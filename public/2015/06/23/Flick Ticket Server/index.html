@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Flick Ticket Server | Gnim.wang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="为什么采用Ticket ServerFlickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外FlickerMysql是基于主-主复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.
+考虑GUIDGUID是非常大的,他们在MY">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flick Ticket Server">
+<meta property="og:url" content="http://www.gnim.wang/2015/06/23/Flick Ticket Server/index.html">
+<meta property="og:site_name" content="Gnim.wang">
+<meta property="og:description" content="为什么采用Ticket ServerFlickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外FlickerMysql是基于主-主复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.
+考虑GUIDGUID是非常大的,他们在MY">
+<meta property="og:updated_time" content="2015-06-23T09:23:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flick Ticket Server">
+<meta name="twitter:description" content="为什么采用Ticket ServerFlickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外FlickerMysql是基于主-主复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.
+考虑GUIDGUID是非常大的,他们在MY">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  
+  
+    <link rel="stylesheet" href="/scrollLoading/style.css" type="text/css">
+  
+  
+
+
+  
+    <style type="text/css">
+      .logo { background-image:url(https://raw.githubusercontent.com/wanggnim/website/gh-pages/fancybox/title.png); }
+    </style>
+  
+
+  
+    <link href='//fonts.useso.com/css?family=Titillium+Web:300,400,600' rel='stylesheet' type='text/css'>
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+</head>
+
+<body>
+  <div id="wrap">
+    <header id="header">
+  <div id="header-outer" class="outer">
+    <div class="container">
+      <div class="container-inner">
+        <div id="header-title">
+          <h1 class="logo-wrap">
+            <a href="/" class="logo"></a>
+          </h1>
+          
+        </div>
+        <div id="header-inner" class="nav-container">
+          <a id="main-nav-toggle" class="nav-icon"></a>
+          <div class="nav-container-inner">
+            <ul id="main-nav">
+              
+                <li class="main-nav-list-item" ><a class="main-nav-list-link" href="/">Home</a></li>
+              
+                <li class="main-nav-list-item" ><a class="main-nav-list-link" href="http://books.gnim.wang/vertx2/index.html">vertx2</a></li>
+              
+                <li class="main-nav-list-item" ><a class="main-nav-list-link" href="http://books.gnim.wang/vertx3/index.html">vertx3</a></li>
+              
+            </ul>
+            <nav id="sub-nav">
+              <div id="search-form-wrap">
+                <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="搜索"><input type="hidden" name="sitesearch" value="http://www.gnim.wang"></form>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <div class="main-body container-inner">
+        <div class="main-body-inner">
+          <section id="main">
+            <div class="main-body-header">
+
+              <h1 class="header">未分类</h1>
+            </div>
+            <div class="main-body-content">
+              
+  <article id="post-Flick Ticket Server" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+      <!--  -->
+      
+        <header class="article-header">
+          
+  
+    <h1 class="article-title" itemprop="name">
+      Flick Ticket Server
+    </h1>
+  
+
+        </header>
+      
+      <p class="article-byline">
+        <a href="/2015/06/23/Flick Ticket Server/" class="article-date">
+  <time datetime="2015-06-23T09:23:02.000Z" itemprop="datePublished">2015-06-23</time>
+</a>
+      </p>
+      <div class="article-entry" itemprop="articleBody">
+        <h4 id="为什么采用Ticket_Server">为什么采用Ticket Server</h4><p>Flickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外FlickerMysql是基于主-主复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.</p>
+<h4 id="考虑GUID">考虑GUID</h4><p>GUID是非常大的,他们在MYSQL索引时性能比较差.我们使用MYSQL查询非常快的一个原因就是,我们对想要查询的东西都会简历索引,那么在查询的时候,我们只需要查询这些索引就好了. 所以索引的大小是一个关键性的选择.另外TickerServer内含了序列性,这对于报告或者debug是很有好处的.</p>
+<h4 id="一致性哈希">一致性哈希</h4><p>像Amazon Dynamo等项目提出了在数据存储顶部采用一致性哈希环,来解决GUID/sharding问题.这种解决方案更适合write-cheap(大量写操作)这种场景,然后MYSQL是针对快速随机读 优化的</p>
+<h4 id="集中自动增量">集中自动增量</h4><p>如果不能让mysql在多个数据库中实现自动增长的话,那么为什么不仅仅只是更新一个数据库呢？如果我们每次只是在一个数据库中插入一行数据, 那么某人在上传一张照片时 我们可以只使用从那个表中生成的主键ID.</p>
+<p>当然如果每秒钟上传60张照片的话,这个表会变得非常大. 那我们可以将这张照片的图像数据去掉, 在中心数据库中只保留ID. 可即便那样, 这个表有可能仍然会变得非常大. 而且还会产生评论,分组,标记等等其他信息, 这些数据都需要ID</p>
+<h4 id="替换(重新插入)">替换(重新插入)</h4><p>大概十多年前,mysql对ANSI SQL实现了一个非标准化的拓展-“REPLACE INTO”. 随后“INSERT ON DUPLICATE KEY UPDATE”做为一个新的语法出现了, 它的出现更好的解决了那个初始问题. 但是“REPLACE INTO” 仍然被支持着.</p>
+<p>REPLACE 的操作极像 INSERT, 如果新插入的一行和原有行中的PRIMARY KEY或者 UNIQUE index重复的话,那么会先将原来的整行删掉,然后再插入新的一行.</p>
+<h4 id="组装">组装</h4><p>Flicker ticket server 专用于database服务器, 该服务器上有且仅有一个数据库. 在该数据库内有一些表,像表示32位ID的Tickets32, 或者表示64位ID的 Tickets64.</p>
+<ul>
+<li>下面展示了一下Ticket64 schema</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Tickets64 (</span><br><span class="line">id <span class="built_in">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="literal">NULL</span> auto_increment,</span><br><span class="line">stub <span class="built_in">char</span>(<span class="number">1</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">default</span> <span class="string">' '</span> ,</span><br><span class="line"><span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> ( id ) ,</span><br><span class="line"><span class="keyword">UNIQUE</span> <span class="keyword">KEY</span>  stub ( stub )</span><br><span class="line">) <span class="keyword">ENGINE</span>=MyISAM</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>当我们执行sql:<code>SELECT * from Tickets64</code> 返回下面一个结果</li>
+</ul>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+-------------------+</span>------+</span><br><span class="line"><span class="header">| id 				|stub  |</span><br><span class="line">+-------------------+------+</span></span><br><span class="line"><span class="header">| 72157623227190423 | a    |</span><br><span class="line">+-------------------+------+</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>当我需要一个新的64位ID时,我执行面貌这个sql</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">REPLACE</span> <span class="keyword">INTO</span> Tickets64 (stub) <span class="keyword">VALUES</span> (<span class="string">' a'</span> ) ;</span></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">LAST_INSERT_ID</span>() ;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>SPOF(单点故障) </li>
+</ul>
+<p>你无法预料到准备好给你的ID会产生单点故障. 故我们同事运行俩台ticket server来达到高可用. 同时在不同的数据库中<br>大量的发生写/更新操作也会产生问题, 如果加锁的话就会使服务器白白丧失掉大量的性能.<br>我们的解决办法是通过拆分ID空间 在不同的数据库间进行责任拆分, 如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">TicketServer1:</span><br><span class="line"><span class="keyword">auto</span>-increment-increment = <span class="number">2</span></span><br><span class="line"><span class="keyword">auto</span>-increment-offset = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">TicketServer2:</span><br><span class="line"><span class="keyword">auto</span>-increment-increment = <span class="number">2</span></span><br><span class="line"><span class="keyword">auto</span>-increment-offset = <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>我们通过在不同的服务器间循环操作来达到负载均衡以及减少运行时间.</li>
+</ul>
+<h4 id="More_Sequences">More Sequences</h4><p> 在Ticket server我们不单单只有Tickets32 and Tickets64 这俩张表,我们还有更多的表. 例如针对照片, 账号, 离线任务等等 其他的表.</p>
+
+      </div>
+      <footer class="article-footer">
+        <a data-url="http://www.gnim.wang/2015/06/23/Flick Ticket Server/" data-id="cib9a7iyu0007q1ss5ldid58z" class="article-share-link">分享到</a>
+        
+        
+      </footer>
+    </div>
+  </article>
+  
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-Flick Ticket Server" data-title="Flick Ticket Server" data-url="http://www.gnim.wang/2015/06/23/Flick Ticket Server/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'wanggnim'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+  
+
+            </div>
+          </section>
+          <aside id="sidebar">
+  <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+  <div class="sidebar-top">
+    <p>关注我 :</p>
+    <ul class="social-links">
+      
+        <li><a class="social-tooltip" title="github" href="https://github.com/wanggnim" target="_blank"><i id="icon-github" class="icon"></i></a></li>
+      
+        <li><a class="social-tooltip" title="weibo" href="/" target="_blank"><i id="icon-weibo" class="icon"></i></a></li>
+      
+        <li><a class="social-tooltip" title="rss" href="/" target="_blank"><i id="icon-rss" class="icon"></i></a></li>
+      
+    </ul>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/06/23/java 集合/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <p class="article-nav-title">
+        
+          (no title)
+        
+      </p>
+      <i class="icon" id="icon-chevron-right"></i>
+    </a>
+  
+  
+    <a href="/2015/06/23/docker命令/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <p class="article-nav-title">docker命令</p>
+      <i class="icon" id="icon-chevron-left"></i>
+    </a>
+  
+</nav>
+
+  
+  <div class="widgets-container">
+    
+      
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              
+<a href="/2015/06/23/io_models/" class="thumbnail">
+  
+    <span style="background-image:url(/images/net/阻塞IO.jpg
+)" alt="JAVA IO" class="thumbnail-image"></span>
+  
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/06/23/io_models/" class="title">JAVA IO</a></p>
+              <p class="item-date"><time datetime="2015-06-23T13:38:01.000Z" itemprop="datePublished">2015-06-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              
+<a href="/2015/06/23/java 集合/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/06/23/java 集合/" class="title"></a></p>
+              <p class="item-date"><time datetime="2015-06-23T09:30:43.000Z" itemprop="datePublished">2015-06-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              
+<a href="/2015/06/23/Flick Ticket Server/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/06/23/Flick Ticket Server/" class="title">Flick Ticket Server</a></p>
+              <p class="item-date"><time datetime="2015-06-23T09:23:02.000Z" itemprop="datePublished">2015-06-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              
+<a href="/2015/06/23/docker命令/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/06/23/docker命令/" class="title">docker命令</a></p>
+              <p class="item-date"><time datetime="2015-06-23T09:17:24.000Z" itemprop="datePublished">2015-06-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              
+<a href="/2015/06/19/java_hook/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/06/19/java_hook/" class="title">JAVA钩子程序</a></p>
+              <p class="item-date"><time datetime="2015-06-19T13:51:41.000Z" itemprop="datePublished">2015-06-19</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+      
+
+    
+      
+  <div class="widget-wrap widget-list">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">June 2015</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+
+    
+      
+
+    
+      
+  <div class="widget-wrap widget-list">
+    <h3 class="widget-title">链接</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="http://hexo.io">Hexo</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+        </div>
+      </div>
+    </div>
+    <footer id="footer">
+  
+  <div class="container">
+    <div class="container-inner">
+      <a id="back-to-top" href="javascript:;"><i class="icon" id="icon-angle-up"></i></a>
+      <div class="credit">
+        <h1 class="logo-wrap">
+          <a href="/" class="logo"></a>
+        </h1>
+        <p>&copy; 2015 gnim wang</p>
+        <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+      </div>
+    </div>
+  </div>
+</footer>
+    
+
+
+  <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+
+
+
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+
+  <script src="/scrollLoading/jquery.scrollLoading.js" type="text/javascript"></script>
+  <script src="/scrollLoading/main.js" type="text/javascript"></script>
+
+
+<script src="/js/html-patch.js" type="text/javascript"></script>
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
