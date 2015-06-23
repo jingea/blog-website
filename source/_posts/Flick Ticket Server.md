@@ -31,53 +31,55 @@ REPLACE 的操作极像 INSERT, 如果新插入的一行和原有行中的PRIMAR
 Flicker ticket server 专用于database服务器, 该服务器上有且仅有一个数据库. 在该数据库内有一些表,像表示32位ID的Tickets32, 或者表示64位ID的 Tickets64.
 
 
-1. 下面展示了一下Ticket64 schema
-
-```sql
-	CREATE TABLE ` Tickets64` (
-	` id` bigint(20) unsigned NOT NULL auto_increment,
-	` stub` char(1) NOT NULL default ' ' ,
-	PRIMARY KEY (` id` ) ,
-	UNIQUE KEY ` stub` (` stub` )
-	) ENGINE=MyISAM
-```
-
-2. 当我们执行sql:`SELECT * from Tickets64` 返回下面一个结果
+* 下面展示了一下Ticket64 schema
 
 ```
-	+-------------------+------+
-	| id 				|stub  |
-	+-------------------+------+
-	| 72157623227190423 | a    |
-	+-------------------+------+
-```
-
-3. 当我需要一个新的64位ID时,我执行面貌这个sql
+CREATE TABLE Tickets64 (
+id bigint(20) unsigned NOT NULL auto_increment,
+stub char(1) NOT NULL default ' ' ,
+PRIMARY KEY ( id ) ,
+UNIQUE KEY  stub ( stub )
+) ENGINE=MyISAM
 
 ```
-	REPLACE INTO Tickets64 (stub) VALUES (' a' ) ;
-	SELECT LAST_INSERT_ID() ;
-```
 
-4. SPOF(单点故障) ####
+* 当我们执行sql:`SELECT * from Tickets64` 返回下面一个结果
 
 ```
-	你无法预料到准备好给你的ID会产生单点故障. 故我们同事运行俩台ticket server来达到高可用. 同时在不同的数据库中
-	大量的发生写/更新操作也会产生问题, 如果加锁的话就会使服务器白白丧失掉大量的性能.
-	我们的解决办法是通过拆分ID空间 在不同的数据库间进行责任拆分, 如下所示：
-
-	TicketServer1:
-	auto-increment-increment = 2
-	auto-increment-offset = 1
-
-	TicketServer2:
-	auto-increment-increment = 2
-	auto-increment-offset = 2
++-------------------+------+
+| id 				|stub  |
++-------------------+------+
+| 72157623227190423 | a    |
++-------------------+------+
 ```
 
-5. 我们通过在不同的服务器间循环操作来达到负载均衡以及减少运行时间.
+* 当我需要一个新的64位ID时,我执行面貌这个sql
+
+```
+REPLACE INTO Tickets64 (stub) VALUES (' a' ) ;
+SELECT LAST_INSERT_ID() ;
+```
+
+* SPOF(单点故障) 
+
+你无法预料到准备好给你的ID会产生单点故障. 故我们同事运行俩台ticket server来达到高可用. 同时在不同的数据库中
+大量的发生写/更新操作也会产生问题, 如果加锁的话就会使服务器白白丧失掉大量的性能.
+我们的解决办法是通过拆分ID空间 在不同的数据库间进行责任拆分, 如下所示：
+
+```
+TicketServer1:
+auto-increment-increment = 2
+auto-increment-offset = 1
+
+TicketServer2:
+auto-increment-increment = 2
+auto-increment-offset = 2
+
+```
+
+* 我们通过在不同的服务器间循环操作来达到负载均衡以及减少运行时间.
 
 #### More Sequences ##
-```
+
  在Ticket server我们不单单只有Tickets32 and Tickets64 这俩张表,我们还有更多的表. 例如针对照片, 账号, 离线任务等等 其他的表.
-```
+
