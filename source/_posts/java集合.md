@@ -1,4 +1,4 @@
-title： JAVA集合
+title: java集合
 ---
 
 ##### 单线程集合
