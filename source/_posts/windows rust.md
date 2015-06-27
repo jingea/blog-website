@@ -1,3 +1,5 @@
+title: 在windows上搭建rust开发环境
+---
 在windows上搭建rust开发环境
 
 1. 安装[msys2](http://sourceforge.net/projects/msys2/) (我的电脑是64位的,所以以下操作都是以64位为主)
