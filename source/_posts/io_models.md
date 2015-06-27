@@ -42,11 +42,11 @@ linux将内存分为内核区，用户区。linux内核给我们管理所有的�
 
 ### 阻塞IO
 最流行的I/O模型是阻塞I/O模型，缺省情形下，所有文件操作都是阻塞的。我们以套接口为例来讲解此模型。在进程空间中调用recvfrom，其系统调用直到数据报到达且被拷贝到应用进程的缓冲区中或者发生错误才返回，期间一直在等待。我们就说进程在从调用recvfrom开始到它返回的整段时间内是被阻塞的。
-![阻塞IO.jpg](/images/net/阻塞IO.jpg)
+![阻塞IO.jpg](https://raw.githubusercontent.com/wanggnim/website/images/net/阻塞IO.jpg)
 
 ### 非阻塞IO
 进程把一个套接口设置成非阻塞是在通知内核：当所请求的I/O操作不能满足要求时候，不把本进程投入睡眠，而是返回一个错误。也就是说当数据没有到达时并不等待，而是以一个错误返回。
-![非阻塞IO.jpg](/images/net/非阻塞IO.jpg)
+![非阻塞IO.jpg](https://raw.githubusercontent.com/wanggnim/website/images/net/非阻塞IO.jpg)
 
 通过上面，我们知道，所有的IO操作在默认情况下，都是属于阻塞IO。尽管上图中所示的反复请求的非阻塞IO的效率底下（需要反复在用户空间和进程空间切换和判断，把一个原本属于IO密集的操作变为IO密集和计算密集的操作），但是在后面IO复用中，需要把IO的操作设置为非阻塞的，此时程序将会阻塞在select和poll系统调用中。把一个IO设置为非阻塞IO有两种方式：在创建文件描述符时，指定该文件描述符的操作为非阻塞；在创建文件描述符以后，调用fcntl()函数设置相应的文件描述符为非阻塞。
 创建描述符时，利用open函数和socket函数的标志设置返回的fd/socket描述符为O_NONBLOCK。
@@ -72,11 +72,11 @@ if (fcntl(fd, F_SETFL, fcntl(sockfd, F_GETFL, 0)|O_NONBLOCK) == -1) {
 
 ### SIGIO
 首先开启套接口信号驱动I/O功能, 并通过系统调用sigaction安装一个信号处理函数（此系统调用立即返回，进程继续工作，它是非阻塞的）。当数据报准备好被读时，就为该进程生成一个SIGIO信号。随即可以在信号处理程序中调用recvfrom来读数据报，井通知主循环数据已准备好被处理中。也可以通知主循环，让它来读数据报。
-![信号驱动IO.jpg](/images/net/信号驱动IO.jpg)
+![信号驱动IO.jpg](https://raw.githubusercontent.com/wanggnim/website/images/net/信号驱动IO.jpg)
 
 ### select and poll
 linux提供select/poll，进程通过将一个或多个fd传递给select或poll系统调用，阻塞在select;这样select/poll可以帮我们侦测许多fd是否就绪。但是select/poll是顺序扫描fd是否就绪，而且支持的fd数量有限。linux还提供了一个epoll系统调用，epoll是基于事件驱动方式，而不是顺序扫描,当有fd就绪时，立即回调函数rollback；
-![IO复用.jpg](/images/net/IO复用.jpg)
+![IO复用.jpg](https://raw.githubusercontent.com/wanggnim/website/images/net/IO复用.jpg)
 
 ##### IO复用详解
 
@@ -88,7 +88,7 @@ linux提供select/poll，进程通过将一个或多个fd传递给select或poll�
 
 ### windows的IOCP
 告知内核启动某个操作，并让内核在整个操作完成后(包括将数据从内核拷贝到用户自己的缓冲区)通知我们。这种模型与信号驱动模型的主要区别是：信号驱动I/O：由内核通知我们何时可以启动一个I/O操作；异步I/O模型：由内核通知我们I/O操作何时完成。
-![异步IO.jpg](/images/net/异步IO.jpg)
+![异步IO.jpg](https://raw.githubusercontent.com/wanggnim/website/images/net/异步IO.jpg)
 
 
 
@@ -98,8 +98,8 @@ Java 类库通过 `java.nio.channels.FileChannel` 中的 `transferTo()` 方法�
 
 
 ###### 数据传输：传统方法
-![传统的数据拷贝方法.gif](/images/net/transfer_copy.jpg)
-![传统上下文切换.gif](/images/net/transfer_context.gif)
+![传统的数据拷贝方法.gif](https://raw.githubusercontent.com/wanggnim/website/images/net/transfer_copy.jpg)
+![传统上下文切换.gif](https://raw.githubusercontent.com/wanggnim/website/images/net/transfer_context.gif)
 
 1. read() 调用引发了一次从用户模式到内核模式的上下文切换。在内部，发出 `sys_read()`(或等效内容)以从文件中读取数据。直接内存存取(`direct memory access`，DMA)引擎执行了第一次拷贝，它从磁盘中读取文件内容，然后将它们存储到一个内核地址空间缓存区中。
 2. 所需的数据被从读取缓冲区拷贝到用户缓冲区，read() 调用返回。该调用的返回引发了内核模式到用户模式的上下文切换(又一次上下文切换)。现在数据被储存在用户地址空间缓冲区。
@@ -112,8 +112,8 @@ Java 类库通过 `java.nio.channels.FileChannel` 中的 `transferTo()` 方法�
 
 零拷贝通过消除这些冗余的数据拷贝而提高了性能。
 
-![使用 transferTo() 方法的数据拷贝.gif](/images/net/transferTo_copy.gif)
-![使用 transferTo() 方法的上下文切换.gif](/images/net/transferTo_context.gif)
+![使用 transferTo() 方法的数据拷贝.gif](https://raw.githubusercontent.com/wanggnim/website/images/net/transferTo_copy.gif)
+![使用 transferTo() 方法的上下文切换.gif](https://raw.githubusercontent.com/wanggnim/website/images/net/transferTo_context.gif)
 
 1. transferTo() 方法引发 DMA 引擎将文件内容拷贝到一个读取缓冲区。然后由内核将数据拷贝到与输出套接字相关联的内核缓冲区。
 
@@ -123,7 +123,7 @@ Java 类库通过 `java.nio.channels.FileChannel` 中的 `transferTo()` 方法�
 A. transferTo() 方法引发 DMA 引擎将文件内容拷贝到内核缓冲区。
 B. 数据未被拷贝到套接字缓冲区。取而代之的是，只有包含关于数据的位置和长度的信息的描述符被追加到了套接字缓冲区。DMA 引擎直接把数据从内核缓冲区传输到协议引擎，从而消除了剩下的最后一次 CPU 拷贝。
 
-![结合使用 transferTo() 和收集操作时的数据拷贝.gif](/images/net/transferTo_collect.gif)
+![结合使用 transferTo() 和收集操作时的数据拷贝.gif](https://raw.githubusercontent.com/wanggnim/website/images/net/transferTo_collect.gif)
 
 
 
