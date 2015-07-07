@@ -1,10 +1,8 @@
-## Getting Started
-
-Getting Started will guide you through the process of adding Metrics to an existing application. We’ll go through the various measuring instruments that Metrics provides, how to use them, and when they’ll come in handy.
+# Getting Started
 
 ## Setting Up Maven
 
-You need the metrics-core library as a dependency:
+在MAVEN的dependency里添加`metrics-core`库
 ```xml
 <dependencies>
     <dependency>
@@ -14,13 +12,12 @@ You need the metrics-core library as a dependency:
     </dependency>
 </dependencies>
 ```
-> Note : Make sure you have a metrics.version property declared in your POM with the current version, which is 3.1.0.
-Now it’s time to add some metrics to your application!
+> 注意，使用上面依赖你需要在pom文件里声明了`metrics.version`属性,并且该属性值是`3.1.0`
 
 ## Meters
 
-A meter measures the rate of events over time (e.g., “requests per second”). In addition to the mean rate, meters also track 1-, 5-, and 15-minute moving averages.
-```xml
+`meter`表示的是单位时间内事件数的比例(例如每秒请求数). 除了平均速率之外, `meter`仍然会追踪`1-,5-,15-`分钟的移动平均数.
+```java
 private final Meter requests = metrics.meter("requests");
 
 public void handleRequest(Request request, Response response) {
@@ -28,12 +25,12 @@ public void handleRequest(Request request, Response response) {
     // etc
 }
 ```
-This meter will measure the rate of requests in requests per second.
+上面的`meter`表示每秒请求数的比例。
 
 ## Console Reporter
 
-A Console Reporter is exactly what it sounds like - report to the console. This reporter will print every second.
-```xml
+`Console Reporter`正如其名,向控制台进行输出日志,下面的示例将每秒进行输出一次.
+```java
 ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)
        .convertRatesTo(TimeUnit.SECONDS)
        .convertDurationsTo(TimeUnit.MILLISECONDS)
@@ -43,8 +40,8 @@ ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)
 
 ## Complete getting started
 
-So the complete Getting Started is
-```xml
+下面是一个完整的示例：
+```java
   package sample;
   import com.codahale.metrics.*;
   import java.util.concurrent.TimeUnit;
@@ -73,6 +70,8 @@ So the complete Getting Started is
       catch(InterruptedException e) {}
   }
 }
+```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -92,23 +91,23 @@ So the complete Getting Started is
 </project>
 ```
 
-> Note
-Make sure you have a metrics.version property declared in your POM with the current version, which is 3.1.0.
-To run
-```xml
+> 注意：使用上面依赖你需要在pom文件里声明了`metrics.version`属性,并且该属性值是`3.1.0`
+
+```
 mvn package exec:java -Dexec.mainClass=sample.First
 ```
 
 ## The Registry
 
-The centerpiece of Metrics is the MetricRegistry class, which is the container for all your application’s metrics. Go ahead and create a new one:
-
+Metrics的核心部分是`MetricRegistry`类,这个类是应用程序中所有的metrics的容器. 下面的示例创建一个新的`MetricRegistry`:
+```java
 final MetricRegistry metrics = new MetricRegistry();
-You’ll probably want to integrate this into your application’s lifecycle (maybe using your dependency injection framework), but static field is fine.
+```
+如果你在应用程序中嵌入一个自己创建的`MetricRegistry`实例，你应该将这个属性置为静态的.
 
 ## Gauges
 
-A gauge is an instantaneous measurement of a value. For example, we may want to measure the number of pending jobs in a queue:
+`gauge`表示的是一个瞬时值. 例如我们获取队列里待执行的任务数
 ```xml
 public class QueueManager {
     private final Queue queue;
@@ -125,20 +124,19 @@ public class QueueManager {
     }
 }
 ```
-When this gauge is measured, it will return the number of jobs in the queue.
+当完成计算之后,它将会返回队列里的任务数。
 
-Every metric in a registry has a unique name, which is just a dotted-name string like "things.count" or "com.example.Thing.latency". MetricRegistry has a static helper method for constructing these names:
+在`registry`里的每个`metric`都有一个唯一的名字,其命名规范为用`.`分割的字符串,例如`things.count`或者`com.example.Thing.latency`. `MetricRegistry`类提供了一个静态方法来构建这些名字.
 ```xml
 MetricRegistry.name(QueueManager.class, "jobs", "size")
 ```
+上面的调用会返回`com.example.QueueManager.jobs.size`。
 
-This will return a string with something like "com.example.QueueManager.jobs.size".
-
-For most queue and queue-like structures, you won’t want to simply return queue.size(). Most of java.util and java.util.concurrent have implementations of #size() which are O(n), which means your gauge will be slow (potentially while holding a lock).
+对于大多数队列或者类队列结构,你也许仅想要获得`queue.size()`这个值. 大多数`java.util`和`java.util.concurrent`包都实现了`size()`方法,它的复杂度是`O(n)`,这意味着你的`gauge`也许会很慢(也许还会持有锁)
 
 ## Counters
 
-A counter is just a gauge for an AtomicLong instance. You can increment or decrement its value. For example, we may want a more efficient way of measuring the pending job in a queue:
+`counter`是一个内部采用`AtomicLong`计数器的`gauge`实现. 你可以增加或者减少这个值.例如,我们想要一种更加高效的计算队列大小的方式:
 ```xml
 private final Counter pendingJobs = metrics.counter(name(QueueManager.class, "pending-jobs"));
 
@@ -152,15 +150,15 @@ public Job takeJob() {
     return queue.take();
 }
 ```
-Every time this counter is measured, it will return the number of jobs in the queue.
+每一次业务逻辑的调用，counter都会被计算一次,它会返回队列中的任务数.
 
-As you can see, the API for counters is slightly different: #counter(String) instead of #register(String, Metric). While you can use register and create your own Counter instance, #counter(String) does all the work for you, and allows you to reuse metrics with the same name.
+正如你看到的,counter的API是非常不同的是,`counter(String)`取代了`register(String, Metric)`，然而你可以仍然可以使用`register`方法创建你自己的`Counter`实例,实际上`counter(String)`在内部里已经将这些工作都为你做好了,还允许你使用相同的名字对metric进行复用
 
-Also, we’ve statically imported MetricRegistry‘s name method in this scope to reduce clutter.
+还需要说明一点,在上例中,我们静态引入了`MetricRegistry`的`name`方法.
 
 ## Histograms
 
-A histogram measures the statistical distribution of values in a stream of data. In addition to minimum, maximum, mean, etc., it also measures median, 75th, 90th, 95th, 98th, 99th, and 99.9th percentiles.
+`histogram`表示的是流中数据值的静态分布. 除了计算`minimum, maximum, mean, etc`等值,它还计算中间值或者`75th, 90th, 95th, 98th, 99th, 99.9th`等百分比.
 ```xml
 private final Histogram responseSizes = metrics.histogram(name(RequestHandler.class, "response-sizes"));
 
@@ -169,11 +167,10 @@ public void handleRequest(Request request, Response response) {
     responseSizes.update(response.getContent().length);
 }
 ```
-This histogram will measure the size of responses in bytes.
+上面的`histogram`统计了响应中的字节数.
 
 ## Timers
-
-A timer measures both the rate that a particular piece of code is called and the distribution of its duration.
+`timer`可以计算某个代码段的调用比例,和调用期间的分布状况.
 ```xml
 private final Timer responses = metrics.timer(name(RequestHandler.class, "responses"));
 
@@ -189,11 +186,12 @@ public String handleRequest(Request request, Response response) {
 ```
 This timer will measure the amount of time it takes to process each request in nanoseconds and provide a rate of requests in requests per second.
 
+
 ## Health Checks
 
-Metrics also has the ability to centralize your service’s health checks with the metrics-healthchecks module.
+Metrics还可以通过`metrics-healthchecks`模块集中检查你的服务的健康.
 
-First, create a new HealthCheckRegistry instance:
+首先创建一个新的`HealthCheckRegistry`实例
 ```xml
 final HealthCheckRegistry healthChecks = new HealthCheckRegistry();
 Second, implement a HealthCheck subclass:
@@ -215,11 +213,11 @@ public class DatabaseHealthCheck extends HealthCheck {
     }
 }
 ```
-Then register an instance of it with Metrics:
+然后将Metrics注册到它身上：
 ```xml
 healthChecks.register("postgres", new DatabaseHealthCheck(database));
 ```
-To run all of the registered health checks:
+接下来运行所有的health checks:
 ```xml
 final Map<String, HealthCheck.Result> results = healthChecks.runHealthChecks();
 for (Entry<String, HealthCheck.Result> entry : results.entrySet()) {
@@ -234,26 +232,26 @@ for (Entry<String, HealthCheck.Result> entry : results.entrySet()) {
     }
 }
 ```
-Metrics comes with a pre-built health check: ThreadDeadlockHealthCheck, which uses Java’s built-in thread deadlock detection to determine if any threads are deadlocked.
+Metrics内置了一种health check：`ThreadDeadlockHealthCheck`,它使用了java内置的线程死锁检测来查找死锁线程.
 
 ## Reporting Via JMX
 
-To report metrics via JMX:
+通过`JMX`报告metrics：
 ```xml
 final JmxReporter reporter = JmxReporter.forRegistry(registry).build();
 reporter.start();
 ```
-Once the reporter is started, all of the metrics in the registry will become visible via JConsole or VisualVM (if you install the MBeans plugin):
+一旦reporter启动了,registry中的所有的metrics都可以通过`JConsole`或者`VisualVM`看到.
 
-Metrics exposed as JMX MBeans being viewed in VisualVM's MBeans browser
-Tip
-If you double-click any of the metric properties, VisualVM will start graphing the data for that property. Sweet, eh?
+Metrics被包装成`JMX MBeans`,可以在`VisualVM's MBeans browser`查看`Metrics`.
+
+> 注意：在VisualVM中，你双击任一metric属性,VisualVM将会将这些属性数据通过图形化的方式展示给你.
 
 ## Reporting Via HTTP
 
-Metrics also ships with a servlet (AdminServlet) which will serve a JSON representation of all registered metrics. It will also run health checks, print out a thread dump, and provide a simple “ping” response for load-balancers. (It also has single servlets–MetricsServlet, HealthCheckServlet, ThreadDumpServlet, and PingServlet–which do these individual tasks.)
+Metrics仍然可以通过servlet(AdminServlet)展示给你, 提供JSON形式的数据. 它可以报告`health checks`,打印`thread dump`,或者提供一个负载均衡的简单响应. (它还提供了其他的`servlets–MetricsServlet`,例如`HealthCheckServlet, ThreadDumpServlet`或者`PingServlet`.)
 
-To use this servlet, include the metrics-servlets module as a dependency:
+如果想要使用servlet你必须在pom文件中依赖`metrics-servlets`.
 ```xml
 <dependency>
     <groupId>io.dropwizard.metrics</groupId>
@@ -261,16 +259,13 @@ To use this servlet, include the metrics-servlets module as a dependency:
     <version>${metrics.version}</version>
 </dependency>
 ```
-Note
-Make sure you have a metrics.version property declared in your POM with the current version, which is 3.1.0.
-From there on, you can map the servlet to whatever path you see fit.
 
 ## Other Reporting
 
-In addition to JMX and HTTP, Metrics also has reporters for the following outputs:
+除了`JMX`和`HTTP`以外,Metrics还提供了下面的报告方式
 
-* STDOUT, using ConsoleReporter from metrics-core
-* CSV files, using CsvReporter from metrics-core
-* SLF4J loggers, using Slf4jReporter from metrics-core
-* Ganglia, using GangliaReporter from metrics-ganglia
-* Graphite, using GraphiteReporter from metrics-graphite
+* `STDOUT`: 使用`metrics-core`的`ConsoleReporter`报告
+* `CSV files`, 使用`metrics-core`的`CsvReporter`报告
+* `SLF4J loggers`, 使用`metrics-core`的`Slf4jReporter`报告
+* `Ganglia`, 使用`metrics-ganglia`的`GangliaReporter`报告
+* `Graphite`, 使用`metrics-graphite`的`GraphiteReporter`报告 
