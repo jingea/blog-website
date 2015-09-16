@@ -1,23 +1,801 @@
-title: groovy
+ï»¿title: groovy
 ---
+> æœ¬æ–‡æ˜¯å¯¹Groovyéƒ¨åˆ†å®˜æ–¹æ–‡æ¡£è¿›è¡Œäº†ç¿»è¯‘
+
+# æ³¨é‡Š
+## å•è¡Œæ³¨é‡Š
+æƒ³è¦ä½¿ç”¨å•è¡Œæ³¨é‡Š, ä½¿ç”¨`//`å°±å¯ä»¥äº†.  æœ¬è¡Œä¸­`//`åç»­çš„å†…å®¹éƒ½ä¼šè¢«è®¤ä¸ºæ˜¯æ³¨é‡Šçš„ä¸€éƒ¨åˆ†
+```groovy
+// a standalone single line comment
+println "hello" // a comment till the end of the line
+```
+
+## å¤šè¡Œæ³¨é‡Š
+å¤šè¡Œæ³¨é‡Šä»`/*`å¼€å§‹, ç›´åˆ°`*/`ç»“æŸ(è·¨è¡Œä¹ŸåŒ…å«åœ¨å†…)
+```groovy
+/* a standalone multiline comment
+spanning two lines */
+println "hello" /* a multiline comment starting
+at the end of a statement */
+println 1 /* one */ + 2 /* two */
+```
+### GroovyDoc æ³¨é‡Š
+`GroovyDoc` æ³¨é‡Šä¹Ÿæ˜¯å¤šè¡Œçš„, ä½†æ˜¯å®ƒæ˜¯ä»¥`/**`å¼€å§‹, `*/`ç»“æŸå®šä¹‰çš„.
+è¿™ç§æ³¨é‡Šä¸€èˆ¬ç”¨äºä»¥ä¸‹æƒ…å†µï¼š
+* ç±»å‹å®šä¹‰(åŒ…å« classes, interfaces, enums, annotations)
+* å­—æ®µå’Œå±æ€§å®šä¹‰
+* æ–¹æ³•å®šä¹‰
+
+```groovy
+/**
+  * A Class description
+  */
+ class Person {
+     /** the name of the person */
+     String name
+
+     /**
+      * Creates a greeting method for a certain person.
+      *
+      * @param otherPerson the person to greet
+      * @return ag reeting message
+      */
+     String greet(String otherPerson) {
+        "Hello ${otherPerson}"
+     }
+ }
+```
+
+## Shebang line
+é™¤äº†ä¸Šé¢æåˆ°çš„å•è¡Œæ³¨é‡Šå¤–, è¿˜æœ‰ä¸€ç§ç‰¹æ®Šçš„å•è¡Œæ³¨é‡Š.è¿™ç§æ³¨é‡Šåœ¨UNIXç³»ç»Ÿä¸‹é€šå¸¸ç§°ä¸ºshebangçº¿, è¿™ç§æ³¨é‡Šå…è®¸è„šæœ¬ç›´æ¥åœ¨å‘½ä»¤è¡Œé‡Œæ‰§è¡Œ( ä½†æ˜¯å‰ææ˜¯ä½ å·²ç»åœ¨ç³»ç»Ÿæ˜¯å®‰è£…äº†`groovy`,å¹¶ä¸”åœ¨`PATH`é‡Œè¿›è¡Œäº†é…ç½®)
+
+```groovy
+#!/usr/bin/env groovy
+println "Hello from the shebang line"
+```
+`#`å­—ç¬¦å¿…é¡»æ˜¯è¿™ä¸ªæ–‡ä»¶é‡Œçš„ç¬¬ä¸€ä¸ªå­—ç¬¦,å¦åˆ™ç¼–è¯‘å™¨å°†ä¼šæŠ›å‡ºä¸€ä¸ªç¼–è¯‘é”™è¯¯.
+
+# æ ‡è¯†ç¬¦
+
+## æ™®é€šæ ‡è¯†ç¬¦
+
+æ ‡è¯†ç¬¦ä»¥ä¸€ä¸ª`å­—æ¯`æˆ–è€…`$`æˆ–è€…`_`å¼€å§‹, ä¸èƒ½ä»¥æ•°å­—æ‰“å¤´.
+å¦‚æœä»¥å­—æ¯æ‰“å¤´,ä»–ä»¬åœ¨ä¸‹åˆ—èŒƒå›´å†…
+
+* 'a' to 'z' (lowercase ascii letter)
+* 'A' to 'Z' (uppercase ascii letter)
+* '\u00C0' to '\u00D6'
+* '\u00D8' to '\u00F6'
+* '\u00F8' to '\u00FF'
+* '\u0100' to '\uFFFE'
+
+å‰©ä¸‹çš„å­—ç¬¦å°±å¯ä»¥åŒ…å«å­—æ¯æˆ–è€…æ•°å­—äº†.  ä¸‹é¢åˆ—ä¸¾äº†ä¸€äº›åˆæ³•çš„æ ‡è¯†ç¬¦ï¼š
+```groovy
+def name
+def item3
+def with_underscore
+def $dollarStart
+```
+ä¸‹é¢æ˜¯ä¸€äº›éæ³•çš„æ ‡è¯†ç¬¦
+```groovy
+def 3tier
+def a+b
+def a#b
+```
+`.`åé¢çš„å…³é”®å­—ä¹Ÿæ˜¯åˆæ³•çš„æ ‡è¯†ç¬¦
+```groovy
+foo.as
+foo.assert
+foo.break
+foo.case
+foo.catch
+```
+
+## å¸¦å¼•å·çš„æ ‡è¯†ç¬¦
+
+å¸¦å¼•å·çš„æ ‡è¯†ç¬¦å‡ºç°åœ¨`.\`. ä¾‹å¦‚`person.name`è¡¨è¾¾å¼ä¸­çš„`name`éƒ¨åˆ†èƒ½é€šè¿‡è¿™ä¿©ç§æ–¹å¼å¼•èµ·æ¥`person."name"`æˆ–è€…`person.\'name'`. å½“ç‰¹å®šæ ‡è¯†ç¬¦ä¸­åŒ…å«éæ³•å­—ç¬¦(javaè¯­è¨€ç¦æ­¢çš„å­—ç¬¦),ä½†æ˜¯é€šè¿‡å¼•å·çš„æ–¹å¼å¯ä»¥è¾¾åˆ°åœ¨Groovyçš„åˆæ³•. ä¾‹å¦‚,ä¸€ä¸ªç ´æŠ˜å·,ä¸€ä¸ªç©ºæ ¼,ä¸€ä¸ªæ„Ÿå¹å·,
+```groovy
+def map = [:]
+
+map."an identifier with a space and double quotes" = "ALLOWED"
+map.'with-dash-signs-and-single-quotes' = "ALLOWED"
+
+assert map."an identifier with a space and double quotes" == "ALLOWED"
+assert map.'with-dash-signs-and-single-quotes' == "ALLOWED"
+```
+
+æ­£åƒä¸€ä¼šæˆ‘ä»¬åœ¨stringsæ¨¡å—çœ‹åˆ°çš„ä¸€æ ·, Groovyæä¾›äº†ä¸åŒçš„stringå­—é¢é‡. ä»¥ä¸‹æ‰€åˆ—ä¸¾çš„éƒ½æ˜¯åˆæ³•çš„
+```groovy
+map.'single quote'
+map."double quote"
+map.'''triple single quote'''
+map."""triple double quote"""
+map./slashy string/
+map.$/dollar slashy string/$
+```
+
+strings å’Œ Groovyâ€™s GStrings åœ¨çº¯å­—ç¬¦ä¸Šé¢æ˜¯æœ‰ä¸€ç‚¹ä¸åŒçš„,as in that the latter case, the interpolated values are inserted in the final string for evaluating the whole identifier:
+```groovy
+def firstname = "Homer"
+map."Simson-${firstname}" = "Homer Simson"
+
+assert map.'Simson-Homer' == "Homer Simson"
+```
+
+# å­—ç¬¦ä¸²
+Text literals are represented in the form of chain of characters called strings. Groovy lets you instantiate `java.lang.String` objects, as well as GStrings (`groovy.lang.GString`) which are also called interpolated strings in other programming languages.
+
+åœ¨Groovyæ–‡æœ¬å­—é¢é‡è¢«ç§°ä¸ºString,è¿™æ˜¯ä»¥å­—ç¬¦é“¾çš„å½¢å¼å‡ºç°çš„. Groovyå…è®¸ä½ å®ä¾‹åŒ–`java.lang.String`,åƒ  GStrings (`groovy.lang.GString`)é‚£æ ·, (GStringè¿˜è¢«ç§°ä¸ºæ’å€¼å­—ç¬¦ä¸²)
+
+## å•å¼•å·å­—ç¬¦
+Single quoted strings are a series of characters surrounded by single quotes:
+
+å•å¼•å·å­—ç¬¦ä¸²æ˜¯é€šè¿‡å•å¼•å·æ‹¬èµ·æ¥çš„ä¸€åˆ—å­—ç¬¦
+```groovy
+'a single quoted string'
+```
+Single quoted strings are plain `java.lang.String` and donâ€™t support interpolation.
+
+å•å¼•å·å­—ç¬¦å’Œ`java.lang.String`æ˜¯åŒä¸€ä¸ªä¸œè¥¿, åŒæ—¶å®ƒä¹Ÿä¸å…è®¸æ’å€¼çš„å‡ºç°
+## å­—ç¬¦ä¸²è¿æ¥
+
+Groovyé‡Œæ‰€æœ‰çš„å­—ç¬¦ä¸²éƒ½å¯ä»¥é€šè¿‡ `+` è¿æ¥èµ·æ¥
+```groovy
+assert 'ab' == 'a' + 'b'
+```
+
+## ä¸‰é‡å•å¼•å·å­—ç¬¦ä¸²
+
+ä¸‰é‡å•å¼•å·å­—ç¬¦ä¸² æ˜¯é€šè¿‡ä¸‰ä¸ªå•å¼•å· åŒ…å›´èµ·æ¥çš„å­—ç¬¦åºåˆ—.
+```groovy
+'''a triple single quoted string'''
+```
+ä¸‰é‡å•å¼•å·å­—ç¬¦ä¸²å°±æ˜¯çº¯`java.lang.String` è€Œä¸”ä¸å…è®¸æ’å€¼.
+ä¸‰é‡å•å¼•å·å­—ç¬¦ä¸²å¯ä»¥å¤šè¡Œèµ‹å€¼.
+```groovy
+def aMultilineString = '''line one
+line two
+line three'''
+```
+
+å¦‚æœä½ çš„ä»£ç è¿›è¡Œäº†ç¼©è¿›, ä¾‹å¦‚ç±»ä¸­çš„æ–¹æ³•ä½“, é‚£è·¨è¡Œçš„ä¸‰é‡å•å¼•å·å­—ç¬¦ä¸²ä¹Ÿä¼šåŒ…å«ç¼©è¿›. ä¸è¿‡å¯ä»¥è°ƒç”¨`String#stripIndent()` å»é™¤æ‰ç¼©è¿›. `String#stripMargin()`æ–¹æ³•ä¼šé€šè¿‡åˆ†å‰²ç¬¦ä»å­—ç¬¦ä¸²çš„å¼€å¤´
+```groovy
+def startingAndEndingWithANewline = '''
+line one
+line two
+line three
+'''
+```
+
+ä½ ä¹Ÿè®¸ä¼šæ³¨æ„åˆ°æœ€ç»ˆå¾—åˆ°çš„å­—ç¬¦ä¸²ä¼šåŒ…å«ä¸€ä¸ªæ¢è¡Œç¬¦.It is possible to strip that character by escaping the newline with a backslash:
+```groovy
+def strippedFirstNewline = '''\
+line one
+line two
+line three
+'''
+
+assert !strippedFirstNewline.startsWith('\n')
+```
+
+### æ›´æ¢ç‰¹æ®Šå­—ç¬¦
+
+å¯ä»¥é€šè¿‡`\`å­—ç¬¦åœ¨`''`ç»§ç»­å¼•ç”¨`'`
+```groovy
+'an escaped single quote: \' needs a backslash'
+```
+
+å½“ç„¶ä¹Ÿå¯ä»¥é€šè¿‡`\`æ¥å¼•ç”¨å®ƒè‡ªèº«
+```groovy
+'an escaped escape character: \\ needs a double backslash'
+```
+
+è¿˜æœ‰ä¸€äº›å…¶ä»–çš„ç‰¹æ®Šå­—ç¬¦éœ€è¦`\`æ¥å¼•ç”¨
+```groovy
+Escape sequence	Character
+'\t'	tabulation
+'\b'	backspace
+'\n'	newline
+'\r'	carriage return
+'\f'	formfeed
+'\\'	backslash
+'\''	single quote (for single quoted and triple single quoted strings)
+'\"'	double quote (for double quoted and triple double quoted strings)
+```
+### Unicode è½¬ä¹‰åºåˆ—
+
+æœ‰ä¸€äº›å­—ç¬¦å¹¶ä¸èƒ½é€šè¿‡é”®ç›˜è¾“å‡º, é‚£ä¹ˆæ­¤æ—¶å°±å¯ä»¥é€šè¿‡Unicode è½¬ä¹‰åºåˆ—æ¥å®ç°. ä¾‹å¦‚`backslash`, åœ¨uåè·Ÿ4ä¸ª16è¿›åˆ¶æ•°å­—å³å¯.
+
+```groovy
+'The Euro currency symbol: \u20AC'
+```
+## åŒå¼•å·åŒ…å«çš„ string
+
+é€šè¿‡åŒå¼•å·åŒ…æ‹¬èµ·æ¥çš„å­—ç¬¦ä¸²
+```groovy
+"a double quoted string"
+```
+To escape a double quote, you can use the backslash character: "A double quote: \"".
+
+å½“åŒå¼•å·å­—ç¬¦ä¸²å†…æ²¡æœ‰æ’å€¼(${})çš„æ—¶å€™, é‚£å®ƒå°±ç­‰åŒäº`java.lang.String`, å½“æœ‰æ’å€¼çš„æ—¶å€™é‚£ä¹ˆåŒå¼•å·å­—ç¬¦ä¸²å°±æ˜¯`groovy.lang.GString`çš„å®ä¾‹
+
+### String æ’å€¼
+
+ä»»ä½•è¡¨è¾¾å¼éƒ½å¯ä»¥åµŒå…¥åˆ°é™¤äº†å•å¼•å·å’Œä¸‰å¼•å·çš„æ‰€æœ‰å­—ç¬¦ä¸²å¸¸é‡ä¸­. å½“å¯¹å­—ç¬¦ä¸²æ±‚å€¼çš„æ—¶å€™, æ’å€¼ä¼šä½¿ç”¨ä»–çš„å€¼æ¥æ›¿æ¢æ‰å­—ç¬¦ä¸²é‡Œçš„å ä½ç¬¦. å ä½ç¬¦è¡¨è¾¾å¼é€šè¿‡`${}` æˆ–è€… `$`æ¥å®ç°. å ä½ç¬¦é‡Œçš„è¡¨è¾¾å¼å€¼ä¼šè¢«è½¬æ¢æˆå…¶å­—ç¬¦ä¸²è¡¨ç¤ºå½¢å¼, è½¬æ¢æ˜¯é€šè¿‡è°ƒç”¨è¡¨è¾¾å¼`toString()`æ–¹æ³•,é€šè¿‡ä¼ é€’ä¸€ä¸ªStringå‚æ•°.
+
+ä¸‹é¢çš„ä¾‹å­å±•ç¤ºçš„æ˜¯å­—ç¬¦ä¸²é‡Œçš„å ä½ç¬¦å®šä½æœ¬åœ°å˜é‡
+```groovy
+def name = 'Guillaume' // a plain string
+def greeting = "Hello ${name}"
+
+assert greeting.toString() == 'Hello Guillaume'
+```
+
+ä½†æ˜¯å¹¶éæ‰€æœ‰çš„è¡¨è¾¾å¼éƒ½æ˜¯åˆæ³•çš„, åƒä¸‹é¢æˆ‘ä»¬åˆ—ä¸¾çš„è¿™ä¸ªç®—æœ¯è¡¨è¾¾å¼
+
+```groovy
+def sum = "The sum of 2 and 3 equals ${2 + 3}"
+assert sum.toString() == 'The sum of 2 and 3 equals 5'
+```
+
+å…¶å®å¹¶ä¸æ˜¯åªæœ‰è¡¨è¾¾å¼å…è®¸å‡ºç°åœ¨`${}`è¡¨è¾¾å¼é‡Œ. Statements åŒæ ·å¯ä»¥åœ¨`${}` å ä½ç¬¦é‡Œå‡ºç°, ä½†æ˜¯statementçš„å€¼ä¼šæ˜¯null. å¦‚æœæœ‰Nä¸ªstatementså‡ºç°åœ¨`${}`é‡Œ,é‚£ä¹ˆæœ€åä¸€ä¸ªstatementåº”è¯¥è¿”å›ä¸€ä¸ªæœ‰æ•ˆå€¼,ä»¥ä¾¿è¢«æ’å…¥åˆ°å­—ç¬¦ä¸²é‡Œ. ä¾‹å¦‚`"The sum of 1 and 2 is equal to ${def a = 1; def b = 2; a + b}"` æ˜¯å…è®¸çš„,è€Œä¸”ä¹Ÿä¼šåƒè¯­æ³•é¢„æœŸçš„é‚£æ ·æ‰§è¡Œ, ä½†æ˜¯ä¹ æƒ¯ä¸Š,GString å ä½ç¬¦é‡Œåº”è¯¥æ›´å¤šçš„æ˜¯ä½¿ç”¨ç®€å•è¡¨è¾¾å¼.
+é™¤äº†` ${}`å ä½ç¬¦ä¹‹å¤–, æˆ‘ä»¬ä¹Ÿå¯ä»¥ä½¿ç”¨`$`æ ‡è®°å‰ç¼€ç‚¹ç¼€è¡¨è¾¾å¼ï¼š
+
+```groovy
+def person = [name: 'Guillaume', age: 36]
+assert "$person.name is $person.age years old" == 'Guillaume is 36 years old'
+```
+ä½†æ˜¯ä»…ä»…ä¸€ä¸‹å½¢å¼çš„ç‚¹ç¼€è¡¨è¾¾å¼æ˜¯åˆæ³•çš„ï¼ša.b, a.b.c,etc.ä½†æ˜¯é‚£äº›åŒ…å«æ‹¬å·çš„è¡¨è¾¾å¼(ä¾‹å¦‚æ–¹æ³•è°ƒç”¨,èŠ±æ‹¬å·ä¸ºé—­åŒ…,ç®—æœ¯è¿ç®—ç¬¦)æ˜¯æ— æ•ˆçš„.
+ä¸‹é¢ç»™å‡ºäº†ä¸€ä¸ªå®šä¹‰æˆæ•°å­—å½¢å¼çš„å˜é‡.
+```groovy
+def number = 3.14
+```
+
+ä¸‹é¢çš„ statement å°†ä¼šæŠ›å‡ºä¸€ä¸ª`groovy.lang.MissingPropertyException` å¼‚å¸¸,å› ä¸ºGroovyè®¤ä¸ºä½ æ­£åœ¨å°è¯•è®¿é—®é‚£ä¸ªæ•°å­—çš„ä¸å­˜åœ¨çš„toStringå±æ€§.
+```groovy
+shouldFail(MissingPropertyException) {
+    println "$number.toString()"
+}
+```
+ä½ å¯ä»¥ç†è§£æˆè§£æå™¨ä¼šå°†`"$number.toString()"` è§£é‡Šæˆ `"${number.toString}()"`.å¦‚æœä½ æƒ³è¦åœ¨GStringä¸­é¿å…`$`æˆ–è€…`${}` ç§°ä¸ºæ’å€¼çš„è¯,åªéœ€è¦åœ¨å®ƒä»¬å‰é¢åŠ ä¸Š`\`å³å¯.
+
+```groovy
+assert '${name}' == "\${name}"
+```
+### ç‰¹æ®Šæ’å€¼å½¢å¼-é—­åŒ…è¡¨è¾¾å¼
+
+åˆ°ç›®å‰ä¸ºæ­¢,æˆ‘ä»¬çœ‹åˆ°å¯ä»¥åœ¨${}å ä½ç¬¦é‡Œæ’å…¥ä»»ä½•çš„è¡¨è¾¾å¼, ä½†è¿˜æœ‰ä¸€ç§ç‰¹æ®Šçš„è¡¨è¾¾å¼-é—­åŒ…è¡¨è¾¾å¼. å½“å ä½ç¬¦å†…å¥½æ±‰ä¸€ä¸ªç®­å¤´æ—¶`${â†’}`,è¿™ä¸ªè¡¨è¾¾å¼å®é™…ä¸Šå°±æ˜¯ä¸€ä¸ªé—­åŒ…è¡¨è¾¾å¼.
+
+```groovy
+def sParameterLessClosure = "1 + 2 == ${-> 3}" (1)
+assert sParameterLessClosure == '1 + 2 == 3'
+
+def sOneParamClosure = "1 + 2 == ${ w -> w << 3}" (2)
+assert sOneParamClosure == '1 + 2 == 3'
+```
+1. ç”±äºé—­åŒ…ä¸ç”¨å£°æ˜å‚æ•°, æ‰€ä»¥åœ¨ä½¿ç”¨é—­åŒ…æ—¶,æˆ‘ä»¬ä¸å¿…å¯¹å…¶ä¼ å‚
+2. ä¸Šä¾‹ä¸­,é—­åŒ…ä¸­ä½¿ç”¨äº†ä¸€ä¸ª`java.io.StringWriter argument`å‚æ•°, æˆ‘ä»¬å¯ä»¥ä½¿ç”¨`<<`æ“ä½œç¬¦æ·»åŠ å†…å®¹.ä¸è®ºä»»ä½•æƒ…å†µ, å ä½ç¬¦éƒ½è¢«åµŒå…¥äº†é—­åŒ….
+
+ä¸Šé¢çš„è¡¨è¾¾å¼çœ‹èµ·æ¥æ›´åƒæ˜¯ä½¿ç”¨äº†ä¸€ä¸ªå•°å—¦çš„æ–¹å¼å»å®šä¹‰æ’å€¼è¡¨è¾¾å¼, ä½†æ˜¯é—­åŒ…æœ‰ä¸ªæœ‰è¶£åˆé«˜çº§çš„ç‰¹æ€§ï¼šæƒ°æ€§è®¡ç®—:
+
+```groovy
+def number = 1 (1)
+def eagerGString = "value == ${number}"
+def lazyGString = "value == ${ -> number }"
+
+assert eagerGString == "value == 1" (2)
+assert lazyGString ==  "value == 1" (3)
+
+number = 2 (4)
+assert eagerGString == "value == 1" (5)
+assert lazyGString ==  "value == 2" (6)
+```
+1	We define a number variable containing 1 that we then interpolate within two GStrings, as an expression in eagerGString and as a closure in lazyGString.
+2	We expect the resulting string to contain the same string value of 1 for eagerGString.
+3	Similarily for lazyGString
+4	Then we change the value of the variable to a new number
+5	With a plain interpolated expression, the value was actually bound at the time of creation of the GString.
+6	But with a closure expression, the closure is called upon each coercion of the GString into String, resulting in an updated string containing the new number value.
+An embedded closure expression taking more than one parameter will generate an exception at runtime. Only closures with zero or one parameters are allowed.
+
+1. æˆ‘ä»¬å®šä¹‰äº†æ•°å€¼ä¸º1çš„numberç±»å‹å˜é‡, å®ƒç¨åä¼šä½œä¸ºæ’å€¼å‡ºç°åœ¨ä¿©ä¸ªGStringä¸­,
+2. æˆ‘ä»¬å¸Œæœ›eagerGString äº§ç”Ÿçš„å­—ç¬¦ä¸²åŒ…å«ç€ç›¸åŒçš„å€¼ 1
+3. åŒæ ·æˆ‘ä»¬ä¹Ÿå¸Œæœ›lazyGString äº§ç”Ÿçš„å­—ç¬¦ä¸²åŒ…å«ç€ç›¸åŒçš„å€¼ 1
+4. ç„¶åæˆ‘ä»¬å°†numberæ”¹å˜ä¸€ä¸ªå€¼.
+5.
+6.
+
+### Inteoperability with Java
+å½“ä¸€ä¸ªæ–¹æ³•(ä¸ç®¡æ˜¯åœ¨Javaè¿˜æ˜¯åœ¨Groovyä¸­å®šä¹‰çš„)å¸¦æœ‰ä¸€ä¸ª`java.lang.String`å‚æ•°, ä½†æˆ‘ä»¬ä¼ é€’ä¸€ä¸ª`groovy.lang.GString instance`å®ä¾‹, GStringä¼šè‡ªåŠ¨è°ƒç”¨toString()æ–¹æ³•.
+
+```groovy
+String takeString(String message) {         (4)
+    assert message instanceof String        (5)
+    return message
+}
+
+def message = "The message is ${'hello'}"   (1)
+assert message instanceof GString           (2)
+
+def result = takeString(message)            (3)
+assert result instanceof String
+assert result == 'The message is hello'
+```
+1. é¦–å…ˆæˆ‘ä»¬åˆ›å»ºä¸€ä¸ªGStringå˜é‡
+2. ç„¶åæˆ‘ä»¬æ£€æŸ¥ä¸€ä¸‹å£°æ˜çš„å˜é‡æ˜¯å¦æ˜¯GStringçš„å®ä¾‹
+3. æ¥ç€æˆ‘ä»¬å‘ä¸€ä¸ªæ–¹æ³•(å‚æ•°ä¸ºStringç±»å‹)ä¼ é€’GStringç±»å‹å˜é‡
+4. takeString()æ˜¾å¼åœ°æŒ‡å‡ºäº†å®ƒå”¯ä¸€çš„å‚æ•°ä¸ºString
+5. æˆ‘ä»¬å†æ¬¡éªŒè¯æ‰€éœ€çš„å‚æ•°æ˜¯String è€Œä¸æ˜¯GString
+
+
+### GString and String hashCodes
+
+å°½ç®¡æ’å€¼å­—ç¬¦ä¸²èƒ½è¢«ç”¨æ¥ä»£æ›¿`Java strings`, ä½†æ˜¯ä»–ä»¬åœ¨æŸäº›åœ°æ–¹å¹¶ä¸æ˜¯å®Œå…¨ä¸€æ ·çš„â€”â€” ä»–ä»¬çš„hashCodesæ˜¯ä¸åŒçš„. Java Strigæ˜¯`immutable`, ç„¶è€Œ, GStringé€šè¿‡å®ƒçš„å†…æ’å€¼ ç”Ÿæˆçš„å­—ç¬¦ä¸²æ˜¯å¯ä»¥æ”¹å˜çš„. å³ä½¿ç”Ÿæˆå®Œå…¨ä¸€æ ·çš„å­—ç¬¦ä¸², GStrings å’Œ Stringsçš„ hashCode ä»ç„¶æ˜¯ä¸ä¸€æ ·çš„.
+
+```groovy
+assert "one: ${1}".hashCode() != "one: 1".hashCode()
+```
+
+GString å’Œ Strings æ‹¥æœ‰ä¸åŒçš„hashCodeå€¼, åœ¨Mapä¸­åº”è¯¥é¿å…ä½¿ç”¨GStringä½œä¸ºkey, ç‰¹åˆ«çš„,å½“æˆ‘ä»¬æƒ³è¦æ£€ç´¢å€¼çš„ä¹‹ååº”è¯¥ä½¿ç”¨String,è€Œä¸æ˜¯GString.
+```groovy
+def key = "a"
+def m = ["${key}": "letter ${key}"]     (1)
+
+assert m["a"] == null                   (2)
+```
+1. mapä½¿ç”¨ä¸€å¯¹é”®å€¼è¢«åˆ›å»ºäº†å‡ºæ¥,å…¶keyæ˜¯GStringç±»å‹
+2. å½“æˆ‘ä»¬é€šè¿‡ä¸€ä¸ªStringç±»å‹çš„keyè¿›è¡Œæ£€ç´¢å€¼çš„æ—¶å€™,æˆ‘ä»¬ä¼šå¾—åˆ°ä¸€ä¸ªnullçš„ç»“æœ, äº§ç”Ÿè¿™æ ·çš„ç°è±¡æ­£æ˜¯ç”±äºStringå’ŒGStringæ‹¥æœ‰ä¸åŒçš„hashCode
+
+## Triple double quoted string
+
+ä¸‰é‡åŒå¼•å·å­—ç¬¦ä¸²å…¶ä½¿ç”¨å’ŒåŒå¼•å·å­—ç¬¦ä¸²åŠå…¶ç›¸åƒ, ä½†ä¸åŒå¼•å·å­—ç¬¦ä¸²ä¸åŒçš„ä¸€ç‚¹æ˜¯ï¼šå®ƒä»¬æ˜¯å¯ä»¥æ¢è¡Œçš„(åƒä¸‰é‡å•å¼•å·å­—ç¬¦ä¸²é‚£æ ·)
+```groovy
+def name = 'Groovy'
+def template = """
+    Dear Mr ${name},
+
+    You're the winner of the lottery!
+
+    Yours sincerly,
+
+    Dave
+"""
+
+assert template.toString().contains('Groovy')
+```
+
+åœ¨ä¸‰é‡åŒå¼•å·å­—ç¬¦ä¸²ä¸­,ä¸ç®¡æ˜¯åŒå¼•å·è¿˜æ˜¯å•å¼•å·éƒ½ä¸éœ€è¦escaped
+
+## Slashy string
+é™¤äº†å¼•å·å­—ç¬¦ä¸², Groovyè¿˜æä¾›äº†slashyå­—ç¬¦ä¸²(ä½¿ç”¨/ä½œä¸ºåˆ†éš”ç¬¦). Slashyå­—ç¬¦ä¸²å¯¹å®šä¹‰æ­£åˆ™è¡¨è¾¾å¼å’Œæ­£åˆ™æ¨¡å¼æ˜¯éå¸¸æœ‰ç”¨çš„.
+
+```groovy
+def fooPattern = /.*foo.*/
+assert fooPattern == '.*foo.*'
+```
+
+åªæœ‰åœ¨`/ slashes`ä¸­éœ€è¦ä½¿ç”¨\ æ¥escaped
+```groovy
+def escapeSlash = /The character \/ is a forward slash/
+assert escapeSlash == 'The character / is a forward slash'
+```
+
+Slashyå­—ç¬¦ä¸²ä¹Ÿå¯ä»¥æ˜¯å¤šè¡Œçš„
+```groovy
+def multilineSlashy = /one
+    two
+    three/
+
+assert multilineSlashy.contains('\n')
+```
+
+Slashyå­—ç¬¦ä¸²ä¹Ÿå¯ä»¥æ’å€¼å½¢å¼å‡ºç°(åƒGStringä¸€æ ·)
+```groovy
+def color = 'blue'
+def interpolatedSlashy = /a ${color} car/
+
+assert interpolatedSlashy == 'a blue car'
+```
+
+ä¸‹é¢æœ‰ä¸€äº›å¸¸è¯†æ–¹é¢çš„ä¸œè¥¿éœ€è¦ä½ çŸ¥é“ï¼š
+`//`ä¸ä¼šè¢«è§£é‡Šä¸ºç©ºSlashyå­—ç¬¦ä¸²,è¿™ä»£è¡¨ç€è¡Œæ³¨é‡Š.
+
+```groovy
+assert '' == //
+```
+
+## Dollar slashy string
+
+Dollar slashyå­—ç¬¦ä¸² é€šè¿‡`$/``/$` æ¥å®ç°å¤šè¡ŒGString. ç¾å…ƒç¬¦ä½œä¸ºè½¬ä¹‰å­—ç¬¦, è€Œä¸”å®ƒè¿˜èƒ½è½¬ä¹‰å¦ä¸€ä¸ªç¾å…ƒç¬¦å·, æˆ–è€…ä¸€ä¸ª forward slash. é™¤äº†è¦å®ç°åƒGStringå ä½ç¬¦å’Œé—­åŒ…ç¾å…ƒç¬¦slashyçš„å¼€å¤´ç¾å…ƒç¬¦ä¹‹å¤–, ç¾å…ƒç¬¦å’Œforward slasheséƒ½ä¸éœ€è¦è½¬ä¹‰
+```groovy
+def name = "Guillaume"
+def date = "April, 1st"
+
+def dollarSlashy = $/
+    Hello $name,
+    today we're ${date}.
+
+    $ dollar sign
+    $$ escaped dollar sign
+    \ backslash
+    / forward slash
+    $/ escaped forward slash
+    $/$ escaped dollar slashy string delimiter
+/$
+
+assert [
+    'Guillaume',
+    'April, 1st',
+    '$ dollar sign',
+    '$ escaped dollar sign',
+    '\\ backslash',
+    '/ forward slash',
+        '$/ escaped forward slash',
+        '/$ escaped dollar slashy string delimiter'
+
+        ].each { dollarSlashy.contains(it) }
+```
+
+## Characters
+
+ä¸åƒjava, Groovyé‡Œæ²¡æœ‰æ˜¾å¼çš„å­—ç¬¦å­—é¢é‡. å¯ä»¥é€šè¿‡ä¸‹é¢ä¸‰ç§æ–¹å¼,æ˜¾å¼åœ°ç”ŸæˆGroovy å­—ç¬¦å˜é‡
+```groovy
+char c1 = 'A' (1)
+assert c1 instanceof Character
+
+def c2 = 'B' as char (2)
+assert c2 instanceof Character
+
+def c3 = (char)'C' (3)
+assert c3 instanceof Character
+```
+1. é€šè¿‡æŒ‡å®šcharç±»å‹æ¥æ˜¾å¼åœ°å£°æ˜ä¸€ä¸ªcharacterå˜é‡
+2. é€šè¿‡æ“ä½œç¬¦å¼ºåˆ¶è½¬æ¢ç±»å‹
+3. é€šè¿‡å¼ºåˆ¶è½¬æ¢æˆæŒ‡å®šç±»å‹
+
+# Numbers
+
+Groovyæ”¯æŒå¤šç§ä¸åŒçš„æ•´æ•°å­—é¢é‡å’Œå°æ•°å­—é¢é‡ (é€šè¿‡ä¾é Javaæ•°å­—ç±»å‹å®ç°)
+
+## Integral literals
+
+The integral literal types are the same as in Java:
+
+è¯ä¹¦ç±»å‹å˜é‡å’ŒJavaé‡Œçš„ä¸€æ ·
+
+* byte
+* char
+* short
+* int
+* long
+* java.lang.BigInteger
+
+You can create integral numbers of those types with the following declarations:
+
+å¯ä»¥é€šè¿‡ä»¥ä¸‹å£°æ˜æ–¹å¼åˆ›å»ºæ•´æ•°ç±»å‹å˜é‡
+```groovy
+// primitive types
+byte  b = 1
+char  c = 2
+short s = 3
+int   i = 4
+long  l = 5
+
+// infinite precision
+BigInteger bi =  6
+```
+å¦‚æœä½¿ç”¨`def`å…³é”®å­—, æ•´å‹ç±»å‹ä¼šå‘ç”Ÿæ”¹å˜ï¼šå®ƒä¼šè‡ªåŠ¨é€‚é…æˆèƒ½å¤Ÿå­˜å‚¨numberç±»å‹çš„ç±»å‹
+```groovy
+def a = 1
+assert a instanceof Integer
+
+// Integer.MAX_VALUE
+def b = 2147483647
+assert b instanceof Integer
+
+// Integer.MAX_VALUE + 1
+def c = 2147483648
+assert c instanceof Long
+
+// Long.MAX_VALUE
+def d = 9223372036854775807
+assert d instanceof Long
+
+// Long.MAX_VALUE + 1
+def e = 9223372036854775808
+assert e instanceof BigInteger
+```
+As well as for negative numbers:
+```groovy
+def na = -1
+assert na instanceof Integer
+
+// Integer.MIN_VALUE
+def nb = -2147483648
+assert nb instanceof Integer
+
+// Integer.MIN_VALUE - 1
+def nc = -2147483649
+assert nc instanceof Long
+
+// Long.MIN_VALUE
+def nd = -9223372036854775808
+assert nd instanceof Long
+
+// Long.MIN_VALUE - 1
+def ne = -9223372036854775809
+assert ne instanceof BigInteger
+```
+
+### Alternative non-base 10 representations
+
+#### Binary literal
+
+åœ¨Java6ä»¥å‰å’ŒGroovyä¸­,numberç±»å‹å¯ä»¥æ˜¯å°æ•°, 8è¿›åˆ¶å’Œ16è¿›åˆ¶. ä½†æ˜¯åœ¨Java7å’ŒGroovy2ä¸­,å¯ä»¥ä½¿ç”¨0bå‰ç¼€è¡¨ç¤ºäºŒè¿›åˆ¶æ•°æ®.
+```groovy
+int xInt = 0b10101111
+assert xInt == 175
+
+short xShort = 0b11001001
+assert xShort == 201 as short
+
+byte xByte = 0b11
+assert xByte == 3 as byte
+
+long xLong = 0b101101101101
+assert xLong == 2925l
+
+BigInteger xBigInteger = 0b111100100001
+assert xBigInteger == 3873g
+
+int xNegativeInt = -0b10101111
+assert xNegativeInt == -175
+```
+#### Octal literal
+
+8è¿›åˆ¶çš„ç”µè¯,åªéœ€è¦å¼€å¤´æ˜¯0åè·Ÿè¦è¡¨ç¤ºçš„8è¿›åˆ¶æ•°å³å¯.
+```groovy
+int xInt = 077
+assert xInt == 63
+
+short xShort = 011
+assert xShort == 9 as short
+
+byte xByte = 032
+assert xByte == 26 as byte
+
+long xLong = 0246
+assert xLong == 166l
+
+BigInteger xBigInteger = 01111
+assert xBigInteger == 585g
+
+int xNegativeInt = -077
+assert xNegativeInt == -63
+```
+#### Hexadecimal literal
+
+Hexadecimal numbers are specified in the typical format of 0x followed by hex digits.
+
+16è¿›åˆ¶çš„ç”µè¯,åªéœ€è¦å¼€å¤´æ˜¯0xåè·Ÿè¦è¡¨ç¤ºçš„16è¿›åˆ¶æ•°å³å¯.
+```groovy
+
+int xInt = 0x77
+assert xInt == 119
+
+short xShort = 0xaa
+assert xShort == 170 as short
+
+byte xByte = 0x3a
+assert xByte == 58 as byte
+
+long xLong = 0xffff
+assert xLong == 65535l
+
+BigInteger xBigInteger = 0xaaaa
+assert xBigInteger == 43690g
+
+Double xDouble = new Double('0x1.0p0')
+assert xDouble == 1.0d
+
+int xNegativeInt = -0x77
+assert xNegativeInt == -119
+```
+
+## Decimal literals
+
+å°æ•°å­—é¢é‡å’Œåœ¨java é‡Œä¸€æ ·
+* float
+* double
+* java.lang.BigDecimal
+
+å¯ä»¥é€šè¿‡ä¸‹é¢çš„æ–¹å¼åˆ›å»ºå°æ•°ç±»å‹çš„number
+```groovy
+// primitive types
+float  f = 1.234
+double d = 2.345
+
+// infinite precision
+BigDecimal bd =  3.456
+```
+Decimals can use exponents, with the e or E exponent letter, followed by an optional sign, and a integral number representing the exponent:
+
+
+```groovy
+assert 1e3  ==  1_000.0
+assert 2E4  == 20_000.0
+assert 3e+1 ==     30.0
+assert 4E-2 ==      0.04
+assert 5e-1 ==      0.5
+```
+Conveniently for exact decimal number calculations, Groovy choses java.lang.BigDecimal as its decimal number type. In addition, both float and double are supported, but require an explicit type declaration, type coercion or suffix. Even if BigDecimal is the default for decimal numbers, such literals are accepted in methods or closures taking float or double as parameter types.
+
+Decimal numbers canâ€™t be represented using a binary, octal or hexadecimal representation.
+
+
+## Underscore in literals
+
+When writing long literal numbers, itâ€™s harder on the eye to figure out how some numbers are grouped together, for example with groups of thousands, of words, etc. By allowing you to place underscore in number literals, itâ€™s easier to spot those groups:
+
+
+```groovy
+long creditCardNumber = 1234_5678_9012_3456L
+long socialSecurityNumbers = 999_99_9999L
+double monetaryAmount = 12_345_132.12
+long hexBytes = 0xFF_EC_DE_5E
+long hexWords = 0xFFEC_DE5E
+long maxLong = 0x7fff_ffff_ffff_ffffL
+long alsoMaxLong = 9_223_372_036_854_775_807L
+long bytes = 0b11010010_01101001_10010100_10010010
+```
+
+## Number type suffixes
+
+æˆ‘ä»¬å¯ä»¥é€šè¿‡æ·»åŠ åç¼€çš„æ–¹å¼å¼ºåˆ¶æŒ‡å®šä¸€ä¸ªæ•°å­—çš„ç±»å‹(åŒ…å«äºŒè¿›åˆ¶,å…«è¿›åˆ¶å’Œåå…­è¿›åˆ¶)
+```java
+Type			Suffix
+BigInteger		G or g
+Long			L or l
+Integer			I or i
+BigDecimal		G or g
+Double			D or d
+Float			F or f
+```
+```groovy
+assert 42I == new Integer('42')
+assert 42i == new Integer('42') // lowercase i more readable
+assert 123L == new Long("123") // uppercase L more readable
+assert 2147483648 == new Long('2147483648') // Long type used, value too large for an Integer
+assert 456G == new BigInteger('456')
+assert 456g == new BigInteger('456')
+assert 123.45 == new BigDecimal('123.45') // default BigDecimal type used
+assert 1.200065D == new Double('1.200065')
+assert 1.234F == new Float('1.234')
+assert 1.23E23D == new Double('1.23E23')
+assert 0b1111L.class == Long // binary
+assert 0xFFi.class == Integer // hexadecimal
+assert 034G.class == BigInteger // octal
+```
+## Math operations
+
+å°½ç®¡æ¥ä¸‹æ¥æˆ‘ä»¬è¿˜è¦è¯¦ç»†è®¨è®ºæ“ä½œç¬¦, ä½†æ˜¯é‰´äºæ•°å­¦æ“ä½œç¬¦çš„é‡è¦æ€§, ç°åœ¨æˆ‘ä»¬è¿˜æ˜¯è¦å…ˆè®¨è®ºå…¶è¡Œä¸ºå’Œè¿”å›ç±»å‹
+
+* byte, char, short å’Œ int ä¹‹é—´çš„äºŒè¿›åˆ¶è®¡ç®—è¿”å›çš„æ˜¯intç±»å‹
+* byte, char, short å’Œ int ä¹‹é—´çš„äºŒè¿›åˆ¶è®¡ç®—ä¸­æ¶‰åŠåˆ°longçš„è¯, é‚£ä¹ˆè¿”å›çš„å°±æ˜¯longç±»å‹
+* BigInteger ä¸ä»»ä½•æ•´æ•°ç±»å‹çš„äºŒè¿›åˆ¶è®¡ç®— è¿”å›çš„ç»“æœéƒ½æ˜¯BigIntegerç±»å‹
+* float, double å’Œ BigDecimal ä¹‹é—´çš„äºŒè¿›åˆ¶è®¡ç®—è¿”å›çš„ç»“æœéƒ½æ˜¯doubleç±»å‹
+* ä¿©ä¸ªBigDecimalä¹‹é—´çš„äºŒè¿›åˆ¶è¿ç®—è¿”å›çš„éƒ½æ˜¯BigDecimalç±»å‹.
+
+The following table summarizes those rules:
+```groovy
+
+```
+
+ç”±äºGroovyæä¾›äº†æ“ä½œç¬¦é‡è½½åŠŸèƒ½, BigIntegerå’ŒBigDecimalä¹‹é—´çš„ç®—æœ¯è¿ç®—ä¹Ÿå¾—ä»¥å®ç°, ä½†æ˜¯åœ¨Javaä¸­éœ€è¦è°ƒç”¨ä¸€äº›æ–¹æ³•æ‰èƒ½è®¡ç®—è¿™äº›ä¸åŒç±»å‹çš„æ•°å­—.
+
+### The case of the division operator
+
+The division operators / (and /= for division and assignment) produce a double result if either operand is a float or double, and a BigDecimal result otherwise (when both operands are any combination of an integral type short, char, byte, int, long, BigInteger or BigDecimal).
+
+BigDecimal division is performed with the divide() method if the division is exact (ie. yielding a result that can be represented within the bounds of the same precision and scale), or using a MathContext with a precision of the maximum of the two operands' precision plus an extra precision of 10, and a scale of the maximum of 10 and the maximum of the operands' scale.
+
+For integer division like in Java, you should use the intdiv() method, as Groovy doesnâ€™t provide a dedicated integer division operator symbol.
+
+é™¤æ³•æ“ä½œç¬¦`/`(å’Œ`/=`)ä¼šå¾—åˆ°ä¸€ä¸ªdoubleç±»å‹çš„ç»“æœ,
+
+### The case of the power operator
+
+Groovy é‡Œæœ‰ä¸€ç§å¼ºå¤§çš„æ“ä½œç¬¦`**`, è¿™ä¸ªæ“ä½œç¬¦å¸¦æœ‰baseå’Œexponentä¿©ä¸ªå‚æ•°. è¿™ä¸ªæ“ä½œç¬¦çš„ç»“æœä¾èµ–äºå®ƒçš„æ“ä½œæ•°å’Œæ“ä½œç»“æœ.Groovyä½¿ç”¨ä¸‹é¢çš„è§„åˆ™æ¥å†³å®šè¯¥æ“ä½œç¬¦çš„è¿”å›ç±»å‹
+
+#### å¦‚æœexponentä¸ºå°æ•°ç±»å‹
+```java
+1. å¦‚æœç»“æœèƒ½è¡¨ç¤ºä¸ºIntegerç±»å‹,é‚£å°±è¿”å›Integerç±»å‹
+2. å¦åˆ™å¦‚æœç»“æœèƒ½è¡¨ç¤ºä¸ºLongç±»å‹,é‚£å°±è¿”å›Longç±»å‹
+3. å¦åˆ™çš„è¯å°±è¿”å›Double
+```
+
+#### å¦‚æœexponentä¸ºæ•´æ•°ç±»å‹
+```
+1. å¦‚æœexponentè´Ÿæ•°è´Ÿæ•°, é‚£å°±è¿”å›Integer, Long æˆ–è€…Double,
+2. å¦‚æœexponentæ˜¯æ­£æ•°æˆ–è€…0, é‚£å°±è¦æ ¹æ®baseæ¥åˆ¤æ–­äº†
+	A. å¦‚æœbaseæ˜¯ BigDecimal, é‚£å°±è¿”å›BigDecimalç±»å‹
+	B. å¦‚æœbaseæ˜¯ BigInteger, é‚£å°±è¿”å›BigIntegerç±»å‹
+	C. å¦‚æœbaseæ˜¯ Integer, é‚£å°±è¿”å›Integerç±»å‹, å¦‚æœè¿”å›çš„å€¼è¶…è¿‡IntegerèŒƒå›´çš„è¯,å°±è¿”å›BigInteger
+	D. å¦‚æœbaseæ˜¯ Long, é‚£å°±è¿”å›Longç±»å‹, å¦‚æœè¿”å›çš„å€¼è¶…è¿‡LongèŒƒå›´çš„è¯,å°±è¿”å›BigInteger
+```
+
+#### ç¤ºä¾‹
+```groovy
+// base and exponent are ints and the result can be represented by an Integer
+assert    2    **   3    instanceof Integer    //  8
+assert   10    **   9    instanceof Integer    //  1_000_000_000
+
+// the base is a long, so fit the result in a Long
+// (although it could have fit in an Integer)
+assert    5L   **   2    instanceof Long       //  25
+
+// the result can't be represented as an Integer or Long, so return a BigInteger
+assert  100    **  10    instanceof BigInteger //  10e20
+assert 1234    ** 123    instanceof BigInteger //  170515806212727042875...
+
+// the base is a BigDecimal and the exponent a negative int
+// but the result can be represented as an Integer
+assert    0.5  **  -2    instanceof Integer    //  4
+
+// the base is an int, and the exponent a negative float
+// but again, the result can be represented as an Integer
+assert    1    **  -0.3f instanceof Integer    //  1
+
+// the base is an int, and the exponent a negative int
+// but the result will be calculated as a Double
+// (both base and exponent are actually converted to doubles)
+assert   10    **  -1    instanceof Double     //  0.1
+
+// the base is a BigDecimal, and the exponent is an int, so return a BigDecimal
+assert    1.2  **  10    instanceof BigDecimal //  6.1917364224
+
+// the base is a float or double, and the exponent is an int
+// but the result can only be represented as a Double value
+assert    3.4f **   5    instanceof Double     //  454.35430372146965
+assert    5.6d **   2    instanceof Double     //  31.359999999999996
+
+// the exponent is a decimal value
+// and the result can only be represented as a Double value
+assert    7.8  **   1.9  instanceof Double     //  49.542708423868476
+assert    2    **   0.1f instanceof Double     //  1.0717734636432956
+```
+
+
+# Booleans
+Booleanæ˜¯ä¸€ç§ç‰¹æ®Šçš„æ•°æ®ç±»å‹, ä»–ä»¬çš„å€¼åªæœ‰ä¿©ç§æƒ…å†µï¼štrue å’Œ false.
+```groovy
+def myBooleanVariable = true
+boolean untypedBooleanVar = false
+booleanField = true
+```
+true and false are the only two primitive boolean values. But more complex boolean expressions can be represented using logical operators.
+
+In addition, Groovy has special rules (often referred to as Groovy Truth) for coercing non-boolean objects to a boolean value.
+
+
 # IO
-## 1.1. Reading files
-×÷ÎªµÚÒ»¸öÀı×Ó,ÈÃÎÒÃÇ¿´Ò»ÏÂ,ÈçºÎÊä³öÒ»¸öÎÄ±¾ÎÄ¼şÀïµÄËùÓĞĞĞ
+## è¯»æ–‡ä»¶
+ä½œä¸ºç¬¬ä¸€ä¸ªä¾‹å­,è®©æˆ‘ä»¬çœ‹ä¸€ä¸‹,å¦‚ä½•è¾“å‡ºä¸€ä¸ªæ–‡æœ¬æ–‡ä»¶é‡Œçš„æ‰€æœ‰è¡Œ
 ```groovy
 new File(baseDir, 'haiku.txt').eachLine { line ->
     println line
 }
 ```
 
-`eachLine`·½·¨ÊÇGroovy×Ô¶¯Ìí¼Óµ½File ClassµÄ,Í¬Ê±ÄØ,Groovy»¹Ìí¼ÓÁËºÜ¶à±äÁ¿,ÀıÈç,ÄãÈç¹ûÏëÒªÖªµÀÃ¿Ò»ĞĞµÄĞĞºÅ,Äã¿ÉÒÔÊ¹ÓÃÕâ¸ö±äÁ¿:
+`eachLine`æ–¹æ³•æ˜¯Groovyè‡ªåŠ¨æ·»åŠ åˆ°File Classçš„,åŒæ—¶å‘¢,Groovyè¿˜æ·»åŠ äº†å¾ˆå¤šå˜é‡,ä¾‹å¦‚,ä½ å¦‚æœæƒ³è¦çŸ¥é“æ¯ä¸€è¡Œçš„è¡Œå·,ä½ å¯ä»¥ä½¿ç”¨è¿™ä¸ªå˜é‡:
 ```groovy
 new File(baseDir, 'haiku.txt').eachLine { line, nb ->
     println "Line $nb: $line"
 }
 ```
-ÎŞÂÛÓÉÓÚÊ²Ã´Ô­Òò, µ±`eachLine`ÖĞÅ×³öÁËÒì³£,Õâ¸ö·½·¨¶¼»áÈ·±£,×ÊÔ´ÒÑ¾­±»ÕıÈ·µÄ¹Ø±ÕµôÁË. Õâ¶ÔËùÓĞGroovy×Ô¶¯Ìí¼ÓµÄ¹ØÓÚI/O×ÊÔ´µÄ·½·¨¶¼ÓĞĞ§.
+æ— è®ºç”±äºä»€ä¹ˆåŸå› , å½“`eachLine`ä¸­æŠ›å‡ºäº†å¼‚å¸¸,è¿™ä¸ªæ–¹æ³•éƒ½ä¼šç¡®ä¿,èµ„æºå·²ç»è¢«æ­£ç¡®çš„å…³é—­æ‰äº†. è¿™å¯¹æ‰€æœ‰Groovyè‡ªåŠ¨æ·»åŠ çš„å…³äºI/Oèµ„æºçš„æ–¹æ³•éƒ½æœ‰æ•ˆ.
 
-ÀıÈç, Ä³ÖÖÇé¿öÄãÊ¹ÓÃÁË`Reader`, µ«ÊÇÄã»¹ÏëÈÃGroovy×Ô¼º¹ÜÀí×ÊÔ´. ÏÂÃæÕâ¸öÀı×Ó, ¼´Ê¹Å×³öÁËexception, readerÈÔÈ»»á±»×Ô¶¯¹Ø±Õ.
+ä¾‹å¦‚, æŸç§æƒ…å†µä½ ä½¿ç”¨äº†`Reader`, ä½†æ˜¯ä½ è¿˜æƒ³è®©Groovyè‡ªå·±ç®¡ç†èµ„æº. ä¸‹é¢è¿™ä¸ªä¾‹å­, å³ä½¿æŠ›å‡ºäº†exception, readerä»ç„¶ä¼šè¢«è‡ªåŠ¨å…³é—­.
 ```groovy
 def count = 0, MAXSIZE = 3
 new File(baseDir,"haiku.txt").withReader { reader ->
@@ -29,75 +807,75 @@ new File(baseDir,"haiku.txt").withReader { reader ->
 }
 ```
 
-Èç¹ûÄãÏëÒª°ÑÎÄ±¾ÎÄ¼şÖĞÃ¿Ò»ĞĞ¶¼·Å½øÒ»¸ölistÖĞ, Äã¿ÉÒÔÕâÃ´×ö:
+å¦‚æœä½ æƒ³è¦æŠŠæ–‡æœ¬æ–‡ä»¶ä¸­æ¯ä¸€è¡Œéƒ½æ”¾è¿›ä¸€ä¸ªlistä¸­, ä½ å¯ä»¥è¿™ä¹ˆåš:
 ```groovy
 def list = new File(baseDir, 'haiku.txt').collect {it}
 ```
 
-»òÕßÄãÏëÀûÓÃ²Ù×÷·û½«ÎÄ¼şÖĞÃ¿Ò»ĞĞ¶¼Ìí¼Óµ½Ò»¸öÊı×éÖĞ:
+æˆ–è€…ä½ æƒ³åˆ©ç”¨æ“ä½œç¬¦å°†æ–‡ä»¶ä¸­æ¯ä¸€è¡Œéƒ½æ·»åŠ åˆ°ä¸€ä¸ªæ•°ç»„ä¸­:
 ```groovy
 def array = new File(baseDir, 'haiku.txt') as String[]
 ```
 
-ÏÂÃæÕâ¸öÊ¾Àı,·Ç³£¼òµ¥µÄÊµÏÖÁË,½«Ò»¸öÎÄ¼ş´æ½øÒ»¸ö×Ö½ÚÊı×éÀï:
+ä¸‹é¢è¿™ä¸ªç¤ºä¾‹,éå¸¸ç®€å•çš„å®ç°äº†,å°†ä¸€ä¸ªæ–‡ä»¶å­˜è¿›ä¸€ä¸ªå­—èŠ‚æ•°ç»„é‡Œ:
 ```groovy
 byte[] contents = file.bytes
 ```
 
-ÈçÏÂÀı,ÎÒÃÇÇáËÉµØ»ñµÃÁËÒ»¸öÊäÈëÁ÷.
+å¦‚ä¸‹ä¾‹,æˆ‘ä»¬è½»æ¾åœ°è·å¾—äº†ä¸€ä¸ªè¾“å…¥æµ.
 ```groovy
 def is = new File(baseDir,'haiku.txt').newInputStream()
 // do something ...
 is.close()
 ```
 
-ÉÏ¸öÀı×ÓÖĞÎÒÃÇ»ñµÃÁËÒ»¸öÊäÈëÁ÷,µ«ÊÇ×îºóÎÒÃÇ²»µÃ²»ÊÖ¶¯¹Ø±ÕËü, GroovyÌá¹©ÁíÒ»¸ö·½·¨`withInputStream`, Õâ¸ö·½·¨¿ÉÒÔ°ïÎÒÃÇ×Ô¶¯µÄ¹Ø±ÕÊäÈëÁ÷.
+ä¸Šä¸ªä¾‹å­ä¸­æˆ‘ä»¬è·å¾—äº†ä¸€ä¸ªè¾“å…¥æµ,ä½†æ˜¯æœ€åæˆ‘ä»¬ä¸å¾—ä¸æ‰‹åŠ¨å…³é—­å®ƒ, Groovyæä¾›å¦ä¸€ä¸ªæ–¹æ³•`withInputStream`, è¿™ä¸ªæ–¹æ³•å¯ä»¥å¸®æˆ‘ä»¬è‡ªåŠ¨çš„å…³é—­è¾“å…¥æµ.
 ```groovy
 new File(baseDir,'haiku.txt').withInputStream { stream ->
     // do something ...
 }
 ```
 
-## 1.2. Writing files
+## å†™æ–‡ä»¶
 
-ÓĞÊ±ºò,ÄãĞèÒªµÄÒ²ĞíÖ»ÊÇĞ´ÎÄ¼ş,ÏÂÃæÕ¹Ê¾ÁË,ÈçºÎÔÚGroovyÖĞĞ´ÎÄ¼ş
+æœ‰æ—¶å€™,ä½ éœ€è¦çš„ä¹Ÿè®¸åªæ˜¯å†™æ–‡ä»¶,ä¸‹é¢å±•ç¤ºäº†,å¦‚ä½•åœ¨Groovyä¸­å†™æ–‡ä»¶
 ```groovy
 new File(baseDir,'haiku.txt').withWriter('utf-8') { writer ->
     writer.writeLine 'Into the ancient pond'
     writer.writeLine 'A frog jumps'
-    writer.writeLine 'Water¡¯s sound!'
+    writer.writeLine 'Waterâ€™s sound!'
 }
 ```
 
-µ«¶ÔÓÚÒ»¸öÒªÇóºÜ¼òµ¥µÄĞèÇóÀ´Ëµ,ÎÒÃÇ¿ÉÒÔÊ¹ÓÃ`<<`ÏòÎÄ¼şÖĞĞ´
+ä½†å¯¹äºä¸€ä¸ªè¦æ±‚å¾ˆç®€å•çš„éœ€æ±‚æ¥è¯´,æˆ‘ä»¬å¯ä»¥ä½¿ç”¨`<<`å‘æ–‡ä»¶ä¸­å†™
 ```groovy
 new File(baseDir,'haiku.txt') << '''Into the ancient pond
 A frog jumps
-Water¡¯s sound!'''
+Waterâ€™s sound!'''
 ```
 
-µ±È»²»ÊÇÃ¿Ò»´ÎÎÒÃÇ¶¼ÊÇÏòÎÄ¼şÖĞÊä³öÎÄ±¾,ÏÂÃæµÄÀı×ÓÑİÊ¾ÁË,ÎÒÃÇÈçºÎÏòÒ»¸öÎÄ¼şÖĞĞ´Èë×Ö½Ú:
+å½“ç„¶ä¸æ˜¯æ¯ä¸€æ¬¡æˆ‘ä»¬éƒ½æ˜¯å‘æ–‡ä»¶ä¸­è¾“å‡ºæ–‡æœ¬,ä¸‹é¢çš„ä¾‹å­æ¼”ç¤ºäº†,æˆ‘ä»¬å¦‚ä½•å‘ä¸€ä¸ªæ–‡ä»¶ä¸­å†™å…¥å­—èŠ‚:
 ```groovy
 file.bytes = [66,22,11]
 ```
 
-µ±È»,ÄãÒ²¿ÉÒÔÖ±½Ó´ò¿ªÒ»¸öÊä³öÁ÷,ÏÂÃæµÄÀı×ÓÑİÊ¾ÁËÈçºÎ¿ªÆôÒ»¸öÊä³öÁ÷.
+å½“ç„¶,ä½ ä¹Ÿå¯ä»¥ç›´æ¥æ‰“å¼€ä¸€ä¸ªè¾“å‡ºæµ,ä¸‹é¢çš„ä¾‹å­æ¼”ç¤ºäº†å¦‚ä½•å¼€å¯ä¸€ä¸ªè¾“å‡ºæµ.
 ```groovy
 def os = new File(baseDir,'data.bin').newOutputStream()
 // do something ...
 os.close()
 ```
 
-Í¬`newInputStream`Ò»Ñù,`newOutputStream`Í¬ÑùĞèÒªÊÖ¶¯¹Ø±Õ, ok,Äã´ó¸ÅÏëµ½ÁË`withOutputStream`:
+åŒ`newInputStream`ä¸€æ ·,`newOutputStream`åŒæ ·éœ€è¦æ‰‹åŠ¨å…³é—­, ok,ä½ å¤§æ¦‚æƒ³åˆ°äº†`withOutputStream`:
 ```groovy
 new File(baseDir,'data.bin').withOutputStream { stream ->
     // do something ...
 }
 ```
 
-## 1.3. Traversing file trees
+## éå†æ–‡ä»¶
 
-ÔÚ½Å±¾ÖĞ, ÓĞ¸öºÜ³£ÓÃµÄĞèÇó¾ÍÊÇ,±éÀúÒ»¸öÄ¿Â¼,È»ºóÕÒµ½Ò»¸öÎÄ¼ş,½øĞĞÄ³Ğ©²Ù×÷. GroovyÌá¹©ÁËºÜ¶à·½·¨,À´´ïµ½Õâ¸öĞ§¹û. ÏÂÃæµÄÀı×ÓÑİÊ¾ÁË½«Ò»¸öÄ¿Â¼ÏÂµÄËùÓĞÎÄ¼ş¶¼Ö´ĞĞÄ³¸ö²Ù×÷:
+åœ¨è„šæœ¬ä¸­, æœ‰ä¸ªå¾ˆå¸¸ç”¨çš„éœ€æ±‚å°±æ˜¯,éå†ä¸€ä¸ªç›®å½•,ç„¶åæ‰¾åˆ°ä¸€ä¸ªæ–‡ä»¶,è¿›è¡ŒæŸäº›æ“ä½œ. Groovyæä¾›äº†å¾ˆå¤šæ–¹æ³•,æ¥è¾¾åˆ°è¿™ä¸ªæ•ˆæœ. ä¸‹é¢çš„ä¾‹å­æ¼”ç¤ºäº†å°†ä¸€ä¸ªç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶éƒ½æ‰§è¡ŒæŸä¸ªæ“ä½œ:
 ```groovy
 dir.eachFile { file ->                      (1)
     println file.name
@@ -107,10 +885,10 @@ dir.eachFileMatch(~/.*\.txt/) { file ->     (2)
 }
 ```
 
-1. ÔÚÄ¿Â¼ÏÂµÄÃ¿¸öÎÄ¼şÉÏÖ´ĞĞ±Õ°ü²Ù×÷.
-2. ¸ù¾İÕıÔò±í´ïÊ½ÔÚÄ¿Â¼ÏÂÕÒµ½·ûºÏÌõ¼şµÄÎÄ¼ş,È»ºóÖ´ĞĞ±Õ°ü²Ù×÷.
+1. åœ¨ç›®å½•ä¸‹çš„æ¯ä¸ªæ–‡ä»¶ä¸Šæ‰§è¡Œé—­åŒ…æ“ä½œ.
+2. æ ¹æ®æ­£åˆ™è¡¨è¾¾å¼åœ¨ç›®å½•ä¸‹æ‰¾åˆ°ç¬¦åˆæ¡ä»¶çš„æ–‡ä»¶,ç„¶åæ‰§è¡Œé—­åŒ…æ“ä½œ.
 
-Ò²ĞíÄãÏëÒª±éÀúÄ³¸öÄ¿Â¼ºÍÄ¿Â¼ÀïµÄËùÓĞ×ÓÄ¿Â¼, ÄÇÃ´Äã¿ÉÒÔÊ¹ÓÃ`eachFileRecurse`
+ä¹Ÿè®¸ä½ æƒ³è¦éå†æŸä¸ªç›®å½•å’Œç›®å½•é‡Œçš„æ‰€æœ‰å­ç›®å½•, é‚£ä¹ˆä½ å¯ä»¥ä½¿ç”¨`eachFileRecurse`
 ```groovy
 dir.eachFileRecurse { file ->                      (1)
     println file.name
@@ -120,8 +898,8 @@ dir.eachFileRecurse(FileType.FILES) { file ->      (2)
     println file.name
 }
 ```
-1. ¶ÔÄ¿Â¼ÀïµÄËùÓĞ×ÓÄ¿Â¼½øĞĞµİ¹é, È»ºó¶ÔÕÒµ½µÄÎÄ¼şºÍÄ¿Â¼½øĞĞ±Õ°ü²Ù×÷
-2. ¶ÔÄ¿Â¼Àï½øĞĞµİ¹é²éÕÒ,µ«ÊÇÖ»²éÕÒÎÄ¼ş.
+1. å¯¹ç›®å½•é‡Œçš„æ‰€æœ‰å­ç›®å½•è¿›è¡Œé€’å½’, ç„¶åå¯¹æ‰¾åˆ°çš„æ–‡ä»¶å’Œç›®å½•è¿›è¡Œé—­åŒ…æ“ä½œ
+2. å¯¹ç›®å½•é‡Œè¿›è¡Œé€’å½’æŸ¥æ‰¾,ä½†æ˜¯åªæŸ¥æ‰¾æ–‡ä»¶.
 
 ```groovy
 dir.traverse { file ->
@@ -134,12 +912,12 @@ dir.traverse { file ->
 
 }
 ```
-1. Èç¹ûÕÒµ½µÄÎÄ¼şÊÇÄ¿Â¼,ÇÒËüµÄÃû×ÖÊÇ"dir", ÔòÍ£Ö¹±éÀú
-2.  ´òÓ¡³öÎÄ¼şµÄÃû×Ö,½Ó×Å±éÀú
+1. å¦‚æœæ‰¾åˆ°çš„æ–‡ä»¶æ˜¯ç›®å½•,ä¸”å®ƒçš„åå­—æ˜¯"dir", åˆ™åœæ­¢éå†
+2.  æ‰“å°å‡ºæ–‡ä»¶çš„åå­—,æ¥ç€éå†
 
-## 1.4. Data and objects
+## åºåˆ—åŒ–
 
-ÔÚjavaÖĞ»áÊ¹ÓÃ`java.io.DataOutputStream` ĞòÁĞ»¯Êı¾İÒ²²»º±¼û. Groovy¶ÔÕâ¸öĞèÇóÒ²×öÁË·Ç³£¼òµ¥µÄÊµÏÖ, ÏÂÃæµÄÀı×ÓÑİÊ¾ÁËÈçºÎĞòÁĞ»¯ºÍ·´ĞòÁĞ»¯:
+åœ¨javaä¸­ä¼šä½¿ç”¨`java.io.DataOutputStream` åºåˆ—åŒ–æ•°æ®ä¹Ÿä¸ç½•è§. Groovyå¯¹è¿™ä¸ªéœ€æ±‚ä¹Ÿåšäº†éå¸¸ç®€å•çš„å®ç°, ä¸‹é¢çš„ä¾‹å­æ¼”ç¤ºäº†å¦‚ä½•åºåˆ—åŒ–å’Œååºåˆ—åŒ–:
 ```groovy
 boolean b = true
 String message = 'Hello from Groovy'
@@ -156,7 +934,7 @@ file.withDataInputStream { input ->
 }
 ```
 
-Í¬Ñù,Èç¹ûÕâ¸öÊı¾İÊµÀıÁËĞòÁĞ»¯½Ó¿Ú`Serializable`, Äã¿ÉÒÔÊ¹ÓÃ object output stream½«Õû¸öÊı¾İĞòÁĞ»¯µ½ÎÄ¼ş:
+åŒæ ·,å¦‚æœè¿™ä¸ªæ•°æ®å®ä¾‹äº†åºåˆ—åŒ–æ¥å£`Serializable`, ä½ å¯ä»¥ä½¿ç”¨ object output streamå°†æ•´ä¸ªæ•°æ®åºåˆ—åŒ–åˆ°æ–‡ä»¶:
 ```groovy
 Person p = new Person(name:'Bob', age:76)
 // Serialize data into a file
@@ -172,21 +950,21 @@ file.withObjectInputStream { input ->
 }
 ```
 
-## 1.5. Executing External Processes
+## æ‰§è¡Œå‘½ä»¤
 
-Ç°ÃæµÄÕÂ½Ú½éÉÜÁËÔÚGroovyÖĞ²Ù×÷files, readers or streams·Ç³£¼òµ¥. È»¶ø, ÏñÏµÍ³¹ÜÀíÔ±»òÕß¿ª·¢Õß,¿ÉÄÜ¸ü¶àµÄÊÇÖ´ĞĞÒ»¸öÏµÍ³ÃüÁî.
+å‰é¢çš„ç« èŠ‚ä»‹ç»äº†åœ¨Groovyä¸­æ“ä½œfiles, readers or streamséå¸¸ç®€å•. ç„¶è€Œ, åƒç³»ç»Ÿç®¡ç†å‘˜æˆ–è€…å¼€å‘è€…,å¯èƒ½æ›´å¤šçš„æ˜¯æ‰§è¡Œä¸€ä¸ªç³»ç»Ÿå‘½ä»¤.
 
-GroovyÍ¬ÑùÌá¹©ÁË·Ç³£¼òµ¥µÄ·½Ê½Ö´ĞĞÃüÁîĞĞÃüÁî. Ö»ĞèÒª¶¨ÒåÒ»¸öÃüÁîµÄ×Ö·û´®,È»ºóÖ´ĞĞÕâ¸ö×Ö·û´®µÄ`execute()`. ÔÚÀàUnixÏµÍ³ÖĞ(Èç¹ûÔÚwindowsÖĞÒ²°²×°ÁËÀàUnixÃüÁîĞĞ¹¤¾ßÒ²Ëã),Äã¿ÉÒÔÕâÑùÖ´ĞĞÃüÁî.
+GroovyåŒæ ·æä¾›äº†éå¸¸ç®€å•çš„æ–¹å¼æ‰§è¡Œå‘½ä»¤è¡Œå‘½ä»¤. åªéœ€è¦å®šä¹‰ä¸€ä¸ªå‘½ä»¤çš„å­—ç¬¦ä¸²,ç„¶åæ‰§è¡Œè¿™ä¸ªå­—ç¬¦ä¸²çš„`execute()`. åœ¨ç±»Unixç³»ç»Ÿä¸­(å¦‚æœåœ¨windowsä¸­ä¹Ÿå®‰è£…äº†ç±»Unixå‘½ä»¤è¡Œå·¥å…·ä¹Ÿç®—),ä½ å¯ä»¥è¿™æ ·æ‰§è¡Œå‘½ä»¤.
 ```groovy
 def process = "ls -l".execute()             (1)
 println "Found text ${process.text}"        (2)
 ```
-1. ÔÚÍâ²¿¹ı³Ì(external process)Ö´ĞĞlsÃüÁî
-2. »ñµÃÃüÁîµÄÊä³ö,²¢Êä³ö
+1. åœ¨å¤–éƒ¨è¿‡ç¨‹(external process)æ‰§è¡Œlså‘½ä»¤
+2. è·å¾—å‘½ä»¤çš„è¾“å‡º,å¹¶è¾“å‡º
 
-`execute()`·½·¨·µ»ØÒ»¸ö`java.lang.Process`ÊµÀı, ËæºóÑ¡ÔñÒ»ÖÖÊä³öÁ÷`in/out/err`, Í¬Ê±¼ì²é`exit`Öµ,²é¿´ÊÇ·ñÃüÁîÖ´ĞĞÍê±Ï.
+`execute()`æ–¹æ³•è¿”å›ä¸€ä¸ª`java.lang.Process`å®ä¾‹, éšåé€‰æ‹©ä¸€ç§è¾“å‡ºæµ`in/out/err`, åŒæ—¶æ£€æŸ¥`exit`å€¼,æŸ¥çœ‹æ˜¯å¦å‘½ä»¤æ‰§è¡Œå®Œæ¯•.
 
-ÏÂÃæµÄÀı×ÓÊ¹ÓÃÁËºÍ¸Õ²ÅÄÇ¸öÀı×ÓÒ»ÑùµÄÃüÁî,µ«ÊÇÏÖÔÚÎÒÃÇÃ¿´Î¶¼»á¶Ô»ñµÃµÄ½á¹û½øĞĞĞĞÊä³ö.
+ä¸‹é¢çš„ä¾‹å­ä½¿ç”¨äº†å’Œåˆšæ‰é‚£ä¸ªä¾‹å­ä¸€æ ·çš„å‘½ä»¤,ä½†æ˜¯ç°åœ¨æˆ‘ä»¬æ¯æ¬¡éƒ½ä¼šå¯¹è·å¾—çš„ç»“æœè¿›è¡Œè¡Œè¾“å‡º.
 ```groovy
             def process = "ls -l".execute()             (1)
             process.in.eachLine { line ->               (2)
@@ -257,7 +1035,7 @@ println "Found text ${process.text}"        (2)
 1	executes the ls command in an external process
 2	for each line of the input stream of the process
 3	print the line
-1. ÔÚÍâ²¿½ø³ÌÖĞÖ´ĞĞlsÃüÁî
+1. åœ¨å¤–éƒ¨è¿›ç¨‹ä¸­æ‰§è¡Œlså‘½ä»¤
 2.
 
 It is worth noting that in corresponds to an input stream to the standard output of the command. out will refer to a stream where you can send data to the process (its standard input).
@@ -270,33 +1048,30 @@ def process = "dir".execute()
 println "${process.text}"
 ```
 
-½Ó×ÅÄã»áÊÕµ½Ò»¸öÒì³£`IOException`,Òì³£ĞÅÏ¢Îª`Cannot run program "dir": CreateProcess error=2`,ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÎÄ¼ş.
+æ¥ç€ä½ ä¼šæ”¶åˆ°ä¸€ä¸ªå¼‚å¸¸`IOException`,å¼‚å¸¸ä¿¡æ¯ä¸º`Cannot run program "dir": CreateProcess error=2`,ç³»ç»Ÿæ‰¾ä¸åˆ°æŒ‡å®šçš„æ–‡ä»¶.
 
-ÕâÊÇÒòÎª`dir`ÊÇÄÚ½¨ÓÚ`windows shell(cmd.ext)`, ÏëÒªÊ¹ÓÃÄÇ¸öÃüÁî,ÄãÒªÏñÏÂÃæÕâ¸öÑù²Ù×÷:
+è¿™æ˜¯å› ä¸º`dir`æ˜¯å†…å»ºäº`windows shell(cmd.ext)`, æƒ³è¦ä½¿ç”¨é‚£ä¸ªå‘½ä»¤,ä½ è¦åƒä¸‹é¢è¿™ä¸ªæ ·æ“ä½œ:
 ```groovy
 def process = "cmd /c dir".execute()
 println "${process.text}"
 ```
 
-»¹ÓĞ,ÒòÎªÉÏÊöµÄ¹¦ÄÜÊÇÔÚÄÚ²¿Ê¹ÓÃµÄ`java.lang.Process`, Õâ¸öÀàµÄÒ»Ğ©²»×ãµÄµØ·½,ÎÒÃÇÒ²Òª³ä·Ö¿¼ÂÇ. ÔÚjavadocÖĞ,ÊÇÕâÑùÃèÊöÕâ¸öÀàµÄ:
+è¿˜æœ‰,å› ä¸ºä¸Šè¿°çš„åŠŸèƒ½æ˜¯åœ¨å†…éƒ¨ä½¿ç”¨çš„`java.lang.Process`, è¿™ä¸ªç±»çš„ä¸€äº›ä¸è¶³çš„åœ°æ–¹,æˆ‘ä»¬ä¹Ÿè¦å……åˆ†è€ƒè™‘. åœ¨javadocä¸­,æ˜¯è¿™æ ·æè¿°è¿™ä¸ªç±»çš„:
 
 > Because some native platforms only provide limited buffer size for standard input and output streams, failure to promptly write the input stream or read the output stream of the subprocess may cause the subprocess to block, and even deadlock
 Because of this, Groovy provides some additional helper methods which make stream handling for processes easier.
 
-Here is how to gobble all of the output (including the error stream output) from your process:
-
-ÏÖÔÚÑİÊ¾Ò»ÏÂ,ÈçºÎÊä³ö½ø³ÌÀïËùÓĞµÄÊä³ö(°üÀ¨error stream).
+ç°åœ¨æ¼”ç¤ºä¸€ä¸‹,å¦‚ä½•è¾“å‡ºè¿›ç¨‹é‡Œæ‰€æœ‰çš„è¾“å‡º(åŒ…æ‹¬error stream).
 ```groovy
 def p = "rm -f foo.tmp".execute([], tmpDir)
 p.consumeProcessOutput()
 p.waitFor()
 ```
 
-`consumeProcessOutput`ÈÔÈ»ÓĞºÜ¶à¶Ô`StringBuffer`, `InputStream`, `OutputStream`µÈ·â×°µÄ±äÁ¿, Èç¹ûÏëÒª»ñÈ¡Ò»¸öÍêÕûµÄ·â×°ÁĞ±íµÄ,ÄÇ¿ÉÒÔ²Î¿¼ [GDK API for java.lang.Process](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Process.html)
+`consumeProcessOutput`ä»ç„¶æœ‰å¾ˆå¤šå¯¹`StringBuffer`, `InputStream`, `OutputStream`ç­‰å°è£…çš„å˜é‡, å¦‚æœæƒ³è¦è·å–ä¸€ä¸ªå®Œæ•´çš„å°è£…åˆ—è¡¨çš„,é‚£å¯ä»¥å‚è€ƒ [GDK API for java.lang.Process](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Process.html)
 
-ÁíÍâ, `pipeTo`ÃüÁî ¿ÉÒÔÈÃÒ»¸ö½ø³ÌµÄÊä³öÁ÷Á¬½Óµ½Ò»¸ö½ø³ÌµÄÊäÈëÁ÷Àï. ÈçÏÂÀı:
+å¦å¤–, `pipeTo`å‘½ä»¤ å¯ä»¥è®©ä¸€ä¸ªè¿›ç¨‹çš„è¾“å‡ºæµè¿æ¥åˆ°ä¸€ä¸ªè¿›ç¨‹çš„è¾“å…¥æµé‡Œ. å¦‚ä¸‹ä¾‹:
 
-Pipes in action
 ```groovy
 proc1 = 'ls'.execute()
 proc2 = 'tr -d o'.execute()
@@ -328,14 +1103,85 @@ println "Standard output: $sout"
 println "Standard error: $serr"
 ```
 
-# 2. Working with collections
+# é›†åˆ
 
-Groovy ÓïÑÔ²ãÃæÉÏ¾ÍÖ§³Ö¶àÖÖ¼¯ºÏÀàĞÍ,°üÀ¨list, map, range. ´ó¶àÊıÀàĞÍ¼¯ºÏ¶¼ÊÇ»ùÓÚjavaµÄ¼¯ºÏ¿ò¼Ü,¶øÇÒGroovy development kit¶ÔÕâĞ©¼¯ºÏÄÚÖÃºÜ¶à¿ì½İ·½·¨.
-## 2.1. Lists
+Groovy è¯­è¨€å±‚é¢ä¸Šå°±æ”¯æŒå¤šç§é›†åˆç±»å‹,åŒ…æ‹¬list, map, range. å¤§å¤šæ•°ç±»å‹é›†åˆéƒ½æ˜¯åŸºäºjavaçš„é›†åˆæ¡†æ¶,è€Œä¸”Groovy development kitå¯¹è¿™äº›é›†åˆå†…ç½®å¾ˆå¤šå¿«æ·æ–¹æ³•.
+## Lists
 
-### 2.1.1. List literals
+Groovyä½¿ç”¨äº†ä¸€ç§è¢«`[]`æ‹¬èµ·æ¥,å€¼é€šè¿‡`,`åˆ†å‰²çš„è¯­æ³• å®šä¹‰list. Groovy list é‡‡ç”¨çš„æ˜¯ JDKé‡Œ`java.util.List`çš„å®ç°, å› ä¸ºå®ƒè‡ªèº«å¹¶æ²¡æœ‰å®šä¹‰è‡ªå·±çš„é›†åˆç±».
+Groovy list çš„é»˜è®¤å®ç°æ˜¯`java.util.ArrayList`, åœ¨åé¢æˆ‘ä»¬å¯ä»¥çœ‹åˆ°å…¶ä»–å½¢å¼çš„list
 
-Äã¿ÉÒÔÏñÏÂÃæÕâÑù´´½¨¼¯ºÏ, ×¢Òâ`[]`ÊÇ¿Õ¼¯ºÏ±í´ïÊ½.
+```groovy
+def numbers = [1, 2, 3]         (1)
+
+assert numbers instanceof List  (2)
+assert numbers.size() == 3      (3)
+```
+
+1. æˆ‘ä»¬å®šä¹‰äº†ä¸€ä¸ªNumberç±»å‹çš„List,ç„¶åå°†è¿™ä¸ªliståˆ†é…ç»™ä¸€ä¸ªå˜é‡
+2. åˆ¤æ–­listæ˜¯ Javaâ€™s `java.util.List` interface çš„å®ä¾‹
+3. listçš„å¤§å°å¯ä»¥é€šè¿‡size()æ¥è¿›è¡ŒæŸ¥è¯¢, ä¾‹å­ä¸­ä¹Ÿç»™æˆ‘ä»¬å±•ç¤ºäº†è¿™ä¸ªlistç¡®å®åŒ…å«3ä¸ªå…ƒç´ 
+
+åœ¨ä¸Šé¢çš„listä¸­,æˆ‘ä»¬ä½¿ç”¨çš„æ˜¯åŒç±»å…ƒç´ çš„list, ä½†å…¶å®Groovy listä¸­çš„æ•°æ®ç±»å‹è¿˜å¯ä»¥ä¸ä¸€æ ·ï¼š
+```groovy
+def heterogeneous = [1, "a", true]  (1)
+```
+1. æˆ‘ä»¬å®šä¹‰äº†ä¸€ä¸ªåŒ…å«æœ‰number,string,boolean ä¸‰ä¸ªç±»å‹çš„list
+
+åœ¨ä¸Šé¢æˆ‘ä»¬æåˆ°è¿‡, listå®é™…ä¸Šæ˜¯`java.util.ArrayList`å®ä¾‹, ä½†å…¶å®listè¿˜å¯ä»¥æ˜¯å…¶ä»–ä¸åŒç±»å‹çš„å®ä¾‹, ä¸‹é¢æˆ‘ä»¬é€šè¿‡æ“ä½œç¬¦æˆ–è€…æ˜¾å¼ç±»å‹å£°æ˜æ¥å¼ºåˆ¶æŒ‡å®š listä½¿ç”¨ä¸åŒçš„Listå®ç°
+```groovy
+def arrayList = [1, 2, 3]
+assert arrayList instanceof java.util.ArrayList
+
+def linkedList = [2, 3, 4] as LinkedList    (1)
+assert linkedList instanceof java.util.LinkedList
+
+LinkedList otherLinked = [3, 4, 5]          (2)
+assert otherLinked instanceof java.util.LinkedList
+```
+1. æˆ‘ä»¬ä½¿ç”¨æ“ä½œç¬¦å¼ºåˆ¶å°†ç±»å‹æ˜¾å¼åœ°å£°æ˜ä¸º`java.util.LinkedList`
+2. æˆ‘ä»¬ä½¿ç”¨æ˜¾å¼å£°æ˜æ–¹å¼, å°†listå£°æ˜ä¸º`java.util.LinkedList`
+
+æˆ‘ä»¬å¯ä»¥é€šè¿‡`[]`ä¸‹æ ‡æ“ä½œç¬¦æ¥è®¿é—®listä¸­çš„å…ƒç´ (è¯»å†™éƒ½å¯ä»¥). ä¸‹æ ‡æ—¢å¦‚æœæ˜¯æ­£æ•°çš„è¯,é‚£å°±ä»å·¦åˆ°å³è®¿é—®å…ƒç´ , å¦‚æœä¸‹æ ‡æ˜¯è´Ÿæ•°é‚£å°±ä»å³åˆ°å·¦è®¿é—®å…ƒç´ . æˆ‘ä»¬å¥½å¯ä»¥ä½¿ç”¨`<<`æ“ä½œç¬¦å‘listé‡Œè¿½åŠ å…ƒç´ 
+```groovy
+def letters = ['a', 'b', 'c', 'd']
+
+assert letters[0] == 'a'     (1)
+assert letters[1] == 'b'
+
+assert letters[-1] == 'd'    (2)
+assert letters[-2] == 'c'
+
+letters[2] = 'C'             (3)
+assert letters[2] == 'C'
+
+letters << 'e'               (4)
+assert letters[ 4] == 'e'
+assert letters[-1] == 'e'
+
+assert letters[1, 3] == ['b', 'd']         (5)
+assert letters[2..4] == ['C', 'd', 'e']    (6)
+```
+
+1. è®¿é—®ç¬¬ä¸€ä¸ªå…ƒç´ (ä»è¿™å¯ä»¥çœ‹å‡º,listçš„ä¸‹æ ‡æ˜¯ä»0å¼€å§‹çš„)
+2. é€šè¿‡-1 ä¸‹æ ‡è®¿é—®listä¸­çš„æœ€åä¸€ä¸ªå…ƒç´ .
+3. ä½¿ç”¨ä¸‹æ ‡å¯¹listä¸­ç¬¬ä¸‰ä¸ªå…ƒç´ é‡æ–°èµ‹å€¼
+4. ä½¿ç”¨`<<`å‘listå°¾éƒ¨æ·»åŠ ä¸€ä¸ªå…ƒç´ 
+5. ä¸€æ¬¡æ€§è®¿é—®listä¸­ä¿©ä¸ªå…ƒç´ ,è¿™ä¸ªæ“ä½œçš„ç»“æœæ˜¯è¿”å›ä¸€ä¸ªåŒ…å«ä¿©ä¸ªå…ƒç´ çš„æ–°çš„list
+6. ä½¿ç”¨å€¼åŸŸç¬¦æ¥è®¿é—®listä¸­ä¸€å®šèŒƒå›´å†…çš„å€¼.
+
+ç”±äºlistæ”¯æŒå¤šç§ä¸åŒç±»å‹çš„å…ƒç´ , é‚£ä¹ˆlistä¸­ä¹Ÿå¯ä»¥åŒ…å«list,è¿™æ ·å°±å¯ä»¥åˆ¶é€ å‡ºå¤šç»´list
+```groovy
+def multi = [[0, 1], [2, 3]]     (1)
+assert multi[1][0] == 2          (2)
+```
+
+1. å®šä¹‰äº†ä¸€ä¸ªåŒ…å«Numberç±»å‹listçš„list
+2. è®¿é—®å¤–å±‚çš„ç¬¬äºŒä¸ªå…ƒç´ (ç¬¬äºŒä¸ªlist), ç„¶åè®¿é—®å†…éƒ¨listçš„ç¬¬ä¸€ä¸ªå…ƒç´ (ç¬¬äºŒä¸ªlistçš„ç¬¬ä¸€ä¸ªå…ƒç´ )
+
+### List literals
+
+ä½ å¯ä»¥åƒä¸‹é¢è¿™æ ·åˆ›å»ºé›†åˆ, æ³¨æ„`[]`æ˜¯ç©ºé›†åˆè¡¨è¾¾å¼.
 ```groovy
 def list = [5, 6, 7, 8]
 assert list.get(2) == 7
@@ -348,9 +1194,9 @@ emptyList.add(5)
 assert emptyList.size() == 1
 ```groovy
 
-Ã¿Ò»¸ölist±í´ïÊ½¶¼ÊÇÊµÏÖ×Ô`java.util.List`
+æ¯ä¸€ä¸ªlistè¡¨è¾¾å¼éƒ½æ˜¯å®ç°è‡ª`java.util.List`
 
-µ±È»listÒ²¿ÉÒÔÖ¸¶¨Æä¾ßÌåµÄÊµÏÖÀàĞÍ
+å½“ç„¶listä¹Ÿå¯ä»¥æŒ‡å®šå…¶å…·ä½“çš„å®ç°ç±»å‹
 ```groovy
 def list1 = ['a', 'b', 'c']
 //construct a new list, seeded with the same items as in list1
@@ -363,7 +1209,7 @@ def list3 = list1.clone()
 assert list3 == list1
 ```
 
-list±¾ÖÊÉÏÊÇÒ»¸öÓĞĞòµÄ¶ÔÏó¼¯ºÏ.
+listæœ¬è´¨ä¸Šæ˜¯ä¸€ä¸ªæœ‰åºçš„å¯¹è±¡é›†åˆ.
 ```groovy
 def list = [5, 6, 7, 8]
 assert list.size() == 4
@@ -395,9 +1241,9 @@ try {
 }
 ```
 
-### 2.1.2. List as a boolean expression
+### List as a boolean expression
 
-list»¹¿ÉÒÔ¼ÆËã³öboolean±í´ïÊ½.
+listè¿˜å¯ä»¥è®¡ç®—å‡ºbooleanè¡¨è¾¾å¼.
 ```groovy
 assert ![]             // an empty list evaluates as false
 
@@ -405,9 +1251,9 @@ assert ![]             // an empty list evaluates as false
 assert [1] && ['a'] && [0] && [0.0] && [false] && [null]
 ```
 
-### 2.1.3. Iterating on a list
+### Iterating on a list
 
-¿ÉÒÔÍ¨¹ı`each`, `eachWithIndex`±éÀúÕû¸ö¼¯ºÏ.
+å¯ä»¥é€šè¿‡`each`, `eachWithIndex`éå†æ•´ä¸ªé›†åˆ.
 ```groovy
 [1, 2, 3].each {
     println "Item: $it" // `it` is an implicit parameter corresponding to the current element
@@ -417,7 +1263,7 @@ assert [1] && ['a'] && [0] && [0.0] && [false] && [null]
 }
 ```
 
-ÔÚ±éÀúµÄÊ±ºò,ÎÒÃÇ¾­³£ĞèÒª½«±éÀú³öÀ´µÄÖµ¾­¹ıÄ³Ğ©ÔËËã,È»ºóÔÙÖØĞÂ·Å½øÒ»¸öĞÂµÄlistÖĞ. ÕâÖÖ²Ù×÷¾­³£³ÆÎªÓ³Éä(mapping), ÕâÖÖ²Ù×÷Í¨¹ı`collect`·½·¨ÊµÏÖ.
+åœ¨éå†çš„æ—¶å€™,æˆ‘ä»¬ç»å¸¸éœ€è¦å°†éå†å‡ºæ¥çš„å€¼ç»è¿‡æŸäº›è¿ç®—,ç„¶åå†é‡æ–°æ”¾è¿›ä¸€ä¸ªæ–°çš„listä¸­. è¿™ç§æ“ä½œç»å¸¸ç§°ä¸ºæ˜ å°„(mapping), è¿™ç§æ“ä½œé€šè¿‡`collect`æ–¹æ³•å®ç°.
 ```groovy
 assert [1, 2, 3].collect { it * 2 } == [2, 4, 6]
 
@@ -430,11 +1276,11 @@ assert [1, 2, 3].collect(list) { it * 2 } == [0, 2, 4, 6]
 assert list == [0, 2, 4, 6]
 ```
 
-### 2.1.4. Manipulating lists
+### Manipulating lists
 
-###### Filtering and searching
+#### Filtering and searching
 
-[Groovy development kit](http://www.groovy-lang.org/gdk.html)Ìá¹©ÁËĞí¶àÇ¿´óÓĞÈ¤µÄ·½·¨ÓÃÀ´Ç¿»¯±ê×¼¼¯ºÏ:
+[Groovy development kit](http://www.groovy-lang.org/gdk.html)æä¾›äº†è®¸å¤šå¼ºå¤§æœ‰è¶£çš„æ–¹æ³•ç”¨æ¥å¼ºåŒ–æ ‡å‡†é›†åˆ:
 
 ```groovy
 assert [1, 2, 3].find { it > 1 } == 2           // find 1st element matching criteria
@@ -474,7 +1320,7 @@ assert [1, 2, 3].inject(0) { count, item ->
 } == 6
 ```
 
-ÏÂÃæÕâ¶Î´úÂëÊÇÓÉGroovyÓïÑÔÖ§³ÅµÄÔÚ¼¯ºÏÖĞÕÒµ½×î´óºÍ×îĞ¡ÊıµÄÀı×Ó:
+ä¸‹é¢è¿™æ®µä»£ç æ˜¯ç”±Groovyè¯­è¨€æ”¯æ’‘çš„åœ¨é›†åˆä¸­æ‰¾åˆ°æœ€å¤§å’Œæœ€å°æ•°çš„ä¾‹å­:
 ```groovy
 def list = [9, 4, 2, 10, 5]
 assert list.max() == 10
@@ -489,7 +1335,7 @@ assert list2.max { it.size() } == 'xyzuvw'
 assert list2.min { it.size() } == 'z'
 ```
 
-ÔÚ±Õ°üÀï,Äã»¹¿ÉÒÔ×Ô¶¨ÒåÒ»¸ö±È½Ï¹æÔò.
+åœ¨é—­åŒ…é‡Œ,ä½ è¿˜å¯ä»¥è‡ªå®šä¹‰ä¸€ä¸ªæ¯”è¾ƒè§„åˆ™.
 ```groovy
 Comparator mc = { a, b -> a == b ? 0 : (a < b ? -1 : 1) }
 
@@ -507,9 +1353,9 @@ assert list.max { a, b -> a.equals(b) ? 0 : Math.abs(a) < Math.abs(b) ? -1 : 1 }
 assert list.min { a, b -> a.equals(b) ? 0 : Math.abs(a) < Math.abs(b) ? -1 : 1 } == -1
 ```
 
-###### Adding or removing elements
+#### Adding or removing elements
 
-ÎÒÃÇ¿ÉÒÔÊ¹ÓÃ`[]`È¥ÉùÃ÷Ò»¸öĞÂµÄ¿Õlist, È»ºóÊ¹ÓÃ`<<`Ïòlist×·¼ÓÔªËØ
+æˆ‘ä»¬å¯ä»¥ä½¿ç”¨`[]`å»å£°æ˜ä¸€ä¸ªæ–°çš„ç©ºlist, ç„¶åä½¿ç”¨`<<`å‘listè¿½åŠ å…ƒç´ 
 ```groovy
 def list = []
 assert list.empty
@@ -562,9 +1408,9 @@ list[8] = 'x' // the [] operator is growing the list as needed
 assert list == ['a', 'b', 'z', 'e', 'u', 'v', 'g', null, 'x']
 ```
 
-ÔÚlistÖĞ`+`µÄÓïÒå²¢Ã»ÓĞ·¢Éú±ä»¯,ÕâÊÇºÎµÈµÄÖØÒª°¡~~~ Óë`<<`Ïà±È, `+`»á´´½¨Ò»¸öĞÂµÄlist,  µ«ÊÇÕâ¸ö´´½¨µÄlistºÜ¿ÉÄÜ²»ÊÇÄãËùÔ¤ÆÚµÄ, ¶øÇÒÕâÖÖ·½Ê½Ò²¿ÉÄÜ»áµ¼ÖÂÒ»Ğ©ĞÔÄÜÎÊÌâ.
+åœ¨listä¸­`+`çš„è¯­ä¹‰å¹¶æ²¡æœ‰å‘ç”Ÿå˜åŒ–,è¿™æ˜¯ä½•ç­‰çš„é‡è¦å•Š~~~ ä¸`<<`ç›¸æ¯”, `+`ä¼šåˆ›å»ºä¸€ä¸ªæ–°çš„list,  ä½†æ˜¯è¿™ä¸ªåˆ›å»ºçš„listå¾ˆå¯èƒ½ä¸æ˜¯ä½ æ‰€é¢„æœŸçš„, è€Œä¸”è¿™ç§æ–¹å¼ä¹Ÿå¯èƒ½ä¼šå¯¼è‡´ä¸€äº›æ€§èƒ½é—®é¢˜.
 
-`Groovy development kit`Í¬ÑùÌá¹©ÁËºÜ¶à±ã½İµÄ·½Ê½´ÓlistÀïÉ¾³ıÔªËØ:
+`Groovy development kit`åŒæ ·æä¾›äº†å¾ˆå¤šä¾¿æ·çš„æ–¹å¼ä»listé‡Œåˆ é™¤å…ƒç´ :
 ```groovy
 assert ['a','b','c','b','b'] - 'c' == ['a','b','b','b']
 assert ['a','b','c','b','b'] - 'b' == ['a','c']
@@ -575,13 +1421,13 @@ list -= 3           // creates a new list by removing `3` from the original one
 assert list == [1,2,4,2,1]
 assert ( list -= [2,4] ) == [1,1]
 ```
-Í¬Ñù,ÄãÒ²ÄÜÍ¨¹ıË÷ÒıµÄ·½Ê½´ÓlistÀïÉ¾³ıÔªËØ.
+åŒæ ·,ä½ ä¹Ÿèƒ½é€šè¿‡ç´¢å¼•çš„æ–¹å¼ä»listé‡Œåˆ é™¤å…ƒç´ .
 ```groovy
 def list = [1,2,3,4,5,6,2,2,1]
 assert list.remove(2) == 3          // remove the third element, and return it
 assert list == [1,2,4,5,6,2,2,1]
 ```
-¼ÙÉè,ÄãÈç¹û´ÓlistÖĞÉ¾³ı¶à¸öÏàÍ¬ÔªËØÖĞµÄµÚÒ»¸ö, ÄÇÄã¿ÉÒÔµ÷ÓÃ`remove`·½·¨.
+å‡è®¾,ä½ å¦‚æœä»listä¸­åˆ é™¤å¤šä¸ªç›¸åŒå…ƒç´ ä¸­çš„ç¬¬ä¸€ä¸ª, é‚£ä½ å¯ä»¥è°ƒç”¨`remove`æ–¹æ³•.
 ```groovy
 def list= ['a','b','c','b','b']
 assert list.remove('c')             // remove 'c', and return true because element removed
@@ -590,16 +1436,16 @@ assert list.remove('b')             // remove first 'b', and return true because
 assert ! list.remove('z')           // return false because no elements removed
 assert list == ['a','b','b']
 ```
-Èç¹ûÄãÏëÒª½«listÇå¿ÕµÄ»°,Ö»ĞèÒªµ÷ÓÃ`clear`·½·¨¼´¿É
+å¦‚æœä½ æƒ³è¦å°†listæ¸…ç©ºçš„è¯,åªéœ€è¦è°ƒç”¨`clear`æ–¹æ³•å³å¯
 ```groovy
 def list= ['a',2,'c',4]
 list.clear()
 assert list == []
 ```
 
-###### Set operations
+#### Set operations
 
-`Groovy development kit`»¹°üº¬ºÜ¶àÂß¼­ÔËËãµÄ·½·¨
+`Groovy development kit`è¿˜åŒ…å«å¾ˆå¤šé€»è¾‘è¿ç®—çš„æ–¹æ³•
 ```groovy
 assert 'a' in ['a','b','c']             // returns true if an element belongs to the list
 assert ['a','b','c'].contains('a')      // equivalent to the `contains` method in Java
@@ -616,9 +1462,9 @@ assert [1,2,3].disjoint( [4,6,9] )
 assert ![1,2,3].disjoint( [2,4,6] )
 ```
 
-###### Sorting
+#### Sorting
 
-Groovy»¹Ìá¹©ÁËºÜ¶àÊ¹ÓÃ±Õ°ü±È½ÏÆ÷µÄÅÅĞò²Ù×÷
+Groovyè¿˜æä¾›äº†å¾ˆå¤šä½¿ç”¨é—­åŒ…æ¯”è¾ƒå™¨çš„æ’åºæ“ä½œ
 ```groovy
 assert [6, 3, 9, 2, 7, 1, 5].sort() == [1, 2, 3, 5, 6, 7, 9]
 
@@ -646,9 +1492,9 @@ Collections.sort(list3, mc)
 assert list3 == [1, 2, -3, 5, 6, -7, 9]
 ```
 
-###### Duplicating elements
+#### Duplicating elements
 
-`roovy development kit`»¹Í¨¹ıÖØÔØ²Ù×÷·ûµÄ·½Ê½, ÄÚ²¿Ìá¹©ÁËÒ»Ğ©·½·¨½øĞĞlistÔªËØ¸´ÖÆ.
+`roovy development kit`è¿˜é€šè¿‡é‡è½½æ“ä½œç¬¦çš„æ–¹å¼, å†…éƒ¨æä¾›äº†ä¸€äº›æ–¹æ³•è¿›è¡Œlistå…ƒç´ å¤åˆ¶.
 ```groovy
 assert [1, 2, 3] * 3 == [1, 2, 3, 1, 2, 3, 1, 2, 3]
 assert [1, 2, 3].multiply(2) == [1, 2, 3, 1, 2, 3]
@@ -658,11 +1504,123 @@ assert Collections.nCopies(3, 'b') == ['b', 'b', 'b']
 assert Collections.nCopies(2, [1, 2]) == [[1, 2], [1, 2]] //not [1,2,1,2]
 ```
 
-## 2.2. Maps
+## Arrays
 
-### 2.2.1. Map literals
+Groovy æ•°ç»„é‡ç”¨äº†listç¬¦å·, ä½†æ˜¯å¦‚æœæƒ³è¦åˆ›å»ºæ•°ç»„, é‚£ä¹ˆå°±å¿…é¡»å¼ºåˆ¶åœ°æ˜¾å¼å®šä¹‰æ•°ç»„ç±»å‹
+```groovy
+String[] arrStr = ['Ananas', 'Banana', 'Kiwi']  (1)
 
-ÔÚGroovyÖĞ¿ÉÒÔÊ¹ÓÃ`[:]` ´´½¨Ò»¸ömap.
+assert arrStr instanceof String[]    (2)
+assert !(arrStr instanceof List)
+
+def numArr = [1, 2, 3] as int[]      (3)
+
+assert numArr instanceof int[]       (4)
+assert numArr.size() == 3
+```
+
+1. ä½¿ç”¨æ˜¾å¼å˜é‡ç±»å‹å®šä¹‰äº†ä¸€ä¸ªå­—ç¬¦ä¸²æ•°ç»„
+2. æ–­è¨€åˆšæ‰åˆ›å»ºçš„æ•°ç»„æ˜¯å¦æ˜¯stringç±»å‹
+3. ä½¿ç”¨æ“ä½œç¬¦å®šä¹‰ä¸€ä¸ªintæ•°ç»„
+4. æ–­è¨€åˆšæ‰åˆ›å»ºçš„æ•°ç»„æ˜¯å¦æ˜¯intç±»å‹
+
+æˆ‘ä»¬ä¹Ÿå¯ä»¥åˆ›å»ºå‡ºä¸€ä¸ªå¤šç»´æ•°ç»„
+```groovy
+def matrix3 = new Integer[3][3]         (1)
+assert matrix3.size() == 3
+
+Integer[][] matrix2                     (2)
+matrix2 = [[1, 2], [3, 4]]
+assert matrix2 instanceof Integer[][]
+```
+1. æˆ‘ä»¬æŒ‡å®šäº†æ–°æ•°ç»„çš„è¾¹ç•Œ
+2. å½“ç„¶æˆ‘ä»¬ä¹Ÿå¯ä»¥ä¸æŒ‡å®šå®ƒçš„è¾¹ç•Œ
+
+è®¿é—®æ•°ç»„å…ƒç´ å’Œè®¿é—®listå…ƒç´ çš„æ–¹å¼ç›¸åŒ
+```groovy
+String[] names = ['CÃ©dric', 'Guillaume', 'Jochen', 'Paul']
+assert names[0] == 'CÃ©dric'     (1)
+
+names[2] = 'Blackdrag'          (2)
+assert names[2] == 'Blackdrag'
+```
+1	Retrieve the first element of the array
+2	Set the value of the third element of the array to a new value
+1. æ£€ç´¢æ•°ç»„ä¸­ç¬¬ä¸€ä¸ªå…ƒç´ 
+2. å¯¹æ•°ç»„ä¸­ç¬¬ä¸‰ä¸ªå…ƒç´ é‡æ–°èµ‹å€¼
+
+Groovyä¸æ”¯æŒJavaæ•°ç»„åˆå§‹åŒ–è¯­æ³•, å› ä¸ºJavaæ•°ç»„ä¸­çš„èŠ±æ‹¬å·å¯èƒ½è¢«ä¼šGroovyæ— è§£æˆé—­åŒ…
+
+## Maps
+æœ‰æ—¶å€™æˆ‘ä»¬åœ¨å…¶ä»–è¯­è¨€ä¸­ç§°mapä¸º å­—å…¸æˆ–è€…å…³è”æ•°ç»„. Mapå°†keyå’Œvalueå…³è”èµ·æ¥, åœ¨Groovyä¸­mapè¢«`[]`æ‹¬èµ·æ¥, é€šè¿‡`,`åˆ†å‰²é”®å€¼å¯¹, é”®å€¼é€šè¿‡`:`åˆ†å‰²
+```groovy
+def colors = [red: '#FF0000', green: '#00FF00', blue: '#0000FF']   (1)
+
+assert colors['red'] == '#FF0000'    (2)
+assert colors.green  == '#00FF00'    (3)
+
+colors['pink'] = '#FF00FF'           (4)
+colors.yellow  = '#FFFF00'           (5)
+
+assert colors.pink == '#FF00FF'
+assert colors['yellow'] == '#FFFF00'
+
+assert colors instanceof java.util.LinkedHashMap
+```
+
+1. æˆ‘ä»¬å®šä¹‰äº†ä¸€ä¸ªstringç±»å‹çš„ä»£è¡¨é¢œè‰²åå­—çš„æ•°ç»„,
+2. ç„¶åä½¿ç”¨ä¸‹æ ‡æ¥æ£€ç´¢mapä¸­æ˜¯å¦åŒ…å«redè¿™ä¸ªkey
+3. æˆ‘ä»¬è¿˜å¯ä»¥ç›´æ¥ä½¿ç”¨`.`æ¥ç´¢å¼•åˆ°æŸä¸ªkey
+4. æˆ‘ä»¬å¯ä»¥ä½¿ç”¨ä¸‹æ ‡å‘mapä¸­æ·»åŠ ä¸€ä¸ªæ–°çš„é”®å€¼å¯¹
+5. æˆ‘ä»¬ä¹Ÿå¯ä»¥ä½¿ç”¨`.`æ·»åŠ ä¸€ä¸ªæ–°çš„é”®å€¼å¯¹
+
+Groovyåˆ›å»ºçš„mapç±»å‹é»˜è®¤çš„æ˜¯`java.util.LinkedHashMap`
+
+å½“ä½ æƒ³è¦è®¿é—®ä¸€ä¸ªä¸å­˜åœ¨çš„keyæ—¶ï¼š
+```groovy
+assert colors.unknown == null
+```
+ä½ å°†æ£€ç´¢å‡ºä¸€ä¸ªnullçš„ç»“æœ
+
+åœ¨ä¸Šé¢çš„ä¾‹å­ä¸­æˆ‘ä»¬ä½¿ç”¨çš„æ˜¯ä»¥stringä½œä¸ºkey, ä½†æ˜¯ä½ è¿˜å¯ä»¥ä½¿ç”¨å…¶ä»–ç±»å‹ä½œä¸ºmapçš„keyï¼š
+
+```groovy
+def numbers = [1: 'one', 2: 'two']
+
+assert numbers[1] == 'one'
+```
+
+æˆ‘ä»¬ä½¿ç”¨äº†numberä½œä¸ºäº†mapæ–°çš„keyç±»å‹, numberç±»å‹å°±ä¼šç›´æ¥è¢«è§£é‡Šä¸ºnumberç±»å‹, å› æ­¤Groovyä¸ä¼šåƒå…ˆå‰é‚£æ ·åˆ›å»ºä¸€ä¸ªstringç±»å‹çš„key. ä½†æ˜¯å‡è®¾ä½ æƒ³è¦ä¼ é€’ä¸€ä¸ªå˜é‡ä½œä¸ºkey,æ˜¯å˜é‡çš„å€¼ä½œä¸ºkeyï¼š
+
+```groovy
+def key = 'name'
+def person = [key: 'Guillaume']      (1)
+
+assert !person.containsKey('name')   (2)
+assert person.containsKey('key')     (3)
+```
+1. ä¸`\'Guillaume'` å…³è”çš„keyå®é™…ä¸Šæ˜¯`"key"`è¿™ä¸ªå­—ç¬¦ä¸², è€Œä¸æ˜¯è¿™ä¸ªkeyçš„å¼•ç”¨å€¼`'name'`
+2. mapä¸­ä¸åŒ…å«`'name'`key
+3. å–è€Œä»£ä¹‹çš„æ˜¯mapä¸­åŒ…å«ä¸€ä¸ª`"key"`çš„å­—ç¬¦ä¸²
+
+ä½ å¯ä»¥å‘mapä¸­ä¼ é€’ä¸€ä¸ªå¼•å·å­—ç¬¦ä¸²ä½œä¸ºkey,ä¾‹å¦‚`["name": "Guillaume"]`.
+
+```groovy
+person = [(key): 'Guillaume']        (1)
+
+assert person.containsKey('name')    (2)
+assert !person.containsKey('key')    (3)
+```
+1	This time, we surround the key variable with parentheses, to instruct the parser we are passing a variable rather than defining a string key
+2	The map does contain the name key
+3	But the map doesnâ€™t contain the key key as before
+1.
+2.
+3.
+
+### Map literals
+
+åœ¨Groovyä¸­å¯ä»¥ä½¿ç”¨`[:]` åˆ›å»ºä¸€ä¸ªmap.
 ```groovy
 def map = [name: 'Gromit', likes: 'cheese', id: 1234]
 assert map.get('name') == 'Gromit'
@@ -678,7 +1636,7 @@ assert emptyMap.size() == 1
 assert emptyMap.get("foo") == 5
 ```
 
-MapµÄkeyÄ¬ÈÏÊÇ`string`, ÀıÈç`[a:1]`µÈÍ¬ÓÚ`['a':1]`. ±È½ÏÈÙÓşÔì³ÉÒÉ»óµÄ¾ÍÊÇ,Èç¹ûÄã´´½¨ÁËÒ»¸ö±äÁ¿a(ÖµÎªb), µ«ÊÇÄã½«±äÁ¿a`put`½ømapºó, mapµÄkey»áÊÇa,¶ø²»ÊÇb. Èç¹ûÄãÓöµ½ÁËÕâ¸öÇé¿öµÄ»°,ÄÇÃ´Äã±ØĞë¶ÔÊ¹ÓÃ`()`key½øĞĞ×ªÒåÁË.
+Mapçš„keyé»˜è®¤æ˜¯`string`, ä¾‹å¦‚`[a:1]`ç­‰åŒäº`['a':1]`. æ¯”è¾ƒè£èª‰é€ æˆç–‘æƒ‘çš„å°±æ˜¯,å¦‚æœä½ åˆ›å»ºäº†ä¸€ä¸ªå˜é‡a(å€¼ä¸ºb), ä½†æ˜¯ä½ å°†å˜é‡a`put`è¿›mapå, mapçš„keyä¼šæ˜¯a,è€Œä¸æ˜¯b. å¦‚æœä½ é‡åˆ°äº†è¿™ä¸ªæƒ…å†µçš„è¯,é‚£ä¹ˆä½ å¿…é¡»å¯¹ä½¿ç”¨`()`keyè¿›è¡Œè½¬ä¹‰äº†.
 ```groovy
 def a = 'Bob'
 def ages = [a: 43]
@@ -689,7 +1647,7 @@ ages = [(a): 43]            // now we escape `a` by using parenthesis
 assert ages['Bob'] == 43   // and the value is found!
 ```
 
-Í¨¹ıÏÂÃæµÄ·½Ê½Äã¿ÉÒÔÇáËÉ¿ËÂ¡Ò»¸ömap
+é€šè¿‡ä¸‹é¢çš„æ–¹å¼ä½ å¯ä»¥è½»æ¾å…‹éš†ä¸€ä¸ªmap
 ```groovy
 def map = [
         simple : 123,
@@ -702,9 +1660,9 @@ map2.get('complex').put('c', 3)
 assert map.get('complex').get('c') == 3
 ```
 
-### 2.2.2. Map property notation
+### Map property notation
 
-MapsºÍbeansÒ²ÊÇ·Ç³£ÏàÏñµÄ, ËùÒÔÄã¿ÉÒÔ¶ÔmapÊ¹ÓÃ`get/set`²Ù×÷ÔªËØ,µ±È»ÕâÒ²ÓĞ¸öÇ°Ìá,ÄÇ¾ÍÊÇmapÖĞµÄkey±ØĞëÊÇ·ûºÏGroovy±êÊ¶·ûµÄkey.
+Mapså’Œbeansä¹Ÿæ˜¯éå¸¸ç›¸åƒçš„, æ‰€ä»¥ä½ å¯ä»¥å¯¹mapä½¿ç”¨`get/set`æ“ä½œå…ƒç´ ,å½“ç„¶è¿™ä¹Ÿæœ‰ä¸ªå‰æ,é‚£å°±æ˜¯mapä¸­çš„keyå¿…é¡»æ˜¯ç¬¦åˆGroovyæ ‡è¯†ç¬¦çš„key.
 
 ```groovy
 def map = [name: 'Gromit', likes: 'cheese', id: 1234]
@@ -718,7 +1676,7 @@ assert emptyMap.size() == 1
 assert emptyMap.foo == 5
 ```
 
-×¢Òâ:`map.foo`×ÜÊÇ»áÔÚmapÖĞ²éÕÒkey`foo`. ÕâÒâÎ¶×Å,
+æ³¨æ„:`map.foo`æ€»æ˜¯ä¼šåœ¨mapä¸­æŸ¥æ‰¾key`foo`. è¿™æ„å‘³ç€,
 ```groovy
 def map = [name: 'Gromit', likes: 'cheese', id: 1234]
 assert map.class == null
@@ -739,9 +1697,9 @@ assert map.null == 'z'
 assert map.get(null) == 'x'
 ```
 
-### 2.2.3. Iterating on maps
+### Iterating on maps
 
-`Groovy development kit`»¹Ìá¹©ÁË`eachWithIndex`·½·¨±éÀúmap.ÖµµÃ×¢ÒâµÄÊÇ,map»á±£ÁôputÔªËØµÄË³Ğò,Ò²¾ÍÊÇËµ,µ±Äã±éÀúÒ»¸ömapµÄÊ±ºò,ÎŞÂÛ½øĞĞ¶àÉÙ´Î,Äã»ñµÃµÄÔªËØµÄË³ĞòÊÇÒ»¶¨µÄ.
+`Groovy development kit`è¿˜æä¾›äº†`eachWithIndex`æ–¹æ³•éå†map.å€¼å¾—æ³¨æ„çš„æ˜¯,mapä¼šä¿ç•™putå…ƒç´ çš„é¡ºåº,ä¹Ÿå°±æ˜¯è¯´,å½“ä½ éå†ä¸€ä¸ªmapçš„æ—¶å€™,æ— è®ºè¿›è¡Œå¤šå°‘æ¬¡,ä½ è·å¾—çš„å…ƒç´ çš„é¡ºåºæ˜¯ä¸€å®šçš„.
 ```groovy
 def map = [
         Bob  : 42,
@@ -770,11 +1728,11 @@ map.eachWithIndex { key, value, i ->
 }
 ```
 
-### 2.2.4. Manipulating maps
+### Manipulating maps
 
-###### Adding or removing elements
+#### Adding or removing elements
 
-ÏòmapÖĞÌí¼ÓÔªËØÄã¿ÉÒÔÊ¹ÓÃ`put`·½·¨, `ÏÂ±ê`, `putAll`·½·¨.
+å‘mapä¸­æ·»åŠ å…ƒç´ ä½ å¯ä»¥ä½¿ç”¨`put`æ–¹æ³•, `ä¸‹æ ‡`, `putAll`æ–¹æ³•.
 ```groovy
 def defaults = [1: 'a', 2: 'b', 3: 'c', 4: 'd']
 def overrides = [2: 'z', 5: 'x', 13: 'x']
@@ -786,7 +1744,7 @@ result.putAll(overrides)
 assert result == [1: 'a', 2: 'z', 3: 'c', 4: 'd', 5: 'x', 13: 'x', 15: 't', 17: 'u']
 ```
 
-Èç¹ûÏëÒªÉ¾³ımapÖĞÈ«²¿µÄÔªËØ,¿ÉÒÔÊ¹ÓÃ`clear`·½·¨.
+å¦‚æœæƒ³è¦åˆ é™¤mapä¸­å…¨éƒ¨çš„å…ƒç´ ,å¯ä»¥ä½¿ç”¨`clear`æ–¹æ³•.
 ```groovy
 def m = [1:'a', 2:'b']
 assert m.get(1) == 'a'
@@ -794,9 +1752,9 @@ m.clear()
 assert m == [:]
 ```
 
-Í¨¹ımap×ÖÃæÁ¿±ê¼Ç´´½¨µÄmap»áÊ¹ÓÃ`object`µÄ`equals`·½·¨ºÍ`hashcode`·½·¨.
+é€šè¿‡mapå­—é¢é‡æ ‡è®°åˆ›å»ºçš„mapä¼šä½¿ç”¨`object`çš„`equals`æ–¹æ³•å’Œ`hashcode`æ–¹æ³•.
 
-»¹Òª×¢ÒâµÄÊÇ,²»ÒªÊ¹ÓÃGString×÷ÎªmapµÄkey, ÒòÎªGStringµÄhashcode·½·¨ºÍStringµÄhashcode·½·¨²»Ò»Ñù.
+è¿˜è¦æ³¨æ„çš„æ˜¯,ä¸è¦ä½¿ç”¨GStringä½œä¸ºmapçš„key, å› ä¸ºGStringçš„hashcodeæ–¹æ³•å’ŒStringçš„hashcodeæ–¹æ³•ä¸ä¸€æ ·.
 ```groovy
 def key = 'some key'
 def map = [:]
@@ -805,9 +1763,9 @@ map.put(gstringKey,'value')
 assert map.get('SOME KEY') == null
 ```
 
-###### Keys, values and entries
+#### Keys, values and entries
 
-ÎÒÃÇ¿ÉÒÔÔÚÊÓÍ¼ÖĞinspect`keys, values, and entries`
+æˆ‘ä»¬å¯ä»¥åœ¨è§†å›¾ä¸­inspect`keys, values, and entries`
 ```groovy
 def map = [1:'a', 2:'b', 3:'c']
 
@@ -824,7 +1782,7 @@ assert keys == [1,2,3] as Set
 Mutating values returned by the view (be it a map entry, a key or a value) is highly discouraged because success of the operation directly depends on the type of the map being manipulated. In particular, Groovy relies on collections from the JDK that in general make no guarantee that a collection can safely be manipulated through keySet, entrySet, or values.
 
 
-###### Filtering and searching
+#### Filtering and searching
 
 The Groovy development kit contains filtering, searching and collecting methods similar to those found for lists:
 
@@ -868,7 +1826,7 @@ assert people.any { id, person ->
 }
 ```
 
-###### Grouping
+#### Grouping
 
 We can group a list into a map using some criteria:
 
@@ -894,7 +1852,7 @@ assert [
 ]
 ```
 
-## 2.3. Ranges
+## Ranges
 
 Ranges allow you to create a list of sequential values. These can be used as List since Range extends java.util.List.
 
@@ -933,13 +1891,13 @@ Ranges can be used for any Java object which implements java.lang.Comparable for
 
 # Parsing and producing JSON
 
-Groovy Ô­ÉúÖ§³ÖGroovy¶ÔÏóºÍJSONÖ®¼äµÄ×ª»». `groovy.json`°üÄÚµÄÀàÓÃÓÚJSONµÄĞòÁĞ»¯ºÍ½âÎö¹¦ÄÜ
+Groovy åŸç”Ÿæ”¯æŒGroovyå¯¹è±¡å’ŒJSONä¹‹é—´çš„è½¬æ¢. `groovy.json`åŒ…å†…çš„ç±»ç”¨äºJSONçš„åºåˆ—åŒ–å’Œè§£æåŠŸèƒ½
 
-## 1. JsonSlurper
+# JsonSlurper
 
-`JsonSlurper`ÓÃÓÚ½«JSONÎÄ±¾»òÕßÆäËûÊı¾İÄÚÈİ½âÎö³ÉGroovyÀïµÄÊı¾İ½á¹¹,ÀıÈç`maps</code>, `lists</code>, »òÕßÆäËûÔ­Éú»ù±¾ÀàĞÍ `Integer</code>, `Double</code>, `Boolean</code>, `String`¡£
+`JsonSlurper`ç”¨äºå°†JSONæ–‡æœ¬æˆ–è€…å…¶ä»–æ•°æ®å†…å®¹è§£ææˆGroovyé‡Œçš„æ•°æ®ç»“æ„,ä¾‹å¦‚`maps</code>, `lists</code>, æˆ–è€…å…¶ä»–åŸç”ŸåŸºæœ¬ç±»å‹ `Integer</code>, `Double</code>, `Boolean</code>, `String`ã€‚
 
-Õâ¸öÀàÖØÔØÁËºÜ¶à·½·¨, ¶øÇÒ»¹Ìí¼ÓÁËÒ»Ğ©ÌØÊâµÄ·½·¨, ÀıÈç`parseText</code>, `parseFile` µÈ.ÏÂÃæÕâ¸öÀı×ÓÖĞÎÒÃÇÊ¹ÓÃÁË `parseText` ·½·¨, Ëü»á½âÎöÒ»¸öJSON×Ö·û´®, È»ºóµİ¹éµØ½«Ëü×ª»»³É`list</code>, `map`½á¹¹. Ò»Ğ©ÆäËûµÄ`parse*</code> ·½·¨ºÍÕâ¸ö·½·¨ºÜÀàËÆ, ¶¼·µ»ØÁËJSON×Ö·û´®, Ö»²»¹ıÆäËûµÄ·½·¨½ÓÊÜµÄ²ÎÊı²»Ò»Ñù.
+è¿™ä¸ªç±»é‡è½½äº†å¾ˆå¤šæ–¹æ³•, è€Œä¸”è¿˜æ·»åŠ äº†ä¸€äº›ç‰¹æ®Šçš„æ–¹æ³•, ä¾‹å¦‚`parseText</code>, `parseFile` ç­‰.ä¸‹é¢è¿™ä¸ªä¾‹å­ä¸­æˆ‘ä»¬ä½¿ç”¨äº† `parseText` æ–¹æ³•, å®ƒä¼šè§£æä¸€ä¸ªJSONå­—ç¬¦ä¸², ç„¶åé€’å½’åœ°å°†å®ƒè½¬æ¢æˆ`list</code>, `map`ç»“æ„. ä¸€äº›å…¶ä»–çš„`parse*</code> æ–¹æ³•å’Œè¿™ä¸ªæ–¹æ³•å¾ˆç±»ä¼¼, éƒ½è¿”å›äº†JSONå­—ç¬¦ä¸², åªä¸è¿‡å…¶ä»–çš„æ–¹æ³•æ¥å—çš„å‚æ•°ä¸ä¸€æ ·.
 
 ```groovy
 def jsonSlurper = new JsonSlurper()
@@ -949,9 +1907,9 @@ assert object instanceof Map
 assert object.name == 'John Doe'
 ```
 
-ĞèÒª×¢ÒâµÄÊÇ, ²úÉúµÄ½á¹ûÊÇÒ»¸ö´¿map, ¿ÉÒÔÏñÒ»¸öÆÕÍ¨µÄGroovy¶ÔÏóÊµÀı³ÖÓĞËü. `JsonSlurper`¸ù¾İ[ECMA-404 JSON Interchange Standard](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)¶¨ÒåÀ´½âÎöJSON, Í¬Ê±Ö§³ÖJavaScriptµÄ×¢ÊÍºÍÊ±¼äÀàĞÍ.
+éœ€è¦æ³¨æ„çš„æ˜¯, äº§ç”Ÿçš„ç»“æœæ˜¯ä¸€ä¸ªçº¯map, å¯ä»¥åƒä¸€ä¸ªæ™®é€šçš„Groovyå¯¹è±¡å®ä¾‹æŒæœ‰å®ƒ. `JsonSlurper`æ ¹æ®[ECMA-404 JSON Interchange Standard](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)å®šä¹‰æ¥è§£æJSON, åŒæ—¶æ”¯æŒJavaScriptçš„æ³¨é‡Šå’Œæ—¶é—´ç±»å‹.
 
-³ıÁËÖ§³ÖmapsÖ®Íâ, `JsonSlurper` »¹Ö§³Ö½«JSONÊı×é½âÎö³ÉlistµÄ¹¦ÄÜ
+é™¤äº†æ”¯æŒmapsä¹‹å¤–, `JsonSlurper` è¿˜æ”¯æŒå°†JSONæ•°ç»„è§£ææˆlistçš„åŠŸèƒ½
 ```groovy
 def jsonSlurper = new JsonSlurper()
 def object = jsonSlurper.parseText('{ "myList": [4, 8, 15, 16, 23, 42] }')
@@ -961,7 +1919,7 @@ assert object.myList instanceof List
 assert object.myList == [4, 8, 15, 16, 23, 42]
 ```
 
-JSON±ê×¼ÉÏÖ»Ö§³ÖÏÂÃæÕâĞ©Ô­ÉúÊı¾İÀàĞÍ£º`string</code>, `number</code>, `object</code>, `true</code>, `false</code>, `null</code>. `JsonSlurper` ½«ÄÇĞ©JSONÀàĞÍ×ª»»³ÉGroovyÀàĞÍ.
+JSONæ ‡å‡†ä¸Šåªæ”¯æŒä¸‹é¢è¿™äº›åŸç”Ÿæ•°æ®ç±»å‹ï¼š`string</code>, `number</code>, `object</code>, `true</code>, `false</code>, `null</code>. `JsonSlurper` å°†é‚£äº›JSONç±»å‹è½¬æ¢æˆGroovyç±»å‹.
 ```groovy
 def jsonSlurper = new JsonSlurper()
 def object = jsonSlurper.parseText '''
@@ -976,10 +1934,10 @@ assert object.fraction.class == BigDecimal
 assert object.exponential.class == BigDecimal
 ```
 
-`JsonSlurper` Éú³ÉµÄ½á¹û¾ÍÊÇ´¿Groovy¶ÔÏóÊµÀı, ËıµÄÄÚ²¿²»»á°üº¬ÈÎºÎµÄJSONÏà¹ØµÄÀà¶ÔÏó, ËüµÄÓÃ·¨ÊÇÏàµ±Í¸Ã÷µÄ. ÊÂÊµÉÏ`JsonSlurper`µÄ½á¹û×ñÑ­`GPath`±í´ïÊ½. `GPath`ÊÇÒ»¸ö·Ç³£Ç¿´óµÄ±í´ïÊ½ÓïÑÔ, ËüÖ§³Ö¶àÖÖ²»Í¬µÄÊı¾İ¸ñÊ½(ÀıÈç`XmlSlurper`Ö§³Ö`XML` ¾ÍÊÇÆäÖĞÒ»¸öÀı×Ó)
+`JsonSlurper` ç”Ÿæˆçš„ç»“æœå°±æ˜¯çº¯Groovyå¯¹è±¡å®ä¾‹, å¥¹çš„å†…éƒ¨ä¸ä¼šåŒ…å«ä»»ä½•çš„JSONç›¸å…³çš„ç±»å¯¹è±¡, å®ƒçš„ç”¨æ³•æ˜¯ç›¸å½“é€æ˜çš„. äº‹å®ä¸Š`JsonSlurper`çš„ç»“æœéµå¾ª`GPath`è¡¨è¾¾å¼. `GPath`æ˜¯ä¸€ä¸ªéå¸¸å¼ºå¤§çš„è¡¨è¾¾å¼è¯­è¨€, å®ƒæ”¯æŒå¤šç§ä¸åŒçš„æ•°æ®æ ¼å¼(ä¾‹å¦‚`XmlSlurper`æ”¯æŒ`XML` å°±æ˜¯å…¶ä¸­ä¸€ä¸ªä¾‹å­)
 
-Èç¹ûÏëÒªÁË½â¸ü¶àµÄÄÚÈİ, Äã¿ÉÒÔÖ±½ÓÈ¥[GPath expressions](http://docs.groovy-lang.org/latest/html/documentation/core-semantics.html#gpath_expressions)¿´Ò»¿´.
-ÏÂÃæ¸ø³öÁËJSONÀàĞÍÓëGroovyÊı¾İÀàĞÍÖ®¼äµÄ¶ÔÓ¦¹ØÏµ.
+å¦‚æœæƒ³è¦äº†è§£æ›´å¤šçš„å†…å®¹, ä½ å¯ä»¥ç›´æ¥å»[GPath expressions](http://docs.groovy-lang.org/latest/html/documentation/core-semantics.html#gpath_expressions)çœ‹ä¸€çœ‹.
+ä¸‹é¢ç»™å‡ºäº†JSONç±»å‹ä¸Groovyæ•°æ®ç±»å‹ä¹‹é—´çš„å¯¹åº”å…³ç³».
 ```groovy
 JSON			Groovy
 string			java.lang.String
@@ -989,25 +1947,25 @@ array			java.util.ArrayList
 true			true
 false			false
 null			null
-date			java.util.Date based on the yyyy-MM-dd¡¯T¡¯HH:mm:ssZ date format
+date			java.util.Date based on the yyyy-MM-ddâ€™Tâ€™HH:mm:ssZ date format
 ```
 
-Èç¹ûJSONÖĞµÄÒ»¸öÖµÊÇ`null</code>, `JsonSlurper`Ö§³ÖËü×ª»»³ÉGroovyÖĞµÄ`null</code>.Õâ¾ÍÓëÆäËûJSON½âÎöÆ÷ĞÎ³ÉÁË¶Ô±È, ´ú±íÒ»¸ö¿ÕÖµÓë¿âÌá¹©µÄµ¥Ò»¶ÔÏó¡£
+å¦‚æœJSONä¸­çš„ä¸€ä¸ªå€¼æ˜¯`null</code>, `JsonSlurper`æ”¯æŒå®ƒè½¬æ¢æˆGroovyä¸­çš„`null</code>.è¿™å°±ä¸å…¶ä»–JSONè§£æå™¨å½¢æˆäº†å¯¹æ¯”, ä»£è¡¨ä¸€ä¸ªç©ºå€¼ä¸åº“æä¾›çš„å•ä¸€å¯¹è±¡ã€‚
 
-## 1.1. Parser Variants
+## Parser Variants
 
-Groovy ÓĞ¶à¸ö`JsonSlurper` ½âÎöÆ÷ÊµÏÖ. Ã¿Ò»¸ö½âÎöÆ÷¶¼¶ÔÓ¦×Å²»Í¬µÄĞèÇó, Ã¿Ò»¸öÌØ¶¨µÄ½âÎö¶¼ÄÜºÜºÃµÄ´¦ÀíÌØ¶¨ĞèÇó, ËùÒÔÄ¬ÈÏµÄ½âÎöÆ÷²¢²»ÊÇÊÊÓ¦ÓÚËùÓĞµÄÇé¿ö. ÏÂÃæ¾Í¶Ô¸÷¸ö½âÎöÆ÷×ö¸ö¼ò½é:
+Groovy æœ‰å¤šä¸ª`JsonSlurper` è§£æå™¨å®ç°. æ¯ä¸€ä¸ªè§£æå™¨éƒ½å¯¹åº”ç€ä¸åŒçš„éœ€æ±‚, æ¯ä¸€ä¸ªç‰¹å®šçš„è§£æéƒ½èƒ½å¾ˆå¥½çš„å¤„ç†ç‰¹å®šéœ€æ±‚, æ‰€ä»¥é»˜è®¤çš„è§£æå™¨å¹¶ä¸æ˜¯é€‚åº”äºæ‰€æœ‰çš„æƒ…å†µ. ä¸‹é¢å°±å¯¹å„ä¸ªè§£æå™¨åšä¸ªç®€ä»‹:
 
-`JsonParserCharArray` ½âÎöÆ÷½ÓÊÜÒ»¸öJSON×Ö·û´®, È»ºóÆäÄÚ²¿Ê¹ÓÃÒ»¸ö×Ö½ÚÊı×é½øĞĞ½âÎö. During value conversion it copies character sub-arrays (a mechanism known as "chopping") and operates on them.
+`JsonParserCharArray` è§£æå™¨æ¥å—ä¸€ä¸ªJSONå­—ç¬¦ä¸², ç„¶åå…¶å†…éƒ¨ä½¿ç”¨ä¸€ä¸ªå­—èŠ‚æ•°ç»„è¿›è¡Œè§£æ. During value conversion it copies character sub-arrays (a mechanism known as "chopping") and operates on them.
 
 
-* `JsonFastParser`½âÎöÆ÷ÊÇ`JsonParserCharArray`½âÎöÆ÷µÄ±äÖÖ, ËüÊÇ×î¿ìµÄ½âÎöÆ÷. ¾¡¹ÜËüÊÇ×î¿ìµÄ,µ«ÊÇ»ùÓÚÄ³Ğ©Ô­Òò,Ëü²¢²»ÊÇÄ¬ÈÏµÄ½âÎöÆ÷. `JsonFastParser`½âÎöÆ÷Ò²±»³ÆÎªË÷Òı¸²¸Ç(index-overlay)½âÎöÆ÷. µ±½âÎö¸ø¶¨JSON×Ö·û´®µÄÊ±ºò,¸Ã½âÎöÆ÷»á¼«Á¦±ÜÃâ´´½¨ĞÂµÄ×Ö½ÚÊı×é»òÕß×Ö·û´®ÊµÀı. ËüÒ»Ö±Ö¸ÏòÔ­ÉúµÄ×Ö½ÚÊı×é¡£ ÁíÍâ, Ëü»á¾¡¿ÉÄÜµÄÍÆ³Ù¶ÔÏóµÄ´´½¨. If parsed maps are put into long-term caches care must be taken as the map objects might not be created and still consist of pointer to the original char buffer only. `JsonFastParser`²ÉÈ¡ÁËÒ»ÖÖÌØÊâµÄÇĞ¸îÄ£ĞÍ, Ëü»á¾¡ÔçµØ·Ö¸îchar buffer, ÒÔ±ãÄÜÎ¬³ÖÒ»·İ¶ÔÔ­Éúbuffer±È½ÏĞ¡µÄ¿½±´. Èç¹ûÄãÏëÊ¹ÓÃ`JsonFastParser</code>, ÄÇÃ´¸øÄãµÄ½¨ÒéÊÇ±£³Ö`JsonFastParser`µÄJSON bufferÔÚ2MB×óÓÒ, ¶øÇÒÊ±¿ÌÒª±£³Ö³¤ÆÚ»º´æÏŞÖÆ.
+* `JsonFastParser`è§£æå™¨æ˜¯`JsonParserCharArray`è§£æå™¨çš„å˜ç§, å®ƒæ˜¯æœ€å¿«çš„è§£æå™¨. å°½ç®¡å®ƒæ˜¯æœ€å¿«çš„,ä½†æ˜¯åŸºäºæŸäº›åŸå› ,å®ƒå¹¶ä¸æ˜¯é»˜è®¤çš„è§£æå™¨. `JsonFastParser`è§£æå™¨ä¹Ÿè¢«ç§°ä¸ºç´¢å¼•è¦†ç›–(index-overlay)è§£æå™¨. å½“è§£æç»™å®šJSONå­—ç¬¦ä¸²çš„æ—¶å€™,è¯¥è§£æå™¨ä¼šæåŠ›é¿å…åˆ›å»ºæ–°çš„å­—èŠ‚æ•°ç»„æˆ–è€…å­—ç¬¦ä¸²å®ä¾‹. å®ƒä¸€ç›´æŒ‡å‘åŸç”Ÿçš„å­—èŠ‚æ•°ç»„ã€‚ å¦å¤–, å®ƒä¼šå°½å¯èƒ½çš„æ¨è¿Ÿå¯¹è±¡çš„åˆ›å»º. If parsed maps are put into long-term caches care must be taken as the map objects might not be created and still consist of pointer to the original char buffer only. `JsonFastParser`é‡‡å–äº†ä¸€ç§ç‰¹æ®Šçš„åˆ‡å‰²æ¨¡å‹, å®ƒä¼šå°½æ—©åœ°åˆ†å‰²char buffer, ä»¥ä¾¿èƒ½ç»´æŒä¸€ä»½å¯¹åŸç”Ÿbufferæ¯”è¾ƒå°çš„æ‹·è´. å¦‚æœä½ æƒ³ä½¿ç”¨`JsonFastParser</code>, é‚£ä¹ˆç»™ä½ çš„å»ºè®®æ˜¯ä¿æŒ`JsonFastParser`çš„JSON bufferåœ¨2MBå·¦å³, è€Œä¸”æ—¶åˆ»è¦ä¿æŒé•¿æœŸç¼“å­˜é™åˆ¶.
 
-* `JsonParserLax` ÊÇ`JsonFastParser`µÄÒ»¸ö±äÖÖÊµÏÖ. ËüÓë`JsonFastParser` ÓĞÒ»Ğ©ÏàËÆµÄÏëÄÜÌØµã, µ«ÊÇ²»Í¬µÄÊÇËü²»ÊÇ½ö½öÒÀ¿¿`ECMA-404 JSON grammar</code>. ÀıÈç,ÔÚÏÂÃæÀı×ÓÖĞËüÖ§³Ö²»´øÒıºÅµÄ×Ö·û´®×¢ÊÍ.
+* `JsonParserLax` æ˜¯`JsonFastParser`çš„ä¸€ä¸ªå˜ç§å®ç°. å®ƒä¸`JsonFastParser` æœ‰ä¸€äº›ç›¸ä¼¼çš„æƒ³èƒ½ç‰¹ç‚¹, ä½†æ˜¯ä¸åŒçš„æ˜¯å®ƒä¸æ˜¯ä»…ä»…ä¾é `ECMA-404 JSON grammar</code>. ä¾‹å¦‚,åœ¨ä¸‹é¢ä¾‹å­ä¸­å®ƒæ”¯æŒä¸å¸¦å¼•å·çš„å­—ç¬¦ä¸²æ³¨é‡Š.
 
-`JsonParserUsingCharacterSource` ÓÃÓÚ½âÎö·Ç³£´óµÄÎÄ¼ş. ËüÊ¹ÓÃÒ»ÖÖ³ÆÎª<code>"character windowing"</code>µÄ¼¼ÊõÈ¥½âÎö·Ç³£´ó(³¬¹ı2MB)µÄJSONÎÄ¼ş,¶øÇÒĞÔÄÜÉÏÒ²·Ç³£ÎÈ¶¨
+`JsonParserUsingCharacterSource` ç”¨äºè§£æéå¸¸å¤§çš„æ–‡ä»¶. å®ƒä½¿ç”¨ä¸€ç§ç§°ä¸º<code>"character windowing"</code>çš„æŠ€æœ¯å»è§£æéå¸¸å¤§(è¶…è¿‡2MB)çš„JSONæ–‡ä»¶,è€Œä¸”æ€§èƒ½ä¸Šä¹Ÿéå¸¸ç¨³å®š
 
-`JsonSlurper`µÄÄ¬ÈÏÊµÏÖÊÇ `JsonParserCharArray</code>.  `JsonParserType`°üº¬ÁË½âÎöÆ÷ÖÖÀàµÄÃ¶¾ÙÀàĞÍ:
+`JsonSlurper`çš„é»˜è®¤å®ç°æ˜¯ `JsonParserCharArray</code>.  `JsonParserType`åŒ…å«äº†è§£æå™¨ç§ç±»çš„æšä¸¾ç±»å‹:
 
 ```groovy
 Implementation					Constant
@@ -1017,7 +1975,7 @@ JsonParserLax					JsonParserType#LAX
 JsonParserUsingCharacterSource	JsonParserType#CHARACTER_SOURCE
 ```
 
-Èç¹ûÏëÒª¸Ä±ä½âÎöÆ÷µÄÊµÏÖÒ²·Ç³£¼òµ¥, Ö»ĞèÒªÍ¨¹ıµ÷ÓÃ`JsonSlurper#setType()</code>·½·¨¸ø`JsonParserType`ÉèÖÃÉÏ²»Í¬µÄÖµ¾Í¿ÉÒÔÁË
+å¦‚æœæƒ³è¦æ”¹å˜è§£æå™¨çš„å®ç°ä¹Ÿéå¸¸ç®€å•, åªéœ€è¦é€šè¿‡è°ƒç”¨`JsonSlurper#setType()</code>æ–¹æ³•ç»™`JsonParserType`è®¾ç½®ä¸Šä¸åŒçš„å€¼å°±å¯ä»¥äº†
 
 ```groovy
 def jsonSlurper = new JsonSlurper(type: JsonParserType.INDEX_OVERLAY)
@@ -1028,20 +1986,20 @@ assert object.myList instanceof List
 assert object.myList == [4, 8, 15, 16, 23, 42]
 ```
 
-# 2. JsonOutput
+## JsonOutput
 
-`JsonOutput`ÓÃÓÚ½«Groovy¶ÔÏóĞòÁĞ»¯³ÉJSON×Ö·û´®. 
+`JsonOutput`ç”¨äºå°†Groovyå¯¹è±¡åºåˆ—åŒ–æˆJSONå­—ç¬¦ä¸². 
 
-`JsonOutput` ÖØÔØÁË`toJson`¾²Ì¬·½·¨. Ã¿¸ö²»Í¬µÄ`toJson`·½·¨¶¼»á½ÓÊÜÒ»¸ö²»Í¬µÄ²ÎÊıÀàĞÍ. 
+`JsonOutput` é‡è½½äº†`toJson`é™æ€æ–¹æ³•. æ¯ä¸ªä¸åŒçš„`toJson`æ–¹æ³•éƒ½ä¼šæ¥å—ä¸€ä¸ªä¸åŒçš„å‚æ•°ç±»å‹. 
 
-`toJson`·½·¨·µ»ØµÄÊÇÒ»¸ö°üº¬JSOn¸ñÊ½µÄ×Ö·û´®
+`toJson`æ–¹æ³•è¿”å›çš„æ˜¯ä¸€ä¸ªåŒ…å«JSOnæ ¼å¼çš„å­—ç¬¦ä¸²
 ```groovy
 def json = JsonOutput.toJson([name: 'John Doe', age: 42])
 
 assert json == '{"name":"John Doe","age":42}'
 ```
 
-`JsonOutput`²»½öÖ§³ÖÔ­ÉúÀàĞÍ, map, listµÈÀàĞÍĞòÁĞ»¯µ½JSON, ÉõÖÁ»¹Ö§³ÖĞòÁĞ»¯`POGOs</code>(Ò»ÖÖ±È½ÏÀÏµÄGroovy¶ÔÏó)
+`JsonOutput`ä¸ä»…æ”¯æŒåŸç”Ÿç±»å‹, map, listç­‰ç±»å‹åºåˆ—åŒ–åˆ°JSON, ç”šè‡³è¿˜æ”¯æŒåºåˆ—åŒ–`POGOs</code>(ä¸€ç§æ¯”è¾ƒè€çš„Groovyå¯¹è±¡)
 ```groovy
 class Person { String name }
 
@@ -1050,7 +2008,7 @@ def json = JsonOutput.toJson([ new Person(name: 'John'), new Person(name: 'Max')
 assert json == '[{"name":"John"},{"name":"Max"}]'
 ```
 
-¸Õ²ÅÄÇ¸öÀı×ÓÖĞ, JSONÊä³öÄ¬ÈÏÃ»ÓĞ½øĞĞprettyÊä³ö. Òò´Ë`JsonSlurper`»¹Ìá¹©ÁË`prettyPrint`·½·¨
+åˆšæ‰é‚£ä¸ªä¾‹å­ä¸­, JSONè¾“å‡ºé»˜è®¤æ²¡æœ‰è¿›è¡Œprettyè¾“å‡º. å› æ­¤`JsonSlurper`è¿˜æä¾›äº†`prettyPrint`æ–¹æ³•
 ```groovy
 def json = JsonOutput.toJson([name: 'John Doe', age: 42])
 
@@ -1063,9 +2021,9 @@ assert JsonOutput.prettyPrint(json) == '''\
 }'''.stripIndent()
 ```
 
-`prettyPrint`·½·¨Ö»½ÓÊÜÒ»¸öStringÀàĞÍµÄ×Ö·û´®, Ëü²»ÄÜºÍ`JsonOutput`ÀïÆäËûµÄ·½Ê½½áºÏÆğÀ´Ê¹ÓÃ, it can be applied on arbitrary JSON String instances.
+`prettyPrint`æ–¹æ³•åªæ¥å—ä¸€ä¸ªStringç±»å‹çš„å­—ç¬¦ä¸², å®ƒä¸èƒ½å’Œ`JsonOutput`é‡Œå…¶ä»–çš„æ–¹å¼ç»“åˆèµ·æ¥ä½¿ç”¨, it can be applied on arbitrary JSON String instances.
 
-ÔÚGroovyÖĞ»¹¿ÉÒÔÊ¹ÓÃ`JsonBuilder</code>, `StreamingJsonBuilder`·½Ê½´´½¨JSON. ÕâÁ©¸ö¹¹½¨Æğ¶¼Ìá¹©ÁËÒ»¸ö`DSL</code>, µ±¹¹½¨Æ÷Éú³ÉÒ»¸öJSONµÄÊ±ºò,¿ÉÒÔÖÆ¶¨Ò»¸ö¶ÔÏóÍ¼.
+åœ¨Groovyä¸­è¿˜å¯ä»¥ä½¿ç”¨`JsonBuilder</code>, `StreamingJsonBuilder`æ–¹å¼åˆ›å»ºJSON. è¿™ä¿©ä¸ªæ„å»ºèµ·éƒ½æä¾›äº†ä¸€ä¸ª`DSL</code>, å½“æ„å»ºå™¨ç”Ÿæˆä¸€ä¸ªJSONçš„æ—¶å€™,å¯ä»¥åˆ¶å®šä¸€ä¸ªå¯¹è±¡å›¾.
 
 
 ```groovy
@@ -1106,9 +2064,9 @@ switch (years) {
 }
 ```
 
-## 2.4. Syntax enhancements for collections
+# Syntax enhancements for collections
 
-### 2.4.1. GPath support
+## GPath support
 
 Thanks to the support of property notation for both lists and maps, Groovy provides syntactic sugar making it really easy to deal with nested collections, as illustrated in the following examples:
 
@@ -1124,7 +2082,7 @@ assert listOfMaps*.a == listOfMaps.collect { it?.a } //equivalent notation
 assert listOfMaps.a == [11,21]
 ```
 
-### 2.4.2. Spread operator
+## Spread operator
 
 The spread operator can be used to "inline" a collection into another. It is syntactic sugar which often avoids calls to putAll and facilitates the realization of one-liners:
 
@@ -1161,7 +2119,7 @@ def persons = [new Person(name:'Hugo', age:17), new Person(name:'Sandra',age:19)
 assert [17, 19] == persons*.age
 ```
 
-### 2.4.4. Slicing with the subscript operator
+## Slicing with the subscript operator
 
 You can index into lists, arrays, maps using the subscript expression. It is interesting that strings are considered as special kinds of collections in that context:
 
@@ -1217,40 +2175,28 @@ name = text[3..1]
 assert name == "eci"
 ```
 
-## 2.5. Enhanced Collection Methods
-
-In addition to lists, maps or ranges, Groovy offers a lot of additional methods for filtering, collecting, grouping, counting, ¡­? which are directly available on either collections or more easily iterables.
-
-In particular, we invite you to read the Groovy development kit API docs and specifically:
-
-* methods added to Iterable can be found here
-* methods added to Iterator can be found here
-* methods added to Collection can be found here
-* methods added to List can be found here
-* methods added to Map can be found here
-
 # Scripting Ant tasks
 
-ËäÈ»`Ant`Ö»ÊÇÒ»¸ö¹¹½¨¹¤¾ß, µ«ÆäÌá¹©ÁËÀıÈçÄÜ¹»²Ù×÷ÎÄ¼ş(°üÀ¨zipÎÄ¼ş), ¿½±´, ×ÊÔ´¹ÜÀíµÈÖî¶àÊµÓÃ¹¦ÄÜ. È»¶øÈç¹ûÄã²»Ï²»¶Ê¹ÓÃ`build.xml`ÎÄ¼ş»òÕß`Jelly`½Å±¾, ¶øÊÇÏëÒªÒ»ÖÖÇåÎú¼ò½àµÄ¹¹½¨·½Ê½, ÄÇÃ´Äã¾Í¿ÉÒÔÊÔÊÔÊ¹ÓÃGroovy±àĞ´¹¹½¨¹ı³Ì.
+è™½ç„¶`Ant`åªæ˜¯ä¸€ä¸ªæ„å»ºå·¥å…·, ä½†å…¶æä¾›äº†ä¾‹å¦‚èƒ½å¤Ÿæ“ä½œæ–‡ä»¶(åŒ…æ‹¬zipæ–‡ä»¶), æ‹·è´, èµ„æºç®¡ç†ç­‰è¯¸å¤šå®ç”¨åŠŸèƒ½. ç„¶è€Œå¦‚æœä½ ä¸å–œæ¬¢ä½¿ç”¨`build.xml`æ–‡ä»¶æˆ–è€…`Jelly`è„šæœ¬, è€Œæ˜¯æƒ³è¦ä¸€ç§æ¸…æ™°ç®€æ´çš„æ„å»ºæ–¹å¼, é‚£ä¹ˆä½ å°±å¯ä»¥è¯•è¯•ä½¿ç”¨Groovyç¼–å†™æ„å»ºè¿‡ç¨‹.
 
-GroovyÌá¹©ÁËÒ»¸ö¸¨ÖúÀà`AntBuilder`°ïÃ¦±àĞ´Ant¹¹½¨ÈÎÎñ. Ëü¿´ÆğÀ´ºÜÏñÒ»¸ö²»´ø¼âÀ¨ºÅµÄAnt¡¯s XMLµÄ¼ò½à°æ±¾. Òò´ËÄã¿ÉÒÔÔÚ½Å±¾ÖĞ»ìºÏºÍÆ¥Åä±ê¼Ç. Ant±¾ÉíÊÇÒ»×éJarÎÄ¼şµÄ¼¯ºÏ. ½«Õâ×éjarÎÄ¼şÌí¼Óµ½ÄãµÄclasspathÉÏ, Äã¾Í¿ÉÒÔÔÚGroovyÖĞÇáÇáËÉËÉµÄÊ¹ÓÃËüÃÇ.
+Groovyæä¾›äº†ä¸€ä¸ªè¾…åŠ©ç±»`AntBuilder`å¸®å¿™ç¼–å†™Antæ„å»ºä»»åŠ¡. å®ƒçœ‹èµ·æ¥å¾ˆåƒä¸€ä¸ªä¸å¸¦å°–æ‹¬å·çš„Antâ€™s XMLçš„ç®€æ´ç‰ˆæœ¬. å› æ­¤ä½ å¯ä»¥åœ¨è„šæœ¬ä¸­æ··åˆå’ŒåŒ¹é…æ ‡è®°. Antæœ¬èº«æ˜¯ä¸€ç»„Jaræ–‡ä»¶çš„é›†åˆ. å°†è¿™ç»„jaræ–‡ä»¶æ·»åŠ åˆ°ä½ çš„classpathä¸Š, ä½ å°±å¯ä»¥åœ¨Groovyä¸­è½»è½»æ¾æ¾çš„ä½¿ç”¨å®ƒä»¬.
 
-`AntBuilder`Í¨¹ı±ã½İµÄ¹¹ÔìÆ÷Óï·¨Ö±½Ó±©Â¶ÁËAnt task. ÏÂÃæÊÇÒ»¸ö¼òµ¥µÄÊ¾Àı, ËüµÄ¹¦ÄÜÊÇÔÚ±ê×¼Êä³öÉÏÊä³öÒ»ÌõÏûÏ¢.
+`AntBuilder`é€šè¿‡ä¾¿æ·çš„æ„é€ å™¨è¯­æ³•ç›´æ¥æš´éœ²äº†Ant task. ä¸‹é¢æ˜¯ä¸€ä¸ªç®€å•çš„ç¤ºä¾‹, å®ƒçš„åŠŸèƒ½æ˜¯åœ¨æ ‡å‡†è¾“å‡ºä¸Šè¾“å‡ºä¸€æ¡æ¶ˆæ¯.
 ```groovy
 def ant = new AntBuilder()          
 ant.echo('hello from Ant!')        
 ```
 
-1. ´´½¨Ò»¸ö`AntBuilder`ÊµÀı
-2. Ö´ĞĞ`AntBuilder`ÊµÀıµÄecho task
+1. åˆ›å»ºä¸€ä¸ª`AntBuilder`å®ä¾‹
+2. æ‰§è¡Œ`AntBuilder`å®ä¾‹çš„echo task
 
-¼ÙÉè,ÏÖÔÚÄãĞèÒª´´½¨Ò»¸öZIPÎÄ¼ş£º
+å‡è®¾,ç°åœ¨ä½ éœ€è¦åˆ›å»ºä¸€ä¸ªZIPæ–‡ä»¶ï¼š
 ```groovy
 def ant = new AntBuilder()
 ant.zip(destfile: 'sources.zip', basedir: 'src')
 ```
 
-ÔÚÏÂÃæµÄÀı×ÓÖĞ, ÎÒÃÇ½«Õ¹Ê¾ÔÚGroovyÖĞÊ¹ÓÃ´«Í³µÄAnt Ä£Ê½Í¨¹ı`AntBuilder`¿½±´Ò»×éÎÄ¼ş.
+åœ¨ä¸‹é¢çš„ä¾‹å­ä¸­, æˆ‘ä»¬å°†å±•ç¤ºåœ¨Groovyä¸­ä½¿ç”¨ä¼ ç»Ÿçš„Ant æ¨¡å¼é€šè¿‡`AntBuilder`æ‹·è´ä¸€ç»„æ–‡ä»¶.
 ```groovy
 // lets just call one task
 ant.echo("hello")
@@ -1273,7 +2219,7 @@ def file = new File(ant.project.baseDir,"target/AntTest/groovy/util/AntTest.groo
 assert file.exists()
 ```
 
-ÏÂÃæµÄÀı×ÓÊÇ±éÀúÒ»×éÎÄ¼ş, È»ºó½«Ã¿¸öÎÄ¼ş¸ù¾İÌØÊâÄ£Ê½½øĞĞÆ¥Åä.
+ä¸‹é¢çš„ä¾‹å­æ˜¯éå†ä¸€ç»„æ–‡ä»¶, ç„¶åå°†æ¯ä¸ªæ–‡ä»¶æ ¹æ®ç‰¹æ®Šæ¨¡å¼è¿›è¡ŒåŒ¹é….
 ```groovy
 // lets create a scanner of filesets
 def scanner = ant.fileScanner {
@@ -1295,7 +2241,7 @@ assert found
 
 Or execute a JUnit test:
 
-ÏÂÃæÎÒÃÇÖ´ĞĞJUnit
+ä¸‹é¢æˆ‘ä»¬æ‰§è¡ŒJUnit
 ```groovy
 // lets create a scanner of filesets
 ant.junit {
@@ -1303,7 +2249,7 @@ ant.junit {
 }
 ```
 
-ÏÖÔÚ, ÈÃÎÒÃÇµÄ²½×ÓÂõµØ¸ü´óÒ»µã£ºÔÚGroovyÖĞ±àÒëÈ»ºóÖ´ĞĞÒ»¸öJavaÎÄ¼ş.
+ç°åœ¨, è®©æˆ‘ä»¬çš„æ­¥å­è¿ˆåœ°æ›´å¤§ä¸€ç‚¹ï¼šåœ¨Groovyä¸­ç¼–è¯‘ç„¶åæ‰§è¡Œä¸€ä¸ªJavaæ–‡ä»¶.
 ```groovy
 ant.echo(file:'Temp.java', '''
     class Temp {
@@ -1317,4 +2263,4 @@ ant.java(classpath:'.', classname:'Temp', fork:'true')
 ant.echo('Done')
 ```
 
-ĞèÒªÌá¼°µÄÊÇ, `AntBuilder`ÊÇÄÚÇ¶ÓÚ`Gradle`ÖĞµÄ. Äã¿ÉÒÔÏñÔÚGroovyÖĞÄÇÑù, ÔÚ`Gradle`Ê¹ÓÃ`AntBuilder`
+éœ€è¦æåŠçš„æ˜¯, `AntBuilder`æ˜¯å†…åµŒäº`Gradle`ä¸­çš„. ä½ å¯ä»¥åƒåœ¨Groovyä¸­é‚£æ ·, åœ¨`Gradle`ä½¿ç”¨`AntBuilder`
