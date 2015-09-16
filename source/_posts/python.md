@@ -1,7 +1,7 @@
 title: PYTHON2
 ---
 
-## 字符串
+# 字符串
 * `capitalize(...)` : `S.capitalize() -> str`
 
     Return a capitalized version of S, i.e. make the first character
@@ -246,8 +246,8 @@ title: PYTHON2
     Pad a numeric string S with zeros on the left, to fill a field
     of the specified width. The string S is never truncated.
 
-## 内置数据结构
-### 列表
+# 内置数据结构
+## 列表
 * 声明一个列表 `list = [123, "ad"]`
 * 索引第一个元素 `list[0]`
 * 在尾部添加一个元素 `list.append(2.56)`
@@ -257,7 +257,7 @@ title: PYTHON2
 
 
 
-### 元组
+## 元组
 元组和列表十分类似，只不过元组和字符串一样是 不可变的 即你不能修改元组
 ```python
 tumple = (123, "adf")
@@ -265,7 +265,7 @@ print(tumple[0])
 print(len(tumple))
 ```
 
-### 字典
+## 字典
 ```python
 map = {
        "key1":"value1",
@@ -286,7 +286,7 @@ if "key2" in map:
 help(dict)
 ```
 
-### 序列
+## 序列
 序列的两个主要特点是索引操作符和切片操作符
 ```python
 shoplist = ['apple', 'mango', 'carrot', 'banana']
@@ -309,11 +309,11 @@ print('characters start to end is', name[:])
 ```
 
 
-## 文件
+# 文件
 
 
-## 控制流
-### if
+# 控制流
+## if
 ```python
 tmp = 0
 if tmp > 0 :
@@ -324,7 +324,7 @@ else :
     print("=")
 ```
 
-### while
+## while
 ```python
 tmp = 0
 while tmp < 3 :
@@ -334,7 +334,7 @@ else :
     print("over")
 ```
 
-### for
+## for
 ```python
 for i in [0,1,2,3,4]:
     print(i)
@@ -348,9 +348,9 @@ else:
     print('loop over')
 ```
 
-## 函数
+# 函数
 
-### 定义一个不带参数的函数
+## 定义一个不带参数的函数
 ```python
 # 定义一个不带参数的函数
 def printHelloworld():
@@ -360,7 +360,7 @@ def printHelloworld():
 printHelloworld()
 ```
 
-### 定义一个带参数的函数
+## 定义一个带参数的函数
 ```python
 # 定义一个带参数的函数
 def printHelloworld(saywhat):
@@ -370,7 +370,7 @@ def printHelloworld(saywhat):
 printHelloworld("hello world")
 ```
 
-### 函数中的局部变量
+## 函数中的局部变量
 ```python
 # 定义一个带参数的函数
 def printHelloworld(saywhat):
@@ -395,7 +395,7 @@ printHelloworld(str)
 print(str)
 ```
 
-### 使用global语句
+## 使用global语句
 ```python
 # 定义一个带参数的函数
 def printHelloworld():
@@ -408,7 +408,7 @@ printHelloworld()
 print(saywhat)
 ```
 
-### 默认参数值
+## 默认参数值
 ```python
 def printHelloworld(str, str1="str1 value", str2="str2 value"):
     print(str + " " + str1 + " " + str2)
@@ -417,7 +417,7 @@ def printHelloworld(str, str1="str1 value", str2="str2 value"):
 printHelloworld("123", str2="789")
 ```
 
-### return返回值
+## return返回值
 ```python
 def printHelloworld(str, str1="str1 value", str2="str2 value"):
     print(str)
@@ -434,10 +434,10 @@ result = printHelloworld("123", str1="789")
 print(result)
 ```
 
-## 模块
+# 模块
 模块是一个包含函数和变量的文件。为了在其他程序中重用模块，模块的文件名必须以.py为扩展名。
 
-### 使用`sys`模块
+## 使用`sys`模块
 ```python
 import sys
 
@@ -458,7 +458,7 @@ for argvtmp in argv :
 print(__name__)
 ```
 
-### 自定义模块
+## 自定义模块
 * 建立`mymodule.py`文件
 ```python
 # Filename: mymodule.py
@@ -474,3 +474,114 @@ mymodule.printModuleName()
 ```
 1. 需要注意的是`mymodule.py`文件的`Filename`必须和文件名相同
 2. 如果`module`的name是`__main__`说明这个module是由用户启动的
+
+# 面向对象
+
+## self
+类的方法与普通的函数只有一个特别的区别——它们必须有一个额外的第一个参数名称`self`
+```python
+
+```
+
+## 创建一个类
+```python
+class Person:
+    pass
+
+p = Person()
+print p
+```
+
+## 对象的方法
+```python
+class Person:
+    def run(self):
+        print("run")
+
+p = Person()
+p.run()
+```
+
+### __init__方法
+`__init__`方法在类的一个对象被建立时，马上运行
+```python
+class Person:
+    def run(self):
+        print("run")
+    def __init__(self):
+        print("init")
+
+p = Person()
+p.run()
+```
+
+### __del__方法
+```python
+class Person:
+    def __init__(self):
+        print("init")
+    def __del__(self):
+        print("__destory__")
+
+p = Person()
+```
+
+#### 类与对象的方法
+* 类的变量: 由一个类的所有对象（实例）共享使用。只有一个类变量的拷贝，所以当某个对象对类的变量做了改动的时候，这个改动会反映到所有其他的实例上。
+
+* 对象的变量: 由类的每个对象/实例拥有。因此每个对象有自己对这个域的一份拷贝，即它们不是共享的，在同一个类的不同实例中，虽然对象的变量有相同的名称，但是是互不相关的。通过一个例子会使这个易于理解。
+
+```python
+class Father:
+    age = 0
+
+father = Father()
+father.age = 10
+Father.age = 20
+print(father.age)
+print(Father.age)
+```
+
+## 继承
+```python
+class Father:
+    name = "Tom"
+    def run(self):
+        print("run")
+
+class Son(Father):
+    pass
+
+son = Son()
+print(son.name)
+son.run()
+
+```
+
+### `__init__`, `__del__`在继承中的使用
+Python不会自动调用父类的constructor
+```python
+class Mother:
+    pass
+
+class Father:
+    name = "Tom"
+    def run(self):
+        print("run")
+    def __init__(self):
+        print("Father init")
+    def __del__(self):
+        print("Father del")
+
+class Son(Father, Mother):
+    def __init__(self):
+        print("Son init")
+    def __del__(self):
+        print("Son del")
+
+son = Son()
+print(son.name)
+son.run()
+
+
+```
