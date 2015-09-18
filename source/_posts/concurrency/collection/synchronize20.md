@@ -1,4 +1,6 @@
 category: 
+- concurrency
+tag:
 - collection
 title: java2.0的同步方式
 ---

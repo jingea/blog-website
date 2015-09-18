@@ -1,4 +1,6 @@
-category: 
+锘縞ategory: 
+- concurrency
+tag:
 - custom
-title: custom\通过实现ThreadFactory接口为ForkJoin框架生成定制线程
+title: custom\閫氳繃瀹炵幇ThreadFactory鎺ュ彛涓篎orkJoin妗嗘灦鐢熸垚瀹氬埗绾跨▼
 ---

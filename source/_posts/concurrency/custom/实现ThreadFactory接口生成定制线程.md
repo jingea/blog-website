@@ -1,4 +1,6 @@
-category: 
+锘縞ategory: 
+- concurrency
+tag:
 - custom
-title: custom\实现ThreadFactory接口生成定制线程
+title: 瀹炵幇ThreadFactory鎺ュ彛鐢熸垚瀹氬埗绾跨▼
 ---

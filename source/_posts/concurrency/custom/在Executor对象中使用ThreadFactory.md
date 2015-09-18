@@ -1,4 +1,6 @@
-category: 
+锘縞ategory: 
+- concurrency
+tag:
 - custom
-title: custom\在Executor对象中使用ThreadFactory
+title: custom\鍦‥xecutor瀵硅薄涓娇鐢═hreadFactory
 ---

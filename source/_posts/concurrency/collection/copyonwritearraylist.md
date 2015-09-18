@@ -1,5 +1,7 @@
 ﻿category: 
-- 并发集合
+- concurrency
+tag:
+- collection
 title: CopyOnWriteArrayList
 ---
 # CopyOnWriteArrayList

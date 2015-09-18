@@ -1,4 +1,6 @@
 category: 
+- concurrency
+tag:
 - collection
 title: Skip list
 ---
