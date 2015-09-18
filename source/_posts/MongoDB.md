@@ -1,138 +1,138 @@
-
+ï»¿title: MongoDB
+---
 # Run MongoDB
 
 ## Run MongoDB On Windows
 
 ```
-	Èç¹ûÔÚÃ»ÓĞ½øĞĞauthÉèÖÃÇÒÔÚSecure ModeÔËĞĞ, ÄÇÃ´¾Í²»ÒªÊ¹ mongod.exeÔÚ¹«¹²ÍøÂçÉÏ¿É¼û.
+	å¦‚æœåœ¨æ²¡æœ‰è¿›è¡Œauthè®¾ç½®ä¸”åœ¨Secure Modeè¿è¡Œ, é‚£ä¹ˆå°±ä¸è¦ä½¿ mongod.exeåœ¨å…¬å…±ç½‘ç»œä¸Šå¯è§.
 ```
 
-### ÉèÖÃMOngoDB»·¾³
+### è®¾ç½®MOngoDBç¯å¢ƒ
 
-###### ÉèÖÃ»·¾³±äÁ¿
+###### è®¾ç½®ç¯å¢ƒå˜é‡
 ```
-	ÔÚ»·¾³±äÁ¿ÀïÌí¼Ó»·¾³±äÁ¿ D:\Program Files\MongoDB\Server\3.0\
-	È»ºóÔÚPathÀïÌí¼Ó£º %MONGODB_HOME%\bin
+	åœ¨ç¯å¢ƒå˜é‡é‡Œæ·»åŠ ç¯å¢ƒå˜é‡ D:\Program Files\MongoDB\Server\3.0\
+	ç„¶ååœ¨Pathé‡Œæ·»åŠ ï¼š %MONGODB_HOME%\bin
 ```
 
 ###### data directory
 ```
-	MongoDB ĞèÒªÒ»¸ödata directoryÀ´´æ´¢È«²¿µÄÊı¾İ. MongoDBÄ¬ÈÏµÄdata directoryÂ·¾¶ÊÇ\data\db, 
-	ËùÒÔÎÒÃÇĞèÒª´´½¨Ò»¸ödata directory. ¼ÙÉèÎÒÃÇÔÚDÅÌ´´½¨ÁËÒ»¸öÕâÑùµÄÄ¿Â¼: D:\mongodb\data\db.
+	MongoDB éœ€è¦ä¸€ä¸ªdata directoryæ¥å­˜å‚¨å…¨éƒ¨çš„æ•°æ®. MongoDBé»˜è®¤çš„data directoryè·¯å¾„æ˜¯\data\db, 
+	æ‰€ä»¥æˆ‘ä»¬éœ€è¦åˆ›å»ºä¸€ä¸ªdata directory. å‡è®¾æˆ‘ä»¬åœ¨Dç›˜åˆ›å»ºäº†ä¸€ä¸ªè¿™æ ·çš„ç›®å½•: D:\mongodb\data\db.
 
-	Äã¿ÉÒÔÍ¨¹ı--dbpathÑ¡Ïî¸ømongod.exeÉèÖÃÁíÒ»¸ödata directory.
+	ä½ å¯ä»¥é€šè¿‡--dbpathé€‰é¡¹ç»™mongod.exeè®¾ç½®å¦ä¸€ä¸ªdata directory.
 	mongod.exe --dbpath D:\mongodb\data\db
 
-	Èç¹ûÄãµÄdata directory°üº¬¿Õ¸ñµÄ»°,ÄÇÃ´¾ÍĞèÒªÊ¹ÓÃ""½«ËûÃÇ°üº¬ÆğÀ´£º
+	å¦‚æœä½ çš„data directoryåŒ…å«ç©ºæ ¼çš„è¯,é‚£ä¹ˆå°±éœ€è¦ä½¿ç”¨""å°†ä»–ä»¬åŒ…å«èµ·æ¥ï¼š
 	mongod.exe --dbpath "d:\test\mongo db data"
 ```
 
-## Æô¶¯MongoDB
+## å¯åŠ¨MongoDB
 
-###### Ê¹ÓÃmongod.exeÃüÁîÆô¶¯mongoDB
+###### ä½¿ç”¨mongod.exeå‘½ä»¤å¯åŠ¨mongoDB
 ```
 	mongod.exe
 ```
 
-###### Æô¶¯ÈÕÖ¾
+###### å¯åŠ¨æ—¥å¿—
 ```
-	×îºóÎÒÃÇÔÚÆô¶¯ÈÕÖ¾Àï¿´µ½
+	æœ€åæˆ‘ä»¬åœ¨å¯åŠ¨æ—¥å¿—é‡Œçœ‹åˆ°
 	waiting for connections on port 27017
 ```
 
-#### ÃüÁîĞĞ·½Ê½Æô¶¯
+#### å‘½ä»¤è¡Œæ–¹å¼å¯åŠ¨
 
-MongoDB Ä¬ÈÏ´æ´¢Êı¾İÄ¿Â¼Îª/data/db/ (»òÕß c:/data/db), Ä¬ÈÏ¶Ë¿Ú 27017,Ä¬ÈÏ HTTP ¶Ë¿Ú 28017.
+MongoDB é»˜è®¤å­˜å‚¨æ•°æ®ç›®å½•ä¸º/data/db/ (æˆ–è€… c:/data/db), é»˜è®¤ç«¯å£ 27017,é»˜è®¤ HTTP ç«¯å£ 28017.
 ```
 	mongod --dbpath=/data/db
 ```
 
-#### ÅäÖÃÎÄ¼ş·½Ê½Æô¶¯
-MongoDB Ò²Ö§³ÖÍ¬ mysql Ò»ÑùµÄ¶ÁÈ¡Æô¶¯ÅäÖÃÎÄ¼şµÄ·½Ê½À´Æô¶¯Êı¾İ¿â,ÅäÖÃÎÄ¼şµÄÄÚÈİÈçÏÂ:
+#### é…ç½®æ–‡ä»¶æ–¹å¼å¯åŠ¨
+MongoDB ä¹Ÿæ”¯æŒåŒ mysql ä¸€æ ·çš„è¯»å–å¯åŠ¨é…ç½®æ–‡ä»¶çš„æ–¹å¼æ¥å¯åŠ¨æ•°æ®åº“,é…ç½®æ–‡ä»¶çš„å†…å®¹å¦‚ä¸‹:
 ```
 	cat /etc/mongodb.cnf
 ```
-Æô¶¯Ê±¼ÓÉÏ¡±-f¡±²ÎÊı,²¢Ö¸ÏòÅäÖÃÎÄ¼ş¼´¿É:
+å¯åŠ¨æ—¶åŠ ä¸Šâ€-fâ€å‚æ•°,å¹¶æŒ‡å‘é…ç½®æ–‡ä»¶å³å¯:
 ```
 	mongod -f /etc/mongodb.cnf
 ```
 
-#### Daemon ·½Ê½Æô¶¯
-MongoDB Ìá¹©ÁËÒ»ÖÖºóÌ¨ Daemon ·½Ê½Æô¶¯µÄÑ¡Ôñ,Ö»Ğè¼ÓÉÏÒ»¸ö¡± --fork¡±²ÎÊı¼´¿É,,µ«Èç¹ûÓÃµ½ÁË ¡± --fork¡±²ÎÊı¾Í±ØĞëÒ²ÆôÓÃ ¡±--logpath¡±²ÎÊı,ÕâÊÇÇ¿ÖÆµÄ
+#### Daemon æ–¹å¼å¯åŠ¨
+MongoDB æä¾›äº†ä¸€ç§åå° Daemon æ–¹å¼å¯åŠ¨çš„é€‰æ‹©,åªéœ€åŠ ä¸Šä¸€ä¸ªâ€ --forkâ€å‚æ•°å³å¯,,ä½†å¦‚æœç”¨åˆ°äº† â€ --forkâ€å‚æ•°å°±å¿…é¡»ä¹Ÿå¯ç”¨ â€--logpathâ€å‚æ•°,è¿™æ˜¯å¼ºåˆ¶çš„
 
 ```
 	mongod --dbpath=/data/db --logpath=/data/log/r3.log --fork
 ```
 
-#### mongod ²ÎÊıËµÃ÷
-mongod µÄ²ÎÊı·ÖÎªÒ»°ã²ÎÊı, windows ²ÎÊı, replication ²ÎÊı, replica set ²ÎÊı,ÒÔ¼°Òşº¬²ÎÊı.ÉÏÃæÁĞ¾ÙµÄ¶¼ÊÇÒ»°ã²ÎÊı
+#### mongod å‚æ•°è¯´æ˜
+mongod çš„å‚æ•°åˆ†ä¸ºä¸€èˆ¬å‚æ•°, windows å‚æ•°, replication å‚æ•°, replica set å‚æ•°,ä»¥åŠéšå«å‚æ•°.ä¸Šé¢åˆ—ä¸¾çš„éƒ½æ˜¯ä¸€èˆ¬å‚æ•°
 
-mongod µÄ²ÎÊıÖĞ,Ã»ÓĞÉèÖÃÄÚ´æ´óĞ¡Ïà¹ØµÄ²ÎÊı,ÊÇµÄ, MongoDB Ê¹ÓÃ os mmap »úÖÆÀ´»º´æÊı¾İÎÄ¼şÊı¾İ,×ÔÉíÄ¿Ç°²»Ìá¹©»º´æ»úÖÆ.ÕâÑùºÃ´¦ÊÇ´úÂë¼òµ¥,
-mmap ÔÚÊı¾İÁ¿²»³¬¹ıÄÚ´æÊ±Ğ§ÂÊºÜ¸ß.µ«ÊÇÊı¾İÁ¿³¬¹ıÏµÍ³¿ÉÓÃÄÚ´æºó,ÔòĞ´ÈëµÄĞÔÄÜ¿ÉÄÜ²»Ì«ÎÈ¶¨,ÈİÒ×³öÏÖ´óÆğ´óÂä,²»¹ıÔÚ×îĞÂµÄ 1.8 °æ±¾ÖĞ,Õâ¸öÇé¿öÏà¶ÔÒÔÇ°µÄ°æ±¾ÒÑ¾­
-ÓĞÁËÒ»¶¨³Ì¶ÈµÄ¸ÄÉÆ.
+mongod çš„å‚æ•°ä¸­,æ²¡æœ‰è®¾ç½®å†…å­˜å¤§å°ç›¸å…³çš„å‚æ•°,æ˜¯çš„, MongoDB ä½¿ç”¨ os mmap æœºåˆ¶æ¥ç¼“å­˜æ•°æ®æ–‡ä»¶æ•°æ®,è‡ªèº«ç›®å‰ä¸æä¾›ç¼“å­˜æœºåˆ¶.è¿™æ ·å¥½å¤„æ˜¯ä»£ç ç®€å•,
+mmap åœ¨æ•°æ®é‡ä¸è¶…è¿‡å†…å­˜æ—¶æ•ˆç‡å¾ˆé«˜.ä½†æ˜¯æ•°æ®é‡è¶…è¿‡ç³»ç»Ÿå¯ç”¨å†…å­˜å,åˆ™å†™å…¥çš„æ€§èƒ½å¯èƒ½ä¸å¤ªç¨³å®š,å®¹æ˜“å‡ºç°å¤§èµ·å¤§è½,ä¸è¿‡åœ¨æœ€æ–°çš„ 1.8 ç‰ˆæœ¬ä¸­,è¿™ä¸ªæƒ…å†µç›¸å¯¹ä»¥å‰çš„ç‰ˆæœ¬å·²ç»
+æœ‰äº†ä¸€å®šç¨‹åº¦çš„æ”¹å–„.
 
-###### mongod µÄÖ÷Òª²ÎÊıÓĞ£º
-* dbpath ¡ª¡ª Êı¾İÎÄ¼ş´æ·ÅÂ·¾¶,Ã¿¸öÊı¾İ¿â»áÔÚÆäÖĞ´´½¨Ò»¸ö×ÓÄ¿Â¼,ÓÃÓÚ·ÀÖ¹Í¬Ò»¸öÊµÀı¶à´ÎÔË
-ĞĞµÄ mongod.lock Ò²±£´æÔÚ´ËÄ¿Â¼ÖĞ.
-* logpath ¡ª¡ª ´íÎóÈÕÖ¾ÎÄ¼ş
-* logappend ¡ª¡ª ´íÎóÈÕÖ¾²ÉÓÃ×·¼ÓÄ£Ê½£¨Ä¬ÈÏÊÇ¸²Ğ´Ä£Ê½£©
-* bind_ip ¡ª¡ª ¶ÔÍâ·şÎñµÄ°ó¶¨ ip,Ò»°ãÉèÖÃÎª¿Õ,¼°°ó¶¨ÔÚ±¾»úËùÓĞ¿ÉÓÃ ip ÉÏ,ÈçÓĞĞèÒª¿ÉÒÔµ¥¶ÀÖ¸¶¨
-* port ¡ª¡ª ¶ÔÍâ·şÎñ¶Ë¿Ú . Web ¹ÜÀí¶Ë¿ÚÔÚÕâ¸ö port µÄ»ù´¡ÉÏ+1000
-* fork ¡ª¡ª ÒÔºóÌ¨ Daemon ĞÎÊ½ÔËĞĞ·şÎñ
-* journal ¡ª¡ª ¿ªÆôÈÕÖ¾¹¦ÄÜ,Í¨¹ı±£´æ²Ù×÷ÈÕÖ¾À´½µµÍµ¥»ú¹ÊÕÏµÄ»Ö¸´Ê±¼ä,ÔÚ 1.8 °æ±¾ºóÕıÊ½¼ÓÈë,È¡´úÔÚ 1.7.5 °æ±¾ÖĞµÄ dur ²ÎÊı.
-* syncdelay ¡ª¡ª ÏµÍ³Í¬²½Ë¢ĞÂ´ÅÅÌµÄÊ±¼ä,µ¥Î»ÎªÃë,Ä¬ÈÏÊÇ 60 Ãë.
-* directoryperdb ¡ª¡ª Ã¿¸ö db ´æ·ÅÔÚµ¥¶ÀµÄÄ¿Â¼ÖĞ,½¨ÒéÉèÖÃ¸Ã²ÎÊı.Óë MySQL µÄ¶ÀÁ¢±í¿Õ¼äÀàËÆ
-* maxConns ¡ª¡ª ×î´óÁ¬½ÓÊı
-* repairpath ¡ª¡ª Ö´ĞĞ repair Ê±µÄÁÙÊ±Ä¿Â¼.ÔÚÈç¹ûÃ»ÓĞ¿ªÆô journal,Òì³£ down »úºóÖØÆô ,±ØĞëÖ´ĞĞ repair²Ù×÷.
+###### mongod çš„ä¸»è¦å‚æ•°æœ‰ï¼š
+* dbpath â€”â€” æ•°æ®æ–‡ä»¶å­˜æ”¾è·¯å¾„,æ¯ä¸ªæ•°æ®åº“ä¼šåœ¨å…¶ä¸­åˆ›å»ºä¸€ä¸ªå­ç›®å½•,ç”¨äºé˜²æ­¢åŒä¸€ä¸ªå®ä¾‹å¤šæ¬¡è¿è¡Œçš„ mongod.lock ä¹Ÿä¿å­˜åœ¨æ­¤ç›®å½•ä¸­.
+* logpath â€”â€” é”™è¯¯æ—¥å¿—æ–‡ä»¶
+* logappend â€”â€” é”™è¯¯æ—¥å¿—é‡‡ç”¨è¿½åŠ æ¨¡å¼ï¼ˆé»˜è®¤æ˜¯è¦†å†™æ¨¡å¼ï¼‰
+* bind_ip â€”â€” å¯¹å¤–æœåŠ¡çš„ç»‘å®š ip,ä¸€èˆ¬è®¾ç½®ä¸ºç©º,åŠç»‘å®šåœ¨æœ¬æœºæ‰€æœ‰å¯ç”¨ ip ä¸Š,å¦‚æœ‰éœ€è¦å¯ä»¥å•ç‹¬æŒ‡å®š
+* port â€”â€” å¯¹å¤–æœåŠ¡ç«¯å£ . Web ç®¡ç†ç«¯å£åœ¨è¿™ä¸ª port çš„åŸºç¡€ä¸Š+1000
+* fork â€”â€” ä»¥åå° Daemon å½¢å¼è¿è¡ŒæœåŠ¡
+* journal â€”â€” å¼€å¯æ—¥å¿—åŠŸèƒ½,é€šè¿‡ä¿å­˜æ“ä½œæ—¥å¿—æ¥é™ä½å•æœºæ•…éšœçš„æ¢å¤æ—¶é—´,åœ¨ 1.8 ç‰ˆæœ¬åæ­£å¼åŠ å…¥,å–ä»£åœ¨ 1.7.5 ç‰ˆæœ¬ä¸­çš„ dur å‚æ•°.
+* syncdelay â€”â€” ç³»ç»ŸåŒæ­¥åˆ·æ–°ç£ç›˜çš„æ—¶é—´,å•ä½ä¸ºç§’,é»˜è®¤æ˜¯ 60 ç§’.
+* directoryperdb â€”â€” æ¯ä¸ª db å­˜æ”¾åœ¨å•ç‹¬çš„ç›®å½•ä¸­,å»ºè®®è®¾ç½®è¯¥å‚æ•°.ä¸ MySQL çš„ç‹¬ç«‹è¡¨ç©ºé—´ç±»ä¼¼
+* maxConns â€”â€” æœ€å¤§è¿æ¥æ•°
+* repairpath â€”â€” æ‰§è¡Œ repair æ—¶çš„ä¸´æ—¶ç›®å½•.åœ¨å¦‚æœæ²¡æœ‰å¼€å¯ journal,å¼‚å¸¸ down æœºåé‡å¯ ,å¿…é¡»æ‰§è¡Œ repairæ“ä½œ.
 
-## Í£Ö¹Êı¾İ¿â
+## åœæ­¢æ•°æ®åº“
 
 #### Control-C
-#### shutdownServer()Ö¸Áî
+#### shutdownServer()æŒ‡ä»¤
 ```
 	mongo --port 28013
 	use admin
 	db.shutdownServer()
 ```
 
-## ³£ÓÃ¹¤¾ß¼¯
-MongoDB ÔÚ bin Ä¿Â¼ÏÂÌá¹©ÁËÒ»ÏµÁĞÓĞÓÃµÄ¹¤¾ß,ÕâĞ©¹¤¾ßÌá¹©ÁË MongoDB ÔÚÔËÎ¬¹ÜÀíÉÏ
-µÄ·½±ã¡£
-* bsondump: ½« bson ¸ñÊ½µÄÎÄ¼ş×ª´¢Îª json ¸ñÊ½µÄÊı¾İ
-* mongo: ¿Í»§¶ËÃüÁîĞĞ¹¤¾ß,ÆäÊµÒ²ÊÇÒ»¸ö js ½âÊÍÆ÷,Ö§³Ö js Óï·¨
-* mongod: Êı¾İ¿â·şÎñ¶Ë,Ã¿¸öÊµÀıÆô¶¯Ò»¸ö½ø³Ì,¿ÉÒÔ fork ÎªºóÌ¨ÔËĞĞ
-* mongodump/ mongorestore: Êı¾İ¿â±¸·İºÍ»Ö¸´¹¤¾ß
-* mongoexport/ mongoimport: Êı¾İµ¼³öºÍµ¼Èë¹¤¾ß
-* mongofiles: GridFS ¹ÜÀí¹¤¾ß,¿ÉÊµÏÖ¶şÖÆÎÄ¼şµÄ´æÈ¡
-* mongos: ·ÖÆ¬Â·ÓÉ,Èç¹ûÊ¹ÓÃÁË sharding ¹¦ÄÜ,ÔòÓ¦ÓÃ³ÌĞòÁ¬½ÓµÄÊÇ mongos ¶ø²»ÊÇmongod
-* mongosniff: ÕâÒ»¹¤¾ßµÄ×÷ÓÃÀàËÆÓÚ tcpdump,²»Í¬µÄÊÇËûÖ»¼à¿Ø MongoDB Ïà¹ØµÄ°üÇëÇó,²¢ÇÒÊÇÒÔÖ¸¶¨µÄ¿É¶ÁĞÔµÄĞÎÊ½Êä³ö
-* mongostat: ÊµÊ±ĞÔÄÜ¼à¿Ø¹¤¾ß
+## å¸¸ç”¨å·¥å…·é›†
+MongoDB åœ¨ bin ç›®å½•ä¸‹æä¾›äº†ä¸€ç³»åˆ—æœ‰ç”¨çš„å·¥å…·,è¿™äº›å·¥å…·æä¾›äº† MongoDB åœ¨è¿ç»´ç®¡ç†ä¸Š
+çš„æ–¹ä¾¿ã€‚
+* bsondump: å°† bson æ ¼å¼çš„æ–‡ä»¶è½¬å‚¨ä¸º json æ ¼å¼çš„æ•°æ®
+* mongo: å®¢æˆ·ç«¯å‘½ä»¤è¡Œå·¥å…·,å…¶å®ä¹Ÿæ˜¯ä¸€ä¸ª js è§£é‡Šå™¨,æ”¯æŒ js è¯­æ³•
+* mongod: æ•°æ®åº“æœåŠ¡ç«¯,æ¯ä¸ªå®ä¾‹å¯åŠ¨ä¸€ä¸ªè¿›ç¨‹,å¯ä»¥ fork ä¸ºåå°è¿è¡Œ
+* mongodump/ mongorestore: æ•°æ®åº“å¤‡ä»½å’Œæ¢å¤å·¥å…·
+* mongoexport/ mongoimport: æ•°æ®å¯¼å‡ºå’Œå¯¼å…¥å·¥å…·
+* mongofiles: GridFS ç®¡ç†å·¥å…·,å¯å®ç°äºŒåˆ¶æ–‡ä»¶çš„å­˜å–
+* mongos: åˆ†ç‰‡è·¯ç”±,å¦‚æœä½¿ç”¨äº† sharding åŠŸèƒ½,åˆ™åº”ç”¨ç¨‹åºè¿æ¥çš„æ˜¯ mongos è€Œä¸æ˜¯mongod
+* mongosniff: è¿™ä¸€å·¥å…·çš„ä½œç”¨ç±»ä¼¼äº tcpdump,ä¸åŒçš„æ˜¯ä»–åªç›‘æ§ MongoDB ç›¸å…³çš„åŒ…è¯·æ±‚,å¹¶ä¸”æ˜¯ä»¥æŒ‡å®šçš„å¯è¯»æ€§çš„å½¢å¼è¾“å‡º
+* mongostat: å®æ—¶æ€§èƒ½ç›‘æ§å·¥å…·
 
-## ²¿Êğ Replica Sets
-* ´´½¨Êı¾İÎÄ¼ş´æ´¢Â·¾¶
+## éƒ¨ç½² Replica Sets
+* åˆ›å»ºæ•°æ®æ–‡ä»¶å­˜å‚¨è·¯å¾„
 ```
 	mkdir E:/mongoData/data/r0
 	mkdir E:/mongoData/data/r1
 	mkdir E:/mongoData/data/r2
 ```
-* ´´½¨ÈÕÖ¾ÎÄ¼şÂ·¾¶
+* åˆ›å»ºæ—¥å¿—æ–‡ä»¶è·¯å¾„
 ```
 	mkdir E:/mongoData/log
 ```
-* ´´½¨Ö÷´Ó key ÎÄ¼ş£¬ÓÃÓÚ±êÊ¶¼¯ÈºµÄË½Ô¿µÄÍêÕûÂ·¾¶£¬Èç¹û¸÷¸öÊµÀıµÄ key file ÄÚÈİ²»Ò»ÖÂ£¬³ÌĞò½«²»ÄÜÕı³£ÓÃ¡£
+* åˆ›å»ºä¸»ä» key æ–‡ä»¶ï¼Œç”¨äºæ ‡è¯†é›†ç¾¤çš„ç§é’¥çš„å®Œæ•´è·¯å¾„ï¼Œå¦‚æœå„ä¸ªå®ä¾‹çš„ key file å†…å®¹ä¸ä¸€è‡´ï¼Œç¨‹åºå°†ä¸èƒ½æ­£å¸¸ç”¨ã€‚
 ```
 	mkdir E:/mongoData/key
 	echo "this is rs1 super secret key" > E:/mongoData/key/r0
 	echo "this is rs1 super secret key" > E:/mongoData/key/r1
 	echo "this is rs1 super secret key" > E:/mongoData/key/r2
 ```
-* Æô¶¯ 3 ¸öÊµÀı
+* å¯åŠ¨ 3 ä¸ªå®ä¾‹
 ```
 	mongod --replSet rs1 --keyFile E:/mongoData/key/r0 -fork --port 28010 --dbpath E:/mongoData/data/r0 --logpath=E:/mongoData/log/r0.log --logappend
 	mongod --replSet rs1 --keyFile E:/mongoData/key/r1 -fork --port 28011 --dbpath E:/mongoData/data/r1 --logpath=E:/mongoData/log/r1.log --logappend
 	mongod --replSet rs1 --keyFile E:/mongoData/key/r2 -fork --port 28012 --dbpath E:/mongoData/data/r2 --logpath=E:/mongoData/log/r2.log --logappend
 ```
-* ÅäÖÃ¼°³õÊ¼»¯ Replica Sets
+* é…ç½®åŠåˆå§‹åŒ– Replica Sets
 ```
 	mongo -port 28010
 	
@@ -143,13 +143,13 @@ MongoDB ÔÚ bin Ä¿Â¼ÏÂÌá¹©ÁËÒ»ÏµÁĞÓĞÓÃµÄ¹¤¾ß,ÕâĞ©¹¤¾ßÌá¹©ÁË MongoDB ÔÚÔËÎ¬¹ÜÀíÉÏ
 
 ## A Quick Tour
 
-Ê¹ÓÃjava Çı¶¯¿ª·¢ÊÇ·Ç³£¼òµ¥µÄ,Ê×ÏÈÄãÒªÈ·±£ÄãµÄ`classpath`ÖĞ°üº¬`mongo.jar`
+ä½¿ç”¨java é©±åŠ¨å¼€å‘æ˜¯éå¸¸ç®€å•çš„,é¦–å…ˆä½ è¦ç¡®ä¿ä½ çš„`classpath`ä¸­åŒ…å«`mongo.jar`
 
 ### Making a Connection
 
-ÎªÁËÄÜ¹»Á¬½ÓÉÏMongoDB,×îµÍµÄÒªÇóÒ²ÊÇÄãÒªÖªµÀÁ¬½ÓµÄdatabaseµÄÃû³Æ. Õâ¸öÊı¾İ¿â¿ÉÒÔ²»´æÔÚ,Èç¹û²»´æÔÚµÄ»°,MongoDB»á×Ô¶¯´´½¨Õâ¸öÊı¾İ¿â
+ä¸ºäº†èƒ½å¤Ÿè¿æ¥ä¸ŠMongoDB,æœ€ä½çš„è¦æ±‚ä¹Ÿæ˜¯ä½ è¦çŸ¥é“è¿æ¥çš„databaseçš„åç§°. è¿™ä¸ªæ•°æ®åº“å¯ä»¥ä¸å­˜åœ¨,å¦‚æœä¸å­˜åœ¨çš„è¯,MongoDBä¼šè‡ªåŠ¨åˆ›å»ºè¿™ä¸ªæ•°æ®åº“
 
-ÁíÍâ,Äã¿ÉÒÔÖ¸¶¨Á¬½ÓµÄ·şÎñÆ÷µÄµØÖ·ºÍ¶Ë¿Ú,ÏÂÃæµÄÀı×ÓÕ¹Ê¾ÁËÈıÖÖÁ¬½Ó±¾µØ`mydb`Êı¾İ¿âµÄ·½Ê½
+å¦å¤–,ä½ å¯ä»¥æŒ‡å®šè¿æ¥çš„æœåŠ¡å™¨çš„åœ°å€å’Œç«¯å£,ä¸‹é¢çš„ä¾‹å­å±•ç¤ºäº†ä¸‰ç§è¿æ¥æœ¬åœ°`mydb`æ•°æ®åº“çš„æ–¹å¼
 ```java
 import com.mongodb.BasicDBObject;
 import com.mongodb.BulkWriteOperation;
@@ -183,55 +183,55 @@ MongoClient mongoClient = new MongoClient(Arrays.asList(new ServerAddress("local
 DB db = mongoClient.getDB( "mydb" );
 ```
 
-ÔÚÕâ¸öÀı×ÓÖĞ`db`¶ÔÏó±£³Ö×ÅÒ»¸ö¶ÔMongoDB·şÎñÆ÷Ö¸¶¨Êı¾İ¿âµÄÒ»¸öÁ¬½Ó. Í¨¹ıÕâ¸ö¶ÔÏóÄã¿ÉÒÔ×öºÜ¶àÆäËû²Ù×÷
+åœ¨è¿™ä¸ªä¾‹å­ä¸­`db`å¯¹è±¡ä¿æŒç€ä¸€ä¸ªå¯¹MongoDBæœåŠ¡å™¨æŒ‡å®šæ•°æ®åº“çš„ä¸€ä¸ªè¿æ¥. é€šè¿‡è¿™ä¸ªå¯¹è±¡ä½ å¯ä»¥åšå¾ˆå¤šå…¶ä»–æ“ä½œ
 
 > Note:
 >
-> `MongoClient`ÊµÀıÊµ¼ÊÉÏÎ¬³Ö×Å¶ÔÕâ¸öÊı¾İ¿âµÄÒ»¸öÁ¬½Ó³Ø. ¼´Ê¹ÔÚ¶àÏß³ÌµÄÇé¿öÏÂ,ÄãÒ²Ö»ĞèÒªÒ»¸ö`MongoClient`ÊµÀı, ²Î¿¼[concurrency doc page]()
+> `MongoClient`å®ä¾‹å®é™…ä¸Šç»´æŒç€å¯¹è¿™ä¸ªæ•°æ®åº“çš„ä¸€ä¸ªè¿æ¥æ± . å³ä½¿åœ¨å¤šçº¿ç¨‹çš„æƒ…å†µä¸‹,ä½ ä¹Ÿåªéœ€è¦ä¸€ä¸ª`MongoClient`å®ä¾‹, å‚è€ƒ[concurrency doc page]()
 
 
-`MongoClient`±»Éè¼Æ³ÉÒ»¸öÏß³Ì°²È«ÇÒÏß³Ì¹²ÏíµÄÀà. Ò»¸öµäĞÍÀı×ÓÊÇ,Äã¶ÔÒ»¸öÊı¾İ¿â¼¯Èº½ö½ö´´½¨ÁËÒ»¸ö`MongoClient`ÊµÀı,È»ºóÔÚÄãµÄÕû¸öÓ¦ÓÃ³ÌĞòÖĞ¶¼Ê¹ÓÃÕâÒ»¸öÊµÀı. Èç¹û³öÓÚÒ»Ğ©ÌØÊâÔ­ÒòÄã²»µÃ²»´´½¨¶à¸ö`MongoClient`ÊµÀı,ÄÇÃ´ÄãĞèÒª×¢ÒâÏÂÃæÁ©µã£º
+`MongoClient`è¢«è®¾è®¡æˆä¸€ä¸ªçº¿ç¨‹å®‰å…¨ä¸”çº¿ç¨‹å…±äº«çš„ç±». ä¸€ä¸ªå…¸å‹ä¾‹å­æ˜¯,ä½ å¯¹ä¸€ä¸ªæ•°æ®åº“é›†ç¾¤ä»…ä»…åˆ›å»ºäº†ä¸€ä¸ª`MongoClient`å®ä¾‹,ç„¶ååœ¨ä½ çš„æ•´ä¸ªåº”ç”¨ç¨‹åºä¸­éƒ½ä½¿ç”¨è¿™ä¸€ä¸ªå®ä¾‹. å¦‚æœå‡ºäºä¸€äº›ç‰¹æ®ŠåŸå› ä½ ä¸å¾—ä¸åˆ›å»ºå¤šä¸ª`MongoClient`å®ä¾‹,é‚£ä¹ˆä½ éœ€è¦æ³¨æ„ä¸‹é¢ä¿©ç‚¹ï¼š
 
 * all resource usage limits (max connections, etc) apply per MongoClient instance
-* µ±¹Ø±ÕÒ»¸öÊµÀıÊ±,Äã±ØĞëÈ·±£Äãµ÷ÓÃÁË`MongoClient.close()`ÇåÀíµôÁËÈ«²¿µÄ×ÊÔ´
+* å½“å…³é—­ä¸€ä¸ªå®ä¾‹æ—¶,ä½ å¿…é¡»ç¡®ä¿ä½ è°ƒç”¨äº†`MongoClient.close()`æ¸…ç†æ‰äº†å…¨éƒ¨çš„èµ„æº
 
 New in version 2.10.0: The MongoClient class is new in version 2.10.0. For releases prior to that, please use the Mongo class instead.
 
 ### Authentication (Optional)
 
-MongoDB¿ÉÒÔÔÚ°²È«Ä£Ê½ÏÂÔËĞĞ, ÕâÖÖÄ£Ê½ÏÂ,ĞèÒªÍ¨¹ıÑéÖ¤²ÅÄÜ·ÃÎÊÊı¾İ¿â. µ±ÔÚÕâÖÖÄ£Ê½ÏÂÔËĞĞµÄÊ±ºò, ÈÎºÎ¿Í»§¶Ë¶¼±ØĞëÌá¹©Ò»×éÖ¤Êé.ÔÚjava DriverÖĞ,ÄãÖ»ĞèÒªÔÚ´´½¨`MongoClient`ÊµÀıÊ±Ìá¹©Ò»ÏÂÖ¤Êé.
+MongoDBå¯ä»¥åœ¨å®‰å…¨æ¨¡å¼ä¸‹è¿è¡Œ, è¿™ç§æ¨¡å¼ä¸‹,éœ€è¦é€šè¿‡éªŒè¯æ‰èƒ½è®¿é—®æ•°æ®åº“. å½“åœ¨è¿™ç§æ¨¡å¼ä¸‹è¿è¡Œçš„æ—¶å€™, ä»»ä½•å®¢æˆ·ç«¯éƒ½å¿…é¡»æä¾›ä¸€ç»„è¯ä¹¦.åœ¨java Driverä¸­,ä½ åªéœ€è¦åœ¨åˆ›å»º`MongoClient`å®ä¾‹æ—¶æä¾›ä¸€ä¸‹è¯ä¹¦.
 ```java
 MongoCredential credential = MongoCredential.createMongoCRCredential(userName, database, password);
 MongoClient mongoClient = new MongoClient(new ServerAddress(), Arrays.asList(credential));
 ```
 
-MongoDBÖ§³Ö²»Í¬µÄÈÏÖ¤»úÖÆ,¾ßÌå²Î¿¼[the access control tutorials]()
+MongoDBæ”¯æŒä¸åŒçš„è®¤è¯æœºåˆ¶,å…·ä½“å‚è€ƒ[the access control tutorials]()
 
 ### Getting a Collection
 
-Èç¹ûÏëÒªÊ¹ÓÃÒ»¸öcollection,ÄÇÃ´Äã½ö½öĞèÒªµ÷ÓÃ`getCollection(String collectionName)`·½·¨,È»ºóÖ¸¶¨¸ÃcollectionÃû³Æ¾ÍºÃ
+å¦‚æœæƒ³è¦ä½¿ç”¨ä¸€ä¸ªcollection,é‚£ä¹ˆä½ ä»…ä»…éœ€è¦è°ƒç”¨`getCollection(String collectionName)`æ–¹æ³•,ç„¶åæŒ‡å®šè¯¥collectionåç§°å°±å¥½
 
 ```java
 DBCollection coll = db.getCollection("testCollection");
 ```
 
-Ò»µ©ÄãÓĞÁËcollection¶ÔÏó,ÄÇÄã¾Í¿ÉÒÔÖ´ĞĞÀıÈç²åÈëÊı¾İ,²éÑ¯Êı¾İµÈµÈµÄ²Ù×÷ÁË
+ä¸€æ—¦ä½ æœ‰äº†collectionå¯¹è±¡,é‚£ä½ å°±å¯ä»¥æ‰§è¡Œä¾‹å¦‚æ’å…¥æ•°æ®,æŸ¥è¯¢æ•°æ®ç­‰ç­‰çš„æ“ä½œäº†
 
 ### Setting Write Concern
 
-ÔÚ2.10.0Õâ¸ö°æ±¾Àï,Ä¬ÈÏµÄwrite concernÊÇ`WriteConcern.ACKNOWLEDGED`²»¹ıÄã¿ÉÒÔÍ¨¹ıÏÂÃæµÄ·½·¨ÇáËÉ¸Ä±äËü
+åœ¨2.10.0è¿™ä¸ªç‰ˆæœ¬é‡Œ,é»˜è®¤çš„write concernæ˜¯`WriteConcern.ACKNOWLEDGED`ä¸è¿‡ä½ å¯ä»¥é€šè¿‡ä¸‹é¢çš„æ–¹æ³•è½»æ¾æ”¹å˜å®ƒ
 ```java
 mongoClient.setWriteConcern(WriteConcern.JOURNALED);
 ```
 
-¶ÔÓ¦write concernÌá¹©ÁËºÜ¶àÖÖÑ¡Ïî. ÁíÍâ,Õâ¸öÄ¬ÈÏµÄwrite concern·Ö±ğ¿ÉÒÔÔÚÊı¾İ¿â,collection,ÒÔ¼°µ¥¶ÀµÄ¸üĞÂ²Ù×÷ÉÏÖØÔØ.
+å¯¹åº”write concernæä¾›äº†å¾ˆå¤šç§é€‰é¡¹. å¦å¤–,è¿™ä¸ªé»˜è®¤çš„write concernåˆ†åˆ«å¯ä»¥åœ¨æ•°æ®åº“,collection,ä»¥åŠå•ç‹¬çš„æ›´æ–°æ“ä½œä¸Šé‡è½½.
 
 Changed in version 2.10.0: Prior to version 2.10.0, the default write concern is WriteConcern.NORMAL. Under normal circumstances, clients will typically change this to ensure they are notified of problems writing to the database.
 
 
 ### Inserting a Document
 
-Ò»µ©ÄãÓµÓĞÁËcollection¶ÔÏó,Äã¾Í¿ÉÒÔÏò¸ÃcollectionÖĞ²åÈëdocument. ÀıÈç,ÎÒÃÇ¿ÉÒÔ²åÈëÒ»¸öÏñÏÂÃæÕâÑùµÄÒ»¸öjsonÎÄµµ
+ä¸€æ—¦ä½ æ‹¥æœ‰äº†collectionå¯¹è±¡,ä½ å°±å¯ä»¥å‘è¯¥collectionä¸­æ’å…¥document. ä¾‹å¦‚,æˆ‘ä»¬å¯ä»¥æ’å…¥ä¸€ä¸ªåƒä¸‹é¢è¿™æ ·çš„ä¸€ä¸ªjsonæ–‡æ¡£
 ```json
 {
    "name" : "MongoDB",
@@ -244,7 +244,7 @@ Changed in version 2.10.0: Prior to version 2.10.0, the default write concern is
 }
 ```
 
-×¢Òâ,ÉÏÃæµÄÀı×ÓÖĞÎÒÃÇÓĞÒ»¸öÄÚÇ¶µÄÎÄµµ.ÏëÒª²åÈëÕâÑùÒ»¸öÎÄµµ,ÎÒÃÇ¿ÉÒÔÊ¹ÓÃ`BasicDBObject`ÀàÀ´ÊµÏÖ£º
+æ³¨æ„,ä¸Šé¢çš„ä¾‹å­ä¸­æˆ‘ä»¬æœ‰ä¸€ä¸ªå†…åµŒçš„æ–‡æ¡£.æƒ³è¦æ’å…¥è¿™æ ·ä¸€ä¸ªæ–‡æ¡£,æˆ‘ä»¬å¯ä»¥ä½¿ç”¨`BasicDBObject`ç±»æ¥å®ç°ï¼š
 ```java
 BasicDBObject doc = new BasicDBObject("name", "MongoDB")
         .append("type", "database")
@@ -256,12 +256,12 @@ coll.insert(doc);
 
 ### Finding the First Document in a Collection Using findOne()
 
-Èç¹ûÏëÒª²é¿´¸Õ²Å²åÈëµÄÎÄµµ,ÎÒÃÇ¿ÉÒÔ¼òµ¥µØµ÷ÓÃ`findOne()`,Õâ¸ö²Ù×÷»á»ñµÃ¸ÃcollectionÖĞµÄµÚÒ»¸öÎÄµµ.Õâ¸ö·½·¨Ö»ÊÇ·µ»ØÒ»¸öÎÄµµ¶ÔÏó(¶ø`find()`»á·µ»ØÒ»¸ö`DBCursor`¶ÔÏó),µ±collectionÖĞÖ»ÓĞÒ»¸öÎÄµµµÄÊ±ºò,ÕâÊÇ·Ç³£ÓĞÓÃµÄ.
+å¦‚æœæƒ³è¦æŸ¥çœ‹åˆšæ‰æ’å…¥çš„æ–‡æ¡£,æˆ‘ä»¬å¯ä»¥ç®€å•åœ°è°ƒç”¨`findOne()`,è¿™ä¸ªæ“ä½œä¼šè·å¾—è¯¥collectionä¸­çš„ç¬¬ä¸€ä¸ªæ–‡æ¡£.è¿™ä¸ªæ–¹æ³•åªæ˜¯è¿”å›ä¸€ä¸ªæ–‡æ¡£å¯¹è±¡(è€Œ`find()`ä¼šè¿”å›ä¸€ä¸ª`DBCursor`å¯¹è±¡),å½“collectionä¸­åªæœ‰ä¸€ä¸ªæ–‡æ¡£çš„æ—¶å€™,è¿™æ˜¯éå¸¸æœ‰ç”¨çš„.
 ```java
 DBObject myDoc = coll.findOne();
 System.out.println(myDoc);
 ```
-½á¹ûÈçÏÂ£º
+ç»“æœå¦‚ä¸‹ï¼š
 ```json
 { "_id" : "49902cde5162504500b45c2c" ,
   "name" : "MongoDB" ,
@@ -273,36 +273,36 @@ System.out.println(myDoc);
 
 >Note:
 >
-> `_id`ÔªËØÊÇMongoDB×Ô¶¯Ìí¼Óµ½ÄãµÄÎÄµµÖĞµÄ. ¼Ç×¡,MongoDBÄÚ²¿ÒÔ¡°_¡±/¡±$¡±¿ªÍ·´¢´æÔªËØÃû³Æ
+> `_id`å…ƒç´ æ˜¯MongoDBè‡ªåŠ¨æ·»åŠ åˆ°ä½ çš„æ–‡æ¡£ä¸­çš„. è®°ä½,MongoDBå†…éƒ¨ä»¥â€œ_â€/â€$â€å¼€å¤´å‚¨å­˜å…ƒç´ åç§°
 
 ### Adding Multiple Documents
 
-µ±²âÊÔÒ»Ğ©ÆäËû²éÑ¯µÄÊ±ºò,ÎÒÃÇĞèÒª´óÁ¿µÄÊı¾İ,ÈÃÎÒÃÇÌí¼ÓÒ»Ğ©¼òµ¥µÄÎÄµµµ½collectionÖĞ.
+å½“æµ‹è¯•ä¸€äº›å…¶ä»–æŸ¥è¯¢çš„æ—¶å€™,æˆ‘ä»¬éœ€è¦å¤§é‡çš„æ•°æ®,è®©æˆ‘ä»¬æ·»åŠ ä¸€äº›ç®€å•çš„æ–‡æ¡£åˆ°collectionä¸­.
 ```json
 {
    "i" : value
 }
 ```
 
-ÎÒÃÇ¿ÉÒÔÔÚÒ»¸öÑ­»·ÖĞ²»¶ÏµØ²åÈëÊı¾İ
+æˆ‘ä»¬å¯ä»¥åœ¨ä¸€ä¸ªå¾ªç¯ä¸­ä¸æ–­åœ°æ’å…¥æ•°æ®
 ```java
 for (int i=0; i < 100; i++) {
     coll.insert(new BasicDBObject("i", i));
 }
 ```
 
-×¢Òâ£ºÎÒÃÇ¿ÉÒÔÏòÍ¬Ò»¸öcollectionÖĞ²åÈë°üº¬²»Í¬ÔªËØµÄÎÄµµ.ËùÒÔMongoDBÒ²±»³ÆÎª`schema-free`
+æ³¨æ„ï¼šæˆ‘ä»¬å¯ä»¥å‘åŒä¸€ä¸ªcollectionä¸­æ’å…¥åŒ…å«ä¸åŒå…ƒç´ çš„æ–‡æ¡£.æ‰€ä»¥MongoDBä¹Ÿè¢«ç§°ä¸º`schema-free`
 
 ### Counting Documents in A Collection
 
-Í¨¹ıÒÔÉÏµÄ²Ù×÷ÎÒÃÇÒÑ¾­²åÈëÁË101¸öÎÄµµ,ÎÒÃÇÍ¨¹ı`getCount()`·½·¨À´¼ì²éÒ»ÏÂ.
+é€šè¿‡ä»¥ä¸Šçš„æ“ä½œæˆ‘ä»¬å·²ç»æ’å…¥äº†101ä¸ªæ–‡æ¡£,æˆ‘ä»¬é€šè¿‡`getCount()`æ–¹æ³•æ¥æ£€æŸ¥ä¸€ä¸‹.
 ```java
 System.out.println(coll.getCount());
 ```
 
 ### Using a Cursor to Get All the Documents
 
-Èç¹ûÏëÒª»ñµÃcollectionÖĞµÄÈ«²¿ÎÄµµ,ÎÒÃÇ¿ÉÒÔÊ¹ÓÃ`find()`·½·¨. `find()`·µ»ØÒ»¸ö`DBCursor`¶ÔÏó,ÎÒÃÇ¿ÉÒÔÍ¨¹ı±éÀú¸Ã¶ÔÏó»ñÈ¡ËùÓĞÆ¥ÅäÎÒÃÇĞèÇóµÄÎÄµµ.
+å¦‚æœæƒ³è¦è·å¾—collectionä¸­çš„å…¨éƒ¨æ–‡æ¡£,æˆ‘ä»¬å¯ä»¥ä½¿ç”¨`find()`æ–¹æ³•. `find()`è¿”å›ä¸€ä¸ª`DBCursor`å¯¹è±¡,æˆ‘ä»¬å¯ä»¥é€šè¿‡éå†è¯¥å¯¹è±¡è·å–æ‰€æœ‰åŒ¹é…æˆ‘ä»¬éœ€æ±‚çš„æ–‡æ¡£.
 ```java
 DBCursor cursor = coll.find();
 try {
@@ -316,7 +316,7 @@ try {
 
 ### Getting A Single Document with A Query
 
-ÎÒÃÇ¿ÉÒÔÏò`find()`·½·¨´«µİÒ»¸ö²éÑ¯²ÎÊı, Í¨¹ı¸Ã²ÎÊıÕÒµ½¼¯ºÏÖĞ·ûºÏĞèÇóµÄÎÄµµ×Ó¼¯. ÏÂÀıÖĞÕ¹Ê¾ÁËÎÒÃÇÏëÒªÕÒµ½iÊÇ7µÄËùÓĞÎÄµµ.
+æˆ‘ä»¬å¯ä»¥å‘`find()`æ–¹æ³•ä¼ é€’ä¸€ä¸ªæŸ¥è¯¢å‚æ•°, é€šè¿‡è¯¥å‚æ•°æ‰¾åˆ°é›†åˆä¸­ç¬¦åˆéœ€æ±‚çš„æ–‡æ¡£å­é›†. ä¸‹ä¾‹ä¸­å±•ç¤ºäº†æˆ‘ä»¬æƒ³è¦æ‰¾åˆ°iæ˜¯7çš„æ‰€æœ‰æ–‡æ¡£.
 ```java
 BasicDBObject query = new BasicDBObject("i", 71);
 
@@ -331,17 +331,17 @@ try {
 }
 ```
 
-¸Ã´úÂëÖ»»áÊä³öÒ»¸öÎÄµµ
+è¯¥ä»£ç åªä¼šè¾“å‡ºä¸€ä¸ªæ–‡æ¡£
 ```json
 { "_id" : "49903677516250c1008d624e" , "i" : 71 }
 ```
 
-ÄãÒ²¿ÉÒÔ´ÓÆäËûµÄÊµÀıºÍÎÄµµÖĞ²é¿´`$`²Ù×÷·ûµÄÓÃ·¨£º
+ä½ ä¹Ÿå¯ä»¥ä»å…¶ä»–çš„å®ä¾‹å’Œæ–‡æ¡£ä¸­æŸ¥çœ‹`$`æ“ä½œç¬¦çš„ç”¨æ³•ï¼š
 ```java
 db.things.find({j: {$ne: 3}, k: {$gt: 10} });
 ```
 
-Ê¹ÓÃÄÚÇ¶µÄ`DBObject`,`$`¿ÉÒÔ¿´×÷ÊÇÕıÔò±í´ïÊ½×Ö´®
+ä½¿ç”¨å†…åµŒçš„`DBObject`,`$`å¯ä»¥çœ‹ä½œæ˜¯æ­£åˆ™è¡¨è¾¾å¼å­—ä¸²
 ``` java
 query = new BasicDBObject("j", new BasicDBObject("$ne", 3))
         .append("k", new BasicDBObject("$gt", 10));
@@ -360,7 +360,7 @@ try {
 
 ### Getting A Set of Documents With a Query
 
-ÎÒÃÇ¿ÉÒÔÊ¹ÓÃ²éÑ¯À´»ñµÃcollectionÖĞµÄÒ»¸öÎÄµµ¼¯ºÏ.ÀıÈç,ÎÒÃÇÊ¹ÓÃÏÂÃæµÄÓï·¨À´»ñÈ¡ËùÓĞi > 50µÄÎÄµµ
+æˆ‘ä»¬å¯ä»¥ä½¿ç”¨æŸ¥è¯¢æ¥è·å¾—collectionä¸­çš„ä¸€ä¸ªæ–‡æ¡£é›†åˆ.ä¾‹å¦‚,æˆ‘ä»¬ä½¿ç”¨ä¸‹é¢çš„è¯­æ³•æ¥è·å–æ‰€æœ‰i > 50çš„æ–‡æ¡£
 ```java
 // find all where i > 50
 query = new BasicDBObject("i", new BasicDBObject("$gt", 50));
@@ -375,7 +375,7 @@ try {
 }
 ```
 
-ÎÒÃÇ»¹¿ÉÒÔ»ñµÃÒ»¸öÇø¼ä(20 < i <= 30)ÎÄµµ¼¯ºÏ
+æˆ‘ä»¬è¿˜å¯ä»¥è·å¾—ä¸€ä¸ªåŒºé—´(20 < i <= 30)æ–‡æ¡£é›†åˆ
 ```java
 query = new BasicDBObject("i", new BasicDBObject("$gt", 20).append("$lte", 30));
 cursor = coll.find(query);
@@ -392,22 +392,22 @@ try {
 
 ### MaxTime
 
-MongoDB2.6 Ìí¼Ó²éÑ¯³¬Ê±µÄÄÜÁ¦
+MongoDB2.6 æ·»åŠ æŸ¥è¯¢è¶…æ—¶çš„èƒ½åŠ›
 
 ```java
 coll.find().maxTime(1, SECONDS).count();
 ```
 
-ÔÚÉÏÃæµÄÀı×ÓÖĞ½«`maxTime`ÉèÖÃÎª1s,µ±Ê±¼äµ½ºó²éÑ¯½«±»´ò¶Ï
+åœ¨ä¸Šé¢çš„ä¾‹å­ä¸­å°†`maxTime`è®¾ç½®ä¸º1s,å½“æ—¶é—´åˆ°åæŸ¥è¯¢å°†è¢«æ‰“æ–­
 
 ### Bulk operations
 
 Under the covers MongoDB is moving away from the combination of a write operation followed by get last error (GLE) and towards a write commands API. These new commands allow for the execution of bulk insert/update/remove operations. There are two types of bulk operations:
 
-1. Ordered bulk operations. °´Ë³ĞòÖ´ĞĞÈ«²¿µÄ²Ù×÷,µ±Óöµ½µÚÒ»¸öĞ´Ê§°ÜµÄÊ±ºò,ÍË³ö
-2. Unordered bulk operations. ²¢ĞĞÖ´ĞĞÈ«²¿²Ù×÷, Í¬Ê±ÊÕ¼¯È«²¿´íÎó.¸Ã²Ù×÷²»±£Ö¤°´ÕÕË³ĞòÖ´ĞĞ
+1. Ordered bulk operations. æŒ‰é¡ºåºæ‰§è¡Œå…¨éƒ¨çš„æ“ä½œ,å½“é‡åˆ°ç¬¬ä¸€ä¸ªå†™å¤±è´¥çš„æ—¶å€™,é€€å‡º
+2. Unordered bulk operations. å¹¶è¡Œæ‰§è¡Œå…¨éƒ¨æ“ä½œ, åŒæ—¶æ”¶é›†å…¨éƒ¨é”™è¯¯.è¯¥æ“ä½œä¸ä¿è¯æŒ‰ç…§é¡ºåºæ‰§è¡Œ
 
-ÏÂÃæÕ¹Ê¾ÁËÉÏÃæËùËµµÄÁ©¸öÊ¾Àı
+ä¸‹é¢å±•ç¤ºäº†ä¸Šé¢æ‰€è¯´çš„ä¿©ä¸ªç¤ºä¾‹
 ```java
 // 1. Ordered bulk operation
 BulkWriteOperation builder = coll.initializeOrderedBulkOperation();
@@ -432,12 +432,12 @@ result = builder.execute();
 
 > Note:
 > 
-For servers older than 2.6 the API will down convert the operations. To support the correct semantics for BulkWriteResult and BulkWriteException, the operations have to be done one at a time. It¡¯s not possible to down convert 100% so there might be slight edge cases where it cannot correctly report the right numbers.
+For servers older than 2.6 the API will down convert the operations. To support the correct semantics for BulkWriteResult and BulkWriteException, the operations have to be done one at a time. Itâ€™s not possible to down convert 100% so there might be slight edge cases where it cannot correctly report the right numbers.
 
 
 ### parallelScan
 
-MongoDB 2.6 Ôö¼ÓÁË`parallelCollectionScan`ÃüÁî, ¸ÃÃüÁîÍ¨¹ıÊ¹ÓÃ¶à¸öÓÎ±ê¶ÁÈ¡Õû¸öcollection.
+MongoDB 2.6 å¢åŠ äº†`parallelCollectionScan`å‘½ä»¤, è¯¥å‘½ä»¤é€šè¿‡ä½¿ç”¨å¤šä¸ªæ¸¸æ ‡è¯»å–æ•´ä¸ªcollection.
 ```java
 ParallelScanOptions parallelScanOptions = ParallelScanOptions
         .builder()
@@ -453,17 +453,17 @@ for (Cursor pCursor: cursors) {
 }
 ```
 
-Æä¶Ôcollection½øĞĞIOÍÌÍÂÁ¿µÄÓÅ»¯.
+å…¶å¯¹collectionè¿›è¡ŒIOååé‡çš„ä¼˜åŒ–.
 
 > Note:
 >
-> `ParallelScan`²»ÄÜÍ¨¹ı`mongos`ÔËĞĞ
+> `ParallelScan`ä¸èƒ½é€šè¿‡`mongos`è¿è¡Œ
 
 ## Quick Tour of the Administrative Functions
 
 ### Getting A List of Databases
 
-Í¨¹ıÏÂÃæµÄ´úÂëÄã¿ÉÒÔ»ñÈ¡Ò»¸ö¿ÉÓÃÊı¾İ¿âÁĞ±í
+é€šè¿‡ä¸‹é¢çš„ä»£ç ä½ å¯ä»¥è·å–ä¸€ä¸ªå¯ç”¨æ•°æ®åº“åˆ—è¡¨
 ```java
 MongoClient mongoClient = new MongoClient();
 
@@ -472,11 +472,11 @@ for (String s : mongoClient.getDatabaseNames()) {
 }
 ```
 
-µ÷ÓÃ`mongoClient.getDB()`²¢²»»á´´½¨Ò»¸öÊı¾İ¿â. ½ö½öµ±³¢ÊÔÏòÊı¾İ¿âĞ´ÈëÊı¾İÊ±,¸ÃÊı¾İ¿â²Å»á±»´´½¨. ÀıÈç³¢ÊÔ´´½¨Ò»¸öËùÒÔ»òÕßÒ»¸öcollection»òÕß²åÈëÒ»¸öÎÄµµ.
+è°ƒç”¨`mongoClient.getDB()`å¹¶ä¸ä¼šåˆ›å»ºä¸€ä¸ªæ•°æ®åº“. ä»…ä»…å½“å°è¯•å‘æ•°æ®åº“å†™å…¥æ•°æ®æ—¶,è¯¥æ•°æ®åº“æ‰ä¼šè¢«åˆ›å»º. ä¾‹å¦‚å°è¯•åˆ›å»ºä¸€ä¸ªæ‰€ä»¥æˆ–è€…ä¸€ä¸ªcollectionæˆ–è€…æ’å…¥ä¸€ä¸ªæ–‡æ¡£.
 
 ### Dropping A Database
 
-Í¨¹ı`MongoClient`ÊµÀıÄãÒ²¿ÉÒÔ`drop`µôÒ»¸öÊı¾İ¿â
+é€šè¿‡`MongoClient`å®ä¾‹ä½ ä¹Ÿå¯ä»¥`drop`æ‰ä¸€ä¸ªæ•°æ®åº“
 ```java
 MongoClient mongoClient = new MongoClient();
 mongoClient.dropDatabase("databaseToBeDropped");
@@ -484,11 +484,11 @@ mongoClient.dropDatabase("databaseToBeDropped");
 
 ### Creating A Collection
 
-ÓĞÁ©ÖÖ·½Ê½´´½¨collection£º
-1. Èç¹ûÏòÒ»¸ö²»´æÔÚµÄcollectionÖĞ³¢ÊÔ²åÈëÒ»¸öÎÄµµ,ÄÇÃ´¸Ãcollection»á±»´´½¨³öÀ´
-2. »òÕßÖ±½Óµ÷ÓÃ`createCollection`ÃüÁî
+æœ‰ä¿©ç§æ–¹å¼åˆ›å»ºcollectionï¼š
+1. å¦‚æœå‘ä¸€ä¸ªä¸å­˜åœ¨çš„collectionä¸­å°è¯•æ’å…¥ä¸€ä¸ªæ–‡æ¡£,é‚£ä¹ˆè¯¥collectionä¼šè¢«åˆ›å»ºå‡ºæ¥
+2. æˆ–è€…ç›´æ¥è°ƒç”¨`createCollection`å‘½ä»¤
 
-ÏÂÃæµÄÀı×ÓÕ¹Ê¾ÁË´´½¨1M´óĞ¡µÄcollection
+ä¸‹é¢çš„ä¾‹å­å±•ç¤ºäº†åˆ›å»º1Må¤§å°çš„collection
 ```java
 db = mongoClient.getDB("mydb");
 db.createCollection("testCollection", new BasicDBObject("capped", true)
@@ -497,14 +497,14 @@ db.createCollection("testCollection", new BasicDBObject("capped", true)
 
 ### Getting A List of Collections
 
-Äã¿ÉÒÔÍ¨¹ıÏÂÃæµÄ·½Ê½»ñµÃÒ»¸öÊı¾İ¿âµ±ÖĞ¿ÉÓÃcollectionÁĞ±í
+ä½ å¯ä»¥é€šè¿‡ä¸‹é¢çš„æ–¹å¼è·å¾—ä¸€ä¸ªæ•°æ®åº“å½“ä¸­å¯ç”¨collectionåˆ—è¡¨
 ```java
 for (String s : db.getCollectionNames()) {
    System.out.println(s);
 }
 ```
 
-ÉÏÃæµÄÀı×Ó»áÊä³ö£º
+ä¸Šé¢çš„ä¾‹å­ä¼šè¾“å‡ºï¼š
 ```
 system.indexes
 testCollection
@@ -512,11 +512,11 @@ testCollection
 
 >Note:
 >
-> `system.indexes` collectionÊÇ×Ô¶¯´´½¨µÄ, ËüÀïÃæÊÇÊı¾İ¿âÖĞËùÓĞµÄË÷Òı, ËùÒÔ²»Ó¦¸ÃÖ±½Ó·ÃÎÊËü
+> `system.indexes` collectionæ˜¯è‡ªåŠ¨åˆ›å»ºçš„, å®ƒé‡Œé¢æ˜¯æ•°æ®åº“ä¸­æ‰€æœ‰çš„ç´¢å¼•, æ‰€ä»¥ä¸åº”è¯¥ç›´æ¥è®¿é—®å®ƒ
 
 ### Dropping A Collection
 
-Äã¿ÉÒÔÍ¨¹ı`drop()`·½·¨Ö±½ÓdropµôÒ»¸öcollection
+ä½ å¯ä»¥é€šè¿‡`drop()`æ–¹æ³•ç›´æ¥dropæ‰ä¸€ä¸ªcollection
 ```java
 DBCollection coll = db.getCollection("testCollection");
 coll.drop();
@@ -525,7 +525,7 @@ System.out.println(db.getCollectionNames());
 
 ### Getting a List of Indexes on a Collection
 
-ÏÂÀıÕ¹Ê¾ÁËÈçºÎ»ñµÃÒ»¸öcollectionÖĞË÷ÒıµÄÁĞ±í
+ä¸‹ä¾‹å±•ç¤ºäº†å¦‚ä½•è·å¾—ä¸€ä¸ªcollectionä¸­ç´¢å¼•çš„åˆ—è¡¨
 ```java
 List<DBObject> list = coll.getIndexInfo();
 
@@ -534,7 +534,7 @@ for (DBObject o : list) {
 }
 ```
 
-ÉÏÃæµÄÊµÀı»á½øĞĞÏÂÃæµÄÊä³ö£º
+ä¸Šé¢çš„å®ä¾‹ä¼šè¿›è¡Œä¸‹é¢çš„è¾“å‡ºï¼š
 ```json
 { "v" : 1 , "key" : { "_id" : 1} , "name" : "_id_" , "ns" : "mydb.testCollection"}
 { "v" : 1 , "key" : { "i" : 1} , "name" : "i_1" , "ns" : "mydb.testCollection"}
@@ -545,7 +545,7 @@ for (DBObject o : list) {
 
 ### Creating An Index
 
-MongoDBÖ§³ÖË÷Òı,¶øÇÒËüÃÇ¿ÉÒÔÇáËÉµØ²åÈëµ½Ò»¸ö¼¯ºÏÖĞ.´´½¨Ë÷ÒıµÄ¹ı³Ì·Ç³£¼òµ¥,ÄãÖ»ĞèÒªÖ¸¶¨±»Ë÷ÒıµÄ×Ö¶Î,Äã»¹¿ÉÒÔÖ¸¶¨¸ÃË÷ÒıÊÇÉÏÉıµÄ(1)»¹ÊÇÏÂ½µµÄ(-1).
+MongoDBæ”¯æŒç´¢å¼•,è€Œä¸”å®ƒä»¬å¯ä»¥è½»æ¾åœ°æ’å…¥åˆ°ä¸€ä¸ªé›†åˆä¸­.åˆ›å»ºç´¢å¼•çš„è¿‡ç¨‹éå¸¸ç®€å•,ä½ åªéœ€è¦æŒ‡å®šè¢«ç´¢å¼•çš„å­—æ®µ,ä½ è¿˜å¯ä»¥æŒ‡å®šè¯¥ç´¢å¼•æ˜¯ä¸Šå‡çš„(1)è¿˜æ˜¯ä¸‹é™çš„(-1).
 ```java
 coll.createIndex(new BasicDBObject("i", 1));  // create index on "i", ascending
 ```
@@ -553,12 +553,12 @@ coll.createIndex(new BasicDBObject("i", 1));  // create index on "i", ascending
 
 ### Geo indexes
 
-MongoDBÖ§³Ö²»Í¬µÄµØÀí¿Õ¼äË÷Òı,ÔÚÏÂÃæµÄÀı×ÓÖĞ,ÎÒÃÇ½«´°¿ÚÒ»¸ö`2dsphere`Ë÷Òı, ÎÒÃÇ¿ÉÒÔÍ¨¹ı±ê×¼`GeoJson`±ê¼Ç½øĞĞ²éÑ¯. ÏëÒª´´½¨Ò»¸ö`2dsphere`Ë÷Òı,ÎÒÃÇĞèÒªÔÚË÷ÒıÎÄµµÖĞÖ¸¶¨`2dsphere`Õâ¸ö×ÖÃæÁ¿.
+MongoDBæ”¯æŒä¸åŒçš„åœ°ç†ç©ºé—´ç´¢å¼•,åœ¨ä¸‹é¢çš„ä¾‹å­ä¸­,æˆ‘ä»¬å°†çª—å£ä¸€ä¸ª`2dsphere`ç´¢å¼•, æˆ‘ä»¬å¯ä»¥é€šè¿‡æ ‡å‡†`GeoJson`æ ‡è®°è¿›è¡ŒæŸ¥è¯¢. æƒ³è¦åˆ›å»ºä¸€ä¸ª`2dsphere`ç´¢å¼•,æˆ‘ä»¬éœ€è¦åœ¨ç´¢å¼•æ–‡æ¡£ä¸­æŒ‡å®š`2dsphere`è¿™ä¸ªå­—é¢é‡.
 ```java
 coll.createIndex(new BasicDBObject("loc", "2dsphere"));
 ```
 
-ÓĞ²»Í¬µÄ·½Ê½È¥²éÑ¯`2dsphere`Ë÷Òı,ÏÂÃæµÄÀı×ÓÖĞÕÒµ½ÁË500mÒÔÄÚµÄÎ»ÖÃ.
+æœ‰ä¸åŒçš„æ–¹å¼å»æŸ¥è¯¢`2dsphere`ç´¢å¼•,ä¸‹é¢çš„ä¾‹å­ä¸­æ‰¾åˆ°äº†500mä»¥å†…çš„ä½ç½®.
 ```java
 BasicDBList coordinates = new BasicDBList();
 coordinates.put(0, -73.97);
@@ -591,17 +591,17 @@ myDoc = coll.findOne(
 System.out.println(myDoc.get("name"));
 ```
 
-¸ü¶à²Î¿¼[geospatial]()ÎÄµµ
+æ›´å¤šå‚è€ƒ[geospatial]()æ–‡æ¡£
 
 ### Text indexes
 
-MongoDB»¹Ö§³Ö`text`Ë÷Òı,¸ÃË÷ÒıÓÃÀ´Ö§³Ö´ÓStringÖĞËÑË÷ÎÄ±¾. `text`Ë÷Òı¿ÉÒÔ°üº¬ÈÎºÎ×Ö¶Î,µ«ÊÇ¸Ã×Ö¶ÎµÄÖµ±ØĞëÊÇString»òÕßStringÊı×é.ÏëÒª´´½¨Ò»¸ö`text`Ë÷Òı,Ö»ĞèÒªÔÚË÷ÒıÎÄµµÖĞÖ¸¶¨`text`×ÖÃæÁ¿.
+MongoDBè¿˜æ”¯æŒ`text`ç´¢å¼•,è¯¥ç´¢å¼•ç”¨æ¥æ”¯æŒä»Stringä¸­æœç´¢æ–‡æœ¬. `text`ç´¢å¼•å¯ä»¥åŒ…å«ä»»ä½•å­—æ®µ,ä½†æ˜¯è¯¥å­—æ®µçš„å€¼å¿…é¡»æ˜¯Stringæˆ–è€…Stringæ•°ç»„.æƒ³è¦åˆ›å»ºä¸€ä¸ª`text`ç´¢å¼•,åªéœ€è¦åœ¨ç´¢å¼•æ–‡æ¡£ä¸­æŒ‡å®š`text`å­—é¢é‡.
 ```java
 // create a text index on the "content" field
 coll.createIndex(new BasicDBObject("content", "text"));
 ```
 
-MongoDB2.6 ÒÔºó`text`Ë÷ÒıÈÚ½øÁËÖ÷ÒªµÄ²éÑ¯ÓïÑÔÖĞ,²¢ÇÒ³ÉÎªÁËÒ»ÖÖÄ¬ÈÏµÄ·½Ê½.
+MongoDB2.6 ä»¥å`text`ç´¢å¼•èè¿›äº†ä¸»è¦çš„æŸ¥è¯¢è¯­è¨€ä¸­,å¹¶ä¸”æˆä¸ºäº†ä¸€ç§é»˜è®¤çš„æ–¹å¼.
 ```java
 // Insert some documents
 coll.insert(new BasicDBObject("_id", 0).append("content", "textual content"));
@@ -625,53 +625,53 @@ myDoc = coll.findOne(textSearch, projection);
 System.out.println("Highest scoring document: "+ myDoc);
 ```
 
-ÉÏÃæµÄ´úÂëÓ¦¸ÃÊä³ö£º
+ä¸Šé¢çš„ä»£ç åº”è¯¥è¾“å‡ºï¼š
 ```java
 Text search matches: 2
 Text search matches (english): 2
 Highest scoring document: { "_id" : 1 , "content" : "additional content" , "score" : 0.75}
 ```
 
-¸ü¶à¹ØÓÚtext search,²Î¿¼[text index and $text query operator]()
+æ›´å¤šå…³äºtext search,å‚è€ƒ[text index and $text query operator]()
 
 # Replica
 # Deploy a Replica Set
 
-ÕâÆª½Ì³Ì½²ÊöµÄÊÇÈçºÎ»ùÓÚÕıÔÚÔËĞĞµÄ²»½øĞĞ¿ØÖÆ·ÃÎÊµÄ`mongod`´´½¨Èı¸ö`replica set`.
+è¿™ç¯‡æ•™ç¨‹è®²è¿°çš„æ˜¯å¦‚ä½•åŸºäºæ­£åœ¨è¿è¡Œçš„ä¸è¿›è¡Œæ§åˆ¶è®¿é—®çš„`mongod`åˆ›å»ºä¸‰ä¸ª`replica set`.
 
-Èç¹ûÏëÒª´´½¨´øÓĞ¿ØÖÆ·ÃÎÊ¹¦ÄÜµÄ`replica set`,²Î¿¼[Deploy Replica Set and Configure Authentication and Authorization](http://docs.mongodb.org/manual/tutorial/deploy-replica-set-with-auth/). Èç¹ûÄãÏëÒªÔÚÒ»¸öµ¥¶ÀµÄMongoDBÉÏ²¿Êğ`replica set`, ¿ÉÒÔ²Î¿¼[Convert a Standalone to a Replica Set](http://docs.mongodb.org/manual/tutorial/convert-standalone-to-replica-set/). ¹ØÓÚ¸ü¶àµÄ`replica set`²¿ÊğĞÅÏ¢,²Î¿¼[Replication](http://docs.mongodb.org/manual/replication/)ºÍ[Replica Set Deployment Architectures](http://docs.mongodb.org/manual/core/replica-set-architectures/)
+å¦‚æœæƒ³è¦åˆ›å»ºå¸¦æœ‰æ§åˆ¶è®¿é—®åŠŸèƒ½çš„`replica set`,å‚è€ƒ[Deploy Replica Set and Configure Authentication and Authorization](http://docs.mongodb.org/manual/tutorial/deploy-replica-set-with-auth/). å¦‚æœä½ æƒ³è¦åœ¨ä¸€ä¸ªå•ç‹¬çš„MongoDBä¸Šéƒ¨ç½²`replica set`, å¯ä»¥å‚è€ƒ[Convert a Standalone to a Replica Set](http://docs.mongodb.org/manual/tutorial/convert-standalone-to-replica-set/). å…³äºæ›´å¤šçš„`replica set`éƒ¨ç½²ä¿¡æ¯,å‚è€ƒ[Replication](http://docs.mongodb.org/manual/replication/)å’Œ[Replica Set Deployment Architectures](http://docs.mongodb.org/manual/core/replica-set-architectures/)
 
 ## Overview
 
-´øÓĞÈı¸ö³ÉÔ±µÄ`replica sets`¾Í×ã¹»Ó¦¸¶ÍøÂçÇĞ·ÖºÍÆäËûÀàĞÍµÄÏµÍ³Ê§°Ü. ÄÇĞ©setsÓĞ×ã¹»µÄÄÜÁ¦À´Ó¦¸¶·Ö²¼Ê½ÀàĞÍµÄ¶Á²Ù×÷. `Replica sets`Ó¦¸Ã±£Ö¤ËüµÄ³ÉÔ±ÊıÁ¿Î¬³ÖÔÚÒ»¸öÆæÊıÉÏ. ÕâÌõ¹æÔòÄÜ¹»±£Ö¤Õı³£µÄ[elections](http://docs.mongodb.org/manual/core/replica-set-elections/). ¸ü¶à¹ØÓÚ¶Ô`replica sets`µÄÉè¼Æ,²Î¿¼[Replication overview](http://docs.mongodb.org/manual/core/replication-introduction/)
+å¸¦æœ‰ä¸‰ä¸ªæˆå‘˜çš„`replica sets`å°±è¶³å¤Ÿåº”ä»˜ç½‘ç»œåˆ‡åˆ†å’Œå…¶ä»–ç±»å‹çš„ç³»ç»Ÿå¤±è´¥. é‚£äº›setsæœ‰è¶³å¤Ÿçš„èƒ½åŠ›æ¥åº”ä»˜åˆ†å¸ƒå¼ç±»å‹çš„è¯»æ“ä½œ. `Replica sets`åº”è¯¥ä¿è¯å®ƒçš„æˆå‘˜æ•°é‡ç»´æŒåœ¨ä¸€ä¸ªå¥‡æ•°ä¸Š. è¿™æ¡è§„åˆ™èƒ½å¤Ÿä¿è¯æ­£å¸¸çš„[elections](http://docs.mongodb.org/manual/core/replica-set-elections/). æ›´å¤šå…³äºå¯¹`replica sets`çš„è®¾è®¡,å‚è€ƒ[Replication overview](http://docs.mongodb.org/manual/core/replication-introduction/)
 
-»ù±¾µÄ²½ÖèÊÇ: Ê×ÏÈÆô¶¯Òª³ÉÎª`replica set`³ÉÔ±µÄ`mongod`, È»ºóÅäÖÃ`replica set`, ×îºó½«`mongod`Ìí¼Óµ½`replica set`ÉÏ.
+åŸºæœ¬çš„æ­¥éª¤æ˜¯: é¦–å…ˆå¯åŠ¨è¦æˆä¸º`replica set`æˆå‘˜çš„`mongod`, ç„¶åé…ç½®`replica set`, æœ€åå°†`mongod`æ·»åŠ åˆ°`replica set`ä¸Š.
 
 ## Requirements
 
 For production deployments, you should maintain as much separation between members as possible by hosting the mongod instances on separate machines. When using virtual machines for production deployments, you should place each mongod instance on a separate host server serviced by redundant power circuits and redundant network paths.
 
-ÔÚÉú²ú²¿Êğ½×¶Î, ÄãÓ¦¸Ã¾¡Á¿ÔÚ²»Í¬µÄÖ÷»úÉÏ²¿Êğ´úÀí`mongod`µÄ³ÉÔ±. µ±Ê¹ÓÃĞéÄâÖ÷»ú½øĞĞÉú²ú²¿ÊğÊ±, ÄãÓ¦¸ÃÔÚ²»Í¬µÄÖ÷»ú·şÎñÆ÷ÉÏ¶¼²¿ÊğÒ»¸ö'mongod'.
+åœ¨ç”Ÿäº§éƒ¨ç½²é˜¶æ®µ, ä½ åº”è¯¥å°½é‡åœ¨ä¸åŒçš„ä¸»æœºä¸Šéƒ¨ç½²ä»£ç†`mongod`çš„æˆå‘˜. å½“ä½¿ç”¨è™šæ‹Ÿä¸»æœºè¿›è¡Œç”Ÿäº§éƒ¨ç½²æ—¶, ä½ åº”è¯¥åœ¨ä¸åŒçš„ä¸»æœºæœåŠ¡å™¨ä¸Šéƒ½éƒ¨ç½²ä¸€ä¸ª'mongod'.
 
-ÔÚÄã´´½¨`replica set`Ö®Ç°, Äã±ØĞëÏÈ¼ì²éÄãµÄÍøÂçÅäÖÃÄÜ¹»ÔÊĞíÃ¿Ò»¸ö³ÉÔ±¶¼ÄÜ¹»Ïà»¥Á¬½ÓÉÏ. Ò»¸ö³É¹¦µÄ`replica set`²¿Êğ, Ã¿Ò»¸ö³ÉÔ±¶¼ÄÜ¹»Á¬½ÓµÃÉÏÆäËû³ÉÔ±. ¹ØÓÚÈçºÎ¼ì²éÁ¬½Ó,²Î¿¼[Test Connections Between all Members](http://docs.mongodb.org/manual/tutorial/troubleshoot-replica-sets/#replica-set-troubleshooting-check-connection)
+åœ¨ä½ åˆ›å»º`replica set`ä¹‹å‰, ä½ å¿…é¡»å…ˆæ£€æŸ¥ä½ çš„ç½‘ç»œé…ç½®èƒ½å¤Ÿå…è®¸æ¯ä¸€ä¸ªæˆå‘˜éƒ½èƒ½å¤Ÿç›¸äº’è¿æ¥ä¸Š. ä¸€ä¸ªæˆåŠŸçš„`replica set`éƒ¨ç½², æ¯ä¸€ä¸ªæˆå‘˜éƒ½èƒ½å¤Ÿè¿æ¥å¾—ä¸Šå…¶ä»–æˆå‘˜. å…³äºå¦‚ä½•æ£€æŸ¥è¿æ¥,å‚è€ƒ[Test Connections Between all Members](http://docs.mongodb.org/manual/tutorial/troubleshoot-replica-sets/#replica-set-troubleshooting-check-connection)
 
 ## Considerations When Deploying a Replica Set
 
 ### Architecture
 
-ÔÚÉú²ú½×¶Î, ½«`replica set`ºÍËüµÄ³ÉÔ±²¿Êğµ½Í¬Ò»Ì¨»úÆ÷ÉÏ. Èç¹û¿ÉÄÜµÄ»°, °ó¶¨µ½MongoDB±ê×¼¶Ë¿Ú27017ÉÏ. Ê¹ÓÃ`bind_ip`Ñ¡ÏîÈ·±£MongoDB»á¸ù¾İÅäÖÃºÃµÄµØÖ·¼àÌıÀ´×ÔÓ¦ÓÃ³ÌĞòµÄÁ¬½Ó.
+åœ¨ç”Ÿäº§é˜¶æ®µ, å°†`replica set`å’Œå®ƒçš„æˆå‘˜éƒ¨ç½²åˆ°åŒä¸€å°æœºå™¨ä¸Š. å¦‚æœå¯èƒ½çš„è¯, ç»‘å®šåˆ°MongoDBæ ‡å‡†ç«¯å£27017ä¸Š. ä½¿ç”¨`bind_ip`é€‰é¡¹ç¡®ä¿MongoDBä¼šæ ¹æ®é…ç½®å¥½çš„åœ°å€ç›‘å¬æ¥è‡ªåº”ç”¨ç¨‹åºçš„è¿æ¥.
 
-Èç¹û`replica set`ÔÚ²»Í¬µÄ»ú·¿ÄÚ²¿Êğ, ÄÇÃ´Ó¦¸ÃÈ·±£´ó¶àÊıµÄ`mongod`ÊµÀı²¿ÊğÔÚµÚÒ»Õ¾µãÉÏ.²Î¿¼[Replica Set Deployment Architectures]()
+å¦‚æœ`replica set`åœ¨ä¸åŒçš„æœºæˆ¿å†…éƒ¨ç½², é‚£ä¹ˆåº”è¯¥ç¡®ä¿å¤§å¤šæ•°çš„`mongod`å®ä¾‹éƒ¨ç½²åœ¨ç¬¬ä¸€ç«™ç‚¹ä¸Š.å‚è€ƒ[Replica Set Deployment Architectures]()
 
 ### Connectivity
 
-È·±£ÍøÂçÖĞËùÓĞµÄ`replica set`³ÉÔ±ºÍ¿Í»§¶ËµÄÁ÷Á¿ÄÜ¹»°²È«ºÍ¸ßĞ§µØ´«Êä:
+ç¡®ä¿ç½‘ç»œä¸­æ‰€æœ‰çš„`replica set`æˆå‘˜å’Œå®¢æˆ·ç«¯çš„æµé‡èƒ½å¤Ÿå®‰å…¨å’Œé«˜æ•ˆåœ°ä¼ è¾“:
 
-* ´´½¨Ò»¸öĞéÄâµÄË½ÓĞÍøÂç. È·±£¸ÃÍøÂçÉÏÒ»¸öµ¥¶ÀÕ¾µã¿ÉÒÔÂ·ÓÉ²»Í¬³ÉÔ±¼ä ¼äËùÓĞµÄÁ÷Á¿.
-* ÅäÖÃ·ÃÎÊ¿ØÖÆÄÜ¹»×èÖ¹Î´ÖªµÄ¿Í»§¶ËÁ¬½Óµ½ `replica set`ÉÏ
-* ÅäÖÃÍøÂçºÍ·À»ğÇ½¹æÔòÒÔ±ã½øÕ¾ºÍ³öÕ¾µÄÍøÂç°ü½ö½öÊÇÔÚMongoDBµÄÄ¬ÈÏ¶Ë¿ÚºÍÄãµÄÅäÖÃÉÏ.
+* åˆ›å»ºä¸€ä¸ªè™šæ‹Ÿçš„ç§æœ‰ç½‘ç»œ. ç¡®ä¿è¯¥ç½‘ç»œä¸Šä¸€ä¸ªå•ç‹¬ç«™ç‚¹å¯ä»¥è·¯ç”±ä¸åŒæˆå‘˜é—´ é—´æ‰€æœ‰çš„æµé‡.
+* é…ç½®è®¿é—®æ§åˆ¶èƒ½å¤Ÿé˜»æ­¢æœªçŸ¥çš„å®¢æˆ·ç«¯è¿æ¥åˆ° `replica set`ä¸Š
+* é…ç½®ç½‘ç»œå’Œé˜²ç«å¢™è§„åˆ™ä»¥ä¾¿è¿›ç«™å’Œå‡ºç«™çš„ç½‘ç»œåŒ…ä»…ä»…æ˜¯åœ¨MongoDBçš„é»˜è®¤ç«¯å£å’Œä½ çš„é…ç½®ä¸Š.
 
-×îÖÕÈ·±£`replica set`ÖĞÃ¿¸ö³ÉÔ±¶¼¿ÉÒÔÍ¨¹ı¿É½âÎöµÄ`DNS`»òÕß`hostname`·ÃÎÊµ½. ÄãÓ¦¸ÃÇ¡µ±µØÉèÖÃÉÏ`DNS`Ãû³Æ»òÕßÍ¨¹ı`/etc/hosts`ÎÄ¼şÀ´Ó³ÉäÕâ¸öÅäÖÃ
+æœ€ç»ˆç¡®ä¿`replica set`ä¸­æ¯ä¸ªæˆå‘˜éƒ½å¯ä»¥é€šè¿‡å¯è§£æçš„`DNS`æˆ–è€…`hostname`è®¿é—®åˆ°. ä½ åº”è¯¥æ°å½“åœ°è®¾ç½®ä¸Š`DNS`åç§°æˆ–è€…é€šè¿‡`/etc/hosts`æ–‡ä»¶æ¥æ˜ å°„è¿™ä¸ªé…ç½®
 
 ### Configuration
 Specify the run time configuration on each system in a configuration file stored in /etc/mongodb.conf or a related location. Create the directory where MongoDB stores data files before deploying MongoDB.
@@ -680,59 +680,59 @@ For more information about the run time options used above and other configurati
 
 ## Procedure
 
-ÏÂÃæµÄ²½Öè¸ÅÀ¨ÁËÔÚ`access control`Ê§Ğ§µÄÇé¿öÏÂÈçºÎ²¿Êğreplica set
+ä¸‹é¢çš„æ­¥éª¤æ¦‚æ‹¬äº†åœ¨`access control`å¤±æ•ˆçš„æƒ…å†µä¸‹å¦‚ä½•éƒ¨ç½²replica set
 
 ###### 1. Start each member of the replica set with the appropriate options.
 
 
-Æô¶¯`mongod`È»ºóÍ¨¹ı`replSet`Ñ¡ÏîÉè¶¨`replica set`Ãû×Ö, Ïò`replica set`ÖĞÌí¼ÓÒ»¸ö³ÉÔ±. Èç¹ûÏëÒªÅäÖÃÆäËûÌØÓĞ²ÎÊı,²Î¿¼[Replication Options]()
+å¯åŠ¨`mongod`ç„¶åé€šè¿‡`replSet`é€‰é¡¹è®¾å®š`replica set`åå­—, å‘`replica set`ä¸­æ·»åŠ ä¸€ä¸ªæˆå‘˜. å¦‚æœæƒ³è¦é…ç½®å…¶ä»–ç‰¹æœ‰å‚æ•°,å‚è€ƒ[Replication Options]()
 
-Èç¹ûÄãµÄÓ¦ÓÃ³ÌĞòÁ¬½ÓÁË¶à¸ö`replica set`, Ã¿Ò»¸ö`replica set`¶¼Ó¦¸ÃÓĞÒ»¸ö¶ÀÁ¢µÄÃû×Ö. Ä³Ğ©Çı¶¯»á¸ù¾İ`replica set`Ãû³Æ½«`replica set`Á¬½Ó½øĞĞ·Ö×é.
+å¦‚æœä½ çš„åº”ç”¨ç¨‹åºè¿æ¥äº†å¤šä¸ª`replica set`, æ¯ä¸€ä¸ª`replica set`éƒ½åº”è¯¥æœ‰ä¸€ä¸ªç‹¬ç«‹çš„åå­—. æŸäº›é©±åŠ¨ä¼šæ ¹æ®`replica set`åç§°å°†`replica set`è¿æ¥è¿›è¡Œåˆ†ç»„.
 
-ÏÂÃæÊÇÒ»¸öÊ¾Àı£º
+ä¸‹é¢æ˜¯ä¸€ä¸ªç¤ºä¾‹ï¼š
 ```
 	mongod --replSet "rs0"
 ```
 
-ÄãÒ²Í¨¹ıÅäÖÃÎÄ¼şÉèÖÃ`replica set`Ãû×Ö. Èç¹ûÏëÒªÍ¨¹ıÅäÖÃÎÄ¼şÆô¶¯`mongod`, ÄÇÃ´ÄãĞèÒª`--config`Ñ¡ÏîÖ¸¶¨ÅäÖÃÎÄ¼ş
+ä½ ä¹Ÿé€šè¿‡é…ç½®æ–‡ä»¶è®¾ç½®`replica set`åå­—. å¦‚æœæƒ³è¦é€šè¿‡é…ç½®æ–‡ä»¶å¯åŠ¨`mongod`, é‚£ä¹ˆä½ éœ€è¦`--config`é€‰é¡¹æŒ‡å®šé…ç½®æ–‡ä»¶
 ```
 mongod --config $HOME/.mongodb/config
 ```
-ÔÚÉú²ú²¿Êğ½×¶Î, Äã¿ÉÒÔÍ¨¹ıÅäÖÃÒ»¸ö¿ØÖÆ½Å±¾À´¹ÜÀíÕâ¸ö½ø³Ì. µ«ÊÇ¿ØÖÆ½Å±¾µÄÊ¹ÓÃ³¬¹ıÁË¸Ã½Ì³ÌµÄ½éÉÜ·¶Î§.
+åœ¨ç”Ÿäº§éƒ¨ç½²é˜¶æ®µ, ä½ å¯ä»¥é€šè¿‡é…ç½®ä¸€ä¸ªæ§åˆ¶è„šæœ¬æ¥ç®¡ç†è¿™ä¸ªè¿›ç¨‹. ä½†æ˜¯æ§åˆ¶è„šæœ¬çš„ä½¿ç”¨è¶…è¿‡äº†è¯¥æ•™ç¨‹çš„ä»‹ç»èŒƒå›´.
 
-> ×¢Òâ:
+> æ³¨æ„:
 >
-> Èç¹ûÄãµÄcÅÌÃ»ÓĞ´´½¨C:/data/db, ÄÇÃ´»áÅ×³ö £ºHotfix KB2731284 or later update is not installed. ÒÔ¼° C:\data\db not found µÄ×ÖÑù. 
+> å¦‚æœä½ çš„cç›˜æ²¡æœ‰åˆ›å»ºC:/data/db, é‚£ä¹ˆä¼šæŠ›å‡º ï¼šHotfix KB2731284 or later update is not installed. ä»¥åŠ C:\data\db not found çš„å­—æ ·. 
 >
-> ÄÇÃ´Äã¾ÍĞèÒªÔÚÃüÁîÉÏ¼ÓÉÏ --dbpath Ñ¡ÏîÁË
+> é‚£ä¹ˆä½ å°±éœ€è¦åœ¨å‘½ä»¤ä¸ŠåŠ ä¸Š --dbpath é€‰é¡¹äº†
 
 ###### 2. Connect a mongo shell to a replica set member.
 
-ÏÂÀıÕ¹Ê¾ÁËÈçºÎÁ¬½Óµ½ÔÚ`localhost:27017`ÉÏÔËĞĞµÄ`mongod`:
+ä¸‹ä¾‹å±•ç¤ºäº†å¦‚ä½•è¿æ¥åˆ°åœ¨`localhost:27017`ä¸Šè¿è¡Œçš„`mongod`:
 ```
 mongo
 ```
 
 ###### 3. Initiate the replica set.
 
-½Ó×ÅÕâ`mongo`shellÀïÊ¹ÓÃ`rs.initiate()`ÉèÖÃ³ÉÔ±.
+æ¥ç€è¿™`mongo`shellé‡Œä½¿ç”¨`rs.initiate()`è®¾ç½®æˆå‘˜.
 ```
 rs.initiate()
 ```
-MongoDBÊ¹ÓÃ`replica set`Ä¬ÈÏÅäÖÃÆô¶¯ÁËÒ»¸ö°üº¬µ±Ç°³ÉÔ±µÄ`replica set`
+MongoDBä½¿ç”¨`replica set`é»˜è®¤é…ç½®å¯åŠ¨äº†ä¸€ä¸ªåŒ…å«å½“å‰æˆå‘˜çš„`replica set`
 
-> ×¢Òâ:
+> æ³¨æ„:
 >
-> Õâ¸ö¹ı³Ì´ó¸ÅĞèÒª¼¸·ÖÖÓµÄÊ±¼ä, ËùÒÔĞèÒªÄÍĞÄµÄÉÔµÈÒ»ÏÂ.
+> è¿™ä¸ªè¿‡ç¨‹å¤§æ¦‚éœ€è¦å‡ åˆ†é’Ÿçš„æ—¶é—´, æ‰€ä»¥éœ€è¦è€å¿ƒçš„ç¨ç­‰ä¸€ä¸‹.
 
 ###### 4. Verify the initial replica set configuration.
 
-ÔÚ`mongo`shellÖĞÊ¹ÓÃ`rs.conf()`Êä³ö`replica set`ÅäÖÃ:
+åœ¨`mongo`shellä¸­ä½¿ç”¨`rs.conf()`è¾“å‡º`replica set`é…ç½®:
 ```
 rs.conf()
 ```
 
-Êä³öµÄ`replica set`ÅäÖÃÀàËÆÓÚÏÂÃæµÄ½á¹¹
+è¾“å‡ºçš„`replica set`é…ç½®ç±»ä¼¼äºä¸‹é¢çš„ç»“æ„
 ```json
 {
    "_id" : "rs0",
@@ -748,24 +748,24 @@ rs.conf()
 
 ###### 5. Add the remaining members to the replica set.
 
-ÔÚ`mongo`shellÖĞÊ¹ÓÃ`rs.add()`·½·¨Ìí¼ÓÁ©¸ö³ÉÔ±:
+åœ¨`mongo`shellä¸­ä½¿ç”¨`rs.add()`æ–¹æ³•æ·»åŠ ä¿©ä¸ªæˆå‘˜:
 ```
 rs.add("mongodb1.example.net")
 rs.add("mongodb2.example.net")
 ```
 
-Íê³ÉÕâÒ»²½Ö®ºó,Äã¾Í»ñµÃÁËÒ»¸öÓµÓĞÍêÕû¹¦ÄÜµÄ`replica set`. ĞÂµÄ`replica set`»áÑ¡³öÒ»¸öÖ÷ÒªµÄÀ´.
+å®Œæˆè¿™ä¸€æ­¥ä¹‹å,ä½ å°±è·å¾—äº†ä¸€ä¸ªæ‹¥æœ‰å®Œæ•´åŠŸèƒ½çš„`replica set`. æ–°çš„`replica set`ä¼šé€‰å‡ºä¸€ä¸ªä¸»è¦çš„æ¥.
 
 ###### 6. Check the status of the replica set.
 
-ÔÚ`mongo`shellÖĞÊ¹ÓÃ`rs.status()`·½·¨²é¿´`replica set`×´Ì¬.
+åœ¨`mongo`shellä¸­ä½¿ç”¨`rs.status()`æ–¹æ³•æŸ¥çœ‹`replica set`çŠ¶æ€.
 ```
 rs.status()
 ```
 
 ## Replication Introduction
 
-`Replication` ÊÇÓÃÓÚ¶àÌ¨·şÎñÆ÷¼äÊı¾İÍ¬²½µÄÒ»¸ö½ø³Ì.
+`Replication` æ˜¯ç”¨äºå¤šå°æœåŠ¡å™¨é—´æ•°æ®åŒæ­¥çš„ä¸€ä¸ªè¿›ç¨‹.
 
 ## Purpose of Replication
 
@@ -773,9 +773,9 @@ Replication provides redundancy and increases data availability. With multiple c
 
 In some cases, you can use replication to increase read capacity. Clients have the ability to send read and write operations to different servers. You can also maintain copies in different data centers to increase the locality and availability of data for distributed applications.
 
-`Replication`Ìá¹©ÁË¼õÉÙºÍÌá¸ßÊı¾İµÄ¿ÉÓÃĞÔ. 
+`Replication`æä¾›äº†å‡å°‘å’Œæé«˜æ•°æ®çš„å¯ç”¨æ€§. 
 
-ÔÚÄ³Ğ©Çé¿öÏÂ, Í¨¹ı`replication`¿ÉÒÔÌá¸ß¶ÁÊı¾İµÄÄÜÁ¦. 
+åœ¨æŸäº›æƒ…å†µä¸‹, é€šè¿‡`replication`å¯ä»¥æé«˜è¯»æ•°æ®çš„èƒ½åŠ›. 
 
 ## Replication in MongoDB
 
@@ -787,7 +787,7 @@ The primary accepts all write operations from clients. Replica set can have only
 
 Diagram of default routing of reads and writes to the primary.
 
-The secondaries replicate the primary¡¯s oplog and apply the operations to their data sets. Secondaries¡¯ data sets reflect the primary¡¯s data set. If the primary is unavailable, the replica set will elect a secondary to be primary. By default, clients read from the primary, however, clients can specify a read preferences to send read operations to secondaries. Reads from secondaries may return data that does not reflect the state of the primary. See secondaries for more information.
+The secondaries replicate the primaryâ€™s oplog and apply the operations to their data sets. Secondariesâ€™ data sets reflect the primaryâ€™s data set. If the primary is unavailable, the replica set will elect a secondary to be primary. By default, clients read from the primary, however, clients can specify a read preferences to send read operations to secondaries. Reads from secondaries may return data that does not reflect the state of the primary. See secondaries for more information.
 
 ![replica-set-primary-with-two-secondaries](/images/mongodb/replica-set-primary-with-two-secondaries.png)
 
