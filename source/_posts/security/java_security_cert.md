@@ -1,3 +1,6 @@
+category: 
+- 加密
+title: java_security_cert
 ## Certificate.md用于管理证书的抽象类 证书有很多类型,如X.509证书,PGP证书和SDSI证书
 并且它们都以不同的方式存储并存储不同的信息,但却都可以通过继承Certificate类来实现
 ## CertificateFactory

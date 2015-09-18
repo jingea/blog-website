@@ -1,3 +1,6 @@
+category: 
+- 加密
+title: Java����
 # Java加密
 
 ## Java与密码学

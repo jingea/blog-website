@@ -1,3 +1,6 @@
+category: 
+- 加密
+title: javax_net_ssl
 ## HttpsURLConnection
 ```java
 		URL url = new URL("www.baidu.com");

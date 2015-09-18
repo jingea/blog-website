@@ -1,3 +1,6 @@
+category: 
+- 加密
+title: java_security_spec
 ## AlgorithmParameterSpec
 ```java
 // 以DSAParameterSpec为例
