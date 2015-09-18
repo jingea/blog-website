@@ -1,3 +1,3 @@
 layout: categories
-title: 并发
+title: categories
 ---

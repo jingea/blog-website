@@ -1,6 +1,6 @@
-category: 
+﻿category: 
 - collection
-title: collection\linkedtransferqueue
+title: LinkedTransferQueue
 ---
 # LinkedTransferQueue
 

@@ -1,6 +1,6 @@
 category: 
 - collection
-title: collection\synchronousqueue
+title: SynchronousQueue
 ---
 # SynchronousQueue
 

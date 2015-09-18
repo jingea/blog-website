@@ -1,6 +1,6 @@
 category: 
 - collection
-title: collection\collection
+title: 简介
 ---
 java 提供了俩类用于并发的集合
 

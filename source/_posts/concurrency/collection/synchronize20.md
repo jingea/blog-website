@@ -1,6 +1,6 @@
 category: 
 - collection
-title: collection\synchronize20
+title: java2.0的同步方式
 ---
 # synchronize2.0
 

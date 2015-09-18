@@ -1,6 +1,6 @@
 category: 
 - collection
-title: collection\skip_list
+title: Skip list
 ---
 # Skip list
 

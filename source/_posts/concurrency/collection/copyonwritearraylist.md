@@ -1,6 +1,6 @@
-category: 
-- collection
-title: collection\copyonwritearraylist
+﻿category: 
+- 并发集合
+title: CopyOnWriteArrayList
 ---
 # CopyOnWriteArrayList
 
