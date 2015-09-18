@@ -1,5 +1,5 @@
 category: 
 - synchrone_base
-title: synchrone_base\使用synchronized实现同步方法
+title: 浣跨敤synchronized瀹炵幇鍚屾鏂规硶
 ---
 

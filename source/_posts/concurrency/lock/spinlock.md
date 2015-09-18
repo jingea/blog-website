@@ -1,6 +1,6 @@
 category: 
 - lock
-title: lock\spinlock
+title: 自旋锁spinlock
 ---
 # 自旋锁spinlock
 自旋锁（Spin lock）

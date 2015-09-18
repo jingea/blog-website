@@ -1,6 +1,6 @@
 category: 
 - lock
-title: lock\ticketspinlock
+title: TicketSpinLock
 ---
 # TicketSpinLock
 

@@ -1,6 +1,6 @@
 category: 
 - lock
-title: lock\reentrantlock
+title: ReentrantLock
 ---
 # ReentrantLock
 

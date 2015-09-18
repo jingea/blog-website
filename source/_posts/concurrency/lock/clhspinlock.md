@@ -1,6 +1,6 @@
 category: 
 - lock
-title: lock\clhspinlock
+title: CLHSpinLock
 ---
 # CLHSpinLock
 

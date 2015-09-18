@@ -1,6 +1,6 @@
 category: 
 - lock
-title: lock\mcsspinlock
+title: MCSSpinLock
 ---
 # MCSSpinLock
 

@@ -1,6 +1,6 @@
 category: 
 - lock
-title: lock\readwritelock
+title: ReadWriteLock
 ---
 # ReadWriteLock
 
