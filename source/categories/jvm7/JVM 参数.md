@@ -1,5 +1,7 @@
-## java虚拟机参数
-
+category: jvm7
+title: java虚拟机参数
+---
+# java虚拟机参数
 
 
 ## 内存管理参数

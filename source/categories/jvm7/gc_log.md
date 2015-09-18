@@ -1,3 +1,6 @@
+category: jvm7
+title: gc_log
+---
 # gc_log
 ### gc log
 我使用`-Xmx2048m -Xms2048M  -Xmn1048m`的内存分配方式启动一个JVM,下面是其中一段GC 日志
