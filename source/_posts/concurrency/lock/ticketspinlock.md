@@ -1,3 +1,7 @@
+category: 
+- lock
+title: lock\ticketspinlock
+---
 # TicketSpinLock
 
 Ticket Lock 是为了解决上面的公平性问题，类似于现实中银行柜台的排队叫号：

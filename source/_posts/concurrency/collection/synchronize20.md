@@ -1,3 +1,7 @@
+category: 
+- collection
+title: collection\synchronize20
+---
 # synchronize2.0
 
 ##### 2.0

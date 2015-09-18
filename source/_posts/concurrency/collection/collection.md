@@ -1,3 +1,7 @@
+category: 
+- collection
+title: collection\collection
+---
 java 提供了俩类用于并发的集合
 
 ###### 基本上,Java提供两种在并发应用程序中使用的集合：

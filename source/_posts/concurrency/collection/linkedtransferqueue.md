@@ -1,3 +1,7 @@
+category: 
+- collection
+title: collection\linkedtransferqueue
+---
 # LinkedTransferQueue
 
 LinkedTransferQueue是一个由链表结构组成的无界阻塞TransferQueue队列。相对于其他阻塞队列LinkedTransferQueue多了tryTransfer和transfer方法。

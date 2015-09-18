@@ -1,3 +1,7 @@
+category: 
+- collection
+title: collection\synchronousqueue
+---
 # SynchronousQueue
 
 SynchronousQueue是一个不存储元素的阻塞队列.每一个put操作必须等待一个take操作,否则不能继续添加元素.反之亦然.同步队列没有任何内部容量,甚至连一个队列的容量都没有.

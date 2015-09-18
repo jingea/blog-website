@@ -1,3 +1,7 @@
+category: 
+- lock
+title: lock\clhspinlock
+---
 # CLHSpinLock
 
 CLH锁也是一种基于链表的可扩展、高性能、公平的自旋锁，申请线程只在本地变量上自旋，

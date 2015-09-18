@@ -1,3 +1,7 @@
+category: 
+- lock
+title: lock\spinlock
+---
 # 自旋锁spinlock
 自旋锁（Spin lock）
 自旋锁是指当一个线程尝试获取某个锁时，如果该锁已被其他线程占用，就一直循环检测锁是否被释放，而不是进入线程挂起或睡眠状态。

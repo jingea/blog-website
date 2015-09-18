@@ -1,3 +1,7 @@
+category: 
+- lock
+title: lock\mcsspinlock
+---
 # MCSSpinLock
 
 MCS Spinlock 是一种基于链表的可扩展、高性能、公平的自旋锁，申请线程只在本地变量上自旋，直接前驱负责通知其结束自旋，从而极大地减少了不必要的处理器缓存同步的次数，降低了总线和内存的开销。

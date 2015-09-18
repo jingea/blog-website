@@ -1,3 +1,7 @@
+category: 
+- collection
+title: collection\copyonwritearraylist
+---
 # CopyOnWriteArrayList
 
 1. CopyOnWriteArrayList（写数组的拷贝）是ArrayList的一个线程安全的变体,CopyOnWriteArrayList和CopyOnWriteSet都是线程安全的集合,其中所有可变操作（add、set等等）都是通过对底层数组进行一次新的复制来实现的。

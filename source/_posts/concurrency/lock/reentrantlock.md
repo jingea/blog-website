@@ -1,3 +1,7 @@
+category: 
+- lock
+title: lock\reentrantlock
+---
 # ReentrantLock
 
 Java提供了同步代码块的另一种机制,它比synchronized关键字更加强大也更加灵活. 这种机制基于Lock接口以及其实现类.

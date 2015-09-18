@@ -1,3 +1,7 @@
+category: 
+- collection
+title: collection\skip_list
+---
 # Skip list
 
 Skip list(跳表)说明
