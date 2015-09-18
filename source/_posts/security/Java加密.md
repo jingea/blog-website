@@ -1,9 +1,7 @@
 category: 
 - security
-title: Java¼ÓÃÜ
-category: 
-- åŠ å¯†
-title: Java¼ÓÃÜ
+title: JavaåŠ å¯†
+---
 # JavaåŠ å¯†
 
 ## Javaä¸å¯†ç å­¦

@@ -1,9 +1,7 @@
 category: 
 - security
 title: javax_crypto
-category: 
-- 加密
-title: javax_crypto
+---
 ## Cipher
 ```java
 NoSuchPaddingException, InvalidKeyException,

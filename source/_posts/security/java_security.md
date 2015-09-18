@@ -1,9 +1,7 @@
 category: 
 - security
 title: java_security
-category: 
-- 加密
-title: java_security
+---
 ## AlgorithmParameterGenerator
 ```java
 AlgorithmParameterGenerator apg = AlgorithmParameterGenerator.getInstance(Algorithm.DES.name());
