@@ -1,7 +1,7 @@
 category: 
 - concurrency
 tag:
-- collection
+- 并发集合
 title: java2.0的同步方式
 ---
 # synchronize2.0

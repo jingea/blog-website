@@ -1,6 +1,6 @@
 ﻿category: 
 - concurrency
 tag:
-- custom
+- 定制并发类
 title: 在Executor对象中使用ThreadFactory
 ---

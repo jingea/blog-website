@@ -1,6 +1,6 @@
 ﻿category: 
 - concurrency
 tag:
-- custom
+- 定制并发类
 title: 定制ThreadPoolExecutor类
 ---

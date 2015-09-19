@@ -1,7 +1,7 @@
 category: 
 - concurrency
 tag:
-- collection
+- 并发集合
 title: 简介
 ---
 java 提供了俩类用于并发的集合

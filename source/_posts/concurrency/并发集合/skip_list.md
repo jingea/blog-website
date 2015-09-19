@@ -1,7 +1,7 @@
 category: 
 - concurrency
 tag:
-- collection
+- 并发集合
 title: Skip list
 ---
 # Skip list
