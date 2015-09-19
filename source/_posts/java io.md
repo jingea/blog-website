@@ -1,5 +1,5 @@
-
-
+title: JAVA IO
+---
 
 ## JAVA IO
 ### io#interface
@@ -453,101 +453,101 @@ raf.close();
 
 ### nio
 
-#### [Buffer](java/src/test/io/robertsing/cookios/nio/TestBuffer.java)
+#### [Buffer]()
 
 
-#### [ByteBuffer](java/src/test/io/robertsing/cookios/nio/TestByteBuffer.java)
+#### [ByteBuffer]()
 
 
-#### [ByteOrder](java/src/test/io/robertsing/cookios/nio/TestByteOrder.java)
+#### [ByteOrder]()
 
 
-#### [CharBuffer](java/src/test/io/robertsing/cookios/nio/TestCharBuffer.java)
+#### [CharBuffer]()
 
 
-#### [DoubleBuffer](java/src/test/io/robertsing/cookios/nio/TestDoubleBuffer.java)
+#### [DoubleBuffer](TestDoubleBuffer.java)
 
 
-#### [FloatBuffer](java/src/test/io/robertsing/cookios/nio/TestFloatBuffer.java)
+#### [FloatBuffer](TestFloatBuffer.java)
 
 
-#### [IntBuffer](java/src/test/io/robertsing/cookios/nio/TestIntBuffer.java)
+#### [IntBuffer](TestIntBuffer.java)
 
 
-#### [LongBuffer](java/src/test/io/robertsing/cookios/nio/TestLongBuffer.java)
+#### [LongBuffer](TestLongBuffer.java)
 
 
-#### [MappedByteBuffer](java/src/test/io/robertsing/cookios/nio/TestMappedByteBuffer.java)
+#### [MappedByteBuffer](TestMappedByteBuffer.java)
 
 
-#### [ShortBuffer](java/src/test/io/robertsing/cookios/nio/TestShortBuffer.java)
+#### [ShortBuffer](TestShortBuffer.java)
 
 
 ### nio#channels#Interfaces
 
-#### [AsynchronousByteChannel](java/src/test/io/robertsing/cookios/nio/channels/TestAsynchronousByteChannel.java)
+#### [AsynchronousByteChannel](TestAsynchronousByteChannel.java)
 
 
-#### [AsynchronousChannel](java/src/test/io/robertsing/cookios/nio/channels/TestAsynchronousChannel.java)
+#### [AsynchronousChannel](TestAsynchronousChannel.java)
 
 
-#### [ByteChannel](java/src/test/io/robertsing/cookios/nio/channels/TestByteChannel.java)
+#### [ByteChannel](TestByteChannel.java)
 
 
-#### [Channel](java/src/test/io/robertsing/cookios/nio/channels/TestChannel.java)
+#### [Channel](TestChannel.java)
 
 
-#### [CompletionHandler](java/src/test/io/robertsing/cookios/nio/channels/TestCompletionHandler.java)
+#### [CompletionHandler](TestCompletionHandler.java)
 
 
-#### [GatheringByteChannel](java/src/test/io/robertsing/cookios/nio/channels/TestGatheringByteChannel.java)
+#### [GatheringByteChannel](TestGatheringByteChannel.java)
 
 
-#### [InterruptibleChannel](java/src/test/io/robertsing/cookios/nio/channels/TestInterruptibleChannel.java)
+#### [InterruptibleChannel](TestInterruptibleChannel.java)
 
 
-#### [MulticastChannel](java/src/test/io/robertsing/cookios/nio/channels/TestMulticastChannel.java)
+#### [MulticastChannel](TestMulticastChannel.java)
 
 
-#### [NetworkChannel](java/src/test/io/robertsing/cookios/nio/channels/TestNetworkChannel.java)
+#### [NetworkChannel](TestNetworkChannel.java)
 
 
-#### [ReadableByteChannel](java/src/test/io/robertsing/cookios/nio/channels/TestReadableByteChannel.java)
+#### [ReadableByteChannel](TestReadableByteChannel.java)
 
 
-#### [ScatteringByteChannel](java/src/test/io/robertsing/cookios/nio/channels/TestScatteringByteChannel.java)
+#### [ScatteringByteChannel](TestScatteringByteChannel.java)
 
 
-#### [SeekableByteChannel](java/src/test/io/robertsing/cookios/nio/channels/TestSeekableByteChannel.java)
+#### [SeekableByteChannel](TestSeekableByteChannel.java)
 
 
-#### [WritableByteChannel](java/src/test/io/robertsing/cookios/nio/channels/TestWritableByteChannel.java)
+#### [WritableByteChannel](TestWritableByteChannel.java)
 
 
 ### nio#channels#Classes
 
-#### [AsynchronousChannelGroup](java/src/test/io/robertsing/cookios/nio/channels/TestAsynchronousChannelGroup.java)
+#### [AsynchronousChannelGroup](TestAsynchronousChannelGroup.java)
 
 
-#### [AsynchronousFileChannel](java/src/test/io/robertsing/cookios/nio/channels/TestAsynchronousFileChannel.java)
+#### [AsynchronousFileChannel](TestAsynchronousFileChannel.java)
 
 
-#### [AsynchronousServerSocketChannel](java/src/test/io/robertsing/cookios/nio/channels/TestAsynchronousServerSocketChannel.java)
+#### [AsynchronousServerSocketChannel](TestAsynchronousServerSocketChannel.java)
 
 
-#### [AsynchronousSocketChannel](java/src/test/io/robertsing/cookios/nio/channels/TestAsynchronousSocketChannel.java)
+#### [AsynchronousSocketChannel](TestAsynchronousSocketChannel.java)
 
 
-#### [Channels](java/src/test/io/robertsing/cookios/nio/channels/TestChannels.java)
+#### [Channels](TestChannels.java)
 
 
-#### [DatagramChannel](java/src/test/io/robertsing/cookios/nio/channels/TestDatagramChannel.java)
+#### [DatagramChannel](TestDatagramChannel.java)
 
 
-#### [FileChannel](java/src/test/io/robertsing/cookios/nio/channels/TestFileChannel.java)
+#### [FileChannel](TestFileChannel.java)
 
 
-#### [FileChannel.MapMode](java/src/test/io/robertsing/cookios/nio/channels/TestFileChannel.MapMode.java)
+#### [FileChannel.MapMode](TestFileChannel.MapMode.java)
 
 
 #### FileLock
@@ -586,70 +586,69 @@ if (fl != null) {
 fos.close()
 ```
 
-#### [MembershipKey](java/src/test/io/robertsing/cookios/nio/channels/TestMembershipKey.java)
+#### [MembershipKey](TestMembershipKey.java)
 
 
-#### [Pipe](java/src/test/io/robertsing/cookios/nio/channels/TestPipe.java)
+#### [Pipe](TestPipe.java)
 
 
-#### [SelectableChannel](java/src/test/io/robertsing/cookios/nio/channels/TestSelectableChannel.java)
+#### [SelectableChannel](TestSelectableChannel.java)
 
 
-#### [SelectionKey](java/src/test/io/robertsing/cookios/nio/channels/TestSelectionKey.java)
+#### [SelectionKey](TestSelectionKey.java)
 
 
-#### [Selector](java/src/test/io/robertsing/cookios/nio/channels/TestSelector.java)
+#### [Selector](TestSelector.java)
 
 
-#### [ServerSocketChannel](java/src/test/io/robertsing/cookios/nio/channels/TestServerSocketChannel.java)
+#### [ServerSocketChannel](TestServerSocketChannel.java)
 ServerSocketChannel 只有一个用途--接受入站连接 它是无法读取,写入或者连接的
 
 
 
-#### [SocketChannel](java/src/test/io/robertsing/cookios/nio/channels/TestSocketChannel.java)
+#### [SocketChannel](TestSocketChannel.java)
 
 
 ### nio#file#Interfaces
 
-#### [CopyOption](java/src/test/io/robertsing/cookios/nio/file/TestCopyOption.java)
+#### [CopyOption](TestCopyOption.java)
 
 
-#### [DirectoryStream](java/src/test/io/robertsing/cookios/nio/file/TestDirectoryStream.java)
+#### [DirectoryStream](TestDirectoryStream.java)
 
 	遍历某个文件夹内的所有文件,但是不会遍历子目录. 也就是这会遍历当前路径中的所有文件
 
-#### [FileVisitor](java/src/test/io/robertsing/cookios/nio/file/TestFileVisitor.java)
-
-	@SimpleFileVisitor
-
-#### [OpenOption](java/src/test/io/robertsing/cookios/nio/file/TestOpenOption.java)
+#### [FileVisitor](TestFileVisitor.java)
 
 
-#### [Path](java/src/test/io/robertsing/cookios/nio/file/TestPath.java)
+#### [OpenOption](TestOpenOption.java)
+
+
+#### [Path](TestPath.java)
 Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件，但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据，因此在网络环境或在虚拟文件系统中，NIO.2 也完全适用。NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法
 
-#### [PathMatcher](java/src/test/io/robertsing/cookios/nio/file/TestPathMatcher.java)
+#### [PathMatcher](TestPathMatcher.java)
 
 
-#### [SecureDirectoryStream](java/src/test/io/robertsing/cookios/nio/file/TestSecureDirectoryStream.java)
+#### [SecureDirectoryStream](TestSecureDirectoryStream.java)
 
 
-#### [Watchable](java/src/test/io/robertsing/cookios/nio/file/TestWatchable.java)
+#### [Watchable](TestWatchable.java)
 
 
-#### [WatchEvent](java/src/test/io/robertsing/cookios/nio/file/TestWatchEvent.java)
+#### [WatchEvent](TestWatchEvent.java)
 
 
-#### [WatchEvent.Kind](java/src/test/io/robertsing/cookios/nio/file/TestWatchEvent.Kind.java)
+#### [WatchEvent.Kind](TestWatchEvent.Kind.java)
 
 
-#### [WatchEvent.Modifier](java/src/test/io/robertsing/cookios/nio/file/TestWatchEvent.Modifier.java)
+#### [WatchEvent.Modifier](TestWatchEvent.Modifier.java)
 
 
-#### [WatchKey](java/src/test/io/robertsing/cookios/nio/file/TestWatchKey.java)
+#### [WatchKey](TestWatchKey.java)
 
 
-#### [WatchService](java/src/test/io/robertsing/cookios/niofile//TestWatchService.java)
+#### [WatchService](java/src/test/io/robertsing/cookios/nio/TestWatchService.java)
 
 
 ### nio#file#Classes
@@ -705,10 +704,10 @@ Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path �
 #### [FileStore]()
 代表了真正的存储设备，提供了设备的详尽信息
 
-#### [FileSystem](java/src/test/io/robertsing/cookios/nio/file/TestFileSystem.java)
+#### [FileSystem](TestFileSystem.java)
 
 
-#### [FileSystems](java/src/test/io/robertsing/cookios/nio/file/TestFileSystems.java)
+#### [FileSystems](TestFileSystems.java)
 ```java
 // 返回 JVM 默认的 FileSystem – 一般说来，也就是操作系统的默认文件系统
 FileSystems.getDefault();
@@ -719,36 +718,36 @@ FileSystem system = FileSystems.getDefault();
 Set<String> views = system.supportedFileAttributeViews();
 ```
 
-#### [LinkPermission](java/src/test/io/robertsing/cookios/nio/file/TestLinkPermission.java)
+#### [LinkPermission](TestLinkPermission.java)
 
 
-#### [Paths](java/src/test/io/robertsing/cookios/nio/file/TestPaths.java)
+#### [Paths](TestPaths.java)
 
 
-#### [SimpleFileVisitor](java/src/test/io/robertsing/cookios/nio/file/TestSimpleFileVisitor.java)
+#### [SimpleFileVisitor](TestSimpleFileVisitor.java)
 与DirectoryStream 不同的是，这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.
 
-#### [StandardWatchEventKinds](java/src/test/io/robertsing/cookios/nio/file/TestStandardWatchEventKinds.java)
+#### [StandardWatchEventKinds](TestStandardWatchEventKinds.java)
 
 
 ### nio#charset
 
-#### [Charset](java/src/test/io/robertsing/cookios/nio/charset/TestCharset.java)
+#### [Charset](TestCharset.java)
 
 
-#### [CharsetDecoder](java/src/test/io/robertsing/cookios/nio/charset/TestCharsetDecoder.java)
+#### [CharsetDecoder](TestCharsetDecoder.java)
 
 
-#### [CharsetEncoder](java/src/test/io/robertsing/cookios/nio/charset/TestCharsetEncoder.java)
+#### [CharsetEncoder](TestCharsetEncoder.java)
 
 
-#### [CoderResult](java/src/test/io/robertsing/cookios/nio/charset/TestCoderResult.java)
+#### [CoderResult](TestCoderResult.java)
 
 
-#### [CodingErrorAction](java/src/test/io/robertsing/cookios/nio/charset/TestCodingErrorAction.java)
+#### [CodingErrorAction](TestCodingErrorAction.java)
 
 
-#### [StandardCharsets](java/src/test/io/robertsing/cookios/nio/charset/TestStandardCharsets.java)
+#### [StandardCharsets](TestStandardCharsets.java)
 
 
 
