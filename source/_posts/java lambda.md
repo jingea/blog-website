@@ -91,7 +91,9 @@ Run1 run1 = () -> {
 	System.out.println(name + " am running");
 };
 ```		
-会提示`variable used in lambda expression shouble be final`, 这说明lambda其实内部引用的是值而不是变量.好,接下来我们换种方式再次验证一下我们的结果：
+会提示`variable used in lambda expression shouble be final`, 这说明lambda其实内部引用的是值而不是变量.
+
+好,接下来我们换种方式再次验证一下我们的结果：
 ```java
 String name = "sam";
 name = "Jams";
