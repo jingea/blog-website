@@ -2,9 +2,12 @@ category:
 - security
 title: java_security_cert
 ---
-## Certificate.md用于管理证书的抽象类 证书有很多类型,如X.509证书,PGP证书和SDSI证书
+## Certificate
+用于管理证书的抽象类 证书有很多类型,如X.509证书,PGP证书和SDSI证书
 并且它们都以不同的方式存储并存储不同的信息,但却都可以通过继承Certificate类来实现
+
 ## CertificateFactory
+CertificateFactory是一个引擎类,称之为证书工厂,可以通过它将证书导入程序中.
 ```java
 // 实例化,并指明证书类型为 x.509
 CertificateFactory cf = CertificateFactory.getInstance("x.509");
@@ -23,8 +26,9 @@ in.close();
 	}
 }
 ```
-CertificateFactory是一个引擎类,称之为证书工厂,可以通过它将证书导入程序中.
+
 ## CertPath
+定义了常用于所有CertPath的方法 其子类可处理不同类型的证书(x.509 PGP等)所有的CertPath对象都包含类型,Certificate列表及其支持的一种或多种编码
 ```java
 // 实例化,并指明证书类型为X.509
 CertificateFactory cf = CertificateFactory.getInstance("x.509");
@@ -38,9 +42,9 @@ cp.getEncoded();// 获得证书路径中的Certificate类型 如x。509
 cp.getType();	}
 }
 ```
-定义了常用于所有CertPath的方法 其子类可处理不同类型的证书(x.509 PGP等)
-所有的CertPath对象都包含类型,Certificate列表及其支持的一种或多种编码
+
 ## CRL
+证书可能会由于各种原因失效, 失效后证书将被制为无效,无效的结果就是产生CRL(证书撤销列表),CA负责发布CRL,CRL中列出了该CA已经撤销的证书验证证书时,首先需要查询此列表,然后再考虑接受证书的合法性
 ```java
 // 实例化,并致命证书类型为 X509
 CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -54,13 +58,12 @@ in.close();
 crl.getType();
 // 检查给定的证书是否在此CRl中
 //	crl.isRevoked(cert)
-	}
-}
 ```
-证书可能会由于各种原因失效, 失效后证书将被制为无效,无效的结果就是产生CRL(证书撤销列表),
-CA负责发布CRL,CRL中列出了该CA已经撤销的证书
-验证证书时,首先需要查询此列表,然后再考虑接受证书的合法性
+
 ## X509Certificate
+X509Certificate是Certificate的子类
+
+x.509证书的抽象类,此类提供类一种访问x.509证书的所有属性的标准方式
 ```java
 // 加载密钥库文件
 FileInputStream fin = new FileInputStream(new File(""));
@@ -110,9 +113,9 @@ xc.getSigAlgParams();// 获取签名值
 xc.getSignature();	}
 }
 ```
-X509Certificate是Certificate的子类
-x.509证书的抽象类,此类提供类一种访问x.509证书的所有属性的标准方式
+
 ## X509CRL
+作为CRl的子类,已标明了类型为X.509的CRl, X.509证书撤销列表(CRL)的抽象类.CRL是标致已撤销证书的时间戳列表.它由证书颁发机构签署,并可在公共存储库中随意使用
 ```java
 // 实例化,并指明证书类型为X.509
 CertificateFactory cf = CertificateFactory.getInstance("x.509");
@@ -143,7 +146,6 @@ xc.getSignature();// 获取具有给定证书serialNumber的CRL项
 xc.getIssuerX500Principal();	}
 }
 ```
-作为CRl的子类,已标明了类型为X.509的CRl, X.509证书撤销列表(CRL)的抽象类.
-CRL是标致已撤销证书的时间戳列表.
-它由证书颁发机构签署,并可在公共存储库中随意使用
-## X509CRLEntry.md已经撤销的证书类
+
+## X509CRLEntry
+已经撤销的证书类

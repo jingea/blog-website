@@ -5,34 +5,25 @@ title: java_security
 ## AlgorithmParameterGenerator
 ```java
 AlgorithmParameterGenerator apg = AlgorithmParameterGenerator.getInstance(Algorithm.DES.name());
+// 与算法无关的初始化,所有参数生成器都共享大小概念和一个随机源
+// 特定于算法的参数生成值默认为某些标准值,除非他们可以从指定的大小派生
+apg.init(size, random);
 
-  与算法无关的初始化
-  所有参数生成器都共享大小概念和一个随机源
-  
-   特定于算法的参数生成值默认为某些标准值,除非他们可以从指定的大小派生
-   apg.init(size, random);
-/
 apg.init(56);
 
-/*
- 实例化后就可以生成算法参数对象了
-/
+//实例化后就可以生成算法参数对象了
 AlgorithmParameters ap = apg.generateParameters();
 
 // 获得字节数组
 byte[] b = ap.getEncoded();
 System.out.println(new BigInteger(b).toString());
 
-
-  特定于算法的初始化
-  使用特定算法的语意初始化参数生成器对象,这些语意由特定于算法的参数生成值集合表示.
-  
-  apg.init(genParamSpec);
-  apg.init(genParamSpec, random);
-/
-
+// 特定于算法的初始化,使用特定算法的语意初始化参数生成器对象,这些语意由特定于算法的参数生成值集合表示.
+apg.init(genParamSpec);
+apg.init(genParamSpec, random);
 ```
 引擎类,用于生成某个特定算法中使用的参数集合.{@link AlgorithmParameters} 生成的参数
+
 ## AlgorithmParameters.md
 ```java
 // 实例化AlgorithmParameters 并指定DES算法
@@ -65,10 +56,18 @@ System.out.println("Provider : " + ap.getProvider());
 
 // 获取指定编码格式的参数
 ap.getEncoded("");
-
 ```
-引擎类. 提供密码参数的不透明表示{@link AlgorithmParameters}AlgorithmParameters是一个引擎类,提供密码参数的不透明表示{@link AlgorithmParameterGenerator} 可以通过该引擎类生成不透明:不可以直接访问各参数域,只能得到与参数集相关联的算法名及该参数集的某类编码透明 :用户可以通过相应规范中定义的某个get方法来分别访问每个值
+引擎类. 提供密码参数的不透明表示{@link AlgorithmParameters}AlgorithmParameters是一个引擎类,提供密码参数的不透明表示{@link AlgorithmParameterGenerator}可以通过该引擎类生成不透明:不可以直接访问各参数域,只能得到与参数集相关联的算法名及该参数集的某类编码透明 :用户可以通过相应规范中定义的某个get方法来分别访问每个值
+
 ## CodeSigner
+封装了代码签名者的信息,且他是不可变的,称之为代码签名 他和数字时间戳({@link Timestamp}) 紧密相连CodeSigner类是一个终态类,可以通过其构造方法完成实例化对象：
+* 构建CodeSigner对象 --> CodeSigner()完成实例化对象后,就可以通过以下方法获得其属性：
+* 返回签名者的CertPath对象 --> getSignerCertpath()
+* 返回签名时间戳  --> getTimestamp()注意,这里的Timestamp是java.security.Timestamp,是用做数字时间戳的Timestamp！
+获得CodeSigner对象后的最重要的操作就是执行比对,CodeSigner覆盖了equals()方法.
+测试指定对象与此CodeSigner对象是否相等 --> equals().
+如果,传入参数不是CodeSigner类的实现,则直接返回false.
+如果传入参数是CodeSigner类的实现,则比较其Timestamp和CerPath两个属性
 ```java
 // 构建CertificateFactory对象,并指定证书类型为x.509
 CertificateFactory cf = CertificateFactory.getInstance("509");
@@ -81,15 +80,7 @@ CodeSigner cs = new CodeSigner(cp, t);
 // 对比
 boolean result = cs.equals(new CodeSigner(cp, t));
 ```
-封装了代码签名者的信息,且他是不可变的,称之为代码签名 他和数字时间戳({@link Timestamp}) 紧密相连CodeSigner类是一个终态类,可以通过其构造方法完成实例化对象：
-* 构建CodeSigner对象 --> CodeSigner()
-完成实例化对象后,就可以通过以下方法获得其属性：
-* 返回签名者的CertPath对象 --> getSignerCertpath()
-* 返回签名时间戳  --> getTimestamp()注意,这里的Timestamp是java.security.Timestamp,是用做数字时间戳的Timestamp！
-获得CodeSigner对象后的最重要的操作就是执行比对,CodeSigner覆盖了equals()方法.
-测试指定对象与此CodeSigner对象是否相等 --> equals()
-如果,传入参数不是CodeSigner类的实现,则直接返回false.
-如果传入参数是CodeSigner类的实现,则比较其Timestamp和CerPath两个属性
+
 ## DigestInputStream
 ```java
 消息摘要输入流通过指定的读操作完成MessageDigest 的update()方法
@@ -98,17 +89,10 @@ MessageDigest md = MessageDigest.getInstance("MD5");
 try(FileInputStream in = new FileInputStream(new File(fileName));
 DigestInputStream dis = new DigestInputStream(in, md)) {
 
-
- 更新MessageDigest对象,将其与dis相关
- 
-/
+// 更新MessageDigest对象,将其与dis相关
 dis.setMessageDigest(MessageDigest.getInstance("MD2"));
 
-
- 读取字节 并更新摘要
- read会调用MessageDigest的update()方法完成摘要更新
- 之后通过nmd的digest完成摘要操作
-/
+// 读取字节 并更新摘要. read会调用MessageDigest的update()方法完成摘要更新之后通过nmd的digest完成摘要操作
 dis.read();
 //  获取流中相关的MessageDigest
 MessageDigest nmd = dis.getMessageDigest();
@@ -125,21 +109,17 @@ MessageDigest md = MessageDigest.getInstance("MD5");
 try(DigestInputStream dis = new DigestInputStream(
 new ByteArrayInputStream(input), md)) {
 	
-	dis.read(input, 0, input.length);
-	MessageDigest nmd = dis.getMessageDigest();
-	// 获得摘要信息
-	byte[] output = nmd.digest();
-	System.out.println(output);
-
+dis.read(input, 0, input.length);
+MessageDigest nmd = dis.getMessageDigest();
+// 获得摘要信息
+byte[] output = nmd.digest();
+System.out.println(output);
 ```
 消息摘要输入流通过指定的读操作完成MessageDigest 的update()方法
 
 ## DigestOutputStream
-```java
-
 消息摘要输出流通过指定的写操作完成MessageDigest 的update()方法. 基本上和DigestInputStream类似
-
-
+```java
 // 待做消息摘要操作的原始信息
 byte[] input = "md5".getBytes();
 // 使用MD5算法初始化MessageDigest对象
@@ -155,26 +135,29 @@ new ByteArrayOutputStream(), md)) {
 	System.out.println(output);
 
 	dis.flush();
+}
 ```
-消息摘要输出流通过指定的写操作完成MessageDigest 的update()方法
 
 ## Key
-Key接口是所有密钥接口的顶层接口,一切与加密有关的操作都离不开Key接口
-由于密钥必须在不同的实体间传输,因此所有的密钥都是可序列话的
+Key接口是所有密钥接口的顶层接口,一切与加密有关的操作都离不开Key接口. 由于密钥必须在不同的实体间传输,因此所有的密钥都是可序列话的.
+
 所有的密钥都具有三个形式
-算法:密钥算法, 如DES和DSA. getAlgorithm()
-编码形式:密钥的外部编码形式,密钥根据标准格式(RKC#8)编码,  getEncode()
-格式:已编码密钥的格式的名称,getFormat()
-对称密钥顶层接口
+* 算法:密钥算法, 如DES和DSA. getAlgorithm()
+* 编码形式:密钥的外部编码形式,密钥根据标准格式(RKC#8)编码,  getEncode()
+* 格式:已编码密钥的格式的名称,getFormat()
+### 对称密钥顶层接口
 {@link SecretKey}
-通常使用的是{@link SecretKeySpec}
-DES,AES 等多种对称密码算法均可通过该接口提供,PBE接口提供PBE算法定义并继承了该接口
-MAC算法实现过程中,通过SecretKey接口提供秘密秘钥
-非对称密钥顶层接口
-{@link PublicKey} 公钥接口
-{@link PrivateKey} 私钥接口
+通常使用的是{@link SecretKeySpec}DES,AES 等多种对称密码算法均可通过该接口提供,PBE接口提供PBE算法定义并继承了该接口.MAC算法实现过程中,通过SecretKey接口提供秘密秘钥
+### 非对称密钥顶层接口
+* {@link PublicKey} 公钥接口
+* {@link PrivateKey} 私钥接口
 Dh,RSA,DSA,EC等多种非对称秘钥接口均继承了这俩个接口
+
 ## KeyFactory
+同{@link KeyPairGenerator} 一样,它也是用来生成密钥(公钥和私钥)的引擎类,称之为密钥工厂
+按照指定的编码格式或密钥参数,提供一个用于输入和输出密钥的基础设施
+从另一方面来说KeyFactory 是通过密钥规范({@link KeySpec}) 还原密钥,
+与KeyFacory对应的是{@link SecretKeyFactory},用来生成秘密密钥
 ```java
 KeyPairGenerator generator = KeyPairGenerator.getInstance(Algorithm.RSA.name());
 generator.initialize(1024);
@@ -196,34 +179,27 @@ factory.translateKey(pk);
 // 返回给定对象的规范
 factory.getKeySpec(pk, PKCS8EncodedKeySpec.class);
 ```
-同{@link KeyPairGenerator} 一样,它也是用来生成密钥(公钥和私钥)的引擎类,称之为密钥工厂
-按照指定的编码格式或密钥参数,提供一个用于输入和输出密钥的基础设施
-从另一方面来说KeyFactory 是通过密钥规范({@link KeySpec}) 还原密钥,
-与KeyFacory对应的是{@link SecretKeyFactory},用来生成秘密密钥
 
-## KeyPair.md对非对称密钥的拓展,是密钥对的载体,称之为密钥对一般是通过KeyPairGenerator#generateKeyPair()获得keyPair只能通过构造方法初始化内部的公钥和私钥,此外不提供设置公钥和私钥的方法
+
+## KeyPair
+对非对称密钥的拓展,是密钥对的载体,称之为密钥对一般是通过KeyPairGenerator#generateKeyPair()获得keyPair只能通过构造方法初始化内部的公钥和私钥,此外不提供设置公钥和私钥的方法
 
 ## KeyPairGenerator
+引擎类. 负责生成公钥和私钥,称之为密钥对生成器,负责生成公钥和私钥,称之为密钥对生成器,同样是一个引擎类如果要生成私钥可以使用 {@link KeyGenerator}
 ```java
 // 生成指定算法的公钥私钥密钥对的KeyPairGenerator对象
 KeyPairGenerator kg = KeyPairGenerator.getInstance("DH");
 
-  与算法无关的初始化
-  所有密钥对生成器都共享大小概念和一个随机源
-  初始化给定密钥对大小的密钥对生成器,使用默认的参数集合,并使用以最高优先级安装的提供者的SecureRandom作为随机源
-  
-  keysize是用来控制密钥长度的,单位为位
-/
+//与算法无关的初始化,所有密钥对生成器都共享大小概念和一个随机源.
+// 初始化给定密钥对大小的密钥对生成器,使用默认的参数集合,并使用以最高优先级安装的提供者的SecureRandom作为随机源
+// keysize是用来控制密钥长度的,单位为位
 kg.initialize(1024); // DH算法要求长度为64的倍数 长度为512-1024
 
 KeyPairGenerator kg = KeyPairGenerator.getInstance("DH");
 
-  特定算法的初始化
-  所有密钥对生成器都共享大小概念和一个随机源
-  初始化给定密钥对大小的密钥对生成器,使用默认的参数集合,并使用以最高优先级安装的提供者的SecureRandom作为随机源
-/
+// 特定算法的初始化,所有密钥对生成器都共享大小概念和一个随机源.
+// 初始化给定密钥对大小的密钥对生成器,使用默认的参数集合,并使用以最高优先级安装的提供者的SecureRandom作为随机源
 kg.initialize(params);
-
 
 KeyPairGenerator kg = KeyPairGenerator.getInstance("DH");
 kg.initialize(1024); 
@@ -231,9 +207,21 @@ kg.initialize(1024);
 KeyPair kp = kg.generateKeyPair();
 
 ```
-引擎类. 负责生成公钥和私钥,称之为密钥对生成器,负责生成公钥和私钥,称之为密钥对生成器,同样是一个引擎类如果要生成私钥可以使用 {@link KeyGenerator}
 
 ## KeyStore
+称为密钥库,用于管理密钥和证书的存储
+
+密钥库类型：
+* JKS,PKCS12,JCEKS 三种类型(名字不区分大小写)
+* JCEKS 受美国出口限制
+* PKCS12 这种类型的密钥库管理支持不是很完备,只能读取该类型的证书,却不能对其更改
+
+KeyStore.Entry接口是一个空借口,内部没有定义代码用于类型区分 KeyStore用于管理不同类型的条目,每种类型的条目都实现Entry接口
+
+Entry接口实现:
+* PrivateKeyEntry:保存私钥和相应证书链的密钥库项
+* SecretKeyEntry:保存私密密钥的密钥库项
+* TrustedCertificateEntry:保存可信的证书的密钥库项
 ```java
 KeyStoreException, NoSuchAlgorithmException, CertificateException,
 UnrecoverableKeyException {
@@ -318,25 +306,19 @@ TrustedCertificateEntry tcf = new KeyStore.TrustedCertificateEntry(
 
 // 从信任证书项获取可信证书
 tcf.getTrustedCertificate();
-}
-	}
-}
 ```
-称为密钥库,用于管理密钥和证书的存储
-密钥库类型：
- JKS,PKCS12,JCEKS 三种类型(名字不区分大小写)
- JCEKS 受美国出口限制
- PKCS12 这种类型的密钥库管理支持不是很完备,只能读取该类型的证书,却不能对其更改
-KeyStore.Entry接口是一个空借口,内部没有定义代码用于类型区分 KeyStore用于管理不同类型的条目,每种类型的条目都实现Entry接口
-Entry接口实现:
-PrivateKeyEntry:保存私钥和相应证书链的密钥库项
-SecretKeyEntry:保存私密密钥的密钥库项
-TrustedCertificateEntry:保存可信的证书的密钥库项
-## MessageDigest
-```java
 
- 通过指定算法获取MessageDigest 实例
-/
+## MessageDigest
+实现了消息摘要算法: JAVA7 支持 MD2 MD5 SHA-1 SHA-256 SHA-284 SHA-512 六种消息摘要算法
+
+* MessageDigest DigestInputStream DigestOutputStream  Mac 均是消息认证的引擎类.
+* MessageDigest : 提供核心的消息摘要实现
+* DigestInputStream  DigestOutputStream  ： 为核心的消息摘要流实现
+* Mac ： 提供基于秘密密钥的安全消息摘要实现
+
+Mac与MessageDigest没有任何依赖关系
+```java
+// 通过指定算法获取MessageDigest 实例
 MessageDigest.getInstance("MD5");
 //MessageDigest.getInstance("MD5", "SunJCE");// 使用SunJCE安全提供者提供的MD5 消息摘要
 //MessageDigest.getInstance("MD5", new SunJCE());// 使用SunJCE安全提供者提供的MD5 消息摘要
@@ -346,44 +328,25 @@ System.out.println(md.getAlgorithm());
 System.out.println(md.getProvider());
 System.out.println(md.getDigestLength());
 
-
- 使用指定字节更新摘要
-/
+// 使用指定字节更新摘要
 md.update((byte)1);
 
+// 使用指定字节数组更新摘要
+md.update(new byte[]{(byte)1});
 
- 使用指定字节数组更新摘要
- 
- md.update(new byte[]{(byte)1});
-/
+//使用指定字节数组和偏移量更新摘要
+md.update(new byte[]{(byte)1}, 1, 2);
 
+//使用指定字节缓冲模式更新摘要
+md.update((byte)1);
 
- 使用指定字节数组和偏移量更新摘要
- 
- md.update(new byte[]{(byte)1}, 1, 2);
-/
-
-
- 使用指定字节缓冲模式更新摘要
- 
- md.update((byte)1);
-/
-
-
- 完成摘要更新后 完成摘要计算, 返回摘要数组
-/
+//完成摘要更新后 完成摘要计算, 返回摘要数组
 byte[] digest = md.digest();
 	
+// 直接使用字节数组进行摘要更新同时完成摘要计算, 返回摘要数组
+md.digest(new byte[]{(byte)1});
 
- 直接使用字节数组进行摘要更新同时完成摘要计算, 返回摘要数组
- 
- md.digest(new byte[]{(byte)1});
-/
-
-
-
- 判断俩个摘要是否相等
-/
+//判断俩个摘要是否相等
 byte[] d1 = md.digest(new byte[]{(byte)1});
 byte[] d2 = md.digest(new byte[]{(byte)2});
 boolean isEqual = MessageDigest.isEqual(d1, d2);
@@ -394,59 +357,32 @@ d2 = md.digest(new byte[]{(byte)1});
 isEqual = MessageDigest.isEqual(d1, d2);
 Assert.assertEquals(true, isEqual);
 
-
- 重置摘要以供再次使用,执行该操作等同于创建一个新的MessageDigest实例
-/
+// 重置摘要以供再次使用,执行该操作等同于创建一个新的MessageDigest实例
 md.reset();
 
 md.clone(); // 如果实现是可复制的,则返回一个副本
-	}
 	
 byte[] input = "sha".getBytes();
 MessageDigest sha = MessageDigest.getInstance("SHA");
 sha.update(input);
 System.out.println(sha.digest());
-} catch (NoSuchAlgorithmException e) {
-}
-	}
-}
 ```
-实现了消息摘要算法
-JAVA7 支持 MD2 MD5 SHA-1 SHA-256 SHA-284 SHA-512 六种消息摘要算法
-MessageDigest DigestInputStream DigestOutputStream  Mac 均是消息认证的引擎类.
-MessageDigest : 提供核心的消息摘要实现
-DigestInputStream  DigestOutputStream  ： 为核心的消息摘要流实现
-Mac ： 提供基于秘密密钥的安全消息摘要实现
-Mac与MessageDigest没有任何依赖关系
+
 ## Provider
-```java
+Provider 可能实现的服务:DSA,RSA,MD5,SHA-1等算法,密钥的生成,转换和管理设置和 {@link Security} 一起构成了安全提供者
 
-
-
-
-Provider provider = Security.getProvider("SUN");
-System.out.println("Name : " + provider.getName());
-System.out.println("Version : " + provider.getVersion());
-System.out.println("Info : " + provider.getInfo());
-Set<Entry<Object, Object>> keys = provider.entrySet();
-for (Entry<Object, Object> entry : keys) {
-System.out.println(entry.getKey() + " : " + entry.getValue());
-}
-
-	}
-}
-```
-Provider 可能实现的服务:DSA,RSA,MD5,SHA-1等算法,密钥的生成,转换和管理设置
-和 {@link Security} 一起构成了安全提供者
 JCA和JCE是Java平台用于安全和加密服务的俩组API,它们并不执行任何算法,它们只是链接应用和实际算法实现程序的一组接口
-软件开发商可以根据JCE接口将各种算法实现后打包成一个安全提供者.
-要实现一个完整的安全结构就需要一个或者多个第三方提供的JCE产品(安全提供者们)
+
+软件开发商可以根据JCE接口将各种算法实现后打包成一个安全提供者.要实现一个完整的安全结构就需要一个或者多个第三方提供的JCE产品(安全提供者们)
+
 安全提供者抽象了俩个概念：
-引擎：可以理解为操作,如加密,解密
-算法：可以理解为如何加密,如何解密
+* 引擎：可以理解为操作,如加密,解密
+* 算法：可以理解为如何加密,如何解密
+
 Provider 可能实现的服务:
-  DSA,RSA,MD5,SHA-1等算法
-  密钥的生成,转换和管理设置
+* DSA,RSA,MD5,SHA-1等算法
+* 密钥的生成,转换和管理设置
+```
 SUN
 SunRsaSign
 SunEC
@@ -457,114 +393,72 @@ SunSASL
 XMLDSig
 SunPCSC
 SunMSCAPI
-## SecureRandom.md```java
+```
 
+```java
+Provider provider = Security.getProvider("SUN");
+System.out.println("Name : " + provider.getName());
+System.out.println("Version : " + provider.getVersion());
+System.out.println("Info : " + provider.getInfo());
+Set<Entry<Object, Object>> keys = provider.entrySet();
+for (Entry<Object, Object> entry : keys) {
+System.out.println(entry.getKey() + " : " + entry.getValue());
+```
 
-
-
- {@link SecureRandom}
- 
- 	安全随机数生成器   TODO
- SHA1PRNG是其默认算法
- 
-
-/
-
-
-SecureRandom.getInstance("MD5");
-	}
-	
+## SecureRandom
+安全随机数生成器 ,SHA1PRNG是其默认算法
+```java
 SecureRandom sr = SecureRandom.getInstance("MD5");
 
- 可使用如下方法多次生成种子
- 返回给定种子字节数量,该数量可是要此类来将自身设置为种子的种子生成算法来计算
-/
+// 可使用如下方法多次生成种子,返回给定种子字节数量,该数量可是要此类来将自身设置为种子的种子生成算法来计算
 byte[] seeds = sr.generateSeed(256);
-	}
-	
+
 SecureRandom sr = SecureRandom.getInstance("MD5");
 // SecureRandom覆盖了Random几个方法.
 // 生成用户指定的随机字节数,其结果填充到byte[]数组中
 byte[] bytes = new byte[1024];
 sr.nextBytes(bytes);
-
-	}
-	
-// TODO
-	}
-}
 ```
-安全随机数生成器 ,SHA1PRNG是其默认算法
+
 
 ## Security
+管理java程序中所用到的提供者.Security类是一个终态类,除了私有的构造方法外,其余均匀静态方法
 ```java
-
-	
-	 在提供者数组尾部增加新的提供者
-	/
-	}
-	
-	
-	 在提供者数组某个位置增加新的提供者
-	/
-//Security.insertProviderAt(provider, position)
-	}
-	
-	
-	 将带有指定名称的提供者从提供者数组中移除,其后提供者位置可能上移
-	/
+// 在提供者数组某个位置增加新的提供者
+Security.insertProviderAt(provider, position)
+//将带有指定名称的提供者从提供者数组中移除,其后提供者位置可能上移
 Security.removeProvider("");
-	}
-	
-	
-	 获取带有指定名称的提供者
-	/
+//获取带有指定名称的提供者
 Security.getProvider("");
-	}
-	
-	
-	 
-	/
+
 Security.getProviders();
-	}
-	
-	
-	 返回包含制定的选择标准的所有已安装的提供者的数组(拷贝),如果尚未安装此类提供者,则返回null
-	/
-//Security.getProviders(filter)
-	}
-	
-	
-	 返回包含制定的选择标准的所有已安装的提供者的数组(拷贝),如果尚未安装此类提供者,则返回null
-	/
+// 返回包含制定的选择标准的所有已安装的提供者的数组(拷贝),如果尚未安装此类提供者,则返回null
+Security.getProviders(filter)
+// 返回包含制定的选择标准的所有已安装的提供者的数组(拷贝),如果尚未安装此类提供者,则返回null
 Security.getProviders("");
-	}
-	
-	
-	 获取安全属性值
-	/
+// 获取安全属性值
 Security.getProperty("");
-	}
-	
-	
-	 设置安全属性值
-	/
+// 设置安全属性值
 Security.setProperty("", "");
-	}
-	
-	
-	 通过指定加密服务所对应的可用算法活类型的名称
-	 
-	/
+// 通过指定加密服务所对应的可用算法活类型的名称
 Security.getAlgorithms(""); // TODO
-	}
-	
-	
-}
 ```
-管理java程序中所用到的提供者
-Security类是一个终态类,除了私有的构造方法外,其余均匀静态方法
+
 ## Signature
+引擎类. 用来生成和验证数字签名. 用来生成和验证数字签名.
+
+使用Sinature对象签名数据或验证签名包括下面三个阶段
+1. 初始化:初始化验证签名的公钥, 初始化签署签名的私钥
+2. 更新. 根绝初始化的类型,可更新要签名活验证的字节
+3.签署或验证所有更新字节的签名
+
+支持的算法
+```
+基于:DSA
+NONEwithDSA,SHAwithDSA
+基于:RSA
+MD2whitRSA,MD5whitRSA,SHA1whitRSA,SHA256whitRSA,SHA256whitRSA,SHA384whitRSA,SHA512whitRSA
+```
 ```java
 // 实例化对象
 Signature s = Signature.getInstance("NONEwithDSA");
@@ -587,7 +481,6 @@ byte[] signed = s.sign();
 
 // 开始验证
 boolean vResult = s.verify(signed);
-
 	
 // 代做签名的原始信息
 byte[] bytes = "Data signture".getBytes();
@@ -612,39 +505,20 @@ s.initVerify(kp.getPublic());
 s.update(bytes);
 // 获得验证结果
 boolean status = s.verify(sign);
-	}
-}
 ```
-引擎类. 用来生成和验证数字签名.
-用来生成和验证数字签名.同样是引擎类
-使用Sinature对象签名数据或验证签名包括下面三个阶段
-1.初始化
-初始化验证签名的公钥
-初始化签署签名的私钥
-2.更新
-根绝初始化的类型,可更新要签名活验证的字节
-3.签署或验证所有更新字节的签名
-支持的算法
-	基于:DSA
-NONEwithDSA,SHAwithDSA
-	基于:RSA
-MD2whitRSA,MD5whitRSA,SHA1whitRSA,SHA256whitRSA,SHA256whitRSA,SHA384whitRSA,SHA512whitRSA
+
 ## SignedObject
+用来创建实际运行时的对象.在检测不到这些对象的情况下,其完整性不会遭受损害SignedObject包含另一个Serializable对象,即签名的对象及其签名.
+签名对象是对原始对象的深层复制(以序列化形式),一旦生成了副本对原始对的进一步操作就不再影响该副本
 
-签名对象通过以下构造方法完成实例化对象：
-通过任何可序列化对象构造Signedobject对象
-public Signedobject(Serializable object,privateKey,Signature signingEngine)
-在完成上述实例化操作后，可通过以下方法获得封装后边的对象和签名：
-获取已封装的对象 --> getobject() 
+签名对象通过以下构造方法完成实例化对象：通过任何可序列化对象构造Signedobject对象
+`public Signedobject(Serializable object,privateKey,Signature signingEngine)`
+在完成上述实例化操作后，可通过以下方法获得封装后边的对象和签名：获取已封装的对象 --> getObject() 
 
-在已签名对象上按字节数组的形式获取签名  -->	 getobject()
-接着，可以通过公钥和Signature进行验证操作：
+在已签名对象上按字节数组的形式获取签名  -->	 getobject()接着，可以通过公钥和Signature进行验证操作：
 使用指派的验证引擎，通过给定的验证密钥验证Sibnedobject中的签名是否为内部存储对象的有效签名  verify()
 
-此外，SignedObject还提供了以下方法：
-获取签名算法的名称 getAlgorithm()
-
-
+此外，SignedObject还提供了以下方法：获取签名算法的名称 getAlgorithm()
 ```java
 // 代做签名的原始信息
 byte[] bytes = "Data signture".getBytes();
@@ -661,16 +535,12 @@ byte[] sign = so.getSignature();
 
 // 用公钥完成验证
 // 获得验证结果
-boolean status = so.verify(kp.getPublic(), s);
-	}
-}
+boolean status = so.verify(kp.getPublic(), s)
 ```
-用来创建实际运行时的对象.在检测不到这些对象的情况下,其完整性不会遭受损害
-SignedObject包含另一个Serializable对象,即签名的对象及其签名.
-签名对象是对原始对象的深层复制(以序列化形式),一旦生成了副本对原始对的进一步操作就不再影响该副本
+
 
 ## Timestamp
-用来封装有关签署时间戳的信息.它包括时间戳的日期和时间,以及有关生成时间戳的Timestamping Authority信息
+用来封装有关签署时间戳的信息.它包括时间戳的日期和时间,以及有关生成时间戳的Timestamping Authority信息.
 构建一个数字时间戳需要提供时间和签名证书路径（CertPath）两个参数，方法如下：
 构建一个Timestamp对象 --> Timestamp（）
 
