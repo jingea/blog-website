@@ -2,7 +2,7 @@
 - concurrency
 tag:
 - 并发集合
-title: CopyOnWriteArrayList
+title: CopyOnWriteArrayList 和 CopyOnWriteArraySet
 ---
 # CopyOnWriteArrayList
 
@@ -18,9 +18,8 @@ title: CopyOnWriteArrayList
    >（3）CopyOnWriteArrayList（E[] toCopyIn） 创建一个保存给定数组的副本的列表。
 
 
-它是线程安全的无序的集合，可以将它理解成线程安全的HashSet。有意思的是，CopyOnWriteArraySet和HashSet虽然都继承于共同的父类AbstractSet
-；但是，HashSet是通过“散列表(HashMap)”实现的，而CopyOnWriteArraySet则是通过“动态数组(CopyOnWriteArrayList)”实现的，并不是散列表。
-和CopyOnWriteArrayList类似，CopyOnWriteArraySet具有以下特性： 
+# CopyOnWriteArraySet
+它是线程安全的无序的集合，可以将它理解成线程安全的HashSet。有意思的是，CopyOnWriteArraySet和HashSet虽然都继承于共同的父类AbstractSet；但是，HashSet是通过“散列表(HashMap)”实现的，而CopyOnWriteArraySet则是通过“动态数组(CopyOnWriteArrayList)”实现的，并不是散列表。和CopyOnWriteArrayList类似，CopyOnWriteArraySet具有以下特性： 
 1. 它最适合于具有以下特征的应用程序：Set大小通常保持很小，只读操作远多于可变操作，需要在遍历期间防止线程间的冲突。 
 2. 它是线程安全的。 
 3. 因为通常需要复制整个基础数组，所以可变操作（add()、set() 和 remove() 等等）的开销很大。 
