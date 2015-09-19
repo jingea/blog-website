@@ -1,66 +1,66 @@
-title: java lambda
+ï»¿title: java lambda
 ---
 
-# º¯Êý½Ó¿Ú
+# å‡½æ•°æŽ¥å£
 
-## º¯Êý½Ó¿Ú¶¨Òå
-º¯Êý½Ó¿ÚÖ»ÊÇÒ»¸ö³éÏó·½·¨µÄ½Ó¿Ú,ÓÃ×÷lambda±í´ïÊ½ÀàÐÍ.
+## å‡½æ•°æŽ¥å£å®šä¹‰
+å‡½æ•°æŽ¥å£åªæ˜¯ä¸€ä¸ªæŠ½è±¡æ–¹æ³•çš„æŽ¥å£,ç”¨ä½œlambdaè¡¨è¾¾å¼ç±»åž‹.
 
-×¢Òâ, ÉÏÃæÕâ¸ö¶¨ÒåÓÐÈý¸öÐèÒª×¢ÒâµÄµØ·½
-1. º¯Êý½Ó¿ÚÊÇÒ»¸ö½Ó¿Ú
-2. º¯Êý½Ó¿ÚÓÐÇÒÖ»ÓÐÒ»¸ö³éÏó·½·¨
-3. º¯Êý½Ó¿ÚÓÃ×÷lambda±í´ïÊ½ÀàÐÍ
+æ³¨æ„, ä¸Šé¢è¿™ä¸ªå®šä¹‰æœ‰ä¸‰ä¸ªéœ€è¦æ³¨æ„çš„åœ°æ–¹
+1. å‡½æ•°æŽ¥å£æ˜¯ä¸€ä¸ªæŽ¥å£
+2. å‡½æ•°æŽ¥å£æœ‰ä¸”åªæœ‰ä¸€ä¸ªæŠ½è±¡æ–¹æ³•
+3. å‡½æ•°æŽ¥å£ç”¨ä½œlambdaè¡¨è¾¾å¼ç±»åž‹
 
-## º¯Êý½Ó¿ÚÊ¾Àý:
+## å‡½æ•°æŽ¥å£ç¤ºä¾‹:
 ```java
-// ¶¨ÒåÒ»¸ö·Ç·ºÐÍÃ»ÓÐ·µ»ØÖµÃ»ÓÐ²ÎÊýµÄº¯Êý½Ó¿Ú
+// å®šä¹‰ä¸€ä¸ªéžæ³›åž‹æ²¡æœ‰è¿”å›žå€¼æ²¡æœ‰å‚æ•°çš„å‡½æ•°æŽ¥å£
 interface Run1 {
 	public void runFast();
 }
-// ¶¨ÒåÒ»¸ö·Ç·ºÐÍÃ»ÓÐ·µ»ØÖµÓÐ²ÎÊýµÄº¯Êý½Ó¿Ú
+// å®šä¹‰ä¸€ä¸ªéžæ³›åž‹æ²¡æœ‰è¿”å›žå€¼æœ‰å‚æ•°çš„å‡½æ•°æŽ¥å£
 interface Run2 {
 	public void runFast(int seconds);
 }
-// ¶¨ÒåÒ»¸ö·Ç·ºÐÍÓÐ·µ»ØÖµÓÐ²ÎÊýµÄº¯Êý½Ó¿Ú
+// å®šä¹‰ä¸€ä¸ªéžæ³›åž‹æœ‰è¿”å›žå€¼æœ‰å‚æ•°çš„å‡½æ•°æŽ¥å£
 interface Run3 {
 	public int runFast(int seconds);
 }
-// ¶¨ÒåÒ»¸ö·ºÐÍÓÐ·µ»ØÖµÓÐ²ÎÊýµÄº¯Êý½Ó¿Ú
+// å®šä¹‰ä¸€ä¸ªæ³›åž‹æœ‰è¿”å›žå€¼æœ‰å‚æ•°çš„å‡½æ•°æŽ¥å£
 interface Run4<T> {
 	public int runFast(T t, int seconds);
 }
 ```
 
-# lambda±í´ïÊ½
+# lambdaè¡¨è¾¾å¼
 
-## lambda±í´ïÊ½¶¨Òå
-½ÓÏÂÀ´ÎÒÃÇ¸ù¾ÝÉÏÃæ¶¨ÒåµÄº¯Êý½Ó¿ÚÀ´¶¨ÒåÒ»ÏÂlambda±í´ïÊ½
+## lambdaè¡¨è¾¾å¼å®šä¹‰
+æŽ¥ä¸‹æ¥æˆ‘ä»¬æ ¹æ®ä¸Šé¢å®šä¹‰çš„å‡½æ•°æŽ¥å£æ¥å®šä¹‰ä¸€ä¸‹lambdaè¡¨è¾¾å¼
 ```java
-// ²»´ø²ÎÊýµÄ°æ±¾
+// ä¸å¸¦å‚æ•°çš„ç‰ˆæœ¬
 Run1 run1 = () -> {
 	System.out.println("I am running");
 };
 
-// ²ÎÊýÒªÖ¸¶¨
+// å‚æ•°è¦æŒ‡å®š
 Run2 run2 = seconds -> {
 	System.out.println("I am running " + seconds + " seconds");
 };
 
-// ÏÂÃæÕâ¸ö°æ±¾¾Í±ØÐëÒªÓÐ¸ö·µ»ØÖµÁË
+// ä¸‹é¢è¿™ä¸ªç‰ˆæœ¬å°±å¿…é¡»è¦æœ‰ä¸ªè¿”å›žå€¼äº†
 Run3 run3 = seconds -> {
 	System.out.println("I am running");
 	return 0;
 };
 
-// ÎÒÃÇÔÚÏÂÃæµÄ°æ±¾ÖÐÖ¸¶¨ÁËËüµÄ·ºÐÍÐÅÏ¢
+// æˆ‘ä»¬åœ¨ä¸‹é¢çš„ç‰ˆæœ¬ä¸­æŒ‡å®šäº†å®ƒçš„æ³›åž‹ä¿¡æ¯
 Run4<String> run4 = (name, seconds) -> {
 	System.out.println(name + " is running");
 	return 0;
 };
 ```
 
-## lambda±í´ïÊ½Ê¹ÓÃ
-½ÓÏÂÀ´ÎÒÃÇÊ¹ÓÃÉÏÃæ¶¨ÒåµÄlambda±í´ïÊ½
+## lambdaè¡¨è¾¾å¼ä½¿ç”¨
+æŽ¥ä¸‹æ¥æˆ‘ä»¬ä½¿ç”¨ä¸Šé¢å®šä¹‰çš„lambdaè¡¨è¾¾å¼
 ```java
 run1.runFast();
 -> I am running
@@ -71,19 +71,19 @@ run2.runFast(10);
 int result = run3.runFast(10);
 -> I am running
 
-run4.runFast("Ð¡¹·", 10); Ð¡¹· is running
+run4.runFast("å°ç‹—", 10); å°ç‹— is running
 -> 
 ```
 
-### ×¢Òâ
-ÎÒÃÇÒýÓÃlambda±í´ïÊ½Íâ²¿µÄÒ»¸ö±äÁ¿
+### æ³¨æ„
+æˆ‘ä»¬å¼•ç”¨lambdaè¡¨è¾¾å¼å¤–éƒ¨çš„ä¸€ä¸ªå˜é‡
 ```java
 String name = "sam";
 Run1 run1 = () -> {
 	System.out.println(name + " am running");
 };
 ```
-±àÒëÔËÐÐÍ¨¹ýÃ»ÓÐÎÊÌâ,µ«ÊÇÈç¹ûÎÒÃÇ½«nameÔÚlambda±í´ïÊ½ÄÚ²¿ÖØÐÂ¸³ÖµµÄ»°
+ç¼–è¯‘è¿è¡Œé€šè¿‡æ²¡æœ‰é—®é¢˜,ä½†æ˜¯å¦‚æžœæˆ‘ä»¬å°†nameåœ¨lambdaè¡¨è¾¾å¼å†…éƒ¨é‡æ–°èµ‹å€¼çš„è¯
 ```java
 String name = "sam";
 Run1 run1 = () -> {
@@ -91,7 +91,7 @@ Run1 run1 = () -> {
 	System.out.println(name + " am running");
 };
 ```		
-»áÌáÊ¾`variable used in lambda expression shouble be final`, ÕâËµÃ÷lambdaÆäÊµÄÚ²¿ÒýÓÃµÄÊÇÖµ¶ø²»ÊÇ±äÁ¿.ºÃ,½ÓÏÂÀ´ÎÒÃÇ»»ÖÖ·½Ê½ÔÙ´ÎÑéÖ¤Ò»ÏÂÎÒÃÇµÄ½á¹û£º
+ä¼šæç¤º`variable used in lambda expression shouble be final`, è¿™è¯´æ˜Žlambdaå…¶å®žå†…éƒ¨å¼•ç”¨çš„æ˜¯å€¼è€Œä¸æ˜¯å˜é‡.å¥½,æŽ¥ä¸‹æ¥æˆ‘ä»¬æ¢ç§æ–¹å¼å†æ¬¡éªŒè¯ä¸€ä¸‹æˆ‘ä»¬çš„ç»“æžœï¼š
 ```java
 String name = "sam";
 name = "Jams";
@@ -99,9 +99,9 @@ Run1 run1 = () -> {
 	System.out.println(name + " am running");
 };
 ```
-Í¬ÑùµÄ²úÉúÁË±àÒë´íÎó.
+åŒæ ·çš„äº§ç”Ÿäº†ç¼–è¯‘é”™è¯¯.
 
-### javaÖÐÖØÒªµÄº¯Êý½Ó¿Ú
+### javaä¸­é‡è¦çš„å‡½æ•°æŽ¥å£
 * `Predicate<T>`
 * `Consumer<T>`
 * `Supplier<T>`
