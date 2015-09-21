@@ -270,3 +270,47 @@ Run9 run9 = run8Param -> {
 在上述的例子中产生了编译错误, 在`Haskell`这种纯FP语言中可以将一个调用函数但是参数不完整的函数从某个参数中返回或者定义一个参数不完整的函数值.
 
 ## 重载解析
+我们使用函数接口作为方法参数,然后进行重载
+```java
+// 定义函数接口
+interface Run1 {
+	public void runFast();
+}
+
+interface Run2 {
+	public void runFast();
+}
+
+
+// 定义重载代码
+	public static void run(Run1 run1){
+		System.out.println("run1");
+	}
+
+	public static void run(Run2 run2){
+		System.out.println("run2");
+	}
+
+// 定义运行代码
+public static void main(String[] args) {
+	run(() -> System.out.println());
+}
+```
+当我们进行如上定义时,javac提示了编译错误：不确定的方法调用,`run(Run1 run1)`和`run(Run2 run2)`都符合.
+
+但是如果`Run2`继承了`Run1`这个接口之后
+```java
+interface Run1 {
+	public void runFast();
+}
+
+interface Run2 extends Run1 {
+	public void runFast();
+}
+```
+当我们运行测试代码之后,我们发现输出的`run2`. 
+
+当Lambda表达式作为参数时,其类型由它的目标类型推导得出,推导过程遵循如下规则：
+* 如果只有一个可能的目标类型,由相应的函数接口里的参数类型推导得出
+* 如果有多个可能的目标类型，由最具体的类型推导得出
+* 如果有多个可能的目标类型且最具体的类型不明确，则需要人为指定类型
