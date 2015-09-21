@@ -3,66 +3,59 @@
 # Run MongoDB
 
 ## Run MongoDB On Windows
-
-```
-	如果在没有进行auth设置且在Secure Mode运行, 那么就不要使 mongod.exe在公共网络上可见.
-```
+如果在没有进行auth设置且在Secure Mode运行, 那么就不要使 mongod.exe在公共网络上可见.
 
 ### 设置MOngoDB环境
 
-###### 设置环境变量
-```
-	在环境变量里添加环境变量 D:\Program Files\MongoDB\Server\3.0\
-	然后在Path里添加： %MONGODB_HOME%\bin
-```
+#### 设置环境变量
+在环境变量里添加环境变量 `D:\Program Files\MongoDB\Server\3.0\` 然后在Path里添加： `%MONGODB_HOME%\bin`
 
-###### data directory
+#### data directory
 ```
-	MongoDB 需要一个data directory来存储全部的数据. MongoDB默认的data directory路径是\data\db, 
-	所以我们需要创建一个data directory. 假设我们在D盘创建了一个这样的目录: D:\mongodb\data\db.
+MongoDB 需要一个data directory来存储全部的数据. MongoDB默认的data directory路径是\data\db, 
+所以我们需要创建一个data directory. 假设我们在D盘创建了一个这样的目录: D:\mongodb\data\db.
 
-	你可以通过--dbpath选项给mongod.exe设置另一个data directory.
-	mongod.exe --dbpath D:\mongodb\data\db
+你可以通过--dbpath选项给mongod.exe设置另一个data directory.
+mongod.exe --dbpath D:\mongodb\data\db
 
-	如果你的data directory包含空格的话,那么就需要使用""将他们包含起来：
-	mongod.exe --dbpath "d:\test\mongo db data"
+如果你的data directory包含空格的话,那么就需要使用""将他们包含起来：
+mongod.exe --dbpath "d:\test\mongo db data"
 ```
 
 ## 启动MongoDB
 
-###### 使用mongod.exe命令启动mongoDB
+### 使用mongod.exe命令启动mongoDB
 ```
 	mongod.exe
 ```
 
-###### 启动日志
+### 启动日志
+最后我们在启动日志里看到
 ```
-	最后我们在启动日志里看到
-	waiting for connections on port 27017
+waiting for connections on port 27017
 ```
 
-#### 命令行方式启动
+### 命令行方式启动
 
 MongoDB 默认存储数据目录为/data/db/ (或者 c:/data/db), 默认端口 27017,默认 HTTP 端口 28017.
 ```
-	mongod --dbpath=/data/db
+mongod --dbpath=/data/db
 ```
 
-#### 配置文件方式启动
+### 配置文件方式启动
 MongoDB 也支持同 mysql 一样的读取启动配置文件的方式来启动数据库,配置文件的内容如下:
 ```
-	cat /etc/mongodb.cnf
+cat /etc/mongodb.cnf
 ```
 启动时加上”-f”参数,并指向配置文件即可:
 ```
-	mongod -f /etc/mongodb.cnf
+mongod -f /etc/mongodb.cnf
 ```
 
 #### Daemon 方式启动
 MongoDB 提供了一种后台 Daemon 方式启动的选择,只需加上一个” --fork”参数即可,,但如果用到了 ” --fork”参数就必须也启用 ”--logpath”参数,这是强制的
-
 ```
-	mongod --dbpath=/data/db --logpath=/data/log/r3.log --fork
+mongod --dbpath=/data/db --logpath=/data/log/r3.log --fork
 ```
 
 #### mongod 参数说明
@@ -72,7 +65,7 @@ mongod 的参数中,没有设置内存大小相关的参数,是的, MongoDB 使�
 mmap 在数据量不超过内存时效率很高.但是数据量超过系统可用内存后,则写入的性能可能不太稳定,容易出现大起大落,不过在最新的 1.8 版本中,这个情况相对以前的版本已经
 有了一定程度的改善.
 
-###### mongod 的主要参数有：
+##### mongod 的主要参数有：
 * dbpath —— 数据文件存放路径,每个数据库会在其中创建一个子目录,用于防止同一个实例多次运行的 mongod.lock 也保存在此目录中.
 * logpath —— 错误日志文件
 * logappend —— 错误日志采用追加模式（默认是覆写模式）
@@ -87,17 +80,16 @@ mmap 在数据量不超过内存时效率很高.但是数据量超过系统可�
 
 ## 停止数据库
 
-#### Control-C
-#### shutdownServer()指令
+* Control-C
+* shutdownServer()指令
 ```
-	mongo --port 28013
-	use admin
-	db.shutdownServer()
+mongo --port 28013
+use admin
+db.shutdownServer()
 ```
 
 ## 常用工具集
-MongoDB 在 bin 目录下提供了一系列有用的工具,这些工具提供了 MongoDB 在运维管理上
-的方便。
+MongoDB 在 bin 目录下提供了一系列有用的工具,这些工具提供了 MongoDB 在运维管理上的方便。
 * bsondump: 将 bson 格式的文件转储为 json 格式的数据
 * mongo: 客户端命令行工具,其实也是一个 js 解释器,支持 js 语法
 * mongod: 数据库服务端,每个实例启动一个进程,可以 fork 为后台运行
@@ -111,31 +103,30 @@ MongoDB 在 bin 目录下提供了一系列有用的工具,这些工具提供了
 ## 部署 Replica Sets
 * 创建数据文件存储路径
 ```
-	mkdir E:/mongoData/data/r0
-	mkdir E:/mongoData/data/r1
-	mkdir E:/mongoData/data/r2
+mkdir E:/mongoData/data/r0
+mkdir E:/mongoData/data/r1
+mkdir E:/mongoData/data/r2
 ```
 * 创建日志文件路径
 ```
-	mkdir E:/mongoData/log
+mkdir E:/mongoData/log
 ```
 * 创建主从 key 文件，用于标识集群的私钥的完整路径，如果各个实例的 key file 内容不一致，程序将不能正常用。
 ```
-	mkdir E:/mongoData/key
-	echo "this is rs1 super secret key" > E:/mongoData/key/r0
-	echo "this is rs1 super secret key" > E:/mongoData/key/r1
-	echo "this is rs1 super secret key" > E:/mongoData/key/r2
+mkdir E:/mongoData/key
+echo "this is rs1 super secret key" > E:/mongoData/key/r0
+echo "this is rs1 super secret key" > E:/mongoData/key/r1
+echo "this is rs1 super secret key" > E:/mongoData/key/r2
 ```
 * 启动 3 个实例
 ```
-	mongod --replSet rs1 --keyFile E:/mongoData/key/r0 -fork --port 28010 --dbpath E:/mongoData/data/r0 --logpath=E:/mongoData/log/r0.log --logappend
-	mongod --replSet rs1 --keyFile E:/mongoData/key/r1 -fork --port 28011 --dbpath E:/mongoData/data/r1 --logpath=E:/mongoData/log/r1.log --logappend
-	mongod --replSet rs1 --keyFile E:/mongoData/key/r2 -fork --port 28012 --dbpath E:/mongoData/data/r2 --logpath=E:/mongoData/log/r2.log --logappend
+mongod --replSet rs1 --keyFile E:/mongoData/key/r0 -fork --port 28010 --dbpath E:/mongoData/data/r0 --logpath=E:/mongoData/log/r0.log --logappend
+mongod --replSet rs1 --keyFile E:/mongoData/key/r1 -fork --port 28011 --dbpath E:/mongoData/data/r1 --logpath=E:/mongoData/log/r1.log --logappend
+mongod --replSet rs1 --keyFile E:/mongoData/key/r2 -fork --port 28012 --dbpath E:/mongoData/data/r2 --logpath=E:/mongoData/log/r2.log --logappend
 ```
 * 配置及初始化 Replica Sets
 ```
-	mongo -port 28010
-	
+mongo -port 28010
 ```
 
 
@@ -226,8 +217,6 @@ mongoClient.setWriteConcern(WriteConcern.JOURNALED);
 
 对应write concern提供了很多种选项. 另外,这个默认的write concern分别可以在数据库,collection,以及单独的更新操作上重载.
 
-Changed in version 2.10.0: Prior to version 2.10.0, the default write concern is WriteConcern.NORMAL. Under normal circumstances, clients will typically change this to ensure they are notified of problems writing to the database.
-
 
 ### Inserting a Document
 
@@ -254,7 +243,7 @@ coll.insert(doc);
 ```
 
 
-### Finding the First Document in a Collection Using findOne()
+### findOne()
 
 如果想要查看刚才插入的文档,我们可以简单地调用`findOne()`,这个操作会获得该collection中的第一个文档.这个方法只是返回一个文档对象(而`find()`会返回一个`DBCursor`对象),当collection中只有一个文档的时候,这是非常有用的.
 ```java
@@ -649,8 +638,6 @@ Highest scoring document: { "_id" : 1 , "content" : "additional content" , "scor
 
 ## Requirements
 
-For production deployments, you should maintain as much separation between members as possible by hosting the mongod instances on separate machines. When using virtual machines for production deployments, you should place each mongod instance on a separate host server serviced by redundant power circuits and redundant network paths.
-
 在生产部署阶段, 你应该尽量在不同的主机上部署代理`mongod`的成员. 当使用虚拟主机进行生产部署时, 你应该在不同的主机服务器上都部署一个'mongod'.
 
 在你创建`replica set`之前, 你必须先检查你的网络配置能够允许每一个成员都能够相互连接上. 一个成功的`replica set`部署, 每一个成员都能够连接得上其他成员. 关于如何检查连接,参考[Test Connections Between all Members](http://docs.mongodb.org/manual/tutorial/troubleshoot-replica-sets/#replica-set-troubleshooting-check-connection)
@@ -682,8 +669,7 @@ For more information about the run time options used above and other configurati
 
 下面的步骤概括了在`access control`失效的情况下如何部署replica set
 
-###### 1. Start each member of the replica set with the appropriate options.
-
+### Start each member of the replica set with the appropriate options.
 
 启动`mongod`然后通过`replSet`选项设定`replica set`名字, 向`replica set`中添加一个成员. 如果想要配置其他特有参数,参考[Replication Options]()
 
@@ -691,7 +677,7 @@ For more information about the run time options used above and other configurati
 
 下面是一个示例：
 ```
-	mongod --replSet "rs0"
+mongod --replSet "rs0"
 ```
 
 你也通过配置文件设置`replica set`名字. 如果想要通过配置文件启动`mongod`, 那么你需要`--config`选项指定配置文件
@@ -706,14 +692,14 @@ mongod --config $HOME/.mongodb/config
 >
 > 那么你就需要在命令上加上 --dbpath 选项了
 
-###### 2. Connect a mongo shell to a replica set member.
+### Connect a mongo shell to a replica set member.
 
 下例展示了如何连接到在`localhost:27017`上运行的`mongod`:
 ```
 mongo
 ```
 
-###### 3. Initiate the replica set.
+### Initiate the replica set.
 
 接着这`mongo`shell里使用`rs.initiate()`设置成员.
 ```
@@ -725,7 +711,7 @@ MongoDB使用`replica set`默认配置启动了一个包含当前成员的`repli
 >
 > 这个过程大概需要几分钟的时间, 所以需要耐心的稍等一下.
 
-###### 4. Verify the initial replica set configuration.
+### Verify the initial replica set configuration.
 
 在`mongo`shell中使用`rs.conf()`输出`replica set`配置:
 ```
@@ -746,7 +732,7 @@ rs.conf()
 }
 ```
 
-###### 5. Add the remaining members to the replica set.
+### Add the remaining members to the replica set.
 
 在`mongo`shell中使用`rs.add()`方法添加俩个成员:
 ```
@@ -756,7 +742,7 @@ rs.add("mongodb2.example.net")
 
 完成这一步之后,你就获得了一个拥有完整功能的`replica set`. 新的`replica set`会选出一个主要的来.
 
-###### 6. Check the status of the replica set.
+### Check the status of the replica set.
 
 在`mongo`shell中使用`rs.status()`方法查看`replica set`状态.
 ```
@@ -766,60 +752,3 @@ rs.status()
 ## Replication Introduction
 
 `Replication` 是用于多台服务器间数据同步的一个进程.
-
-## Purpose of Replication
-
-Replication provides redundancy and increases data availability. With multiple copies of data on different database servers, replication protects a database from the loss of a single server. Replication also allows you to recover from hardware failure and service interruptions. With additional copies of the data, you can dedicate one to disaster recovery, reporting, or backup.
-
-In some cases, you can use replication to increase read capacity. Clients have the ability to send read and write operations to different servers. You can also maintain copies in different data centers to increase the locality and availability of data for distributed applications.
-
-`Replication`提供了减少和提高数据的可用性. 
-
-在某些情况下, 通过`replication`可以提高读数据的能力. 
-
-## Replication in MongoDB
-
-A replica set is a group of mongod instances that host the same data set. One mongod, the primary, receives all write operations. All other instances, secondaries, apply operations from the primary so that they have the same data set.
-
-The primary accepts all write operations from clients. Replica set can have only one primary. Because only one member can accept write operations, replica sets provide strict consistency for all reads from the primary. To support replication, the primary logs all changes to its data sets in its oplog. See primary for more information.
-
-![replica-set-read-write-operations-primary](/images/mongodb/replica-set-read-write-operations-primary.png)
-
-Diagram of default routing of reads and writes to the primary.
-
-The secondaries replicate the primary’s oplog and apply the operations to their data sets. Secondaries’ data sets reflect the primary’s data set. If the primary is unavailable, the replica set will elect a secondary to be primary. By default, clients read from the primary, however, clients can specify a read preferences to send read operations to secondaries. Reads from secondaries may return data that does not reflect the state of the primary. See secondaries for more information.
-
-![replica-set-primary-with-two-secondaries](/images/mongodb/replica-set-primary-with-two-secondaries.png)
-
-Diagram of a 3 member replica set that consists of a primary and two secondaries.
-You may add an extra mongod instance to a replica set as an arbiter. Arbiters do not maintain a data set. Arbiters only exist to vote in elections. If your replica set has an even number of members, add an arbiter to obtain a majority of votes in an election for primary. Arbiters do not require dedicated hardware. See arbiter for more information.
-
-Diagram of a replica set that consists of a primary, a secondary, and an arbiter.
-
-![replica-set-primary-with-secondary-and-arbiter](/images/mongodb/replica-set-primary-with-secondary-and-arbiter.png)
-
-An arbiter will always be an arbiter. A primary may step down and become a secondary. A secondary may become the primary during an election.
-
-## Asynchronous Replication
-
-Secondaries apply operations from the primary asynchronously. By applying operations after the primary, sets can continue to function without some members. However, as a result secondaries may not return the most current data to clients.
-
-See Replica Set Oplog and Replica Set Data Synchronization for more information. See Read Preference for more on read operations and secondaries.
-
-## Automatic Failover
-
-When a primary does not communicate with the other members of the set for more than 10 seconds, the replica set will attempt to select another member to become the new primary. The first secondary that receives a majority of the votes becomes primary.
-
-![replica-set-trigger-election](/images/mongodb/replica-set-trigger-election.png)
-
-Diagram of an election of a new primary. In a three member replica set with two secondaries, the primary becomes unreachable. The loss of a primary triggers an election where one of the secondaries becomes the new primary
-See Replica Set Elections and Rollbacks During Replica Set Failover for more information.
-
-## Additional Features
-
-Replica sets provide a number of options to support application needs. For example, you may deploy a replica set with members in multiple data centers, or control the outcome of elections by adjusting the priority of some members. Replica sets also support dedicated members for reporting, disaster recovery, or backup functions.
-
-See Priority 0 Replica Set Members, Hidden Replica Set Members and Delayed Replica Set Members for more information.
-
-
-# Shard
