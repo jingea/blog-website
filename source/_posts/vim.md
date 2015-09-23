@@ -1,9 +1,9 @@
-title: GVIM
+ï»¿title: GVIM
 ---
-# °²×°Vundle.vim
-* ÏÂÔØ°²×°[msysgit installer](https://github.com/msysgit/msysgit/releases/download/Git-1.9.2-preview20140411/Git-1.9.2-preview20140411.exe)
-* ÏÂÔØ°²×°[Curl](http://curl.haxx.se/download/curl-7.44.0.tar.gz)(Ö»ĞèÒª°ÑÆäÌí¼Óµ½»·¾³±äÁ¿Path¼´¿É)
-* ÔÚ`C:\Program Files (x86)\Git\cmd`Ä¿Â¼ÀïÌí¼Ó`curl.cmd`ÎÄ¼ş. ÎÄ¼şÄÚÈİÈçÏÂ£º
+# å®‰è£…Vundle.vim
+* ä¸‹è½½å®‰è£…[msysgit installer](https://github.com/msysgit/msysgit/releases/download/Git-1.9.2-preview20140411/Git-1.9.2-preview20140411.exe)
+* ä¸‹è½½å®‰è£…[Curl](http://curl.haxx.se/download/curl-7.44.0.tar.gz)(åªéœ€è¦æŠŠå…¶æ·»åŠ åˆ°ç¯å¢ƒå˜é‡Pathå³å¯)
+* åœ¨`C:\Program Files (x86)\Git\cmd`ç›®å½•é‡Œæ·»åŠ `curl.cmd`æ–‡ä»¶. æ–‡ä»¶å†…å®¹å¦‚ä¸‹ï¼š
 ```
 @rem Do not use "echo off" to not affect any child calls.
 @setlocal
@@ -18,8 +18,8 @@ title: GVIM
 
 @curl.exe %*
 ```
-* ½Ó×ÅÔÚÃüÁîĞĞÖĞÖ´ĞĞ`git clone https://github.com/gmarik/Vundle.vim.git %USERPROFILE%/.vim/bundle/Vundle.vim`
-* È»ºó±à¼­`D:\Program Files\Vim\_vimrc`, ÔÚ¸ÃÎÄ¼ş¶¥²¿Ìí¼Ó
+* æ¥ç€åœ¨å‘½ä»¤è¡Œä¸­æ‰§è¡Œ`git clone https://github.com/gmarik/Vundle.vim.git %USERPROFILE%/.vim/bundle/Vundle.vim`
+* ç„¶åç¼–è¾‘`D:\Program Files\Vim\_vimrc`, åœ¨è¯¥æ–‡ä»¶é¡¶éƒ¨æ·»åŠ 
 ```
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -64,8 +64,8 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 ```
-* ½Ó×ÅÎÒÃÇÓÃvim´ò¿ªÒ»¸öÎÄ¼şÔÚnormalÄ£Ê½ÏÂÖ´ĞĞÃüÁî`:BundleInstall` ¾Í¿ÉÒÔÏÂÔØ²å¼ş£¬ÏÂÔØÍê¿ÉÒÔÔÚVimÖĞ¿´µ½Done×ÖÑù.
+* æ¥ç€æˆ‘ä»¬ç”¨vimæ‰“å¼€ä¸€ä¸ªæ–‡ä»¶åœ¨normalæ¨¡å¼ä¸‹æ‰§è¡Œå‘½ä»¤`:BundleInstall` å°±å¯ä»¥ä¸‹è½½æ’ä»¶ï¼Œä¸‹è½½å®Œå¯ä»¥åœ¨Vimä¸­çœ‹åˆ°Doneå­—æ ·.
 
-# _vimrcÅäÖÃÎÄ¼ş
-## GVIM´ò¿ª¼´È«ÆÁ
+# _vimrcé…ç½®æ–‡ä»¶
+## GVIMæ‰“å¼€å³å…¨å±
 `au GUIEnter * simalt ~x `
