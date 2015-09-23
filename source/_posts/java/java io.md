@@ -1,8 +1,7 @@
 title: JAVA IO
 ---
 
-## JAVA IO
-### io#interface
+# io#interface
 
 #### [Closeable]()
 Closeable 是可以关闭的数据源或目标。调用 close 方法可释放对象保存的资源（如打开文件）。
@@ -13,9 +12,7 @@ DataInput 接口用于从二进制流中读取字节，并重构所有 Java 基�
 对于此接口中的所有数据读取例程来说，如果在读取到所需字节数的数据之前已经到达文件末尾 (end of file)，则都将抛出 EOFException（IOException 的一种）。如果因为文件末尾以外的其他原因无法读取字节，则抛出 IOException而不是 EOFException。尤其在输入流已关闭的情况下，将抛出 IOException。
 
 #### [DataOutput]()
-	
 DataOutput 接口用于将任意 Java 基本类型转换为一系列字节，并将这些字节写入二进制流。同时还提供了一个将 String 转换成 UTF-8 修改版格式并写入所得到的系列字节的工具。
-	
 对于此接口中写入字节的所有方法，如果由于某种原因无法写入某个字节，则抛出 IOException。
 	
 #### [Externalizable]()
@@ -27,15 +24,15 @@ Externalizable继承于Serializable，当使用该接口时，序列化的细节
 #### [FilenameFilter]()
 
 #### [Flushable]()
-	实现了Flushable接口的类的对象，可以强制将缓存的输出写入到与对象关联的流中。写入流的所有I/O类都实现了Flushable接口。
+实现了Flushable接口的类的对象，可以强制将缓存的输出写入到与对象关联的流中。写入流的所有I/O类都实现了Flushable接口。
 
 #### [ObjectInputValidation]()
-	序列化流验证机制. 一般情况下，我们认为序列化流中的数据总是与最初写到流中的数据一致，这并没有问题。但当黑客获取流信息并篡改一些敏感信息重新序列化到流中后，用户通过反序列化得到的将是被篡改的信息。Java序列化提供一套验证机制。序列化类通过实现 java.io.ObjectInputValidation接口，就可以做到验证了
+序列化流验证机制.一般情况下，我们认为序列化流中的数据总是与最初写到流中的数据一致，这并没有问题。但当黑客获取流信息并篡改一些敏感信息重新序列化到流中后，用户通过反序列化得到的将是被篡改的信息。Java序列化提供一套验证机制。序列化类通过实现 java.io.ObjectInputValidation接口，就可以做到验证了
 
 #### [ObjectStreamConstants]()
 Java序列化序列化对象的信息包括：类元数据描述、类的属性、父类信息以及属性域的值。Java将这些信息分成3部分：序列化头信息、类的描述部分以及属性域的值部分。现在对a.txt文件加以分析，其中包含一些序列化机制中提供的特殊字段，这些字段被定义在java.io.ObjectStreamConstants接口中。 
 
-### io#class
+# io#class
 
 #### [BufferedInputStream]()
 BufferedInputStream是一个带有缓冲区域的InputStream, 支持“mark()标记”和“reset()重置方法”。输入到byte[]数组里.
@@ -191,28 +188,28 @@ in.close();
 
 #### [File]()
 ```
-	1. 删除文件
-	2. 文件重命名
-	3. 创建新的文件
-	4. 创建新的文件
-	5. 获取文件的最后修改时间
-	6. 设置文件只读
-	7. 设置文件可写
-	8. 获取文件长度(总字节数)
-	9. 获取文件路径
-	10. 获取绝对文件路径
-	11. 文件是否隐藏
-	12. 获得剩余磁盘空间？
-	13. 拷贝文件夹
-	14. 遍历文件夹
-	15. 检查文件夹是否为空？
+删除文件
+文件重命名
+创建新的文件
+创建新的文件
+获取文件的最后修改时间
+设置文件只读
+设置文件可写
+获取文件长度(总字节数)
+获取文件路径
+获取绝对文件路径
+文件是否隐藏
+获得剩余磁盘空间？
+拷贝文件夹
+遍历文件夹
+检查文件夹是否为空？
 ```
 #### [FileDescriptor]()
-	用来表示开放文件、开放套接字等。当FileDescriptor表示某文件时，我们可以通俗的将FileDescriptor看成是该文件。但是，我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作，则需要新创建FileDescriptor对应的FileOutputStream，再对文件进行操作。
+用来表示开放文件、开放套接字等。当FileDescriptor表示某文件时，我们可以通俗的将FileDescriptor看成是该文件。但是，我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作，则需要新创建FileDescriptor对应的FileOutputStream，再对文件进行操作。
 	
-	类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件，打开的套接字或其他来源或字节的接收器。以下是关于FileDescriptor要点：
-	1. 主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它。
-	2. 应用程序不应创建自己的文件描述符。
+类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件，打开的套接字或其他来源或字节的接收器。以下是关于FileDescriptor要点：
+1. 主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它。
+2. 应用程序不应创建自己的文件描述符。
 
 #### [FileInputStream]()
 一个字节一个字节的从文件里读取数据
@@ -346,9 +343,7 @@ out.println(string);
 拥有一个PushBack缓冲区，从PushbackInputStream读出数据后，只要PushBack缓冲区没有满，就可以使用unread()将数据推回流的前端。
 
 #### [PushbackReader]()
-允许将字符推回到流的字符流 reader。
-
-当程序调用推回输入流的unread()方法时，系统会把指定数组的内容推回到该缓冲区中，而推回输入流每次调用read()方法时，总是先从推回缓冲区读取内容，只有完全读取了推回缓冲区里的内容后，但是还没有装满read()所需要的数组时才会从原输入流中读取
+允许将字符推回到流的字符流 reader。当程序调用推回输入流的unread()方法时，系统会把指定数组的内容推回到该缓冲区中，而推回输入流每次调用read()方法时，总是先从推回缓冲区读取内容，只有完全读取了推回缓冲区里的内容后，但是还没有装满read()所需要的数组时才会从原输入流中读取
 ```java
 try (
 // 创建一个PushbackReader对象，指定推回缓冲区的长度为64
@@ -433,7 +428,6 @@ for (int i = 0; i < 2000000; i++) {
 }
 
 raf.close();
-
 ```
 
 #### [SequenceInputStream]()
@@ -451,7 +445,7 @@ raf.close();
 #### [StringWriter]()
 
 
-### nio
+# nio
 
 #### [Buffer]()
 
@@ -483,7 +477,7 @@ raf.close();
 #### [ShortBuffer](TestShortBuffer.java)
 
 
-### nio#channels#Interfaces
+# nio#channels#Interfaces
 
 #### [AsynchronousByteChannel](TestAsynchronousByteChannel.java)
 
@@ -524,7 +518,7 @@ raf.close();
 #### [WritableByteChannel](TestWritableByteChannel.java)
 
 
-### nio#channels#Classes
+# nio#channels#Classes
 
 #### [AsynchronousChannelGroup](TestAsynchronousChannelGroup.java)
 
@@ -604,12 +598,10 @@ fos.close()
 #### [ServerSocketChannel](TestServerSocketChannel.java)
 ServerSocketChannel 只有一个用途--接受入站连接 它是无法读取,写入或者连接的
 
-
-
 #### [SocketChannel](TestSocketChannel.java)
 
 
-### nio#file#Interfaces
+# nio#file#Interfaces
 
 #### [CopyOption](TestCopyOption.java)
 
@@ -651,54 +643,54 @@ Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path �
 #### [WatchService](java/src/test/io/robertsing/cookios/nio/TestWatchService.java)
 
 
-### nio#file#Classes
+# nio#file#Classes
 
 #### [Files]()
 
-	1. copy
-	2. createDirectories
-	3. createDirectory
-	4. createFile
-	5. createLink
-	6. createSymbolicLink
-	7. createTempDirectory
-	8. createTempFile
-	9. delete
-	10. deleteIfExists
-	11. exists
-	12. getAttribute
-	13. getFileAttributeView
-	14. getFileStore
-	15. getLastModifiedTime
-	16. getOwner
-	17. getPosixFilePermissions
-	18. isDirectory
-	19. isExecutable
-	20. isHidden
-	21. isReadable
-	22. isRegularFile
-	23. isSameFile
-	24. isSymbolicLink
-	25. isWritable
-	26. move
-	27. newBufferedReader
-	28. newBufferedWriter
-	29. newByteChannel
-	30. newDirectoryStream
-	31. newInputStream
-	32. newOutputStream
-	33. notExists
-	34. probeContentType
-	35. readAllBytes
-	36. readAllLines
-	37. readAttributes
-	38. readSymbolicLink
-	39. setAttribute
-	40. setLastModifiedTime
-	41. setOwner
-	42. setPosixFilePermissions
-	43. walkFileTree
-	44. write
+1. copy
+2. createDirectories
+3. createDirectory
+4. createFile
+5. createLink
+6. createSymbolicLink
+7. createTempDirectory
+8. createTempFile
+9. delete
+10. deleteIfExists
+11. exists
+12. getAttribute
+13. getFileAttributeView
+14. getFileStore
+15. getLastModifiedTime
+16. getOwner
+17. getPosixFilePermissions
+18. isDirectory
+19. isExecutable
+20. isHidden
+21. isReadable
+22. isRegularFile
+23. isSameFile
+24. isSymbolicLink
+25. isWritable
+26. move
+27. newBufferedReader
+28. newBufferedWriter
+29. newByteChannel
+30. newDirectoryStream
+31. newInputStream
+32. newOutputStream
+33. notExists
+34. probeContentType
+35. readAllBytes
+36. readAllLines
+37. readAttributes
+38. readSymbolicLink
+39. setAttribute
+40. setLastModifiedTime
+41. setOwner
+42. setPosixFilePermissions
+43. walkFileTree
+44. write
 
 
 #### [FileStore]()
@@ -730,7 +722,7 @@ Set<String> views = system.supportedFileAttributeViews();
 #### [StandardWatchEventKinds](TestStandardWatchEventKinds.java)
 
 
-### nio#charset
+# nio#charset
 
 #### [Charset](TestCharset.java)
 
