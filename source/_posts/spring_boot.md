@@ -108,8 +108,7 @@ public class TestAction {
 	/**
 	 * A） 常用来处理简单类型的绑定,可以处理get 方式中queryString的值,也可以处理post方式中 body data的值;
 	 * 
-	 * B）用来处理Content-Type: 为
-	 * application/x-www-form-urlencoded编码的内容,提交方式GET、POST;
+	 * B）用来处理Content-Type: 为application/x-www-form-urlencoded编码的内容,提交方式GET、POST;
 	 * 
 	 * C) 该注解有两个属性： value、required; value用来指定要传入值的id名称,required用来指示参数是否必须绑定;
 	 * 
