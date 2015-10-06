@@ -1,4 +1,5 @@
-category: jvm7
+category: java
+tag: jvm7
 title: 运行时数据区
 ---
 ## 运行时数据区

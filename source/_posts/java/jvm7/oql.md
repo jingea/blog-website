@@ -1,5 +1,5 @@
-categories:
-- jvm7
+category: java
+tag: jvm7
 title: OQL
 ---
 # OQL

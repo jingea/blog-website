@@ -1,4 +1,5 @@
-category: jvm7
+category: java
+tag: jvm7
 title: jstack_log
 ---
 # jstack_log

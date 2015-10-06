@@ -1,4 +1,5 @@
-category: jvm7
+category: java
+tag: jvm7
 title: java虚拟机参数
 ---
 # java虚拟机参数

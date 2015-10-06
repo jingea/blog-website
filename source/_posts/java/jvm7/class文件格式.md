@@ -1,4 +1,5 @@
-category: jvm7
+category: java
+tag: jvm7
 title: class文件格式
 ---
 # class文件格式
