@@ -1,3 +1,3 @@
 ﻿layout: categories
-title: jvm7
+title: java
 ---
