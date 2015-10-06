@@ -1,4 +1,5 @@
-﻿title: groovy
+﻿category: 编程语言
+title: groovy
 ---
 > 本文是对Groovy部分官方文档进行了翻译
 

@@ -1,3 +1,5 @@
+category: java
+tag: java8
 title: java lambda
 ---
 

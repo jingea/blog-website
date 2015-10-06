@@ -1,3 +1,4 @@
+category: 工具
 title: gitbook使用
 ---
 # 安装gitbook命令行

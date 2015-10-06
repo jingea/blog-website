@@ -1,4 +1,5 @@
-﻿title: GVIM
+﻿category: 工具
+title: GVIM
 ---
 # 安装Vundle.vim
 * 下载安装[msysgit installer](https://github.com/msysgit/msysgit/releases/download/Git-1.9.2-preview20140411/Git-1.9.2-preview20140411.exe)

@@ -1,3 +1,4 @@
+category: 工具
 title: maven
 ---
 # maven生命周期

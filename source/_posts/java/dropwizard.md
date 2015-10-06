@@ -1,3 +1,4 @@
+category: java
 title: Dropwizard
 ---
 

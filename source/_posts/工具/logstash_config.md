@@ -1,3 +1,4 @@
+category: 工具
 title: logstash配置文件
 ---
 ### input插件

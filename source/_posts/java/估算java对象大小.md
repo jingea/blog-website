@@ -1,3 +1,4 @@
+category: java
 title: 估算java对象大小
 ---
 

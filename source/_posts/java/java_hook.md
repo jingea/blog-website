@@ -1,3 +1,4 @@
+category: java
 title: JAVA钩子程序
 ---
 # java hook

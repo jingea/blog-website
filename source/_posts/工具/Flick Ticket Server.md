@@ -1,3 +1,4 @@
+category: 工具
 title: Flick Ticket Server
 ---
 ## 为什么采用Ticket Server

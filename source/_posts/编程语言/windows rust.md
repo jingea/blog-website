@@ -1,3 +1,4 @@
+category: 编程语言
 title: 在windows上搭建rust开发环境
 ---
 在windows上搭建rust开发环境

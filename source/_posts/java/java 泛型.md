@@ -1,3 +1,4 @@
+category: java
 title: java泛型
 ---
 
