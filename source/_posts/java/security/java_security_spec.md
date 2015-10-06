@@ -1,7 +1,7 @@
 category: 
 - java
 tag:
-- security
+- java加密解密
 title: java_security_spec
 ---
 ## AlgorithmParameterSpec

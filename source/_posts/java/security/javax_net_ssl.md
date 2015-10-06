@@ -1,5 +1,7 @@
 category: 
-- security
+- java
+tag:
+- java加密解密
 title: javax_net_ssl
 ---
 ## HttpsURLConnection
