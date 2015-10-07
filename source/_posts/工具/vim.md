@@ -1,72 +1,45 @@
-﻿category: 工具
+category: 工具
 title: GVIM
 ---
-# 安装Vundle.vim
-* 下载安装[msysgit installer](https://github.com/msysgit/msysgit/releases/download/Git-1.9.2-preview20140411/Git-1.9.2-preview20140411.exe)
-* 下载安装[Curl](http://curl.haxx.se/download/curl-7.44.0.tar.gz)(只需要把其添加到环境变量Path即可)
-* 在`C:\Program Files (x86)\Git\cmd`目录里添加`curl.cmd`文件. 文件内容如下：
-```
-@rem Do not use "echo off" to not affect any child calls.
-@setlocal
-
-@rem Get the abolute path to the parent directory, which is assumed to be the
-@rem Git installation root.
-@for /F "delims=" %%I in ("%~dp0..") do @set git_install_root=%%~fI
-@set PATH=%git_install_root%\bin;%git_install_root%\mingw\bin;%PATH%
-
-@if not exist "%HOME%" @set HOME=%HOMEDRIVE%%HOMEPATH%
-@if not exist "%HOME%" @set HOME=%USERPROFILE%
-
-@curl.exe %*
-```
-* 接着在命令行中执行`git clone https://github.com/gmarik/Vundle.vim.git %USERPROFILE%/.vim/bundle/Vundle.vim`
-* 然后编辑`D:\Program Files\Vim\_vimrc`, 在该文件顶部添加
-```
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-Plugin 'L9'
-" Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-Plugin 'file:///home/gmarik/path/to/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Avoid a name conflict with L9
-Plugin 'user/L9', {'name': 'newL9'}
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-```
-* 接着我们用vim打开一个文件在normal模式下执行命令`:BundleInstall` 就可以下载插件，下载完可以在Vim中看到Done字样.
 
 # _vimrc配置文件
 ## GVIM打开即全屏
 `au GUIEnter * simalt ~x `
+
+## 设置VeraMono字体
+[VeraMono](http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf)需要下载安装(百度字体安装就好)
+`set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI`
+
+# 快捷键
+* 搜索：`/`向下搜索. `?`向上搜索
+* 替换： `:%s/abc/123/g`, 将abc都替换为123
+* 删除行：`dd`删除整行. `5dd`从当前行开始向后删除5整行. `D`从光标删除到行尾
+* 删除字符：`x`向后删除一个字符. `X`向前删除一个字符
+* 撤销: `u`
+* 复制:`yy`复制一行. `5yy`从当前行开始向下复制5行
+* 粘贴: `p`光标向下移动. `P`光标不动
+* 块选择: `V`多行整行选择. `v`多行字符选择. `ctrl v`矩阵方式选择.
+* 光标移动：`$`移动到行尾. `0`移动到行首. `G`移动到最后一行. `gg`移动到最一行. 
+* 窗口编辑: `：split`水平新建窗口. `：vsplit `垂直分割.
+* 在窗口间游走: `Ctrl W` 加 `h, j, k, l`一起使用
+* 分页编辑： `：tabnew`新建分页。 `：tabclose`关闭当前分页. `：tabonly `关闭其他所有的分页
+* 
+
+# 插件
+## [Pydiction ](http://www.vim.org/scripts/script.php?script_id=850)
+python自动补全插件
+
+配置,`_vimrc`文件追加
+```
+filetype plugin on
+let g:pydiction_location = 'D:/Program Files/Vim/pydiction/complete-dict'
+```
+然后将`pydiction/after/ftplugin/python_pydiction.vim`复制到`Vim\vimfiles\ftplugin\python_pydiction.vim`
+
+## [The NERD tree](http://www.vim.org/scripts/script.php?script_id=1658)
+文件树
+
+将下载下来的压缩包解压到`Vim\vimfiles`
+* `:NERDTree` 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径
+* `:NERDTreeClose` 关闭目录树
+

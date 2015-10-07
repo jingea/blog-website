@@ -8,7 +8,7 @@ title: Mycat
 ## schema.xml
 
 ### schema标签
-定义MyCat实例中的逻辑库
+定义MyCat实例中的逻辑库,对于客户端来说,实际的数据库是不可见的,在sql中要使用逻辑库名称而不是实际的物理库的名称
 * `dataNode` : 对应实际的物理库(如果设置了这个属性,该逻辑库就不能实现分库功能了,但是该逻辑库就可以用作读写分离和主从切换). 它的值对应下面的dataNode标签.
 * `checkSQLschema` : 把schema字符去掉(在sql中将库名去掉)
 * `sqlMaxLimit` : 在分库中执行sql时,为sql添加`limit`字段
@@ -21,7 +21,7 @@ title: Mycat
 * `rule` : 指定逻辑表要使用定义在rule.xml中的规则名字
 * `ruleRequired` : 指定表是否绑定分片规则(如果指定绑定但是在rule.xml中找不到则会报错)
 * `primaryKey` : 逻辑表对应真实表的主键
-* `type` : 逻辑表类型(可选值为global,不设置的话为非全局表)
+* `type` : 逻辑表类型(可选值为global表示全局表,不设置的话为非全局表). 全局表就是每个分片内都保存一份全完相同的数据.
 * `autoIncrement` : 自增长主键,但是需要在Mysql中设置auto_increment属性
 * `needAddLimit` : 如果为false, 会屏蔽sqlMaxLimit功能
 
@@ -61,28 +61,24 @@ title: Mycat
 * `password` :  后端存储实例需要的密码
 
 ### schema.xml配置示例
-下面的例子中我创建了一个db1的逻辑库, 该库下有一张idTable逻辑表,该逻辑表对应dn1,dn2这俩个物理库.
+下面的例子实现一个分库,db1和db2各有一张idTable表
 ```xml
 <?xml version="1.0"?>
 <!DOCTYPE mycat:schema SYSTEM "schema.dtd">
 <mycat:schema xmlns:mycat="http://org.opencloudb/">
-
 	<schema name="idDB" checkSQLschema="false" sqlMaxLimit="100">
-		<table name="idTable" primaryKey="ID" dataNode="dn1,dn2" rule="auto-sharding-long" />
+		<table name="idTable" primaryKey="ID" dataNode="dn1,dn2" rule="mod-long" />
 	</schema>
-
 	<dataNode name="dn1" dataHost="localhost1" database="db1" />
 	<dataNode name="dn2" dataHost="localhost1" database="db2" />
-	
-	<dataHost name="localhost1" maxCon="1000" minCon="10" balance="0" 
-		writeType="0" dbType="mysql" dbDriver="native">
+	<dataHost name="localhost1" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="native">
 		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="localhost:3306" user="root" password="root">
-		</writeHost>
+		<writeHost host="hostM1" url="localhost:3306" user="root" password="root" />
 	</dataHost>
-	
 </mycat:schema>
 ```
+
+如果我们要实现分表的功能需要在`rule.xml`中指定分表逻辑
 
 ## server.xml
 保存mycat需要的系统配置信息.
@@ -90,7 +86,7 @@ title: Mycat
 ### user标签
 定义登录mycat的用户和权限,它可以定义`property`子标签.`property`子标签的name值可以是：
 * `password` : 该用户的密码
-* `schemas` : 该用户可访问的schema
+* `schemas` : 该用户可访问的schema(在schema.xml中定义的schema)
 * `readOnly` : 该用户的读写权限
 
 ### system标签
@@ -163,5 +159,34 @@ title: Mycat
 
 ### 示例
 ```xml
+<tableRule name="rule2">
+    <rule>
+      <columns>user_id</columns>
+      <algorithm>func1</algorithm>
+    </rule>
+</tableRule>
+```
 
+### 常用的分片规则
+由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解
+
+#### 分片枚举
+```xml
+<function name="hash-int" class="org.opencloudb.route.function.PartitionByFileMap">
+	<property name="mapFile">partition-hash-int.txt</property>
+	<property name="type">0</property>
+	<property name="defaultNode">0</property>
+</function>
+```
+* mapFile: 配置文件名称
+* type: 0表示Integer，非零表示String
+* defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点
+
+#### 固定分片hash算法
+对columns取低10位进行求模运算
+```xml
+<function name="partitionByLong" class="org.opencloudb.route.function.PartitionByLong">
+	<property name="partitionCount">2,1</property>
+	<property name="partitionLength">256,512</property>
+</function>
 ```

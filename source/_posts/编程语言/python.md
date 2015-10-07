@@ -25,14 +25,10 @@ Python capitalize()将字符串的第一个字母变成大写,其他字母变小
 检测字符串中是否包含子字符串 str ，如果指定 beg（开始） 和 end（结束） 范围，则检查是否包含在指定范围内，如果包含子字符串返回开始的索引值，否则返回-1。
 
 * `format(...)` : `S.format(*args, **kwargs) -> str`
-
-    Return a formatted version of S, using substitutions from args and kwargs.
-    The substitutions are identified by braces ('{' and '}').
+Return a formatted version of S, using substitutions from args and kwargs. The substitutions are identified by braces ('{' and '}').
 
 * `format_map(...)` : `S.format_map(mapping) -> str`
-
-    Return a formatted version of S, using substitutions from mapping.
-    The substitutions are identified by braces ('{' and '}').
+Return a formatted version of S, using substitutions from mapping. The substitutions are identified by braces ('{' and '}').
 
 * `index(...)` : `S.index(sub[, start[, end]]) -> int`
 检测字符串中是否包含子字符串 str ，如果指定 beg（开始） 和 end（结束） 范围，则检查是否包含在指定范围内，该方法与 python find()方法一样，只不过如果str不在 string中会报一个异常。
@@ -50,24 +46,11 @@ Python capitalize()将字符串的第一个字母变成大写,其他字母变小
 * `isdigit(...)` : `S.isdigit() -> bool`
 检测字符串是否只由数字组成。
 
-* `isidentifier(...)` : `S.isidentifier() -> bool`
-
-    Return True if S is a valid identifier according
-    to the language definition.
-
-    Use keyword.iskeyword() to test for reserved identifiers
-    such as "def" and "class".
-
 * `islower(...)` : `S.islower() -> bool`
 检测字符串是否由小写字母组成。
 
 * `isnumeric(...)` : `S.isnumeric() -> bool`
 检查是否只有数字字符组成的字符串。这种方法目前只对unicode对象。
-
-* `isprintable(...)` : `S.isprintable() -> bool`
-
-    Return True if all characters in S are considered
-    printable in repr() or S is empty, False otherwise.
 
 * `isspace(...)` : `S.isspace() -> bool`
 是否只由空格组成。
@@ -91,10 +74,7 @@ Python capitalize()将字符串的第一个字母变成大写,其他字母变小
 用于截掉字符串左边的空格或指定字符。
 
 * `partition(...)` : `S.partition(sep) -> (head, sep, tail)`
-
-    Search for the separator sep in S, and return the part before it,
-    the separator itself, and the part after it.  If the separator is not
-    found, return S and two empty strings.
+Search for the separator sep in S, and return the part before it,the separator itself, and the part after it.  If the separator is not found, return S and two empty strings.
 
 * `replace(...)` : `S.replace(old, new[, count]) -> str`
 把字符串中的 old（旧字符串） 替换成 new(新字符串)，如果指定第三个参数max，则替换不超过 max 次。
@@ -112,12 +92,7 @@ Python capitalize()将字符串的第一个字母变成大写,其他字母变小
 类似于 partition()函数,不过是从右边开始查找.
 
 * `rsplit(...)` : `S.rsplit(sep=None, maxsplit=-1) -> list of strings`
-
-    Return a list of the words in S, using sep as the
-    delimiter string, starting at the end of the string and
-    working to the front.  If maxsplit is given, at most maxsplit
-    splits are done. If sep is not specified, any whitespace string
-    is a separator.
+Return a list of the words in S, using sep as the delimiter string, starting at the end of the string and working to the front.  If maxsplit is given, at most maxsplit splits are done. If sep is not specified, any whitespace string is a separator.
 
 * `rstrip(...)` : `S.rstrip([chars]) -> str`
  删除 string 字符串末尾的指定字符（默认为空格）.
@@ -213,6 +188,39 @@ print('characters start to end is', name[:])
 
 
 # 文件
+```python
+f = open(name, [mode], [size])
+```
+* name: 文件名
+* mode: 打开方式
+* size: 操作的字节数
+
+## mode值:
+* `r`: 只读方式打开(文件必须存在)
+* `w`: 只写方式打开(文件不存在创建文件,文件存在清空文件)
+* `a`: 追加方式打开(文件不存在创建文件)
+* `r+/w+`: 读写方式打开
+* `a+`: 读写方式打开
+* `rb,wb,ab,rb+,wb+,ab+`: 二进制方式打开
+
+> 注意:如果我们使用非二进制模式输出时`\n(0A)`会被自动替换为`\r\n(0D 0A)`,因此在文件输出时,我们要注意这个问题.
+
+## f对象常用方法
+* `read([size])` : 读取文件(size有值则读取size个字节),如果不填写size则读取全部
+* `readline([size])` : 每次读取一行(size值为当前行的长度,但是如果每次读取不完的话,下次再调用readline时会继续在当前行读取)
+* `readlines([size])` : 读取多行,返回每一行组成的列表. 如果不填写size则读取全部内容
+* `write(str)` : 将字符串直接写入文件中
+* `writelines(lines)`: 将多行写入文件中.(不推荐使用这种方式读取所有行)
+* `close()`: 关闭文件操作
+
+我们可以使用for循环遍历整个文件
+```python
+file = open("demo.txt")
+for line in file:
+	print(line)
+```
+
+写入文件时,如果输出中文,我们经常会遇到乱码的问题:
 
 
 # 控制流
@@ -485,6 +493,4 @@ class Son(Father, Mother):
 son = Son()
 print(son.name)
 son.run()
-
-
 ```
