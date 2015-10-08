@@ -208,9 +208,9 @@ f = open(name, [mode], [size])
 ## f对象常用方法
 * `read([size])` : 读取文件(size有值则读取size个字节),如果不填写size则读取全部
 * `readline([size])` : 每次读取一行(size值为当前行的长度,但是如果每次读取不完的话,下次再调用readline时会继续在当前行读取)
-* `readlines([size])` : 读取多行,返回每一行组成的列表. 如果不填写size则读取全部内容
+* `readlines([size])` : 读取多行,返回每一行组成的列表. 如果不填写size则读取全部内容(不推荐使用这种方式读取所有行)
 * `write(str)` : 将字符串直接写入文件中
-* `writelines(lines)`: 将多行写入文件中.(不推荐使用这种方式读取所有行)
+* `writelines(lines)`: 将字符串或者字符串列表写入文件中.
 * `close()`: 关闭文件操作
 
 我们可以使用for循环遍历整个文件
@@ -220,8 +220,27 @@ for line in file:
 	print(line)
 ```
 
-写入文件时,如果输出中文,我们经常会遇到乱码的问题:
+## OS模块文件操作
+```
+fd = os.open(filename, flag, [mode])
+```
+filename和mode我们通过上面的描述都知道了,现在我们看一下flag属性值(文件打开方式)
+* os.O_CREAT : 创建文件
+* os.O_RDONLY : 只读方式打开
+* os.O_WRONLY : 只写方式打开
+* os.O_RDWR : 读写方式打开
 
+示例
+```python
+fd = os.open("test.txt", os.O_CREAT | os.O_RDWR)
+os.write(fd, "helloworld")
+```
+
+## 中文乱码
+写入文件时,如果输出中文,我们经常会遇到乱码的问题.只需要在python文件顶部加上以下内容就可以了
+```
+#-*- coding=utf-8 -*-
+```
 
 # 控制流
 ## if
@@ -320,12 +339,28 @@ print(saywhat)
 ```
 
 ## 默认参数值
+我们也可以给函数参数指定默认值
 ```python
 def printHelloworld(str, str1="str1 value", str2="str2 value"):
     print(str + " " + str1 + " " + str2)
 
 # 调用函数
 printHelloworld("123", str2="789")
+```
+
+## 可变参数
+python函数也可以接受不定参数
+```python
+def f(*args):
+	print(args)
+
+f(1)
+f(1, 2)
+```
+输出为
+```
+(1,)
+(1, 2)
 ```
 
 ## return返回值
@@ -344,6 +379,114 @@ print(result)
 result = printHelloworld("123", str1="789")
 print(result)
 ```
+
+## 高阶函数
+如果函数A里的参数或者返回值是另一个函数,那么函数A就是高阶函数.
+```python
+def add5(v1):
+	return v1 + 5;
+
+def add(v1, v2, add5):
+	return add5(v1) + add5(v2)
+
+print(add(2, 4, add5))
+```
+
+### 内置高阶函数
+#### map()函数
+它接受一个函数和一个列表,然后遍历列表中的每个元素作用在函数参数中
+```python
+print(map(add5, [1, 2, 3]))
+
+// 结果为
+[6, 7, 8]
+```
+#### reduce()函数
+```python
+
+```
+
+#### filter
+```python
+
+```
+
+## 闭包
+在2.7版本中必须要如下声明一个闭包
+```python
+def outerF():
+	count = [10]
+	def innerF():
+		print(count[0])
+		count[0] = 20
+	return innerF
+
+f = outerF()
+f()
+f()
+```
+
+## 匿名函数
+python通过lambda表达式完成匿名函数
+```python
+def nonameF(f, v1):
+	return f(v1)
+
+value = nonameF(lambda x: x + 1, 5)
+print(value)
+```
+不过python只是有限的支持匿名函数, 匿名函数只能是一个表达式,而且不能拥有return,表达式的结果就是返回值
+
+## 偏函数
+偏函数就是通过`functools.partial`函数将函数A中的参数指定一个值然后返回一个新的函数
+```python
+import functools
+def fa(var1, var2, var3):
+	print(var1 + var2 + var3)
+
+fb = functools.partial(fa, var2=2, var3=3)
+
+fa(1, 2, 3)
+fb(1)
+```
+最后我们看到了相同的结果
+
+## 重定义
+我们可以对一个已经存在的函数重新定义行为
+```
+def f(*args):
+	print(args)
+
+
+f = lambda : 15
+print(f())
+
+n = f
+
+def f():
+	return 20
+
+print(n())
+print(f())
+```
+从这一点可以验证在python中函数也是对象.
+
+## 装饰器
+装饰器本质上就是一个高阶函数，它接收一个函数作为参数，然后，返回一个新函数。
+
+python通过`@`语法内置实现装饰器
+```python
+def fb(f):
+	print("fb")
+	return f
+
+@fb
+def fa(var1, var2, var3):
+	print(var1 + var2 + var3)
+
+fa(1, 2, 3)
+```
+上面这个例子每次在调用`fa`方法时都会输出一个`fb`字符串
 
 # 模块
 模块是一个包含函数和变量的文件。为了在其他程序中重用模块，模块的文件名必须以.py为扩展名。
@@ -437,7 +580,7 @@ class Person:
 p = Person()
 ```
 
-#### 类与对象的方法
+### 变量
 * 类的变量: 由一个类的所有对象（实例）共享使用。只有一个类变量的拷贝，所以当某个对象对类的变量做了改动的时候，这个改动会反映到所有其他的实例上。
 
 * 对象的变量: 由类的每个对象/实例拥有。因此每个对象有自己对这个域的一份拷贝，即它们不是共享的，在同一个类的不同实例中，虽然对象的变量有相同的名称，但是是互不相关的。通过一个例子会使这个易于理解。
@@ -452,6 +595,9 @@ Father.age = 20
 print(father.age)
 print(Father.age)
 ```
+
+### 权限控制
+对象的属性(变量和方法)如果名字以`__`开头则不能被外部访问,但是如果名称构成形式为`__xxx__`则被称为特殊属性,是可以被外界访问的.
 
 ## 继承
 ```python
@@ -494,3 +640,4 @@ son = Son()
 print(son.name)
 son.run()
 ```
+

@@ -23,7 +23,6 @@ title: GVIM
 * 窗口编辑: `：split`水平新建窗口. `：vsplit `垂直分割.
 * 在窗口间游走: `Ctrl W` 加 `h, j, k, l`一起使用
 * 分页编辑： `：tabnew`新建分页。 `：tabclose`关闭当前分页. `：tabonly `关闭其他所有的分页
-* 
 
 # 插件
 ## [Pydiction ](http://www.vim.org/scripts/script.php?script_id=850)
@@ -43,3 +42,7 @@ let g:pydiction_location = 'D:/Program Files/Vim/pydiction/complete-dict'
 * `:NERDTree` 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径
 * `:NERDTreeClose` 关闭目录树
 
+## [bsh.vim](http://www.vim.org/scripts/script.php?script_id=1202)
+Shell语法高亮
+
+只需将`bsh.vim `文件拷贝到`Vim\vimfiles\syntax`就可以了
