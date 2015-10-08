@@ -10,6 +10,15 @@ title: GVIM
 [VeraMono](http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf)需要下载安装(百度字体安装就好)
 `set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI`
 
+## python编译
+```
+autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  
+autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  
+autocmd BufRead *.py nmap <F5> :!python %<CR>  
+autocmd BufRead *.py nmap <F6> :make<CR>  
+autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口  
+```
+
 # 快捷键
 * 搜索：`/`向下搜索. `?`向上搜索
 * 替换： `:%s/abc/123/g`, 将abc都替换为123
@@ -36,11 +45,14 @@ let g:pydiction_location = 'D:/Program Files/Vim/pydiction/complete-dict'
 然后将`pydiction/after/ftplugin/python_pydiction.vim`复制到`Vim\vimfiles\ftplugin\python_pydiction.vim`
 
 ## [The NERD tree](http://www.vim.org/scripts/script.php?script_id=1658)
-文件树
-
-将下载下来的压缩包解压到`Vim\vimfiles`
+文件树. 将下载下来的压缩包解压到`Vim\vimfiles`
 * `:NERDTree` 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径
 * `:NERDTreeClose` 关闭目录树
+
+修改_vimrc配置文件,添加映射
+```
+nmap <F2> :NERDTreeToggle<CR>  
+```
 
 ## [bsh.vim](http://www.vim.org/scripts/script.php?script_id=1202)
 Shell语法高亮
