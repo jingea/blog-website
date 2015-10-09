@@ -2,7 +2,7 @@ category:
 - java
 tag:
 - java加密解密
-title: java_security
+title: java.security  API
 ---
 ## AlgorithmParameterGenerator
 ```java
@@ -66,10 +66,8 @@ ap.getEncoded("");
 * 构建CodeSigner对象 --> CodeSigner()完成实例化对象后,就可以通过以下方法获得其属性：
 * 返回签名者的CertPath对象 --> getSignerCertpath()
 * 返回签名时间戳  --> getTimestamp()注意,这里的Timestamp是java.security.Timestamp,是用做数字时间戳的Timestamp！
-获得CodeSigner对象后的最重要的操作就是执行比对,CodeSigner覆盖了equals()方法.
-测试指定对象与此CodeSigner对象是否相等 --> equals().
-如果,传入参数不是CodeSigner类的实现,则直接返回false.
-如果传入参数是CodeSigner类的实现,则比较其Timestamp和CerPath两个属性
+
+获得CodeSigner对象后的最重要的操作就是执行比对,CodeSigner覆盖了equals()方法.测试指定对象与此CodeSigner对象是否相等 --> equals().如果,传入参数不是CodeSigner类的实现,则直接返回false.如果传入参数是CodeSigner类的实现,则比较其Timestamp和CerPath两个属性
 ```java
 // 构建CertificateFactory对象,并指定证书类型为x.509
 CertificateFactory cf = CertificateFactory.getInstance("509");
@@ -147,12 +145,13 @@ Key接口是所有密钥接口的顶层接口,一切与加密有关的操作都�
 * 算法:密钥算法, 如DES和DSA. getAlgorithm()
 * 编码形式:密钥的外部编码形式,密钥根据标准格式(RKC#8)编码,  getEncode()
 * 格式:已编码密钥的格式的名称,getFormat()
-### 对称密钥顶层接口
-{@link SecretKey}
-通常使用的是{@link SecretKeySpec}DES,AES 等多种对称密码算法均可通过该接口提供,PBE接口提供PBE算法定义并继承了该接口.MAC算法实现过程中,通过SecretKey接口提供秘密秘钥
-### 非对称密钥顶层接口
+
+对称密钥顶层接口 {@link SecretKey}. 通常使用的是{@link SecretKeySpec}DES,AES 等多种对称密码算法均可通过该接口提供,PBE接口提供PBE算法定义并继承了该接口.MAC算法实现过程中,通过SecretKey接口提供秘密秘钥
+
+非对称密钥顶层接口
 * {@link PublicKey} 公钥接口
 * {@link PrivateKey} 私钥接口
+
 Dh,RSA,DSA,EC等多种非对称秘钥接口均继承了这俩个接口
 
 ## KeyFactory
@@ -181,7 +180,6 @@ factory.translateKey(pk);
 // 返回给定对象的规范
 factory.getKeySpec(pk, PKCS8EncodedKeySpec.class);
 ```
-
 
 ## KeyPair
 对非对称密钥的拓展,是密钥对的载体,称之为密钥对一般是通过KeyPairGenerator#generateKeyPair()获得keyPair只能通过构造方法初始化内部的公钥和私钥,此外不提供设置公钥和私钥的方法
@@ -510,15 +508,11 @@ boolean status = s.verify(sign);
 ```
 
 ## SignedObject
-用来创建实际运行时的对象.在检测不到这些对象的情况下,其完整性不会遭受损害SignedObject包含另一个Serializable对象,即签名的对象及其签名.
-签名对象是对原始对象的深层复制(以序列化形式),一旦生成了副本对原始对的进一步操作就不再影响该副本
+用来创建实际运行时的对象.在检测不到这些对象的情况下,其完整性不会遭受损害SignedObject包含另一个Serializable对象,即签名的对象及其签名.签名对象是对原始对象的深层复制(以序列化形式),一旦生成了副本对原始对的进一步操作就不再影响该副本
 
-签名对象通过以下构造方法完成实例化对象：通过任何可序列化对象构造Signedobject对象
-`public Signedobject(Serializable object,privateKey,Signature signingEngine)`
-在完成上述实例化操作后，可通过以下方法获得封装后边的对象和签名：获取已封装的对象 --> getObject() 
+签名对象通过以下构造方法完成实例化对象：通过任何可序列化对象构造Signedobject对象`public Signedobject(Serializable object,privateKey,Signature signingEngine)`. 在完成上述实例化操作后，可通过以下方法获得封装后边的对象和签名：获取已封装的对象 --> getObject() 
 
-在已签名对象上按字节数组的形式获取签名  -->	 getobject()接着，可以通过公钥和Signature进行验证操作：
-使用指派的验证引擎，通过给定的验证密钥验证Sibnedobject中的签名是否为内部存储对象的有效签名  verify()
+在已签名对象上按字节数组的形式获取签名  -->	 getobject()接着，可以通过公钥和Signature进行验证操作：使用指派的验证引擎，通过给定的验证密钥验证Sibnedobject中的签名是否为内部存储对象的有效签名  verify()
 
 此外，SignedObject还提供了以下方法：获取签名算法的名称 getAlgorithm()
 ```java
@@ -542,20 +536,16 @@ boolean status = so.verify(kp.getPublic(), s)
 
 
 ## Timestamp
-用来封装有关签署时间戳的信息.它包括时间戳的日期和时间,以及有关生成时间戳的Timestamping Authority信息.
-构建一个数字时间戳需要提供时间和签名证书路径（CertPath）两个参数，方法如下：
+用来封装有关签署时间戳的信息.它包括时间戳的日期和时间,以及有关生成时间戳的Timestamping Authority信息.构建一个数字时间戳需要提供时间和签名证书路径（CertPath）两个参数，方法如下：
 构建一个Timestamp对象 --> Timestamp（）
 
-获得数字时间戳后的主要目的在于校验给定对象是否与此数字时间戳一致，方法如下：
-比较指定的对象和Timestamp对象是否相同 --> equals（）
+获得数字时间戳后的主要目的在于校验给定对象是否与此数字时间戳一致，方法如下：比较指定的对象和Timestamp对象是否相同 --> equals（）
 
-当然，我们可以通过数字时间戳获得相应的签名证书路径和生成数字时间戳的日期和时间，方法如下：
-返回Timestamping Authority的证书路径  --> getSignerCertPath()
+当然，我们可以通过数字时间戳获得相应的签名证书路径和生成数字时间戳的日期和时间，方法如下：返回Timestamping Authority的证书路径  --> getSignerCertPath()
 
 返回生成数字数字时间戳时的日期和时间  --> getTimestamp()
 
-此外，数字时间戳覆盖了以下两种方法：
-返回描述此数字时间戳的字符串tostring()
+此外，数字时间戳覆盖了以下两种方法：返回描述此数字时间戳的字符串tostring()
 ```java
 // 构造一个数字时间戳
 // 构建CertificateFactory对象,并指定证书类型为x.509

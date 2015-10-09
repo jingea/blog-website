@@ -2,7 +2,7 @@ category:
 - java
 tag:
 - java加密解密
-title: javax_net_ssl
+title: javax.net.ssl API
 ---
 ## HttpsURLConnection
 HttpsURLConnection 拓展了URLConnection, 支持各种特定于Https的功能

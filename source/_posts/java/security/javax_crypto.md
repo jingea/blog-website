@@ -2,7 +2,7 @@ category:
 - java
 tag:
 - java加密解密
-title: javax_crypto
+title: javax.crypto  API
 ---
 ## Cipher
 Cipher类是一个引擎类,它需要通过getlnstanceo工厂方法来实例化对象.
@@ -28,11 +28,8 @@ Cipher类是一个引擎类,它需要通过getlnstanceo工厂方法来实例化�
 当然，我们也可以使用如下缓冲方式： 继续多部分加密或解密操作(具体取决于此Cipher对象的初始化方式)，以处理其他数据部分update() 完成上述数据更新后，直接执行如下方法： 结束多部分加密和解密操作(具体取决于此Cipher对象的初始化方式)dofinal() 如果，加密(解密)操作不需要多次更新数据可以直接执行如下方法： 按单部分操作加密或解密数据，或者结束一个多部分操作
 dofinal()
 
-或按以下偏移量的方式完成操作： 按单部分操作加密或解密数据，或者结束一个多部分操作 dofinal()以下方式将操作后的结果存于给定的参数中，与上述方式大同小异： 结束多部分加密和解密操作(具体取决于此Cipher对象的初始化方式) dofinal() 与上述方法不同的是，以下方法可用于多部分操作，并操作结果存于给定参数中：
-按单部分操作加密或解密数据，或者结束一个多部分操作 dofinal() 按单部分操作加密或解密数据，或者结束一个多部分操作
-dofinal() 以下方法提供了一种基于缓冲的处理方式： 按单部分操作加密或解密数据，或者结束一个多部分操作 dofinal()
-除了完成数据的加密与解密，Cipher类还提供了对密钥的包装与解包。 我们先来了解一下与密钥包装有关的常量
-用于将Cipher对象初始化为密钥包装模式的常量 init WAR_MODE
+或按以下偏移量的方式完成操作： 按单部分操作加密或解密数据，或者结束一个多部分操作 dofinal()以下方式将操作后的结果存于给定的参数中，与上述方式大同小异： 结束多部分加密和解密操作(具体取决于此Cipher对象的初始化方式) dofinal() 与上述方法不同的是，以下方法可用于多部分操作，并操作结果存于给定参数中：按单部分操作加密或解密数据，或者结束一个多部分操作 dofinal() 按单部分操作加密或解密数据，或者结束一个多部分操作
+dofinal()以下方法提供了一种基于缓冲的处理方式：按单部分操作加密或解密数据，或者结束一个多部分操作dofinal()除了完成数据的加密与解密，Cipher类还提供了对密钥的包装与解包。我们先来了解一下与密钥包装有关的常量用于将Cipher对象初始化为密钥包装模式的常量 init WAR_MODE
 
 这一常量需要在进行Cipher对象初始化使用，给出如下示例代码： init() 初始化 在此之后我们就可以执行包装操作，可使用如下方法：
 包装密钥 wrap() 解包操作需要如下常量执行初始化 用于将Cipher初始化为密钥解包模式的常量 init WAR_MODE
@@ -297,32 +294,29 @@ String output = (String)so.getObject(c2);
 ```
 
 ## SecretKeyFactory
-SecretKe factor类同样属于引擎类,与Kefactory类相对应,它用于产生秘密密钥,我们称之为秘密密钥工厂.
-此类表示秘密密钥的工厂信任管理库及构建安全基于HTTPS的加密网络通信实现的知识
+SecretKe factor类同样属于引擎类,与Kefactory类相对应,它用于产生秘密密钥,我们称之为秘密密钥工厂.此类表示秘密密钥的工厂信任管理库及构建安全基于HTTPS的加密网络通信实现的知识
 
-既然SecretKeyFactory类也是一 个引擎类,同样需要通过getlnstance()工厂方法来实例化对象。
-我们可以通过制定算法名称的方式获得秘密密钥实例化对象，方法如下：
-返回转换指定算法的秘密密钥的SecretKeyFactory对象
-public final static SecretXeyPactory getxnstance(String algorithm)
-或者，指定算法名称的同时制定该算法的提供者，方法如下： 
-返回转换指定算法的秘迷密钥的SecretKeyFactory对象
+既然SecretKeyFactory类也是一 个引擎类,同样需要通过getlnstance()工厂方法来实例化对象。我们可以通过制定算法名称的方式获得秘密密钥实例化对象，方法如下：
+
+或者，指定算法名称的同时制定该算法的提供者，方法如下： 返回转换指定算法的秘迷密钥的SecretKeyFactory对象
 public final static SecretReyfactory getlnstance(String algorlttmt, Provider provider)
+
 返回转换指定算法的秘迷密钥的SecretKeyFactory对象
 public final static SecretReyfactory getlnstance(String algorlttmt, sting provider)
+
 算法生成器共有两种初始化方式：与算法无关的方式或特定于算法的方式。
 得利SecretKeyFactory实例化对象后，我们就可以通过以下方法来生成秘密密钥：
 根据提供的密钥规范(密钥材料) 生成SecretKey对象
 public final SecretKey generatesecret(Reyspec keyspec)
+
 SecretKeyfactory类也是一个引擎类同样需要通过getlnstanceo工厂方法来实例化对象
 与其他引擎类一 样，SecretKeyFactory类提供以下两种方法
-返回此秘密密钥工厂对象的提供者
-public final provider getprovider( )
-返回此秘密密钥工厂对象的算法名称
- public final String getAlgorithm()
+返回此秘密密钥工厂对象的提供者public final provider getprovider( )
+返回此秘密密钥工厂对象的算法名称public final String getAlgorithm()
  
 ```java
 // 通过以下代码获得私密迷药的迷药编码字节数组
-// 实例化KeyGenerator对象,并指定DES算法
+// 实例化KeyGenerator对象,并指定DES算法. 返回转换指定算法的秘密密钥的SecretKeyFactory对象
 KeyGenerator kg = KeyGenerator.getInstance("DES");
 // 生成SecretKey
 SecretKey sk = kg.generateKey();

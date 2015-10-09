@@ -2,11 +2,10 @@ category:
 - java
 tag:
 - java加密解密
-title: java_security_cert
+title: java.security.cert  API
 ---
 ## Certificate
-用于管理证书的抽象类 证书有很多类型,如X.509证书,PGP证书和SDSI证书
-并且它们都以不同的方式存储并存储不同的信息,但却都可以通过继承Certificate类来实现
+用于管理证书的抽象类 证书有很多类型,如X.509证书,PGP证书和SDSI证书,并且它们都以不同的方式存储并存储不同的信息,但却都可以通过继承Certificate类来实现
 
 ## CertificateFactory
 CertificateFactory是一个引擎类,称之为证书工厂,可以通过它将证书导入程序中.
@@ -63,9 +62,7 @@ crl.getType();
 ```
 
 ## X509Certificate
-X509Certificate是Certificate的子类
-
-x.509证书的抽象类,此类提供类一种访问x.509证书的所有属性的标准方式
+X509Certificate是Certificate的子类. x.509证书的抽象类,此类提供类一种访问x.509证书的所有属性的标准方式
 ```java
 // 加载密钥库文件
 FileInputStream fin = new FileInputStream(new File(""));

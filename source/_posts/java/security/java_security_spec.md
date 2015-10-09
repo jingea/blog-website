@@ -2,7 +2,7 @@ category:
 - java
 tag:
 - java加密解密
-title: java_security_spec
+title: java.security.spec  API
 ---
 ## AlgorithmParameterSpec
 此接口不包含任何方法或常亮.它仅用于将所有参数规范分组,并为其提供类型安全.所有参数规范否必须实现此接口.
@@ -19,7 +19,7 @@ dsa.getQ();	// 返回子素数Q
 ## DESKeySpec
 DESKeySpec和SecretKeySpec都是提供秘密密钥规范的实现类 DESKeySpec：指定类DES算法.
 
-SecretKeySpec：兼容所有对称加密算法
+SecretKeySpec：兼容所有对称加密算法.
 
 DESKeySpec有很多的同胞, DESedeKeySpec提供类三重DES加密算法的密钥规范 PBEKeySpec 提供了PBE算法的密钥规范
 ```java
