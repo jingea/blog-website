@@ -6,7 +6,7 @@ title: java.security  API
 ---
 ## AlgorithmParameterGenerator
 ```java
-AlgorithmParameterGenerator apg = AlgorithmParameterGenerator.getInstance(Algorithm.DES.name());
+AlgorithmParameterGenerator apg = AlgorithmParameterGenerator.getInstance("DES"));
 // 与算法无关的初始化,所有参数生成器都共享大小概念和一个随机源
 // 特定于算法的参数生成值默认为某些标准值,除非他们可以从指定的大小派生
 apg.init(size, random);
@@ -26,10 +26,11 @@ apg.init(genParamSpec, random);
 ```
 引擎类,用于生成某个特定算法中使用的参数集合.{@link AlgorithmParameters} 生成的参数
 
-## AlgorithmParameters.md
+## AlgorithmParameters
+提供密码参数的不透明表示`AlgorithmParameters`.`AlgorithmParameters`是一个引擎类,提供密码参数的不透明表示`AlgorithmParameterGenerator`可以通过该引擎类生成不透明:不可以直接访问各参数域,只能得到与参数集相关联的算法名及该参数集的某类编码透明 :用户可以通过相应规范中定义的某个get方法来分别访问每个值
 ```java
 // 实例化AlgorithmParameters 并指定DES算法
-AlgorithmParameters ap = AlgorithmParameters.getInstance(Algorithm.DES.name());
+AlgorithmParameters ap = AlgorithmParameters.getInstance("DES"));
 // 使用BigInteger生成字节数组参数
 ap.init(new BigInteger("19050619766489163472469").toByteArray());
 // 获取参数字节数组
@@ -59,7 +60,7 @@ System.out.println("Provider : " + ap.getProvider());
 // 获取指定编码格式的参数
 ap.getEncoded("");
 ```
-引擎类. 提供密码参数的不透明表示{@link AlgorithmParameters}AlgorithmParameters是一个引擎类,提供密码参数的不透明表示{@link AlgorithmParameterGenerator}可以通过该引擎类生成不透明:不可以直接访问各参数域,只能得到与参数集相关联的算法名及该参数集的某类编码透明 :用户可以通过相应规范中定义的某个get方法来分别访问每个值
+
 
 ## CodeSigner
 封装了代码签名者的信息,且他是不可变的,称之为代码签名 他和数字时间戳({@link Timestamp}) 紧密相连CodeSigner类是一个终态类,可以通过其构造方法完成实例化对象：
@@ -67,7 +68,7 @@ ap.getEncoded("");
 * 返回签名者的CertPath对象 --> getSignerCertpath()
 * 返回签名时间戳  --> getTimestamp()注意,这里的Timestamp是java.security.Timestamp,是用做数字时间戳的Timestamp！
 
-获得CodeSigner对象后的最重要的操作就是执行比对,CodeSigner覆盖了equals()方法.测试指定对象与此CodeSigner对象是否相等 --> equals().如果,传入参数不是CodeSigner类的实现,则直接返回false.如果传入参数是CodeSigner类的实现,则比较其Timestamp和CerPath两个属性
+获得CodeSigner对象后的最重要的操作就是执行比对,CodeSigner覆盖了equals()方法.测试指定对象与此CodeSigner对象是否相等-->equals().如果,传入参数不是CodeSigner类的实现,则直接返回false.如果传入参数是CodeSigner类的实现,则比较其Timestamp和CerPath两个属性
 ```java
 // 构建CertificateFactory对象,并指定证书类型为x.509
 CertificateFactory cf = CertificateFactory.getInstance("509");
@@ -82,9 +83,8 @@ boolean result = cs.equals(new CodeSigner(cp, t));
 ```
 
 ## DigestInputStream
-```java
 消息摘要输入流通过指定的读操作完成MessageDigest 的update()方法
-
+```java
 MessageDigest md = MessageDigest.getInstance("MD5");
 try(FileInputStream in = new FileInputStream(new File(fileName));
 DigestInputStream dis = new DigestInputStream(in, md)) {
@@ -115,7 +115,6 @@ MessageDigest nmd = dis.getMessageDigest();
 byte[] output = nmd.digest();
 System.out.println(output);
 ```
-消息摘要输入流通过指定的读操作完成MessageDigest 的update()方法
 
 ## DigestOutputStream
 消息摘要输出流通过指定的写操作完成MessageDigest 的update()方法. 基本上和DigestInputStream类似
@@ -146,19 +145,16 @@ Key接口是所有密钥接口的顶层接口,一切与加密有关的操作都�
 * 编码形式:密钥的外部编码形式,密钥根据标准格式(RKC#8)编码,  getEncode()
 * 格式:已编码密钥的格式的名称,getFormat()
 
-对称密钥顶层接口 {@link SecretKey}. 通常使用的是{@link SecretKeySpec}DES,AES 等多种对称密码算法均可通过该接口提供,PBE接口提供PBE算法定义并继承了该接口.MAC算法实现过程中,通过SecretKey接口提供秘密秘钥
+对称密钥顶层接口 SecretKey}. 通常使用的是{@link SecretKeySpec}DES,AES 等多种对称密码算法均可通过该接口提供,PBE接口提供PBE算法定义并继承了该接口.MAC算法实现过程中,通过SecretKey接口提供秘密秘钥
 
 非对称密钥顶层接口
-* {@link PublicKey} 公钥接口
-* {@link PrivateKey} 私钥接口
+* PublicKey 公钥接口
+* PrivateKey 私钥接口
 
 Dh,RSA,DSA,EC等多种非对称秘钥接口均继承了这俩个接口
 
 ## KeyFactory
-同{@link KeyPairGenerator} 一样,它也是用来生成密钥(公钥和私钥)的引擎类,称之为密钥工厂
-按照指定的编码格式或密钥参数,提供一个用于输入和输出密钥的基础设施
-从另一方面来说KeyFactory 是通过密钥规范({@link KeySpec}) 还原密钥,
-与KeyFacory对应的是{@link SecretKeyFactory},用来生成秘密密钥
+同{@link KeyPairGenerator} 一样,它也是用来生成密钥(公钥和私钥)的引擎类,称之为密钥工厂.按照指定的编码格式或密钥参数,提供一个用于输入和输出密钥的基础设施从另一方面来说KeyFactory 是通过密钥规范({@link KeySpec}) 还原密钥,与KeyFacory对应的是{@link SecretKeyFactory},用来生成秘密密钥
 ```java
 KeyPairGenerator generator = KeyPairGenerator.getInstance(Algorithm.RSA.name());
 generator.initialize(1024);
@@ -185,7 +181,7 @@ factory.getKeySpec(pk, PKCS8EncodedKeySpec.class);
 对非对称密钥的拓展,是密钥对的载体,称之为密钥对一般是通过KeyPairGenerator#generateKeyPair()获得keyPair只能通过构造方法初始化内部的公钥和私钥,此外不提供设置公钥和私钥的方法
 
 ## KeyPairGenerator
-引擎类. 负责生成公钥和私钥,称之为密钥对生成器,负责生成公钥和私钥,称之为密钥对生成器,同样是一个引擎类如果要生成私钥可以使用 {@link KeyGenerator}
+引擎类. 负责生成公钥和私钥,称之为密钥对生成器,负责生成公钥和私钥,称之为密钥对生成器,同样是一个引擎类如果要生成私钥可以使用 KeyGenerator
 ```java
 // 生成指定算法的公钥私钥密钥对的KeyPairGenerator对象
 KeyPairGenerator kg = KeyPairGenerator.getInstance("DH");
@@ -369,7 +365,7 @@ System.out.println(sha.digest());
 ```
 
 ## Provider
-Provider 可能实现的服务:DSA,RSA,MD5,SHA-1等算法,密钥的生成,转换和管理设置和 {@link Security} 一起构成了安全提供者
+Provider 可能实现的服务:DSA,RSA,MD5,SHA-1等算法,密钥的生成,转换和管理设置和 Security} 一起构成了安全提供者
 
 JCA和JCE是Java平台用于安全和加密服务的俩组API,它们并不执行任何算法,它们只是链接应用和实际算法实现程序的一组接口
 
