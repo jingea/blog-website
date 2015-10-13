@@ -34,4 +34,16 @@ class LockOne {
 但是如果`write_A(flag[0] = true)`和`write_B(flag[1] = true)`先于`read_A(flag[1] == false)`和`read_B(flag[0] == false)`的话,那么`flag[0]`和`flag[1]`就都成为true,也就是线程A和线程B进入了死锁.
 
 
+至于说为什么要使用`volatile`关键字,这是为了保证`flags`变量的内存可见性,因为Java会将这段代码
+```java
+while(flag[j]) {}	
+```
+编译成
+```java
+if(flag[j]) {
+	while(true) {
 
+	}
+}
+```
+编译后的代码进行了重排序,加上`volatile`关键字,就是告诉编译器,不要重排序我的代码.
