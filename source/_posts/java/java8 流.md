@@ -1,5 +1,6 @@
 category: java
 tag: java8
+date: 2015-09-08
 title: java8 流
 ---
 # 流

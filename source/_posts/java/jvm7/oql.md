@@ -1,5 +1,6 @@
 category: java
 tag: jvm7
+date: 2014-10-08
 title: OQL
 ---
 # OQL

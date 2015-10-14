@@ -1,4 +1,5 @@
 category: java
+date: 2015-04-08
 title: Dropwizard
 ---
 

@@ -1,4 +1,5 @@
 category: 工具
+date: 2015-10-08
 title: Mycat
 ---
 [Mycat权威指南V1](https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&id=44263828402&ns=1&abbucket=17#detail)学习总结

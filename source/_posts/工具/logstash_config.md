@@ -1,4 +1,5 @@
 category: 工具
+date: 2015-08-08
 title: logstash配置文件
 ---
 ### input插件

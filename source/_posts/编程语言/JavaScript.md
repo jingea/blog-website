@@ -1,4 +1,5 @@
 category: 编程语言
+date: 2015-09-08
 title: JavaScript
 ---
 JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.

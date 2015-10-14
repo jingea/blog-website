@@ -1,4 +1,5 @@
 category: 编程语言
+date: 2015-04-08
 title: haskell
 ---
 

@@ -1,4 +1,5 @@
 category: 编程语言
+date: 2015-06-08
 title: 在windows上搭建rust开发环境
 ---
 在windows上搭建rust开发环境

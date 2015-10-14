@@ -1,4 +1,5 @@
 category: 工具
+date: 2015-05-08
 title: Flick Ticket Server
 ---
 ## 为什么采用Ticket Server

@@ -1,4 +1,5 @@
 category: java
+date: 2015-03-08
 title: JAVA钩子程序
 ---
 # java hook

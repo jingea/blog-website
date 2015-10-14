@@ -1,4 +1,5 @@
 ﻿category: 编程语言
+date: 2014-04-08
 title: groovy
 ---
 > 本文是对Groovy部分官方文档进行了翻译
