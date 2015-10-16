@@ -26,7 +26,7 @@ vmstat是Virtual Meomory Statistics（虚拟内存统计）的缩写, 是实时�
 
 一般vmstat工具的使用是通过两个数字参数来完成的，第一个参数是采样的时间间隔数，单位是秒，第二个参数是采样的次数，如:
 ```
-vmstat 2 1
+[root@cvs /]# vmstat 2 1
 =>
 procs  -----------memory----------     ---swap--  -----io----  --system--   -----cpu-----
  r  b    swpd   free   buff  cache      si   so     bi    bo    in   cs     us sy id wa st
@@ -45,7 +45,7 @@ procs  -----------memory----------     ---swap--  -----io----  --system--   ----
 * -S：使用指定单位显示。参数有 k 、K 、m 、M ，分别代表1000、1024、1000000、1048576字节（byte）。默认单位为K（1024 bytes）
 * -V：显示vmstat版本信息。
 
-![]()
+![](https://raw.githubusercontent.com/ming15/blog-website/images/other/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81.gif)
 我们从上面那个图来解释各个参数
 > porcs
 * r：表示运行队列(分配到CPU进程数)
@@ -82,7 +82,7 @@ procs  -----------memory----------     ---swap--  -----io----  --system--   ----
 ### pidstat
 监控锁竞争
 ```
- pidstat
+[root@cvs /]# pidstat
 Linux 2.6.32-279.el6.x86_64 (cvs)       2015年10月15日  _x86_64_        (8 CPU)
 
 PID    %usr %system  %guest    %CPU   CPU  Command
@@ -117,18 +117,122 @@ PID    %usr %system  %guest    %CPU   CPU  Command
 
  
 ### iostat
+iostat用于输出CPU和磁盘I/O相关的统计信息. 
+
+* `-c` 仅显示CPU统计信息.与-d选项互斥.
+* `-d` 仅显示磁盘统计信息.与-c选项互斥.
+* `-k` 以K为单位显示每秒的磁盘请求数,默认单位块.
+* `-p device | ALL`  与-x选项互斥,用于显示块设备及系统分区的统计信息.也可以在-p后指定一个设备名,如:
+> # iostat -p hda
+ 或显示所有设备
+ # iostat -p ALL
+* `-t`    在输出数据时,打印搜集数据的时间.
+* `-V`    打印版本号和帮助信息.
+* `-x`    输出扩展信息.
+* 
+```
+[root@cvs /]# iostat
+Linux 2.6.32-279.el6.x86_64 (cvs)       2015年10月16日  _x86_64_        (8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.67    0.00    0.21    0.38    0.00   97.74
+
+Device:            tps   Blk_read/s   Blk_wrtn/s   Blk_read   Blk_wrtn
+sda              18.64        72.79       512.65  951732770 6702726216
+```
+avg-cpu:  
+* `%user`: 在用户级别运行所使用的CPU的百分比.
+* `%nice`: nice操作所使用的CPU的百分比.
+* `%system`: 在系统级别(kernel)运行所使用CPU的百分比.
+* `%iowait`: CPU等待硬件I/O时,所占用CPU百分比.
+* `%steal`: 
+* `%idle`: CPU空闲时间的百分比.
+           
+
+Device:            
+* `tps`: 每秒钟发送到的I/O请求数.
+* `Blk_read/s`: 每秒读取的block数.
+* `Blk_wrtn/s`: 每秒写入的block数.
+* `Blk_read`: 读入的block总数.
+* `Blk_wrtn`: 写入的block总数.
+
+
+* `Blk_read` 读入块的当总数.
+* `Blk_wrtn` 写入块的总数.
+* `kB_read/s` 每秒从驱动器读入的数据量,单位为K.
+* `kB_wrtn/s` 每秒向驱动器写入的数据量,单位为K.
+* `kB_read` 读入的数据总量,单位为K.
+* `kB_wrtn` 写入的数据总量,单位为K.
+* `rrqm/s`  将读入请求合并后,每秒发送到设备的读入请求数.
+* `wrqm/s`  将写入请求合并后,每秒发送到设备的写入请求数.
+* `r/s`     每秒发送到设备的读入请求数.
+* `w/s`     每秒发送到设备的写入请求数.
+* `rsec/s`  每秒从设备读入的扇区数.
+* `wsec/s`  每秒向设备写入的扇区数.
+* `rkB/s`  每秒从设备读入的数据量,单位为K.
+* `wkB/s`  每秒向设备写入的数据量,单位为K.
+* `avgrq-sz`  发送到设备的请求的平均大小,单位是扇区.
+* `avgqu-sz` 发送到设备的请求的平均队列长度.
+* `await`  I/O请求平均执行时间.包括发送请求和执行的时间.单位是毫秒.
+* `svctm` 发送到设备的I/O请求的平均执行时间.单位是毫秒.
+* `%util`  在I/O请求发送到设备期间,占用CPU时间的百分比.用于显示设备的带宽利用率.当这个值接近100%时,表示设备带宽已经占满.
 
 ### uname 
+* `-a` 　显示全部的信息。 
+* `-m`　显示电脑类型。 
+* `-n`　显示在网络上的主机名称。 
+* `-r`　显示操作系统的发行编号。 
+* `-s`　显示操作系统名称。 
+* `-v` 　显示操作系统的版本。 
+
 
 ### sar 
+系统报告命令
+* sar -q 1 5    察看cpu的load状况，每1s钟统计1次，共统计5次
+* sar -u 2 3   察看cpu使用率，每2s统计1次，共统计3次
+* sar -r   察看当日内存占用情况(默认每10分钟统计一次)
+* sar -b 察看当日IO使用情况
+* sar -n SOCK   察看网络sock连接
+* sar -n DEV 察看网络流量
+
 
 ### top  
 
 ### ps 
 
 ### df 
+检查文件系统的磁盘空间占用情况
+* -a 显示所有文件系统的磁盘使用情况，包括0块（block）的文件系统，如/proc文件系统。
+* -k 以k字节为单位显示。
+* -i 显示i节点信息，而不是磁盘块。
+* -t 显示各指定类型的文件系统的磁盘空间使用情况。
+* -x 列出不是某一指定类型文件系统的磁盘空间使用情况（与t选项相反）。
+* -T 显示文件系统类型。
+```
+文件系统                 1K-块      已用      可用 已用% 挂载点
+/dev/sda2             10079084   6660892   2906192  70% /
+tmpfs                  8141376         0   8141376   0% /dev/shm
+/dev/sda1             10079084    173308   9393776   2% /boot
+/dev/sda5            257592732 241557292   2950464  99% /opt
+```
 
 ### du 
+显示每个文件和目录的磁盘使用空间。
+* -a或-all  显示目录中个别文件的大小。   
+* -b或-bytes  显示目录或文件大小时，以byte为单位。   
+* -c或--total  除了显示个别目录或文件的大小外，同时也显示所有目录或文件的总和。 
+* -k或--kilobytes  以KB(1024bytes)为单位输出。
+* -m或--megabytes  以MB为单位输出。   
+* -s或--summarize  仅显示总计，只列出最后加总的值。
+* -h或--human-readable  以K，M，G为单位，提高信息的可读性。
+* -x或--one-file-xystem  以一开始处理时的文件系统为准，若遇上其它不同的文件系统目录则略过。 
+* -L<符号链接>或--dereference<符号链接> 显示选项中所指定符号链接的源文件大小。   
+* -S或--separate-dirs   显示个别目录的大小时，并不含其子目录的大小。 
+* -X<文件>或--exclude-from=<文件>  在<文件>指定目录或文件。   
+* --exclude=<目录或文件>         略过指定的目录或文件。    
+* -D或--dereference-args   显示指定符号链接的源文件大小。   
+* -H或--si  与-h参数相同，但是K，M，G是以1000为换算单位。   
+* -l或--count-links   重复计算硬件链接的文件。  
 ```
 # 对当前目前下所有文件按文件大小倒排序，大小相同按文件名字母倒排序
 du -ak | sort -t$'\t' -l1 -nr -k2 -r 
@@ -138,104 +242,188 @@ du -ak | sort -t$'\t' -l1 -nr -k2 -r
 
 ### /proc/cpuinfo
 ```
-cat /proc/cpuinfo
+[root@cvs /]# cat /proc/cpuinfo
+processor       : 0
+vendor_id       : GenuineIntel
+cpu family      : 6
+model           : 45
+model name      : Intel(R) Xeon(R) CPU E5-2603 0 @ 1.80GHz
+stepping        : 7
+cpu MHz         : 1800.009
+cache size      : 10240 KB
+physical id     : 0
+siblings        : 4
+core id         : 0
+cpu cores       : 4
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 13
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce ...
+bogomips        : 3600.01
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 46 bits physical, 48 bits virtual
+power management:
 ```
-* `processor`       :
-* `vendor_id`       :
-* `cpu family`      :
-* `model`           :
-* `model name`      :
-* `stepping`        :
-* `cpu MHz`         :
-* `cache size`      :
-* `physical id`     :
-* `siblings`        :
-* `core id`         :
-* `cpu cores`       :
-* `apicid`          :
+* `processor`       : CPU号
+* `vendor_id`       : CPU制造商   
+* `cpu family`      : CPU产品系列代号
+* `model`           : CPU属于其系列中的哪一代的代号
+* `model name`      : CPU属于的名字及其编号、标称主频
+* `stepping`        : CPU属于制作更新版本
+* `cpu MHz`         : CPU的实际使用主频
+* `cache size`      : CPU二级缓存大小
+* `physical id`     : 单个CPU的标号
+* `siblings`        : 单个CPU逻辑物理核数
+* `core id`         : 当前物理核在其所处CPU中的编号，这个编号不一定连续
+* `cpu cores`       : 该逻辑核所处CPU的物理核数
+* `apicid`          : 用来区分不同逻辑核的编号，系统中每个逻辑核的此编号必然不同，此编号不一定连续
 * `initial apicid`  :
-* `fpu`             :
-* `fpu_exception`   :
-* `cpuid level`     :
-* `wp`              :
-* `flags`           :
-* `bogomips`        :
-* `clflush size`    :
-* `cache_alignment` :
-* `address sizes`   :
-* `power management`:
+* `fpu`             : 是否具有浮点运算单元（Floating Point Unit）
+* `fpu_exception`   : 是否支持浮点计算异常
+* `cpuid level`     : 执行cpuid指令前，eax寄存器中的值，根据不同的值cpuid指令会返回不同的内容
+* `wp`              : 表明当前CPU是否在内核态支持对用户空间的写保护（Write Protection）
+* `flags`           : 当前CPU支持的功能
+* `bogomips`        : 在系统内核启动时粗略测算的CPU速度（Million Instructions Per Second）
+* `clflush size`    : 每次刷新缓存的大小单位
+* `cache_alignment` : 缓存地址对齐单位
+* `address sizes`   : 可访问地址空间位数
+* `power management`: 对能源管理的支持，有以下几个可选支持功能
 
 ### /proc/meminfo 
 ```
-cat /proc/meminfo 
+[root@cvs /]# cat /proc/meminfo 
+MemTotal:       16282756 kB
+MemFree:         2012664 kB
+Buffers:          491980 kB
+Cached:          5477644 kB
+SwapCached:       110344 kB
+Active:          9224100 kB
+Inactive:        4478716 kB
+Active(anon):    6410680 kB
+Inactive(anon):  1322576 kB
+Active(file):    2813420 kB
+Inactive(file):  3156140 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:      10239992 kB
+SwapFree:        8921364 kB
+Dirty:              1176 kB
+Writeback:             0 kB
+AnonPages:       7679964 kB
+Mapped:            25344 kB
+Shmem:                36 kB
+Slab:             328340 kB
+SReclaimable:     284284 kB
+SUnreclaim:        44056 kB
+KernelStack:        8504 kB
+PageTables:        27520 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    18381368 kB
+Committed_AS:   11103356 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      307784 kB
+VmallocChunk:   34350792204 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:   6842368 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:        5056 kB
+DirectMap2M:     2045952 kB
+DirectMap1G:    14680064 kB
 ```
-* `MemTotal`:           
-* `MemFree`:            
-* `Buffers`:            
-* `Cached`:             
-* `SwapCached`:         
-* `Active`:             
-* `Inactive`:           
-* `Active(anon)`:       
-* `Inactive(anon)`:     
-* `Active(file)`:       
-* `Inactive(file)`:     
-* `Unevictable`:        
-* `Mlocked`:            
-* `SwapTotal`:          
-* `SwapFree`:           
-* `Dirty`:              
-* `Writeback`:          
-* `AnonPages`:          
-* `Mapped`:             
-* `Shmem`:              
-* `Slab`:               
-* `SReclaimable`:       
-* `SUnreclaim`:         
-* `KernelStack`:        
-* `PageTables`:         
-* `NFS_Unstable`:       
-* `Bounce`:             
-* `WritebackTmp`:       
-* `CommitLimit`:        
-* `Committed_AS`:       
-* `VmallocTotal`:       
-* `VmallocUsed`:        
-* `VmallocChunk`:       
-* `HardwareCorrupted`:  
-* `AnonHugePages`:      
-* `HugePages_Total`:    
-* `HugePages_Free`:     
-* `HugePages_Rsvd`:     
-* `HugePages_Surp`:     
-* `Hugepagesize`:       
-* `DirectMap4k`:        
-* `DirectMap2M`:        
-* `DirectMap1G`:        
+* `MemTotal`: 
+* `MemFree`:空闲内存
+* `Buffers`:给文件的缓冲大小
+* `Cached`: 高速缓冲存储器(http://baike.baidu.com/view/496990.htm)使用的大小
+* `SwapCached`: 被高速缓冲存储用的交换空间大小
+* `Active`: 活跃使用中的高速缓冲存储器页面文件大小
+* `Inactive`: 不经常使用的高速缓冲存储器页面文件大小
+* `Active(anon)`: 
+* `Inactive(anon)`: 
+* `Active(file)`: 
+* `Inactive(file)`: 
+* `Unevictable`:
+* `Mlocked`:
+* `SwapTotal`:交换空间总大小
+* `SwapFree`: 空闲交换空间
+* `Dirty`:等待被写回到磁盘的大小
+* `Writeback`:正在被写回的大小
+* `AnonPages`:未映射的页的大小
+* `Mapped`: 设备和文件映射的大小
+* `Shmem`:
+* `Slab`: 内核数据结构缓存的大小，可减少申请和释放内存带来的消耗
+* `SReclaimable`: 可收回slab的大小
+* `SUnreclaim`: 不可收回的slab的大小23204+14164=37368
+* `KernelStack`:
+* `PageTables`: 管理内存分页的索引表的大小
+* `NFS_Unstable`: 不稳定页表的大小
+* `Bounce`: bounce:退回
+* `WritebackTmp`: 
+* `CommitLimit`:
+* `Committed_AS`: 
+* `VmallocTotal`: 虚拟内存大小
+* `VmallocUsed`:已经被使用的虚拟内存大小
+* `VmallocChunk`: 
+* `HardwareCorrupted`:
+* `AnonHugePages`:
+* `HugePages_Total`:大页面的分配
+* `HugePages_Free`: 
+* `HugePages_Rsvd`: 
+* `HugePages_Surp`: 
+* `Hugepagesize`: 
+* `DirectMap4k`:
+* `DirectMap2M`:
+* `DirectMap1G`:
 
 ### /proc/net/dev
+```
+[root@cvs /]# cat /proc/net/dev
+Inter-|   Receive                                                |  Transmit
+ face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
+    lo:365528559149 865504543    0    0    0     0          0         0 365528559149 865504543    0    0    0     0       0          0
+   em1:542483270223 575346473    0    0    0    62          0   8267561 580200919340 586706511    0    0    0     0       0          0
+   em2:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+   em3:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+   em4:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
+```
+
 > Inter                                                     
-* `face`:
+* `face`:接口的名字
  
 > Receive
-* `bytes`:    
-* `packets`: 
-* `errs`: 
-* `drop`: 
+* `bytes`: 收发的字节数   
+* `packets`: 收发正确的包量
+* `errs`: 收发错误的包量
+* `drop`: 收发丢弃的包量
 * `fifo`: 
 * `frame`: 
 * `compressed`: 
 * `multicast`:
 
 > Transmit
-* `bytes`:    
-* `packets`: 
-* `errs`: 
-* `drop`: 
+* `bytes`: 收发的字节数   
+* `packets`: 收发正确的包量
+* `errs`: 收发错误的包量
+* `drop`: 收发丢弃的包量
 * `fifo`: 
 * `colls`: 
 * `carrier`: 
 * `compressed`:
+
+
+![性能测评工具](https://raw.githubusercontent.com/ming15/blog-website/images/other/Linux%20%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%84%E5%B7%A5%E5%85%B7.jpg)
+![性能观测工具](https://raw.githubusercontent.com/ming15/blog-website/images/other/Linux%20%E6%80%A7%E8%83%BD%E8%A7%82%E6%B5%8B%E5%B7%A5%E5%85%B7.jpg)
+![性能调优工具](https://raw.githubusercontent.com/ming15/blog-website/images/other/Linux%20%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%B7%A5%E5%85%B7.jpg)
+![](https://github.com/ming15/blog-website/blob/images/other/Linux%20observability%20sar.jpg)
 
 ## 其他小工具
 
