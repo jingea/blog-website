@@ -10,7 +10,7 @@ title: java虚拟机参数
 * `-XExplicitGCInvokesConcurrent`:  当收到System.gc()方法提交的垃圾收集申请时,使用CMS收集器收集
 * `-XUseSerialGC`: 打开此开关后使用Serial + Serial Old的收集器组合进行内存回收.
 * `-XUseParNewGC`: 虚拟机运行在Client模式下的默认值,打开此开关后,使用ParNew+Seial Old的收集器组合进行垃圾收集
-* `-XUseConcMarkSweepGc`:  打开次开关后使用`: ParNew+CMS+Serial Old`: 收集器组合进行垃圾收集.如果CMS收集器出现`: Concurrent Mode Failure`: ,则`: Seial Old`: 收集器将作为后备收集器.
+* `-XUseConcMarkSweepGc`:  打开次开关后使用`ParNew+CMS+Serial Old`收集器组合进行垃圾收集.如果CMS收集器出现`Concurrent Mode Failure`,则`Seial Old` 收集器将作为后备收集器.
 * `-XUseParallelGC`: 虚拟机运行在Server模式下的默认值,打开此开关后,使用Parallel Scavenge + Serial Old的收集器组合进行内存回收
 * `-XUseParaelOldGC`: 打开此开关后,使用Parallel Scavenge + Parallel Old的收集器组合进行内存回收
 * `-XSurvivorRatio`:  新生代中Eden区和Survivor区的容量比值(默认为8)
@@ -84,55 +84,48 @@ title: java虚拟机参数
 -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=10020
 ```
 
-## 其他参数
+###  
+* `-XX:+UseVMInterruptibleIO` : 线程中断前或是EINTR 在OS_INTRPT中对于I/O操作的结果 
+* `-XX:-UseParallelOldGC` :  所有的集合使用并行垃圾收集器。能够自动化地设置这个选项 -XX:+UseParallelGC
+* `-XX:+FailOverToOldVerifier` :  当新的类型检测器失败时切换到旧的认证器
+* `-XX:-AllowUserSignalHandlers` :  允许为java进程安装信号处理器（限于Linux和Solaris，默认关闭）
 
-#### Behavioral Options
-* `OptionAndDefaultValue` :  Description
-* `-XX:+UseVMInterruptibleIO` :  Thread interrupt before or with EINTR for I/O operations results in OS_INTRPT.
-* `-XX:+MaxFDLimit` :  Bump the number of file descriptors to max.
-* `-XX:-UseConcMarkSweepGC` :  Use concurrent mark-sweep collection for the old generation.
-* `-XX:-UseParallelOldGC` :  Use parallel garbage collection for the full collections. Enabling this option automatically sets -XX:+UseParallelGC.
-* `-XX:+UseAltSigs` :  Use alternate signals instead of SIGUSR1 and SIGUSR2 for VM internal signals. (Introduced in 1.3.1 update 9, 1.4.1. Relevant to Solaris only.)
-* `-XX:+FailOverToOldVerifier` :  Fail over to old verifier when the new type checker fails.
-* `-XX:-AllowUserSignalHandlers` :  Do not complain if the application installs signal handlers. (Relevant to Solaris and Linux only.)
-* `OptionAndDefaultValue` :  Description
-* `-XX:NewRatio=n` :  Ratio of old/new generation sizes. The default value is 2.
-* `-XX:ConcGCThreads=n` :  Number of threads concurrent garbage collectors will use. The default value varies with the platform on which the JVM is running.
-* `-XX:+UseG1GC` :  Use the Garbage First (G1) Collector
-* `-XX:InitiatingHeapOccupancyPercent=n` :  Percentage of the (entire) heap occupancy to start a concurrent GC cycle. It is used by GCs that trigger a concurrent GC cycle based on the occupancy of the entire heap, not just one of the generations (e.g., G1). A value of 0 denotes 'do constant GC cycles'. The default value is 45.
-* `-XX:G1HeapRegionSize=n` :  With G1 the Java heap is subdivided into uniformly sized regions. This sets the size of the individual sub-divisions. The default value of this parameter is determined ergonomically based upon heap size. The minimum value is 1Mb and the maximum value is 32Mb.
-* `-XX:G1ReservePercent=n` :  Sets the amount of heap that is reserved as a false ceiling to reduce the possibility of promotion failure. The default value is 10.
-* `OptionAndDefaultValue` :  Description
-* `-XX:AllocatePrefetchStyle=1` :  Generated code style for prefetch instructions.
-* `-XX:+UseMPSS` :  Use Multiple Page Size Support w/4mb pages for the heap. Do not use with ISM as this replaces the need for ISM. (Introduced in 1.4.0 update 1, Relevant to Solaris 9 and newer.) [1.4.1 and earlier: false]
-* `-XX:NewSize=2m` :  Default size of new generation (in bytes) [5.0 and newer: 64 bit VMs are scaled 30% larger; x86: 1m; x86, 5.0 and older: 640k]
-* `-XX:AllocatePrefetchLines=1` :  Number of cache lines to load after the last object allocation using prefetch instructions generated in JIT compiled code. Default values are 1 if the last allocated object was an instance and 3 if it was an array.
-* `-XX:+OptimizeStringConcat` :  Optimize String concatenation operations where possible. (Introduced in Java 6 Update 20)
-* `-XX:-UseISM` :  Use Intimate Shared Memory. [Not accepted for non-Solaris platforms.] For details, see Intimate Shared Memory.
-* `-XX:NewRatio=2` :  Ratio of old/new generation sizes. [Sparc -client: 8; x86 -server: 8; x86 -client: 12.]-client: 4 (1.3) 8 (1.3.1+), x86: 12]
-* `-XX:MaxNewSize=size` :  Maximum size of new generation (in bytes). Since 1.4, MaxNewSize is computed as a function of NewRatio. [1.3.1 Sparc: 32m; 1.3.1 x86: 2.5m.]
-* `-XX:ThreadStackSize=512` :  Thread Stack Size (in Kbytes). (0 means use default stack size) [Sparc: 512; Solaris x86: 320 (was 256 prior in 5.0 and earlier); Sparc 64 bit: 1024; Linux amd64: 1024 (was 0 in 5.0 and earlier); all others 0.]
-* `-XX:+UseCompressedStrings` :  Use a byte[] for Strings which can be represented as pure ASCII. (Introduced in Java 6 Update 21 Performance Release)
-* `-XX:+UseBiasedLocking` :  Enable biased locking. For more details, see this tuning example. (Introduced in 5.0 update 6.) [5.0: false]
-* `OptionAndDefaultValue` :  Description
-* `-XX:LoopUnrollLimit=n` :  Unroll loop bodies with server compiler intermediate representation node count less than this value. The limit used by the server compiler is a function of this value, not the actual value. The default value varies with the platform on which the JVM is running.
-* `-XX:GCLogFileSize=8K` :  The size of the log file at which point the log will be rotated, must be >= 8K.
-* `-XX:HeapDumpPath=./java_pid<pid>.hprof` :  Path to directory or filename for heap dump. Manageable. (Introduced in 1.4.2 update 12, 5.0 update 7.)
-* `-XX:+PerfDataSaveToFile` :  Saves jvmstat binary data on exit.
-* `-Xloggc:<filename>` :  Log GC verbose output to specified file. The verbose output is controlled by the normal verbose GC flags.
-* `-XX:+AlwaysPreTouch` :  Pre-touch the Java heap during JVM initialization. Every page of the heap is thus demand-zeroed during initialization rather than incrementally during application execution.
-* `-XX:InlineSmallCode=n` :  Inline a previously compiled method only if its generated native code size is less than this. The default value varies with the platform on which the JVM is running.
-* `-XX:InitialTenuringThreshold=7` :  Sets the initial tenuring threshold for use in adaptive GC sizing in the parallel young collector. The tenuring threshold is the number of times an object survives a young collection before being promoted to the old, or tenured, generation.
-* `-XX:+UseCompressedOops` :  Enables the use of compressed pointers (object references represented as 32 bit offsets instead of 64-bit pointers) for optimized 64-bit performance with Java heap sizes less than 32gb.
-* `-XX:-PrintAdaptiveSizePolicy` :  Enables printing of information about adaptive generation sizing.
-* `-XX:AllocatePrefetchDistance=n` :  Sets the prefetch distance for object allocation. Memory about to be written with the value of new objects is prefetched into cache at this distance (in bytes) beyond the address of the last allocated object. Each Java thread has its own allocation point. The default value varies with the platform on which the JVM is running.
-* `-XX:MaxInlineSize=35` :  Maximum bytecode size of a method to be inlined.
-* `-XX:-UseGCLogFileRotation` :  Enabled GC log rotation, requires -Xloggc.
-* `-XX:-CITime` :  Prints time spent in JIT Compiler. (Introduced in 1.4.0.)
-* `-XX:-TraceClassResolution` :  Trace constant pool resolutions. (Introduced in 1.4.2.)
-* `-XX:FreqInlineSize=n` :  Maximum bytecode size of a frequently executed method to be inlined. The default value varies with the platform on which the JVM is running.
-* `-XX:-TraceLoaderConstraints` :  Trace recording of loader constraints. (Introduced in 6.)
-* `-XX:ErrorFile=./hs_err_pid<pid>.log` :  If an error occurs, save the error data to this file. (Introduced in 6.)
-* `-XX:NumberOfGClogFiles=1` :  Set the number of files to use when rotating logs, must be >= 1. The rotated log files will use the following naming scheme, <filename>.0, <filename>.1, ..., <filename>.n-1.
-* `-XX:-ExtendedDTraceProbes` :  Enable performance-impacting dtrace probes. (Introduced in 6. Relevant to Solaris only.)
-* `-XX:-PrintTenuringDistribution` :  Print tenuring age information.
+### 
+* `-XX:NewRatio=n` :  老年代与新生代比例(默认是2).
+* `-XX:ConcGCThreads=n` :  `concurrent garbage collectors`使用的线程数. (默认值与JVM所在平台有关).
+* `-XX:+UseG1GC` :  使用`Garbage First (G1) `收集器
+* `-XX:InitiatingHeapOccupancyPercent=n` :  设置触发标记周期的 Java 堆占用率阈值。默认占用率是整个 Java 堆的 45%。
+* `-XX:G1HeapRegionSize=n` : 设置的 G1 区域的大小。值是 2 的幂，范围是 1 MB 到 32 MB 之间。目标是根据最小的 Java 堆大小划分出约 2048 个区域.
+* `-XX:G1ReservePercent=n` : 设置作为空闲空间的预留内存百分比，以降低目标空间溢出的风险。默认值是 10%。增加或减少百分比时，请确保对总的 Java 堆调整相同的量。Java HotSpot VM build 23 中没有此设置。
+
+### 
+* `-XX:AllocatePrefetchStyle=1` : 预取指令的产生代码风格：0-没有预取指令，1-每一次分配内存就执行预取指令，2-当执行预取代码指令时，用TLAB分配水印指针指向门
+* `-XX:NewSize=2m` :  新生代默认大小(单位是字节) 
+* `-XX:AllocatePrefetchLines=1` :  在使用JIT生成的预读取指令分配对象后读取的缓存行数。如果上次分配的对象是一个实例则默认值是1，如果是一个数组则是3
+* `-XX:+OptimizeStringConcat` :  对字符串拼接进行优化
+* `-XX:MaxNewSize=size` : 新生代最大值(单位字节)
+* `-XX:ThreadStackSize=512` : 线程堆栈大小(单位Kbytes，0 使用默认大小) 
+* `-XX:+UseCompressedStrings` :  如果可以表示为纯ASCII的话，则用byte[] 代替字符串. 
+* `-XX:+UseBiasedLocking` :  使用偏锁.
+
+### 
+* `-XX:LoopUnrollLimit=n` :  代表节点数目小于给定值时打开循环体。
+* `-XX:GCLogFileSize=8K` :  gc日志文件大小(必须>= 8K).
+* `-XX:HeapDumpPath=./java_pid<pid>.hprof` :  堆内存溢出存放日志目录.
+* `-XX:+PerfDataSaveToFile` :  Jvm退出时保存jvmstat的二进制数据.
+* `-Xloggc:<filename>` :  gc日志文件
+* `-XX:+AlwaysPreTouch` :  当JVM初始化时预先对Java堆进行预先摸底(堆中每个页归零处理)。
+* `-XX:InlineSmallCode=n` :  当编译的代码小于指定的值时,内联编译的代码。
+* `-XX:InitialTenuringThreshold=7` :  设置初始的对象在新生代中最大存活次数。
+* `-XX:+UseCompressedOops` :  使用compressed pointers。这个参数默认在64bit的环境下默认启动，但是如果JVM的内存达到32G后，这个参数就会默认为不启动，因为32G内存后，压缩就没有多大必要了，要管理那么大的内存指针也需要很大的宽度了
+* `-XX:-PrintAdaptiveSizePolicy` :  打印JVM自动划分新生代和老生代大小信息.
+* `-XX:AllocatePrefetchDistance=n` :  为对象分配设置预取距离。
+* `-XX:MaxInlineSize=35` :  内联函数最大的字节码大小.
+* `-XX:-UseGCLogFileRotation` :  开启GC 日志文件切分功能，前置选项 -Xloggc
+* `-XX:-CITime` :  打印`JIT Compiler`的耗时
+* `-XX:-TraceClassResolution` :  追踪常量池resolutions. 
+* `-XX:FreqInlineSize=n` :  经常执行方法内联的最大字节大小
+* `-XX:-TraceLoaderConstraints` : 跟踪加载器的限制记录.
+* `-XX:ErrorFile=./hs_err_pid<pid>.log` :  如果有Error发生,则将Error输入到该日志. 
+* `-XX:NumberOfGClogFiles=1` :  设置Gc日志文件的数量(必须大于1)
+* `-XX:-PrintTenuringDistribution` :  打印对象的存活期限信息。
