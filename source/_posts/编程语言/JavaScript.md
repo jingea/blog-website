@@ -4,12 +4,13 @@ title: JavaScript
 ---
 JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.
 
-# 数字
+# 数据类型
+## 数字
 JavaScript只有一个数字类型,它在内部被表示为64位的浮点数. 它没有分离出整数类型,因此1和1.0的值是相同的
 
 NaN是一个数值，它表示一个不能产生正常结果的运算结果。NaN不等于任何值，包括它自己。可以使用函数isNaN来检测NaN。
 
-# 字符串
+## 字符串
 字符串可以由一对单引号或者一对双引号构成，可以包含0到多个字符。`\`是转义字符。JavaScript采用Unicode16作为字符集，因此所有的字符都是16位的。
 
 字符串有一个length属性，可以获得字符串长度。
@@ -146,6 +147,30 @@ xiaoming.chengji: {
 var chengji = xiaoming.chengji
 ```
 
+## 创建对象
+
+### Object 模式
+```javascript
+var o1 = {};//字面量的表现形式
+var o2 = new Object;
+var o3 = new Object();
+var o4 = new Object(null);
+var o5 = new Object(undefined);
+var o6 = Object.create(Object.prototype);//等价于 var o = {};//即以 Object.prototype 对象为一个原型模板,新建一个以这个原型模板为原型的对象
+// 区别
+var o7 = Object.create(null);//创建一个原型为 null 的对象
+```
+
+### 构造器模式
+```javascript
+function Car(sColor){
+    this.color = sColor;      
+}
+
+var car = new Car("red");
+```
+
+
 ## 原型链
 每个对象都会连接到一个原型对象,并且从中继承属性. 对象字面量会连接到`Object.prototype`
 
@@ -193,6 +218,13 @@ var add = function(a, b) {
 上面这个函数字面量是通过将一个匿名函数赋值给一个变量.
 
 函数字面量可以出现在任何允许表达式出现的地方. 函数可以被定义在其他函数中. 可以作为函数参数或者函数返回值出现。函数甚至拥有自己的作用域(就像变量有自己的作用域一样)
+
+每声明一个函数实际是创建了一个Function 实例,上面的函数等价于
+```javascript
+var Add = new Function("a","b","a + b;");
+
+var add = new Add(1, 2);
+```
 
 ## 闭包
 内部函数可以访问自己内部的参数和变量还可以访问嵌套在父函数的参数和变量。通过函数字面量创建的函数对象包含了一个连接到外部上下文的连接，这杯称为闭包(每个函数在创建时会附加俩个隐藏属性：函数的上下文和实现函数行为的代码).

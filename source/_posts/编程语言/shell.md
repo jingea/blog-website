@@ -2,6 +2,7 @@ category: 编程语言
 date: 2015-10-08
 title: Shell
 ---
+每个shell脚本文件第一行都要指定使用哪个shell,我们默认使用`#!/bin/bash`
 
 # 变量
 bash变量分为
@@ -9,6 +10,11 @@ bash变量分为
 * 环境变量: 所有的脚本和shell中都可以访问的变量
 * 预定义变量
 
+## 变量类型
+运行shell时，会同时存在三种变量：
+* 局部变量： 局部变量在脚本或命令中定义，仅在当前shell实例中有效，其他shell启动的程序不能访问局部变量。
+* 环境变量：所有的程序，包括shell启动的程序，都能访问环境变量，有些程序需要环境变量来保证其正常运行。必要的时候shell脚本也可以定义环境变量。
+* shell变量：shell变量是由shell程序设置的特殊变量。shell变量中有一部分是环境变量，有一部分是局部变量，这些变量保证了shell的正常运行
 
 ## 变量声明
 ```shell
@@ -20,13 +26,7 @@ v1=123
 * 该变量对当前以及子shell都有效
 
 ### declare声明
-```
-declare v1=
-```
 
-```shell
-
-```
 
 ## 变量引用
 我们通过使用`$`或者`${}`符号可以引用一个变量
@@ -55,6 +55,49 @@ unset  myUrl
 * `$@`:	传递给脚本或函数的所有参数。被双引号(" ")包含时，与 $* 稍有不同
 * `$?`:	上个命令的退出状态，或函数的返回值。
 * `$$`:	当前Shell进程ID。对于 Shell 脚本，就是这些脚本所在的进程ID。
+
+## 数组
+
+### 数组定义
+一对括号表示是数组，数组元素用“空格”符号分割开。
+```shell
+array=(1 2 3 4 5)
+```
+
+### 数组长度
+用`${#数组名[@或*]}` 可以得到数组长度
+```shell
+${#array[@]}
+```
+### 索引数组成员
+用`${数组名[下标]}` 下标是从0开始 (下标是：*或者@ 得到整个数组内容)
+```shell
+${array[2]}
+```
+
+### 数组成员赋值
+直接通过 `数组名[下标]` 就可以对其进行引用赋值，如果下标不存在，自动添加新一个数组元素
+```shell
+array[1]=100
+```
+
+### 删除数组
+`unset 数组[下标]` 可以清除相应的元素，不带下标，清除整个数据。
+```shell
+unset array[1]
+```
+
+### 数组分片
+`${数组名[@或*]:起始位置:长度}` 切片原先数组，返回是字符串，中间用“空格”分开，因此如果加上”()”，将得到切片数组
+```shell
+ c=(${array[@]:1:4})
+```
+
+### 数组替换
+`${数组名[@或*]/查找字符/替换字符}` 该操作不会改变原先数组内容
+```shell
+${array[@]/3/100}
+```
 
 # 运算符
 
@@ -106,34 +149,161 @@ unset  myUrl
 * `-e` 文件（包括目录）是否存在，如果是，则返回 true。	[ -e $file ] 返回 true。
 
 # 流程控制
+shell流程控制包含：
+* if
+* while
+* until
+* case
+* for
+
+同样的shell也支持`break`和`continue`
+
+##  if else
+
+### if 
+语法格式
 ```shell
+if condition
+then
+    command1 
+    command2
+    ...
+    commandN 
+fi
+```
+示例
+```shell
+#!/bin/bash
+v=123
+if [ -b $txt ];   
+then
+        echo "ok";
+fi
+```
+我们一定要注意if前后的空格
 
-
+### if else
+```
+if condition
+then
+    command1 
+    command2
+    ...
+    commandN
+else
+    command
+fi
 ```
 
-##  if 
-```shell
-
+### if else-if else
+```
+if condition1
+then
+    command1
+elif condition2
+    command2
+else
+    commandN
+fi
 ```
 
 ## case 
+ case语句为多选择语句
+```shell
+case 值 in
+模式1)
+    command1
+    command2
+    ...
+    commandN
+    ;;
+模式2）
+    command1
+    command2
+    ...
+    commandN
+    ;;
+esac
+```
+示例
 ```shell
 
+#!/bin/bash
+
+for i in 1 2 3 4 5;
+do
+        case $i in
+                1)  echo '你选择了 1'
+                ;;
+                2)  echo '你选择了 2'
+                ;;
+                3)  echo '你选择了 3'
+                ;;
+                4)  echo '你选择了 4'
+                ;;
+                *)  echo '你没有输入 1 到 4 之间的数字'
+                ;;
+                esac
+done
 ```
 
 ## for 
 ```shell
+for var in item1 item2 ... itemN
+do
+    command1
+    command2
+    ...
+    commandN
+done
+```
+示例
+```shell
+#!/bin/bash
 
+for i in 1 2 3 4;
+do
+        echo $i
+done
 ```
 
 ## while 
 ```shell
+while condition
+do
+    command
+done
+```
+示例
+```shell
+#!/bin/bash
 
+i=1
+while(( $i<=5 ))
+do
+        echo $i
+        ((i++))
+done
 ```
 
 ## until 
+until循环执行一系列命令直至条件为真时停止。
 ```shell
+until condition
+do
+    command
+done
+```
+示例
+```shell
+#!/bin/bash
 
+i=1
+until(( $i>3 ))
+do
+        echo $i
+        ((i++))
+done
 ```
 
 # 函数
