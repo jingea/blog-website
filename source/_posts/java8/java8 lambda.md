@@ -318,3 +318,24 @@ interface Run2 extends Run1 {
 * 如果有多个可能的目标类型且最具体的类型不明确，则需要人为指定类型
 
 # 方法引用
+方法引用是简洁的Lambda表达式，能够用于已经拥有名称的方法。
+
+* 静态方法 (ClassName::methName)
+* 对象实例方法 (instanceRef::methName)
+* 对象的super 方法 (super::methName)
+* 类型的实例方法 (ClassName::methName, 引用时和静态方法是一样的，但这里的 methName 是个实例方法)
+* 构造方法 (ClassName::new)
+* 数组的构造方法 (TypeName[]::new)
+
+## 静态方法引用
+
+
+## 对象实例方法引用
+
+
+## 类型的实例方法引用
+
+
+## 构造方法引用
+
+## 数组的构造方法
