@@ -322,20 +322,60 @@ interface Run2 extends Run1 {
 
 * 静态方法 (ClassName::methName)
 * 对象实例方法 (instanceRef::methName)
-* 对象的super 方法 (super::methName)
 * 类型的实例方法 (ClassName::methName, 引用时和静态方法是一样的，但这里的 methName 是个实例方法)
 * 构造方法 (ClassName::new)
 * 数组的构造方法 (TypeName[]::new)
 
 ## 静态方法引用
+```
+public class Print {
+	public static void main(String[] args) throws Exception {
+		F f = Print::p;
+		f.m();
+	}
 
+	public static void p() {
+		System.out.println("Print");
+	}
+}
 
-## 对象实例方法引用
+@FunctionalInterface
+interface F {
+	void m();
+}
 
+```
 
-## 类型的实例方法引用
+## 类型实例方法引用
+```
+public class Print {
+	public static void main(String[] args) throws Exception {
+		F f = String::length;
+		int len = f.m("12");
+		System.out.println(len);
+	}
+}
 
+@FunctionalInterface
+interface F {
+	int m(String p);
+}
+```
 
 ## 构造方法引用
+```java
+public class Print {
+	public static void main(String[] args) throws Exception {
+		F f = Print::new;
+		Print p = f.m();
+		System.out.println(p == null);	// 结果为null
+	}
+}
+
+@FunctionalInterface
+interface F {
+	Print m();
+}
+```
 
 ## 数组的构造方法
