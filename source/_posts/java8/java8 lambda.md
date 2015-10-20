@@ -220,11 +220,11 @@ Run1 run1 = () -> {
 同样的产生了编译错误.
 
 ### java中重要的函数接口
-* `Predicate<T>`
-* `Consumer<T>`
-* `Supplier<T>`
-* `UnaryOperator<T>`
-* `BinaryOperator<T>`
+* `Predicate<T>`: `boolean test(T t)`
+* `Consumer<T>`: `void accept(T t);`
+* `Supplier<T>`: `T get();`
+* `UnaryOperator<T>`: ``
+* `BinaryOperator<T>`: ``
 
 # 函数
 在Java8中什么是函数呢？
