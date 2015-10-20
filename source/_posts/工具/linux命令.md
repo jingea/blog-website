@@ -140,12 +140,12 @@ PID    %usr %system  %guest    %CPU   CPU  Command
 * -r: pidstat将显示各活动进程的内存使用统计：
 * -d: 我们可以查看进程IO的统计信息
 
-> -d:
+-d:
 * kB_rd/s: 每秒进程从磁盘读取的数据量(以kB为单位)
 * kB_wr/s: 每秒进程向磁盘写的数据量(以kB为单位)
 * Command: 拉起进程对应的命令
 
-> -r:
+-r:
 * minflt/s: 每秒次缺页错误次数(minor page faults)，次缺页错误次数意即虚拟内存地址映射成物理内存地址产生的page fault次数
 * majflt/s: 每秒主缺页错误次数(major page faults)，当虚拟内存地址映射成物理内存地址时，相应的page在swap中，这样的page fault为major page fault，一般在内存使用紧张时产生
 * VSZ:      该进程使用的虚拟内存(以kB为单位)
@@ -160,10 +160,7 @@ iostat用于输出CPU和磁盘I/O相关的统计信息.
 * `-c` 仅显示CPU统计信息.与-d选项互斥.
 * `-d` 仅显示磁盘统计信息.与-c选项互斥.
 * `-k` 以K为单位显示每秒的磁盘请求数,默认单位块.
-* `-p device | ALL`  与-x选项互斥,用于显示块设备及系统分区的统计信息.也可以在-p后指定一个设备名,如:
-> # iostat -p hda
- 或显示所有设备
- # iostat -p ALL
+* `-p device | ALL`  与-x选项互斥,用于显示块设备及系统分区的统计信息.也可以在-p后指定一个设备名,如:`iostat -p hda` 或显示所有设备`iostat -p ALL`
 * `-t`    在输出数据时,打印搜集数据的时间.
 * `-V`    打印版本号和帮助信息.
 * `-x`    输出扩展信息.
@@ -434,10 +431,10 @@ Inter-|   Receive                                                |  Transmit
    em4:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0
 ```
 
-> Inter                                                     
+Inter                                                     
 * `face`:接口的名字
  
-> Receive
+Receive
 * `bytes`: 收发的字节数   
 * `packets`: 收发正确的包量
 * `errs`: 收发错误的包量
@@ -447,7 +444,7 @@ Inter-|   Receive                                                |  Transmit
 * `compressed`: 
 * `multicast`:
 
-> Transmit
+Transmit
 * `bytes`: 收发的字节数   
 * `packets`: 收发正确的包量
 * `errs`: 收发错误的包量

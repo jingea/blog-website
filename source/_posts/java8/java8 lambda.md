@@ -220,9 +220,9 @@ Run1 run1 = () -> {
 同样的产生了编译错误.
 
 ### java中重要的函数接口
-* `Predicate<T>`: `boolean test(T t)`
-* `Consumer<T>`: `void accept(T t);`
-* `Supplier<T>`: `T get();`
+* `Predicate<T>`: `boolean test(T t)` 判断输入的对象是否符合某个条件
+* `Consumer<T>`: `void accept(T t);`  接收一个输入参数并且没有返回值
+* `Supplier<T>`: `T get();`  可以看成一个对象的工厂，每次调用返回一个给定类型的对象
 * `UnaryOperator<T>`: ``
 * `BinaryOperator<T>`: ``
 

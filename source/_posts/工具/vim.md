@@ -33,6 +33,7 @@ autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗�
 * 窗口编辑: `：split`水平新建窗口. `：vsplit `垂直分割.
 * 在窗口间游走: `Ctrl W` 加 `h, j, k, l`一起使用
 * 分页编辑： `：tabnew`新建分页。 `：tabclose`关闭当前分页. `：tabonly `关闭其他所有的分页
+* 顶部底部跳转： 顶部``, 底部`shift + g`
 
 # 插件
 ## [Pydiction ](http://www.vim.org/scripts/script.php?script_id=850)
