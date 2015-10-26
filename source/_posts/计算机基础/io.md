@@ -68,3 +68,13 @@ B. 数据未被拷贝到套接字缓冲区.取而代之的是,只有包含关于
 ![结合使用 transferTo() 和收集操作时的数据拷贝.gif](https://raw.githubusercontent.com/wanggnim/website/images/net/transferTo_collect.gif)
 
 
+## IO性能
+性能度量的几个指标
+
+Linux中怎么查看这几个指标
+
+结合当前主流的服务器的IO性能，给出Linux中磁盘达到瓶颈时的IO性能阀值（80%的极限性能）
+
+全SSD硬盘的IO阀值
+
+1万转机械磁盘的IO阀值

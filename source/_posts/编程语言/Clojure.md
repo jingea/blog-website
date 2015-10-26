@@ -1,4 +1,4 @@
-﻿category: 编程语言
+category: 编程语言
 date: 2015-10-08
 title: Clojure
 ---
@@ -22,12 +22,12 @@ Clojure里面的每个操作被实现成以下三种形式的一种:
 * 宏(macro)
 * special form. 
 
-## 函数
+### 函数
 defn 宏用来定义一个函数。它的参数包括一个函数名字，一个可选的注释字符串，参数列表，然后一个方法体。而函数的返回值则是方法体里面最后一个表达式的值。所有的函数都会返回一个值， 只是有的返回的值是nil。
 
 通过宏defn- 定义的函数是私有的. 这意味着它们只在定义它们的名字空间里面可见. 其它一些类似定义私有函数/宏的还有：defmacro- 和defstruct- (在clojure.contrib.def里面)
 
-### 定义函数
+#### 定义函数
 ```clojure
 (defn printHello ;定义函数名
   "println hello" ;注释
@@ -56,7 +56,7 @@ defn 宏用来定义一个函数。它的参数包括一个函数名字，一个
 ```
 
 
-#### 匿名函数
+##### 匿名函数
 我们可以通过`fn`或者`#(...)`定义匿名函数
 
 fn 定义的匿名函数可以包含任意个数的表达式
@@ -72,7 +72,7 @@ user=> (map #(+ % 1) [1 2 3])
 ```
 `%`代表参数,如果有多个参数可以使用`%1`, `%2`等.
 
-### 函数重载
+#### 函数重载
 Clojure虽然只能根据参数个数进行重载,使用multimethods技术可以实现任意类型的重载。
 
 multimethod使用宏`defmulti`和`defmethod`进行定义.
@@ -89,7 +89,7 @@ multimethod使用宏`defmulti`和`defmethod`进行定义.
 ```
 
 
-### 函数参数占位符
+#### 函数参数占位符
 `_`可以用来做函数的占位符 
 ```clojure
 (defn call1 [n1] (println n1))
@@ -108,127 +108,127 @@ multimethod使用宏`defmulti`和`defmethod`进行定义.
 (caller call3 3)
 ```
 
-### 高阶函数
-#### complement
+#### 高阶函数
+##### complement
 接受一个函数作为参数，如果这个参数返回值是true， 那么它就返回false, 相当于一个取反的操作
 ```clojure
 
 ```
 
-#### comp
+##### comp
 comp把任意多个函数组合成一个，前面一个函数的返回值作为后面一个函数的参数
 ```clojure
 
 ```
 
-#### partial
+##### partial
 partial 函数创建一个新的函数 — 通过给旧的函数制定一个初始值， 然后再调用原来的函数
 ```clojure
 
 ```
 
-#### memoize
+##### memoize
 函数接受一个参数，它的作用就是给原来的函数加一个缓存，所以如果同样的参数被调用了两次， 那么它就直接从缓存里面返回缓存了的结果
 ```clojure
 
 ```
 
-#### time
+##### time
 ```clojure
 
 ```
 
-### 宏
+#### 宏
 
 
 
 
 
-### special form
+#### special form
 Clojure支持以下几种special form
 
-#### def
+##### def
 通过`def`来定义一个全局binding(还可以给他一个`root value`, 该值在所有线程里都是可见的).
 ```clojure
 (def n 19)
 (print n)
 ```
 
-#### var
+##### var
 ```clojure
 
 ```
 
-#### do
-```clojure
-
-```
-
-
-#### dot (‘.’)
+##### do
 ```clojure
 
 ```
 
 
-#### finally
+##### dot (‘.’)
 ```clojure
 
 ```
 
 
-#### fn
+##### finally
 ```clojure
 
 ```
 
-#### if
+
+##### fn
 ```clojure
 
 ```
 
-#### let
+##### if
+```clojure
+
+```
+
+##### let
 let 这个special form 创建局限于一个 当前form的bindings. 它的第一个参数是一个vector, 里面包含名字-表达式的对子。表达式的值会被解析然后赋给左边的名字。这些binding可以在这个vector后面的表达式里面使用。这些binding还可以被多次赋值以改变它们的值，let命令剩下的参数是一些利用这个binding来进行计算的一些表达式。注意：如果这些表达式里面有调用别的函数，那么这个函数是无法利用let创建的这个binding的。
 ```clojure
 
 ```
 
-#### loop
+##### loop
 ```clojure
 
 ```
 
-#### monitor-enter
+##### monitor-enter
 ```clojure
 
 ```
 
-#### monitor-exit
+##### monitor-exit
 ```clojure
 
 ```
 
-#### new
+##### new
 ```clojure
 
 ```
 
-#### quote
+##### quote
 ```clojure
 
 ```
 
-#### recur
+##### recur
 ```clojure
 
 ```
 
-#### set!
+##### set!
 ```clojure
 
 ```
 
-#### try catch throw
+##### try catch throw
 ```clojure
 
 ```
@@ -361,77 +361,69 @@ send-off 使用的是 "cached thread pool" (java.util.concurrent.Executors里面
 
 
 ## 流程控制
-```clojure
-
-```
-
-
 
 
 ## 调用java
-```clojure
-
-```
 
 
 ## 谓词
 Clojure 提供了很多函数来充当谓词的功能 — 测试条件是否成立
 
 ### 测试对象类型谓词
-* class?,
-* coll?,
-* decimal?,
-* delay?,
-* float?,
-* fn?,
-* instance?,
-* integer?,
-* isa?,
-* keyword?,
-* list?,
-* macro?,
-* map?,
-* number?,
-* seq?,
-* set?,
-* string? 
-* vector?
+* `class?`
+* `coll?`
+* `decimal?`
+* `delay?`
+* `float?`
+* `fn?`
+* `instance?`
+* `integer?`
+* `isa?`
+* `keyword?`
+* `list?`
+* `macro?`
+* `map?`
+* `number?`
+* `seq?`
+* `set?`
+* `string?` 
+* `vector?`
 
 ### 测试两个值关系
-* <,
-* <=,
-* =,
-* not=,
-* ==,
-* >,
-* >=,
-* compare,
-* distinct? 
-* identical?.
+* `<`
+* `<=`
+* `=`
+* `not=`
+* `==`
+* `>`
+* `>=`
+* `compare`
+* `distinct?` 
+* `identical?`
 
 ### 测试逻辑关系
-* and,
-* or,
-* not,
-* true?,
-* false? 
-* nil?
+* `and`
+* `or`
+* `not`
+* `true?`
+* `false?` 
+* `nil?`
 
 
 ### 测试集合
-* empty?,
-* not-empty,
-* every?,
-* not-every?,
-* some? 
-* not-any?.
+* `empty?`
+* `not-empty`
+* `every?`
+* `not-every?`
+* `some?` 
+* `not-any?`
 
 ### 测试数字的谓词有
-* even?,
-* neg?,
-* odd?,
-* pos? 
-* zero?.
+* `even?`
+* `neg?`
+* `odd?`
+* `pos?` 
+* `zero?`
 
 
 
