@@ -3,6 +3,7 @@ date: 2015-10-26
 title: NUMA和RDMA 
 ---
 ## NUMA
+非一致性内存访问 (NUMA) 硬件可以通过将专用内存与 CPU 配对来显著提高性能
 
 ### Linux NUMA
 
