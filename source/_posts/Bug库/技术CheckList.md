@@ -1,6 +1,6 @@
 category: Bug库
 date: 2015-10-15
-title: 在Java项目中遇到的Bug
+title: 技术CheckList
 ---
 
 ## FastJSON
@@ -61,4 +61,9 @@ Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 160
 	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:418)
 	at Print1.main(Print1.java:52)
 ```
-原因还待查,总之以后再有非程序生成的Json字符时一定要先进行序列化检查,否则会造成线上重大问题.
+出现的原因是:`服务器名称：[FFFF00]N23-物华天宝 [-]`物华天宝后面跟的空格，不是我们常用的ascii码为32的空格，而是一个ascii码为160特殊的空格符,导致JSON序列化时失败.
+
+## 用户名字符集
+用户可能输入emoji表情符号,这种符号普遍存在iOS与android系统中,这种表情不处理直接存储到MySQL5.5以下的版本会报错
+> 这种符号采用Unicode 6标准4个bytes作为存储单元,MySQL存储这种字符需要修改数据库字符集为utf8mb4,但数据回传给网页或者移动客户端时则需要做兼容处理
+
