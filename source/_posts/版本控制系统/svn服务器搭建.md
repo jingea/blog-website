@@ -1,4 +1,4 @@
-category: windows工具
+category: 版本控制系统
 date: 2012-08-20
 title: svn服务器搭建
 ---

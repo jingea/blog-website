@@ -1,4 +1,4 @@
-category: windows工具
+category: vi
 date: 2015-10-08
 title: GVIM
 ---
