@@ -1,3 +1,0 @@
-﻿layout: categories
-title: java
----
