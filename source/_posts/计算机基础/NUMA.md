@@ -94,62 +94,6 @@ Application.class
 > 注意要指定网络格式为`IPv4Stack`。尽管Java 7和InfiniBand都支持IPv6网络格式，但Solaris和Linux都不支持两者之间的映射。所以启动支持SDP的Java 7 VM时，还是要使用基础、可靠的IPv4网络格式。
 
 ## IO性能度量
-iostat用于输出CPU和磁盘I/O相关的统计信息. 
-
-* `-c` 仅显示CPU统计信息.与-d选项互斥.
-* `-d` 仅显示磁盘统计信息.与-c选项互斥.
-* `-k` 以K为单位显示每秒的磁盘请求数,默认单位块.
-* `-p device | ALL`  与-x选项互斥,用于显示块设备及系统分区的统计信息.也可以在-p后指定一个设备名,如:`iostat -p hda` 或显示所有设备`iostat -p ALL`
-* `-t`    在输出数据时,打印搜集数据的时间.
-* `-V`    打印版本号和帮助信息.
-* `-x`    输出扩展信息.
-* 
-```
-[root@cvs /]# iostat
-Linux 2.6.32-279.el6.x86_64 (cvs)       2015年10月16日  _x86_64_        (8 CPU)
-
-avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-           1.67    0.00    0.21    0.38    0.00   97.74
-
-Device:            tps   Blk_read/s   Blk_wrtn/s   Blk_read   Blk_wrtn
-sda              18.64        72.79       512.65  951732770 6702726216
-```
-avg-cpu:  
-* `%user`: 在用户级别运行所使用的CPU的百分比.
-* `%nice`: nice操作所使用的CPU的百分比.
-* `%system`: 在系统级别(kernel)运行所使用CPU的百分比.
-* `%iowait`: CPU等待硬件I/O时,所占用CPU百分比.
-* `%steal`: 
-* `%idle`: CPU空闲时间的百分比.
-           
-
-Device:            
-* `tps`: 每秒钟发送到的I/O请求数.
-* `Blk_read/s`: 每秒读取的block数.
-* `Blk_wrtn/s`: 每秒写入的block数.
-* `Blk_read`: 读入的block总数.
-* `Blk_wrtn`: 写入的block总数.
-
-
-* `Blk_read` 读入块的当总数.
-* `Blk_wrtn` 写入块的总数.
-* `kB_read/s` 每秒从驱动器读入的数据量,单位为K.
-* `kB_wrtn/s` 每秒向驱动器写入的数据量,单位为K.
-* `kB_read` 读入的数据总量,单位为K.
-* `kB_wrtn` 写入的数据总量,单位为K.
-* `rrqm/s`  将读入请求合并后,每秒发送到设备的读入请求数.
-* `wrqm/s`  将写入请求合并后,每秒发送到设备的写入请求数.
-* `r/s`     每秒发送到设备的读入请求数.
-* `w/s`     每秒发送到设备的写入请求数.
-* `rsec/s`  每秒从设备读入的扇区数.
-* `wsec/s`  每秒向设备写入的扇区数.
-* `rkB/s`  每秒从设备读入的数据量,单位为K.
-* `wkB/s`  每秒向设备写入的数据量,单位为K.
-* `avgrq-sz`  发送到设备的请求的平均大小,单位是扇区.
-* `avgqu-sz` 发送到设备的请求的平均队列长度.
-* `await`  I/O请求平均执行时间.包括发送请求和执行的时间.单位是毫秒.
-* `svctm` 发送到设备的I/O请求的平均执行时间.单位是毫秒.
-* `%util`  在I/O请求发送到设备期间,占用CPU时间的百分比.用于显示设备的带宽利用率.当这个值接近100%时,表示设备带宽已经占满.
 
 ### 全SSD硬盘的IO阀值
 SSD 硬盘传输速率取 500M/S
