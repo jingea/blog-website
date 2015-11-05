@@ -27,7 +27,7 @@ URL url = new URL("http" , "www.eff.org", "/blueribbon.html#intro");
 带端口构造`URL`
 ```
 URL url = new URL("http" , "www.eff.org", 8080, "/blueribbon.html#intro");
-```	
+```
 
 根据相对URL和基础URL构建一个绝对URL,当希望迭代处理位于相同目录下的一组文件时, 可以考虑使用该构造器
 ```
@@ -36,19 +36,18 @@ URL newURL = new URL(url, "mailinglists.html");
 Assert.assertEquals("http://ibiblio.org/javafaq/mailinglists.html", newURL.toString());
 ```
 
-
 利用ClassLoader可以加载资源,例如图片 音频等
 ```
 URL url = ClassLoader.getSystemResource("resource/simple.txt");
 Assert.assertEquals(null, url);
 ```
-		
+
 利用ClassLoader可以加载资源,例如图片 音频等
 ```
 URL url = getClass().getResource("resource/simple.txt");
 Assert.assertEquals(null, url);
 ```
-	
+
 查看URL中的模式
 ```
 URL url = new URL("http://ibiblio.org/javafaq/index.html");
@@ -62,13 +61,13 @@ Assert.assertEquals("www.ibiblio.org", url.getHost());
 URL url = new URL("http://ibiblio.org/nywc/compositions.pthml?category=Piano");
 Assert.assertEquals("/nywc/compositions.pthml?category=Piano", url.getFile());
 ```
-	
+
 查看URL中的路径 (范围：主机名后面的第一个/ 到片段标示符# 之前)  不包含查询字符串
 ```
 URL url = new URL("http://ibiblio.org/nywc/compositions.pthml?category=Piano");
 Assert.assertEquals("/nywc/compositions.pthml", url.getPath());
 ```
-	
+
 查看URL中的查询字符串
 ```
 URL url = new URL("http://ibiblio.org/nywc/compositions.pthml?category=Piano");
@@ -96,7 +95,7 @@ if(u1.sameFile(u2))
 else
 	System.out.println(u1 + " is not same file with " + u2);
 ```
-	
+
 连接URl所指向的资源.执行客户端和服务器之间任何必要的握手.返回一个可以读取数据的`InputStream`,该流读取文件里的原始内容,不包括任何HTTP首部或者任何与协议有关的信息
 ```
 try(InputStream in = new URL("http://www.baidu.com").openStream()) {
@@ -106,8 +105,7 @@ try(InputStream in = new URL("http://www.baidu.com").openStream()) {
 		System.out.write(c);
 	}
 }
-
-```	
+```
 
 `openConnection`打开指定URL的socket,返回URLConnection对象(一个打开网络资源的连接)
 ```

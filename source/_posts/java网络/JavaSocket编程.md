@@ -52,9 +52,7 @@ title: Java Socket
 
 * `getLocalSocketAddress()`
 
-* `setTcpNoDelay(boolean)`设置`TCP_NODELAY`为`true`,可确保包会尽快地发送,而无论包的大小.正常情况下,小的包(1byte)在发送前会组合为大点的包.在发送另一个包之前,本地主机要等待远程系统对前一个包的响应,这称为`Nagle`算法.`Nagle`算法的问题是,如果远程系统没有尽可能快地将回应发送回本地系统,那么依赖于小数据量信息稳定传输的应用程序会变得很慢.
-
-为true关闭socket缓冲,为false再次打开socket缓冲. 
+* `setTcpNoDelay(boolean)`设置`TCP_NODELAY`为`true`,可确保包会尽快地发送,而无论包的大小.正常情况下,小的包(1byte)在发送前会组合为大点的包.在发送另一个包之前,本地主机要等待远程系统对前一个包的响应,这称为`Nagle`算法.`Nagle`算法的问题是,如果远程系统没有尽可能快地将回应发送回本地系统,那么依赖于小数据量信息稳定传输的应用程序会变得很慢.为true关闭socket缓冲,为false再次打开socket缓冲. 
 
 * `getTcpNoDelay()`
 
@@ -142,23 +140,23 @@ new ServerSocket(port, queueLenght, address);
 ```
 connect.close();
 ```
-	
 
 检查ServerSocket是否打开.当关闭后isClosed会返回true, isBound指的是是否曾经绑定过端口,但是并不指现在的状态
+
 ```
 if(!connect.isClosed() && connect.isBound())
 	return false;
-```	
+```
 
-该选项是在accept抛出{@link java.ioInterruptedIOException}前等待入栈连接的时间,以毫秒计
+该选项是在accept抛出java.ioInterruptedIOException前等待入栈连接的时间,以毫秒计
 ```
 setSoTimeout(timeout)
 ```
-	
+
 指定如果仍有旧的数据在网络上传输,新的程序是否可以绑定到该端口
 ```
 connect.setReuseAddress(isSet);
-```	
+```
 
 
 这相当于调用accept()返回的socket的socket.setReceiveBufferSize(size);可以在绑定服务器socket之前或之后设置此选项 除非要设置大于64K的缓冲区大小,这时对于未绑定的ServerSocket必须在绑定他之前设置这个选项

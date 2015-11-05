@@ -44,4 +44,4 @@ URI一般由以下组成
 2. URN ：不指向位置的资源名.  (具体的内容参考例子磁力链接)`urn:namespace:resource_name`. `namespace`:某个授权机构维护的某类资源的集合名.  `resource_name` 集合中的资源名
 
 
-这里简述一下相对URL. 举例来说<a href="java.html"> 这个超链接会继承父文档(当前文档)的协议, 主机名, 资源路径.java.html会替换掉,父文档里最后的文件名,还有例如<a href="/demo/java.html"> 那这个超链接会将主机名后的资源路径一起换掉 ，用该路径替换
+这里简述一下相对URL. 举例来说`<a href="java.html">` 这个超链接会继承父文档(当前文档)的协议, 主机名, 资源路径`.java.html`会替换掉,父文档里最后的文件名,还有例如`<a href="/demo/java.html"> `那这个超链接会将主机名后的资源路径一起换掉 ，用该路径替换
