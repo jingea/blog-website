@@ -1,5 +1,7 @@
-
-
+category: Java网络
+date: 2014-09-26
+title: java BIO服务器
+---
 一个Java阻塞服务器实现
 ```java
 try(ServerSocket server =  new ServerSocket(9090)) {
