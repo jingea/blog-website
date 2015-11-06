@@ -15,7 +15,7 @@ title: Clojure引用类型和共享数据
 
 
 但是只有`Refs,Atoms,Agents`这三种方式可以安全地修改共享数据.这三种方式的实现方式都是持有一个可变引用指向一个不可改变的数据.
-* `Refs`通过使用`Software Transactional Memory（STM`来提供对于多块共享数据的同步访问。
+* `Refs`通过使用`Software Transactional Memory(STM`来提供对于多块共享数据的同步访问)
 * `Atoms` 提供对于单个共享数据的同步访问。
 * `Agents` 提供对于单个共享数据的异步访问。
 
@@ -104,7 +104,7 @@ Atoms 提供了一种比使用Refs&STM更简单的更新当个值的方法.它�
 ```
 
 #### swap!: 
-接受一个要修改的 Atom, 一个计算Atom新值的函数以及一些额外的参数(如果需要的话).这个计算Atom新的值的函数会以这个Atom以及一些额外的参数做为输入.swap！函数实际上是对compare-and-set!函数的一个封装,但是有一个显著的不同. 它首先把Atom的当前值存入一个变量,然后调用计算新值的函数来计算新值, 然后再调用compare-and-set!函数来赋值.如果赋值成功的话,那就结束了.如果赋值不成功的话, 那么它会重复这个过程,一直到赋值成功为止
+接受一个要修改的 Atom, 一个计算Atom新值的函数以及一些额外的参数(如果需要的话).这个计算Atom新的值的函数会以这个Atom以及一些额外的参数做为输入.`swap!`函数实际上是对`compare-and-set!`函数的一个封装,但是有一个显著的不同. 它首先把Atom的当前值存入一个变量,然后调用计算新值的函数来计算新值, 然后再调用`compare-and-set!`函数来赋值.如果赋值成功的话,那就结束了.如果赋值不成功的话, 那么它会重复这个过程,一直到赋值成功为止
 ```clojure
 (swap! atom update-fn arguments)
 ```
@@ -120,15 +120,15 @@ Agents 是用把一些事情放到另外一个线程来做 -- 一般来说不需
 
 有俩个个函数可以修改一个Agent的值：
 #### send
-end 函数把一个 action 分配给一个 Agent, 并且马上返回而不做任何等待. 这个action会在另外一个线程(一般是由一个线程池提供的)上面单独运行. 当这个action运行结束之后,返回值会被设置给这个Agent.
+`end`函数把一个 action 分配给一个 Agent, 并且马上返回而不做任何等待. 这个action会在另外一个线程(一般是由一个线程池提供的)上面单独运行. 当这个action运行结束之后,返回值会被设置给这个Agent.
 
-send 使用一个 "固定大小的" 线程吃 (java.util.concurrent.Executors里面的newFixedThreadPool ) , 线程的个数是机器的处理器的个数加2.如果所有的线程都被占用,那么你如果要运行新的action, 那你就要等了
+send 使用一个 "固定大小的" 线程吃 (`java.util.concurrent.Executors`里面的`newFixedThreadPool` ) , 线程的个数是机器的处理器的个数加2.如果所有的线程都被占用,那么你如果要运行新的action, 那你就要等了
 ```clojure
 (send agent update-fn arguments) 
 ```
 
 #### send-off
-send-off 函数也类似只是线程来自另外一个线程吃.
+`send-off` 函数也类似只是线程来自另外一个线程吃.
 
 send-off 使用的是 "cached thread pool" (java.util.concurrent.Executors里面的?newCachedThreadPool) , 这个线程池里面的线程的个数是按照需要来分配的.
 ```clojure 
