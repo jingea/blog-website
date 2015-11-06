@@ -1,4 +1,4 @@
-category: java基础
+category: Java SE
 date: 2015-03-08
 title: JAVA钩子程序
 ---

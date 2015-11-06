@@ -1,4 +1,4 @@
-category: java基础
+category: Java SE
 date: 2015-06-08
 title: 估算java对象大小
 ---

@@ -1,4 +1,4 @@
-category: java基础
+category: Java SE
 date: 2015-06-08
 title: java泛型
 ---
