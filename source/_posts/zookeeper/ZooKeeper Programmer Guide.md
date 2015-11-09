@@ -1,4 +1,4 @@
-category: Zookeeper
+category: ZooKeeper
 date: 2013-11-09
 title: ZooKeeper Programmer's Guide
 ---
