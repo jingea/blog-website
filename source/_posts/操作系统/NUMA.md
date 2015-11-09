@@ -1,4 +1,4 @@
-category: 计算机基础
+category: 操作系统
 date: 2015-10-26
 title: NUMA和RDMA 
 ---

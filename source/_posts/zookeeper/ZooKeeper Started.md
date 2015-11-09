@@ -1,6 +1,6 @@
-﻿category: Zookeeper
+﻿category: ZooKeeper
 date: 2013-09-13
-title: Zookeeper快速开始
+title: ZooKeeper Started
 ---
 演示windows系统下快速使用`Zookeeper3.4.6`版本
 
