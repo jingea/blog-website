@@ -1,4 +1,4 @@
-category: 计算机基础
+category: TCP IP
 date: 2015-11-02
 title: OSI参考模型
 ---
