@@ -1,6 +1,6 @@
-category: Java第三方库
+category: Dropwizard
 date: 2015-04-08
-title: Dropwizard
+title: Dropwizard入门
 ---
 
 # Setting Up Maven

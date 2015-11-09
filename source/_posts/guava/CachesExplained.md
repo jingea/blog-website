@@ -1,4 +1,4 @@
-﻿category: Java第三方库
+﻿category: Guava
 date: 2013-09-13
 title: Guava Cache
 ---

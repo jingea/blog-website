@@ -1,6 +1,6 @@
-category: Java第三方库
+category: maven
 date: 2015-06-08
-title: maven
+title: maven入门
 ---
 ## maven生命周期
 Maven的生命周期就是对所有的构建过程进行抽象和统一.Maven的生命周期是抽象的,因此生命周期本身是并不做任何实际工作的,实际的任务交给插件来完成.
