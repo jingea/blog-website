@@ -48,29 +48,34 @@ ZooKeeper利用版本号和时间戳来验证缓存同时完成数据更新. 当
 客户端可以在znode上设置`watch`. 当znode发生变化后,设置的`watch`就会被触发,过后就会将刚才的`watch`清空掉. 当watch被触发后,ZooKeeper会向客户端发送一个通知. 
 
 #### Data Access
+在命名空间里的znode里存储的数据会被自动地进行读写。通过znode读取数据时会获取到数据的全部字节码,当写入数据时，会覆盖掉旧有的数据. 每个node都有一个ACL(Access Control List)来控制谁可以进行那些操作.
 
-The data stored at each znode in a namespace is read and written atomically. Reads get all the data bytes associated with a znode and a write replaces all the data. Each node has an Access Control List (ACL) that restricts who can do what.
-
-ZooKeeper was not designed to be a general database or large object store. Instead, it manages coordination data. This data can come in the form of configuration, status information, rendezvous, etc. A common property of the various forms of coordination data is that they are relatively small: measured in kilobytes. The ZooKeeper client and the server implementations have sanity checks to ensure that znodes have less than 1M of data, but the data should be much less than that on average. Operating on relatively large data sizes will cause some operations to take much more time than others and will affect the latencies of some operations because of the extra time needed to move more data over the network and onto storage media. If large data storage is needed, the usually pattern of dealing with such data is to store it on a bulk storage system, such as NFS or HDFS, and store pointers to the storage locations in ZooKeeper.
+ZooKeeper在设计的时候就没有被设计成一个普通的数据库或者一个非常大的对象存储系统. ZooKeeper是用来管理协调数据的. 这些数据可以通过配置或者状态信息等收集到. 协调数据虽然有多种不同的形式,但是他们却有一个共同的特点，那就是都比较小(一般以千字节为单位). 客户端和服务器的实现都有一个显式检查确保zonde所存储的数据都都小于1M，而且要比平均水平小的多。在操作一些相对较大的数据的时候会增加操作时长，而且会使一些操作延期执行。这是因为这时候需要将数据通过网络传输到存储设备上。如果系统中确实是需要存储一些大数据，那么应该将那些数据存储到大容量存储系统上，例如:NFS 或者 HDFS,然后将存储位置的指针保存在ZooKeeper里.
 
 #### Ephemeral Nodes
 ZooKeeper also has the notion of ephemeral nodes. These znodes exists as long as the session that created the znode is active. When the session ends the znode is deleted. Because of this behavior ephemeral znodes are not allowed to have children.
 
+ZooKeeper还有ephemeral nodes概念.只要创建这个znode的session是处于激活状态,那么这个znode就会一直存储. 当session结束的时候,znode也会被删除掉. 因为这种特性,ephemeral znodes不允许出现子node.
+
 #### Sequence Nodes -- Unique Naming
+当创建znode的时候,你可以要求ZooKeeper在路径的结尾添加一个递增的计数器. 计数器和父节点不会冲突,ZooKeeper确保它是唯一的. 计数器的格式是这样的`%010d`,010实际上是个10,我们前缀使用了个0对其进行填充,例如`<path>0000000001`. 注意：计数器一般用于存储
+
 When creating a znode you can also request that ZooKeeper append a monotonically increasing counter to the end of path. This counter is unique to the parent znode. The counter has a format of %010d -- that is 10 digits with 0 (zero) padding (the counter is formatted in this way to simplify sorting), i.e. "<path>0000000001". See Queue Recipe for an example use of this feature. Note: the counter used to store the next sequence number is a signed int (4bytes) maintained by the parent node, the counter will overflow when incremented beyond 2147483647 (resulting in a name "<path>-2147483647").
 
 ### Time in ZooKeeper
-ZooKeeper tracks time multiple ways:
+ZooKeeper 有多种追踪时间的方式：
 
-* `Zxid` : Every change to the ZooKeeper state receives a stamp in the form of a zxid (ZooKeeper Transaction Id). This exposes the total ordering of all changes to ZooKeeper. Each change will have a unique zxid and if zxid1 is smaller than zxid2 then zxid1 happened before zxid2.
-* `Version numbers`:Every change to a node will cause an increase to one of the version numbers of that node. The three version numbers are version (number of changes to the data of a znode), cversion (number of changes to the children of a znode), and aversion (number of changes to the ACL of a znode).
-* `Ticks`:When using multi-server ZooKeeper, servers use ticks to define timing of events such as status uploads, session timeouts, connection timeouts between peers, etc. The tick time is only indirectly exposed through the minimum session timeout (2 times the tick time); if a client requests a session timeout less than the minimum session timeout, the server will tell the client that the session timeout is actually the minimum session timeout.
+* `Zxid`(ZooKeeper Transaction Id) : ZooKeeper每次变化都会产生一个`zxid`形式的标记. 这一点暴露了ZooKeeper里发生的全部变化顺序. 每一个变化都会产生一个唯一的`zxid`值,如果zxid1小于zxid2的值，那么说明zxid1发生在zxid2之前. 
+* `Version numbers`:每当node发生变化,node上的某个版本号就会自增1. 
+* `Ticks`: 当多台服务器之间的ZooKeeper通信时, ZooKeeper使用ticks来完成事件定时功能,例如俩台设备之间的状态上传session超时, 连接超时等等. The tick time is only indirectly exposed through the minimum session timeout (2 times the tick time); if a client requests a session timeout less than the minimum session timeout, the server will tell the client that the session timeout is actually the minimum session timeout.
 * `Real time`:ZooKeeper doesn't use real time, or clock time, at all except to put timestamps into the stat structure on znode creation and znode modification.
 
+> 注：每个node有三个版本号：version (znode里数据发生变化的次数), cversion (znode子节点发生变化的次数), and aversion (znode里 ACL发生变化的次数).
+ 
 ### ZooKeeper Stat Structure
-The Stat structure for each znode in ZooKeeper is made up of the following fields:
+ZooKeeper里的每个znode的状态结构体由以下构成：
 
-* `czxid`:The zxid of the change that caused this znode to be created.
+* `czxid`:The zxid of the change that caused this znode to be created. 引起创建znode的变化zxid
 * `mzxid`:The zxid of the change that last modified this znode.
 * `ctime`:The time in milliseconds from epoch when this znode was created.
 * `mtime`:The time in milliseconds from epoch when this znode was last modified.
@@ -173,110 +178,6 @@ ZooKeeeper has the following built in schemes:
 * auth doesn't use any id, represents any authenticated user.
 * digest uses a username:password string to generate MD5 hash which is then used as an ACL ID identity. Authentication is done by sending the username:password in clear text. When used in the ACL the expression will be the username:base64 encoded SHA1 password digest.
 * ip uses the client host IP as an ACL ID identity. The ACL expression is of the form addr/bits where the most significant bits of addr are matched against the most significant bits of the client host IP.
-
-#### ZooKeeper C client API
-The following constants are provided by the ZooKeeper C library:
-
-* const int ZOO_PERM_READ; //can read node’s value and list its children
-* const int ZOO_PERM_WRITE;// can set the node’s value
-* const int ZOO_PERM_CREATE; //can create children
-* const int ZOO_PERM_DELETE;// can delete children
-* const int ZOO_PERM_ADMIN; //can execute set_acl()
-* const int ZOO_PERM_ALL;// all of the above flags OR’d together
-The following are the standard ACL IDs:
-
-* struct Id ZOO_ANYONE_ID_UNSAFE; //(‘world’,’anyone’)
-* struct Id ZOO_AUTH_IDS;// (‘auth’,’’)
-ZOO_AUTH_IDS empty identity string should be interpreted as “the identity of the creator”.
-
-ZooKeeper client comes with three standard ACLs:
-
-* struct ACL_vector ZOO_OPEN_ACL_UNSAFE; //(ZOO_PERM_ALL,ZOO_ANYONE_ID_UNSAFE)
-* struct ACL_vector ZOO_READ_ACL_UNSAFE;// (ZOO_PERM_READ, ZOO_ANYONE_ID_UNSAFE)
-* struct ACL_vector ZOO_CREATOR_ALL_ACL; //(ZOO_PERM_ALL,ZOO_AUTH_IDS)
-The ZOO_OPEN_ACL_UNSAFE is completely open free for all ACL: any application can execute any operation on the node and can create, list and delete its children. The ZOO_READ_ACL_UNSAFE is read-only access for any application. CREATE_ALL_ACL grants all permissions to the creator of the node. The creator must have been authenticated by the server (for example, using “digest” scheme) before it can create nodes with this ACL.
-
-The following ZooKeeper operations deal with ACLs:
-
-* int zoo_add_auth (zhandle_t *zh,const char* scheme,const char* cert, int certLen, void_completion_t completion, const void *data);
-The application uses the zoo_add_auth function to authenticate itself to the server. The function can be called multiple times if the application wants to authenticate using different schemes and/or identities.
-
-* int zoo_create (zhandle_t *zh, const char *path, const char *value,int valuelen, const struct ACL_vector *acl, int flags,char *realpath, int max_realpath_len);
-zoo_create(...) operation creates a new node. The acl parameter is a list of ACLs associated with the node. The parent node must have the CREATE permission bit set.
-
-* int zoo_get_acl (zhandle_t *zh, const char *path,struct ACL_vector *acl, struct Stat *stat);
-This operation returns a node’s ACL info.
-
-* int zoo_set_acl (zhandle_t *zh, const char *path, int version,const struct ACL_vector *acl);
-This function replaces node’s ACL list with a new one. The node must have the ADMIN permission set.
-
-Here is a sample code that makes use of the above APIs to authenticate itself using the “foo” scheme and create an ephemeral node “/xyz” with create-only permissions.
-
-> Note:This is a very simple example which is intended to show how to interact with ZooKeeper ACLs specifically. See .../trunk/src/c/src/cli.c for an example of a proper C client implementation
-
-```c
-#include <string.h>
-#include <errno.h>
-
-#include "zookeeper.h"
-
-static zhandle_t *zh;
-
-/**
- * In this example this method gets the cert for your
- *   environment -- you must provide
- */
-char *foo_get_cert_once(char* id) { return 0; }
-
-/** Watcher function -- empty for this example, not something you should
- * do in real code */
-void watcher(zhandle_t *zzh, int type, int state, const char *path,
-             void *watcherCtx) {}
-
-int main(int argc, char argv) {
-  char buffer[512];
-  char p[2048];
-  char *cert=0;
-  char appId[64];
-
-  strcpy(appId, "example.foo_test");
-  cert = foo_get_cert_once(appId);
-  if(cert!=0) {
-    fprintf(stderr,
-            "Certificate for appid [%s] is [%s]\n",appId,cert);
-    strncpy(p,cert, sizeof(p)-1);
-    free(cert);
-  } else {
-    fprintf(stderr, "Certificate for appid [%s] not found\n",appId);
-    strcpy(p, "dummy");
-  }
-
-  zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
-
-  zh = zookeeper_init("localhost:3181", watcher, 10000, 0, 0, 0);
-  if (!zh) {
-    return errno;
-  }
-  if(zoo_add_auth(zh,"foo",p,strlen(p),0,0)!=ZOK)
-    return 2;
-
-  struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_CREATE, ZOO_AUTH_IDS}};
-  struct ACL_vector CREATE_ONLY = {1, CREATE_ONLY_ACL};
-  int rc = zoo_create(zh,"/xyz","value", 5, &CREATE_ONLY, ZOO_EPHEMERAL,
-                      buffer, sizeof(buffer)-1);
-
-  /** this operation will fail with a ZNOAUTH error */
-  int buflen= sizeof(buffer);
-  struct Stat stat;
-  rc = zoo_get(zh, "/xyz", 0, buffer, &buflen, &stat);
-  if (rc) {
-    fprintf(stderr, "Error %d for %s\n", rc, __LINE__);
-  }
-
-  zookeeper_close(zh);
-  return 0;
-}
-```
 
 ## Pluggable ZooKeeper authentication
 ZooKeeper runs in a variety of different environments with various different authentication schemes, so it has a completely pluggable authentication framework. Even the builtin authentication schemes use the pluggable authentication framework.
