@@ -1,15 +1,15 @@
 category: groovy
 date: 2014-04-08
-title: groovy¼¯ºÏ
+title: groovyé›†åˆ
 ---
-> ±¾ÎÄÊÇ¶ÔGroovy²¿·Ö¹Ù·½ÎÄµµ½øĞĞÁË·­Òë
+> æœ¬æ–‡æ˜¯å¯¹Groovyéƒ¨åˆ†å®˜æ–¹æ–‡æ¡£è¿›è¡Œäº†ç¿»è¯‘
 
-Groovy ÓïÑÔ²ãÃæÉÏ¾ÍÖ§³Ö¶àÖÖ¼¯ºÏÀàĞÍ,°üÀ¨list, map, range. ´ó¶àÊıÀàĞÍ¼¯ºÏ¶¼ÊÇ»ùÓÚjavaµÄ¼¯ºÏ¿ò¼Ü,¶øÇÒGroovy development kit¶ÔÕâĞ©¼¯ºÏÄÚÖÃºÜ¶à¿ì½İ·½·¨.
+Groovy è¯­è¨€å±‚é¢ä¸Šå°±æ”¯æŒå¤šç§é›†åˆç±»å‹,åŒ…æ‹¬list, map, range. å¤§å¤šæ•°ç±»å‹é›†åˆéƒ½æ˜¯åŸºäºjavaçš„é›†åˆæ¡†æ¶,è€Œä¸”Groovy development kitå¯¹è¿™äº›é›†åˆå†…ç½®å¾ˆå¤šå¿«æ·æ–¹æ³•.
 
 ### Lists
 
-GroovyÊ¹ÓÃÁËÒ»ÖÖ±»`[]`À¨ÆğÀ´,ÖµÍ¨¹ı`,`·Ö¸îµÄÓï·¨ ¶¨Òålist. Groovy list ²ÉÓÃµÄÊÇ JDKÀï`java.util.List`µÄÊµÏÖ, ÒòÎªËü×ÔÉí²¢Ã»ÓĞ¶¨Òå×Ô¼ºµÄ¼¯ºÏÀà.
-Groovy list µÄÄ¬ÈÏÊµÏÖÊÇ`java.util.ArrayList`, ÔÚºóÃæÎÒÃÇ¿ÉÒÔ¿´µ½ÆäËûĞÎÊ½µÄlist
+Groovyä½¿ç”¨äº†ä¸€ç§è¢«`[]`æ‹¬èµ·æ¥,å€¼é€šè¿‡`,`åˆ†å‰²çš„è¯­æ³• å®šä¹‰list. Groovy list é‡‡ç”¨çš„æ˜¯ JDKé‡Œ`java.util.List`çš„å®ç°, å› ä¸ºå®ƒè‡ªèº«å¹¶æ²¡æœ‰å®šä¹‰è‡ªå·±çš„é›†åˆç±».
+Groovy list çš„é»˜è®¤å®ç°æ˜¯`java.util.ArrayList`, åœ¨åé¢æˆ‘ä»¬å¯ä»¥çœ‹åˆ°å…¶ä»–å½¢å¼çš„list
 
 ```groovy
 def numbers = [1, 2, 3]         (1)
@@ -18,17 +18,17 @@ assert numbers instanceof List  (2)
 assert numbers.size() == 3      (3)
 ```
 
-1. ÎÒÃÇ¶¨ÒåÁËÒ»¸öNumberÀàĞÍµÄList,È»ºó½«Õâ¸ölist·ÖÅä¸øÒ»¸ö±äÁ¿
-2. ÅĞ¶ÏlistÊÇ Java¡¯s `java.util.List` interface µÄÊµÀı
-3. listµÄ´óĞ¡¿ÉÒÔÍ¨¹ısize()À´½øĞĞ²éÑ¯, Àı×ÓÖĞÒ²¸øÎÒÃÇÕ¹Ê¾ÁËÕâ¸ölistÈ·Êµ°üº¬3¸öÔªËØ
+1. æˆ‘ä»¬å®šä¹‰äº†ä¸€ä¸ªNumberç±»å‹çš„List,ç„¶åå°†è¿™ä¸ªliståˆ†é…ç»™ä¸€ä¸ªå˜é‡
+2. åˆ¤æ–­listæ˜¯ Javaâ€™s `java.util.List` interface çš„å®ä¾‹
+3. listçš„å¤§å°å¯ä»¥é€šè¿‡size()æ¥è¿›è¡ŒæŸ¥è¯¢, ä¾‹å­ä¸­ä¹Ÿç»™æˆ‘ä»¬å±•ç¤ºäº†è¿™ä¸ªlistç¡®å®åŒ…å«3ä¸ªå…ƒç´ 
 
-ÔÚÉÏÃæµÄlistÖĞ,ÎÒÃÇÊ¹ÓÃµÄÊÇÍ¬ÀàÔªËØµÄlist, µ«ÆäÊµGroovy listÖĞµÄÊı¾İÀàĞÍ»¹¿ÉÒÔ²»Ò»Ñù£º
+åœ¨ä¸Šé¢çš„listä¸­,æˆ‘ä»¬ä½¿ç”¨çš„æ˜¯åŒç±»å…ƒç´ çš„list, ä½†å…¶å®Groovy listä¸­çš„æ•°æ®ç±»å‹è¿˜å¯ä»¥ä¸ä¸€æ ·ï¼š
 ```groovy
 def heterogeneous = [1, "a", true]  (1)
 ```
-1. ÎÒÃÇ¶¨ÒåÁËÒ»¸ö°üº¬ÓĞnumber,string,boolean Èı¸öÀàĞÍµÄlist
+1. æˆ‘ä»¬å®šä¹‰äº†ä¸€ä¸ªåŒ…å«æœ‰number,string,boolean ä¸‰ä¸ªç±»å‹çš„list
 
-ÔÚÉÏÃæÎÒÃÇÌáµ½¹ı, listÊµ¼ÊÉÏÊÇ`java.util.ArrayList`ÊµÀı, µ«ÆäÊµlist»¹¿ÉÒÔÊÇÆäËû²»Í¬ÀàĞÍµÄÊµÀı, ÏÂÃæÎÒÃÇÍ¨¹ı²Ù×÷·û»òÕßÏÔÊ½ÀàĞÍÉùÃ÷À´Ç¿ÖÆÖ¸¶¨ listÊ¹ÓÃ²»Í¬µÄListÊµÏÖ
+åœ¨ä¸Šé¢æˆ‘ä»¬æåˆ°è¿‡, listå®é™…ä¸Šæ˜¯`java.util.ArrayList`å®ä¾‹, ä½†å…¶å®listè¿˜å¯ä»¥æ˜¯å…¶ä»–ä¸åŒç±»å‹çš„å®ä¾‹, ä¸‹é¢æˆ‘ä»¬é€šè¿‡æ“ä½œç¬¦æˆ–è€…æ˜¾å¼ç±»å‹å£°æ˜æ¥å¼ºåˆ¶æŒ‡å®š listä½¿ç”¨ä¸åŒçš„Listå®ç°
 ```groovy
 def arrayList = [1, 2, 3]
 assert arrayList instanceof java.util.ArrayList
@@ -39,10 +39,10 @@ assert linkedList instanceof java.util.LinkedList
 LinkedList otherLinked = [3, 4, 5]          (2)
 assert otherLinked instanceof java.util.LinkedList
 ```
-1. ÎÒÃÇÊ¹ÓÃ²Ù×÷·ûÇ¿ÖÆ½«ÀàĞÍÏÔÊ½µØÉùÃ÷Îª`java.util.LinkedList`
-2. ÎÒÃÇÊ¹ÓÃÏÔÊ½ÉùÃ÷·½Ê½, ½«listÉùÃ÷Îª`java.util.LinkedList`
+1. æˆ‘ä»¬ä½¿ç”¨æ“ä½œç¬¦å¼ºåˆ¶å°†ç±»å‹æ˜¾å¼åœ°å£°æ˜ä¸º`java.util.LinkedList`
+2. æˆ‘ä»¬ä½¿ç”¨æ˜¾å¼å£°æ˜æ–¹å¼, å°†listå£°æ˜ä¸º`java.util.LinkedList`
 
-ÎÒÃÇ¿ÉÒÔÍ¨¹ı`[]`ÏÂ±ê²Ù×÷·ûÀ´·ÃÎÊlistÖĞµÄÔªËØ(¶ÁĞ´¶¼¿ÉÒÔ). ÏÂ±ê¼ÈÈç¹ûÊÇÕıÊıµÄ»°,ÄÇ¾Í´Ó×óµ½ÓÒ·ÃÎÊÔªËØ, Èç¹ûÏÂ±êÊÇ¸ºÊıÄÇ¾Í´ÓÓÒµ½×ó·ÃÎÊÔªËØ. ÎÒÃÇºÃ¿ÉÒÔÊ¹ÓÃ`<<`²Ù×÷·ûÏòlistÀï×·¼ÓÔªËØ
+æˆ‘ä»¬å¯ä»¥é€šè¿‡`[]`ä¸‹æ ‡æ“ä½œç¬¦æ¥è®¿é—®listä¸­çš„å…ƒç´ (è¯»å†™éƒ½å¯ä»¥). ä¸‹æ ‡æ—¢å¦‚æœæ˜¯æ­£æ•°çš„è¯,é‚£å°±ä»å·¦åˆ°å³è®¿é—®å…ƒç´ , å¦‚æœä¸‹æ ‡æ˜¯è´Ÿæ•°é‚£å°±ä»å³åˆ°å·¦è®¿é—®å…ƒç´ . æˆ‘ä»¬å¥½å¯ä»¥ä½¿ç”¨`<<`æ“ä½œç¬¦å‘listé‡Œè¿½åŠ å…ƒç´ 
 ```groovy
 def letters = ['a', 'b', 'c', 'd']
 
@@ -63,25 +63,25 @@ assert letters[1, 3] == ['b', 'd']         (5)
 assert letters[2..4] == ['C', 'd', 'e']    (6)
 ```
 
-1. ·ÃÎÊµÚÒ»¸öÔªËØ(´ÓÕâ¿ÉÒÔ¿´³ö,listµÄÏÂ±êÊÇ´Ó0¿ªÊ¼µÄ)
-2. Í¨¹ı-1 ÏÂ±ê·ÃÎÊlistÖĞµÄ×îºóÒ»¸öÔªËØ.
-3. Ê¹ÓÃÏÂ±ê¶ÔlistÖĞµÚÈı¸öÔªËØÖØĞÂ¸³Öµ
-4. Ê¹ÓÃ`<<`ÏòlistÎ²²¿Ìí¼ÓÒ»¸öÔªËØ
-5. Ò»´ÎĞÔ·ÃÎÊlistÖĞÁ©¸öÔªËØ,Õâ¸ö²Ù×÷µÄ½á¹ûÊÇ·µ»ØÒ»¸ö°üº¬Á©¸öÔªËØµÄĞÂµÄlist
-6. Ê¹ÓÃÖµÓò·ûÀ´·ÃÎÊlistÖĞÒ»¶¨·¶Î§ÄÚµÄÖµ.
+1. è®¿é—®ç¬¬ä¸€ä¸ªå…ƒç´ (ä»è¿™å¯ä»¥çœ‹å‡º,listçš„ä¸‹æ ‡æ˜¯ä»0å¼€å§‹çš„)
+2. é€šè¿‡-1 ä¸‹æ ‡è®¿é—®listä¸­çš„æœ€åä¸€ä¸ªå…ƒç´ .
+3. ä½¿ç”¨ä¸‹æ ‡å¯¹listä¸­ç¬¬ä¸‰ä¸ªå…ƒç´ é‡æ–°èµ‹å€¼
+4. ä½¿ç”¨`<<`å‘listå°¾éƒ¨æ·»åŠ ä¸€ä¸ªå…ƒç´ 
+5. ä¸€æ¬¡æ€§è®¿é—®listä¸­ä¿©ä¸ªå…ƒç´ ,è¿™ä¸ªæ“ä½œçš„ç»“æœæ˜¯è¿”å›ä¸€ä¸ªåŒ…å«ä¿©ä¸ªå…ƒç´ çš„æ–°çš„list
+6. ä½¿ç”¨å€¼åŸŸç¬¦æ¥è®¿é—®listä¸­ä¸€å®šèŒƒå›´å†…çš„å€¼.
 
-ÓÉÓÚlistÖ§³Ö¶àÖÖ²»Í¬ÀàĞÍµÄÔªËØ, ÄÇÃ´listÖĞÒ²¿ÉÒÔ°üº¬list,ÕâÑù¾Í¿ÉÒÔÖÆÔì³ö¶àÎ¬list
+ç”±äºlistæ”¯æŒå¤šç§ä¸åŒç±»å‹çš„å…ƒç´ , é‚£ä¹ˆlistä¸­ä¹Ÿå¯ä»¥åŒ…å«list,è¿™æ ·å°±å¯ä»¥åˆ¶é€ å‡ºå¤šç»´list
 ```groovy
 def multi = [[0, 1], [2, 3]]     (1)
 assert multi[1][0] == 2          (2)
 ```
 
-1. ¶¨ÒåÁËÒ»¸ö°üº¬NumberÀàĞÍlistµÄlist
-2. ·ÃÎÊÍâ²ãµÄµÚ¶ş¸öÔªËØ(µÚ¶ş¸ölist), È»ºó·ÃÎÊÄÚ²¿listµÄµÚÒ»¸öÔªËØ(µÚ¶ş¸ölistµÄµÚÒ»¸öÔªËØ)
+1. å®šä¹‰äº†ä¸€ä¸ªåŒ…å«Numberç±»å‹listçš„list
+2. è®¿é—®å¤–å±‚çš„ç¬¬äºŒä¸ªå…ƒç´ (ç¬¬äºŒä¸ªlist), ç„¶åè®¿é—®å†…éƒ¨listçš„ç¬¬ä¸€ä¸ªå…ƒç´ (ç¬¬äºŒä¸ªlistçš„ç¬¬ä¸€ä¸ªå…ƒç´ )
 
 #### List literals
 
-Äã¿ÉÒÔÏñÏÂÃæÕâÑù´´½¨¼¯ºÏ, ×¢Òâ`[]`ÊÇ¿Õ¼¯ºÏ±í´ïÊ½.
+ä½ å¯ä»¥åƒä¸‹é¢è¿™æ ·åˆ›å»ºé›†åˆ, æ³¨æ„`[]`æ˜¯ç©ºé›†åˆè¡¨è¾¾å¼.
 ```groovy
 def list = [5, 6, 7, 8]
 assert list.get(2) == 7
@@ -94,9 +94,9 @@ emptyList.add(5)
 assert emptyList.size() == 1
 ```groovy
 
-Ã¿Ò»¸ölist±í´ïÊ½¶¼ÊÇÊµÏÖ×Ô`java.util.List`
+æ¯ä¸€ä¸ªlistè¡¨è¾¾å¼éƒ½æ˜¯å®ç°è‡ª`java.util.List`
 
-µ±È»listÒ²¿ÉÒÔÖ¸¶¨Æä¾ßÌåµÄÊµÏÖÀàĞÍ
+å½“ç„¶listä¹Ÿå¯ä»¥æŒ‡å®šå…¶å…·ä½“çš„å®ç°ç±»å‹
 ```groovy
 def list1 = ['a', 'b', 'c']
 //construct a new list, seeded with the same items as in list1
@@ -109,7 +109,7 @@ def list3 = list1.clone()
 assert list3 == list1
 ```
 
-list±¾ÖÊÉÏÊÇÒ»¸öÓĞĞòµÄ¶ÔÏó¼¯ºÏ.
+listæœ¬è´¨ä¸Šæ˜¯ä¸€ä¸ªæœ‰åºçš„å¯¹è±¡é›†åˆ.
 ```groovy
 def list = [5, 6, 7, 8]
 assert list.size() == 4
@@ -143,7 +143,7 @@ try {
 
 #### List as a boolean expression
 
-list»¹¿ÉÒÔ¼ÆËã³öboolean±í´ïÊ½.
+listè¿˜å¯ä»¥è®¡ç®—å‡ºbooleanè¡¨è¾¾å¼.
 ```groovy
 assert ![]             // an empty list evaluates as false
 
@@ -153,7 +153,7 @@ assert [1] && ['a'] && [0] && [0.0] && [false] && [null]
 
 #### Iterating on a list
 
-¿ÉÒÔÍ¨¹ı`each`, `eachWithIndex`±éÀúÕû¸ö¼¯ºÏ.
+å¯ä»¥é€šè¿‡`each`, `eachWithIndex`éå†æ•´ä¸ªé›†åˆ.
 ```groovy
 [1, 2, 3].each {
     println "Item: $it" // `it` is an implicit parameter corresponding to the current element
@@ -163,7 +163,7 @@ assert [1] && ['a'] && [0] && [0.0] && [false] && [null]
 }
 ```
 
-ÔÚ±éÀúµÄÊ±ºò,ÎÒÃÇ¾­³£ĞèÒª½«±éÀú³öÀ´µÄÖµ¾­¹ıÄ³Ğ©ÔËËã,È»ºóÔÙÖØĞÂ·Å½øÒ»¸öĞÂµÄlistÖĞ. ÕâÖÖ²Ù×÷¾­³£³ÆÎªÓ³Éä(mapping), ÕâÖÖ²Ù×÷Í¨¹ı`collect`·½·¨ÊµÏÖ.
+åœ¨éå†çš„æ—¶å€™,æˆ‘ä»¬ç»å¸¸éœ€è¦å°†éå†å‡ºæ¥çš„å€¼ç»è¿‡æŸäº›è¿ç®—,ç„¶åå†é‡æ–°æ”¾è¿›ä¸€ä¸ªæ–°çš„listä¸­. è¿™ç§æ“ä½œç»å¸¸ç§°ä¸ºæ˜ å°„(mapping), è¿™ç§æ“ä½œé€šè¿‡`collect`æ–¹æ³•å®ç°.
 ```groovy
 assert [1, 2, 3].collect { it * 2 } == [2, 4, 6]
 
@@ -180,7 +180,7 @@ assert list == [0, 2, 4, 6]
 
 ##### Filtering and searching
 
-[Groovy development kit](http://www.groovy-lang.org/gdk.html)Ìá¹©ÁËĞí¶àÇ¿´óÓĞÈ¤µÄ·½·¨ÓÃÀ´Ç¿»¯±ê×¼¼¯ºÏ:
+[Groovy development kit](http://www.groovy-lang.org/gdk.html)æä¾›äº†è®¸å¤šå¼ºå¤§æœ‰è¶£çš„æ–¹æ³•ç”¨æ¥å¼ºåŒ–æ ‡å‡†é›†åˆ:
 
 ```groovy
 assert [1, 2, 3].find { it > 1 } == 2           // find 1st element matching criteria
@@ -220,7 +220,7 @@ assert [1, 2, 3].inject(0) { count, item ->
 } == 6
 ```
 
-ÏÂÃæÕâ¶Î´úÂëÊÇÓÉGroovyÓïÑÔÖ§³ÅµÄÔÚ¼¯ºÏÖĞÕÒµ½×î´óºÍ×îĞ¡ÊıµÄÀı×Ó:
+ä¸‹é¢è¿™æ®µä»£ç æ˜¯ç”±Groovyè¯­è¨€æ”¯æ’‘çš„åœ¨é›†åˆä¸­æ‰¾åˆ°æœ€å¤§å’Œæœ€å°æ•°çš„ä¾‹å­:
 ```groovy
 def list = [9, 4, 2, 10, 5]
 assert list.max() == 10
@@ -235,7 +235,7 @@ assert list2.max { it.size() } == 'xyzuvw'
 assert list2.min { it.size() } == 'z'
 ```
 
-ÔÚ±Õ°üÀï,Äã»¹¿ÉÒÔ×Ô¶¨ÒåÒ»¸ö±È½Ï¹æÔò.
+åœ¨é—­åŒ…é‡Œ,ä½ è¿˜å¯ä»¥è‡ªå®šä¹‰ä¸€ä¸ªæ¯”è¾ƒè§„åˆ™.
 ```groovy
 Comparator mc = { a, b -> a == b ? 0 : (a < b ? -1 : 1) }
 
@@ -255,7 +255,7 @@ assert list.min { a, b -> a.equals(b) ? 0 : Math.abs(a) < Math.abs(b) ? -1 : 1 }
 
 ##### Adding or removing elements
 
-ÎÒÃÇ¿ÉÒÔÊ¹ÓÃ`[]`È¥ÉùÃ÷Ò»¸öĞÂµÄ¿Õlist, È»ºóÊ¹ÓÃ`<<`Ïòlist×·¼ÓÔªËØ
+æˆ‘ä»¬å¯ä»¥ä½¿ç”¨`[]`å»å£°æ˜ä¸€ä¸ªæ–°çš„ç©ºlist, ç„¶åä½¿ç”¨`<<`å‘listè¿½åŠ å…ƒç´ 
 ```groovy
 def list = []
 assert list.empty
@@ -308,9 +308,9 @@ list[8] = 'x' // the [] operator is growing the list as needed
 assert list == ['a', 'b', 'z', 'e', 'u', 'v', 'g', null, 'x']
 ```
 
-ÔÚlistÖĞ`+`µÄÓïÒå²¢Ã»ÓĞ·¢Éú±ä»¯,ÕâÊÇºÎµÈµÄÖØÒª°¡~~~ Óë`<<`Ïà±È, `+`»á´´½¨Ò»¸öĞÂµÄlist,  µ«ÊÇÕâ¸ö´´½¨µÄlistºÜ¿ÉÄÜ²»ÊÇÄãËùÔ¤ÆÚµÄ, ¶øÇÒÕâÖÖ·½Ê½Ò²¿ÉÄÜ»áµ¼ÖÂÒ»Ğ©ĞÔÄÜÎÊÌâ.
+åœ¨listä¸­`+`çš„è¯­ä¹‰å¹¶æ²¡æœ‰å‘ç”Ÿå˜åŒ–,è¿™æ˜¯ä½•ç­‰çš„é‡è¦å•Š~~~ ä¸`<<`ç›¸æ¯”, `+`ä¼šåˆ›å»ºä¸€ä¸ªæ–°çš„list,  ä½†æ˜¯è¿™ä¸ªåˆ›å»ºçš„listå¾ˆå¯èƒ½ä¸æ˜¯ä½ æ‰€é¢„æœŸçš„, è€Œä¸”è¿™ç§æ–¹å¼ä¹Ÿå¯èƒ½ä¼šå¯¼è‡´ä¸€äº›æ€§èƒ½é—®é¢˜.
 
-`Groovy development kit`Í¬ÑùÌá¹©ÁËºÜ¶à±ã½İµÄ·½Ê½´ÓlistÀïÉ¾³ıÔªËØ:
+`Groovy development kit`åŒæ ·æä¾›äº†å¾ˆå¤šä¾¿æ·çš„æ–¹å¼ä»listé‡Œåˆ é™¤å…ƒç´ :
 ```groovy
 assert ['a','b','c','b','b'] - 'c' == ['a','b','b','b']
 assert ['a','b','c','b','b'] - 'b' == ['a','c']
@@ -321,13 +321,13 @@ list -= 3           // creates a new list by removing `3` from the original one
 assert list == [1,2,4,2,1]
 assert ( list -= [2,4] ) == [1,1]
 ```
-Í¬Ñù,ÄãÒ²ÄÜÍ¨¹ıË÷ÒıµÄ·½Ê½´ÓlistÀïÉ¾³ıÔªËØ.
+åŒæ ·,ä½ ä¹Ÿèƒ½é€šè¿‡ç´¢å¼•çš„æ–¹å¼ä»listé‡Œåˆ é™¤å…ƒç´ .
 ```groovy
 def list = [1,2,3,4,5,6,2,2,1]
 assert list.remove(2) == 3          // remove the third element, and return it
 assert list == [1,2,4,5,6,2,2,1]
 ```
-¼ÙÉè,ÄãÈç¹û´ÓlistÖĞÉ¾³ı¶à¸öÏàÍ¬ÔªËØÖĞµÄµÚÒ»¸ö, ÄÇÄã¿ÉÒÔµ÷ÓÃ`remove`·½·¨.
+å‡è®¾,ä½ å¦‚æœä»listä¸­åˆ é™¤å¤šä¸ªç›¸åŒå…ƒç´ ä¸­çš„ç¬¬ä¸€ä¸ª, é‚£ä½ å¯ä»¥è°ƒç”¨`remove`æ–¹æ³•.
 ```groovy
 def list= ['a','b','c','b','b']
 assert list.remove('c')             // remove 'c', and return true because element removed
@@ -336,7 +336,7 @@ assert list.remove('b')             // remove first 'b', and return true because
 assert ! list.remove('z')           // return false because no elements removed
 assert list == ['a','b','b']
 ```
-Èç¹ûÄãÏëÒª½«listÇå¿ÕµÄ»°,Ö»ĞèÒªµ÷ÓÃ`clear`·½·¨¼´¿É
+å¦‚æœä½ æƒ³è¦å°†listæ¸…ç©ºçš„è¯,åªéœ€è¦è°ƒç”¨`clear`æ–¹æ³•å³å¯
 ```groovy
 def list= ['a',2,'c',4]
 list.clear()
@@ -345,7 +345,7 @@ assert list == []
 
 ##### Set operations
 
-`Groovy development kit`»¹°üº¬ºÜ¶àÂß¼­ÔËËãµÄ·½·¨
+`Groovy development kit`è¿˜åŒ…å«å¾ˆå¤šé€»è¾‘è¿ç®—çš„æ–¹æ³•
 ```groovy
 assert 'a' in ['a','b','c']             // returns true if an element belongs to the list
 assert ['a','b','c'].contains('a')      // equivalent to the `contains` method in Java
@@ -364,7 +364,7 @@ assert ![1,2,3].disjoint( [2,4,6] )
 
 ##### Sorting
 
-Groovy»¹Ìá¹©ÁËºÜ¶àÊ¹ÓÃ±Õ°ü±È½ÏÆ÷µÄÅÅĞò²Ù×÷
+Groovyè¿˜æä¾›äº†å¾ˆå¤šä½¿ç”¨é—­åŒ…æ¯”è¾ƒå™¨çš„æ’åºæ“ä½œ
 ```groovy
 assert [6, 3, 9, 2, 7, 1, 5].sort() == [1, 2, 3, 5, 6, 7, 9]
 
@@ -394,7 +394,7 @@ assert list3 == [1, 2, -3, 5, 6, -7, 9]
 
 ##### Duplicating elements
 
-`roovy development kit`»¹Í¨¹ıÖØÔØ²Ù×÷·ûµÄ·½Ê½, ÄÚ²¿Ìá¹©ÁËÒ»Ğ©·½·¨½øĞĞlistÔªËØ¸´ÖÆ.
+`roovy development kit`è¿˜é€šè¿‡é‡è½½æ“ä½œç¬¦çš„æ–¹å¼, å†…éƒ¨æä¾›äº†ä¸€äº›æ–¹æ³•è¿›è¡Œlistå…ƒç´ å¤åˆ¶.
 ```groovy
 assert [1, 2, 3] * 3 == [1, 2, 3, 1, 2, 3, 1, 2, 3]
 assert [1, 2, 3].multiply(2) == [1, 2, 3, 1, 2, 3]
@@ -406,7 +406,7 @@ assert Collections.nCopies(2, [1, 2]) == [[1, 2], [1, 2]] //not [1,2,1,2]
 
 ### Arrays
 
-Groovy Êı×éÖØÓÃÁËlist·ûºÅ, µ«ÊÇÈç¹ûÏëÒª´´½¨Êı×é, ÄÇÃ´¾Í±ØĞëÇ¿ÖÆµØÏÔÊ½¶¨ÒåÊı×éÀàĞÍ
+Groovy æ•°ç»„é‡ç”¨äº†listç¬¦å·, ä½†æ˜¯å¦‚æœæƒ³è¦åˆ›å»ºæ•°ç»„, é‚£ä¹ˆå°±å¿…é¡»å¼ºåˆ¶åœ°æ˜¾å¼å®šä¹‰æ•°ç»„ç±»å‹
 ```groovy
 String[] arrStr = ['Ananas', 'Banana', 'Kiwi']  (1)
 
@@ -419,12 +419,12 @@ assert numArr instanceof int[]       (4)
 assert numArr.size() == 3
 ```
 
-1. Ê¹ÓÃÏÔÊ½±äÁ¿ÀàĞÍ¶¨ÒåÁËÒ»¸ö×Ö·û´®Êı×é
-2. ¶ÏÑÔ¸Õ²Å´´½¨µÄÊı×éÊÇ·ñÊÇstringÀàĞÍ
-3. Ê¹ÓÃ²Ù×÷·û¶¨ÒåÒ»¸öintÊı×é
-4. ¶ÏÑÔ¸Õ²Å´´½¨µÄÊı×éÊÇ·ñÊÇintÀàĞÍ
+1. ä½¿ç”¨æ˜¾å¼å˜é‡ç±»å‹å®šä¹‰äº†ä¸€ä¸ªå­—ç¬¦ä¸²æ•°ç»„
+2. æ–­è¨€åˆšæ‰åˆ›å»ºçš„æ•°ç»„æ˜¯å¦æ˜¯stringç±»å‹
+3. ä½¿ç”¨æ“ä½œç¬¦å®šä¹‰ä¸€ä¸ªintæ•°ç»„
+4. æ–­è¨€åˆšæ‰åˆ›å»ºçš„æ•°ç»„æ˜¯å¦æ˜¯intç±»å‹
 
-ÎÒÃÇÒ²¿ÉÒÔ´´½¨³öÒ»¸ö¶àÎ¬Êı×é
+æˆ‘ä»¬ä¹Ÿå¯ä»¥åˆ›å»ºå‡ºä¸€ä¸ªå¤šç»´æ•°ç»„
 ```groovy
 def matrix3 = new Integer[3][3]         (1)
 assert matrix3.size() == 3
@@ -433,26 +433,26 @@ Integer[][] matrix2                     (2)
 matrix2 = [[1, 2], [3, 4]]
 assert matrix2 instanceof Integer[][]
 ```
-1. ÎÒÃÇÖ¸¶¨ÁËĞÂÊı×éµÄ±ß½ç
-2. µ±È»ÎÒÃÇÒ²¿ÉÒÔ²»Ö¸¶¨ËüµÄ±ß½ç
+1. æˆ‘ä»¬æŒ‡å®šäº†æ–°æ•°ç»„çš„è¾¹ç•Œ
+2. å½“ç„¶æˆ‘ä»¬ä¹Ÿå¯ä»¥ä¸æŒ‡å®šå®ƒçš„è¾¹ç•Œ
 
-·ÃÎÊÊı×éÔªËØºÍ·ÃÎÊlistÔªËØµÄ·½Ê½ÏàÍ¬
+è®¿é—®æ•°ç»„å…ƒç´ å’Œè®¿é—®listå…ƒç´ çš„æ–¹å¼ç›¸åŒ
 ```groovy
-String[] names = ['C¨¦dric', 'Guillaume', 'Jochen', 'Paul']
-assert names[0] == 'C¨¦dric'     (1)
+String[] names = ['CÃ©dric', 'Guillaume', 'Jochen', 'Paul']
+assert names[0] == 'CÃ©dric'     (1)
 
 names[2] = 'Blackdrag'          (2)
 assert names[2] == 'Blackdrag'
 ```
 1	Retrieve the first element of the array
 2	Set the value of the third element of the array to a new value
-1. ¼ìË÷Êı×éÖĞµÚÒ»¸öÔªËØ
-2. ¶ÔÊı×éÖĞµÚÈı¸öÔªËØÖØĞÂ¸³Öµ
+1. æ£€ç´¢æ•°ç»„ä¸­ç¬¬ä¸€ä¸ªå…ƒç´ 
+2. å¯¹æ•°ç»„ä¸­ç¬¬ä¸‰ä¸ªå…ƒç´ é‡æ–°èµ‹å€¼
 
-Groovy²»Ö§³ÖJavaÊı×é³õÊ¼»¯Óï·¨, ÒòÎªJavaÊı×éÖĞµÄ»¨À¨ºÅ¿ÉÄÜ±»»áGroovyÎŞ½â³É±Õ°ü
+Groovyä¸æ”¯æŒJavaæ•°ç»„åˆå§‹åŒ–è¯­æ³•, å› ä¸ºJavaæ•°ç»„ä¸­çš„èŠ±æ‹¬å·å¯èƒ½è¢«ä¼šGroovyæ— è§£æˆé—­åŒ…
 
 ### Maps
-ÓĞÊ±ºòÎÒÃÇÔÚÆäËûÓïÑÔÖĞ³ÆmapÎª ×Öµä»òÕß¹ØÁªÊı×é. Map½«keyºÍvalue¹ØÁªÆğÀ´, ÔÚGroovyÖĞmap±»`[]`À¨ÆğÀ´, Í¨¹ı`,`·Ö¸î¼üÖµ¶Ô, ¼üÖµÍ¨¹ı`:`·Ö¸î
+æœ‰æ—¶å€™æˆ‘ä»¬åœ¨å…¶ä»–è¯­è¨€ä¸­ç§°mapä¸º å­—å…¸æˆ–è€…å…³è”æ•°ç»„. Mapå°†keyå’Œvalueå…³è”èµ·æ¥, åœ¨Groovyä¸­mapè¢«`[]`æ‹¬èµ·æ¥, é€šè¿‡`,`åˆ†å‰²é”®å€¼å¯¹, é”®å€¼é€šè¿‡`:`åˆ†å‰²
 ```groovy
 def colors = [red: '#FF0000', green: '#00FF00', blue: '#0000FF']   (1)
 
@@ -468,21 +468,21 @@ assert colors['yellow'] == '#FFFF00'
 assert colors instanceof java.util.LinkedHashMap
 ```
 
-1. ÎÒÃÇ¶¨ÒåÁËÒ»¸östringÀàĞÍµÄ´ú±íÑÕÉ«Ãû×ÖµÄÊı×é,
-2. È»ºóÊ¹ÓÃÏÂ±êÀ´¼ìË÷mapÖĞÊÇ·ñ°üº¬redÕâ¸ökey
-3. ÎÒÃÇ»¹¿ÉÒÔÖ±½ÓÊ¹ÓÃ`.`À´Ë÷Òıµ½Ä³¸ökey
-4. ÎÒÃÇ¿ÉÒÔÊ¹ÓÃÏÂ±êÏòmapÖĞÌí¼ÓÒ»¸öĞÂµÄ¼üÖµ¶Ô
-5. ÎÒÃÇÒ²¿ÉÒÔÊ¹ÓÃ`.`Ìí¼ÓÒ»¸öĞÂµÄ¼üÖµ¶Ô
+1. æˆ‘ä»¬å®šä¹‰äº†ä¸€ä¸ªstringç±»å‹çš„ä»£è¡¨é¢œè‰²åå­—çš„æ•°ç»„,
+2. ç„¶åä½¿ç”¨ä¸‹æ ‡æ¥æ£€ç´¢mapä¸­æ˜¯å¦åŒ…å«redè¿™ä¸ªkey
+3. æˆ‘ä»¬è¿˜å¯ä»¥ç›´æ¥ä½¿ç”¨`.`æ¥ç´¢å¼•åˆ°æŸä¸ªkey
+4. æˆ‘ä»¬å¯ä»¥ä½¿ç”¨ä¸‹æ ‡å‘mapä¸­æ·»åŠ ä¸€ä¸ªæ–°çš„é”®å€¼å¯¹
+5. æˆ‘ä»¬ä¹Ÿå¯ä»¥ä½¿ç”¨`.`æ·»åŠ ä¸€ä¸ªæ–°çš„é”®å€¼å¯¹
 
-Groovy´´½¨µÄmapÀàĞÍÄ¬ÈÏµÄÊÇ`java.util.LinkedHashMap`
+Groovyåˆ›å»ºçš„mapç±»å‹é»˜è®¤çš„æ˜¯`java.util.LinkedHashMap`
 
-µ±ÄãÏëÒª·ÃÎÊÒ»¸ö²»´æÔÚµÄkeyÊ±£º
+å½“ä½ æƒ³è¦è®¿é—®ä¸€ä¸ªä¸å­˜åœ¨çš„keyæ—¶ï¼š
 ```groovy
 assert colors.unknown == null
 ```
-Äã½«¼ìË÷³öÒ»¸önullµÄ½á¹û
+ä½ å°†æ£€ç´¢å‡ºä¸€ä¸ªnullçš„ç»“æœ
 
-ÔÚÉÏÃæµÄÀı×ÓÖĞÎÒÃÇÊ¹ÓÃµÄÊÇÒÔstring×÷Îªkey, µ«ÊÇÄã»¹¿ÉÒÔÊ¹ÓÃÆäËûÀàĞÍ×÷ÎªmapµÄkey£º
+åœ¨ä¸Šé¢çš„ä¾‹å­ä¸­æˆ‘ä»¬ä½¿ç”¨çš„æ˜¯ä»¥stringä½œä¸ºkey, ä½†æ˜¯ä½ è¿˜å¯ä»¥ä½¿ç”¨å…¶ä»–ç±»å‹ä½œä¸ºmapçš„keyï¼š
 
 ```groovy
 def numbers = [1: 'one', 2: 'two']
@@ -490,7 +490,7 @@ def numbers = [1: 'one', 2: 'two']
 assert numbers[1] == 'one'
 ```
 
-ÎÒÃÇÊ¹ÓÃÁËnumber×÷ÎªÁËmapĞÂµÄkeyÀàĞÍ, numberÀàĞÍ¾Í»áÖ±½Ó±»½âÊÍÎªnumberÀàĞÍ, Òò´ËGroovy²»»áÏñÏÈÇ°ÄÇÑù´´½¨Ò»¸östringÀàĞÍµÄkey. µ«ÊÇ¼ÙÉèÄãÏëÒª´«µİÒ»¸ö±äÁ¿×÷Îªkey,ÊÇ±äÁ¿µÄÖµ×÷Îªkey£º
+æˆ‘ä»¬ä½¿ç”¨äº†numberä½œä¸ºäº†mapæ–°çš„keyç±»å‹, numberç±»å‹å°±ä¼šç›´æ¥è¢«è§£é‡Šä¸ºnumberç±»å‹, å› æ­¤Groovyä¸ä¼šåƒå…ˆå‰é‚£æ ·åˆ›å»ºä¸€ä¸ªstringç±»å‹çš„key. ä½†æ˜¯å‡è®¾ä½ æƒ³è¦ä¼ é€’ä¸€ä¸ªå˜é‡ä½œä¸ºkey,æ˜¯å˜é‡çš„å€¼ä½œä¸ºkeyï¼š
 
 ```groovy
 def key = 'name'
@@ -499,11 +499,11 @@ def person = [key: 'Guillaume']      (1)
 assert !person.containsKey('name')   (2)
 assert person.containsKey('key')     (3)
 ```
-1. Óë`\'Guillaume'` ¹ØÁªµÄkeyÊµ¼ÊÉÏÊÇ`"key"`Õâ¸ö×Ö·û´®, ¶ø²»ÊÇÕâ¸ökeyµÄÒıÓÃÖµ`'name'`
-2. mapÖĞ²»°üº¬`'name'`key
-3. È¡¶ø´úÖ®µÄÊÇmapÖĞ°üº¬Ò»¸ö`"key"`µÄ×Ö·û´®
+1. ä¸`\'Guillaume'` å…³è”çš„keyå®é™…ä¸Šæ˜¯`"key"`è¿™ä¸ªå­—ç¬¦ä¸², è€Œä¸æ˜¯è¿™ä¸ªkeyçš„å¼•ç”¨å€¼`'name'`
+2. mapä¸­ä¸åŒ…å«`'name'`key
+3. å–è€Œä»£ä¹‹çš„æ˜¯mapä¸­åŒ…å«ä¸€ä¸ª`"key"`çš„å­—ç¬¦ä¸²
 
-Äã¿ÉÒÔÏòmapÖĞ´«µİÒ»¸öÒıºÅ×Ö·û´®×÷Îªkey,ÀıÈç`["name": "Guillaume"]`.
+ä½ å¯ä»¥å‘mapä¸­ä¼ é€’ä¸€ä¸ªå¼•å·å­—ç¬¦ä¸²ä½œä¸ºkey,ä¾‹å¦‚`["name": "Guillaume"]`.
 
 ```groovy
 person = [(key): 'Guillaume']        (1)
@@ -513,14 +513,14 @@ assert !person.containsKey('key')    (3)
 ```
 1	This time, we surround the key variable with parentheses, to instruct the parser we are passing a variable rather than defining a string key
 2	The map does contain the name key
-3	But the map doesn¡¯t contain the key key as before
+3	But the map doesnâ€™t contain the key key as before
 1.
 2.
 3.
 
 #### Map literals
 
-ÔÚGroovyÖĞ¿ÉÒÔÊ¹ÓÃ`[:]` ´´½¨Ò»¸ömap.
+åœ¨Groovyä¸­å¯ä»¥ä½¿ç”¨`[:]` åˆ›å»ºä¸€ä¸ªmap.
 ```groovy
 def map = [name: 'Gromit', likes: 'cheese', id: 1234]
 assert map.get('name') == 'Gromit'
@@ -536,7 +536,7 @@ assert emptyMap.size() == 1
 assert emptyMap.get("foo") == 5
 ```
 
-MapµÄkeyÄ¬ÈÏÊÇ`string`, ÀıÈç`[a:1]`µÈÍ¬ÓÚ`['a':1]`. ±È½ÏÈÙÓşÔì³ÉÒÉ»óµÄ¾ÍÊÇ,Èç¹ûÄã´´½¨ÁËÒ»¸ö±äÁ¿a(ÖµÎªb), µ«ÊÇÄã½«±äÁ¿a`put`½ømapºó, mapµÄkey»áÊÇa,¶ø²»ÊÇb. Èç¹ûÄãÓöµ½ÁËÕâ¸öÇé¿öµÄ»°,ÄÇÃ´Äã±ØĞë¶ÔÊ¹ÓÃ`()`key½øĞĞ×ªÒåÁË.
+Mapçš„keyé»˜è®¤æ˜¯`string`, ä¾‹å¦‚`[a:1]`ç­‰åŒäº`['a':1]`. æ¯”è¾ƒè£èª‰é€ æˆç–‘æƒ‘çš„å°±æ˜¯,å¦‚æœä½ åˆ›å»ºäº†ä¸€ä¸ªå˜é‡a(å€¼ä¸ºb), ä½†æ˜¯ä½ å°†å˜é‡a`put`è¿›mapå, mapçš„keyä¼šæ˜¯a,è€Œä¸æ˜¯b. å¦‚æœä½ é‡åˆ°äº†è¿™ä¸ªæƒ…å†µçš„è¯,é‚£ä¹ˆä½ å¿…é¡»å¯¹ä½¿ç”¨`()`keyè¿›è¡Œè½¬ä¹‰äº†.
 ```groovy
 def a = 'Bob'
 def ages = [a: 43]
@@ -547,7 +547,7 @@ ages = [(a): 43]            // now we escape `a` by using parenthesis
 assert ages['Bob'] == 43   // and the value is found!
 ```
 
-Í¨¹ıÏÂÃæµÄ·½Ê½Äã¿ÉÒÔÇáËÉ¿ËÂ¡Ò»¸ömap
+é€šè¿‡ä¸‹é¢çš„æ–¹å¼ä½ å¯ä»¥è½»æ¾å…‹éš†ä¸€ä¸ªmap
 ```groovy
 def map = [
         simple : 123,
@@ -562,7 +562,7 @@ assert map.get('complex').get('c') == 3
 
 #### Map property notation
 
-MapsºÍbeansÒ²ÊÇ·Ç³£ÏàÏñµÄ, ËùÒÔÄã¿ÉÒÔ¶ÔmapÊ¹ÓÃ`get/set`²Ù×÷ÔªËØ,µ±È»ÕâÒ²ÓĞ¸öÇ°Ìá,ÄÇ¾ÍÊÇmapÖĞµÄkey±ØĞëÊÇ·ûºÏGroovy±êÊ¶·ûµÄkey.
+Mapså’Œbeansä¹Ÿæ˜¯éå¸¸ç›¸åƒçš„, æ‰€ä»¥ä½ å¯ä»¥å¯¹mapä½¿ç”¨`get/set`æ“ä½œå…ƒç´ ,å½“ç„¶è¿™ä¹Ÿæœ‰ä¸ªå‰æ,é‚£å°±æ˜¯mapä¸­çš„keyå¿…é¡»æ˜¯ç¬¦åˆGroovyæ ‡è¯†ç¬¦çš„key.
 
 ```groovy
 def map = [name: 'Gromit', likes: 'cheese', id: 1234]
@@ -576,7 +576,7 @@ assert emptyMap.size() == 1
 assert emptyMap.foo == 5
 ```
 
-×¢Òâ:`map.foo`×ÜÊÇ»áÔÚmapÖĞ²éÕÒkey`foo`. ÕâÒâÎ¶×Å,
+æ³¨æ„:`map.foo`æ€»æ˜¯ä¼šåœ¨mapä¸­æŸ¥æ‰¾key`foo`. è¿™æ„å‘³ç€,
 ```groovy
 def map = [name: 'Gromit', likes: 'cheese', id: 1234]
 assert map.class == null
@@ -599,7 +599,7 @@ assert map.get(null) == 'x'
 
 #### Iterating on maps
 
-`Groovy development kit`»¹Ìá¹©ÁË`eachWithIndex`·½·¨±éÀúmap.ÖµµÃ×¢ÒâµÄÊÇ,map»á±£ÁôputÔªËØµÄË³Ğò,Ò²¾ÍÊÇËµ,µ±Äã±éÀúÒ»¸ömapµÄÊ±ºò,ÎŞÂÛ½øĞĞ¶àÉÙ´Î,Äã»ñµÃµÄÔªËØµÄË³ĞòÊÇÒ»¶¨µÄ.
+`Groovy development kit`è¿˜æä¾›äº†`eachWithIndex`æ–¹æ³•éå†map.å€¼å¾—æ³¨æ„çš„æ˜¯,mapä¼šä¿ç•™putå…ƒç´ çš„é¡ºåº,ä¹Ÿå°±æ˜¯è¯´,å½“ä½ éå†ä¸€ä¸ªmapçš„æ—¶å€™,æ— è®ºè¿›è¡Œå¤šå°‘æ¬¡,ä½ è·å¾—çš„å…ƒç´ çš„é¡ºåºæ˜¯ä¸€å®šçš„.
 ```groovy
 def map = [
         Bob  : 42,
@@ -632,7 +632,7 @@ map.eachWithIndex { key, value, i ->
 
 ##### Adding or removing elements
 
-ÏòmapÖĞÌí¼ÓÔªËØÄã¿ÉÒÔÊ¹ÓÃ`put`·½·¨, `ÏÂ±ê`, `putAll`·½·¨.
+å‘mapä¸­æ·»åŠ å…ƒç´ ä½ å¯ä»¥ä½¿ç”¨`put`æ–¹æ³•, `ä¸‹æ ‡`, `putAll`æ–¹æ³•.
 ```groovy
 def defaults = [1: 'a', 2: 'b', 3: 'c', 4: 'd']
 def overrides = [2: 'z', 5: 'x', 13: 'x']
@@ -644,7 +644,7 @@ result.putAll(overrides)
 assert result == [1: 'a', 2: 'z', 3: 'c', 4: 'd', 5: 'x', 13: 'x', 15: 't', 17: 'u']
 ```
 
-Èç¹ûÏëÒªÉ¾³ımapÖĞÈ«²¿µÄÔªËØ,¿ÉÒÔÊ¹ÓÃ`clear`·½·¨.
+å¦‚æœæƒ³è¦åˆ é™¤mapä¸­å…¨éƒ¨çš„å…ƒç´ ,å¯ä»¥ä½¿ç”¨`clear`æ–¹æ³•.
 ```groovy
 def m = [1:'a', 2:'b']
 assert m.get(1) == 'a'
@@ -652,9 +652,9 @@ m.clear()
 assert m == [:]
 ```
 
-Í¨¹ımap×ÖÃæÁ¿±ê¼Ç´´½¨µÄmap»áÊ¹ÓÃ`object`µÄ`equals`·½·¨ºÍ`hashcode`·½·¨.
+é€šè¿‡mapå­—é¢é‡æ ‡è®°åˆ›å»ºçš„mapä¼šä½¿ç”¨`object`çš„`equals`æ–¹æ³•å’Œ`hashcode`æ–¹æ³•.
 
-»¹Òª×¢ÒâµÄÊÇ,²»ÒªÊ¹ÓÃGString×÷ÎªmapµÄkey, ÒòÎªGStringµÄhashcode·½·¨ºÍStringµÄhashcode·½·¨²»Ò»Ñù.
+è¿˜è¦æ³¨æ„çš„æ˜¯,ä¸è¦ä½¿ç”¨GStringä½œä¸ºmapçš„key, å› ä¸ºGStringçš„hashcodeæ–¹æ³•å’ŒStringçš„hashcodeæ–¹æ³•ä¸ä¸€æ ·.
 ```groovy
 def key = 'some key'
 def map = [:]
@@ -665,7 +665,7 @@ assert map.get('SOME KEY') == null
 
 ##### Keys, values and entries
 
-ÎÒÃÇ¿ÉÒÔÔÚÊÓÍ¼ÖĞinspect`keys, values, and entries`
+æˆ‘ä»¬å¯ä»¥åœ¨è§†å›¾ä¸­inspect`keys, values, and entries`
 ```groovy
 def map = [1:'a', 2:'b', 3:'c']
 

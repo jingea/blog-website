@@ -79,9 +79,9 @@ title: java虚拟机参数
 ## 参数组合
 *给远程服务器加debug
 ```
--Xdebug-Xnoagent-Djava.compiler=NONE-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=10020
+-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$debug_port
 ```
-
+* suspend:这个参数是用来当JVM启动之后等待debug客户端连接,如果没有debug客户端连接,那么虚拟机就会一直等待，造成假死的现象
 
 *`-XX:+UseVMInterruptibleIO`:线程中断前或是EINTR在OS_INTRPT中对于I/O操作的结果
 *`-XX:-UseParallelOldGC`:所有的集合使用并行垃圾收集器.能够自动化地设置这个选项-XX:+UseParallelGC

@@ -2,15 +2,15 @@ category: groovy
 date: 2014-04-08
 title: groovy JSON
 ---
-> ±¾ÎÄÊÇ¶ÔGroovy²¿·Ö¹Ù·½ÎÄµµ½øĞĞÁË·­Òë
+> æœ¬æ–‡æ˜¯å¯¹Groovyéƒ¨åˆ†å®˜æ–¹æ–‡æ¡£è¿›è¡Œäº†ç¿»è¯‘
 
-Groovy Ô­ÉúÖ§³ÖGroovy¶ÔÏóºÍJSONÖ®¼äµÄ×ª»». `groovy.json`°üÄÚµÄÀàÓÃÓÚJSONµÄĞòÁĞ»¯ºÍ½âÎö¹¦ÄÜ
+Groovy åŸç”Ÿæ”¯æŒGroovyå¯¹è±¡å’ŒJSONä¹‹é—´çš„è½¬æ¢. `groovy.json`åŒ…å†…çš„ç±»ç”¨äºJSONçš„åºåˆ—åŒ–å’Œè§£æåŠŸèƒ½
 
 ## JsonSlurper
 
-`JsonSlurper`ÓÃÓÚ½«JSONÎÄ±¾»òÕßÆäËûÊı¾İÄÚÈİ½âÎö³ÉGroovyÀïµÄÊı¾İ½á¹¹,ÀıÈç`maps</code>, `lists</code>, »òÕßÆäËûÔ­Éú»ù±¾ÀàĞÍ `Integer</code>, `Double</code>, `Boolean</code>, `String`¡£
+`JsonSlurper`ç”¨äºå°†JSONæ–‡æœ¬æˆ–è€…å…¶ä»–æ•°æ®å†…å®¹è§£ææˆGroovyé‡Œçš„æ•°æ®ç»“æ„,ä¾‹å¦‚`maps</code>, `lists</code>, æˆ–è€…å…¶ä»–åŸç”ŸåŸºæœ¬ç±»å‹ `Integer</code>, `Double</code>, `Boolean</code>, `String`ã€‚
 
-Õâ¸öÀàÖØÔØÁËºÜ¶à·½·¨, ¶øÇÒ»¹Ìí¼ÓÁËÒ»Ğ©ÌØÊâµÄ·½·¨, ÀıÈç`parseText</code>, `parseFile` µÈ.ÏÂÃæÕâ¸öÀı×ÓÖĞÎÒÃÇÊ¹ÓÃÁË `parseText` ·½·¨, Ëü»á½âÎöÒ»¸öJSON×Ö·û´®, È»ºóµİ¹éµØ½«Ëü×ª»»³É`list</code>, `map`½á¹¹. Ò»Ğ©ÆäËûµÄ`parse*</code> ·½·¨ºÍÕâ¸ö·½·¨ºÜÀàËÆ, ¶¼·µ»ØÁËJSON×Ö·û´®, Ö»²»¹ıÆäËûµÄ·½·¨½ÓÊÜµÄ²ÎÊı²»Ò»Ñù.
+è¿™ä¸ªç±»é‡è½½äº†å¾ˆå¤šæ–¹æ³•, è€Œä¸”è¿˜æ·»åŠ äº†ä¸€äº›ç‰¹æ®Šçš„æ–¹æ³•, ä¾‹å¦‚`parseText</code>, `parseFile` ç­‰.ä¸‹é¢è¿™ä¸ªä¾‹å­ä¸­æˆ‘ä»¬ä½¿ç”¨äº† `parseText` æ–¹æ³•, å®ƒä¼šè§£æä¸€ä¸ªJSONå­—ç¬¦ä¸², ç„¶åé€’å½’åœ°å°†å®ƒè½¬æ¢æˆ`list</code>, `map`ç»“æ„. ä¸€äº›å…¶ä»–çš„`parse*</code> æ–¹æ³•å’Œè¿™ä¸ªæ–¹æ³•å¾ˆç±»ä¼¼, éƒ½è¿”å›äº†JSONå­—ç¬¦ä¸², åªä¸è¿‡å…¶ä»–çš„æ–¹æ³•æ¥å—çš„å‚æ•°ä¸ä¸€æ ·.
 
 ```groovy
 def jsonSlurper = new JsonSlurper()
@@ -20,9 +20,9 @@ assert object instanceof Map
 assert object.name == 'John Doe'
 ```
 
-ĞèÒª×¢ÒâµÄÊÇ, ²úÉúµÄ½á¹ûÊÇÒ»¸ö´¿map, ¿ÉÒÔÏñÒ»¸öÆÕÍ¨µÄGroovy¶ÔÏóÊµÀı³ÖÓĞËü. `JsonSlurper`¸ù¾İ[ECMA-404 JSON Interchange Standard](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)¶¨ÒåÀ´½âÎöJSON, Í¬Ê±Ö§³ÖJavaScriptµÄ×¢ÊÍºÍÊ±¼äÀàĞÍ.
+éœ€è¦æ³¨æ„çš„æ˜¯, äº§ç”Ÿçš„ç»“æœæ˜¯ä¸€ä¸ªçº¯map, å¯ä»¥åƒä¸€ä¸ªæ™®é€šçš„Groovyå¯¹è±¡å®ä¾‹æŒæœ‰å®ƒ. `JsonSlurper`æ ¹æ®[ECMA-404 JSON Interchange Standard](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)å®šä¹‰æ¥è§£æJSON, åŒæ—¶æ”¯æŒJavaScriptçš„æ³¨é‡Šå’Œæ—¶é—´ç±»å‹.
 
-³ıÁËÖ§³ÖmapsÖ®Íâ, `JsonSlurper` »¹Ö§³Ö½«JSONÊı×é½âÎö³ÉlistµÄ¹¦ÄÜ
+é™¤äº†æ”¯æŒmapsä¹‹å¤–, `JsonSlurper` è¿˜æ”¯æŒå°†JSONæ•°ç»„è§£ææˆlistçš„åŠŸèƒ½
 ```groovy
 def jsonSlurper = new JsonSlurper()
 def object = jsonSlurper.parseText('{ "myList": [4, 8, 15, 16, 23, 42] }')
@@ -32,7 +32,7 @@ assert object.myList instanceof List
 assert object.myList == [4, 8, 15, 16, 23, 42]
 ```
 
-JSON±ê×¼ÉÏÖ»Ö§³ÖÏÂÃæÕâĞ©Ô­ÉúÊı¾İÀàĞÍ£º`string</code>, `number</code>, `object</code>, `true</code>, `false</code>, `null</code>. `JsonSlurper` ½«ÄÇĞ©JSONÀàĞÍ×ª»»³ÉGroovyÀàĞÍ.
+JSONæ ‡å‡†ä¸Šåªæ”¯æŒä¸‹é¢è¿™äº›åŸç”Ÿæ•°æ®ç±»å‹ï¼š`string</code>, `number</code>, `object</code>, `true</code>, `false</code>, `null</code>. `JsonSlurper` å°†é‚£äº›JSONç±»å‹è½¬æ¢æˆGroovyç±»å‹.
 ```groovy
 def jsonSlurper = new JsonSlurper()
 def object = jsonSlurper.parseText '''
@@ -47,10 +47,10 @@ assert object.fraction.class == BigDecimal
 assert object.exponential.class == BigDecimal
 ```
 
-`JsonSlurper` Éú³ÉµÄ½á¹û¾ÍÊÇ´¿Groovy¶ÔÏóÊµÀı, ËıµÄÄÚ²¿²»»á°üº¬ÈÎºÎµÄJSONÏà¹ØµÄÀà¶ÔÏó, ËüµÄÓÃ·¨ÊÇÏàµ±Í¸Ã÷µÄ. ÊÂÊµÉÏ`JsonSlurper`µÄ½á¹û×ñÑ­`GPath`±í´ïÊ½. `GPath`ÊÇÒ»¸ö·Ç³£Ç¿´óµÄ±í´ïÊ½ÓïÑÔ, ËüÖ§³Ö¶àÖÖ²»Í¬µÄÊı¾İ¸ñÊ½(ÀıÈç`XmlSlurper`Ö§³Ö`XML` ¾ÍÊÇÆäÖĞÒ»¸öÀı×Ó)
+`JsonSlurper` ç”Ÿæˆçš„ç»“æœå°±æ˜¯çº¯Groovyå¯¹è±¡å®ä¾‹, å¥¹çš„å†…éƒ¨ä¸ä¼šåŒ…å«ä»»ä½•çš„JSONç›¸å…³çš„ç±»å¯¹è±¡, å®ƒçš„ç”¨æ³•æ˜¯ç›¸å½“é€æ˜çš„. äº‹å®ä¸Š`JsonSlurper`çš„ç»“æœéµå¾ª`GPath`è¡¨è¾¾å¼. `GPath`æ˜¯ä¸€ä¸ªéå¸¸å¼ºå¤§çš„è¡¨è¾¾å¼è¯­è¨€, å®ƒæ”¯æŒå¤šç§ä¸åŒçš„æ•°æ®æ ¼å¼(ä¾‹å¦‚`XmlSlurper`æ”¯æŒ`XML` å°±æ˜¯å…¶ä¸­ä¸€ä¸ªä¾‹å­)
 
-Èç¹ûÏëÒªÁË½â¸ü¶àµÄÄÚÈİ, Äã¿ÉÒÔÖ±½ÓÈ¥[GPath expressions](http://docs.groovy-lang.org/latest/html/documentation/core-semantics.html#gpath_expressions)¿´Ò»¿´.
-ÏÂÃæ¸ø³öÁËJSONÀàĞÍÓëGroovyÊı¾İÀàĞÍÖ®¼äµÄ¶ÔÓ¦¹ØÏµ.
+å¦‚æœæƒ³è¦äº†è§£æ›´å¤šçš„å†…å®¹, ä½ å¯ä»¥ç›´æ¥å»[GPath expressions](http://docs.groovy-lang.org/latest/html/documentation/core-semantics.html#gpath_expressions)çœ‹ä¸€çœ‹.
+ä¸‹é¢ç»™å‡ºäº†JSONç±»å‹ä¸Groovyæ•°æ®ç±»å‹ä¹‹é—´çš„å¯¹åº”å…³ç³».
 ```groovy
 JSON			Groovy
 string			java.lang.String
@@ -60,25 +60,25 @@ array			java.util.ArrayList
 true			true
 false			false
 null			null
-date			java.util.Date based on the yyyy-MM-dd¡¯T¡¯HH:mm:ssZ date format
+date			java.util.Date based on the yyyy-MM-ddâ€™Tâ€™HH:mm:ssZ date format
 ```
 
-Èç¹ûJSONÖĞµÄÒ»¸öÖµÊÇ`null</code>, `JsonSlurper`Ö§³ÖËü×ª»»³ÉGroovyÖĞµÄ`null</code>.Õâ¾ÍÓëÆäËûJSON½âÎöÆ÷ĞÎ³ÉÁË¶Ô±È, ´ú±íÒ»¸ö¿ÕÖµÓë¿âÌá¹©µÄµ¥Ò»¶ÔÏó¡£
+å¦‚æœJSONä¸­çš„ä¸€ä¸ªå€¼æ˜¯`null</code>, `JsonSlurper`æ”¯æŒå®ƒè½¬æ¢æˆGroovyä¸­çš„`null</code>.è¿™å°±ä¸å…¶ä»–JSONè§£æå™¨å½¢æˆäº†å¯¹æ¯”, ä»£è¡¨ä¸€ä¸ªç©ºå€¼ä¸åº“æä¾›çš„å•ä¸€å¯¹è±¡ã€‚
 
 ### Parser Variants
 
-Groovy ÓĞ¶à¸ö`JsonSlurper` ½âÎöÆ÷ÊµÏÖ. Ã¿Ò»¸ö½âÎöÆ÷¶¼¶ÔÓ¦×Å²»Í¬µÄĞèÇó, Ã¿Ò»¸öÌØ¶¨µÄ½âÎö¶¼ÄÜºÜºÃµÄ´¦ÀíÌØ¶¨ĞèÇó, ËùÒÔÄ¬ÈÏµÄ½âÎöÆ÷²¢²»ÊÇÊÊÓ¦ÓÚËùÓĞµÄÇé¿ö. ÏÂÃæ¾Í¶Ô¸÷¸ö½âÎöÆ÷×ö¸ö¼ò½é:
+Groovy æœ‰å¤šä¸ª`JsonSlurper` è§£æå™¨å®ç°. æ¯ä¸€ä¸ªè§£æå™¨éƒ½å¯¹åº”ç€ä¸åŒçš„éœ€æ±‚, æ¯ä¸€ä¸ªç‰¹å®šçš„è§£æéƒ½èƒ½å¾ˆå¥½çš„å¤„ç†ç‰¹å®šéœ€æ±‚, æ‰€ä»¥é»˜è®¤çš„è§£æå™¨å¹¶ä¸æ˜¯é€‚åº”äºæ‰€æœ‰çš„æƒ…å†µ. ä¸‹é¢å°±å¯¹å„ä¸ªè§£æå™¨åšä¸ªç®€ä»‹:
 
-`JsonParserCharArray` ½âÎöÆ÷½ÓÊÜÒ»¸öJSON×Ö·û´®, È»ºóÆäÄÚ²¿Ê¹ÓÃÒ»¸ö×Ö½ÚÊı×é½øĞĞ½âÎö. During value conversion it copies character sub-arrays (a mechanism known as "chopping") and operates on them.
+`JsonParserCharArray` è§£æå™¨æ¥å—ä¸€ä¸ªJSONå­—ç¬¦ä¸², ç„¶åå…¶å†…éƒ¨ä½¿ç”¨ä¸€ä¸ªå­—èŠ‚æ•°ç»„è¿›è¡Œè§£æ. During value conversion it copies character sub-arrays (a mechanism known as "chopping") and operates on them.
 
 
-* `JsonFastParser`½âÎöÆ÷ÊÇ`JsonParserCharArray`½âÎöÆ÷µÄ±äÖÖ, ËüÊÇ×î¿ìµÄ½âÎöÆ÷. ¾¡¹ÜËüÊÇ×î¿ìµÄ,µ«ÊÇ»ùÓÚÄ³Ğ©Ô­Òò,Ëü²¢²»ÊÇÄ¬ÈÏµÄ½âÎöÆ÷. `JsonFastParser`½âÎöÆ÷Ò²±»³ÆÎªË÷Òı¸²¸Ç(index-overlay)½âÎöÆ÷. µ±½âÎö¸ø¶¨JSON×Ö·û´®µÄÊ±ºò,¸Ã½âÎöÆ÷»á¼«Á¦±ÜÃâ´´½¨ĞÂµÄ×Ö½ÚÊı×é»òÕß×Ö·û´®ÊµÀı. ËüÒ»Ö±Ö¸ÏòÔ­ÉúµÄ×Ö½ÚÊı×é¡£ ÁíÍâ, Ëü»á¾¡¿ÉÄÜµÄÍÆ³Ù¶ÔÏóµÄ´´½¨. If parsed maps are put into long-term caches care must be taken as the map objects might not be created and still consist of pointer to the original char buffer only. `JsonFastParser`²ÉÈ¡ÁËÒ»ÖÖÌØÊâµÄÇĞ¸îÄ£ĞÍ, Ëü»á¾¡ÔçµØ·Ö¸îchar buffer, ÒÔ±ãÄÜÎ¬³ÖÒ»·İ¶ÔÔ­Éúbuffer±È½ÏĞ¡µÄ¿½±´. Èç¹ûÄãÏëÊ¹ÓÃ`JsonFastParser</code>, ÄÇÃ´¸øÄãµÄ½¨ÒéÊÇ±£³Ö`JsonFastParser`µÄJSON bufferÔÚ2MB×óÓÒ, ¶øÇÒÊ±¿ÌÒª±£³Ö³¤ÆÚ»º´æÏŞÖÆ.
+* `JsonFastParser`è§£æå™¨æ˜¯`JsonParserCharArray`è§£æå™¨çš„å˜ç§, å®ƒæ˜¯æœ€å¿«çš„è§£æå™¨. å°½ç®¡å®ƒæ˜¯æœ€å¿«çš„,ä½†æ˜¯åŸºäºæŸäº›åŸå› ,å®ƒå¹¶ä¸æ˜¯é»˜è®¤çš„è§£æå™¨. `JsonFastParser`è§£æå™¨ä¹Ÿè¢«ç§°ä¸ºç´¢å¼•è¦†ç›–(index-overlay)è§£æå™¨. å½“è§£æç»™å®šJSONå­—ç¬¦ä¸²çš„æ—¶å€™,è¯¥è§£æå™¨ä¼šæåŠ›é¿å…åˆ›å»ºæ–°çš„å­—èŠ‚æ•°ç»„æˆ–è€…å­—ç¬¦ä¸²å®ä¾‹. å®ƒä¸€ç›´æŒ‡å‘åŸç”Ÿçš„å­—èŠ‚æ•°ç»„ã€‚ å¦å¤–, å®ƒä¼šå°½å¯èƒ½çš„æ¨è¿Ÿå¯¹è±¡çš„åˆ›å»º. If parsed maps are put into long-term caches care must be taken as the map objects might not be created and still consist of pointer to the original char buffer only. `JsonFastParser`é‡‡å–äº†ä¸€ç§ç‰¹æ®Šçš„åˆ‡å‰²æ¨¡å‹, å®ƒä¼šå°½æ—©åœ°åˆ†å‰²char buffer, ä»¥ä¾¿èƒ½ç»´æŒä¸€ä»½å¯¹åŸç”Ÿbufferæ¯”è¾ƒå°çš„æ‹·è´. å¦‚æœä½ æƒ³ä½¿ç”¨`JsonFastParser</code>, é‚£ä¹ˆç»™ä½ çš„å»ºè®®æ˜¯ä¿æŒ`JsonFastParser`çš„JSON bufferåœ¨2MBå·¦å³, è€Œä¸”æ—¶åˆ»è¦ä¿æŒé•¿æœŸç¼“å­˜é™åˆ¶.
 
-* `JsonParserLax` ÊÇ`JsonFastParser`µÄÒ»¸ö±äÖÖÊµÏÖ. ËüÓë`JsonFastParser` ÓĞÒ»Ğ©ÏàËÆµÄÏëÄÜÌØµã, µ«ÊÇ²»Í¬µÄÊÇËü²»ÊÇ½ö½öÒÀ¿¿`ECMA-404 JSON grammar</code>. ÀıÈç,ÔÚÏÂÃæÀı×ÓÖĞËüÖ§³Ö²»´øÒıºÅµÄ×Ö·û´®×¢ÊÍ.
+* `JsonParserLax` æ˜¯`JsonFastParser`çš„ä¸€ä¸ªå˜ç§å®ç°. å®ƒä¸`JsonFastParser` æœ‰ä¸€äº›ç›¸ä¼¼çš„æƒ³èƒ½ç‰¹ç‚¹, ä½†æ˜¯ä¸åŒçš„æ˜¯å®ƒä¸æ˜¯ä»…ä»…ä¾é `ECMA-404 JSON grammar</code>. ä¾‹å¦‚,åœ¨ä¸‹é¢ä¾‹å­ä¸­å®ƒæ”¯æŒä¸å¸¦å¼•å·çš„å­—ç¬¦ä¸²æ³¨é‡Š.
 
-`JsonParserUsingCharacterSource` ÓÃÓÚ½âÎö·Ç³£´óµÄÎÄ¼ş. ËüÊ¹ÓÃÒ»ÖÖ³ÆÎª<code>"character windowing"</code>µÄ¼¼ÊõÈ¥½âÎö·Ç³£´ó(³¬¹ı2MB)µÄJSONÎÄ¼ş,¶øÇÒĞÔÄÜÉÏÒ²·Ç³£ÎÈ¶¨
+`JsonParserUsingCharacterSource` ç”¨äºè§£æéå¸¸å¤§çš„æ–‡ä»¶. å®ƒä½¿ç”¨ä¸€ç§ç§°ä¸º<code>"character windowing"</code>çš„æŠ€æœ¯å»è§£æéå¸¸å¤§(è¶…è¿‡2MB)çš„JSONæ–‡ä»¶,è€Œä¸”æ€§èƒ½ä¸Šä¹Ÿéå¸¸ç¨³å®š
 
-`JsonSlurper`µÄÄ¬ÈÏÊµÏÖÊÇ `JsonParserCharArray</code>.  `JsonParserType`°üº¬ÁË½âÎöÆ÷ÖÖÀàµÄÃ¶¾ÙÀàĞÍ:
+`JsonSlurper`çš„é»˜è®¤å®ç°æ˜¯ `JsonParserCharArray</code>.  `JsonParserType`åŒ…å«äº†è§£æå™¨ç§ç±»çš„æšä¸¾ç±»å‹:
 
 ```groovy
 Implementation					Constant
@@ -88,7 +88,7 @@ JsonParserLax					JsonParserType#LAX
 JsonParserUsingCharacterSource	JsonParserType#CHARACTER_SOURCE
 ```
 
-Èç¹ûÏëÒª¸Ä±ä½âÎöÆ÷µÄÊµÏÖÒ²·Ç³£¼òµ¥, Ö»ĞèÒªÍ¨¹ıµ÷ÓÃ`JsonSlurper#setType()</code>·½·¨¸ø`JsonParserType`ÉèÖÃÉÏ²»Í¬µÄÖµ¾Í¿ÉÒÔÁË
+å¦‚æœæƒ³è¦æ”¹å˜è§£æå™¨çš„å®ç°ä¹Ÿéå¸¸ç®€å•, åªéœ€è¦é€šè¿‡è°ƒç”¨`JsonSlurper#setType()</code>æ–¹æ³•ç»™`JsonParserType`è®¾ç½®ä¸Šä¸åŒçš„å€¼å°±å¯ä»¥äº†
 
 ```groovy
 def jsonSlurper = new JsonSlurper(type: JsonParserType.INDEX_OVERLAY)
@@ -101,18 +101,18 @@ assert object.myList == [4, 8, 15, 16, 23, 42]
 
 ### JsonOutput
 
-`JsonOutput`ÓÃÓÚ½«Groovy¶ÔÏóĞòÁĞ»¯³ÉJSON×Ö·û´®. 
+`JsonOutput`ç”¨äºå°†Groovyå¯¹è±¡åºåˆ—åŒ–æˆJSONå­—ç¬¦ä¸². 
 
-`JsonOutput` ÖØÔØÁË`toJson`¾²Ì¬·½·¨. Ã¿¸ö²»Í¬µÄ`toJson`·½·¨¶¼»á½ÓÊÜÒ»¸ö²»Í¬µÄ²ÎÊıÀàĞÍ. 
+`JsonOutput` é‡è½½äº†`toJson`é™æ€æ–¹æ³•. æ¯ä¸ªä¸åŒçš„`toJson`æ–¹æ³•éƒ½ä¼šæ¥å—ä¸€ä¸ªä¸åŒçš„å‚æ•°ç±»å‹. 
 
-`toJson`·½·¨·µ»ØµÄÊÇÒ»¸ö°üº¬JSOn¸ñÊ½µÄ×Ö·û´®
+`toJson`æ–¹æ³•è¿”å›çš„æ˜¯ä¸€ä¸ªåŒ…å«JSOnæ ¼å¼çš„å­—ç¬¦ä¸²
 ```groovy
 def json = JsonOutput.toJson([name: 'John Doe', age: 42])
 
 assert json == '{"name":"John Doe","age":42}'
 ```
 
-`JsonOutput`²»½öÖ§³ÖÔ­ÉúÀàĞÍ, map, listµÈÀàĞÍĞòÁĞ»¯µ½JSON, ÉõÖÁ»¹Ö§³ÖĞòÁĞ»¯`POGOs</code>(Ò»ÖÖ±È½ÏÀÏµÄGroovy¶ÔÏó)
+`JsonOutput`ä¸ä»…æ”¯æŒåŸç”Ÿç±»å‹, map, listç­‰ç±»å‹åºåˆ—åŒ–åˆ°JSON, ç”šè‡³è¿˜æ”¯æŒåºåˆ—åŒ–`POGOs</code>(ä¸€ç§æ¯”è¾ƒè€çš„Groovyå¯¹è±¡)
 ```groovy
 class Person { String name }
 
@@ -121,7 +121,7 @@ def json = JsonOutput.toJson([ new Person(name: 'John'), new Person(name: 'Max')
 assert json == '[{"name":"John"},{"name":"Max"}]'
 ```
 
-¸Õ²ÅÄÇ¸öÀı×ÓÖĞ, JSONÊä³öÄ¬ÈÏÃ»ÓĞ½øĞĞprettyÊä³ö. Òò´Ë`JsonSlurper`»¹Ìá¹©ÁË`prettyPrint`·½·¨
+åˆšæ‰é‚£ä¸ªä¾‹å­ä¸­, JSONè¾“å‡ºé»˜è®¤æ²¡æœ‰è¿›è¡Œprettyè¾“å‡º. å› æ­¤`JsonSlurper`è¿˜æä¾›äº†`prettyPrint`æ–¹æ³•
 ```groovy
 def json = JsonOutput.toJson([name: 'John Doe', age: 42])
 
@@ -134,9 +134,9 @@ assert JsonOutput.prettyPrint(json) == '''\
 }'''.stripIndent()
 ```
 
-`prettyPrint`·½·¨Ö»½ÓÊÜÒ»¸öStringÀàĞÍµÄ×Ö·û´®, Ëü²»ÄÜºÍ`JsonOutput`ÀïÆäËûµÄ·½Ê½½áºÏÆğÀ´Ê¹ÓÃ, it can be applied on arbitrary JSON String instances.
+`prettyPrint`æ–¹æ³•åªæ¥å—ä¸€ä¸ªStringç±»å‹çš„å­—ç¬¦ä¸², å®ƒä¸èƒ½å’Œ`JsonOutput`é‡Œå…¶ä»–çš„æ–¹å¼ç»“åˆèµ·æ¥ä½¿ç”¨, it can be applied on arbitrary JSON String instances.
 
-ÔÚGroovyÖĞ»¹¿ÉÒÔÊ¹ÓÃ`JsonBuilder</code>, `StreamingJsonBuilder`·½Ê½´´½¨JSON. ÕâÁ©¸ö¹¹½¨Æğ¶¼Ìá¹©ÁËÒ»¸ö`DSL</code>, µ±¹¹½¨Æ÷Éú³ÉÒ»¸öJSONµÄÊ±ºò,¿ÉÒÔÖÆ¶¨Ò»¸ö¶ÔÏóÍ¼.
+åœ¨Groovyä¸­è¿˜å¯ä»¥ä½¿ç”¨`JsonBuilder</code>, `StreamingJsonBuilder`æ–¹å¼åˆ›å»ºJSON. è¿™ä¿©ä¸ªæ„å»ºèµ·éƒ½æä¾›äº†ä¸€ä¸ª`DSL</code>, å½“æ„å»ºå™¨ç”Ÿæˆä¸€ä¸ªJSONçš„æ—¶å€™,å¯ä»¥åˆ¶å®šä¸€ä¸ªå¯¹è±¡å›¾.
 
 
 ```groovy

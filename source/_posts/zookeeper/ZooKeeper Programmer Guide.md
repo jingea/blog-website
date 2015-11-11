@@ -68,27 +68,29 @@ ZooKeeper 有多种追踪时间的方式：
 * `Zxid`(ZooKeeper Transaction Id) : ZooKeeper每次变化都会产生一个`zxid`形式的标记. 这一点暴露了ZooKeeper里发生的全部变化顺序. 每一个变化都会产生一个唯一的`zxid`值,如果zxid1小于zxid2的值，那么说明zxid1发生在zxid2之前. 
 * `Version numbers`:每当node发生变化,node上的某个版本号就会自增1. 
 * `Ticks`: 当多台服务器之间的ZooKeeper通信时, ZooKeeper使用ticks来完成事件定时功能,例如俩台设备之间的状态上传session超时, 连接超时等等. The tick time is only indirectly exposed through the minimum session timeout (2 times the tick time); if a client requests a session timeout less than the minimum session timeout, the server will tell the client that the session timeout is actually the minimum session timeout.
-* `Real time`:ZooKeeper doesn't use real time, or clock time, at all except to put timestamps into the stat structure on znode creation and znode modification.
+* `Real time`:ZooKeeper 并不使用real time或者时钟时间, 而是当znode创建或者修改的时候将时间戳放到znode状态结构体里.
 
 > 注：每个node有三个版本号：version (znode里数据发生变化的次数), cversion (znode子节点发生变化的次数), and aversion (znode里 ACL发生变化的次数).
  
 ### ZooKeeper Stat Structure
 ZooKeeper里的每个znode的状态结构体由以下构成：
 
-* `czxid`:The zxid of the change that caused this znode to be created. 引起创建znode的变化zxid
-* `mzxid`:The zxid of the change that last modified this znode.
-* `ctime`:The time in milliseconds from epoch when this znode was created.
-* `mtime`:The time in milliseconds from epoch when this znode was last modified.
-* `version`:The number of changes to the data of this znode.
-* `cversion`:The number of changes to the children of this znode.
-* `aversion`:The number of changes to the ACL of this znode.
-* `ephemeralOwner`:The session id of the owner of this znode if the znode is an ephemeral node. If it is not an ephemeral node, it will be zero.
-* `dataLength`:The length of the data field of this znode.
-* `numChildren`:The number of children of this znode.
+* `czxid`:znode创建时的zxid标记
+* `mzxid`:znode修改时的zxid标记。
+* `ctime`:znode创建时的毫秒数级别的zxid标记。
+* `mtime`:znode修改时的毫秒数级别的zxid标记。
+* `version`:znode数据变更的次数。
+* `cversion`:znode子节点变更的次数。
+* `aversion`:znode ACL变更的次数。 
+* `ephemeralOwner`:ephemeral node拥有者的session id。如果该node不是ephemeral node，该值为0.
+* `dataLength`:znode的数据长度.
+* `numChildren`:znode子节点数量.
 
 ## ZooKeeper Sessions
+ZooKeeper客户端会通过某种语言绑定到ZooKeeper服务创建出一个handler,然后客户端就可以维持session
 A ZooKeeper client establishes a session with the ZooKeeper service by creating a handle to the service using a language binding. Once created, the handle starts of in the CONNECTING state and the client library tries to connect to one of the servers that make up the ZooKeeper service at which point it switches to the CONNECTED state. During normal operation will be in one of these two states. If an unrecoverable error occurs, such as session expiration or authentication failure, or if the application explicitly closes the handle, the handle will move to the CLOSED state. The following figure shows the possible state transitions of a ZooKeeper client:
 
+![](https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/state_dia.jpg)
 
 To create a client session the application code must provide a connection string containing a comma separated list of host:port pairs, each corresponding to a ZooKeeper server (e.g. "127.0.0.1:4545" or "127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002"). The ZooKeeper client library will pick an arbitrary server and try to connect to it. If this connection fails, or if the client becomes disconnected from the server for any reason, the client will automatically try the next server in the list, until a connection is (re-)established.
 

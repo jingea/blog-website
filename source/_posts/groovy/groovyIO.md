@@ -2,25 +2,25 @@ category: groovy
 date: 2014-04-08
 title: groovy IO
 ---
-> ±¾ÎÄÊÇ¶ÔGroovy²¿·Ö¹Ù·½ÎÄµµ½øĞĞÁË·­Òë
+> æœ¬æ–‡æ˜¯å¯¹Groovyéƒ¨åˆ†å®˜æ–¹æ–‡æ¡£è¿›è¡Œäº†ç¿»è¯‘
 
-### ¶ÁÎÄ¼ş
-×÷ÎªµÚÒ»¸öÀı×Ó,ÈÃÎÒÃÇ¿´Ò»ÏÂ,ÈçºÎÊä³öÒ»¸öÎÄ±¾ÎÄ¼şÀïµÄËùÓĞĞĞ
+### è¯»æ–‡ä»¶
+ä½œä¸ºç¬¬ä¸€ä¸ªä¾‹å­,è®©æˆ‘ä»¬çœ‹ä¸€ä¸‹,å¦‚ä½•è¾“å‡ºä¸€ä¸ªæ–‡æœ¬æ–‡ä»¶é‡Œçš„æ‰€æœ‰è¡Œ
 ```groovy
 new File(baseDir, 'haiku.txt').eachLine { line ->
     println line
 }
 ```
 
-`eachLine`·½·¨ÊÇGroovy×Ô¶¯Ìí¼Óµ½File ClassµÄ,Í¬Ê±ÄØ,Groovy»¹Ìí¼ÓÁËºÜ¶à±äÁ¿,ÀıÈç,ÄãÈç¹ûÏëÒªÖªµÀÃ¿Ò»ĞĞµÄĞĞºÅ,Äã¿ÉÒÔÊ¹ÓÃÕâ¸ö±äÁ¿:
+`eachLine`æ–¹æ³•æ˜¯Groovyè‡ªåŠ¨æ·»åŠ åˆ°File Classçš„,åŒæ—¶å‘¢,Groovyè¿˜æ·»åŠ äº†å¾ˆå¤šå˜é‡,ä¾‹å¦‚,ä½ å¦‚æœæƒ³è¦çŸ¥é“æ¯ä¸€è¡Œçš„è¡Œå·,ä½ å¯ä»¥ä½¿ç”¨è¿™ä¸ªå˜é‡:
 ```groovy
 new File(baseDir, 'haiku.txt').eachLine { line, nb ->
     println "Line $nb: $line"
 }
 ```
-ÎŞÂÛÓÉÓÚÊ²Ã´Ô­Òò, µ±`eachLine`ÖĞÅ×³öÁËÒì³£,Õâ¸ö·½·¨¶¼»áÈ·±£,×ÊÔ´ÒÑ¾­±»ÕıÈ·µÄ¹Ø±ÕµôÁË. Õâ¶ÔËùÓĞGroovy×Ô¶¯Ìí¼ÓµÄ¹ØÓÚI/O×ÊÔ´µÄ·½·¨¶¼ÓĞĞ§.
+æ— è®ºç”±äºä»€ä¹ˆåŸå› , å½“`eachLine`ä¸­æŠ›å‡ºäº†å¼‚å¸¸,è¿™ä¸ªæ–¹æ³•éƒ½ä¼šç¡®ä¿,èµ„æºå·²ç»è¢«æ­£ç¡®çš„å…³é—­æ‰äº†. è¿™å¯¹æ‰€æœ‰Groovyè‡ªåŠ¨æ·»åŠ çš„å…³äºI/Oèµ„æºçš„æ–¹æ³•éƒ½æœ‰æ•ˆ.
 
-ÀıÈç, Ä³ÖÖÇé¿öÄãÊ¹ÓÃÁË`Reader`, µ«ÊÇÄã»¹ÏëÈÃGroovy×Ô¼º¹ÜÀí×ÊÔ´. ÏÂÃæÕâ¸öÀı×Ó, ¼´Ê¹Å×³öÁËexception, readerÈÔÈ»»á±»×Ô¶¯¹Ø±Õ.
+ä¾‹å¦‚, æŸç§æƒ…å†µä½ ä½¿ç”¨äº†`Reader`, ä½†æ˜¯ä½ è¿˜æƒ³è®©Groovyè‡ªå·±ç®¡ç†èµ„æº. ä¸‹é¢è¿™ä¸ªä¾‹å­, å³ä½¿æŠ›å‡ºäº†exception, readerä»ç„¶ä¼šè¢«è‡ªåŠ¨å…³é—­.
 ```groovy
 def count = 0, MAXSIZE = 3
 new File(baseDir,"haiku.txt").withReader { reader ->
@@ -32,75 +32,75 @@ new File(baseDir,"haiku.txt").withReader { reader ->
 }
 ```
 
-Èç¹ûÄãÏëÒª°ÑÎÄ±¾ÎÄ¼şÖĞÃ¿Ò»ĞĞ¶¼·Å½øÒ»¸ölistÖĞ, Äã¿ÉÒÔÕâÃ´×ö:
+å¦‚æœä½ æƒ³è¦æŠŠæ–‡æœ¬æ–‡ä»¶ä¸­æ¯ä¸€è¡Œéƒ½æ”¾è¿›ä¸€ä¸ªlistä¸­, ä½ å¯ä»¥è¿™ä¹ˆåš:
 ```groovy
 def list = new File(baseDir, 'haiku.txt').collect {it}
 ```
 
-»òÕßÄãÏëÀûÓÃ²Ù×÷·û½«ÎÄ¼şÖĞÃ¿Ò»ĞĞ¶¼Ìí¼Óµ½Ò»¸öÊı×éÖĞ:
+æˆ–è€…ä½ æƒ³åˆ©ç”¨æ“ä½œç¬¦å°†æ–‡ä»¶ä¸­æ¯ä¸€è¡Œéƒ½æ·»åŠ åˆ°ä¸€ä¸ªæ•°ç»„ä¸­:
 ```groovy
 def array = new File(baseDir, 'haiku.txt') as String[]
 ```
 
-ÏÂÃæÕâ¸öÊ¾Àı,·Ç³£¼òµ¥µÄÊµÏÖÁË,½«Ò»¸öÎÄ¼ş´æ½øÒ»¸ö×Ö½ÚÊı×éÀï:
+ä¸‹é¢è¿™ä¸ªç¤ºä¾‹,éå¸¸ç®€å•çš„å®ç°äº†,å°†ä¸€ä¸ªæ–‡ä»¶å­˜è¿›ä¸€ä¸ªå­—èŠ‚æ•°ç»„é‡Œ:
 ```groovy
 byte[] contents = file.bytes
 ```
 
-ÈçÏÂÀı,ÎÒÃÇÇáËÉµØ»ñµÃÁËÒ»¸öÊäÈëÁ÷.
+å¦‚ä¸‹ä¾‹,æˆ‘ä»¬è½»æ¾åœ°è·å¾—äº†ä¸€ä¸ªè¾“å…¥æµ.
 ```groovy
 def is = new File(baseDir,'haiku.txt').newInputStream()
 // do something ...
 is.close()
 ```
 
-ÉÏ¸öÀı×ÓÖĞÎÒÃÇ»ñµÃÁËÒ»¸öÊäÈëÁ÷,µ«ÊÇ×îºóÎÒÃÇ²»µÃ²»ÊÖ¶¯¹Ø±ÕËü, GroovyÌá¹©ÁíÒ»¸ö·½·¨`withInputStream`, Õâ¸ö·½·¨¿ÉÒÔ°ïÎÒÃÇ×Ô¶¯µÄ¹Ø±ÕÊäÈëÁ÷.
+ä¸Šä¸ªä¾‹å­ä¸­æˆ‘ä»¬è·å¾—äº†ä¸€ä¸ªè¾“å…¥æµ,ä½†æ˜¯æœ€åæˆ‘ä»¬ä¸å¾—ä¸æ‰‹åŠ¨å…³é—­å®ƒ, Groovyæä¾›å¦ä¸€ä¸ªæ–¹æ³•`withInputStream`, è¿™ä¸ªæ–¹æ³•å¯ä»¥å¸®æˆ‘ä»¬è‡ªåŠ¨çš„å…³é—­è¾“å…¥æµ.
 ```groovy
 new File(baseDir,'haiku.txt').withInputStream { stream ->
     // do something ...
 }
 ```
 
-### Ğ´ÎÄ¼ş
+### å†™æ–‡ä»¶
 
-ÓĞÊ±ºò,ÄãĞèÒªµÄÒ²ĞíÖ»ÊÇĞ´ÎÄ¼ş,ÏÂÃæÕ¹Ê¾ÁË,ÈçºÎÔÚGroovyÖĞĞ´ÎÄ¼ş
+æœ‰æ—¶å€™,ä½ éœ€è¦çš„ä¹Ÿè®¸åªæ˜¯å†™æ–‡ä»¶,ä¸‹é¢å±•ç¤ºäº†,å¦‚ä½•åœ¨Groovyä¸­å†™æ–‡ä»¶
 ```groovy
 new File(baseDir,'haiku.txt').withWriter('utf-8') { writer ->
     writer.writeLine 'Into the ancient pond'
     writer.writeLine 'A frog jumps'
-    writer.writeLine 'Water¡¯s sound!'
+    writer.writeLine 'Waterâ€™s sound!'
 }
 ```
 
-µ«¶ÔÓÚÒ»¸öÒªÇóºÜ¼òµ¥µÄĞèÇóÀ´Ëµ,ÎÒÃÇ¿ÉÒÔÊ¹ÓÃ`<<`ÏòÎÄ¼şÖĞĞ´
+ä½†å¯¹äºä¸€ä¸ªè¦æ±‚å¾ˆç®€å•çš„éœ€æ±‚æ¥è¯´,æˆ‘ä»¬å¯ä»¥ä½¿ç”¨`<<`å‘æ–‡ä»¶ä¸­å†™
 ```groovy
 new File(baseDir,'haiku.txt') << '''Into the ancient pond
 A frog jumps
-Water¡¯s sound!'''
+Waterâ€™s sound!'''
 ```
 
-µ±È»²»ÊÇÃ¿Ò»´ÎÎÒÃÇ¶¼ÊÇÏòÎÄ¼şÖĞÊä³öÎÄ±¾,ÏÂÃæµÄÀı×ÓÑİÊ¾ÁË,ÎÒÃÇÈçºÎÏòÒ»¸öÎÄ¼şÖĞĞ´Èë×Ö½Ú:
+å½“ç„¶ä¸æ˜¯æ¯ä¸€æ¬¡æˆ‘ä»¬éƒ½æ˜¯å‘æ–‡ä»¶ä¸­è¾“å‡ºæ–‡æœ¬,ä¸‹é¢çš„ä¾‹å­æ¼”ç¤ºäº†,æˆ‘ä»¬å¦‚ä½•å‘ä¸€ä¸ªæ–‡ä»¶ä¸­å†™å…¥å­—èŠ‚:
 ```groovy
 file.bytes = [66,22,11]
 ```
 
-µ±È»,ÄãÒ²¿ÉÒÔÖ±½Ó´ò¿ªÒ»¸öÊä³öÁ÷,ÏÂÃæµÄÀı×ÓÑİÊ¾ÁËÈçºÎ¿ªÆôÒ»¸öÊä³öÁ÷.
+å½“ç„¶,ä½ ä¹Ÿå¯ä»¥ç›´æ¥æ‰“å¼€ä¸€ä¸ªè¾“å‡ºæµ,ä¸‹é¢çš„ä¾‹å­æ¼”ç¤ºäº†å¦‚ä½•å¼€å¯ä¸€ä¸ªè¾“å‡ºæµ.
 ```groovy
 def os = new File(baseDir,'data.bin').newOutputStream()
 // do something ...
 os.close()
 ```
 
-Í¬`newInputStream`Ò»Ñù,`newOutputStream`Í¬ÑùĞèÒªÊÖ¶¯¹Ø±Õ, ok,Äã´ó¸ÅÏëµ½ÁË`withOutputStream`:
+åŒ`newInputStream`ä¸€æ ·,`newOutputStream`åŒæ ·éœ€è¦æ‰‹åŠ¨å…³é—­, ok,ä½ å¤§æ¦‚æƒ³åˆ°äº†`withOutputStream`:
 ```groovy
 new File(baseDir,'data.bin').withOutputStream { stream ->
     // do something ...
 }
 ```
 
-### ±éÀúÎÄ¼ş
+### éå†æ–‡ä»¶
 
-ÔÚ½Å±¾ÖĞ, ÓĞ¸öºÜ³£ÓÃµÄĞèÇó¾ÍÊÇ,±éÀúÒ»¸öÄ¿Â¼,È»ºóÕÒµ½Ò»¸öÎÄ¼ş,½øĞĞÄ³Ğ©²Ù×÷. GroovyÌá¹©ÁËºÜ¶à·½·¨,À´´ïµ½Õâ¸öĞ§¹û. ÏÂÃæµÄÀı×ÓÑİÊ¾ÁË½«Ò»¸öÄ¿Â¼ÏÂµÄËùÓĞÎÄ¼ş¶¼Ö´ĞĞÄ³¸ö²Ù×÷:
+åœ¨è„šæœ¬ä¸­, æœ‰ä¸ªå¾ˆå¸¸ç”¨çš„éœ€æ±‚å°±æ˜¯,éå†ä¸€ä¸ªç›®å½•,ç„¶åæ‰¾åˆ°ä¸€ä¸ªæ–‡ä»¶,è¿›è¡ŒæŸäº›æ“ä½œ. Groovyæä¾›äº†å¾ˆå¤šæ–¹æ³•,æ¥è¾¾åˆ°è¿™ä¸ªæ•ˆæœ. ä¸‹é¢çš„ä¾‹å­æ¼”ç¤ºäº†å°†ä¸€ä¸ªç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶éƒ½æ‰§è¡ŒæŸä¸ªæ“ä½œ:
 ```groovy
 dir.eachFile { file ->                      (1)
     println file.name
@@ -110,10 +110,10 @@ dir.eachFileMatch(~/.*\.txt/) { file ->     (2)
 }
 ```
 
-1. ÔÚÄ¿Â¼ÏÂµÄÃ¿¸öÎÄ¼şÉÏÖ´ĞĞ±Õ°ü²Ù×÷.
-2. ¸ù¾İÕıÔò±í´ïÊ½ÔÚÄ¿Â¼ÏÂÕÒµ½·ûºÏÌõ¼şµÄÎÄ¼ş,È»ºóÖ´ĞĞ±Õ°ü²Ù×÷.
+1. åœ¨ç›®å½•ä¸‹çš„æ¯ä¸ªæ–‡ä»¶ä¸Šæ‰§è¡Œé—­åŒ…æ“ä½œ.
+2. æ ¹æ®æ­£åˆ™è¡¨è¾¾å¼åœ¨ç›®å½•ä¸‹æ‰¾åˆ°ç¬¦åˆæ¡ä»¶çš„æ–‡ä»¶,ç„¶åæ‰§è¡Œé—­åŒ…æ“ä½œ.
 
-Ò²ĞíÄãÏëÒª±éÀúÄ³¸öÄ¿Â¼ºÍÄ¿Â¼ÀïµÄËùÓĞ×ÓÄ¿Â¼, ÄÇÃ´Äã¿ÉÒÔÊ¹ÓÃ`eachFileRecurse`
+ä¹Ÿè®¸ä½ æƒ³è¦éå†æŸä¸ªç›®å½•å’Œç›®å½•é‡Œçš„æ‰€æœ‰å­ç›®å½•, é‚£ä¹ˆä½ å¯ä»¥ä½¿ç”¨`eachFileRecurse`
 ```groovy
 dir.eachFileRecurse { file ->                      (1)
     println file.name
@@ -123,8 +123,8 @@ dir.eachFileRecurse(FileType.FILES) { file ->      (2)
     println file.name
 }
 ```
-1. ¶ÔÄ¿Â¼ÀïµÄËùÓĞ×ÓÄ¿Â¼½øĞĞµİ¹é, È»ºó¶ÔÕÒµ½µÄÎÄ¼şºÍÄ¿Â¼½øĞĞ±Õ°ü²Ù×÷
-2. ¶ÔÄ¿Â¼Àï½øĞĞµİ¹é²éÕÒ,µ«ÊÇÖ»²éÕÒÎÄ¼ş.
+1. å¯¹ç›®å½•é‡Œçš„æ‰€æœ‰å­ç›®å½•è¿›è¡Œé€’å½’, ç„¶åå¯¹æ‰¾åˆ°çš„æ–‡ä»¶å’Œç›®å½•è¿›è¡Œé—­åŒ…æ“ä½œ
+2. å¯¹ç›®å½•é‡Œè¿›è¡Œé€’å½’æŸ¥æ‰¾,ä½†æ˜¯åªæŸ¥æ‰¾æ–‡ä»¶.
 
 ```groovy
 dir.traverse { file ->
@@ -137,12 +137,12 @@ dir.traverse { file ->
 
 }
 ```
-1. Èç¹ûÕÒµ½µÄÎÄ¼şÊÇÄ¿Â¼,ÇÒËüµÄÃû×ÖÊÇ"dir", ÔòÍ£Ö¹±éÀú
-2.  ´òÓ¡³öÎÄ¼şµÄÃû×Ö,½Ó×Å±éÀú
+1. å¦‚æœæ‰¾åˆ°çš„æ–‡ä»¶æ˜¯ç›®å½•,ä¸”å®ƒçš„åå­—æ˜¯"dir", åˆ™åœæ­¢éå†
+2.  æ‰“å°å‡ºæ–‡ä»¶çš„åå­—,æ¥ç€éå†
 
-### ĞòÁĞ»¯
+### åºåˆ—åŒ–
 
-ÔÚjavaÖĞ»áÊ¹ÓÃ`java.io.DataOutputStream` ĞòÁĞ»¯Êı¾İÒ²²»º±¼û. Groovy¶ÔÕâ¸öĞèÇóÒ²×öÁË·Ç³£¼òµ¥µÄÊµÏÖ, ÏÂÃæµÄÀı×ÓÑİÊ¾ÁËÈçºÎĞòÁĞ»¯ºÍ·´ĞòÁĞ»¯:
+åœ¨javaä¸­ä¼šä½¿ç”¨`java.io.DataOutputStream` åºåˆ—åŒ–æ•°æ®ä¹Ÿä¸ç½•è§. Groovyå¯¹è¿™ä¸ªéœ€æ±‚ä¹Ÿåšäº†éå¸¸ç®€å•çš„å®ç°, ä¸‹é¢çš„ä¾‹å­æ¼”ç¤ºäº†å¦‚ä½•åºåˆ—åŒ–å’Œååºåˆ—åŒ–:
 ```groovy
 boolean b = true
 String message = 'Hello from Groovy'
@@ -159,7 +159,7 @@ file.withDataInputStream { input ->
 }
 ```
 
-Í¬Ñù,Èç¹ûÕâ¸öÊı¾İÊµÀıÁËĞòÁĞ»¯½Ó¿Ú`Serializable`, Äã¿ÉÒÔÊ¹ÓÃ object output stream½«Õû¸öÊı¾İĞòÁĞ»¯µ½ÎÄ¼ş:
+åŒæ ·,å¦‚æœè¿™ä¸ªæ•°æ®å®ä¾‹äº†åºåˆ—åŒ–æ¥å£`Serializable`, ä½ å¯ä»¥ä½¿ç”¨ object output streamå°†æ•´ä¸ªæ•°æ®åºåˆ—åŒ–åˆ°æ–‡ä»¶:
 ```groovy
 Person p = new Person(name:'Bob', age:76)
 // Serialize data into a file
@@ -175,21 +175,21 @@ file.withObjectInputStream { input ->
 }
 ```
 
-### Ö´ĞĞÃüÁî
+### æ‰§è¡Œå‘½ä»¤
 
-Ç°ÃæµÄÕÂ½Ú½éÉÜÁËÔÚGroovyÖĞ²Ù×÷files, readers or streams·Ç³£¼òµ¥. È»¶ø, ÏñÏµÍ³¹ÜÀíÔ±»òÕß¿ª·¢Õß,¿ÉÄÜ¸ü¶àµÄÊÇÖ´ĞĞÒ»¸öÏµÍ³ÃüÁî.
+å‰é¢çš„ç« èŠ‚ä»‹ç»äº†åœ¨Groovyä¸­æ“ä½œfiles, readers or streamséå¸¸ç®€å•. ç„¶è€Œ, åƒç³»ç»Ÿç®¡ç†å‘˜æˆ–è€…å¼€å‘è€…,å¯èƒ½æ›´å¤šçš„æ˜¯æ‰§è¡Œä¸€ä¸ªç³»ç»Ÿå‘½ä»¤.
 
-GroovyÍ¬ÑùÌá¹©ÁË·Ç³£¼òµ¥µÄ·½Ê½Ö´ĞĞÃüÁîĞĞÃüÁî. Ö»ĞèÒª¶¨ÒåÒ»¸öÃüÁîµÄ×Ö·û´®,È»ºóÖ´ĞĞÕâ¸ö×Ö·û´®µÄ`execute()`. ÔÚÀàUnixÏµÍ³ÖĞ(Èç¹ûÔÚwindowsÖĞÒ²°²×°ÁËÀàUnixÃüÁîĞĞ¹¤¾ßÒ²Ëã),Äã¿ÉÒÔÕâÑùÖ´ĞĞÃüÁî.
+GroovyåŒæ ·æä¾›äº†éå¸¸ç®€å•çš„æ–¹å¼æ‰§è¡Œå‘½ä»¤è¡Œå‘½ä»¤. åªéœ€è¦å®šä¹‰ä¸€ä¸ªå‘½ä»¤çš„å­—ç¬¦ä¸²,ç„¶åæ‰§è¡Œè¿™ä¸ªå­—ç¬¦ä¸²çš„`execute()`. åœ¨ç±»Unixç³»ç»Ÿä¸­(å¦‚æœåœ¨windowsä¸­ä¹Ÿå®‰è£…äº†ç±»Unixå‘½ä»¤è¡Œå·¥å…·ä¹Ÿç®—),ä½ å¯ä»¥è¿™æ ·æ‰§è¡Œå‘½ä»¤.
 ```groovy
 def process = "ls -l".execute()             (1)
 println "Found text ${process.text}"        (2)
 ```
-1. ÔÚÍâ²¿¹ı³Ì(external process)Ö´ĞĞlsÃüÁî
-2. »ñµÃÃüÁîµÄÊä³ö,²¢Êä³ö
+1. åœ¨å¤–éƒ¨è¿‡ç¨‹(external process)æ‰§è¡Œlså‘½ä»¤
+2. è·å¾—å‘½ä»¤çš„è¾“å‡º,å¹¶è¾“å‡º
 
-`execute()`·½·¨·µ»ØÒ»¸ö`java.lang.Process`ÊµÀı, ËæºóÑ¡ÔñÒ»ÖÖÊä³öÁ÷`in/out/err`, Í¬Ê±¼ì²é`exit`Öµ,²é¿´ÊÇ·ñÃüÁîÖ´ĞĞÍê±Ï.
+`execute()`æ–¹æ³•è¿”å›ä¸€ä¸ª`java.lang.Process`å®ä¾‹, éšåé€‰æ‹©ä¸€ç§è¾“å‡ºæµ`in/out/err`, åŒæ—¶æ£€æŸ¥`exit`å€¼,æŸ¥çœ‹æ˜¯å¦å‘½ä»¤æ‰§è¡Œå®Œæ¯•.
 
-ÏÂÃæµÄÀı×ÓÊ¹ÓÃÁËºÍ¸Õ²ÅÄÇ¸öÀı×ÓÒ»ÑùµÄÃüÁî,µ«ÊÇÏÖÔÚÎÒÃÇÃ¿´Î¶¼»á¶Ô»ñµÃµÄ½á¹û½øĞĞĞĞÊä³ö.
+ä¸‹é¢çš„ä¾‹å­ä½¿ç”¨äº†å’Œåˆšæ‰é‚£ä¸ªä¾‹å­ä¸€æ ·çš„å‘½ä»¤,ä½†æ˜¯ç°åœ¨æˆ‘ä»¬æ¯æ¬¡éƒ½ä¼šå¯¹è·å¾—çš„ç»“æœè¿›è¡Œè¡Œè¾“å‡º.
 ```groovy
             def process = "ls -l".execute()             (1)
             process.in.eachLine { line ->               (2)
@@ -260,7 +260,7 @@ println "Found text ${process.text}"        (2)
 1	executes the ls command in an external process
 2	for each line of the input stream of the process
 3	print the line
-1. ÔÚÍâ²¿½ø³ÌÖĞÖ´ĞĞlsÃüÁî
+1. åœ¨å¤–éƒ¨è¿›ç¨‹ä¸­æ‰§è¡Œlså‘½ä»¤
 2.
 
 It is worth noting that in corresponds to an input stream to the standard output of the command. out will refer to a stream where you can send data to the process (its standard input).
@@ -273,29 +273,29 @@ def process = "dir".execute()
 println "${process.text}"
 ```
 
-½Ó×ÅÄã»áÊÕµ½Ò»¸öÒì³£`IOException`,Òì³£ĞÅÏ¢Îª`Cannot run program "dir": CreateProcess error=2`,ÏµÍ³ÕÒ²»µ½Ö¸¶¨µÄÎÄ¼ş.
+æ¥ç€ä½ ä¼šæ”¶åˆ°ä¸€ä¸ªå¼‚å¸¸`IOException`,å¼‚å¸¸ä¿¡æ¯ä¸º`Cannot run program "dir": CreateProcess error=2`,ç³»ç»Ÿæ‰¾ä¸åˆ°æŒ‡å®šçš„æ–‡ä»¶.
 
-ÕâÊÇÒòÎª`dir`ÊÇÄÚ½¨ÓÚ`windows shell(cmd.ext)`, ÏëÒªÊ¹ÓÃÄÇ¸öÃüÁî,ÄãÒªÏñÏÂÃæÕâ¸öÑù²Ù×÷:
+è¿™æ˜¯å› ä¸º`dir`æ˜¯å†…å»ºäº`windows shell(cmd.ext)`, æƒ³è¦ä½¿ç”¨é‚£ä¸ªå‘½ä»¤,ä½ è¦åƒä¸‹é¢è¿™ä¸ªæ ·æ“ä½œ:
 ```groovy
 def process = "cmd /c dir".execute()
 println "${process.text}"
 ```
 
-»¹ÓĞ,ÒòÎªÉÏÊöµÄ¹¦ÄÜÊÇÔÚÄÚ²¿Ê¹ÓÃµÄ`java.lang.Process`, Õâ¸öÀàµÄÒ»Ğ©²»×ãµÄµØ·½,ÎÒÃÇÒ²Òª³ä·Ö¿¼ÂÇ. ÔÚjavadocÖĞ,ÊÇÕâÑùÃèÊöÕâ¸öÀàµÄ:
+è¿˜æœ‰,å› ä¸ºä¸Šè¿°çš„åŠŸèƒ½æ˜¯åœ¨å†…éƒ¨ä½¿ç”¨çš„`java.lang.Process`, è¿™ä¸ªç±»çš„ä¸€äº›ä¸è¶³çš„åœ°æ–¹,æˆ‘ä»¬ä¹Ÿè¦å……åˆ†è€ƒè™‘. åœ¨javadocä¸­,æ˜¯è¿™æ ·æè¿°è¿™ä¸ªç±»çš„:
 
 > Because some native platforms only provide limited buffer size for standard input and output streams, failure to promptly write the input stream or read the output stream of the subprocess may cause the subprocess to block, and even deadlock
 Because of this, Groovy provides some additional helper methods which make stream handling for processes easier.
 
-ÏÖÔÚÑİÊ¾Ò»ÏÂ,ÈçºÎÊä³ö½ø³ÌÀïËùÓĞµÄÊä³ö(°üÀ¨error stream).
+ç°åœ¨æ¼”ç¤ºä¸€ä¸‹,å¦‚ä½•è¾“å‡ºè¿›ç¨‹é‡Œæ‰€æœ‰çš„è¾“å‡º(åŒ…æ‹¬error stream).
 ```groovy
 def p = "rm -f foo.tmp".execute([], tmpDir)
 p.consumeProcessOutput()
 p.waitFor()
 ```
 
-`consumeProcessOutput`ÈÔÈ»ÓĞºÜ¶à¶Ô`StringBuffer`, `InputStream`, `OutputStream`µÈ·â×°µÄ±äÁ¿, Èç¹ûÏëÒª»ñÈ¡Ò»¸öÍêÕûµÄ·â×°ÁĞ±íµÄ,ÄÇ¿ÉÒÔ²Î¿¼ [GDK API for java.lang.Process](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Process.html)
+`consumeProcessOutput`ä»ç„¶æœ‰å¾ˆå¤šå¯¹`StringBuffer`, `InputStream`, `OutputStream`ç­‰å°è£…çš„å˜é‡, å¦‚æœæƒ³è¦è·å–ä¸€ä¸ªå®Œæ•´çš„å°è£…åˆ—è¡¨çš„,é‚£å¯ä»¥å‚è€ƒ [GDK API for java.lang.Process](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Process.html)
 
-ÁíÍâ, `pipeTo`ÃüÁî ¿ÉÒÔÈÃÒ»¸ö½ø³ÌµÄÊä³öÁ÷Á¬½Óµ½Ò»¸ö½ø³ÌµÄÊäÈëÁ÷Àï. ÈçÏÂÀı:
+å¦å¤–, `pipeTo`å‘½ä»¤ å¯ä»¥è®©ä¸€ä¸ªè¿›ç¨‹çš„è¾“å‡ºæµè¿æ¥åˆ°ä¸€ä¸ªè¿›ç¨‹çš„è¾“å…¥æµé‡Œ. å¦‚ä¸‹ä¾‹:
 
 ```groovy
 proc1 = 'ls'.execute()

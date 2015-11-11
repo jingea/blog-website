@@ -1,16 +1,16 @@
 category: groovy
 date: 2014-04-08
-title: groovyÊı×Ö
+title: groovyæ•°å­—
 ---
-> ±¾ÎÄÊÇ¶ÔGroovy²¿·Ö¹Ù·½ÎÄµµ½øĞĞÁË·­Òë
+> æœ¬æ–‡æ˜¯å¯¹Groovyéƒ¨åˆ†å®˜æ–¹æ–‡æ¡£è¿›è¡Œäº†ç¿»è¯‘
 
-GroovyÖ§³Ö¶àÖÖ²»Í¬µÄÕûÊı×ÖÃæÁ¿ºÍĞ¡Êı×ÖÃæÁ¿ (Í¨¹ıÒÀ¿¿JavaÊı×ÖÀàĞÍÊµÏÖ)
+Groovyæ”¯æŒå¤šç§ä¸åŒçš„æ•´æ•°å­—é¢é‡å’Œå°æ•°å­—é¢é‡ (é€šè¿‡ä¾é Javaæ•°å­—ç±»å‹å®ç°)
 
 ### Integral literals
 
 The integral literal types are the same as in Java:
 
-Ö¤ÊéÀàĞÍ±äÁ¿ºÍJavaÀïµÄÒ»Ñù
+è¯ä¹¦ç±»å‹å˜é‡å’ŒJavaé‡Œçš„ä¸€æ ·
 
 * byte
 * char
@@ -21,7 +21,7 @@ The integral literal types are the same as in Java:
 
 You can create integral numbers of those types with the following declarations:
 
-¿ÉÒÔÍ¨¹ıÒÔÏÂÉùÃ÷·½Ê½´´½¨ÕûÊıÀàĞÍ±äÁ¿
+å¯ä»¥é€šè¿‡ä»¥ä¸‹å£°æ˜æ–¹å¼åˆ›å»ºæ•´æ•°ç±»å‹å˜é‡
 ```groovy
 // primitive types
 byte  b = 1
@@ -33,7 +33,7 @@ long  l = 5
 // infinite precision
 BigInteger bi =  6
 ```
-Èç¹ûÊ¹ÓÃ`def`¹Ø¼ü×Ö, ÕûĞÍÀàĞÍ»á·¢Éú¸Ä±ä£ºËü»á×Ô¶¯ÊÊÅä³ÉÄÜ¹»´æ´¢numberÀàĞÍµÄÀàĞÍ
+å¦‚æœä½¿ç”¨`def`å…³é”®å­—, æ•´å‹ç±»å‹ä¼šå‘ç”Ÿæ”¹å˜ï¼šå®ƒä¼šè‡ªåŠ¨é€‚é…æˆèƒ½å¤Ÿå­˜å‚¨numberç±»å‹çš„ç±»å‹
 ```groovy
 def a = 1
 assert a instanceof Integer
@@ -80,7 +80,7 @@ assert ne instanceof BigInteger
 
 ##### Binary literal
 
-ÔÚJava6ÒÔÇ°ºÍGroovyÖĞ,numberÀàĞÍ¿ÉÒÔÊÇĞ¡Êı, 8½øÖÆºÍ16½øÖÆ. µ«ÊÇÔÚJava7ºÍGroovy2ÖĞ,¿ÉÒÔÊ¹ÓÃ0bÇ°×º±íÊ¾¶ş½øÖÆÊı¾İ.
+åœ¨Java6ä»¥å‰å’ŒGroovyä¸­,numberç±»å‹å¯ä»¥æ˜¯å°æ•°, 8è¿›åˆ¶å’Œ16è¿›åˆ¶. ä½†æ˜¯åœ¨Java7å’ŒGroovy2ä¸­,å¯ä»¥ä½¿ç”¨0bå‰ç¼€è¡¨ç¤ºäºŒè¿›åˆ¶æ•°æ®.
 ```groovy
 int xInt = 0b10101111
 assert xInt == 175
@@ -102,7 +102,7 @@ assert xNegativeInt == -175
 ```
 ##### Octal literal
 
-8½øÖÆµÄµç»°,Ö»ĞèÒª¿ªÍ·ÊÇ0ºó¸úÒª±íÊ¾µÄ8½øÖÆÊı¼´¿É.
+8è¿›åˆ¶çš„ç”µè¯,åªéœ€è¦å¼€å¤´æ˜¯0åè·Ÿè¦è¡¨ç¤ºçš„8è¿›åˆ¶æ•°å³å¯.
 ```groovy
 int xInt = 077
 assert xInt == 63
@@ -126,7 +126,7 @@ assert xNegativeInt == -63
 
 Hexadecimal numbers are specified in the typical format of 0x followed by hex digits.
 
-16½øÖÆµÄµç»°,Ö»ĞèÒª¿ªÍ·ÊÇ0xºó¸úÒª±íÊ¾µÄ16½øÖÆÊı¼´¿É.
+16è¿›åˆ¶çš„ç”µè¯,åªéœ€è¦å¼€å¤´æ˜¯0xåè·Ÿè¦è¡¨ç¤ºçš„16è¿›åˆ¶æ•°å³å¯.
 ```groovy
 
 int xInt = 0x77
@@ -153,12 +153,12 @@ assert xNegativeInt == -119
 
 ### Decimal literals
 
-Ğ¡Êı×ÖÃæÁ¿ºÍÔÚjava ÀïÒ»Ñù
+å°æ•°å­—é¢é‡å’Œåœ¨java é‡Œä¸€æ ·
 * float
 * double
 * java.lang.BigDecimal
 
-¿ÉÒÔÍ¨¹ıÏÂÃæµÄ·½Ê½´´½¨Ğ¡ÊıÀàĞÍµÄnumber
+å¯ä»¥é€šè¿‡ä¸‹é¢çš„æ–¹å¼åˆ›å»ºå°æ•°ç±»å‹çš„number
 ```groovy
 // primitive types
 float  f = 1.234
@@ -179,12 +179,12 @@ assert 5e-1 ==      0.5
 ```
 Conveniently for exact decimal number calculations, Groovy choses java.lang.BigDecimal as its decimal number type. In addition, both float and double are supported, but require an explicit type declaration, type coercion or suffix. Even if BigDecimal is the default for decimal numbers, such literals are accepted in methods or closures taking float or double as parameter types.
 
-Decimal numbers can¡¯t be represented using a binary, octal or hexadecimal representation.
+Decimal numbers canâ€™t be represented using a binary, octal or hexadecimal representation.
 
 
 ### Underscore in literals
 
-When writing long literal numbers, it¡¯s harder on the eye to figure out how some numbers are grouped together, for example with groups of thousands, of words, etc. By allowing you to place underscore in number literals, it¡¯s easier to spot those groups:
+When writing long literal numbers, itâ€™s harder on the eye to figure out how some numbers are grouped together, for example with groups of thousands, of words, etc. By allowing you to place underscore in number literals, itâ€™s easier to spot those groups:
 
 
 ```groovy
@@ -200,7 +200,7 @@ long bytes = 0b11010010_01101001_10010100_10010010
 
 ### Number type suffixes
 
-ÎÒÃÇ¿ÉÒÔÍ¨¹ıÌí¼Óºó×ºµÄ·½Ê½Ç¿ÖÆÖ¸¶¨Ò»¸öÊı×ÖµÄÀàĞÍ(°üº¬¶ş½øÖÆ,°Ë½øÖÆºÍÊ®Áù½øÖÆ)
+æˆ‘ä»¬å¯ä»¥é€šè¿‡æ·»åŠ åç¼€çš„æ–¹å¼å¼ºåˆ¶æŒ‡å®šä¸€ä¸ªæ•°å­—çš„ç±»å‹(åŒ…å«äºŒè¿›åˆ¶,å…«è¿›åˆ¶å’Œåå…­è¿›åˆ¶)
 ```java
 Type			Suffix
 BigInteger		G or g
@@ -227,20 +227,20 @@ assert 034G.class == BigInteger // octal
 ```
 ### Math operations
 
-¾¡¹Ü½ÓÏÂÀ´ÎÒÃÇ»¹ÒªÏêÏ¸ÌÖÂÛ²Ù×÷·û, µ«ÊÇ¼øÓÚÊıÑ§²Ù×÷·ûµÄÖØÒªĞÔ, ÏÖÔÚÎÒÃÇ»¹ÊÇÒªÏÈÌÖÂÛÆäĞĞÎªºÍ·µ»ØÀàĞÍ
+å°½ç®¡æ¥ä¸‹æ¥æˆ‘ä»¬è¿˜è¦è¯¦ç»†è®¨è®ºæ“ä½œç¬¦, ä½†æ˜¯é‰´äºæ•°å­¦æ“ä½œç¬¦çš„é‡è¦æ€§, ç°åœ¨æˆ‘ä»¬è¿˜æ˜¯è¦å…ˆè®¨è®ºå…¶è¡Œä¸ºå’Œè¿”å›ç±»å‹
 
-* byte, char, short ºÍ int Ö®¼äµÄ¶ş½øÖÆ¼ÆËã·µ»ØµÄÊÇintÀàĞÍ
-* byte, char, short ºÍ int Ö®¼äµÄ¶ş½øÖÆ¼ÆËãÖĞÉæ¼°µ½longµÄ»°, ÄÇÃ´·µ»ØµÄ¾ÍÊÇlongÀàĞÍ
-* BigInteger ÓëÈÎºÎÕûÊıÀàĞÍµÄ¶ş½øÖÆ¼ÆËã ·µ»ØµÄ½á¹û¶¼ÊÇBigIntegerÀàĞÍ
-* float, double ºÍ BigDecimal Ö®¼äµÄ¶ş½øÖÆ¼ÆËã·µ»ØµÄ½á¹û¶¼ÊÇdoubleÀàĞÍ
-* Á©¸öBigDecimalÖ®¼äµÄ¶ş½øÖÆÔËËã·µ»ØµÄ¶¼ÊÇBigDecimalÀàĞÍ.
+* byte, char, short å’Œ int ä¹‹é—´çš„äºŒè¿›åˆ¶è®¡ç®—è¿”å›çš„æ˜¯intç±»å‹
+* byte, char, short å’Œ int ä¹‹é—´çš„äºŒè¿›åˆ¶è®¡ç®—ä¸­æ¶‰åŠåˆ°longçš„è¯, é‚£ä¹ˆè¿”å›çš„å°±æ˜¯longç±»å‹
+* BigInteger ä¸ä»»ä½•æ•´æ•°ç±»å‹çš„äºŒè¿›åˆ¶è®¡ç®— è¿”å›çš„ç»“æœéƒ½æ˜¯BigIntegerç±»å‹
+* float, double å’Œ BigDecimal ä¹‹é—´çš„äºŒè¿›åˆ¶è®¡ç®—è¿”å›çš„ç»“æœéƒ½æ˜¯doubleç±»å‹
+* ä¿©ä¸ªBigDecimalä¹‹é—´çš„äºŒè¿›åˆ¶è¿ç®—è¿”å›çš„éƒ½æ˜¯BigDecimalç±»å‹.
 
 The following table summarizes those rules:
 ```groovy
 
 ```
 
-ÓÉÓÚGroovyÌá¹©ÁË²Ù×÷·ûÖØÔØ¹¦ÄÜ, BigIntegerºÍBigDecimalÖ®¼äµÄËãÊõÔËËãÒ²µÃÒÔÊµÏÖ, µ«ÊÇÔÚJavaÖĞĞèÒªµ÷ÓÃÒ»Ğ©·½·¨²ÅÄÜ¼ÆËãÕâĞ©²»Í¬ÀàĞÍµÄÊı×Ö.
+ç”±äºGroovyæä¾›äº†æ“ä½œç¬¦é‡è½½åŠŸèƒ½, BigIntegerå’ŒBigDecimalä¹‹é—´çš„ç®—æœ¯è¿ç®—ä¹Ÿå¾—ä»¥å®ç°, ä½†æ˜¯åœ¨Javaä¸­éœ€è¦è°ƒç”¨ä¸€äº›æ–¹æ³•æ‰èƒ½è®¡ç®—è¿™äº›ä¸åŒç±»å‹çš„æ•°å­—.
 
 #### The case of the division operator
 
@@ -248,32 +248,32 @@ The division operators / (and /= for division and assignment) produce a double r
 
 BigDecimal division is performed with the divide() method if the division is exact (ie. yielding a result that can be represented within the bounds of the same precision and scale), or using a MathContext with a precision of the maximum of the two operands' precision plus an extra precision of 10, and a scale of the maximum of 10 and the maximum of the operands' scale.
 
-For integer division like in Java, you should use the intdiv() method, as Groovy doesn¡¯t provide a dedicated integer division operator symbol.
+For integer division like in Java, you should use the intdiv() method, as Groovy doesnâ€™t provide a dedicated integer division operator symbol.
 
-³ı·¨²Ù×÷·û`/`(ºÍ`/=`)»áµÃµ½Ò»¸ödoubleÀàĞÍµÄ½á¹û,
+é™¤æ³•æ“ä½œç¬¦`/`(å’Œ`/=`)ä¼šå¾—åˆ°ä¸€ä¸ªdoubleç±»å‹çš„ç»“æœ,
 
 #### The case of the power operator
 
-Groovy ÀïÓĞÒ»ÖÖÇ¿´óµÄ²Ù×÷·û`**`, Õâ¸ö²Ù×÷·û´øÓĞbaseºÍexponentÁ©¸ö²ÎÊı. Õâ¸ö²Ù×÷·ûµÄ½á¹ûÒÀÀµÓÚËüµÄ²Ù×÷ÊıºÍ²Ù×÷½á¹û.GroovyÊ¹ÓÃÏÂÃæµÄ¹æÔòÀ´¾ö¶¨¸Ã²Ù×÷·ûµÄ·µ»ØÀàĞÍ
+Groovy é‡Œæœ‰ä¸€ç§å¼ºå¤§çš„æ“ä½œç¬¦`**`, è¿™ä¸ªæ“ä½œç¬¦å¸¦æœ‰baseå’Œexponentä¿©ä¸ªå‚æ•°. è¿™ä¸ªæ“ä½œç¬¦çš„ç»“æœä¾èµ–äºå®ƒçš„æ“ä½œæ•°å’Œæ“ä½œç»“æœ.Groovyä½¿ç”¨ä¸‹é¢çš„è§„åˆ™æ¥å†³å®šè¯¥æ“ä½œç¬¦çš„è¿”å›ç±»å‹
 
-##### Èç¹ûexponentÎªĞ¡ÊıÀàĞÍ
+##### å¦‚æœexponentä¸ºå°æ•°ç±»å‹
 ```java
-1. Èç¹û½á¹ûÄÜ±íÊ¾ÎªIntegerÀàĞÍ,ÄÇ¾Í·µ»ØIntegerÀàĞÍ
-2. ·ñÔòÈç¹û½á¹ûÄÜ±íÊ¾ÎªLongÀàĞÍ,ÄÇ¾Í·µ»ØLongÀàĞÍ
-3. ·ñÔòµÄ»°¾Í·µ»ØDouble
+1. å¦‚æœç»“æœèƒ½è¡¨ç¤ºä¸ºIntegerç±»å‹,é‚£å°±è¿”å›Integerç±»å‹
+2. å¦åˆ™å¦‚æœç»“æœèƒ½è¡¨ç¤ºä¸ºLongç±»å‹,é‚£å°±è¿”å›Longç±»å‹
+3. å¦åˆ™çš„è¯å°±è¿”å›Double
 ```
 
-##### Èç¹ûexponentÎªÕûÊıÀàĞÍ
+##### å¦‚æœexponentä¸ºæ•´æ•°ç±»å‹
 ```
-1. Èç¹ûexponent¸ºÊı¸ºÊı, ÄÇ¾Í·µ»ØInteger, Long »òÕßDouble,
-2. Èç¹ûexponentÊÇÕıÊı»òÕß0, ÄÇ¾ÍÒª¸ù¾İbaseÀ´ÅĞ¶ÏÁË
-	A. Èç¹ûbaseÊÇ BigDecimal, ÄÇ¾Í·µ»ØBigDecimalÀàĞÍ
-	B. Èç¹ûbaseÊÇ BigInteger, ÄÇ¾Í·µ»ØBigIntegerÀàĞÍ
-	C. Èç¹ûbaseÊÇ Integer, ÄÇ¾Í·µ»ØIntegerÀàĞÍ, Èç¹û·µ»ØµÄÖµ³¬¹ıInteger·¶Î§µÄ»°,¾Í·µ»ØBigInteger
-	D. Èç¹ûbaseÊÇ Long, ÄÇ¾Í·µ»ØLongÀàĞÍ, Èç¹û·µ»ØµÄÖµ³¬¹ıLong·¶Î§µÄ»°,¾Í·µ»ØBigInteger
+1. å¦‚æœexponentè´Ÿæ•°è´Ÿæ•°, é‚£å°±è¿”å›Integer, Long æˆ–è€…Double,
+2. å¦‚æœexponentæ˜¯æ­£æ•°æˆ–è€…0, é‚£å°±è¦æ ¹æ®baseæ¥åˆ¤æ–­äº†
+	A. å¦‚æœbaseæ˜¯ BigDecimal, é‚£å°±è¿”å›BigDecimalç±»å‹
+	B. å¦‚æœbaseæ˜¯ BigInteger, é‚£å°±è¿”å›BigIntegerç±»å‹
+	C. å¦‚æœbaseæ˜¯ Integer, é‚£å°±è¿”å›Integerç±»å‹, å¦‚æœè¿”å›çš„å€¼è¶…è¿‡IntegerèŒƒå›´çš„è¯,å°±è¿”å›BigInteger
+	D. å¦‚æœbaseæ˜¯ Long, é‚£å°±è¿”å›Longç±»å‹, å¦‚æœè¿”å›çš„å€¼è¶…è¿‡LongèŒƒå›´çš„è¯,å°±è¿”å›BigInteger
 ```
 
-##### Ê¾Àı
+##### ç¤ºä¾‹
 ```groovy
 // base and exponent are ints and the result can be represented by an Integer
 assert    2    **   3    instanceof Integer    //  8
@@ -316,7 +316,7 @@ assert    2    **   0.1f instanceof Double     //  1.0717734636432956
 
 
 ## Booleans
-BooleanÊÇÒ»ÖÖÌØÊâµÄÊı¾İÀàĞÍ, ËûÃÇµÄÖµÖ»ÓĞÁ©ÖÖÇé¿ö£ºtrue ºÍ false.
+Booleanæ˜¯ä¸€ç§ç‰¹æ®Šçš„æ•°æ®ç±»å‹, ä»–ä»¬çš„å€¼åªæœ‰ä¿©ç§æƒ…å†µï¼štrue å’Œ false.
 ```groovy
 def myBooleanVariable = true
 boolean untypedBooleanVar = false
