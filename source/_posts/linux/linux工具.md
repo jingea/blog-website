@@ -26,3 +26,5 @@ title: Linux工具
 ### ngxtop
 [ngxtop：在命令行实时监控 Nginx 的神器](https://linux.cn/article-3205-1.html)
 
+### Supervisor
+[Supervisor的安装与使用入门](http://www.tuicool.com/articles/Ejm2u2)
