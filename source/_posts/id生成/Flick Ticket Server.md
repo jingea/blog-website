@@ -2,7 +2,8 @@ category: ID生成
 date: 2015-05-08
 title: Flick Ticket Server
 ---
-## 为什么采用Ticket Server
+为什么采用Ticket Server？
+
 Flickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外Flicker Mysql是基于`主-主`复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.
 
 
@@ -32,9 +33,7 @@ REPLACE 的操作极像 INSERT, 如果新插入的一行和原有行中的`PRIMA
 
 Flicker ticket server 专用于database服务器, 该服务器上有且仅有一个数据库. 在该数据库内有一些表,像表示32位ID的Tickets32, 或者表示64位ID的 Tickets64.
 
-
-#### 下面展示了一下Ticket64 schema
-
+下面展示了一下Ticket64 schema
 ```
 CREATE TABLE Tickets64 (
 id bigint(20) unsigned NOT NULL auto_increment,
@@ -55,7 +54,7 @@ UNIQUE KEY  stub ( stub )
 +-------------------+------+
 ```
 
-#### 当我需要一个新的64位ID时,我执行面貌这个sql
+当我需要一个新的64位ID时,我执行面貌这个sql
 
 ```
 REPLACE INTO Tickets64 (stub) VALUES (' a' ) ;
@@ -77,8 +76,7 @@ auto-increment-increment = 2
 auto-increment-offset = 2
 
 ```
+我们通过在不同的服务器间循环操作来达到负载均衡以及减少运行时间.
 
-#### 我们通过在不同的服务器间循环操作来达到负载均衡以及减少运行时间.
-
-###### 在Ticket server我们不单单只有Tickets32 and Tickets64 这俩张表,我们还有更多的表. 例如针对照片, 账号, 离线任务等等 其他的表.
+在Ticket server我们不单单只有Tickets32 and Tickets64 这俩张表,我们还有更多的表. 例如针对照片, 账号, 离线任务等等 其他的表.
 

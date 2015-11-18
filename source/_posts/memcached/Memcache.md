@@ -2,30 +2,30 @@ category: memcached
 date: 2015-11-18
 title: memcached
 ---
-## Ô­Àí
-memcachedÊÇÒ»¸ö¸ßĞÔÄÜÄÚ´æ¶ÔÏó»º´æÏµÍ³. Ëü»ùÓÚlibevent,¿É·½±ãµØÍØÕ¹ÎªÈÎÒâ´óĞ¡, ¶øÇÒ¶Ô·ÀÖ¹ÄÚ´æswapºÍÊ¹ÓÃ·Ç×èÈûIO×öÁË´óÁ¿ÓÅ»¯¹¤×÷.
+## åŸç†
+memcachedæ˜¯ä¸€ä¸ªé«˜æ€§èƒ½å†…å­˜å¯¹è±¡ç¼“å­˜ç³»ç»Ÿ. å®ƒåŸºäºlibevent,å¯æ–¹ä¾¿åœ°æ‹“å±•ä¸ºä»»æ„å¤§å°, è€Œä¸”å¯¹é˜²æ­¢å†…å­˜swapå’Œä½¿ç”¨éé˜»å¡IOåšäº†å¤§é‡ä¼˜åŒ–å·¥ä½œ.
 
-memcachedÄÚ´æ·ÖÅä£º
+memcachedå†…å­˜åˆ†é…ï¼š
 
-## ÊÊÓÃ³¡¾°
-* ×îÊÊºÏ´æ´¢Ğ¡Êı¾İ£¬²¢ÇÒ´æ´¢µÄÊı¾İÊÇ´óĞ¡Ò»ÖÂµÄ
-* MemcachedÔÚºÜ¶àÊ±ºò¶¼ÊÇ×÷ÎªÊı¾İ¿âÇ°¶ËcacheÊ¹ÓÃ
-* Ğé»úÉÏ²»ÊÊºÏ²¿ÊğMemcached
-* È·±£MemcachedµÄÄÚ´æ²»»á±»Swap³öÈ¥
-* ²»ÄÜ±ãÀûËùÓĞÊı¾İ£¬Õâ½«µ¼ÖÂÑÏÖØĞÔÄÜÎÊÌâ
-* Local Cache+ MemcachedÕâÖÖ·Ö²ãCache»¹ÊÇºÜÓĞ¼ÛÖµµÄ
-* MemcachedÆô¶¯Ô¤ÈÈÊÇÒ»¸öºÃ°ì·¨
+## é€‚ç”¨åœºæ™¯
+* æœ€é€‚åˆå­˜å‚¨å°æ•°æ®ï¼Œå¹¶ä¸”å­˜å‚¨çš„æ•°æ®æ˜¯å¤§å°ä¸€è‡´çš„
+* Memcachedåœ¨å¾ˆå¤šæ—¶å€™éƒ½æ˜¯ä½œä¸ºæ•°æ®åº“å‰ç«¯cacheä½¿ç”¨
+* è™šæœºä¸Šä¸é€‚åˆéƒ¨ç½²Memcached
+* ç¡®ä¿Memcachedçš„å†…å­˜ä¸ä¼šè¢«Swapå‡ºå»
+* ä¸èƒ½ä¾¿åˆ©æ‰€æœ‰æ•°æ®ï¼Œè¿™å°†å¯¼è‡´ä¸¥é‡æ€§èƒ½é—®é¢˜
+* Local Cache+ Memcachedè¿™ç§åˆ†å±‚Cacheè¿˜æ˜¯å¾ˆæœ‰ä»·å€¼çš„
+* Memcachedå¯åŠ¨é¢„çƒ­æ˜¯ä¸€ä¸ªå¥½åŠæ³•
 
 	   
-## °²×°
-MemcachedÒÀÀµlibevent,ËùÒÔÎÒÃÇÊ×ÏÈĞèÒª°²×°libevent
+## å®‰è£…
+Memcachedä¾èµ–libevent,æ‰€ä»¥æˆ‘ä»¬é¦–å…ˆéœ€è¦å®‰è£…libevent
 ```
 wget http://jaist.dl.sourceforge.net/project/levent/libevent/libevent-2.0/libevent-2.0.22-stable.tar.gz
 tar -zxvf libevent-2.0.22-stable.tar.gz
 cd libevent-2.0.22-stable
 ./configure --prefix=/usr && make && make install
 ```
-½ÓÏÂÀ´°²×°Memcached
+æ¥ä¸‹æ¥å®‰è£…Memcached
 ```
 wget http://memcached.org/latest
 tar -zxvf memcached-1.x.x.tar.gz
@@ -33,23 +33,23 @@ cd memcached-1.x.x
 ./configure --with-libevent=/usr && make && make test && sudo make install
 ```
 
-## Æô¶¯
-`memcached`ÃüÁîÑ¡Ïî 
+## å¯åŠ¨
+`memcached`å‘½ä»¤é€‰é¡¹ 
 * `-s <file>` : Unix socket path to listen on (disables network support).
-* `-a <perms>` : µ±Í¨¹ısÑ¡Ïî´´½¨socketµÄÊ±ºò,ÎÒÃÇ¿ÉÒÔÍ¨¹ı-aÑ¡ÏîÖ¸¶¨´´½¨socketÊ¹ÓÃµÄÈ¨ÏŞ(È¨ÏŞÎª°Ë½øÖÆ).
-* `-l <ip_addr>` : ¼àÌıµÄÖ÷»úµØÖ·. Ä¬ÈÏÊÇ±¾»úÈÎºÎ¿ÉÓÃµÄµØÖ·. 
-* `-d` : ÒÔºóÌ¨½ø³Ì·½Ê½ÔËĞĞmemcached
-* `-u <username>` : µ±memcachedÊÇÒÔrootÓÃ»§Æô¶¯Ê±£¬ÎÒÃÇĞèÒªÍ¨¹ı¸Ã²ÎÊıÖ¸¶¨ÓÃ»§(±»Ö¸¶¨µÄÓÃ»§±ØĞë´æÔÚ)
-* `-c <num>` : ÉèÖÃ×î´óÍ¬Ê±Á¬½ÓÊı.(Ä¬ÈÏÊÇ1024).
-* `-C` : ¹Ø±ÕCAS. (Ã¿¸ö¶ÔÏó¶¼»á¼õÉÙ8bytes´óĞ¡).
-* `-k` : Ëø¶¨ËùÓĞµÄ·ÖÒ³ÄÚ´æ. ÔÚ¾Ş´óµÄ»º´æÏµÍ³ÖĞ,Ê¹ÓÃÕâ¸öÑ¡ÏîÊÇ·Ç³£Î£ÏÕµÄ,Ê¹ÓÃµÄÊ¹ÓÃÒª²Î¿¼READMEÎÄ¼şºÍmemcached homepage½øĞĞÅäÖÃ.
-* `-p <num>` : ÉèÖÃ¼àÌıTCP¶Ë¿ÚºÅ, Ä¬ÈÏÊÇ11211.
-* `-P` : ÉèÖÃpid´æ´¢ÎÄ¼ş.
-* `-U <num>` : ÉèÖÃ¼àÌıUDP¶Ë¿ÚºÅ, Ä¬ÈÏÊÇ11211, 0 ±íÊ¾¹Ø±ÕUDP¼àÌı.
-* `-m <num>` : ÉèÖÃ¶ÔÏó´æ´¢ÄÜÊ¹ÓÃµÄ×î´óÄÚ´æ(µ¥Î»ÊÇMB,Ä¬ÈÏÊÇ64M)
-* `-M` : ¹Ø±Õ¶ÔÏó´æ´¢ËùĞèÄÚ´æ³¬¹ı×î´óÄÚ´æÊ±,×Ô¶¯É¾³ı»º´æ¶ÔÏóµÄ¹¦ÄÜ. Èç¹ûmemcachedµÄÅäÖÃÄÚ´æ´ïµ½×î´óÖµ¾Í²»¿ÉÔÙ´æ´¢ĞÂµÄ¶ÔÏó.
-* `-r` : ½«×î´óµÄºËĞÄÎÄ¼ş´óĞ¡ÏŞÖÆÌáÉıµ½ÔÊĞíµÄ×î´óÖµ.
-* `-v` : ÉèÖÃÎªverbose Í¬Ê±»áÊä³ö·¢ÉúµÄerrors ºÍwarnings.
+* `-a <perms>` : å½“é€šè¿‡sé€‰é¡¹åˆ›å»ºsocketçš„æ—¶å€™,æˆ‘ä»¬å¯ä»¥é€šè¿‡-aé€‰é¡¹æŒ‡å®šåˆ›å»ºsocketä½¿ç”¨çš„æƒé™(æƒé™ä¸ºå…«è¿›åˆ¶).
+* `-l <ip_addr>` : ç›‘å¬çš„ä¸»æœºåœ°å€. é»˜è®¤æ˜¯æœ¬æœºä»»ä½•å¯ç”¨çš„åœ°å€. 
+* `-d` : ä»¥åå°è¿›ç¨‹æ–¹å¼è¿è¡Œmemcached
+* `-u <username>` : å½“memcachedæ˜¯ä»¥rootç”¨æˆ·å¯åŠ¨æ—¶ï¼Œæˆ‘ä»¬éœ€è¦é€šè¿‡è¯¥å‚æ•°æŒ‡å®šç”¨æˆ·(è¢«æŒ‡å®šçš„ç”¨æˆ·å¿…é¡»å­˜åœ¨)
+* `-c <num>` : è®¾ç½®æœ€å¤§åŒæ—¶è¿æ¥æ•°.(é»˜è®¤æ˜¯1024).
+* `-C` : å…³é—­CAS. (æ¯ä¸ªå¯¹è±¡éƒ½ä¼šå‡å°‘8byteså¤§å°).
+* `-k` : é”å®šæ‰€æœ‰çš„åˆ†é¡µå†…å­˜. åœ¨å·¨å¤§çš„ç¼“å­˜ç³»ç»Ÿä¸­,ä½¿ç”¨è¿™ä¸ªé€‰é¡¹æ˜¯éå¸¸å±é™©çš„,ä½¿ç”¨çš„ä½¿ç”¨è¦å‚è€ƒREADMEæ–‡ä»¶å’Œmemcached homepageè¿›è¡Œé…ç½®.
+* `-p <num>` : è®¾ç½®ç›‘å¬TCPç«¯å£å·, é»˜è®¤æ˜¯11211.
+* `-P` : è®¾ç½®pidå­˜å‚¨æ–‡ä»¶.
+* `-U <num>` : è®¾ç½®ç›‘å¬UDPç«¯å£å·, é»˜è®¤æ˜¯11211, 0 è¡¨ç¤ºå…³é—­UDPç›‘å¬.
+* `-m <num>` : è®¾ç½®å¯¹è±¡å­˜å‚¨èƒ½ä½¿ç”¨çš„æœ€å¤§å†…å­˜(å•ä½æ˜¯MB,é»˜è®¤æ˜¯64M)
+* `-M` : å…³é—­å¯¹è±¡å­˜å‚¨æ‰€éœ€å†…å­˜è¶…è¿‡æœ€å¤§å†…å­˜æ—¶,è‡ªåŠ¨åˆ é™¤ç¼“å­˜å¯¹è±¡çš„åŠŸèƒ½. å¦‚æœmemcachedçš„é…ç½®å†…å­˜è¾¾åˆ°æœ€å¤§å€¼å°±ä¸å¯å†å­˜å‚¨æ–°çš„å¯¹è±¡.
+* `-r` : å°†æœ€å¤§çš„æ ¸å¿ƒæ–‡ä»¶å¤§å°é™åˆ¶æå‡åˆ°å…è®¸çš„æœ€å¤§å€¼.
+* `-v` : è®¾ç½®ä¸ºverbose åŒæ—¶ä¼šè¾“å‡ºå‘ç”Ÿçš„errors å’Œwarnings.
 * `-R <num>` : This  option  seeks  to prevent client starvation by setting a limit to the number of sequential requests the server will process from an individual client connection. Once a connection has exceeded this value, the server will attempt to process I/O on other connections before handling any further request from this connection. The default value for this option is 20.
 * `-f <factor>` : Use <factor>  as the multiplier for computing the sizes of memory chunks that items are stored in. A lower value may result in less wasted memory depending on the total amount of memory available and the distribution of item sizes.  The default is 1.25.
 * `-n <size>` : Allocate  a  minimum  of <size>  bytes for the item key, value, and flags. The default is 48. If you have a lot of small keys and values, you can get a significant memory efficiency gain with a lower value. If you use a high chunk growth factor (-f option), on the other hand, you may want to increase the size to allow a bigger percentage of your items to fit in the most densely packed (smallest) chunks.
@@ -67,42 +67,42 @@ cd memcached-1.x.x
 memcached  -d -p 10021 -l 10.234.10.12 -u root -c 1024  -P ./memcached1.pid
 ```
 
-## javaÊ¹ÓÃ
-ÎÒÃÇÊ¹ÓÃspymemcached×÷Îªjava¿Í»§¶ËÁ¬½Ómemcached. ÔÚMavenÏîÄ¿ÖĞÌí¼ÓÒÔÏÂÒÀÀµ
+## javaä½¿ç”¨
+æˆ‘ä»¬ä½¿ç”¨spymemcachedä½œä¸ºjavaå®¢æˆ·ç«¯è¿æ¥memcached. åœ¨Mavené¡¹ç›®ä¸­æ·»åŠ ä»¥ä¸‹ä¾èµ–
 ```xml
 <groupId>net.spy</groupId>
 	<artifactId>spymemcached</artifactId>
 <version>2.12.0</version>
 ```
-È»ºóÁ¬½Ómemcached
+ç„¶åè¿æ¥memcached
 ```java
 MemcachedClient client = new MemcachedClient(new InetSocketAddress("10.234.10.12", 10021));
 ```
-Í¨¹ıÕâÒ»ĞĞÎÒÃÇ¾Í³É¹¦µÄÁ¬½ÓÉÏÁËmemcached.È»ºóÎÒÃÇ¾Í¿ÉÒÔÊ¹ÓÃspymemcachedÌá¹©µÄ´óÁ¿apiÀ´²Ù×÷memcached
+é€šè¿‡è¿™ä¸€è¡Œæˆ‘ä»¬å°±æˆåŠŸçš„è¿æ¥ä¸Šäº†memcached.ç„¶åæˆ‘ä»¬å°±å¯ä»¥ä½¿ç”¨spymemcachedæä¾›çš„å¤§é‡apiæ¥æ“ä½œmemcached
 
-## memcachedĞÅÏ¢Í³¼Æ
-ÎÒÃÇ¿ÉÒÔÊ¹ÓÃtelnetÃüÁîÖ±½ÓÁ¬½Ómemcached`telnet 127.0.0.1 10021`,È»ºóÊäÈëÏÂÁĞÃüÁî²é¿´Ïà¹ØĞÅÏ¢
+## memcachedä¿¡æ¯ç»Ÿè®¡
+æˆ‘ä»¬å¯ä»¥ä½¿ç”¨telnetå‘½ä»¤ç›´æ¥è¿æ¥memcached`telnet 127.0.0.1 10021`,ç„¶åè¾“å…¥ä¸‹åˆ—å‘½ä»¤æŸ¥çœ‹ç›¸å…³ä¿¡æ¯
 
 ### stats
-Í³¼ÆmemcachedµÄ¸÷ÖÖĞÅÏ¢ 
-* `STAT pid 20401` memcache·şÎñÆ÷µÄ½ø³ÌID
-* `STAT uptime 47`  ·şÎñÆ÷ÒÑ¾­ÔËĞĞµÄÃëÊı 
-* `STAT time 1447835371` ·şÎñÆ÷µ±Ç°µÄunixÊ±¼ä´Á 
-* `STAT version 1.4.24`  memcache°æ±¾ 
+ç»Ÿè®¡memcachedçš„å„ç§ä¿¡æ¯ 
+* `STAT pid 20401` memcacheæœåŠ¡å™¨çš„è¿›ç¨‹ID
+* `STAT uptime 47`  æœåŠ¡å™¨å·²ç»è¿è¡Œçš„ç§’æ•° 
+* `STAT time 1447835371` æœåŠ¡å™¨å½“å‰çš„unixæ—¶é—´æˆ³ 
+* `STAT version 1.4.24`  memcacheç‰ˆæœ¬ 
 * `STAT libevent 2.0.22-stable`
-* `STAT pointer_size 64` µ±Ç°²Ù×÷ÏµÍ³µÄÖ¸Õë´óĞ¡£¨32Î»ÏµÍ³Ò»°ãÊÇ32bit£©
+* `STAT pointer_size 64` å½“å‰æ“ä½œç³»ç»Ÿçš„æŒ‡é’ˆå¤§å°ï¼ˆ32ä½ç³»ç»Ÿä¸€èˆ¬æ˜¯32bitï¼‰
 * `STAT rusage_user 0.002999`
 * `STAT rusage_system 0.001999`
-* `STAT curr_connections 10` µ±Ç°´ò¿ª×ÅµÄÁ¬½ÓÊı 
-* `STAT total_connections 11` ´Ó·şÎñÆ÷Æô¶¯ÒÔºóÔø¾­´ò¿ª¹ıµÄÁ¬½ÓÊı 
-* `STAT connection_structures 11` ·şÎñÆ÷·ÖÅäµÄÁ¬½Ó¹¹ÔìÊı
+* `STAT curr_connections 10` å½“å‰æ‰“å¼€ç€çš„è¿æ¥æ•° 
+* `STAT total_connections 11` ä»æœåŠ¡å™¨å¯åŠ¨ä»¥åæ›¾ç»æ‰“å¼€è¿‡çš„è¿æ¥æ•° 
+* `STAT connection_structures 11` æœåŠ¡å™¨åˆ†é…çš„è¿æ¥æ„é€ æ•°
 * `STAT reserved_fds 20`
-* `STAT cmd_get 0`  getÃüÁî£¨»ñÈ¡£©×ÜÇëÇó´ÎÊı
-* `STAT cmd_set 0`  setÃüÁî£¨±£´æ£©×ÜÇëÇó´ÎÊı 
+* `STAT cmd_get 0`  getå‘½ä»¤ï¼ˆè·å–ï¼‰æ€»è¯·æ±‚æ¬¡æ•°
+* `STAT cmd_set 0`  setå‘½ä»¤ï¼ˆä¿å­˜ï¼‰æ€»è¯·æ±‚æ¬¡æ•° 
 * `STAT cmd_flush 0`
 * `STAT cmd_touch 0`
-* `STAT get_hits 0`  ×ÜÃüÖĞ´ÎÊı 
-* `STAT get_misses 0` ×ÜÎ´ÃüÖĞ´ÎÊı 
+* `STAT get_hits 0`  æ€»å‘½ä¸­æ¬¡æ•° 
+* `STAT get_misses 0` æ€»æœªå‘½ä¸­æ¬¡æ•° 
 * `STAT delete_misses 0`
 * `STAT delete_hits 0`
 * `STAT incr_misses 0`
@@ -116,29 +116,29 @@ MemcachedClient client = new MemcachedClient(new InetSocketAddress("10.234.10.12
 * `STAT touch_misses 0`
 * `STAT auth_cmds 0`
 * `STAT auth_errors 0`
-* `STAT bytes_read 7` ×Ü¶ÁÈ¡×Ö½ÚÊı£¨ÇëÇó×Ö½ÚÊı£© 
-* `STAT bytes_written 0` ×Ü·¢ËÍ×Ö½ÚÊı£¨½á¹û×Ö½ÚÊı£© 
-* `STAT limit_maxbytes 67108864`   ·ÖÅä¸ømemcacheµÄÄÚ´æ´óĞ¡£¨×Ö½Ú£©
+* `STAT bytes_read 7` æ€»è¯»å–å­—èŠ‚æ•°ï¼ˆè¯·æ±‚å­—èŠ‚æ•°ï¼‰ 
+* `STAT bytes_written 0` æ€»å‘é€å­—èŠ‚æ•°ï¼ˆç»“æœå­—èŠ‚æ•°ï¼‰ 
+* `STAT limit_maxbytes 67108864`   åˆ†é…ç»™memcacheçš„å†…å­˜å¤§å°ï¼ˆå­—èŠ‚ï¼‰
 * `STAT accepting_conns 1`
 * `STAT listen_disabled_num 0`
-* `STAT threads 4`     µ±Ç°Ïß³ÌÊı 
+* `STAT threads 4`     å½“å‰çº¿ç¨‹æ•° 
 * `STAT conn_yields 0`
 * `STAT hash_power_level 16`
 * `STAT hash_bytes 524288`
 * `STAT hash_is_expanding 0`
 * `STAT malloc_fails 0`
-* `STAT bytes 0`   µ±Ç°·şÎñÆ÷´æ´¢itemsÕ¼ÓÃµÄ×Ö½ÚÊı 
-* `STAT curr_items 0` ·şÎñÆ÷µ±Ç°´æ´¢µÄitemsÊıÁ¿ 
-* `STAT total_items 0` ´Ó·şÎñÆ÷Æô¶¯ÒÔºó´æ´¢µÄitems×ÜÊıÁ¿ 
+* `STAT bytes 0`   å½“å‰æœåŠ¡å™¨å­˜å‚¨itemså ç”¨çš„å­—èŠ‚æ•° 
+* `STAT curr_items 0` æœåŠ¡å™¨å½“å‰å­˜å‚¨çš„itemsæ•°é‡ 
+* `STAT total_items 0` ä»æœåŠ¡å™¨å¯åŠ¨ä»¥åå­˜å‚¨çš„itemsæ€»æ•°é‡ 
 * `STAT expired_unfetched 0`
 * `STAT evicted_unfetched 0`
-* `STAT evictions 0` Îª»ñÈ¡¿ÕÏĞÄÚ´æ¶øÉ¾³ıµÄitemsÊı£¨·ÖÅä¸ømemcacheµÄ¿Õ¼äÓÃÂúºóĞè 
+* `STAT evictions 0` ä¸ºè·å–ç©ºé—²å†…å­˜è€Œåˆ é™¤çš„itemsæ•°ï¼ˆåˆ†é…ç»™memcacheçš„ç©ºé—´ç”¨æ»¡åéœ€ 
 * `STAT reclaimed 0`
 * `STAT crawler_reclaimed 0`
 * `STAT crawler_items_checked 0`
 * `STAT lrutail_reflocked 0`
 
-ÎÒÃÇÒ²¿ÉÒÔÊ¹ÓÃjava»ñÈ¡ÕâĞ©ĞÅÏ¢
+æˆ‘ä»¬ä¹Ÿå¯ä»¥ä½¿ç”¨javaè·å–è¿™äº›ä¿¡æ¯
 ```java
 MemcachedClient client = new MemcachedClient(new InetSocketAddress("10.234.10.12", 10021));
 client.getStats().entrySet().stream().forEach(entry -> {
@@ -150,19 +150,19 @@ client.getStats().entrySet().stream().forEach(entry -> {
 ```
 
 ### stats reset
-ÖØĞÂÍ³¼ÆÊı¾İ 
+é‡æ–°ç»Ÿè®¡æ•°æ® 
 
 ### stats slabs
-ÏÔÊ¾slabsĞÅÏ¢£¬¿ÉÒÔÏêÏ¸¿´µ½Êı¾İµÄ·Ö¶Î´æ´¢Çé¿ö 
+æ˜¾ç¤ºslabsä¿¡æ¯ï¼Œå¯ä»¥è¯¦ç»†çœ‹åˆ°æ•°æ®çš„åˆ†æ®µå­˜å‚¨æƒ…å†µ 
 * `STAT active_slabs 0`
 * `STAT total_malloced 0`
 
 ### stats items
-ÏÔÊ¾slabÖĞµÄitemÊıÄ¿ 
+æ˜¾ç¤ºslabä¸­çš„itemæ•°ç›® 
 
 ### stats cachedump 1 0
-ÁĞ³öslabsµÚÒ»¶ÎÀï´æµÄKEYÖµ 
+åˆ—å‡ºslabsç¬¬ä¸€æ®µé‡Œå­˜çš„KEYå€¼ 
 
 
 ### STAT evictions 0
-±íÊ¾ÒªÌÚ³öĞÂ¿Õ¼ä¸øĞÂµÄitem¶øÒÆ¶¯µÄºÏ·¨itemÊıÄ¿ 
+è¡¨ç¤ºè¦è…¾å‡ºæ–°ç©ºé—´ç»™æ–°çš„itemè€Œç§»åŠ¨çš„åˆæ³•itemæ•°ç›® 
