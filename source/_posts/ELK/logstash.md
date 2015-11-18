@@ -1,6 +1,6 @@
-category: 工具
+category: ELK
 date: 2015-08-08
-title: logstash配置文件
+title: logstash配置
 ---
 ### input插件
 ```json

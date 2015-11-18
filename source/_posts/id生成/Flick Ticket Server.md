@@ -1,4 +1,4 @@
-category: 工具
+category: ID生成
 date: 2015-05-08
 title: Flick Ticket Server
 ---
