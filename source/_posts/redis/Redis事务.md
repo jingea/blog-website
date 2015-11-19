@@ -73,13 +73,6 @@ redis 127.0.0.1:7006>
 
 
 参考文章
-* ()[http://redisbook.readthedocs.org/en/latest/feature/transaction.html]
-* ()[http://ju.outofmemory.cn/entry/81786]
-* ()[http://redisdoc.com/topic/transaction.html#id2]
-
-
-* ()[]
-
-
-* ()[]
-* ()[]
+* [](http://redisbook.readthedocs.org/en/latest/feature/transaction.html)
+* [](http://ju.outofmemory.cn/entry/81786)
+* [](http://redisdoc.com/topic/transaction.html#id2)
