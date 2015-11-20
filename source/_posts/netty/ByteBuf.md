@@ -29,290 +29,288 @@ ByteBuf提供了 `readerIndex` 和 `writerIndex` 进行缓冲区的顺序读写�
 接下来我们看一下向ByteBuf缓冲区写入数据的API
 ```java
 @Test
-	public void testWriteInt() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeInt(1);
-		// 写入一个Int数值, writerIndex向后移动4个字节
-		Assert.assertEquals(4, buf.writerIndex());
-	}
+public void testWriteInt() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeInt(1);
+	// 写入一个Int数值, writerIndex向后移动4个字节
+	Assert.assertEquals(4, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteChar() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeChar('a');
-		// 写入一个Char字符, writerIndex向后移动2个字节
-		Assert.assertEquals(2, buf.writerIndex());
-	}
+@Test
+public void testWriteChar() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeChar('a');
+	// 写入一个Char字符, writerIndex向后移动2个字节
+	Assert.assertEquals(2, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteBytes() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		byte[] bytes = new byte[]{100};
-		buf.writeBytes(bytes);
-		// 写入一个byte数组, 由于byte数组只有一个元素, writerIndex向后移动1个字节
-		Assert.assertEquals(1, buf.writerIndex());
-	}
+@Test
+public void testWriteBytes() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	byte[] bytes = new byte[]{100};
+	buf.writeBytes(bytes);
+	// 写入一个byte数组, 由于byte数组只有一个元素, writerIndex向后移动1个字节
+	Assert.assertEquals(1, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteBytesWithStartEndIndex() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		byte[] bytes = new byte[]{100, 1, 3};
-		buf.writeBytes(bytes, 1, 1);
-		// 我们将三个元素的byte数组写入ByteBuf中,但是在写入的时候我们指定了开始索引和结束索引,
-		// 由于我们的开始索引和结束索引相等, 因此ByteBuf中只写入了1这个元素
-		Assert.assertEquals(1, buf.writerIndex());
-	}
+@Test
+public void testWriteBytesWithStartEndIndex() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	byte[] bytes = new byte[]{100, 1, 3};
+	buf.writeBytes(bytes, 1, 1);
+	// 我们将三个元素的byte数组写入ByteBuf中,但是在写入的时候我们指定了开始索引和结束索引,
+	// 由于我们的开始索引和结束索引相等, 因此ByteBuf中只写入了1这个元素
+	Assert.assertEquals(1, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteBytes3() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		ByteBuf buf1 = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf1.writeInt(1);
-		buf.writeBytes(buf1);
-		// 我们向ByteBuf中写入另一个ByteBuf, 它的索引仍然是增长4. ByteBuf不仅仅可以写入BuyeBuf,还可以写入InputStream和ByteBuffer
-		Assert.assertEquals(4, buf.writerIndex());
-	}
+@Test
+public void testWriteBytes3() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	ByteBuf buf1 = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf1.writeInt(1);
+	buf.writeBytes(buf1);
+	// 我们向ByteBuf中写入另一个ByteBuf, 它的索引仍然是增长4. ByteBuf不仅仅可以写入BuyeBuf,还可以写入InputStream和ByteBuffer
+	Assert.assertEquals(4, buf.writerIndex());
+}
 
 
-	@Test
-	public void testWriteFloat() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeFloat(0.1f);
-		// 写入一个float, 由于float也是占用4个字节, 因此writerIndex向后移动4个字节
-		Assert.assertEquals(4, buf.writerIndex());
-	}
+@Test
+public void testWriteFloat() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeFloat(0.1f);
+	// 写入一个float, 由于float也是占用4个字节, 因此writerIndex向后移动4个字节
+	Assert.assertEquals(4, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteByte() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeByte(1);
-		Assert.assertEquals(1, buf.writerIndex());
-		buf.writeByte(1000);
-		// 写入一个byte, writerIndex向后移动1个字节,至于写进去的数字大于128,会发生什么,我们在read的时候看一下结果
-		Assert.assertEquals(2, buf.writerIndex());
-	}
+@Test
+public void testWriteByte() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeByte(1);
+	Assert.assertEquals(1, buf.writerIndex());
+	buf.writeByte(1000);
+	// 写入一个byte, writerIndex向后移动1个字节,至于写进去的数字大于128,会发生什么,我们在read的时候看一下结果
+	Assert.assertEquals(2, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteShort() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeShort(1000);
-		// 写入一个short, writerIndex向后移动2个字节
-		Assert.assertEquals(2, buf.writerIndex());
-	}
+@Test
+public void testWriteShort() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeShort(1000);
+	// 写入一个short, writerIndex向后移动2个字节
+	Assert.assertEquals(2, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteDouble() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeDouble(1000.0d);
-		// 写入一个double, writerIndex向后移动8个字节
-		Assert.assertEquals(8, buf.writerIndex());
-	}
+@Test
+public void testWriteDouble() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeDouble(1000.0d);
+	// 写入一个double, writerIndex向后移动8个字节
+	Assert.assertEquals(8, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteBoolean() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBoolean(false);
-		// 写入一个boolean, writerIndex向后移动1个字节
-		Assert.assertEquals(1, buf.writerIndex());
-	}
+@Test
+public void testWriteBoolean() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBoolean(false);
+	// 写入一个boolean, writerIndex向后移动1个字节
+	Assert.assertEquals(1, buf.writerIndex());
+}
 
-	@Test
-	public void testWriteLong() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeLong(100l);
-		// 写入一个long, writerIndex向后移动8个字节
-		Assert.assertEquals(8, buf.writerIndex());
-	}
-	
-	@Test
-	public void testWriteOverLoadMaxCapacity() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(5);
-		buf.writeBytes("123456".getBytes());
-		// 虽然在分配的时候我们只分配了5个字节大小的缓冲区,但是我们写入6个字节它也并不报错,
-		// 而且我们观察到writerIndex确实增长到了6,说明ByteBuf会进行自动拓容.
-		Assert.assertEquals(6, buf.writerIndex());
-	}
+@Test
+public void testWriteLong() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeLong(100l);
+	// 写入一个long, writerIndex向后移动8个字节
+	Assert.assertEquals(8, buf.writerIndex());
+}
 
+@Test
+public void testWriteOverLoadMaxCapacity() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(5);
+	buf.writeBytes("123456".getBytes());
+	// 虽然在分配的时候我们只分配了5个字节大小的缓冲区,但是我们写入6个字节它也并不报错,
+	// 而且我们观察到writerIndex确实增长到了6,说明ByteBuf会进行自动拓容.
+	Assert.assertEquals(6, buf.writerIndex());
+}
 ```
 
 ### ByteBuf read
 刚才我们看了向ByteBuf缓冲区写入数据的API,接下来我们看一下从ByteBuf缓冲区读取数据的API
 ```java
-	@Test
-	public void testReadInt() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-//		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		buf.writeInt(1);
-		int read = buf.readInt();
-		// 读取Int, readerIndex向后移动4字节
-		Assert.assertEquals(4, buf.readerIndex());
-		Assert.assertEquals(1, read);
-	}
+@Test
+public void testReadInt() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeInt(1);
+	int read = buf.readInt();
+	// 读取Int, readerIndex向后移动4字节
+	Assert.assertEquals(4, buf.readerIndex());
+	Assert.assertEquals(1, read);
+}
 
-	@Test
-	public void testReadChar() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeChar('1');
-		char read = buf.readChar();
-		// 读取Char, readerIndex向后移动2字节
-		Assert.assertEquals(2, buf.readerIndex());
-		Assert.assertEquals('1', read);
-	}
+@Test
+public void testReadChar() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeChar('1');
+	char read = buf.readChar();
+	// 读取Char, readerIndex向后移动2字节
+	Assert.assertEquals(2, buf.readerIndex());
+	Assert.assertEquals('1', read);
+}
 
-	@Test
-	public void testReadBytes() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		byte[] read = new byte[10];
-		buf.readBytes(read);
-		// 读取byte数组, 这里需要注意的是, read字节数组的长度不能大于ByteBuf的readerIndex的值,否则会产生数组越界
-		Assert.assertEquals(10, buf.readerIndex());
-		Assert.assertEquals(0, read[9]);
-	}
+@Test
+public void testReadBytes() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
+	byte[] read = new byte[10];
+	buf.readBytes(read);
+	// 读取byte数组, 这里需要注意的是, read字节数组的长度不能大于ByteBuf的readerIndex的值,否则会产生数组越界
+	Assert.assertEquals(10, buf.readerIndex());
+	Assert.assertEquals(0, read[9]);
+}
 
-	@Test
-	public void testReadBytesWithStartEndIndex() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		byte[] read = new byte[10];
-		buf.readBytes(read, 2, 3);
-		// 从第三个索引开始读取到第4个索引的位置, 读取2个字节, readerIndex移动到第4个索引位置上
-		Assert.assertEquals(3, buf.readerIndex());
-		Assert.assertEquals(3, read[0]);
-	}
+@Test
+public void testReadBytesWithStartEndIndex() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
+	byte[] read = new byte[10];
+	buf.readBytes(read, 2, 3);
+	// 从第三个索引开始读取到第4个索引的位置, 读取2个字节, readerIndex移动到第4个索引位置上
+	Assert.assertEquals(3, buf.readerIndex());
+	Assert.assertEquals(3, read[0]);
+}
 
-	@Test
-	public void testRead3Bytes() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		buf.readBytes(3);
-		// 读取3个字节, readerIndex向后移动3字节
-		Assert.assertEquals(3, buf.readerIndex());
-	}
+@Test
+public void testRead3Bytes() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
+	buf.readBytes(3);
+	// 读取3个字节, readerIndex向后移动3字节
+	Assert.assertEquals(3, buf.readerIndex());
+}
 
-	@Test
-	public void testReadFloat() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeFloat(10.0f);
-		float read = buf.readFloat();
-		// 读取Float, readerIndex向后移动4字节
-		Assert.assertEquals(4, buf.readerIndex());
-		Assert.assertEquals(10.f, read);
-	}
+@Test
+public void testReadFloat() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeFloat(10.0f);
+	float read = buf.readFloat();
+	// 读取Float, readerIndex向后移动4字节
+	Assert.assertEquals(4, buf.readerIndex());
+	Assert.assertEquals(10.f, read);
+}
 
-	@Test
-	public void testReadLong() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeLong(10l);
-		buf.readLong();
-		// 读取long, readerIndex向后移动8字节
-		Assert.assertEquals(8, buf.readerIndex());
+@Test
+public void testReadLong() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeLong(10l);
+	buf.readLong();
+	// 读取long, readerIndex向后移动8字节
+	Assert.assertEquals(8, buf.readerIndex());
 
-	}
+}
 
-	@Test
-	public void testReadByte() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		buf.readByte();
-		// 读取byte, readerIndex向后移动1字节
-		Assert.assertEquals(1, buf.readerIndex());
-	}
+@Test
+public void testReadByte() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
+	buf.readByte();
+	// 读取byte, readerIndex向后移动1字节
+	Assert.assertEquals(1, buf.readerIndex());
+}
 
-	@Test
-	public void testReadShort() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeShort(10);
-		buf.readShort();
-		// 读取short, readerIndex向后移动2字节
-		Assert.assertEquals(2, buf.readerIndex());
-	}
+@Test
+public void testReadShort() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeShort(10);
+	buf.readShort();
+	// 读取short, readerIndex向后移动2字节
+	Assert.assertEquals(2, buf.readerIndex());
+}
 
-	@Test
-	public void testReadBoolean() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBoolean(true);
-		buf.readBoolean();
-		// 读取boolean, readerIndex向后移动1字节
-		Assert.assertEquals(1, buf.readerIndex());
-	}
+@Test
+public void testReadBoolean() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBoolean(true);
+	buf.readBoolean();
+	// 读取boolean, readerIndex向后移动1字节
+	Assert.assertEquals(1, buf.readerIndex());
+}
 
-	@Test
-	public void testReadDouble() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeDouble(10.0d);
-		buf.readDouble();
-		// 读取double, readerIndex向后移动8字节
-		Assert.assertEquals(8, buf.readerIndex());
-	}
+@Test
+public void testReadDouble() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeDouble(10.0d);
+	buf.readDouble();
+	// 读取double, readerIndex向后移动8字节
+	Assert.assertEquals(8, buf.readerIndex());
+}
 
-	@Test
-	public void testReadUnsignedByte() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeByte(-10);
-		short read = buf.readUnsignedByte();
-		// 读取无符号byte, readerIndex向后移动1字节
-		Assert.assertEquals(1, buf.readerIndex());
-		Assert.assertEquals(246, read);
-	}
+@Test
+public void testReadUnsignedByte() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeByte(-10);
+	short read = buf.readUnsignedByte();
+	// 读取无符号byte, readerIndex向后移动1字节
+	Assert.assertEquals(1, buf.readerIndex());
+	Assert.assertEquals(246, read);
+}
 
-	@Test
-	public void testReadUnsignedShort() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeShort(-1024);
-		// 我们首先读取出-1024,这个负数,然后转化成无符号数字64512
-		int read = buf.readUnsignedShort();
-		// 读取无符号Short, readerIndex向后移动2字节
-		Assert.assertEquals(2, buf.readerIndex());
-		Assert.assertEquals(64512, read);
-	}
+@Test
+public void testReadUnsignedShort() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeShort(-1024);
+	// 我们首先读取出-1024,这个负数,然后转化成无符号数字64512
+	int read = buf.readUnsignedShort();
+	// 读取无符号Short, readerIndex向后移动2字节
+	Assert.assertEquals(2, buf.readerIndex());
+	Assert.assertEquals(64512, read);
+}
 
-	@Test
-	public void testReaderIndex() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		Assert.assertEquals(0, buf.readerIndex());
-	}
+@Test
+public void testReaderIndex() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
+	Assert.assertEquals(0, buf.readerIndex());
+}
 
-	@Test
-	public void testReadableBytes() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		Assert.assertEquals(10, buf.readableBytes());
-		buf.readByte();
-		// 我们读取一个byte之后, 可读取字节变成了9个字节
-		Assert.assertEquals(9, buf.readableBytes());
-	}
+@Test
+public void testReadableBytes() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
+	Assert.assertEquals(10, buf.readableBytes());
+	buf.readByte();
+	// 我们读取一个byte之后, 可读取字节变成了9个字节
+	Assert.assertEquals(9, buf.readableBytes());
+}
 
-	@Test
-	public void testReadUnsignedInt() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeInt(10);
-		long read = buf.readUnsignedInt();
-		Assert.assertEquals(4, buf.readerIndex());
-		Assert.assertEquals(10, read);
-	}
+@Test
+public void testReadUnsignedInt() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeInt(10);
+	long read = buf.readUnsignedInt();
+	Assert.assertEquals(4, buf.readerIndex());
+	Assert.assertEquals(10, read);
+}
 
-	@Test
-	public void testReadSlice() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		ByteBuf read = buf.readSlice(5);
-		// slice出来的ByteBuf与原ByteBuf共享缓冲区
-		Assert.assertEquals(5, buf.readerIndex());
-		Assert.assertEquals(1, read.readByte());
-		Assert.assertEquals(6, buf.readByte());
+@Test
+public void testReadSlice() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
+	ByteBuf read = buf.readSlice(5);
+	// slice出来的ByteBuf与原ByteBuf共享缓冲区
+	Assert.assertEquals(5, buf.readerIndex());
+	Assert.assertEquals(1, read.readByte());
+	Assert.assertEquals(6, buf.readByte());
 
-	}
+}
 
-	@Test
-	public void testWriteBytesReadInt() {
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
-		buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
-		int read = buf.readInt();
-		// 从一个byte数组中读取一个int, 会读取出1, 2, 3, 4这四个byte转换成int为16909060
-		Assert.assertEquals(16909060, read);
-	}
+@Test
+public void testWriteBytesReadInt() {
+	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
+	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
+	int read = buf.readInt();
+	// 从一个byte数组中读取一个int, 会读取出1, 2, 3, 4这四个byte转换成int为16909060
+	Assert.assertEquals(16909060, read);
+}
 ```
 
 ### discard bytes
@@ -441,9 +439,11 @@ System.out.println(b);		// 3
 
 ```
 
+
 ```java
 
 ```
+
 
 ```java
 
