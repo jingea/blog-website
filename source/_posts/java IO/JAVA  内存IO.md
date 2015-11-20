@@ -1,5 +1,5 @@
 category: JAVA IO
-date: 2015-08-08
+date: 2015-11-21
 title: JAVA 内存IO
 ---
 ## ByteArrayInputStream 
