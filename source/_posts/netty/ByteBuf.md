@@ -1,4 +1,4 @@
-category: hazelcast
+category: netty
 date: 2015-11-20
 title: 初探ByteBuf
 ---
@@ -21,6 +21,16 @@ ByteBuf提供了 `readerIndex` 和 `writerIndex` 进行缓冲区的顺序读写�
 * [writerIndex, capacity]  可写的缓冲区区间
 
 > 每个索引移动的单位是`bytes`, 在下例中我们向ByteBuf写入一个int数值, `writerIdex`会移动4个`bytes`
+
+看完ByteBuf的API操作我们来看一下ByteBuf的分类,在内存使用种类上ByteBuf分为以下俩类
+* DirectByteBuf : 使用非JVM堆内存分配.
+* HeapByteBuf: 使用JVM堆内内存分配. 
+
+在内存使用种类上由分为以下俩类
+* PooledByteBuf: 基于内存对象池的ByteBuf, 
+* UnpooledByteBuf: 
+
+> UnpooledDirectByteBuf, UnpooledHeapByteBuf, UnpooledUnsafeDirectByteBuf 
 
 ## ByteBuf
 我们首先看一下ByteBuf提供的API
@@ -434,17 +444,31 @@ System.out.println(buf.readerIndex());		// 0
 System.out.println(b);		// 3
 ```
 
-## 
+## AbstractByteBuf
+`AbstractByteBuf`继承自`ByteBuf`, 它内部并没有定义ByteBuf的缓冲区实现,只是通过定义`readerIndex`, `writerIndex`, `capacity`等实现ByteBuf接口中的各种API, 
 ```java
+static final ResourceLeakDetector<ByteBuf> leakDetector = new ResourceLeakDetector<ByteBuf>(ByteBuf.class);
 
+int readerIndex;
+private int writerIndex;
+private int markedReaderIndex;
+private int markedWriterIndex;
+
+private int maxCapacity;
+
+private SwappedByteBuf swappedBuf;
 ```
 
+### ResourceLeakDetector
+`ResourceLeakDetector`用于检测内存泄漏. 它被所有ByteBuf实例共享.
 
-```java
+### SwappedByteBuf
 
-```
+## AbstractReferenceCountedByteBuf
+
+## UnPooledHeapByteBuf
+不使用对象池的基于堆内存分配的字节缓冲区. 每次IO读写的时候都会创建一个新的UnPooledHeapByteBuf.
 
 
-```java
-
-```
+## 内存池
+Netty的内存池由`PoolArea`. `PoolArea`由多个`PoolChunk`组成. 
