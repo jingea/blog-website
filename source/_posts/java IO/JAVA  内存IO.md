@@ -2,8 +2,9 @@ category: JAVA IO
 date: 2015-11-21
 title: JAVA 内存IO
 ---
+
 ## ByteArrayInputStream 
-从byte[]数组中读取数据到缓存中.可以将字节数组转化为输入流此类中的方法在关闭此流后仍可被调用，而不会产生任何 IOException。
+从byte[]数组中读取数据到缓存中.可以将字节数组转化为输入流此类中的方法在关闭此流后仍可被调用，而不会产生任何 `IOException`。
 ```java
 byte[] buff = {1, 2, 3, 4, 5};
 try(ByteArrayInputStream in = new ByteArrayInputStream(buff)) {
@@ -17,7 +18,7 @@ try(ByteArrayInputStream in = new ByteArrayInputStream(buff)) {
 ```
 
 ## ByteArrayOutputStream 
-输出数据到byte[]数组里，可以捕获内存缓冲区的数据，转换成字节数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray()和 toString()获取数据。	关闭 ByteArrayOutputStream 无效。此类中的方法在关闭此流后仍可被调用，而不会产生任何IOException。
+输出数据到byte[]数组里，可以捕获内存缓冲区的数据，转换成字节数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray()和 toString()获取数据。	关闭 `ByteArrayOutputStream `无效。此类中的方法在关闭此流后仍可被调用，而不会产生任何`IOException`。
 ```java
 byte[] buff = {1, 2, 3, 4, 5};
 try(ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -160,15 +161,6 @@ System.setOut(console);
 
 ## StreamTokenizer 
 获取输入流并将其解析为“标记”，允许一次读取一个标记。解析过程由一个表和许多可以设置为各种状态的标志控制。该流的标记生成器可以识别标识符、数字、引用的字符串和各种注释样式等。
-
-## StringBufferInputStream 
-
-
-## StringReader 
-
-
-## StringWriter 
-
 
 ## Console 
 专用来访问基于字符的控制台设备。如果你的Java程序要与Windows下的cmd或者Linux下的Terminal交互，就可以用这个Java Console类java.io.Console 只能用在标准输入、输出流未被重定向的原始控制台中使用，在 Eclipse 或者其他 IDE 的控制台是用不了的。

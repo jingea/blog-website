@@ -5,8 +5,25 @@ title: JAVA 文件操作
 
 ## FileFilter          
 检测文件是否存在。FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法，而FilenameFilter 是按照目录和文件名的方式来工作的。
+```
+FileFilter fileFilter = pathname -> {
+	System.out.println(pathname.getPath());
+	return pathname.isFile();
+};
+
+fileFilter.accept(new File("D:\\hazelcast-documentation-3.5.3.pdf"));
+```
 
 ## FilenameFilter 
+```java
+FilenameFilter filenameFilter = (dir, name) -> {
+	System.out.println(dir);
+	System.out.println(name);
+	return true;
+};
+
+filenameFilter.accept(new File("D"), "hazelcast-documentation-3.5.3.pdf");
+```
 
 ## File 
 File对象给我们提供了以下的功能
@@ -70,46 +87,24 @@ if (fl != null) {
 fos.close()
 ```
 
-## CopyOption          
-
 
 ## DirectoryStream     
 遍历某个文件夹内的所有文件,但是不会遍历子目录. 也就是这会遍历当前路径中的所有文件
 
-## FileVisitor          FileVisitor 
+> SecureDirectoryStream
+
+## FileVisitor
+遍历某个文件夹内的所有文件接口.
+
+`SimpleFileVisitor`实现了这个接口. 与`DirectoryStream` 不同的是，这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.
 
 
-## OpenOption          OpenOption 
+## 监控文件变化
+```java
 
-
-## Path          
-Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件，但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据，因此在网络环境或在虚拟文件系统中，NIO.2 也完全适用。NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法
-
-## PathMatcher          
-
-
-## SecureDirectoryStream
-
-
-## Watchable        
-
-
-## WatchEvent       
-
-
-## WatchEvent.Kind      
-
-
-## WatchEvent.Modifier  
-
-
-## WatchKey    
-
-
-## WatchService
+```
 
 ## Files 
-
 1. copy
 2. createDirectories
 3. createDirectory
@@ -159,27 +154,19 @@ Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path �
 ## FileStore 
 代表了真正的存储设备，提供了设备的详尽信息
 
-## FileSystem         
-
-
-## FileSystems        
+## FileSystems   
+* FileSystems.getDefault() ：返回 JVM 默认的 FileSystem – 一般说来，也就是操作系统的默认文件系统
+* FileSystems.getFileSystem(uri) ： 可以获取远程主机的FileSystem
 ```java
-// 返回 JVM 默认的 FileSystem – 一般说来，也就是操作系统的默认文件系统
-FileSystems.getDefault();
-// 可以获取远程主机的FileSystem
-FileSystems.getFileSystem(uri);
-// 得到文件系统支持的属性视图列表
 FileSystem system = FileSystems.getDefault();
+// 得到文件系统支持的属性视图列表
 Set<String> views = system.supportedFileAttributeViews();
 ```
-
-## LinkPermission          
+> FileSystem
 
 
 ## Paths          
 
+> Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件，但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据，因此在网络环境或在虚拟文件系统中，NIO.2 也完全适用。NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法
 
-## SimpleFileVisitor          
-与DirectoryStream 不同的是，这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.
 
-## StandardWatchEventKinds

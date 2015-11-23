@@ -59,9 +59,11 @@ try (FileReader reader = new FileReader(IOUtils.newFile(""));
 ```
 
 ## RandomAccessFile  
-读写随机访问文件 RandomAccessFile除了实现了DataInput和DataOutput接口之外,有效地与IO继承层次结构的其他部分实现了分离.因为它不支持装饰模式,所以不能将其与InputStream和OutputStream子类的任何部分组合起来而且必须假定RandomAccessFile已经被正确的缓冲
+读写随机访问文件 `RandomAccessFile`除了实现了`DataInput`和`DataOutput`接口之外,有效地与IO继承层次结构的其他部分实现了分离.
 
-用来访问那些保存数据记录的文件的，你就可以用seek( )方法来访问记录，并进行读写了。这些记录的大小不必相同；但是其大小和位置必须是可知的。但是该类仅限于操作文件。
+因为它不支持装饰模式,所以不能将其与`InputStream`和`OutputStream`子类的任何部分组合起来而且必须假定`RandomAccessFile`已经被正确的缓冲
+
+用来访问那些保存数据记录的文件的，你就可以用`seek()`方法来访问记录，并进行读写了。这些记录的大小不必相同；但是其大小和位置必须是可知的。但是该类仅限于操作文件。
 ```java
 // 读取所有的行
 try (RandomAccessFile r = new RandomAccessFile(file, "rw")) {
