@@ -1,6 +1,6 @@
 category: JAVA IO
 date: 2015-11-21
-title: JAVA 读文件
+title: JAVA 写文件
 ---
 
 ## BufferedOutputStream
@@ -41,5 +41,48 @@ try (Writer out = new BufferedWriter(new OutputStreamWriter(
 	out.flush();
 } catch (final Exception e) {
 	e.printStackTrace();
+}
+```
+
+## PrintStream 
+标准IO重定向
+
+打印输出流,用来装饰其它输出流。它能为其他输出流添加了功能，使它们能够方便地打印各种数据值表示形式。PrintStream永远不会抛出IOException；PrintStream提供了自动flush和字符集设置功能。所谓自动flush，就是往PrintStream写入的数据会立刻调用flush()函数。
+
+System类提供了一些简单的静态方法调用,以允许我们对标准输入,输出和错误IO进行重定向IO重定向是对字节流的操纵而不是字符流,因此在该例中使用的是InputStream和OutputStream而不是Reader和Writer
+
+示例 如果在显示器上创建大量输出,而这些输出滚动地太快而无法阅读时,IO重定向就显得很有用
+```java
+PrintStream console = System.out;
+BufferedInputStream in = new BufferedInputStream(new FileInputStream("Redirecting.java"));
+
+PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream("MapDB.test.out")));
+
+System.setIn(in);
+System.setOut(out);
+System.setErr(out);
+
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+String s;
+while ((s = br.readLine()) != null)
+	System.out.println(s);
+
+out.close(); // Remember this!
+System.setOut(console);
+```
+
+## PrintWriter 
+用于向文本输出流打印对象的格式化表示形式。它实现在 PrintStream 中的所有 print 方法。它不包含用于写入原始字节的方法，对于这些字节，程序应该使用未编码的字节流进行写入。
+
+FileWriter可以向文件输出数据. 首先创建一个与指定文件连接的FileWriter.然后使用BufferedWriter对其进行包装进行性能提升 最后使用PrintWriter提供格式化功能
+```java
+try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)));) {
+	out.println(string);
+}
+```
+System.out 是一个PrintStream,而PrintStream是一个OutputStream而PrintWriter有一个参数是接受OutputStream,因此我们可以将System.out转换成PrintWriter
+```java
+try (PrintWriter out = new PrintWriter(System.out);) {
+out.println(string);
 }
 ```
