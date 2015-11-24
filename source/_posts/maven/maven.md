@@ -205,7 +205,29 @@ mvn release:update-versions
 所有环境变量属性属性都可以使用`env`开头的属性引用,例如`${env.JAVA_HOME}`
 
 
+## Maven插件
 
+### 自定义Manifest
+```
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <configuration>
+        <archive>
+            <manifestFile>
+                src/main/resources/META-INF/MANIFEST.MF
+            </manifestFile>
+            <manifest>
+                <addClasspath>true</addClasspath>
+                <classpathPrefix>lib/</classpathPrefix>
+                <mainClass>
+                    wang.ming15.instrument.core.App
+                </mainClass>
+            </manifest>
+        </archive>
+    </configuration>
+</plugin>
+```
 
 
 
