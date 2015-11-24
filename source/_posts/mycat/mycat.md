@@ -4,7 +4,29 @@ title: Mycat配置文件
 ---
 [Mycat权威指南V1](https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&id=44263828402&ns=1&abbucket=17#detail)学习总结
 
+> 需要注意的一点是Mycat是支持分库,但是不支持分表的.
+
+* 启动Mycat `mycat.bat start`
+* 连接Mycat `mysql -hlocalhost -P8066 -utest -ptest`
+ 
 ## schema.xml
+下面的例子实现一个分库,db1和db2各有一张idTable表
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://org.opencloudb/">
+	<schema name="idDB" checkSQLschema="false" sqlMaxLimit="100">
+		<table name="idTable" primaryKey="ID" dataNode="dn1,dn2" rule="mod-long" />
+	</schema>
+	<dataNode name="dn1" dataHost="localhost1" database="db1" />
+	<dataNode name="dn2" dataHost="localhost1" database="db2" />
+	<dataHost name="localhost1" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="native">
+		<heartbeat>select user()</heartbeat>
+		<writeHost host="hostM1" url="localhost:3306" user="root" password="root" />
+	</dataHost>
+</mycat:schema>
+```
+如果我们要实现分库的功能需要在`rule.xml`中指定分库逻辑
 
 ### schema标签
 定义MyCat实例中的逻辑库,对于客户端来说,实际的数据库是不可见的,在sql中要使用逻辑库名称而不是实际的物理库的名称
@@ -59,66 +81,9 @@ title: Mycat配置文件
 * `user` : 后端存储实例需要的用户名字
 * `password` :  后端存储实例需要的密码
 
-### schema.xml配置示例
-下面的例子实现一个分库,db1和db2各有一张idTable表
-```xml
-<?xml version="1.0"?>
-<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
-<mycat:schema xmlns:mycat="http://org.opencloudb/">
-	<schema name="idDB" checkSQLschema="false" sqlMaxLimit="100">
-		<table name="idTable" primaryKey="ID" dataNode="dn1,dn2" rule="mod-long" />
-	</schema>
-	<dataNode name="dn1" dataHost="localhost1" database="db1" />
-	<dataNode name="dn2" dataHost="localhost1" database="db2" />
-	<dataHost name="localhost1" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="native">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="localhost:3306" user="root" password="root" />
-	</dataHost>
-</mycat:schema>
-```
-
-如果我们要实现分表的功能需要在`rule.xml`中指定分表逻辑
 
 ## server.xml
 保存mycat需要的系统配置信息.
-
-### user标签
-定义登录mycat的用户和权限,它可以定义`property`子标签.`property`子标签的name值可以是：
-* `password` : 该用户的密码
-* `schemas` : 该用户可访问的schema(在schema.xml中定义的schema)
-* `readOnly` : 该用户的读写权限
-
-### system标签
-与系统配置有关.它同样使用`property`子标签.`property`子标签的name值可以是：
-
-* `defaultSqlParser` : 指定默认的解析器
-* `processors` : 指定系统可用的线程数.(主要影响processorBufferPool、processorBufferLocalPercent、processorExecutor属性)
-* `processorBufferChunk` : 这个属性指定每次分配Socket Direct Buffer的大小，默认是4096个字节。这个属性也影响buffer pool的长度。
-* `processorBufferPool` : 这个属性指定bufferPool计算 比例值.
-* `processorBufferLocalPercent` : 控制分配ThreadLocalPool的大小用的，但其也并不是一个准确的值，也是一个比例值。这个属性默认值为100。
-* `processorExecutor` : 指定NIOProcessor上共享的businessExecutor固定线程池大小
-* `sequnceHandlerType` : 指定使用Mycat全局序列的类型。0为本地文件方式，1为数据库方式。
-###### TCP连接相关属性
-* `frontSocketSoRcvbuf` : 
-* `frontSocketSoSndbuf` : 
-* `frontSocketNoDelay` : 
-###### Mysql连接相关属性
-* `packetHeaderSize` : 指定Mysql协议中的报文头长度
-* `maxPacketSize` : 指定Mysql协议可以携带的数据最大长度
-* `idleTimeout` :  指定连接的空闲超时时间。某连接在发起空闲检查下，发现距离上次使用超过了空闲时间，那么这个连接会被回收，就是被直接的关闭掉。默认30分钟。
-* `charset` : 连接的初始化字符集。默认为utf8。
-* `txIsolation` : 前端连接的初始化事务隔离级别，只在初始化的时候使用，后续会根据客户端传递过来的属性对后端数据库连接进行同步。默认为REPEATED_READ。
-* `sqlExecuteTimeout` : SQL执行超时的时间，Mycat会检查连接上最后一次执行SQL的时间，若超过这个时间则会直接关闭这连接。默认时间为300秒。
-###### 周期间隔相关属性
-* `processorCheckPeriod` : 
-* `dataNodeIdleCheckPeriod` : 
-* `dataNodeHeartbeatPeriod` : 
-###### 服务相关属性
-* `bindIp` :  mycat服务监听的IP地址，默认值为0.0.0.0。
-* `serverPort` : mycat的使用端口，默认值为8066。
-* `managerPort` : mycat的管理端口，默认值为9066。
-
-### 示例
 ```xml
 <mycat:server xmlns:mycat="http://org.opencloudb/">
 	<system>
@@ -130,9 +95,57 @@ title: Mycat配置文件
 	</user>
 </mycat:server>
 ```
+
+### user标签
+定义登录mycat的用户和权限,它可以定义`property`子标签.`property`子标签的name值可以是：
+* `password` : 该用户的密码
+* `schemas` : 该用户可访问的schema(在schema.xml中定义的schema)
+* `readOnly` : 该用户的读写权限
+
+### system标签
+与系统配置有关.它同样使用`property`子标签.`property`子标签的name值可以是：
+* `defaultSqlParser` : 指定默认的解析器
+* `processors` : 指定系统可用的线程数.(主要影响processorBufferPool、processorBufferLocalPercent、processorExecutor属性)
+* `processorBufferChunk` : 这个属性指定每次分配Socket Direct Buffer的大小，默认是4096个字节。这个属性也影响buffer pool的长度。
+* `processorBufferPool` : 这个属性指定bufferPool计算 比例值.
+* `processorBufferLocalPercent` : 控制分配ThreadLocalPool的大小用的，但其也并不是一个准确的值，也是一个比例值。这个属性默认值为100。
+* `processorExecutor` : 指定NIOProcessor上共享的businessExecutor固定线程池大小
+* `sequnceHandlerType` : 指定使用Mycat全局序列的类型。0为本地文件方式，1为数据库方式。
+
+#### TCP连接相关属性
+* `frontSocketSoRcvbuf` : 
+* `frontSocketSoSndbuf` : 
+* `frontSocketNoDelay` : 
+
+#### Mysql连接相关属性
+* `packetHeaderSize` : 指定Mysql协议中的报文头长度
+* `maxPacketSize` : 指定Mysql协议可以携带的数据最大长度
+* `idleTimeout` :  指定连接的空闲超时时间。某连接在发起空闲检查下，发现距离上次使用超过了空闲时间，那么这个连接会被回收，就是被直接的关闭掉。默认30分钟。
+* `charset` : 连接的初始化字符集。默认为utf8。
+* `txIsolation` : 前端连接的初始化事务隔离级别，只在初始化的时候使用，后续会根据客户端传递过来的属性对后端数据库连接进行同步。默认为REPEATED_READ。
+* `sqlExecuteTimeout` : SQL执行超时的时间，Mycat会检查连接上最后一次执行SQL的时间，若超过这个时间则会直接关闭这连接。默认时间为300秒。
+
+#### 周期间隔相关属性
+* `processorCheckPeriod` : 
+* `dataNodeIdleCheckPeriod` : 
+* `dataNodeHeartbeatPeriod` :
+ 
+#### 服务相关属性
+* `bindIp` :  mycat服务监听的IP地址，默认值为0.0.0.0。
+* `serverPort` : mycat的使用端口，默认值为8066。
+* `managerPort` : mycat的管理端口，默认值为9066。
+
  
 ## rule.xml
 对表进行拆分所涉及到的规则定义
+```xml
+<tableRule name="rule2">
+    <rule>
+      <columns>user_id</columns>
+      <algorithm>func1</algorithm>
+    </rule>
+</tableRule>
+```
 
 ### tableRule标签
 定义表规则
@@ -155,16 +168,6 @@ title: Mycat配置文件
 具体算法需要用到的一些属性
 * `name` : 
 
-
-### 示例
-```xml
-<tableRule name="rule2">
-    <rule>
-      <columns>user_id</columns>
-      <algorithm>func1</algorithm>
-    </rule>
-</tableRule>
-```
 
 ### 常用的分片规则
 由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解
