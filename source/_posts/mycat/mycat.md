@@ -1,4 +1,4 @@
-category: 数据库
+category: mycat
 date: 2015-10-08
 title: Mycat
 ---

@@ -1,4 +1,4 @@
-﻿category: 数据库
+﻿category: MongoDB
 date: 2015-03-08
 title: MongoDB
 ---

@@ -1,4 +1,4 @@
-category: 数据库
+category: sql
 date: 2015-10-08
 title: 数据库和SQL
 ---
