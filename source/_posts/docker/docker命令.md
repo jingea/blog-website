@@ -85,22 +85,19 @@ docker run -t -i ubuntu14.04 /bin/bash
 > -p（小写的）则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有 `ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort`   在`--net=host`模式下，可以时容器内的端口自动映射到宿主主机上
 
 
-###### 映射所有接口地址
-使用 `hostPort:containerPort` 格式本地的 `5000` 端口映射到容器的 `5000` 端口，可以执行
+映射所有接口地址： 使用 `hostPort:containerPort` 格式本地的 `5000` 端口映射到容器的 `5000` 端口，可以执行
 ```
 $ sudo docker run -d -p 5000:5000 training/webapp python app.py
 ```
 
-###### 此时默认会绑定本地所有接口上的所有地址。
-映射到指定地址的指定端口
+此时默认会绑定本地所有接口上的所有地址。 映射到指定地址的指定端口
 
 可以使用 `ip:hostPort:containerPort` 格式指定映射使用一个特定地址，比如 `localhost` 地址 `127.0.0.1`
 ```
 $ sudo docker run -d -p 127.0.0.1:5000:5000 training/webapp python app.py
 ```
 
-##### 映射到指定地址的任意端口
-使用 `ip::containerPort` 绑定 `localhost` 的任意端口到容器的 `5000` 端口，本地主机会自动分配一个端口。
+映射到指定地址的任意端口。 使用 `ip::containerPort` 绑定 `localhost` 的任意端口到容器的 `5000` 端口，本地主机会自动分配一个端口。
 ```
 $ sudo docker run -d -p 127.0.0.1::5000 training/webapp python app.py
 ```
@@ -176,7 +173,7 @@ Dockerfile 基本的语法是
 7. `CMD` 命令来描述容器启动后运行的程序等
 
 
-##### 当利用 `docker run` 来创建容器时,`Docker` 在后台运行的标准操作包括
+当利用 `docker run` 来创建容器时,`Docker` 在后台运行的标准操作包括
 1. 检查本地是否存在指定的镜像,不存在就从公有仓库下载
 2. 利用镜像创建并启动一个容器
 3. 分配一个文件系统,并在只读的镜像层外面挂载一层可读写层
@@ -186,6 +183,5 @@ Dockerfile 基本的语法是
 7. 执行完毕后容器被终止
 
 
-##### `docker load` vs `docker import`
-用户既可以使用 `docker load` 来导入镜像存储文件到本地镜像库,也可以使用 `docker import `来导入一个容器快照到本地镜像库.这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息(即仅保存容器当时的快照状态),而镜像存储文件将保存完整记录,体积也要大.此外,从容器快照文件导入时可以重新指定标签等元数据信息.
+`docker load` vs `docker import` 用户既可以使用 `docker load` 来导入镜像存储文件到本地镜像库,也可以使用 `docker import `来导入一个容器快照到本地镜像库.这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息(即仅保存容器当时的快照状态),而镜像存储文件将保存完整记录,体积也要大.此外,从容器快照文件导入时可以重新指定标签等元数据信息.
 
