@@ -162,7 +162,7 @@ locked` 锁住的资源,分别锁住了  <0x00000000e673cf38>, <0x00000000e673cd
 	2. `java.lang.Thread.State: WAITING (on object monitor)`;
 
 	
-## gc log
+# gc log
 我使用`-Xmx2048m -Xms2048M  -Xmn1048m`的内存分配方式启动一个JVM,下面是其中一段GC 日志
 ```
 {Heap before GC invocations=196 (full 0):

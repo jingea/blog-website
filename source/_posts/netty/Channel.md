@@ -2,24 +2,18 @@ category: netty
 date: 2015-11-23
 title: 初探Channel
 ---
-`Channel`是Netty网络抽象类. 
+`Channel`是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等.
 
 下面我们看一下Channel提供的API
-* `parent()` : 
-* `isRegistered()` : 
-* `write()` : 
-* `write()` : 
-* `connect()` : 
-* `connect()` : 
-* `connect()` : 
-* `connect()` : 
-* `read()` : 
-* `close()` : 
-* `close()` : 
+* `parent()` : 获取父Channel
+* `isRegistered()` : 是否注册
+* `write()` : 将消息通过ChannelPipeline写入到目标Channel中
+* `connect()` : 建立连接
+* `read()` : 从Channel中读取数据到inbound缓冲区
+* `close()` : 关闭连接
 * `flush()` : 
 * `unsafe()` : 
 * `isOpen()` : 
-* `bind()` : 
 * `bind()` : 
 * `localAddress()` : 
 * `eventLoop()` : 
@@ -37,10 +31,7 @@ title: 初探Channel
 * `newFailedFuture()` : 
 * `voidPromise()` : 
 * `disconnect()` : 
-* `disconnect()` : 
 * `deregister()` : 
-* `deregister()` : 
-* `writeAndFlush()` : 
 * `writeAndFlush()` : 
 * `attr()` : 
 * `compareTo()` :
@@ -75,3 +66,18 @@ private volatile boolean registered;
 private boolean strValActive;
 private String strVal;
 ```
+* `CLOSED_CHANNEL_EXCEPTION` : 链路已经关闭异常
+* `NOT_YET_CONNECTED_EXCEPTION` : 链路尚未连接异常
+* `parent` : 该Channel的父Channel
+* `estimatorHandle` : 用于预测下一个报文的大小.
+* `unsafe` : 
+* `pipeline` : 
+* `succeededFuture` : 
+* `voidPromise` : 
+* `unsafeVoidPromise` : 
+* `closeFuture` : 
+* `localAddress` : 
+* `remoteAddress` : 
+* `eventLoop` : 该Channel注册到的EventLoop
+* `registered` :  
+
