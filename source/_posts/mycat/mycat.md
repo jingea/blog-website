@@ -169,27 +169,3 @@ title: Mycat配置文件
 * `name` : 
 
 
-### 常用的分片规则
-由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解
-
-#### 分片枚举
-```xml
-<function name="hash-int" class="org.opencloudb.route.function.PartitionByFileMap">
-	<property name="mapFile">partition-hash-int.txt</property>
-	<property name="type">0</property>
-	<property name="defaultNode">0</property>
-</function>
-```
-* mapFile: 配置文件名称
-* type: 0表示Integer，非零表示String
-* defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点
-
-#### 固定分片hash算法
-对columns取低10位进行求模运算
-```xml
-<function name="partitionByLong" class="org.opencloudb.route.function.PartitionByLong">
-	<property name="partitionCount">2,1</property>
-	<property name="partitionLength">256,512</property>
-</function>
-```
-
