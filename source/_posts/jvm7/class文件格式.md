@@ -24,27 +24,32 @@ attribute_info  attributes[attributes_count];
 ```
 
 ### magic
-Magic的唯一作用是确定这个文件是否是一个能被虚拟机所接受的Class文件.魔数固定值为0xCAFEBABY,不会改变
+Magic的唯一作用是确定这个文件是否是一个能被虚拟机所接受的Class文件.魔数固定值为`0xCAFEBABY`,不会改变
 
-### minor_version, major_version
-minor_version副版本号. major_version主版本号, 二者共同构成Class文件版本号.假设minor_version为m, major_version为M, 那么class文件的版本号为M.m.在JDK版本在1.k(k>=2)以上时, class文件的版本范围为(45.0 ~ 44+k.0)
+### 版本号
+* minor_version副版本号 
+* major_version主版本号
+二者共同构成Class文件版本号.假设minor_version为m, major_version为M, 那么class文件的版本号为M.m.在JDK版本在1.k(k>=2)以上时, class文件的版本范围为(45.0 ~ 44+k.0)
 
 ### constant_pool_count
 此值等于常量池中的成员数加1. 常量池表的索引值只有大于0且小于constant_pool_count 时才会被认为是有效的,对于long和double例外
 
-### constant_pool[] (常量池)
-是一种表结构, 它包含Class文件结构及其子结构中所引用的所有字符串常量, 类, 或接口名, 字段名和其他常量.如上文所说,常量池主要存放俩大类常量:字面量和符号引用. 字面量包括:文本字符串,被声明为final的常量值.而符号引用则包括了下列三种常量:
+### constant_pool(常量池)
+是一种表结构, 它包含Class文件结构及其子结构中所引用的所有字符串常量, 类, 或接口名, 字段名和其他常量.
+
+常量池主要存放俩大类常量:
+* 字面量 : 文本字符串,被声明为final的常量值
+* 符号引用. 符号引用则包括了下列三种常量:
+
 1. 类和接口的全限定名.
 2. 字段的名称和描述符
 3. 方法的名称和描述符
 
-在class文件中并不会保存各个方法和字段的最终内存布局信息.当虚拟机运行时,会从常量池获得对应的符合引用,再在类创建或运行时解析并翻译到具体的内存地址之中.常量池中每一项常量都是一个表,下面列举了这11种表结构
-
-常量池11种表结构
+当虚拟机运行时,会从常量池获得对应的符合引用,再在类创建或运行时解析并翻译到具体的内存地址之中.常量池中每一项常量都是一个表,下面列举了这11种表结构
 
 |项目                            |类型|描述                                              |
 |--------------------------------|---:|-------------------------------------------------:|
-|<red>CONSTANT_Utf8_info</red>   |UTF-8编码的字符串                                      |
+|CONSTANT_Utf8_info              |UTF-8编码的字符串                                      |
 |tag                             |u1  |值为1                                             |
 |length                          |u2  |UTF-8编码的字符串占用了字节数                     |
 |bytes                           |u1  |长度为length的UTF-8的字符串                       |
@@ -85,7 +90,6 @@ minor_version副版本号. major_version主版本号, 二者共同构成Class文
 
 
 ### access_flags
-
 是一种掩码标志, 用于表示某个类或者接口的访问权限及属性.
 
 access_flags 的取值范围和相应含义表
@@ -101,8 +105,7 @@ access_flags 的取值范围和相应含义表
 |ACC_ANNOTATION |0x2000 |标志为注解类型                                                    |
 |ACC_ENUM       |0x4000 |标志为枚举类型,意味着它或者它的父类被声明为枚举                   |
 
-当设置上ACC_INTERFACE意味着它是接口而不是类, 反之是类而不是接口. 当带有该标志,同时也设置了 ACC_ABSTRACT,则不能再设置ACC_FINAL,ACC_SUPER,ACC_ENUM..
-
+当设置上`ACC_INTERFACE`意味着它是接口而不是类, 反之是类而不是接口. 当带有该标志,同时也设置了 `ACC_ABSTRACT`,则不能再设置`ACC_FINAL,ACC_SUPER,ACC_ENUM`.
 
 ### this_class
 
@@ -374,8 +377,6 @@ inner_class_access_flags访问标志
 |ACC_ENUM        |0x4000   |100000000000    |内部类是否是一个枚举               |
 
 #### Deprecated, Synthetic
-
-
 这俩个属性属于标志型的布尔属性,只有存在不存在的区别.Deprecated 表示某个类或者字段或者方法被作者不再推荐使用,在代码中通过@Deprecated标注Synthetic 代码该字段或者方法并不是由java源码直接产生的,而是由编译器自行添加的.
 
 在JDK1.5以后,标志一个类,字段,方法是编译器自动产生的,也可以设置他们的访问标志中的ACC_SYNTHETIC标志位,最典型的例子就是Bridge Method了. 所有由非用户产生的类,字段,方法都应当至少设置Synthetic属性或者ACC_SYNTHETIC标志位,唯一例外的就是<init>和<clinit>方法.

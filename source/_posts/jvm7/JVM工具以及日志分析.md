@@ -2,29 +2,31 @@ category: jvm7
 date: 2014-10-08
 title: JVM工具以及日志分析
 ---
-# JVM 相关工具
+## JPS
+虚拟机进程状况工具
 
-## JPS:虚拟机进程状况工具
 列出正在运行的虚拟机进程,并显示虚拟机执行主类的名称,以及这些进程的本地虚拟机的唯一ID(LVMID). 
 
 对于本地虚拟机进程来说,LVMID与操作系统的进程ID是一致的,使用windwos的任务管理器或者Unix的ps命令也可以查询到虚拟机进程的LVMID,但如果同时启动了多个虚拟机进程,无法根据进程名称定位时,那就只能依赖jps命令显示主类的功能才能区分.
 
-### 命令格式:
+命令格式:
 ```
 jps [ options ] [hostid]
 ```
 jps可以通过RMI协议查询开启了RMI服务的远程虚拟机进程状态,hostid为RMI注册表中注册的主机名
 
-####jps工具主要选项
+jps工具主要选项
 * `-q`: 只输出LVMID,省略主类的名称
 * `-m`: 输出虚拟机进程启动时传递给主类main()函数的参数
 * `-l`: 输出主类的全名,如果进程执行的jar包,输出jar路径
 * `-v`: 输出虚拟机进程启动时JVM参数.
 
-##jstat:虚拟机统计信息监视工具
+## jstat
+虚拟机统计信息监视工具
+
 用于监视虚拟机各种运行状态信息的命令行工具.它可以显示本地或远程虚拟机进程中的类装载,内存,垃圾收集,JIT编译等运行数据.
 
-###jstat命令格式
+jstat命令格式
 ```
 jstat [ option vmid [interval [s|ms] [count]]]
 ```
@@ -35,7 +37,7 @@ jstat [ option vmid [interval [s|ms] [count]]]
 ```
 选项option代表着用户希望查询的虚拟机信息,主要分为三类:类装载,垃圾收集,运行期编译状况.
 
-#### jstat工具主要选项
+jstat工具主要选项
 * `-class`: 监视类装载,卸载数量,总空间及类装载所耗费的时间
 * `-gc`: 监视java堆状况,包括Eden区,2个survivor区,老年代,永久代等的容量,已用空间,GC时间合计等信息.
 * `-gccapacity`: 监视内容与-gc基本相同,但输出主要关注java堆各个区域使用到最大和最小空间.
@@ -52,7 +54,9 @@ jstat [ option vmid [interval [s|ms] [count]]]
 > E -> Eden. S0 -> Survivor0. S1 -> Survivor1. O -> Old. P -> Permanent. YGC -> YoungGC,Minor GC.
 > FGC  -> Full GC. FGCT -> Full GC Time.
 
-## Jinfo:Java配置
+## Jinfo
+Java配置
+
 jinfo的作用是实时查看和调整虚拟机的各项参数.
 ### jinfo命令格式
 ```
@@ -71,12 +75,11 @@ jmap的作用并不仅仅是为了获取dump文件,它还可以查询`finalize`�
 
 和jinfo命令一样,jmap有不少功能是在windows平台下受限的,除了生成dump文件`-dump`选项和用于查看每个类的实例,空间占用统计的`-histo`选项所有系统操作系统都提供之外,其余选项只能在Linux/Solaris下使用.
 
-### jmap命令格式
 ```
 jmap [ option ] vmid
 ```
 
-#### jmap工具主要选项
+jmap工具主要选项
 * `-dump`: 生成java堆转储快照.格式为:`-dump:[live,]format=b,file=<filename>`.live表示只dump存活对象
 * `-finalizerinfo`: 显示在`F-Queue`中等待`Finalizer`线程执行`finalize`方法的对象.
 * `-heap`: 显示java堆的详细信息,使用哪种回收器,参数配置,分代状况.
@@ -99,9 +102,6 @@ option值：
 
 当对线程堆栈分析时，首先查找`BLOCKED`, 找到锁住的线程。
 
-
-
-# 日志分析
 
 ## jstack日志
 下面摘抄的是NETTY中空epoll的一段记录
@@ -144,7 +144,7 @@ java.lang.Thread.State 线程状态
 locked` 锁住的资源,分别锁住了  <0x00000000e673cf38>, <0x00000000e673cd30>, <0x00000000e673cc58>
 ```
 
-### java.lang.Thread.State 线程状态
+java.lang.Thread.State 线程状态
 * `Runnable ` : 线程具备所有运行条件，在运行队列中准备操作系统的调度，或者正在运行
 * `waiting for monitor entry` :  在等待进入一个临界区,所以它在`Entry Set`队列中等待.
 > 此时线程状态一般都是 `Blocked`:如果大量线程在`waiting for monitor entry`, 可能是一个全局锁阻塞住了大量线程.如果短时间内打印的 `thread dump` 文件反映,随着时间流逝,`waiting for monitor entry`的线程越来越多,没有减少的趋势,可能意味着某些线程在临界区里呆的时间太长了,以至于越来越多新线程迟迟无法进入临界区.
@@ -162,7 +162,7 @@ locked` 锁住的资源,分别锁住了  <0x00000000e673cf38>, <0x00000000e673cd
 	2. `java.lang.Thread.State: WAITING (on object monitor)`;
 
 	
-# gc log
+## gc log
 我使用`-Xmx2048m -Xms2048M  -Xmn1048m`的内存分配方式启动一个JVM,下面是其中一段GC 日志
 ```
 {Heap before GC invocations=196 (full 0):
