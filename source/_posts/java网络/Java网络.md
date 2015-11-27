@@ -2,13 +2,14 @@ category: Java网络
 date: 2014-09-019
 title: java网络
 ---
-## Java里使用的是TCP/IP
+
+Java里使用的是TCP/IP
 * 应用层协议：(例如Http协议) 该层数据由下三层协议共同制定
 * 传输层协议：(常用TCP,UDP)(ICMP Ping命令基于该协议). 该层协议用于确保数据报以发送时的顺序接受,并且不会丢包. 如果发现顺序有误,或者数据丢失,则可要求对方重新发送数据(TCP会要求这一点, 但是UDP协议只是检查数据发送顺序,以及数据是否丢失并不要求对方重传数据)
 * 网络层协议：(使用最广泛的是IP协议)
 > 网络层第一任务是对数据位或者字节进行分组,打成包(包内数据称为数据报).网络层第二任务定义了主机彼此间的寻址方式(例如IPV4用四个字节来标识一个地址).在JAVA里,IP协议是它唯一理解的网络层协议.
 
-### IP数据报格式.
+IP数据报格式
 链路层协议：定义了网络接口(以太网接口或者环牌接口)
 
 谈一下Internet地址分类 (具体定义参考 WIKI IP地址), IP地址分为A,B,C,D,E,F类 (E,F分别作为广播地址这里不说了)
@@ -22,12 +23,11 @@ title: java网络
 在这里需要特殊说明的是有一些非路由地址,例如10; 192.16或者172.16到172.31 开头的地址.这些地址用于构建组织内部网路(例如家里只有一个IP但是却有很多设备,这时就需要通过路由为这些设备分配IP地址了),或者一些大型组织使用C类地址时非常有用
 路由器会将非路由地址转换为外部地址
 
-## URI
+URI
 ```
 scheme:scheme-specific-part (模式:模式特有部分)
 ```
-### 模式
-模式包含 data, file, ftp, http, news, telnet, urn (还有基于JAVA的rmi, jndi 等非标准模式,也称为protocol)
+URI模式包含 data, file, ftp, http, news, telnet, urn (还有基于JAVA的rmi, jndi 等非标准模式,也称为protocol)
 例如：`http://www.ming15.wang/2015/10/13/%E5%B7%A5%E5%85%B7/2015-10-12-AWK/`这个例子中模式为`http`, 负责解析该URI的机构`ming15.wang` 负责将`/2015/10/13/%E5%B7%A5%E5%85%B7/2015-10-12-AWK/`地址映射到主机资源
 
 还有的URI路径中含有? 这是URI的查询部分.后面紧跟查询参数,多个参数用&分割. 例如：`git@github.com:ming15/VertxServer.git`该URI中模式为`git` 解析结构为`github.com` 还可以在git和@之间加上用户名和密码`git://username:password@github.com:ming15/VertxServer.git`

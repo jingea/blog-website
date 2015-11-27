@@ -3,9 +3,9 @@ date: 2015-09-08
 title: java lambda
 ---
 
-# 函数接口
+## 函数接口
 
-## 函数接口定义
+### 函数接口定义
 函数接口只是一个抽象方法的接口,用作lambda表达式类型.
 
 注意, 上面这个定义有三个需要注意的地方
@@ -13,7 +13,7 @@ title: java lambda
 2. 函数接口有且只有一个抽象方法(只有一个表示数量上是唯一的,重载也是不可以)
 3. 函数接口用作lambda表达式类型
 
-## 函数接口示例:
+### 函数接口示例:
 ```java
 // 定义一个非泛型没有返回值没有参数的函数接口
 interface Run1 {
@@ -33,7 +33,7 @@ interface Run4<T> {
 }
 ```
 
-## 默认方法
+### 默认方法
 我们知道java8对核心集合类进行了大幅度修改,例如`Collection`接口添加了`stream()`方法. 那么所有的`Collection`实现类都必须来实现该方法. 为了保持二进制接口的兼容性,java8提供了默认方法,来保证这一兼容性(例如来源在java1到jav7平台写出的代码仍然可以在java8平台上编译运行)
 ```java
 interface Run10 {
@@ -59,7 +59,7 @@ run11.runAt9Clock();
 
 > 如果接口中只有一个默认方法,那么这个接口就不是接口函数.
 
-### 继承默认方法
+#### 继承默认方法
 ```java
 interface Run11 extends Run10 {
 	public default void runAt9Clock() {
@@ -92,7 +92,7 @@ run12 runAt9Clock
 ```
 接着我们都调用默认方法,我们发现当调用默认方法时都会优先调用子类中的方法.
 
-### 多重继承
+#### 多重继承
 ```java
 interface Run10 {
 	public default void runAt9Clock() {
@@ -123,7 +123,7 @@ class Run14 implements Run10, Run13 {
 }
 ```
 
-## 接口静态方法
+### 接口静态方法
 我们定义一个接口静态方法
 ```
 interface Run1 {
@@ -140,12 +140,12 @@ Run1.runSlowly();
 需要注意的是：
 * 接口静态方法不会被继承到子接口或者子类中
 
-## @FunctionalInterface
+### @FunctionalInterface
 所有的函数接口都应该添加`@FunctionalInterface`注释. 该注释会强制检查javac检查一个接口是否符合函数接口的标准. 如果将这个注释添加给类，枚举，多个方法的接口都会产生编译错误.
 
-# lambda表达式
+## lambda表达式
 
-## lambda表达式定义
+### lambda表达式定义
 接下来我们根据上面定义的函数接口来定义一下lambda表达式
 ```java
 // 不带参数的版本
@@ -171,7 +171,7 @@ Run4<String> run4 = (name, seconds) -> {
 };
 ```
 
-## lambda表达式使用
+### lambda表达式使用
 
 接下来我们使用上面定义的lambda表达式
 ```java
@@ -188,7 +188,7 @@ run4.runFast("小狗", 10); 小狗 is running
 -> 
 ```
 
-### 注意
+#### 注意
 
 我们引用lambda表达式外部的一个变量
 ```java
@@ -219,14 +219,14 @@ Run1 run1 = () -> {
 ```
 同样的产生了编译错误.
 
-### java中重要的函数接口
+#### java中重要的函数接口
 * `Predicate<T>`: `boolean test(T t)` 判断输入的对象是否符合某个条件
 * `Consumer<T>`: `void accept(T t);`  接收一个输入参数并且没有返回值
 * `Supplier<T>`: `T get();`  可以看成一个对象的工厂，每次调用返回一个给定类型的对象
 * `UnaryOperator<T>`: ``
 * `BinaryOperator<T>`: ``
 
-# 函数
+## 函数
 在Java8中什么是函数呢？
 ```java
 Run1 run1 = () -> {
@@ -235,7 +235,7 @@ Run1 run1 = () -> {
 ```
 上面`run1`这个就代表一个函数. 一般我们把属于某个类的函数称为方法, 而不依赖于类而存在的函数称之为方法. 
 
-## 高阶函数
+### 高阶函数
 如果某个函数A作为函数B的参数或者返回值, 那么我们称函数B为高阶函数,像下面的`run6`就是一个高级函数
 ```java
 interface Run6 {
@@ -251,7 +251,7 @@ run6.run(run1);
 ```
 我们将`run1`这个函数作为方法传递给了`run6`.
 
-### 返回函数
+#### 返回函数
 ```java
 interface Run8 {
 	public void run(String name, int second, int mils);
@@ -271,7 +271,7 @@ Run9 run9 = run8Param -> {
 ```
 在上述的例子中产生了编译错误, 在`Haskell`这种纯FP语言中可以将一个调用函数但是参数不完整的函数从某个参数中返回或者定义一个参数不完整的函数值.
 
-## 重载解析
+### 重载解析
 我们使用函数接口作为方法参数,然后进行重载
 ```java
 // 定义函数接口
@@ -317,7 +317,7 @@ interface Run2 extends Run1 {
 * 如果有多个可能的目标类型，由最具体的类型推导得出
 * 如果有多个可能的目标类型且最具体的类型不明确，则需要人为指定类型
 
-# 方法引用
+## 方法引用
 方法引用是简洁的Lambda表达式，能够用于已经拥有名称的方法。
 
 * 静态方法 (ClassName::methName)
@@ -326,7 +326,7 @@ interface Run2 extends Run1 {
 * 构造方法 (ClassName::new)
 * 数组的构造方法 (TypeName[]::new)
 
-## 静态方法引用
+### 静态方法引用
 ```
 public class Print {
 	public static void main(String[] args) throws Exception {
@@ -346,7 +346,7 @@ interface F {
 
 ```
 
-## 类型实例方法引用
+### 类型实例方法引用
 ```
 public class Print {
 	public static void main(String[] args) throws Exception {
@@ -362,7 +362,7 @@ interface F {
 }
 ```
 
-## 构造方法引用
+### 构造方法引用
 ```java
 public class Print {
 	public static void main(String[] args) throws Exception {
@@ -378,4 +378,43 @@ interface F {
 }
 ```
 
-## 数组的构造方法
+### 闭包
+Java8还提供了闭包这个特性,虽然我不知道闭包这个特性有啥用,但是还是实验了一下
+```java
+public class Java8 {
+
+	public static void main(String[] args) {
+		I i = () -> {
+			C c = new C();
+			c.count = 10;
+
+			J j = () -> {
+				System.out.println("J print c:" + c.count);
+				return c;
+			};
+
+			System.out.println("I print c:" + c.count);
+			return j;
+		};
+
+		J j = i.r();
+		C c = j.c();
+		c.count = 20;
+		System.out.println("main print c:" + c.count);
+	}
+}
+
+
+interface I {
+	public J r();
+}
+
+interface J {
+	public C c();
+}
+
+class C {
+	public int count;
+}
+```
+我们定义了俩个接口, `I`和`J`, 我们在I的lambada中调用J的lambada, 然后让J返回一个定义在I的对象C, 最后我们在main函数中成功的返回了这个对象. 
