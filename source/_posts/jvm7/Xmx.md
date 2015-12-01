@@ -1,25 +1,20 @@
+category: jvm7
+date: 2014-11-28
+title: Xmx参数
+---
 这个参数设置可用的最大堆内存, 如果我们不使用这个参数,在Mac平台上,默认分配的堆内存为1431M.
 
 
 测试程序为
 
 ```java
+public class Test {
+	public static void main(String[] main) {
+		long maxMemory = Runtime.getRuntime().maxMemory();
 
-
-publicclassTest{
-
-
-public static void main(String[]main){
-
-long maxMemory=Runtime.getRuntime().maxMemory();
-
-System.out.println(maxMemory/1000/1000+"M");
-
+		System.out.println(maxMemory / 1000 / 1000 + "M");
+	}
 }
-
-}
-
-
 ```
 
 
