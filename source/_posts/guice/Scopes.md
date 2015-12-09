@@ -1,6 +1,6 @@
 category: guice
 date: 2015-12-08
-title: Guice 
+title: Guice Scopes
 ---
 默认的,Guice每次在`getInstance()`的时候都会返回一个新的对象.
 

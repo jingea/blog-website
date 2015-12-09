@@ -1,6 +1,6 @@
 category: guice
 date: 2015-12-08
-title: Guice 
+title: Guice Injections
 ---
 ## Constructor Injection
 对构造器进行注入
