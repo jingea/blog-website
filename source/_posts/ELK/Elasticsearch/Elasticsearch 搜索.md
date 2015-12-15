@@ -29,7 +29,6 @@ IndexRequest indexRequest = new IndexRequest()
 client.index(indexRequest).get();
 ```
 
-## 搜索
 * Leaf query clauses : 在指定的字段中搜索指定的值,例如使用`match`, `term` 或者 `range` 搜索时
 * Compound query clauses : 
 
