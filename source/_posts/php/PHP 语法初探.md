@@ -200,6 +200,16 @@ foreach ($colors as $value) {
 }
 ?>
 ```
+如果我们遍历数组的时候,数组的元素是一个键值对的话, 我们可以这样处理
+<?php 
+$colors = array("red:555","green:123","blue:856"); 
+
+foreach ($colors as $colerKey => $colorValue) {
+  echo "$colerKey  is $colorValue";
+}
+?>
+```
+`=>`就表示一个键值对
 
 ## 文件
 我们使用`fopen(fileName, openMode)`函数打开文件, 第一个参数是文件名, 第二个参数打开模式
