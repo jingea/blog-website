@@ -14,7 +14,7 @@ title: Redis SortedSet
 * `score`  值 (可以是整数值或双精度浮点数)
 * `member` 键
 
-这个命令也就是将键值对(member score)插入到有序集合key中. 如果集合不存在就创建一个集合,如果键已经存在就代替原来的值。
+这个命令也就是将键值对(member score)插入到有序集合key中. 如果集合不存在就创建一个集合,如果键已经存在就代替原来的值.
 
 示例
 ```
@@ -31,7 +31,7 @@ redis 127.0.0.1:7006> ZADD test1 10 a
 * `increment`  score值的增量
 * `member`  针对哪个成员进行改变
 
-这个命令就是对某个成员进行增加或者减少(通过负数实现). (member 成员的新 score 值，以字符串形式表示)
+这个命令就是对某个成员进行增加或者减少(通过负数实现). (member 成员的新 score 值,以字符串形式表示)
 
 示例
 ```
@@ -51,7 +51,7 @@ redis 127.0.0.1:7006> zincrby test1 -20 t
 * `key` 有序集合名
 * `member` 成员名 
 
-移除有序集 key 中的一个或多个成员，不存在的成员将被忽略。
+移除有序集 key 中的一个或多个成员,不存在的成员将被忽略.
 
 示例
 ```
@@ -70,7 +70,7 @@ redis 127.0.0.1:7006> zcard test1
 * `start` 开始索引从0开始(默认闭区间,使用`(`表示开区间)
 * `stop`  结束索引从0开始(默认闭区间,使用`(`表示开区间)
 
-移除有序集 key 中，指定排名(rank)区间内的所有成员。
+移除有序集 key 中,指定排名(rank)区间内的所有成员.
 
 示例
 ```
@@ -87,7 +87,7 @@ redis 127.0.0.1:7006> ZREMRANGEBYRANK test1 1 2 # 将第二名和第三名移除
 * `max` 最大值(默认闭区间,使用`(`表示开区间)
 
 将集合key里的score值区间为[min,max]的成员删除
-> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限。
+> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限.
 
 示例
 ```
@@ -103,7 +103,7 @@ redis 127.0.0.1:7006> ZREMRANGEBYSCORE test1 10 20
 * `destination` 有序集合名
 * `numkeys`  需要合并的集合数量
 * `key`  需要合并的集合
-* `WEIGHTS`  指定该值，则在合并的时候，对每个score值都乘以该元素
+* `WEIGHTS`  指定该值,则在合并的时候,对每个score值都乘以该元素
 * `AGGREGATE` 指定并集的结果集的聚合方式
 
 对多个集合采取并集
@@ -169,7 +169,7 @@ redis 127.0.0.1:7006> ZRANGE e  0 -1 WITHSCORES
 * `destination` 有序集合名
 * `numkeys`  需要合并的集合数量
 * `key`  需要合并的集合
-* `WEIGHTS`  指定该值，则在合并的时候，对每个score值都乘以该元素
+* `WEIGHTS`  指定该值,则在合并的时候,对每个score值都乘以该元素
 * `AGGREGATE` 指定并集的结果集的聚合方式
 
 对多个集合采取交集
@@ -212,7 +212,7 @@ redis 127.0.0.1:7006> ZCARD test1
 * `min`最小值(默认闭区间,使用`(`表示开区间)
 * `max` 最大值(默认闭区间,使用`(`表示开区间)
 这个命令就是统计score 值在 min 和 max 之间(默认包括 score 值等于 min 或 max )的成员的数量
-> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限。
+> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限.
 
 示例
 ```
@@ -277,8 +277,8 @@ redis 127.0.0.1:7006> ZREVRANGE test1 1 100
 * `WITHSCORES` 输出score值
 * `LIMIT offset count` 
 
-返回有序集key中，score值介于 [min, max]之间(闭区间)的成员,按 score 值递增(从小到大)次序排列
-> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限。
+返回有序集key中,score值介于 [min, max]之间(闭区间)的成员,按 score 值递增(从小到大)次序排列
+> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限.
 
 示例
 ```
@@ -322,8 +322,8 @@ redis 127.0.0.1:7006> ZRANGEBYSCORE test1 10 56 WITHSCORES LIMIT 0 3 # 从第一
 * `WITHSCORES` 输出score值
 * `LIMIT offset count`  
 
-除了成员按 score 值递减的次序排列这一点外， ZREVRANGEBYSCORE 命令的其他方面和 ZRANGEBYSCORE 命令一样。
-> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限。
+除了成员按 score 值递减的次序排列这一点外, ZREVRANGEBYSCORE 命令的其他方面和 ZRANGEBYSCORE 命令一样. 
+> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限.
 
 示例
 ```
@@ -348,7 +348,7 @@ redis 127.0.0.1:7006> ZREVRANGE test1 1 100 WITHSCORES
 * `max` 最大值(默认闭区间,使用`(`表示开区间)
 
 根据成员进行排序而不是根据score值排序,然后返回[min, max]区间内的成员
-> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限。
+> `+`和`-`在 min 参数以及 max 参数中表示正无限和负无限.
 
 示例
 ```
@@ -363,7 +363,7 @@ redis 127.0.0.1:7006> ZRANGEBYLEX test1 10 30
 * `key` 有序集合名
 * `member`  成员值
 
-返回有序集 key 中成员 member 的排名。其中有序集成员按 score 值递增(从小到大)顺序排列。（排名从0开始）
+返回有序集 key 中成员 member 的排名.其中有序集成员按 score 值递增(从小到大)顺序排列.（排名从0开始）
 
 示例
 ```
@@ -376,7 +376,7 @@ redis 127.0.0.1:7006> ZRANK test1 d
 * `ZREVRANK` redis命令
 * `key` 有序集合名
 * `member`  成员值
-除了成员按 score 值递减的次序排列这一点外， ZREVRANK 命令的其他方面和 ZRANK 命令一样。
+除了成员按 score 值递减的次序排列这一点外, ZREVRANK 命令的其他方面和 ZRANK 命令一样.
 
 示例
 ```
@@ -390,7 +390,7 @@ redis 127.0.0.1:7006> ZREVRANK test1 c
 * `key` 有序集合名
 * `member` 成员 
 
-返回有序集 key 中，成员 member 的 score 值。
+返回有序集 key 中,成员 member 的 score 值.
 
 示例
 ```
