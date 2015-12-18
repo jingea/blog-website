@@ -1,11 +1,12 @@
-category: ELK
+ï»¿category: ELK
 tag: logstash
 date: 2015-12-15
-title: logstash±à½âÂëÈÕÖ¾
+title: logstashç¼–è§£ç æ—¥å¿—
 ---
+æˆ‘ä»¬å¯ä»¥åœ¨`input`æˆ–è€…`ouput`æ’ä»¶é‡Œä½¿ç”¨`codec`æ’ä»¶, æ­£å¦‚logstashæµç¨‹é‚£æ ·`input -> decode -> fliter -> encode -> output`
 
 ## json
-µ±ÎÒÃÇÏòÎÄ¼şÊä³öÈÕÖ¾µÄÊ±ºò, Èç¹û²»Ö¸¶¨±àÂëµÄ»°
+å½“æˆ‘ä»¬å‘æ–‡ä»¶è¾“å‡ºæ—¥å¿—çš„æ—¶å€™, å¦‚æœä¸æŒ‡å®šç¼–ç çš„è¯
 ```
 output {
     file {
@@ -13,13 +14,13 @@ output {
     }
 }
 ```
-»á½«
+ä¼šå°†
 ```
 moon3  2015-12-15 00:00:00,008 [ThreadPoolTaskExecutor-1] PlayerManagerImpl(506) ERROR ERROR update player error 2:1362104689008
 ```
-Êä³öÎª
+è¾“å‡ºä¸º
 ```
 {"message":"moon3  2015-12-15 00:00:00,008 [ThreadPoolTaskExecutor-1] PlayerManagerImpl(506) ERROR ERROR update player error 2:1362104689008","@version":"1","@timestamp":"2015-12-16T03:43:14.112Z","host":"wangming-PC","path":"D:/log/logs/moon-alert-2015-12-15.log","type":"system"}
 ```
 
-¶øÎÒÃÇÖ¸¶¨±àÂëÎªjsonµÄ»°
+è€Œæˆ‘ä»¬æŒ‡å®šç¼–ç ä¸ºjsonçš„è¯

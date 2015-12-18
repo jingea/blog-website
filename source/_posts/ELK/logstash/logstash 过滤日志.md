@@ -1,12 +1,12 @@
-category: ELK
+ï»¿category: ELK
 tag: logstash
 date: 2015-12-15
-title: logstash¹ýÂËÈÕÖ¾
+title: logstashè¿‡æ»¤æ—¥å¿—
 ---
-### filter²å¼þ
+### filteræ’ä»¶
 ```json
 filter {
-	#ÃüÃûÕýÔò±í´ïÊ½£¬ÔÚÉÔºó(grok²ÎÊý»òÕßÆäËûÕýÔò±í´ïÊ½Àï)ÒýÓÃËü	
+	#å‘½åæ­£åˆ™è¡¨è¾¾å¼ï¼Œåœ¨ç¨åŽ(grokå‚æ•°æˆ–è€…å…¶ä»–æ­£åˆ™è¡¨è¾¾å¼é‡Œ)å¼•ç”¨å®ƒ	
     grok {
         match => ["message",  "%{COMBINEDAPACHELOG}"]
     }
@@ -18,14 +18,14 @@ filter {
         target => "jsoncontent"
     }
 	mutate {
-		#ÀàÐÍ×ª»»
+		#ç±»åž‹è½¬æ¢
         convert => ["request_time", "float"]
-		#×Ö·û´®´¦Àí
+		#å­—ç¬¦ä¸²å¤„ç†
 		gsub 	=> ["urlparams", "[\\?#]", "_"]
 		split 	=> ["message", "|"]
 		join 	=> ["message", ","]
 		merge 	=> ["message", "message"]
-		#×Ö¶Î´¦Àí
+		#å­—æ®µå¤„ç†
 		rename => ["syslog_host", "host"]
 		update => ["syslog_host", "host"]
 		replace => ["syslog_host", "host"]
