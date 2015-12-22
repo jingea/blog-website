@@ -1,4 +1,5 @@
-category: maven
+category: mgits
+tag: maven
 date: 2015-06-08
 title: maven入门
 ---
@@ -51,6 +52,10 @@ mvn package
 mvn verify
 mvn install
 mvn deploy
+```
+
+```
+mvn install:install-file -DgroupId=demo -DartifactId=test -Dversion=1.0 -Dpackaging=jar -Dfile=E:\Xg-Push-SDK-JAVA-1.1.6\XingeApp.jar
 ```
 
 ### site生命周期

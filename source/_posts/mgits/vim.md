@@ -1,4 +1,5 @@
-category: vi
+category: mgits
+tag: vi
 date: 2015-10-08
 title: GVIM
 ---

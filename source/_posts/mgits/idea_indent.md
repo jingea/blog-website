@@ -1,4 +1,5 @@
-category: IDEA
+category: mgits
+tag: IDEA
 date: 2015-08-08
 title: IDEA缩进设置
 ---

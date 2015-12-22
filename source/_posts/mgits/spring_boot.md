@@ -1,6 +1,7 @@
-category: spring
+category: mgits
+tag: spring
 date: 2015-04-08
-title: springboot
+title: springboot 初探
 ---
 # 添加依赖
 ```xml

@@ -1,6 +1,7 @@
-category: gradle
+category: mgits
+tag: gradle
 date: 2015-11-18
-title: 初探Gradle
+title: Gradle 初探
 ---
 ## 概述
 任何一个 Gradle 构建都是由一个或多个 projects 组成。每个 project 都由多个 tasks 组成。每个 task 都代表了构建执行过程中的一个原子性操作。

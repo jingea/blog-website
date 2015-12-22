@@ -1,6 +1,7 @@
-category: Archiva
+category: mgits
+tag: Archiva
 date: 2015-09-08
-title: Archiva
+title: Archiva 初探
 ---
 
 ## 安装步骤

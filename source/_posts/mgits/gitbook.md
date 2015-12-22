@@ -1,4 +1,5 @@
-category: markdown
+category: mgits
+tag: gitbook
 date: 2014-09-08
 title: gitbook使用
 ---

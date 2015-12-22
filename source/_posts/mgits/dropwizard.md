@@ -1,6 +1,7 @@
-category: Dropwizard
+category: mgits
+tag: Dropwizard
 date: 2015-04-08
-title: Dropwizard入门
+title: Dropwizard 初探
 ---
 
 ## Setting Up Maven

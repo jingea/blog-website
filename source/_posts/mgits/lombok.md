@@ -1,4 +1,5 @@
-category: lombok
+category: mgits
+tag: lombok
 date: 2015-12-09
 title: Lombok初探
 ---
