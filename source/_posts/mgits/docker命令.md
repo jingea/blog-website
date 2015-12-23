@@ -1,4 +1,5 @@
-category: Docker
+category: mgits
+tag: Docker
 date: 2015-06-08
 title: docker命令
 ---

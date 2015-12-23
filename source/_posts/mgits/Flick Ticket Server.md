@@ -1,4 +1,4 @@
-category: ID生成
+category: mgits
 date: 2015-05-08
 title: Flick Ticket Server
 ---
