@@ -1,4 +1,4 @@
-category: Bug库
+category: mgits
 date: 2015-07-05
 title: 项目CheckList
 ---

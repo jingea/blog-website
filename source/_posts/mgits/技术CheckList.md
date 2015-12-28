@@ -1,4 +1,4 @@
-category: Bug库
+category: mgits
 date: 2015-10-15
 title: 技术CheckList
 ---

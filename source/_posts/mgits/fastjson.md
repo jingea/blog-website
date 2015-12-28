@@ -3,7 +3,7 @@ tag: fastjson
 date: 2015-12-23
 title: fastjson
 ---
-## ¶ÁÈ¡Êı×é
+## è¯»å–æ•°ç»„
 ```java
 List<Reward> rewards = JSONArray.parseArray(jsonStr, Reward.class);
 ```

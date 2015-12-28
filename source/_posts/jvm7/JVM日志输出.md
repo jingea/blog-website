@@ -1,3 +1,7 @@
+category: jvm7
+date: 2014-11-28
+title: JVM 日志输出
+---
 ## PrintGC
 在jvm选项上添加上这个参数,只要遇上GC就会输出GC日志
 
