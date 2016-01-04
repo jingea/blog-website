@@ -1,6 +1,6 @@
 category: jmh
-date: 2015-01-01
-title: JMHSample_05_StateFixtures 
+date: 2015-01-04
+title: 05_StateFixtures 
 ---
 ```java
 

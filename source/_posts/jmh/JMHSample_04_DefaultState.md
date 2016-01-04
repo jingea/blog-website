@@ -1,6 +1,6 @@
 category: jmh
 date: 2015-01-01
-title: JMHSample_04_DefaultState 
+title: 04_DefaultState 
 ---
 ```java
 /*

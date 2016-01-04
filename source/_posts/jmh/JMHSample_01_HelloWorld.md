@@ -1,6 +1,6 @@
 category: jmh
 date: 2015-12-28
-title: JMHSample_01_HelloWorld 
+title: 01_HelloWorld 
 ---
 ```java
 import org.openjdk.jmh.annotations.Benchmark;
