@@ -1,5 +1,5 @@
 category: jmh
-date: 2015-01-04
+date: 2016-01-04
 title: 06_FixtureLevel 
 ---
 在演示这个示例之前我们先说一下`@State`里Fixture methods的运行级别含义

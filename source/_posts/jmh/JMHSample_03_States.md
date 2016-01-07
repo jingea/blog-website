@@ -1,5 +1,5 @@
 category: jmh
-date: 2015-01-01
+date: 2016-01-01
 title: 03_States 
 ---
 在很多种情况下, 在benchmark运行的过程中, 你可能需要维持一些状态, 但是JMH被设计成经常并发的执行benchmark, 因此JMH提供了一些用于保存状态的对象.

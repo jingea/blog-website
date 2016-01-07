@@ -1,5 +1,5 @@
 category: jmh
-date: 2015-01-04
+date: 2016-01-04
 title: 07_FixtureLevelInvocation 
 ---
 Fixtures含有不同的运行等级. Level.Invocation通常可以帮我们在基准测试方法之前执行一些特殊的操作, 这些操作并不会被统计在测量结果中. 但是需要注意的是生成的时间戳和同步代码块会对测量的结果产生偏移
