@@ -1,6 +1,6 @@
 category: jmh
 date: 2015-12-28
-title: 01_HelloWorld 
+title: 02_BenchmarkModes
 ---
 当benchmark编译过程中, JMH会为此生成大量的额外代码. JMH可以在多种不同的模式下进行基准测试.
 
