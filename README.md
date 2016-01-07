@@ -26,7 +26,6 @@
  
  
 TODO
-* Disruptor
 * java8性能
 * ADT4J
 * AssertJ
