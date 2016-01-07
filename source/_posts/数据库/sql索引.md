@@ -1,4 +1,4 @@
-category: sql
+category: 数据库和SQL
 date: 2015-10-08
 title: SQL索引
 ---
