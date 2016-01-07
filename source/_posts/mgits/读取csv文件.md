@@ -1,9 +1,9 @@
 category: mgits
 tag: csv
 date: 2015-06-08
-title: java读取csv文件
+title: java璇诲彇csv鏂囦欢
 ---
-利用Apache Commons CSV读取csv文件, 首先我们添加如下依赖
+鍒╃敤Apache Commons CSV璇诲彇csv鏂囦欢, 棣栧厛鎴戜滑娣诲姞濡備笅渚濊禆
 ```xml
 <dependency>
 	<groupId>org.apache.commons</groupId>
@@ -11,7 +11,7 @@ title: java读取csv文件
 	<version>1.2</version>
 </dependency>
 ```
-读取csv文件
+璇诲彇csv鏂囦欢
 ```java
 Reader in = new FileReader("path/to/file.csv");
 Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);

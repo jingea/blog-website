@@ -1,4 +1,5 @@
-category: Unity
+category: mgits
+tag: unity
 date: 2015-08-08
 title: unity命令行使用
 ---

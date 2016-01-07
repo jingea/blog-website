@@ -1,6 +1,6 @@
-category: mybatis-guice
+category: guice
 date: 2015-12-09
-title: Getting started
+title: Mybatis Guice 初探
 ---
 参考文档[mybatis-guice](http://mybatis.org/guice/index.html)
 
