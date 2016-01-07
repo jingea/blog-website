@@ -96,7 +96,7 @@ CREATE TABLE
 mysql查询的五种子句 
 
 #### where(条件查询)
-```
+```sql
 SELECT * FROM t1 WHERE id > 100;
 ```
 * 数值谓词:`>,=,<,<>,!=,!>,!<,=>,=<`
@@ -105,24 +105,45 @@ SELECT * FROM t1 WHERE id > 100;
 
 
 #### having（筛选）
-```
+```sql
 
 ```
 
 #### group by（分组）
-```
+```sql
 SELECT id FROM player GROUP BY vip;
 ```
 
 #### order by（排序）
-```
+```sql
 SELECT id FROM player ORDER BY id;
 ```
 
 #### limit（限制结果数）
-查询前n条记录
-```
+查询前n条记录(默认从第0个开始)
+```sql
 SELECT id FROM player LIMIT 10;
 ```
-查询后n条记录
+从结果集中第1个开始查询, 查询10个
+```sql
+SELECT id FROM player LIMIT 1, 10;
+```
 
+## 执行顺序
+sql语句的执行顺序
+```sql
+(7)     SELECT 
+(8)     DISTINCT <select_list>
+(1)     FROM <left_table>
+(3)     <join_type> JOIN <right_table>
+(2)     ON <join_condition>
+(4)     WHERE <where_condition>
+(5)     GROUP BY <group_by_list>
+(6)     HAVING <having_condition>
+(9)     ORDER BY <order_by_condition>
+(10)    LIMIT <limit_number>
+```
+也就是
+```
+FROM->ON->JOIN->WHERE->GROUP BY->HAVING->SELECT->DISTINCT->ORDER BY->LIMIT
+```
