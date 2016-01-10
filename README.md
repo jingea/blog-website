@@ -39,3 +39,45 @@ TODO
 * TestNG 
 * ELK
 * zookeeper
+* JavaVerbalExpressions
+* https://github.com/scottysinclair/barleydb
+* https://github.com/mp911de/lettuce
+* https://github.com/Netflix/Hystrix
+* https://github.com/KoMinkyu/teaspoon
+* https://github.com/fabioCollini/DaggerMock
+* http://square.github.io/retrofit/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
