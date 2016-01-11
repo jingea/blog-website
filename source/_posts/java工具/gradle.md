@@ -1,5 +1,7 @@
 category: java工具
-tag: gradle, 构建工具
+tags: 
+	- gradle
+	- 构建工具
 date: 2015-11-18
 title: Gradle 初探
 ---
