@@ -1,4 +1,5 @@
-category: jvm7
+category: jvm
+tag: jvm参数
 date: 2014-11-28
 title: JVM 日志输出
 ---
@@ -13,5 +14,3 @@ title: JVM 日志输出
 
 ## PrintGCTimeStamps
 这个参数会在每次GC的时候,输出GC发生的时间
-
-##  

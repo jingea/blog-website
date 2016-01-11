@@ -1,4 +1,5 @@
-category: jvm7
+category: jvm
+tag: jvm工具
 date: 2014-10-08
 title: JVM工具以及日志分析
 ---

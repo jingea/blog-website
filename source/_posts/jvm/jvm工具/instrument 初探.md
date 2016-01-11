@@ -1,7 +1,19 @@
-category: instrument
+category: jvm
+tag: instrument, jvm工具
 date: 2015-11-24
-title: instrument premain
+title: instrument 初探
 ---
+使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至能够替换和修改某些类的定义。
+
+Instrumentation提供了这样的功能：
+* 获取某个对象的大小
+* 热加载class文件
+* 获取JVM信息
+
+> 要知道一个对象所使用的内存量,需要将所有实例变量使用的内存和对象本身的开销(一般是16字节)相加.这些开销包括一个指向对象的类的引用,垃圾收集信息和同步信息.另外一般内存的使用会被填充为8字节的倍数.
+
+
+## Premain
 premain函数是JavaSE5中实现instrument的方式.
 
 使用premain我们要自定义MANIFEST.MF文件, 定义Premain-Class
@@ -42,7 +54,7 @@ Premain-Class: wang.ming15.instrument.core.Premain
 ```
 
 
-## 获取对象大小
+### 获取对象大小
 首先我们要写一个代理文件出来(该文件放在`core-1.0-SNAPSHOT.jar`中)
 ```java
 public class Premain {
@@ -86,7 +98,7 @@ Hello world, App
 123456789 对象大小: 24
 ```
 
-## 加载jar包
+### 加载jar包
 我们在Premain类中增加一个加载jar的功能
 ```java
 public static void appendJarToSystemClassLoader(String path) {
@@ -149,7 +161,7 @@ wang.ming15.instrument.print.Print  11
 java.io.PrintStream  44
 ```
 
-## 重新加载类
+### 重新加载类
 我们使用`redefineClasses()`可以使用提供的字节码重新定义Class. 这个方法会使用新的字节码全部替换原先存在的Class字节码. 而如果想要修改原先存在的Class字节码应该使用`retransformClasses()`方法.
 
 对于已经在栈帧中的字节码, 他们会继续执行下去, 但是当方法再次调用的时候,则会使用刚刚加载完成的新的字节码.
@@ -209,4 +221,19 @@ I am a big T
 I am a big T
 I am a big T ok
 I am a big T ok
+```
+
+## Agentmain
+
+在 Java SE 5 中premain 所作的 Instrumentation 也仅限与 main 函数执行前，这样的方式存在一定的局限性。Java SE 6 针对这种状况做出了改进，开发者可以在 main 函数开始执行以后，再启动自己的 Instrumentation 程序。在 Java SE 6 的 Instrumentation 当中，有一个跟 premain“并驾齐驱”的“agentmain”方法，可以在 main 函数开始运行之后再运行。
+
+首先我们还是需要修改MANIFEST.MF文件, 在其中添加
+```
+Agent-Class: wang.ming15.instrument.core.Agentmain
+```
+
+## 获取对象大小
+同样我们还是先输出一下对象的大小
+```
+
 ```

@@ -1,4 +1,5 @@
-category: jvm7
+category: jvm
+tag: jvm参数
 date: 2014-11-28
 title: Xmx参数
 ---
