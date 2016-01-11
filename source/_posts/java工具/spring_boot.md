@@ -1,5 +1,5 @@
-category: mgits
-tag: spring
+category: java工具
+tag: spring, http服务器
 date: 2015-04-08
 title: springboot 初探
 ---

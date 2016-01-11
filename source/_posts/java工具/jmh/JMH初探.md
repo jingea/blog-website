@@ -1,4 +1,5 @@
-category: jmh
+category: java工具
+tag: jmh
 date: 2015-12-28
 title: JMH 环境搭建
 ---

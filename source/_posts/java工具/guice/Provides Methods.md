@@ -1,4 +1,5 @@
-category: guice
+category: java工具
+tag: guice
 date: 2015-12-08
 title: Guice Provides Methods
 ---

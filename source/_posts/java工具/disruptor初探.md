@@ -1,4 +1,5 @@
-category: disruptor
+category: java工具
+tag: disruptor
 date: 2015-12-19
 title: Disruptor 初探
 ---

@@ -1,4 +1,5 @@
-category: memcached
+category: 内存数据库
+tag: memcached
 date: 2015-11-18
 title: memcached
 ---

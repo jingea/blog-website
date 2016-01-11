@@ -1,4 +1,4 @@
-﻿category: mgits
+﻿category: java工具
 tag: Guava
 date: 2013-09-13
 title: Guava Cache

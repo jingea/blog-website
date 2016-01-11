@@ -1,4 +1,4 @@
-category: mgits
+category: java工具
 date: 2015-12-30
 title: args4j 初探
 ---

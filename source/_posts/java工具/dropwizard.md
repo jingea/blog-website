@@ -1,4 +1,4 @@
-category: mgits
+category: java工具
 tag: Dropwizard
 date: 2015-04-08
 title: Dropwizard 初探

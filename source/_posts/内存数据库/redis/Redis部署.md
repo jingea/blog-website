@@ -1,4 +1,5 @@
-category: redis
+category: 内存数据库
+tag: redis
 date: 2015-04-02
 title: Redis 部署
 ---

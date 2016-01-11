@@ -1,4 +1,5 @@
-category: guice
+category: java工具
+tag: guice
 date: 2015-12-09
 title: Mybatis Guice 初探
 ---

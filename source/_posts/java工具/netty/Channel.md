@@ -1,4 +1,5 @@
-category: netty
+category: java工具
+tag: netty
 date: 2015-11-23
 title: 初探Channel
 ---

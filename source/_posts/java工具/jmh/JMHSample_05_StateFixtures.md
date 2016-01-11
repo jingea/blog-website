@@ -1,4 +1,5 @@
-category: jmh
+category: java工具
+tag: jmh
 date: 2016-01-04
 title: 05_StateFixtures 
 ---

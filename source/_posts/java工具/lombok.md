@@ -1,4 +1,4 @@
-category: mgits
+category: java工具
 tag: lombok
 date: 2015-12-09
 title: Lombok初探

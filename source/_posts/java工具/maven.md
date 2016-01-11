@@ -1,5 +1,5 @@
-category: mgits
-tag: maven
+category: java工具
+tag: maven, 构建工具
 date: 2015-06-08
 title: maven入门
 ---

@@ -1,4 +1,4 @@
-category: mgits
+category: java工具
 tag: Archiva
 date: 2015-09-08
 title: Archiva 初探

@@ -1,4 +1,5 @@
-category: mgits
+category: java工具
+tag: id生成
 date: 2015-05-08
 title: Flick Ticket Server
 ---
