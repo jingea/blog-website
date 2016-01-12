@@ -38,8 +38,8 @@ TODO
 * Mockito
 * TestNG 
 * ELK
+* jclasslib
 * zookeeper
-* JavaVerbalExpressions
 * https://github.com/scottysinclair/barleydb
 * https://github.com/mp911de/lettuce
 * https://github.com/Netflix/Hystrix
