@@ -8,7 +8,7 @@ title: ASM 解析生成类
 [asm4-guide](http://download.forge.objectweb.org/asm/asm4-guide.pdf)学习心得
 
 ## 解析class
-下来我们给出一个示例, 这个例子仅仅用来打印class信息
+下来的示例中我们通过重写`ClassVisitor`相关函数然后依次打印出类型信息, 字段信息和函数信息.
 ```java
 class ClassPrinter extends ClassVisitor {
 	public ClassPrinter() {
@@ -45,8 +45,10 @@ class ClassPrinter extends ClassVisitor {
 ```java
 public class Test {
 	public static void main(String[] args) throws IOException {
+		// 读取解析二进制字节流
 		ClassReader cr = new ClassReader("Test");
 		ClassPrinter cp = new ClassPrinter();
+		// 开始处理字节流信息
 		cr.accept(cp, 0);
 	}
 }
@@ -60,7 +62,7 @@ Test extends java/lang/Object {
  lambda$main$21(Ljava/lang/Integer;Ljava/lang/Integer;)I
 }
 ```
-我们首先创建了一个`ClassReader`实例用于读取`Test`字节码. 然后由`accept()`方法依次调用`ClassPrinter`的方法
+在测试代码中我们首先创建了一个`ClassReader`实例用于读取`Test`字节码. 然后由`accept()`方法依次调用`ClassPrinter`的方法
 
 
 ## 生成class
