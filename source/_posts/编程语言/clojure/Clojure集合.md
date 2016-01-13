@@ -1,4 +1,5 @@
-category: Clojure
+category: : 编程语言
+tag: Clojure
 date: 2015-10-08
 title: Clojure集合
 ---

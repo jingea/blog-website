@@ -1,9 +1,9 @@
-category: python2
+category: : 编程语言
+tag: python2
 date: 2015-08-08
-title: PYTHON2 字符串
+title: PYTHON2 字符串函数
 ---
 
-## 字符串函数
 * `capitalize(...)` : Python capitalize()将字符串的第一个字母变成大写,其他字母变小写。`print "abc".capitalize()`
 
 * `center(...)` : 返回一个原字符串居中,并使用空格填充至长度 width 的新字符串。默认填充字符为空格。`print "abc".center(10, "1")`结果为`111abc1111`

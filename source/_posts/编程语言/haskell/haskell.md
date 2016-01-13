@@ -1,4 +1,5 @@
-category: haskell
+category: : 编程语言
+tag: Haskell
 date: 2015-04-08
 title: haskell类型系统
 ---

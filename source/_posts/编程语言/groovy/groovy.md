@@ -1,4 +1,5 @@
-﻿category: groovy
+﻿category: : 编程语言
+tag: Groovy
 date: 2014-04-08
 title: groovy注释和标识符
 ---

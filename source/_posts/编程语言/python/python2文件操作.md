@@ -1,4 +1,5 @@
-category: python2
+category: : 编程语言
+tag: python2
 date: 2015-08-08
 title: PYTHON2 文件操作
 ---

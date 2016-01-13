@@ -1,4 +1,5 @@
-category: JavaScript
+category: : 编程语言
+tag: JavaScript
 date: 2015-09-08
 title: JavaScript函数
 ---
