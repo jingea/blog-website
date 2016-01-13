@@ -3,7 +3,7 @@ tags:
 	- asm
 	- jvm工具
 date: 2016-01-11
-title: ASM 初探
+title: ASM(1) 初探
 ---
 [asm4-guide](http://download.forge.objectweb.org/asm/asm4-guide.pdf)学习心得
  ASM是一种小巧轻便的 Java 字节码操控框架，它能方便地生成和改造 Java 代码
