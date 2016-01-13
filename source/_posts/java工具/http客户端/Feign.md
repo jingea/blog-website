@@ -1,5 +1,5 @@
-category: http客户端
-tag: feign
+category: java工具
+tag: http客户端
 date: 2015-12-23
 title: Feign 初探
 ---

@@ -1,4 +1,4 @@
-category: ELK
+category: 平台工具
 tag: Elasticsearch
 date: 2015-11-18
 title: Elasticsearch 搜索

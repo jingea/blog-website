@@ -1,4 +1,5 @@
-﻿category: ZooKeeper
+﻿category: 平台工具
+tag: ZooKeeper
 date: 2013-09-13
 title: ZooKeeper Started
 ---

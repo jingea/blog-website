@@ -1,5 +1,5 @@
 category: java工具
-tag: disruptor
+tag: 消息队列
 date: 2015-12-19
 title: Disruptor 初探
 ---

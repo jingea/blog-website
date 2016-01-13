@@ -1,4 +1,5 @@
-﻿category: ZooKeeper
+﻿category: 平台工具
+tag: ZooKeeper
 date: 2013-11-20
 title: ZooKeeper Java客户端
 ---

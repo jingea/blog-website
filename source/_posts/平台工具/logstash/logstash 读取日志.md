@@ -1,4 +1,4 @@
-category: ELK
+category: 平台工具
 tag: logstash
 date: 2015-08-08
 title: logstash读取日志

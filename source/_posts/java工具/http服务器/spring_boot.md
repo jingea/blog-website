@@ -3,7 +3,7 @@ tags:
 	- spring
 	- http服务器
 date: 2015-04-08
-title: springboot 初探
+title: SpringBoot 初探
 ---
 # 添加依赖
 ```xml

@@ -1,4 +1,4 @@
-﻿category: ELK
+﻿category: 平台工具
 tag: logstash
 date: 2015-12-15
 title: logstash输出日志
