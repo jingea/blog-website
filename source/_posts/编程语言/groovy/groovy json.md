@@ -1,4 +1,4 @@
-category: : 编程语言
+category: 编程语言
 tag: roovy
 date: 2014-04-08
 title: groovy JSON

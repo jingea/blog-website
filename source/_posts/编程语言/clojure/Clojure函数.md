@@ -1,4 +1,4 @@
-category: : 编程语言
+category: 编程语言
 tag: Clojure
 date: 2015-10-08
 title: Clojure函数

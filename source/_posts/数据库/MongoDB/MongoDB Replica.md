@@ -1,5 +1,7 @@
-﻿category: 内存数据库
-tag: MongoDB
+﻿category: 数据库
+tags: 
+	- MongoDB
+	- NOSQL
 date: 2015-03-08
 title: MongoDB Replica
 ---

@@ -1,5 +1,7 @@
-category: 内存数据库
-tag: memcached
+category: 数据库
+tags: 
+	- memcached
+	- NOSQL
 date: 2015-11-18
 title: memcached
 ---

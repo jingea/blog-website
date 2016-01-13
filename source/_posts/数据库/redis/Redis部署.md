@@ -1,5 +1,7 @@
-category: 内存数据库
-tag: redis
+category: 数据库
+tags: 
+	- Reids
+	- NOSQL
 date: 2015-04-02
 title: Redis 部署
 ---
