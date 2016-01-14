@@ -3,7 +3,7 @@ tags:
 	- asm
 	- jvm工具
 date: 2016-01-11
-title: ASM(2) 操作
+title: ASM Core(2) 操作
 ---
 [asm4-guide](http://download.forge.objectweb.org/asm/asm4-guide.pdf)学习心得
 
