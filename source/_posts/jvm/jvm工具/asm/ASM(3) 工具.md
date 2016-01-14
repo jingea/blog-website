@@ -31,9 +31,23 @@ byte b[] = cw.toByteArray();
 ```
 
 ## CheckClassAdapter
-
-
-
+`ClassWriter`并不会检查生成的方法在调用的时候是顺序且参数是否都是正确的. 因此当JVM加载类进行验证的时候可能会抛出异常. 因此当我们秉持着错误越早发现越好, ASM为我们提供了`CheckClassAdapter`, 这个工具类会为我们检查上述问题. 同样的`CheckClassAdapter`继承自`ClassWriter.`, 它可以代理`TraceClassVisitor`或者`ClassWriter`的全部方法. 下面我们给出一个示例
+```java
+ClassWriter cw = new ClassWriter(0);
+TraceClassVisitor tcv = new TraceClassVisitor(cw, printWriter);
+CheckClassAdapter cv = new CheckClassAdapter(tcv);
+cv.visit(...);
+...
+cv.visitEnd();
+byte b[] = cw.toByteArray();
+```
+注意, 我们要确定visitor之间的顺序关系, 如下
+```java
+ClassWriter cw = new ClassWriter(0);
+CheckClassAdapter cca = new CheckClassAdapter(cw);
+TraceClassVisitor cv = new TraceClassVisitor(cca, printWriter);
+```
+上面的例子是先进行文本输出然后再进行方法检查, 这是因为相当于`TraceClassVisitor`最终代理了所有的方法调用
 
 
 
