@@ -1,7 +1,8 @@
 category: mgits
 date: 2012-08-20
-title: svn服务器搭建
+title: SVN 总结
 ---
+## 服务器搭建
 下载svn服务器[subversion](http://sourceforge.net/projects/win32svn/)和svn客户端TortoiseSVN(下载页面有安装程序和汉化程序)，还有[apache]()(apache主要是为了解析成网络，要不然安装好的svn只能在局域网里使用)
 
 在e盘下创建svn仓库`svnresp` ![](https://raw.githubusercontent.com/ming15/blog-website/images/svn/0.jpg)
@@ -35,3 +36,10 @@ password-db = passwd
 [](https://raw.githubusercontent.com/ming15/blog-website/images/svn/7.jpg)
 填写好在passwd文件里配置好的用户名和密码就可以提交文件了。
 [](https://raw.githubusercontent.com/ming15/blog-website/images/svn/8.jpg)
+
+## 修改服务器地址
+当svn服务器地址变化之后我们使用如下命令进行修改
+```
+svn switch --relocate http://10.234.10.11/svn/server/ http://10.230.8.116/svn/server/
+```
+> 在修改前后我们可以使用`svn info`命令进行查看, 当前svn信息. 
