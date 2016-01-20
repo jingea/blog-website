@@ -45,6 +45,5 @@ TODO
 * https://github.com/Netflix/Hystrix
 * https://github.com/KoMinkyu/teaspoon
 * https://github.com/fabioCollini/DaggerMock
-* http://square.github.io/retrofit/
 * https://github.com/aol/cyclops
 
