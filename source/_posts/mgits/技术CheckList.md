@@ -67,3 +67,5 @@ Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 160
 用户可能输入emoji表情符号,这种符号普遍存在iOS与android系统中,这种表情不处理直接存储到MySQL5.5以下的版本会报错
 > 这种符号采用Unicode 6标准4个bytes作为存储单元,MySQL存储这种字符需要修改数据库字符集为utf8mb4,但数据回传给网页或者移动客户端时则需要做兼容处理
 
+## 日志问题
+在项目的开发过程中不允许使用debug模式, 一定要使用日志分析问题, 因为在线上时候, 没办法使用debug的方式, 因此在记录的日志的时候, 一定要记录的全(每个数据变化都要记录下来), 简(剩下来的就是钱)
