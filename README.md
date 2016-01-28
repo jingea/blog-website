@@ -43,7 +43,6 @@ TODO
 * https://github.com/scottysinclair/barleydb
 * https://github.com/mp911de/lettuce
 * https://github.com/Netflix/Hystrix
-* https://github.com/KoMinkyu/teaspoon
 * https://github.com/fabioCollini/DaggerMock
 * https://github.com/aol/cyclops
 
