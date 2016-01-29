@@ -74,6 +74,75 @@ title: 使用Classloader加载类
 
 上面所说只完成了类加载的动作, 但是如果我们想要实现热更代码的这种功能的话,就不能单纯依赖重写`findClass(name)`了，而是要重写`loadClass(String name)`了，这是因为在`ClassLoader`中的`loadClass(String name)`方法当发现已经加载过的类就不会再重新加载了
 ```java
+import java.io.File;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Random;
+
+import static org.objectweb.asm.Opcodes.*;
+
+public class TestClassLoader {
+
+	public static void main(String[] arg) throws Exception {
+
+		URL url = new File(".").toURL();
+		for (int i = 0; i< 5; i++) {
+			MyClassLoader myLoader = new MyClassLoader(new URL[]{url});
+			Class<?> obj = myLoader.loadClass("Mesurable");
+			for (Field field : obj.getFields()) {
+				System.out.println(field.getName());
+			}
+		}
+	}
+}
+
+class MyClassLoader extends URLClassLoader {
+
+	public MyClassLoader(URL[] urls) {
+		super(urls);
+	}
+
+	@Override
+	public Class<?> loadClass(String name) throws ClassNotFoundException {
+		Class<?> loadClass = null;
+		if (name.contains("java.lang.Object")) {
+			// 因为我们的父类是java.lang.Object, 因此我们要调用父类加载器进行加载
+			loadClass = super.loadClass(name);
+		} else {
+			loadClass = findLoadedClass(name);
+			if (loadClass != null) {
+				return loadClass;
+			}
+			byte[] bytes = generateClass();
+			loadClass = defineClass(name, bytes, 0, bytes.length);
+		}
+		return loadClass;
+	}
+
+	private byte[] generateClass() {
+		ClassWriter cw = new ClassWriter(0);
+		cw.visit(V1_8,											// 指定class文件版本号, 我们将其设置为java8
+				ACC_PUBLIC,	// 设置接口的修饰符
+				"Mesurable",								// 我们设置classname, 需要在这里指定全限定名
+				null,											// 设置泛型信息, 因为我们的接口是非泛化的, 因此我们将其设置为null
+				"java/lang/Object",							// 设置父类, 同时需要设定全限定名
+				null);			// 设置接口, 同样需要设置全限定名
+
+		cw.visitField(
+				ACC_PUBLIC,	// 设置字段的修饰符
+				"LESS__" + random.nextInt(100),										// 设置字段名
+				"I",										// 设置字段类型
+				null,										// 设置泛型信息
+				new Long(-1))							// 设置字面量值.
+				.visitEnd();
+
+		cw.visitEnd();
+		return cw.toByteArray();
+	}
+
+	private Random random = new Random();
+}
 
 ```
 
