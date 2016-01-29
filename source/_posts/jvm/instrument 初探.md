@@ -1,5 +1,5 @@
 category: jvm
-tag: instrument, jvm工具
+tag: jvm工具
 date: 2015-11-24
 title: instrument 初探
 ---
