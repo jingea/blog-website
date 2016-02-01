@@ -1,4 +1,5 @@
-category: mycat
+category: 数据库 
+tag: mycat
 date: 2015-10-08
 title: Mycat全局序列号
 ---
