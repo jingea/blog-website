@@ -51,6 +51,9 @@ title: Netty ChannelPipeline
 从上图中我们可以看出左边是`inbound`handler(从下向上进行处理), 右图是`outbound`流程(从上向下进行处理).`inbound`handler通常处理的是由IO线程生成的`inbound`数据(例如`SocketChannel#read(ByteBuffer)`).
 `outbound`handler一般由write请求生成或者转换传输数据. 如果`outbound`数据传输到上图的底部后, 它就会被绑定到`Channel`上的IO线程进行操作. IO线程一般会进行`SocketChannel#write(ByteBuffer)`数据输出操作.
 
+> 底层的`SocketChannel#read()`方法读取`ByteBuf`, 然后由IO线程`NioEventLoop`调用`ChannelPipeline#fireChannelRead()`方法,将消息`ByteBuf`传递到`ChannelPipeline`中.
+
+
 在下面的示例中我们分别在pipeline中添加俩个`inbound`handler和俩个`outbound`handler.(以`Inbound`开头的类名表示为一个`inbound`handler, 以`Outbound`开头的类名表示为一个`outbound`handler.)
 ```java
 ChannelPipeline p = ...;
@@ -66,26 +69,23 @@ p.addLast("5", new InboundOutboundHandlerX());
 但是在真实的执行过程中, 由于`3, 4`并没有实现`ChannelInboundHandler`, 因此inbound流程中真正执行的handler只有`1, 2, 5`. 而由于`1, 2`并没有实现`ChannelOutboundHandler`因此在outbound流程中真正执行的handler只有`5, 4, 3`.
 如果`5`都实现了`ChannelInboundHandler`和`ChannelOutboundHandler`, 那么事件的执行顺序分别是`125`和`543`.
 
-也许你已经注意到了, 在handler中不得不调用`ChannelHandlerContext`的事件传播方法, 将事件传递给下一个handler. 下面的是事件inbound过程涉及到的方法
-* 
-* `ChannelHandlerContext#fireChannelRegistered()`
-* `ChannelHandlerContext#fireChannelActive()`
-* `ChannelHandlerContext#fireChannelRead(Object)`
-* `ChannelHandlerContext#fireChannelReadComplete()`
-* `ChannelHandlerContext#fireExceptionCaught(Throwable)`
-* `ChannelHandlerContext#fireUserEventTriggered(Object)`
-* `ChannelHandlerContext#fireChannelWritabilityChanged()`
-* `ChannelHandlerContext#fireChannelInactive()`
-* `ChannelHandlerContext#fireChannelUnregistered()`
-事件outbound流程传播方法
-* `ChannelHandlerContext#bind(SocketAddress, ChannelPromise)`
-* `ChannelHandlerContext#connect(SocketAddress, SocketAddress, ChannelPromise)`
-* `ChannelHandlerContext#write(Object, ChannelPromise)`
-* `ChannelHandlerContext#flush()`
-* `ChannelHandlerContext#read()`
-* `ChannelHandlerContext#disconnect(ChannelPromise)`
-* `ChannelHandlerContext#close(ChannelPromise)`
-* `ChannelHandlerContext#deregister(ChannelPromise)`
+也许你已经注意到了, 在handler中不得不调用`ChannelHandlerContext`的事件传播方法, 将事件传递给下一个handler. 下面的是
+能够触发`inbound`事件的方法
+* `ChannelHandlerContext#fireChannelRegistered()` Channel注册事件
+* `ChannelHandlerContext#fireChannelActive()` TCP链路建立成功,Channel激活事件
+* `ChannelHandlerContext#fireChannelRead(Object var1)` 读事件
+* `ChannelHandlerContext#fireChannelReadComplete()` 读操作完成通知事件
+* `ChannelHandlerContext#fireExceptionCaught(Throwable var1)` 异常通知事件
+* `ChannelHandlerContext#fireUserEventTriggered(Object var1)` 用户自定义事件
+* `ChannelHandlerContext#fireChannelWritabilityChanged()` Channel的可写状态变化通知事件
+* `ChannelHandlerContext#fireChannelInactive()` TCP链路关闭, 链路不可用通知事件
+触发`outbound`事件的方法有
+* `ChannelHandlerContext#bind(SocketAddress var1, ChannelPromise var2)` 绑定本地地址事件
+* `ChannelHandlerContext#connect(SocketAddress var1, ChannelPromise var2)` 连接服务端事件
+* `ChannelHandlerContext#flush()` 刷新事件
+* `ChannelHandlerContext#read()` 读事件
+* `ChannelHandlerContext#disconnect(ChannelPromise var1)` 断开连接事件
+* `ChannelHandlerContext#close(ChannelPromise var1)` 关闭当前Channel事件
 
 
 下面我们看一下如何自己实现一个inbound和outbound handler
@@ -131,3 +131,23 @@ pipeline.addLast(group, "handler", new MyBusinessLogicHandler());
 ```
 
 我们可以在任何时间在`ChannelPipeline`上添加或者移除`ChannelHandler`, 因为`ChannelPipeline`是线程安全的. 例如我们可以在线上环境中因为业务原因动态的添加或者移除handler.
+
+下来我们看一下`ChannelHandler`的继承结构
+* `ChannelHandler`
+* `ChannelInboundHandler`
+* `ChannelOutboundHandler`
+* `ChannelInboundHandlerAdapter`
+* `ChannelOutboundHandlerAdapter`
+* `ChannelHandlerAdapter`
+
+```java
+public interface ChannelHandler 
+public interface ChannelInboundHandler extends ChannelHandler
+public interface ChannelOutboundHandler extends ChannelHandler
+public abstract class ChannelHandlerAdapter implements ChannelHandler
+public class ChannelInboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelInboundHandler
+public class ChannelOutboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelOutboundHandler
+```
+之所以在提供了handle的接口之后还提供Adapter, 是因为如果我们直接实现handler接口的话, 那么我们就需要实现handler里的所有方法, 但是我们可能要在不同的handler里实现不同的功能, 而这些功能恰巧由不同的handler里的方法实现, 那么每个实现了handler接口的类都会有大量的冗余代码. 但是如果我们继承Adapter的话, 我们只需要重写需要实现功能的方法就可以了.
+
+
