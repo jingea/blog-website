@@ -1,5 +1,5 @@
-category: java工具
-tag: jmh
+category: Java
+tag: JMH
 date: 2016-01-05
 title: 08_DeadCode  
 ---

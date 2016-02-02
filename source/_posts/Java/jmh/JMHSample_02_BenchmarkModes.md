@@ -1,5 +1,5 @@
-category: java工具
-tag: jmh
+category: Java
+tag: JMH
 date: 2015-12-28
 title: 02_BenchmarkModes
 ---
