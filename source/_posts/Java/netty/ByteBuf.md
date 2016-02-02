@@ -1,7 +1,7 @@
 category: Java
 tag: Netty
 date: 2015-11-20
-title: 初探ByteBuf
+title: Netty ByteBuf
 ---
 首先我们来看一下netty buffer包的继承结构
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/io.netty.bytebuf.jpg)

@@ -1,7 +1,7 @@
 category: Java
 tag: Netty
 date: 2015-11-23
-title: 初探Channel
+title: Netty Channel
 ---
 `Channel`是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等.
 
