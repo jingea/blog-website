@@ -2,7 +2,7 @@ category: linux
 date: 2015-10-15
 title: Linux常用命令
 ---
-### gzip
+## gzip
 将文件或者文件夹压缩成后缀为`.gz`的文件
 
 * `-a` 　使用ASCII文字模式. 
@@ -28,7 +28,7 @@ title: Linux常用命令
 * `gzip -rv test6` 递归的压缩目录
 * `gzip -dr test6` 递归地解压目录
 
-### grep
+## grep
 一种强大的文本搜索工具,它能使用正则表达式搜索文本,并把匹 配的行打印出来
 
 主要参数：
@@ -51,10 +51,10 @@ pattern正则表达式主要参数：
 * `.`：所有的单个字符.
 * `*` ：有字符,长度可以为0.
 
-### tar
+## tar
 tar可用于建立、还原、查看、管理文件,也可方 便的追加新文件到备份文件中,或仅更新部分的备份文件,以及解压、删除指定的文件
 
-### sort
+## sort
 sort将文件的每一行作为一个单位,相互比较,比较原则是从首字符向后,依次按ASCII码值进行比较,最后将他们按升序输出.
 
 命令参数
@@ -70,7 +70,7 @@ sort将文件的每一行作为一个单位,相互比较,比较原则是从首�
 * `-M` 会以月份来排序,比如JAN小于FEB等等
 * `-b` 会忽略每一行前面的所有空白部分,从第一个可见字符开始比较.
 
-### wc
+## wc
 统计指定文件中的字节数、字数、行数,并将统计结果显示输出.该命令统计指定文件中的字节数、字数、行数.如果没有给出文件名,则从标准输入读取.wc同时也给出所指定文件的总统计数.
 
 * `-c` 统计字节数.
@@ -79,7 +79,7 @@ sort将文件的每一行作为一个单位,相互比较,比较原则是从首�
 * `-w` 统计字数.一个字被定义为由空白、跳格或换行字符分隔的字符串.
 * `-L` 打印最长行的长度.
 
-### find
+## find
 
 `find pathname -options [-print -exec -ok ...]`
 
@@ -112,3 +112,63 @@ options选项
 * `-ctime n` 查找系统中最后n*24小时被改变文件状态的文件
 * `-mmin n`  查找系统中最后N分钟被改变文件数据的文件
 * `-mtime n` 查找系统中最后n*24小时被改变文件数据的文件
+
+## grep
+用法: `grep [选项]... PATTERN [FILE]...`. 在每个 FILE 或是标准输入中查找 PATTERN。默认的 PATTERN 是一个基本正则表达式(缩写为 BRE)。
+例如: 
+```
+grep -i 'hello world' menu.h main.c
+```
+
+正则表达式选择与解释:
+* -E, --extended-regexp     PATTERN 是一个可扩展的正则表达式(缩写为 ERE)
+* -F, --fixed-strings       PATTERN 是一组由断行符分隔的定长字符串。
+* -G, --basic-regexp        PATTERN 是一个基本正则表达式(缩写为 BRE)
+* -P, --perl-regexp         PATTERN 是一个 Perl 正则表达式
+* -e, --regexp=PATTERN      用 PATTERN 来进行匹配操作
+* -f, --file=FILE           从 FILE 中取得 PATTERN
+* -i, --ignore-case         忽略大小写
+* -w, --word-regexp         强制 PATTERN 仅完全匹配字词
+* -x, --line-regexp         强制 PATTERN 仅完全匹配一行
+* -z, --null-data           一个 0 字节的数据行，但不是空行
+ 
+Output control:
+* -m, --max-count=NUM       只获得前m个匹配结果
+* -b, --byte-offset         在输出的内容中打印byte offset 
+* -n, --line-number         输出行号
+*     --line-buffered       每一行都输出, 不再行上进行缓存
+* -H, --with-filename       输出文件名
+* -h, --no-filename         不输出文件名
+* -o, --only-matching       仅仅输出一行中符合 PATTERN模式 匹配要求的部分
+* -a, --text                等同于 --binary-files=text
+* -I                        等同于 --binary-files=without-match
+* -d, --directories=ACTION  处理目录方式; `read', `recurse', or `skip'
+* -D, --devices=ACTION      处理 devices, FIFOs and sockets的方式: `read' or `skip'
+* -R, -r, --recursive       equivalent to --directories=recurse
+*     --include=FILE_PATTERN  仅对符合FILE_PATTERN模式的文件进行搜索
+*     --exclude=FILE_PATTERN  跳过符合FILE_PATTERN的文件和目录
+*     --exclude-from=FILE   跳过符合FILE中file pattern所有的文件
+*     --exclude-dir=PATTERN  符合PATTERN模式的目录将被跳过.
+* -L, --files-without-match  只输出匹配失败的文件名
+* -l, --files-with-matches  只输出匹配成功的文件名
+* -c, --count               只输出每个文件匹配成功的行数
+* -Z, --null                在文件名后输出0 byte
+
+Context control:
+* -B, --before-context=NUM  显示匹配字符串前n行的数据
+* -A, --after-context=NUM   显示匹配字符串后n行的数据
+* -C, --context=NUM         print NUM lines of output context
+* -NUM                      和 --context=NUM 一样
+
+当前目录下有多个文件我们想要同时对所有文件进行搜索的话, 我们可以使用
+```
+grep "刷新" *
+```
+如果我们只想对今天的文件进行搜索的话, 可以使用
+```
+grep "刷新" *2016-02-02*
+```
+如果我们的目录下有多个目录, 要搜索的文件都在当前的子目录里的话, 可以使用
+```
+grep --directories=recurse "刷新" *
+```
