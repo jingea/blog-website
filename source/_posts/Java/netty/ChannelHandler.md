@@ -4,6 +4,7 @@ date: 2016-01-23
 title: Netty ChannelHandler
 ---
 首先我们看一下`ChannelHandler`的继承结构
+![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/netty%20ChannelHadler.jpg)
 * `ChannelHandler`
 * `ChannelInboundHandler`
 * `ChannelOutboundHandler`

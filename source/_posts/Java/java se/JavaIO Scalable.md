@@ -12,7 +12,7 @@ title: Scalable IO In Java 学习笔记
 * Send reply
 
 下面我们看一个经典的服务设计
-[Classic Service Designs](Classic Service Designs.jpg)
+![Classic Service Designs](https://raw.githubusercontent.com/ming15/blog-website/images/io/Classic%20Service%20Designs.jpg)
 每一个handler都在它自己的线程中执行.  我们来看一下这个模式的代码实现
 ```java
 class Server implements Runnable {
@@ -68,7 +68,7 @@ class Server implements Runnable {
 * Handler：执行非阻塞的操作
 
 基本的Reactor模型
-[Single threaded版本](Basic Reactor Design.jpg)
+![Single threaded版本](https://raw.githubusercontent.com/ming15/blog-website/images/io/Basic%20Reactor%20Design.jpg)
 上面是一个基本Reactor模型(单线程版本)
 
 Java Nio对其的支持
@@ -79,20 +79,225 @@ Java Nio对其的支持
 
 
 ```java
+class Reactor implements Runnable {
+	final Selector selector;
+	final ServerSocketChannel serverSocket;
 
+	Reactor(int port) throws IOException {
+		selector = Selector.open();
+		serverSocket = ServerSocketChannel.open();
+		serverSocket.bind(new InetSocketAddress(port));
+		serverSocket.configureBlocking(false);
+		SelectionKey sk = serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+		sk.attach(new Acceptor());
+	}
+
+	// class Reactor continued
+	public void run() { // normally in a new Thread
+		try {
+			while (!Thread.interrupted()) {
+				selector.select();
+				Set selected = selector.selectedKeys();
+				Iterator it = selected.iterator();
+				while (it.hasNext()) {
+					dispatch((SelectionKey) (it.next()));
+				}
+				selected.clear();
+			}
+		} catch (IOException ex) { /* ... */ }
+	}
+
+	void dispatch(SelectionKey k) {
+		Acceptor r = (Acceptor) (k.attachment());
+		if (r != null)
+			r.run();
+	}
+
+	// class Reactor continued
+	class Acceptor implements Runnable { // inner
+		public void run() {
+			try {
+				SocketChannel c = serverSocket.accept();
+				if (c != null)
+					new Handler(selector, c);
+			} catch (IOException ex) { /* ... */ }
+		}
+	}
+}
+
+final class Handler implements Runnable {
+	static final int READING = 0, SENDING = 1;
+	final SocketChannel socket;
+	final SelectionKey sk;
+	ByteBuffer input = ByteBuffer.allocate(100);
+	ByteBuffer output = ByteBuffer.allocate(100);
+	int state = READING;
+
+	Handler(Selector sel, SocketChannel c) throws IOException {
+		socket = c;
+		// Optionally try first read now
+		sk = socket.register(sel, 0);
+		sk.attach(this);
+		sk.interestOps(SelectionKey.OP_READ);
+		sel.wakeup();
+	}
+
+	boolean inputIsComplete() {
+		return true;
+	}
+
+	boolean outputIsComplete() {
+		return true;
+	}
+
+	void process() { /* ... */ }
+
+	// class Handler continued
+	public void run() {
+		try {
+			if (state == READING) {
+				read();
+			}
+			else if (state == SENDING) {
+				send();
+			}
+		} catch (IOException ex) { /* ... */ }
+	}
+
+	void read() throws IOException {
+		socket.read(input);
+		if (inputIsComplete()) {
+			process();
+			state = SENDING;
+			// Normally also do first write now
+			sk.interestOps(SelectionKey.OP_WRITE);
+		}
+	}
+
+	void send() throws IOException {
+		socket.write(output);
+		if (outputIsComplete()) sk.cancel();
+	}
+}
 ```
-
-
+如果我们采用GoF的状态模式重新设计一下Handler, 我们可以重新绑定一个handler,这样当再次attach的时候, 就可以
 ```java
-
+class Handler { // ...
+	public void run() { // initial state is reader
+		socket.read(input);
+		if (inputIsComplete()) {
+			process();
+			sk.attach(new Sender());
+			sk.interest(SelectionKey.OP_WRITE);
+			sk.selector().wakeup();
+		}
+	}
+	class Sender implements Runnable {
+		public void run(){ // ...
+			socket.write(output);
+			if (outputIsComplete()) sk.cancel();
+		}
+	}
+}
 ```
 
+下来我们再看一下主从模式
+![Worker Thread Pools](https://raw.githubusercontent.com/ming15/blog-website/images/io/Worker%20Thread%20Pools.jpg)
 
+* Strategically add threads for scalability ：Mainly applicable to multiprocessors
+* Worker Threads ：Reactors should quickly trigger handlers， Handler processing slows down Reactor。Offload non-IO processing to other threads
+* Multiple Reactor Threads。 Reactor threads can saturate doing IO。 Distribute load to other reactors。 Load-balance to match CPU and IO rates
+
+Using Reactor Pools
+ Use to match CPU and IO rates
+ Static or dynamic construction
+" Each with own Selector, Thread, dispatch loop
+ Main acceptor distributes to other reactors
 ```java
-
+Selector[] selectors; // also create threads
+int next = 0;
+class Acceptor { // ...
+public synchronized void run() { ...
+Socket connection = serverSocket.accept();
+if (connection != null)
+new Handler(selectors[next], connection);
+if (++next == selectors.length) next = 0;
+}
+}
 ```
 
 
+
+下面我们看一下Reactor的多线程模式
+![Multiple Reactors](https://raw.githubusercontent.com/ming15/blog-website/images/io/Multiple%20Reactors.jpg)
+Offload non-IO processing to speed up
+Reactor thread : Similar to POSA2 Proactor designs
+Simpler than reworking compute-bound
+processing into event-driven form
+ Should still be pure nonblocking computation
+" Enough processing to outweigh overhead
+" But harder to overlap processing with IO
+ Best when can first read all input into a buffer
+" Use thread pool so can tune and control
+ Normally need many fewer threads than clients
 ```java
-
+class Handler implements Runnable {
+	// uses util.concurrent thread pool
+	static PooledExecutor pool = new PooledExecutor(...);
+	static final int PROCESSING = 3;
+	// ...
+	synchronized void read() { // ...
+		socket.read(input);
+		if (inputIsComplete()) {
+			state = PROCESSING;
+			pool.execute(new Processer());
+		}
+	}
+	synchronized void processAndHandOff() {
+		process();
+		state = SENDING; // or rebind attachment
+		sk.interest(SelectionKey.OP_WRITE);
+	}
+	class Processer implements Runnable {
+		public void run() { processAndHandOff(); }
+	}
+}
 ```
+
+Coordinating Tasks
+* Handoffs : Each task enables, triggers, or calls next one. Usually fastest but can be brittle
+* Callbacks to per-handler dispatcher: Sets state, attachment, etc. A variant of GoF Mediator pattern
+* Queues: For example, passing buffers across stages
+* Futures : When each task produces a result. Coordination layered on top of join or wait/notify
+
+
+Using PooledExecutor
+* A tunable worker thread pool
+* Main method execute(Runnable r)
+* Controls for: The kind of task queue (any Channel), Maximum number of threads, Minimum number of threads, "Warm" versus on-demand threads, Keep-alive interval until idle threads die to be later replaced by new ones if necessary, Saturation policy
+* block, drop, producer-runs, etc
+
+
+
+
+
+
+
+Using other java.nio features
+" Multiple Selectors per Reactor : To bind different handlers to different IO events. May need careful synchronization to coordinate
+" File transfer:Automated file-to-net or net-to-file copying
+" Memory-mapped files : Access files via buffers
+" Direct buffers :Can sometimes achieve zero-copy transfer. But have setup and finalization overhead. Best for applications with long-lived connections
+
+Connection-Based Extensions
+" Instead of a single service request,
+ Client connects
+ Client sends a series of messages/requests
+ Client disconnects
+" Examples
+ Databases and Transaction monitors
+ Multi-participant games, chat, etc
+" Can extend basic network service patterns
+ Handle many relatively long-lived clients
+ Track client and session state (including drops)
+ Distribute services across multiple hosts
