@@ -1,8 +1,27 @@
 category: Java
 tag: Netty
 date: 2016-01-23
-title: Netty 内置解码器
+title: Netty ChannelHandler
 ---
+首先我们看一下`ChannelHandler`的继承结构
+* `ChannelHandler`
+* `ChannelInboundHandler`
+* `ChannelOutboundHandler`
+* `ChannelInboundHandlerAdapter`
+* `ChannelOutboundHandlerAdapter`
+* `ChannelHandlerAdapter`
+
+```java
+public interface ChannelHandler 
+public interface ChannelInboundHandler extends ChannelHandler
+public interface ChannelOutboundHandler extends ChannelHandler
+public abstract class ChannelHandlerAdapter implements ChannelHandler
+public class ChannelInboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelInboundHandler
+public class ChannelOutboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelOutboundHandler
+```
+之所以在提供了handle的接口之后还提供Adapter, 是因为如果我们直接实现handler接口的话, 那么我们就需要实现handler里的所有方法, 但是我们可能要在不同的handler里实现不同的功能, 而这些功能恰巧由不同的handler里的方法实现, 那么每个实现了handler接口的类都会有大量的冗余代码. 但是如果我们继承Adapter的话, 我们只需要重写需要实现功能的方法就可以了.
+
+## 解码器
 为了解决网络数据流的拆包粘包问题,Netty为我们内置了如下的解码器
 * ByteToMessageDecoder
 * MessageToMessageDecoder
@@ -19,8 +38,6 @@ Netty还内置了如下的编码器
 * MessageToByteEncoder
 * MessageToMessageEncoder
 * LengthFieldPrepender
-
-
 
 Netty还为我们提供HTTP相关的编解码器
 * `HttpRequestDecoder` : Http消息解码器

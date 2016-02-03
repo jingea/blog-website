@@ -132,22 +132,6 @@ pipeline.addLast(group, "handler", new MyBusinessLogicHandler());
 
 我们可以在任何时间在`ChannelPipeline`上添加或者移除`ChannelHandler`, 因为`ChannelPipeline`是线程安全的. 例如我们可以在线上环境中因为业务原因动态的添加或者移除handler.
 
-下来我们看一下`ChannelHandler`的继承结构
-* `ChannelHandler`
-* `ChannelInboundHandler`
-* `ChannelOutboundHandler`
-* `ChannelInboundHandlerAdapter`
-* `ChannelOutboundHandlerAdapter`
-* `ChannelHandlerAdapter`
 
-```java
-public interface ChannelHandler 
-public interface ChannelInboundHandler extends ChannelHandler
-public interface ChannelOutboundHandler extends ChannelHandler
-public abstract class ChannelHandlerAdapter implements ChannelHandler
-public class ChannelInboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelInboundHandler
-public class ChannelOutboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelOutboundHandler
-```
-之所以在提供了handle的接口之后还提供Adapter, 是因为如果我们直接实现handler接口的话, 那么我们就需要实现handler里的所有方法, 但是我们可能要在不同的handler里实现不同的功能, 而这些功能恰巧由不同的handler里的方法实现, 那么每个实现了handler接口的类都会有大量的冗余代码. 但是如果我们继承Adapter的话, 我们只需要重写需要实现功能的方法就可以了.
 
 
