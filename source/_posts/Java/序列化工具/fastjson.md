@@ -1,5 +1,5 @@
 category: Java
-tag : Java工具
+tag : 序列化工具
 date: 2015-12-23
 title: fastjson
 ---
