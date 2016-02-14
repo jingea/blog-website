@@ -110,7 +110,112 @@ private String strVal;
         return pipeline.write(msg);
 }
 ```
+这个类还为我们提供了一些抽象方法,用于网络连接处理,这些抽象方法API在Unsafe里使用
+```java
+protected abstract void doBeginRead() throws Exception;
 
-## AbstractNioMessage
+    /**
+     * Flush the content of the given buffer to the remote peer.
+     */
+    protected abstract void doWrite(ChannelOutboundBuffer in) throws Exception;
+    protected void doRegister() throws Exception {
+        // NOOP
+    }
 
+    /**
+     * Bind the {@link Channel} to the {@link SocketAddress}
+     */
+    protected abstract void doBind(SocketAddress localAddress) throws Exception;
 
+    /**
+     * Disconnect this {@link Channel} from its remote peer
+     */
+    protected abstract void doDisconnect() throws Exception;
+
+    /**
+     * Close the {@link Channel}
+     */
+    protected abstract void doClose() throws Exception;
+```
+
+## AbstractNioChannel
+`AbstractNioChannel`主要是实现了`AbstractChannel`的``方法
+
+下面我们还是先看看其内部定义的变脸
+```java
+private final SelectableChannel ch;
+protected final int readInterestOp;
+volatile SelectionKey selectionKey;
+```
+`java.nio.channels.ServerSocketChannel`和`java.nio.channels.SocketChannel`都是实现了`java.nio.channels.SelectableChannel`接口,而且`NioSocketChannel`和`NioServerSocketChannel`都是实现了`AbstractNioChannel`接口,因此我们在`AbstractNioChannel`内定义了一个`SelectableChannel`属性用于实现`ServerSocketChannel`和`SocketChannel`的共用
+
+然后我们看一下`doRegister()`方法
+
+```java
+ @Override
+    protected void doRegister() throws Exception {
+        boolean selected = false;
+        for (;;) {
+            try {
+                selectionKey = javaChannel().register(eventLoop().selector, 0, this);
+                return;
+            } catch (CancelledKeyException e) {
+                if (!selected) {
+                    // Force the Selector to select now as the "canceled" SelectionKey may still be
+                    // cached and not removed because no Select.select(..) operation was called yet.
+                    eventLoop().selectNow();
+                    selected = true;
+                } else {
+                    // We forced a select operation on the selector before but the SelectionKey is still cached
+                    // for whatever reason. JDK bug ?
+                    throw e;
+                }
+            }
+        }
+    }
+```
+    
+然后我们看一下`doDeregister()`方法
+```java
+  @Override
+    protected void doDeregister() throws Exception {
+        eventLoop().cancel(selectionKey());
+    }
+```
+最后我们看一下`doBeginRead()`方法
+```java
+@Override
+    protected void doBeginRead() throws Exception {
+        // Channel.read() or ChannelHandlerContext.read() was called
+        if (inputShutdown) {
+            return;
+        }
+
+        final SelectionKey selectionKey = this.selectionKey;
+        if (!selectionKey.isValid()) {
+            return;
+        }
+
+        readPending = true;
+
+        final int interestOps = selectionKey.interestOps();
+        if ((interestOps & readInterestOp) == 0) {
+            selectionKey.interestOps(interestOps | readInterestOp);
+        }
+    }
+```
+
+## AbstractNioMessageChannel
+TODO
+
+## AbstractNioMessageServerChannel
+TODO
+
+## ServerChannel
+TODO
+
+## ServerSocketChannel
+TODO
+
+## NioServerScketChannel
+TODO
