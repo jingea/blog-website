@@ -6,36 +6,31 @@ title: Netty Channel
 `Channel`是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等.
 
 下面我们看一下Channel提供的API
+
 * `parent()` : 获取父Channel
-* `isRegistered()` : 是否注册
-* `write()` : 将消息通过ChannelPipeline写入到目标Channel中
-* `connect()` : 建立连接
-* `read()` : 从Channel中读取数据到inbound缓冲区
-* `close()` : 关闭连接
-* `flush()` : 
 * `unsafe()` : 
-* `isOpen()` : 
+* `localAddress()` : 当前Channel的本地绑定地址
+* `eventLoop()` : 当前Channel注册到的EventLoop对象
+* `config()` : 获取当前Channel的配置信息
+* `remoteAddress()` : 当前Channel通信的远程Socket地址
+* `metadata()` : 当前Channel的元数据描述信息,例如TCP参数等等
+* `isOpen()` : 判断当初Channel是否已经打开
+* `isWritable()` : 当前Channel是否可写
+* `isRegistered()` : 是否注册当EventLoop上
+* `isActive()` : 当前Channel是否处于激活状态
+* `pipeline()` : 当前Channel的ChannelPipeline对象
+
+下面的网络IO操作会直接调用ChannelPipeline里的方法, 在ChannelPipeline里进行事件传播
+
+* `read()` : 从Channel中读取数据到inbound缓冲区
+* `write()` : 将消息通过ChannelPipeline写入到目标Channel中
+* `close()` : 主动关闭与网络对端的连接
+* `flush()` : 将之前写到环形队列里的消息全部写到目标Channel中,发送给网络对端
+* `connect()` : 与网络对端发起连接请求(一般由客户端调用这个方法)
 * `bind()` : 
-* `localAddress()` : 
-* `eventLoop()` : 
-* `config()` : 
-* `newProgressivePromise()` : 
-* `newSucceededFuture()` : 
-* `remoteAddress()` : 
-* `metadata()` : 
-* `isWritable()` : 
-* `closeFuture()` : 
-* `isActive()` : 
-* `pipeline()` : 
-* `alloc()` : 
-* `newPromise()` : 
-* `newFailedFuture()` : 
-* `voidPromise()` : 
-* `disconnect()` : 
-* `deregister()` : 
-* `writeAndFlush()` : 
-* `attr()` : 
-* `compareTo()` :
+* `disconnect()` : 请求关闭与网络对端的连接.
+
+
 
 ## AbstractChannel
 `AbstractChannel`聚合了所有Channel使用到的能力的对象. 如果某个功能和子类相关则定义抽象方法,由子类去实现
@@ -71,14 +66,51 @@ private String strVal;
 * `NOT_YET_CONNECTED_EXCEPTION` : 链路尚未连接异常
 * `parent` : 该Channel的父Channel
 * `estimatorHandle` : 用于预测下一个报文的大小.
-* `unsafe` : 
-* `pipeline` : 
+* `unsafe` : 真实网络IO的操作类
+* `pipeline` : 当前Channel对应的ChannelPipeline
 * `succeededFuture` : 
 * `voidPromise` : 
 * `unsafeVoidPromise` : 
 * `closeFuture` : 
-* `localAddress` : 
-* `remoteAddress` : 
+* `localAddress` : 本地IP地址
+* `remoteAddress` : 网络通信对端的IP地址
 * `eventLoop` : 该Channel注册到的EventLoop
-* `registered` :  
+* `registered` : Channel是否注册到了EventLoop上
+
+通过看`AbstractChannel`的源码我们可以看到了,除了像`pipeline(), eventLoop(), remoteAddress(), newPromise()`这类的方法外, 在刚开始我们提到的与网络IO操作相关的方法会直接调用ChannelPipleline里的方法,由ChannelPipleline里对应的ChannelHandler进行处理, 例如
+```java
+@Override
+    public ChannelFuture disconnect(ChannelPromise promise) {
+        return pipeline.disconnect(promise);
+    }
+
+    @Override
+    public ChannelFuture close(ChannelPromise promise) {
+        return pipeline.close(promise);
+    }
+    
+    @Override
+    public ChannelFuture bind(SocketAddress localAddress, ChannelPromise promise) {
+        return pipeline.bind(localAddress, promise);
+    }
+
+    @Override
+    public ChannelFuture connect(SocketAddress remoteAddress, ChannelPromise promise) {
+        return pipeline.connect(remoteAddress, promise);
+    }
+    
+   @Override
+    public Channel read() {
+        pipeline.read();
+        return this;
+    }
+
+    @Override
+    public ChannelFuture write(Object msg) {
+        return pipeline.write(msg);
+}
+```
+
+## AbstractNioMessage
+
 
