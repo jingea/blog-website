@@ -4,6 +4,7 @@ date: 2015-11-23
 title: Netty Channel
 ---
 `Channel`是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等.
+![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/channel.jpg)
 
 下面我们看一下Channel提供的API
 
@@ -80,62 +81,43 @@ private String strVal;
 通过看`AbstractChannel`的源码我们可以看到了,除了像`pipeline(), eventLoop(), remoteAddress(), newPromise()`这类的方法外, 在刚开始我们提到的与网络IO操作相关的方法会直接调用ChannelPipleline里的方法,由ChannelPipleline里对应的ChannelHandler进行处理, 例如
 ```java
 @Override
-    public ChannelFuture disconnect(ChannelPromise promise) {
-        return pipeline.disconnect(promise);
-    }
+public ChannelFuture disconnect(ChannelPromise promise) {
+    return pipeline.disconnect(promise);
+}
 
-    @Override
-    public ChannelFuture close(ChannelPromise promise) {
-        return pipeline.close(promise);
-    }
-    
-    @Override
-    public ChannelFuture bind(SocketAddress localAddress, ChannelPromise promise) {
-        return pipeline.bind(localAddress, promise);
-    }
+@Override
+public ChannelFuture close(ChannelPromise promise) {
+    return pipeline.close(promise);
+}
 
-    @Override
-    public ChannelFuture connect(SocketAddress remoteAddress, ChannelPromise promise) {
-        return pipeline.connect(remoteAddress, promise);
-    }
-    
-   @Override
-    public Channel read() {
-        pipeline.read();
-        return this;
-    }
+@Override
+public ChannelFuture bind(SocketAddress localAddress, ChannelPromise promise) {
+    return pipeline.bind(localAddress, promise);
+}
 
-    @Override
-    public ChannelFuture write(Object msg) {
-        return pipeline.write(msg);
+@Override
+public ChannelFuture connect(SocketAddress remoteAddress, ChannelPromise promise) {
+    return pipeline.connect(remoteAddress, promise);
+}
+
+Override
+public Channel read() {
+    pipeline.read();
+    return this;
+}
+
+@Override
+public ChannelFuture write(Object msg) {
+    return pipeline.write(msg);
 }
 ```
 这个类还为我们提供了一些抽象方法,用于网络连接处理,这些抽象方法API在Unsafe里使用
 ```java
 protected abstract void doBeginRead() throws Exception;
-
-    /**
-     * Flush the content of the given buffer to the remote peer.
-     */
-    protected abstract void doWrite(ChannelOutboundBuffer in) throws Exception;
-    protected void doRegister() throws Exception {
-        // NOOP
-    }
-
-    /**
-     * Bind the {@link Channel} to the {@link SocketAddress}
-     */
-    protected abstract void doBind(SocketAddress localAddress) throws Exception;
-
-    /**
-     * Disconnect this {@link Channel} from its remote peer
-     */
-    protected abstract void doDisconnect() throws Exception;
-
-    /**
-     * Close the {@link Channel}
-     */
-    protected abstract void doClose() throws Exception;
+protected abstract void doWrite(ChannelOutboundBuffer in) throws Exception;
+protected abstract void doBind(SocketAddress localAddress) throws Exception;
+protected abstract void doDisconnect() throws Exception;
+protected abstract void doClose() throws Exception;
 ```
 
 ## AbstractNioChannel
@@ -152,57 +134,57 @@ volatile SelectionKey selectionKey;
 然后我们看一下`doRegister()`方法
 
 ```java
- @Override
-    protected void doRegister() throws Exception {
-        boolean selected = false;
-        for (;;) {
-            try {
-                selectionKey = javaChannel().register(eventLoop().selector, 0, this);
-                return;
-            } catch (CancelledKeyException e) {
-                if (!selected) {
-                    // Force the Selector to select now as the "canceled" SelectionKey may still be
-                    // cached and not removed because no Select.select(..) operation was called yet.
-                    eventLoop().selectNow();
-                    selected = true;
-                } else {
-                    // We forced a select operation on the selector before but the SelectionKey is still cached
-                    // for whatever reason. JDK bug ?
-                    throw e;
-                }
+@Override
+protected void doRegister() throws Exception {
+    boolean selected = false;
+    for (;;) {
+        try {
+            selectionKey = javaChannel().register(eventLoop().selector, 0, this);
+            return;
+        } catch (CancelledKeyException e) {
+            if (!selected) {
+                // Force the Selector to select now as the "canceled" SelectionKey may still be
+                // cached and not removed because no Select.select(..) operation was called yet.
+                eventLoop().selectNow();
+                selected = true;
+            } else {
+                // We forced a select operation on the selector before but the SelectionKey is still cached
+                // for whatever reason. JDK bug ?
+                throw e;
             }
         }
     }
+}
 ```
     
 然后我们看一下`doDeregister()`方法
 ```java
-  @Override
-    protected void doDeregister() throws Exception {
-        eventLoop().cancel(selectionKey());
-    }
+@Override
+protected void doDeregister() throws Exception {
+    eventLoop().cancel(selectionKey());
+}
 ```
 最后我们看一下`doBeginRead()`方法
 ```java
 @Override
-    protected void doBeginRead() throws Exception {
-        // Channel.read() or ChannelHandlerContext.read() was called
-        if (inputShutdown) {
-            return;
-        }
-
-        final SelectionKey selectionKey = this.selectionKey;
-        if (!selectionKey.isValid()) {
-            return;
-        }
-
-        readPending = true;
-
-        final int interestOps = selectionKey.interestOps();
-        if ((interestOps & readInterestOp) == 0) {
-            selectionKey.interestOps(interestOps | readInterestOp);
-        }
+protected void doBeginRead() throws Exception {
+    // Channel.read() or ChannelHandlerContext.read() was called
+    if (inputShutdown) {
+        return;
     }
+
+    final SelectionKey selectionKey = this.selectionKey;
+    if (!selectionKey.isValid()) {
+        return;
+    }
+
+    readPending = true;
+
+    final int interestOps = selectionKey.interestOps();
+    if ((interestOps & readInterestOp) == 0) {
+        selectionKey.interestOps(interestOps | readInterestOp);
+    }
+}
 ```
 
 ## AbstractNioMessageChannel
@@ -217,5 +199,5 @@ TODO
 ## ServerSocketChannel
 TODO
 
-## NioServerScketChannel
+## NioServerSocketChannel
 TODO
