@@ -31,8 +31,6 @@ title: Netty Channel
 * `bind()` : 
 * `disconnect()` : 请求关闭与网络对端的连接.
 
-
-
 ## AbstractChannel
 `AbstractChannel`聚合了所有Channel使用到的能力的对象. 如果某个功能和子类相关则定义抽象方法,由子类去实现
 ```java
@@ -121,7 +119,7 @@ protected abstract void doClose() throws Exception;
 ```
 
 ## AbstractNioChannel
-`AbstractNioChannel`主要是实现了`AbstractChannel`的``方法
+`AbstractNioChannel`主要是实现了`AbstractChannel`的`doRegister(), doDeregister(), doBeginRead()`方法
 
 下面我们还是先看看其内部定义的变脸
 ```java
@@ -129,16 +127,18 @@ private final SelectableChannel ch;
 protected final int readInterestOp;
 volatile SelectionKey selectionKey;
 ```
-`java.nio.channels.ServerSocketChannel`和`java.nio.channels.SocketChannel`都是实现了`java.nio.channels.SelectableChannel`接口,而且`NioSocketChannel`和`NioServerSocketChannel`都是实现了`AbstractNioChannel`接口,因此我们在`AbstractNioChannel`内定义了一个`SelectableChannel`属性用于实现`ServerSocketChannel`和`SocketChannel`的共用
+`java.nio.channels.ServerSocketChannel`和`java.nio.channels.SocketChannel`都是实现了`java.nio.channels.SelectableChannel`接口. 而`NioSocketChannel`和`NioServerSocketChannel`实现了`AbstractNioChannel`接口, 因此我们在`AbstractNioChannel`内定义了一个`SelectableChannel`成员用于实现`ServerSocketChannel`和`SocketChannel`的共用
 
 然后我们看一下`doRegister()`方法
-
 ```java
 @Override
 protected void doRegister() throws Exception {
     boolean selected = false;
     for (;;) {
         try {
+			// 我们将ServerSocketChannel或者SocketChannel注册到NioEventLoop里的Selector上
+			// 0表示我们对任何事件Channel里的任何事件都不感兴趣
+			// 同时我们将this作为附件传送进去, 
             selectionKey = javaChannel().register(eventLoop().selector, 0, this);
             return;
         } catch (CancelledKeyException e) {
@@ -190,7 +190,7 @@ protected void doBeginRead() throws Exception {
 ## AbstractNioMessageChannel
 TODO
 
-## AbstractNioMessageServerChannel
+## AbstractNioByteChannel
 TODO
 
 ## ServerChannel
