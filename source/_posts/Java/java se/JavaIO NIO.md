@@ -121,3 +121,35 @@ while (true) {
 }
 ```
 
+我们看一下`Selector`
+
+``是`SelectableChannel`的多路复用器. 
+
+我们可以通过调用`Selector#open()`方法来创建一个selector. 当这个selector创建出来之后, 当我们调用`Selector#close()`方法之前, 该selector会一直存在.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
