@@ -11,3 +11,11 @@ title: JAVA 小常识
 `java  -jar ./tools-1.0-SNAPSHOT.jar` 从某个jar运行, mainfest文件必须指定MainClass属性,如果不指定的话,在运行`java`命令的时候就会产生 xxx.jar中没有主清单属性
 
 `java  -jar ./ App` 从指定的classpath下所有的jar中,寻找App主类运行
+
+## 获取周数
+通过`Calendar`我们可以知道某个日期处于一年中第几周
+```java
+Calendar calendar = Calendar.getInstance();
+calendar.setTime(new Date());
+System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));
+```
