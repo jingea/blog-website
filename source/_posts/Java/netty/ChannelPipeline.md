@@ -132,6 +132,146 @@ pipeline.addLast(group, "handler", new MyBusinessLogicHandler());
 
 我们可以在任何时间在`ChannelPipeline`上添加或者移除`ChannelHandler`, 因为`ChannelPipeline`是线程安全的. 例如我们可以在线上环境中因为业务原因动态的添加或者移除handler.
 
+下来我们看一下`ChannelPipeline`的默认实现`DefaultChannelPipeline`里的数据结构
+```java
+final AbstractChannel channel;
 
+final DefaultChannelHandlerContext head;
+final DefaultChannelHandlerContext tail;
+```
+`DefaultChannelPipeline`采用链式方式存储`ChannelHandlerContext`(内部存储的的是`ChannelHandler`). 当我们增加一个`ChannelHandler`时
+```java
+@Override
+public ChannelPipeline addFirst(EventExecutorGroup group, final String name, ChannelHandler handler) {
+    synchronized (this) {
+        checkDuplicateName(name);
+        DefaultChannelHandlerContext newCtx = new DefaultChannelHandlerContext(this, group, name, handler);
+        addFirst0(name, newCtx);
+    }
 
+    return this;
+}
 
+private void addFirst0(String name, DefaultChannelHandlerContext newCtx) {
+    checkMultiplicity(newCtx);
+
+    DefaultChannelHandlerContext nextCtx = head.next;
+    newCtx.prev = head;
+    newCtx.next = nextCtx;
+    head.next = newCtx;
+    nextCtx.prev = newCtx;
+
+    name2ctx.put(name, newCtx);
+
+    callHandlerAdded(newCtx);
+}
+```
+我们看到在`addFirst0()`方法里将`newCtx`放到了首位上,然后内部调用了
+```java
+private void callHandlerAdded(final ChannelHandlerContext ctx) {
+    if (ctx.channel().isRegistered() && !ctx.executor().inEventLoop()) {
+        ctx.executor().execute(new Runnable() {
+            @Override
+            public void run() {
+                callHandlerAdded0(ctx);
+            }
+        });
+        return;
+    }
+    callHandlerAdded0(ctx);
+}
+
+private void callHandlerAdded0(final ChannelHandlerContext ctx) {
+    try {
+        ctx.handler().handlerAdded(ctx);
+    } catch (Throwable t) {
+       
+    }
+}
+```
+我们看到最终的时候在`ChannelHandler`里添加了`ChannelHandlerContext`.
+
+接下来我们看一下`ChannelPipeline`的read数据流程, 由于Netty的真实读写IO操作是封装了Unsafe里，因此我们直接在`NioMessageUnsafe`中看看
+```java
+...
+private final List<Object> readBuf = new ArrayList<Object>();
+public void read() {
+...
+int localRead = doReadMessages(readBuf);
+int size = readBuf.size();
+for (int i = 0; i < size; i ++) {
+	// 在此处ChannelPipeline开始触发读流程
+    pipeline.fireChannelRead(readBuf.get(i));
+}
+...
+}
+```
+我们进一步看一下`fireChannelRead()`方法
+```
+@Override
+public ChannelPipeline fireChannelRead(Object msg) {
+	// 调用ChannelHandlerContext类型的head的fireChannelRead()方法, 然后就通过链式调用开始在一系列ChannelHandler里执行
+    head.fireChannelRead(msg);
+    return this;
+}
+```
+看`ChannelHandlerContext#fireChannelRead`实现
+```
+@Override
+public ChannelHandlerContext fireChannelRead(final Object msg) {
+    if (msg == null) {
+        throw new NullPointerException("msg");
+    }
+	
+	// 因为我们只是在读取数据, 因此只找到Inbound的ChannelHandler就可以了
+    final DefaultChannelHandlerContext next = findContextInbound();
+    EventExecutor executor = next.executor();
+    if (executor.inEventLoop()) {
+        next.invokeChannelRead(msg);
+    } else {
+		// 提交任务, 让任务在EventLoop中执行
+        executor.execute(new OneTimeTask() {
+            @Override
+            public void run() {
+                next.invokeChannelRead(msg);
+            }
+        });
+    }
+    return this;
+}
+
+private DefaultChannelHandlerContext findContextInbound() {
+    DefaultChannelHandlerContext ctx = this;
+    do {
+        ctx = ctx.next;
+    } while (!ctx.inbound);
+    return ctx;
+}
+
+private void invokeChannelRead(Object msg) {
+    try {
+		// 调用handler里的真实的读取channelRead方法
+        ((ChannelInboundHandler) handler).channelRead(this, msg);
+    } catch (Throwable t) {
+        notifyHandlerException(t);
+    }
+}
+```
+那么`Object msg` 是什么呢？`doReadMessages(readBuf)`我们看一下这个方法实现(由于Unsafe是Channel的内部类, 因此Unsafe实际上调用的也是Channel的doReadMessages). 我们直接看一下的实现
+```java
+@Override
+protected int doReadMessages(List<Object> buf) throws Exception {
+    SocketChannel ch = javaChannel().accept();
+
+    try {
+        if (ch != null) {
+            buf.add(new NioSocketChannel(this, ch));
+            return 1;
+        }
+    } catch (Throwable t) {
+      
+    }
+
+    return 0;
+}
+```
