@@ -23,17 +23,7 @@ ByteBuf提供了 `readerIndex` 和 `writerIndex` 进行缓冲区的顺序读写�
 
 > 每个索引移动的单位是`bytes`, 在下例中我们向ByteBuf写入一个int数值, `writerIdex`会移动4个`bytes`
 
-看完ByteBuf的API操作我们来看一下ByteBuf的分类,在内存使用种类上ByteBuf分为以下俩类
-* DirectByteBuf : 使用非JVM堆内存分配.
-* HeapByteBuf: 使用JVM堆内内存分配. 
-
-在内存使用种类上由分为以下俩类
-* PooledByteBuf: 基于内存对象池的ByteBuf, 
-* UnpooledByteBuf: 
-
-> UnpooledDirectByteBuf, UnpooledHeapByteBuf, UnpooledUnsafeDirectByteBuf 
-
-## ByteBuf
+## ByteBuf API
 我们首先看一下ByteBuf提供的API
 
 ### ByteBuf write
@@ -445,8 +435,22 @@ System.out.println(buf.readerIndex());		// 0
 System.out.println(b);		// 3
 ```
 
+## 内存池
+Netty的内存池由`PoolArea`. `PoolArea`由多个`PoolChunk`组成. 
+
+## ButeBuf 类型
+看完ByteBuf的API操作我们来看一下ByteBuf的分类,在内存使用种类上ByteBuf分为以下俩类
+* DirectByteBuf : 使用JVM堆外内存分配. 虽然分配和回收速度慢一些,但是从SocketChannel中写入或者读取数据由于少了一次内存复制,因此速度较快.(SocketIO通信时适合使用)
+* HeapByteBuf: 使用JVM堆内内存分配. 内存分配和回收速度较快,但是读写Socket IO的时候由于会额外进行一次内存复制,堆内存对应的缓冲区复制到内核Channel中,性能会有下降.(后端业务在编解码时适合使用)
+
+在内存使用种类上由分为以下俩类
+* PooledByteBuf: 基于内存对象池的ByteBuf, 
+* UnpooledByteBuf: 
+
+> UnpooledDirectByteBuf, UnpooledHeapByteBuf, UnpooledUnsafeDirectByteBuf ,PooledDirectByteBuf, PooledHeapByteBuf
+
 ## AbstractByteBuf
-`AbstractByteBuf`继承自`ByteBuf`, 它内部并没有定义ByteBuf的缓冲区实现,只是通过定义`readerIndex`, `writerIndex`, `capacity`等实现ByteBuf接口中的各种API, 
+`AbstractByteBuf`继承自`ByteBuf`, 它内部并没有定义ByteBuf的缓冲区实现,只是通过定义`readerIndex`, `writerIndex`, `capacity`等实现ByteBuf接口中的各种API, 具体的缓冲区实现则由子类实现
 ```java
 static final ResourceLeakDetector<ByteBuf> leakDetector = new ResourceLeakDetector<ByteBuf>(ByteBuf.class);
 
@@ -458,6 +462,19 @@ private int markedWriterIndex;
 private int maxCapacity;
 
 private SwappedByteBuf swappedBuf;
+```
+除了操作具体缓冲区API没有实现之外 `AbstractByteBuf`为我们实现了大量的API,首先我们看一下读数据的API
+```java
+@Override
+    public ByteBuf readBytes(byte[] dst, int dstIndex, int length) {
+    	// 检查当前缓冲区中的可读数据是否满足length长度
+        checkReadableBytes(length);
+        // 将当前缓冲区的数据从readerIndex开始读取length个长度到目标dst缓冲区中. 
+        // 这个方法也就是拷贝一部分数据到新的缓冲区中,但是并不会改变当前缓冲区的readerIndex和writerIndex
+        getBytes(readerIndex, dst, dstIndex, length);
+        readerIndex += length;
+        return this;
+    }
 ```
 
 ### ResourceLeakDetector
@@ -471,5 +488,17 @@ private SwappedByteBuf swappedBuf;
 不使用对象池的基于堆内存分配的字节缓冲区. 每次IO读写的时候都会创建一个新的UnPooledHeapByteBuf.
 
 
-## 内存池
-Netty的内存池由`PoolArea`. `PoolArea`由多个`PoolChunk`组成. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
