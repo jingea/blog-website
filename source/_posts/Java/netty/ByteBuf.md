@@ -463,18 +463,58 @@ private int maxCapacity;
 
 private SwappedByteBuf swappedBuf;
 ```
+
 除了操作具体缓冲区API没有实现之外 `AbstractByteBuf`为我们实现了大量的API,首先我们看一下读数据的API
 ```java
 @Override
-    public ByteBuf readBytes(byte[] dst, int dstIndex, int length) {
-    	// 检查当前缓冲区中的可读数据是否满足length长度
-        checkReadableBytes(length);
-        // 将当前缓冲区的数据从readerIndex开始读取length个长度到目标dst缓冲区中. 
-        // 这个方法也就是拷贝一部分数据到新的缓冲区中,但是并不会改变当前缓冲区的readerIndex和writerIndex
-        getBytes(readerIndex, dst, dstIndex, length);
-        readerIndex += length;
+public ByteBuf readBytes(byte[] dst, int dstIndex, int length) {
+	// 检查当前缓冲区中的可读数据是否满足length长度
+    checkReadableBytes(length);
+    // 将当前缓冲区的数据从readerIndex开始读取length个长度到目标dst缓冲区中. 
+    // 这个方法也就是拷贝一部分数据到新的缓冲区中,但是并不会改变当前缓冲区的readerIndex和writerIndex
+    getBytes(readerIndex, dst, dstIndex, length);
+    readerIndex += length;
+    return this;
+}
+```
+下面我们看一下写数据的API实现
+```java
+@Override
+public ByteBuf writeBytes(byte[] src, int srcIndex, int length) {
+    ensureWritable(length);
+    setBytes(writerIndex, src, srcIndex, length);
+    writerIndex += length;
+    return this;
+}
+```
+同样的`setBytes();`是由子类具体实现, 我们着重看一下`ensureWritable()`方法实现
+```java
+@Override
+public ByteBuf ensureWritable(int minWritableBytes) {
+	// 如果要写入数据的字节小于0的话, 则直接抛出异常
+    if (minWritableBytes < 0) {
+        throw new IllegalArgumentException(String.format(
+                "minWritableBytes: %d (expected: >= 0)", minWritableBytes));
+    }
+
+	// minWritableBytes <= capacity() - writerIndex, 要写入的字节数小于可写的字节数则直接返回
+    if (minWritableBytes <= writableBytes()) {
         return this;
     }
+
+    if (minWritableBytes > maxCapacity - writerIndex) {
+        throw new IndexOutOfBoundsException(String.format(
+                "writerIndex(%d) + minWritableBytes(%d) exceeds maxCapacity(%d): %s",
+                writerIndex, minWritableBytes, maxCapacity, this));
+    }
+
+    // Normalize the current capacity to the power of 2.
+    int newCapacity = calculateNewCapacity(writerIndex + minWritableBytes);
+
+    // Adjust to the new capacity.
+    capacity(newCapacity);
+    return this;
+}
 ```
 
 ### ResourceLeakDetector
