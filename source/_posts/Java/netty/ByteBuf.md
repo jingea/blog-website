@@ -4,7 +4,7 @@ date: 2015-11-20
 title: Netty ByteBuf
 ---
 首先我们来看一下netty buffer包的继承结构
-![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/io.netty.bytebuf.jpg)
+![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/bytebuf.jpg)
 接下来我会对几个类进行代码测试.
 
 首先我们来看一下如何使用Netty提供的工具类构建一个ByteBuf
