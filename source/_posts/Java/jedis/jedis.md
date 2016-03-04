@@ -127,3 +127,47 @@ public void returnResource(Jedis resource) {
 
 }
 ```
+
+接下来我们看一下多线程情况
+```java
+public class JedisTest {
+
+    public static void main(String[] args) throws InterruptedException {
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxTotal(3);
+        JedisPool pool = new JedisPool(jedisPoolConfig, "10.1.4.110");
+        List<Thread> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Runnable runnable = () -> {
+                Jedis jedis = null;
+                try {
+                    jedis = pool.getResource();
+                    int sleep = new Random().nextInt(5);
+                    System.out.println("sleep:" + sleep + ". time:" + new Date().toLocaleString() + ". active: " + pool.getNumActive() + ". idle: " + pool.getNumIdle());
+
+                    TimeUnit.SECONDS.sleep(sleep);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (jedis != null) {
+                        jedis.close();
+                    }
+                }
+            };
+            list.add(new Thread(runnable));
+        }
+        list.forEach(thread -> thread.start());
+
+        Thread.currentThread().join();
+        pool.destroy();
+    }
+}
+```
+结果为
+```
+sleep:4. time:2016-3-4 10:04:03. active: 3. idle: 0
+sleep:4. time:2016-3-4 10:04:03. active: 3. idle: 0
+sleep:3. time:2016-3-4 10:04:03. active: 3. idle: 0
+sleep:3. time:2016-3-4 10:04:06. active: 3. idle: 0
+sleep:3. time:2016-3-4 10:04:07. active: 2. idle: 1
+```
