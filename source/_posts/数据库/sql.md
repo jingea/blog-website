@@ -1,5 +1,4 @@
 category: 数据库
-tag: SQL
 date: 2015-10-08
 title: 常用SQL
 ---
