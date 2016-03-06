@@ -1,4 +1,4 @@
-﻿category: 平台工具
+category: 平台工具
 tag: ZooKeeper
 date: 2013-09-13
 title: ZooKeeper Started
@@ -47,7 +47,7 @@ WATCHER::
 
 WatchedEvent state:SyncConnected type:None path:null
 JLine support is enabled
-[zk: 127.0.0.1:2181(CONNECTED) 0] 
+[zk: 127.0.0.1:2181(CONNECTED) 0]
 ```
 
 进入到shell之后,我们可以敲人`help`命令，查看我们都能使用哪些命令：
@@ -61,7 +61,7 @@ ZooKeeper -server host:port cmd args
 	ls2 path [watch]
 	setAcl path acl
 	setquota -n|-b val path
-	history 
+	history
 	redo cmdno
 	printwatches on|off
 	delete path [version]
@@ -71,11 +71,11 @@ ZooKeeper -server host:port cmd args
 	get path [watch]
 	create [-s] [-e] path data acl
 	addauth scheme auth
-	quit 
+	quit
 	getAcl path
-	close 
+	close
 	connect host:port
-[zk: 127.0.0.1:2181(CONNECTED) 2] 
+[zk: 127.0.0.1:2181(CONNECTED) 2]
 ```
 看到了,我们能使用这么多命令，下来我们简单的接受几个命令.
 
@@ -85,7 +85,7 @@ ZooKeeper -server host:port cmd args
 Created /zk_test
 [zk: 127.0.0.1:2181(CONNECTED) 3] ls /
 [zookeeper, zk_test]
-[zk: 127.0.0.1:2181(CONNECTED) 4] 
+[zk: 127.0.0.1:2181(CONNECTED) 4]
 ```
 但是实际上，这个node还没有被创建出来.
 
@@ -104,7 +104,7 @@ aclVersion = 0
 ephemeralOwner = 0x0
 dataLength = 7
 numChildren = 0
-[zk: 127.0.0.1:2181(CONNECTED) 5] 
+[zk: 127.0.0.1:2181(CONNECTED) 5]
 ```
 
 我们还可以使用`set`命令将刚才那个node重新关联
@@ -134,7 +134,7 @@ aclVersion = 0
 ephemeralOwner = 0x0
 dataLength = 8
 numChildren = 0
-[zk: 127.0.0.1:2181(CONNECTED) 8] 
+[zk: 127.0.0.1:2181(CONNECTED) 8]
 ```
 
 最后，我们将这个node删掉
@@ -142,5 +142,5 @@ numChildren = 0
 [zk: 127.0.0.1:2181(CONNECTED) 9] delete /zk_test
 [zk: 127.0.0.1:2181(CONNECTED) 10] ls /
 [zookeeper]
-[zk: 127.0.0.1:2181(CONNECTED) 11] 
+[zk: 127.0.0.1:2181(CONNECTED) 11]
 ```

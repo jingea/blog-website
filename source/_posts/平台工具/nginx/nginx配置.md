@@ -1,4 +1,8 @@
-
+category: 平台工具
+tag: Nginx
+date: 2016-03-05
+title: Nginx配置
+---
 下面我们看一下Nginx官方给出的nginx.config可有的全部配置内容
 ```
 user       www www;  ## Default: nobody
@@ -73,15 +77,16 @@ http {
       expires 30d;
     }
 
-    # 反向代理设置
+    # 反向代理设置, 将/下所有的请求进行转发
     location / {
-      #设置反向代理的地址
+      #设置反向代理的地址, 將80端口接受到的请求转发到localhost的8080端口上
       proxy_pass      http://127.0.0.1:8080;
     }
   }
 
-
+  # 设置反向代理
   upstream big_server_com {
+    # 按照权重将代理过来的请求代理到俩个代理服务器上
     server 127.0.0.3:8000 weight=5;
     server 127.0.0.3:8001 weight=5;
     server 192.168.0.1:8000;
@@ -94,12 +99,14 @@ http {
     access_log      logs/big.server.access.log main;
 
     location / {
+      # 设置反向代理, 代理到big_server_com上(upstream刚刚定义的)
       proxy_pass      http://big_server_com;
     }
   }
 }
 ```
-下面是Nginx官网给出的另一种配置
+
+上面的配置引用里其他的配置文件,而且很多配置没有配置选项,下面是Nginx官网给出的另一种配置
 ```
 user  www www;
 worker_processes  2;
@@ -128,6 +135,7 @@ http {
     '"$http_referer" "$http_user_agent" '
     '"$http_range" "$sent_http_content_range"';
 
+  # HTTP请求,客户端相关设置
   client_header_timeout  3m;
   client_body_timeout    3m;
   send_timeout           3m;
@@ -135,6 +143,7 @@ http {
   client_header_buffer_size    1k;
   large_client_header_buffers  4 4k;
 
+  # 消息发送时开启gzip设置
   gzip on;
   gzip_min_length  1100;
   gzip_buffers     4 8k;
@@ -228,8 +237,6 @@ http {
   }
 }
 ```
-
-## 负载均衡
 
 ## 上传下载文件
 
