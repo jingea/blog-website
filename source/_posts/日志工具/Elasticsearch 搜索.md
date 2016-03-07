@@ -1,5 +1,4 @@
-category: 平台工具
-tag: Elasticsearch
+category: 日志工具
 date: 2015-11-18
 title: Elasticsearch 搜索
 ---
@@ -30,7 +29,7 @@ client.index(indexRequest).get();
 ```
 
 * Leaf query clauses : 在指定的字段中搜索指定的值,例如使用`match`, `term` 或者 `range` 搜索时
-* Compound query clauses : 
+* Compound query clauses :
 
 首先我们来看一个简单的搜索案例
 ```java
@@ -90,13 +89,13 @@ searchResponse.getHits().forEach(hit -> {
 
 #### Common Terms Query
 ```java
-QueryBuilder qb = commonTermsQuery("name", "kimchy"); 
+QueryBuilder qb = commonTermsQuery("name", "kimchy");
 ```
 
 
 #### Query String Query
 ```java
-QueryBuilder qb = queryStringQuery("+kimchy -elasticsearch"); 
+QueryBuilder qb = queryStringQuery("+kimchy -elasticsearch");
 ```
 
 
@@ -232,7 +231,7 @@ QueryBuilder qb = simpleQueryStringQuery("+kimchy -elasticsearch");
 
 ```
 
-### MultiSearch API Query 
+### MultiSearch API Query
 
 
 ### Terminate After

@@ -1,12 +1,11 @@
-﻿category: 平台工具
-tag: logstash
+category: 日志工具
 date: 2015-12-15
 title: logstash过滤日志
 ---
 ### filter插件
 ```json
 filter {
-	#命名正则表达式，在稍后(grok参数或者其他正则表达式里)引用它	
+	#命名正则表达式，在稍后(grok参数或者其他正则表达式里)引用它
     grok {
         match => ["message",  "%{COMBINEDAPACHELOG}"]
     }
@@ -31,12 +30,12 @@ filter {
 		replace => ["syslog_host", "host"]
     }
 	ruby {
-        
+
     }
 	split {
         field => "message"
         terminator => "#"
     }
-	
+
 }
 ```

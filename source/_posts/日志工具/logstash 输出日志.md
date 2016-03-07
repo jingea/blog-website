@@ -1,5 +1,4 @@
-﻿category: 平台工具
-tag: logstash
+category: 日志工具
 date: 2015-12-15
 title: logstash输出日志
 ---
@@ -23,7 +22,7 @@ output {
     }
 }
 ```
-采用这个插件日志就会输出到`D:\log\generate`目录下的2015-12-15.log文件中. 
+采用这个插件日志就会输出到`D:\log\generate`目录下的2015-12-15.log文件中.
 
 在file插件里,除了path字段之外,我们还有俩个字段`message_format`和`gzip`
 * `message_format` ：选择要输出的内容,默认是输出整个event的JSON形式字符串, 我们可以将其设置为`%{message}`, 这样我们就只会输出日志内容了

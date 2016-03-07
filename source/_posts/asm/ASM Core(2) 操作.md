@@ -191,7 +191,7 @@ class ChangeVersionAdapter extends ClassVisitor {
 在上述的代码中, 其实代码的运行效率并不是高效进行的. 这是因为当`b1`字节码被`ClassReader`读取并通过`ClassVisitor`将其执行转换的时候, 我们可能只改变了class的版本号, 其他部分并没有转换, 但是在实际的执行中其他的部分也都被执行了一边, 那这就浪费了cpu计算和内存空间的占用, 其实只需要将不需要改变的字节从`b1`直接拷贝到`b2`就好了.  
 
 好在ASM为我们内部构建了这种优化过程.
-* 
+*
 
 
 ## 删除成员
@@ -277,4 +277,3 @@ class AddFieldAdapter extends ClassVisitor {
 	}
 }
 ```
-

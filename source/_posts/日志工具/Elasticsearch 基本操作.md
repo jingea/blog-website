@@ -1,5 +1,4 @@
-category: 平台工具
-tag: Elasticsearch
+category: 日志工具
 date: 2015-11-18
 title: Elasticsearch 基本操作
 ---
@@ -187,4 +186,3 @@ System.out.println("GetResponse : " + getResponse.getType());
 System.out.println("GetResponse : " + getResponse.getVersion());
 System.out.println("GetResponse : " + getResponse.getSourceAsString());
 ```
-

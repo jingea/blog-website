@@ -1,5 +1,4 @@
-﻿category: 平台工具
-tag: logstash
+category: 日志工具
 date: 2015-12-15
 title: logstash编解码日志
 ---
