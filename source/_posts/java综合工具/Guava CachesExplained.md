@@ -1,5 +1,4 @@
-﻿category: Java
-tag : Java工具
+﻿category: Java工具
 date: 2013-09-13
 title: Guava Cache
 ---

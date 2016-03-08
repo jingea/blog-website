@@ -1,5 +1,4 @@
-category: Java
-tag : Java工具
+category: Java工具
 date: 2015-04-08
 title: Dropwizard 初探
 ---
