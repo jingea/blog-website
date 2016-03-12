@@ -1,4 +1,4 @@
-category: Java
+category: Java工具
 date: 2016-01-30
 title: Typesafe Config 初探
 ---
