@@ -96,7 +96,7 @@ ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)
 
 注意：使用上面依赖你需要在pom文件里声明了`metrics.version`属性,并且该属性值是`3.1.0`
 
-```
+```java
 mvn package exec:java -Dexec.mainClass=sample.First
 ```
 
@@ -271,4 +271,4 @@ Metrics仍然可以通过servlet(AdminServlet)展示给你, 提供JSON形式的�
 * `CSV files`, 使用`metrics-core`的`CsvReporter`报告
 * `SLF4J loggers`, 使用`metrics-core`的`Slf4jReporter`报告
 * `Ganglia`, 使用`metrics-ganglia`的`GangliaReporter`报告
-* `Graphite`, 使用`metrics-graphite`的`GraphiteReporter`报告 
+* `Graphite`, 使用`metrics-graphite`的`GraphiteReporter`报告

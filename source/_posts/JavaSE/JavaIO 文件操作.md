@@ -5,7 +5,7 @@ title: JAVA 文件操作
 
 ## FileFilter          
 检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.
-```
+```java
 FileFilter fileFilter = pathname -> {
 	System.out.println(pathname.getPath());
 	return pathname.isFile();
@@ -14,7 +14,7 @@ FileFilter fileFilter = pathname -> {
 fileFilter.accept(new File("D:\\hazelcast-documentation-3.5.3.pdf"));
 ```
 
-## FilenameFilter 
+## FilenameFilter
 ```java
 FilenameFilter filenameFilter = (dir, name) -> {
 	System.out.println(dir);
@@ -25,7 +25,7 @@ FilenameFilter filenameFilter = (dir, name) -> {
 filenameFilter.accept(new File("D"), "hazelcast-documentation-3.5.3.pdf");
 ```
 
-## File 
+## File
 File对象给我们提供了以下的功能
 * 删除文件
 * 文件重命名
@@ -43,9 +43,9 @@ File对象给我们提供了以下的功能
 * 遍历文件夹
 * 检查文件夹是否为空？
 
-## FileDescriptor 
+## FileDescriptor
 用来表示开放文件、开放套接字等.当FileDescriptor表示某文件时,我们可以通俗的将FileDescriptor看成是该文件.但是,我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作,则需要新创建FileDescriptor对应的FileOutputStream,再对文件进行操作.
-	
+
 类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件,打开的套接字或其他来源或字节的接收器.以下是关于FileDescriptor要点：
 1. 主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它.
 2. 应用程序不应创建自己的文件描述符.
@@ -129,7 +129,7 @@ watchKey.pollEvents().stream().forEach(watchEvent -> {
 watchKey.reset();
 ```
 
-## Files 
+## Files
 1. copy
 2. createDirectories
 3. createDirectory
@@ -176,7 +176,7 @@ watchKey.reset();
 44. write
 
 
-## FileStore 
+## FileStore
 代表了真正的存储设备,提供了设备的详尽信息
 
 ## FileSystems   
@@ -192,5 +192,3 @@ Set<String> views = system.supportedFileAttributeViews();
 
 ## Paths          
 > Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件,但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据,因此在网络环境或在虚拟文件系统中,NIO.2 也完全适用.NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法
-
-

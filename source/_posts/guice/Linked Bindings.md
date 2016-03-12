@@ -44,7 +44,7 @@ class ABCModule extends AbstractModule {
 }
 ```
 这段代码的最后调用结果都是
-```
+```java
 c
 c
 c

@@ -21,7 +21,7 @@ LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()
 缓存的使用范围是十分广泛的。每当计算或者通过一些方式生成一个值的时候，会造成资源严重浪费的时候我们可以考虑用缓存技术来存储该值。
 
 缓存和`CurrentMap`十分相似(键值对形式),但是他们之间还是仍有诸多不同.他们之间最大的不同之处是`ConcurrentMap`里的元素在被明确地删除之前会一直被存储在`Map`里，但是对于cache来说，为了维护cache的内存占用，cache被设计成会自动删除其中的数据。在一些应用场合中，使用`LoadingCache也`是非常有用的，即使它不被允许自动删除其entries(由于它的自动内存加载机制，他不允许这么做)。
-    
+
 一般来说，Guava的缓存技术一般适用于以下场合
 1. 想要消耗掉一些内存来换取速度的提升
 2. key(map中也有key)会在一段时间内被频繁的访问。
@@ -45,7 +45,7 @@ LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()
                return createExpensiveGraph(key);  
              }  
            });  
-  
+
 ...  
 try {  
   return graphs.get(key);  
@@ -63,7 +63,7 @@ LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()
                return createExpensiveGraph(key);  
              }  
            });  
-  
+
 ...  
 return graphs.getUnchecked(key);  
 ```
@@ -122,7 +122,7 @@ LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()
 
 ### Timed Eviction
 CacheBuilder 提供了俩种方式来实现这一模式
-expireAfterAccess(long, TimeUnit) 
+expireAfterAccess(long, TimeUnit)
 从最后一次访问(读或者写)开始计时，过了这段指定的时间就会释放掉该entries。注意：那些被删掉的entries的顺序时和size-based eviction是十分相似的。
 expireAfterWrite(long,TimeUnit)
 它是从entries被创建或者最后一次被修改值的点来计时的，如果从这个点开始超过了那段指定的时间，entries就会被删除掉。这点设计的很精明，因为数据会随着时间变得越来越陈旧。
@@ -134,7 +134,7 @@ Guava为你准备了entries的垃圾回收器，对于keys或者values可以使�
 `CacheBuilder.weakKeys()`通过weak reference存储keys。在这种情况下，如果keys没有被strong或者soft引用，那么entries会被垃圾回收。这种条件下的垃圾回收器是建立在标识符(引用)之上的，那么这会造成整个cache是使用==来比较俩个key的，而不是equals();
 
 `CacheBuilder.weakValues()`  通过weak referene 存储values.在这种情况下，如果valves没有被strong或者soft引用，那么entries会被垃圾回收。这种条件下的垃圾回收器是建立在标识符(引用)之上的，那么这会造成整个cache是使用==来比较俩个values的，而不是equals();
-CacheBuilder.softValues() 
+CacheBuilder.softValues()
 
 ### Explicit Removals
 也许在某年某月某天你不想再等cache释放entries，而是自己能手动的去释放掉这些entries，下面三个方法会帮助你
@@ -159,7 +159,7 @@ RemovalListener<Key, DatabaseConnection> removalListener = new RemovalListener<K
     conn.close(); // tear down properly  
   }  
 };  
-  
+
 return CacheBuilder.newBuilder()  
   .expireAfterWrite(2, TimeUnit.MINUTES)  
   .removalListener(removalListener)  

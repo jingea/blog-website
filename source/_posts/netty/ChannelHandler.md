@@ -12,7 +12,7 @@ title: Netty ChannelHandler
 * `ChannelHandlerAdapter`
 
 ```java
-public interface ChannelHandler 
+public interface ChannelHandler
 public interface ChannelInboundHandler extends ChannelHandler
 public interface ChannelOutboundHandler extends ChannelHandler
 public abstract class ChannelHandlerAdapter implements ChannelHandler
@@ -65,7 +65,7 @@ protected abstract void decode(ChannelHandlerContext ctx, ByteBuf in, List<Objec
 > 需要注意的这个类没有实现粘包组包等情况, 这个就需要我们自己实现了.
 
 ## MessageToMessageDecoder
-`MessageToMessageDecoder`一般作为二次解码器, 当我们在`ByteToMessageDecoder`将一个bytes数组转换成一个java对象的时候, 我们可能还需要将这个对象进行二次解码成其他对象, 我们就可以继承这个类, 
+`MessageToMessageDecoder`一般作为二次解码器, 当我们在`ByteToMessageDecoder`将一个bytes数组转换成一个java对象的时候, 我们可能还需要将这个对象进行二次解码成其他对象, 我们就可以继承这个类,
 ```java
 public abstract class MessageToMessageDecoder<I> extends ChannelInboundHandlerAdapter
 ```
@@ -128,14 +128,14 @@ public class LengthFieldBasedFrameDecoder extends ByteToMessageDecoder
 
 ## MessageToByteEncoder
 该类负责将java对象编码成`ByteBuf`, 我们只需要继承该类然后实现
-```
+```java
 protected abstract void encode(ChannelHandlerContext ctx, I msg, ByteBuf out) throws Exception;
 ```
 方法就可以了
 
 ## MessageToMessageEncoder
 如果要将java对象不编码成`ByteBuf`, 而是编译成, 其他对象, 那我们可以继承这个类实现
-```
+```java
 protected abstract void encode(ChannelHandlerContext ctx, I msg, List<Object> out) throws Exception;
 ```
 这个方法就可以了
@@ -144,11 +144,11 @@ protected abstract void encode(ChannelHandlerContext ctx, I msg, List<Object> ou
 
 ## LengthFieldPrepender
 `LengthFieldPrepender`是一个非常实用的工具类, 如果我们在发送消息的时候采用的是:消息长度字段+原始消息的形式, 那么我们就可以使用`LengthFieldPrepender`了. 这是因为`LengthFieldPrepender`可以将待发送消息的长度(二进制字节长度)写到`ByteBuf`的前俩个字节.例如:
-```
+```java
 Hello,World
 ```
 编码前是12个字节,但是经过`LengthFieldPrepender`编码后变成了
-```
+```java
 0x000E Hello,World
 ```
 成为了14个字节

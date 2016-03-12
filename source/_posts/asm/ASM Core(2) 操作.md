@@ -51,7 +51,7 @@ public class Test {
 }
 ```
 结果为
-```
+```java
 Test extends java/lang/Object {
  <init>()V
  main([Ljava/lang/String;)V

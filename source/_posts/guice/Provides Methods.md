@@ -55,7 +55,7 @@ public A provideC() {
 }
 ```
 guice会产生异常
-```
+```java
 Exception in thread "main" com.google.inject.CreationException: Unable to create injector, see the following errors:
 
 1) A binding to guice.A was already configured at guice.ABCModule.provideA().
@@ -69,7 +69,7 @@ protected void configure() {
 }
 ```
 同样会产生异常
-```
+```java
 Exception in thread "main" com.google.inject.CreationException: Unable to create injector, see the following errors:
 
 1) A binding to guice.A was already configured at guice.ABCModule.provideA().

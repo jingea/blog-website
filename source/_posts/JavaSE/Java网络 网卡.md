@@ -2,40 +2,40 @@ category: JavaSE
 date: 2014-09-20
 title: Java网络接口
 ---
-网络接口的命名 
-* eth0: ethernet的简写，一般用于以太网接口。 
-* wifi0:wifi是无线局域网，因此wifi0一般指无线网络接口。 
-* ath0: Atheros的简写，一般指Atheros芯片所包含的无线网络接口。 
-* lo: local的简写，一般指本地环回接口。 
- 
-lo:虚拟网络接口,其并不真实地从外界接收和发送数据包，而是在系统内部接收和发送数据包，因此虚拟网络接口不需要驱动程序硬件网卡的网络接口由驱动程序创建。而虚拟的网络接口由系统创建或通过应用层程序创建。 
-假如包是由一个本地进程为另一个本地进程产生的, 它们将通过外出链的’lo’接口,然后返回进入链的’lo’接口 
-	 
+网络接口的命名
+* eth0: ethernet的简写，一般用于以太网接口。
+* wifi0:wifi是无线局域网，因此wifi0一般指无线网络接口。
+* ath0: Atheros的简写，一般指Atheros芯片所包含的无线网络接口。
+* lo: local的简写，一般指本地环回接口。
+
+lo:虚拟网络接口,其并不真实地从外界接收和发送数据包，而是在系统内部接收和发送数据包，因此虚拟网络接口不需要驱动程序硬件网卡的网络接口由驱动程序创建。而虚拟的网络接口由系统创建或通过应用层程序创建。
+假如包是由一个本地进程为另一个本地进程产生的, 它们将通过外出链的’lo’接口,然后返回进入链的’lo’接口
+
 Java网络接口相关主要用到`java.net.NetworkInterface`这个类，其表示一个本地IP地址,该类可以是一个物理接口或者绑定于同一个物理接口的虚拟接口.
 
 获取某个名的网络接口对象
-```
+```java
 NetworkInterface net = NetworkInterface.getByName("eth0");
 ```
 获取一个绑定于制定ip地址的网络接口对象
-```
+```java
 InetAddress address = InetAddress.getLocalHost();
 NetworkInterface net = NetworkInterface.getByInetAddress(address);
 ```
 
 列出本机所有的网络接口  包括物理或者虚拟网络接口
-```
+```java
 Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
 while(nets.hasMoreElements()) {
  System.out.println("网络接口 ： " + nets.nextElement());
 }
 ```
-	
+
 列出本机所有绑定到该网络接口上的ip地址
-```
+```java
 NetworkInterface net = NetworkInterface.getByName("eth0");
  Enumeration<InetAddress> address = net.getInetAddresses();
- 
+
  while(address.hasMoreElements()) {
 	 System.out.println("IP 地址 ： " + address.nextElement());
  }

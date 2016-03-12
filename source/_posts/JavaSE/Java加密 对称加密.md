@@ -15,7 +15,7 @@ DES算法和DESede算法统称为DES系列算法. DESede算法是基于DES算法
 
 ###  电子密码本模式-ECB
 ![]()
-```
+```java
 优点：易于理解且简单易行;便于实现并行操作;没有误差产传递的问题
 缺点：不能隐藏明文模式,如果明文重复,则对于的密文也会重复,密文内容很容易被替换,重拍,删除,重放;
 对明文主动攻击的可能性较高
@@ -24,7 +24,7 @@ DES算法和DESede算法统称为DES系列算法. DESede算法是基于DES算法
 
 ###  密文连接模式-CBC
 ![](https://raw.githubusercontent.com/wanggnim/blog-website/images/secure/%E5%88%86%E7%BB%84%E6%A8%A1%E5%BC%8FCBC.jpg)
-```
+```java
 优点：密文连接模式加密后的密文上下文关联,即使在明文中出现重复的信息也不会产生相同的密文;
 密文内容如果被替换,重拍,删除,重放或网络传输过程中发生错误,后续密文即被破坏,
 无法完成还原;对明文的主动攻击性较低
@@ -35,7 +35,7 @@ DES算法和DESede算法统称为DES系列算法. DESede算法是基于DES算法
 
 ###  密文反馈模式-CFB
 ![](https://raw.githubusercontent.com/wanggnim/blog-website/images/secure/%E5%88%86%E7%BB%84%E6%A8%A1%E5%BC%8FCFB.jpg)
-```
+```java
 优点：隐藏了明文的模式,每一个分组的加密结果必受其前面所有分组内容的影响,即使出现许多次相同的明文,
 也均产生不同的密文;分组密码转化为流模式,可产生密钥流;可以及时加密传送小于分组的数据
 缺点：与CBC相似.不利于并行计算,目前没有已知的并行运算算法;存在误差传递,一个单元损坏影响多个单元;
@@ -45,7 +45,7 @@ DES算法和DESede算法统称为DES系列算法. DESede算法是基于DES算法
 
 ###  输出反馈模式-OFB
 ![](https://raw.githubusercontent.com/wanggnim/blog-website/images/secure/%E5%88%86%E7%BB%84%E6%A8%A1%E5%BC%8FOFB.jpg)
-```
+```java
 优点：隐藏了明文的模式;分组密码转化为流模式;无误差传递问题;可以及时加密传送小于分组的数据
 缺点：不利于并行计算;对明文的主动攻击是可能的,安全性较CFB差
 用途：适用于加密冗余性较大的数据,比如语音和图像数据
@@ -53,7 +53,7 @@ DES算法和DESede算法统称为DES系列算法. DESede算法是基于DES算法
 
 ###  计数器模式-CTR
 ![](https://raw.githubusercontent.com/wanggnim/blog-website/images/secure/%E5%88%86%E7%BB%84%E6%A8%A1%E5%BC%8FCTR.jpg)
-```
+```java
 优点：可并行计算;安全性至少与CBC模式一样好;加密与解密仅涉及密码算法的加密
 缺点：没有错误传播,因此不易确保数据完整性
 用途：适用于各种加密应用
@@ -61,7 +61,7 @@ DES算法和DESede算法统称为DES系列算法. DESede算法是基于DES算法
 
 ## 流密码
 ![](https://raw.githubusercontent.com/wanggnim/blog-website/images/secure/%E6%B5%81%E6%A8%A1%E5%BC%8F.jpg)
-```
+```java
 同步流密码
 自同步流密码
 主要用于军事和外交
@@ -74,24 +74,24 @@ DES算法和DESede算法统称为DES系列算法. DESede算法是基于DES算法
 public enum RCCoder {
 
 	INSTANCE;
-	
+
 	public byte[] encrypt(byte[] data) {
-		
+
 		byte[] encoded = new byte[data.length];
 		for(int i = 0; i < data.length; i++) {
 			encoded[i] = (byte) ((data[i]) ^ (byte)'a');
 		}
-		
+
 		return encoded;
 	}
-	
+
 	public byte[] decrypt(byte[] data) {
 
 		byte[] encoded = new byte[data.length];
 		for(int i = 0; i < data.length; i++) {
 			encoded[i] = (byte) ((data[i]) ^ (byte)'a');
 		}
-		
+
 		return encoded;
 	}
 }
@@ -105,9 +105,9 @@ public enum RCCoder {
  */
 public enum PBECoder {
 
-	PBEWithMD5AndDES("PBEWithMD5AndDES"), 
-	PBEWithMD5AndTripleDES("PBEWithMD5AndTripleDES"), 
-	PBEWithSHA1AndDESede("PBEWithSHA1AndDESede"), 
+	PBEWithMD5AndDES("PBEWithMD5AndDES"),
+	PBEWithMD5AndTripleDES("PBEWithMD5AndTripleDES"),
+	PBEWithSHA1AndDESede("PBEWithSHA1AndDESede"),
 	PBEWithSHA1AndRC2_40("PBEWithSHA1AndRC2_40");
 
 	PBECoder(String algothrim) {
@@ -119,11 +119,11 @@ public enum PBECoder {
 	{
 		Security.addProvider(new BouncyCastleProvider());
 	}
-	
+
 	/**
 	 * 盐初始化<br>
 	 * 盐长度必须为8字节
-	 * 
+	 *
 	 * @return byte[] 盐
 	 * @throws Exception
 	 */
@@ -136,7 +136,7 @@ public enum PBECoder {
 
 	/**
 	 * 转换密钥
-	 * 
+	 *
 	 * @param password
 	 *            密码
 	 * @return Key 密钥
@@ -158,7 +158,7 @@ public enum PBECoder {
 
 	/**
 	 * 加密
-	 * 
+	 *
 	 * @param data
 	 *            数据
 	 * @param password
@@ -190,7 +190,7 @@ public enum PBECoder {
 
 	/**
 	 * 解密
-	 * 
+	 *
 	 * @param data
 	 *            数据
 	 * @param password
@@ -228,7 +228,7 @@ public enum PBECoder {
 
 /**
  * IDEA安全编码组件
- * 
+ *
  */
 public abstract class IDEACoder {
 	/**
@@ -243,7 +243,7 @@ public abstract class IDEACoder {
 
 	/**
 	 * 转换密钥
-	 * 
+	 *
 	 * @param key
 	 *            二进制密钥
 	 * @return Key 密钥
@@ -260,10 +260,10 @@ public abstract class IDEACoder {
 	{
 		Security.addProvider(new BouncyCastleProvider());
 	}
-	
+
 	/**
 	 * 解密
-	 * 
+	 *
 	 * @param data
 	 *            待解密数据
 	 * @param key
@@ -291,7 +291,7 @@ public abstract class IDEACoder {
 
 	/**
 	 * 加密
-	 * 
+	 *
 	 * @param data
 	 *            待加密数据
 	 * @param key
@@ -319,7 +319,7 @@ public abstract class IDEACoder {
 
 	/**
 	 * 生成密钥 <br>
-	 * 
+	 *
 	 * @return byte[] 二进制密钥
 	 * @throws Exception
 	 */
@@ -340,7 +340,7 @@ public abstract class IDEACoder {
 		// 获得密钥的二进制编码形式
 		return secretKey.getEncoded();
 	}
-	
+
 }
 ```
 
@@ -378,17 +378,17 @@ public enum DESedeCoder {
 	OFB_PKCS5Padding(WorkModel.OFB, Padding.PKCS5Padding),
 	OFB_ISO10126Padding(WorkModel.OFB, Padding.ISO10126Padding),
 	;
-	
+
 	DESedeCoder(WorkModel workModel, Padding padding) {
 		CIPHER_ALGORITHM = KEY_ALGORITHM + "/" + workModel.name() + "/" + padding.name();
 		this.padding = padding;
 		this.workModel = workModel;
 	}
-	
+
 	{
 		Security.addProvider(new BouncyCastleProvider());
 	}
-	
+
 	/**
 	 * 密钥算法
 	 */
@@ -398,10 +398,10 @@ public enum DESedeCoder {
 
 	private Padding padding;
 	private WorkModel workModel;
-	
+
 	/**
 	 * 转换密钥
-	 * 
+	 *
 	 * @param key
 	 *            二进制密钥
 	 * @return Key 密钥
@@ -438,7 +438,7 @@ public enum DESedeCoder {
 
 	/**
 	 * 解密
-	 * 
+	 *
 	 * @param data
 	 *            待解密数据
 	 * @param key
@@ -451,7 +451,7 @@ public enum DESedeCoder {
 		// 还原密钥
 		Key k = toKey(key);
 
-		/* 
+		/*
 		 * 实例化
 		 * 使用PKCS7Padding填充方式
 		 * Cipher.getInstance(CIPHER_ALGORITHM, "BC");
@@ -482,13 +482,13 @@ public enum DESedeCoder {
 		} catch (IllegalStateException e) {
 			System.out.println(this + "\t" + e.getMessage());
 		}
-		
+
 		return null;
 	}
 
 	/**
 	 * 加密
-	 * 
+	 *
 	 * @param data
 	 *            待加密数据
 	 * @param key
@@ -501,7 +501,7 @@ public enum DESedeCoder {
 		// 还原密钥
 		Key k = toKey(key);
 
-		/* 
+		/*
 		 * 实例化
 		 * 使用PKCS7Padding填充方式
 		 * Cipher.getInstance(CIPHER_ALGORITHM, "BC");
@@ -530,13 +530,13 @@ public enum DESedeCoder {
 		} catch (BadPaddingException e) {
 			System.out.println(this + "\t" + e.getMessage());
 		}
-		
+
 		return null;
 	}
 
 	/**
 	 * 生成密钥 <br>
-	 * 
+	 *
 	 * @return byte[] 二进制密钥
 	 * @throws Exception
 	 */
@@ -561,7 +561,7 @@ public enum DESedeCoder {
 		// 获得密钥的二进制编码形式
 		return secretKey.getEncoded();
 	}
-	
+
 }
 ```
 
@@ -599,7 +599,7 @@ public enum DESCoder {
 	OFB_PKCS5Padding(WorkModel.OFB, Padding.PKCS5Padding),
 	OFB_ISO10126Padding(WorkModel.OFB, Padding.ISO10126Padding),
 	;
-	
+
 	/**
 	 * 加密/解密算法 / 工作模式 / 填充方式
 	 */
@@ -608,11 +608,11 @@ public enum DESCoder {
 		this.padding = padding;
 		this.workModel = workModel;
 	}
-	
+
 	{
 		Security.addProvider(new BouncyCastleProvider());
 	}
-	
+
 	private final String KEY_ALGORITHM = "DES";
 
 	private String CIPHER_ALGORITHM;
@@ -621,7 +621,7 @@ public enum DESCoder {
 	private WorkModel workModel;
 	/**
 	 * 转换密钥
-	 * 
+	 *
 	 * @param key
 	 *            二进制密钥
 	 * @return Key 密钥
@@ -646,7 +646,7 @@ public enum DESCoder {
 
 	/**
 	 * 解密
-	 * 
+	 *
 	 * @param data
 	 *            待解密数据
 	 * @param key
@@ -668,24 +668,24 @@ public enum DESCoder {
 			cipher.init(Cipher.DECRYPT_MODE, k);
 			// 执行操作
 			result = cipher.doFinal(data);
-			
+
 		} catch (final Exception e) {
 			System.out.println("decrypt : " + this + "\t" + e.getMessage());
 		}
-		
+
 		return result;
 	}
 
 	/**
 	 * 加密
-	 * 
+	 *
 	 * 加密数据在下面几种情况下,必须满足长度和倍数关系, 否则会抛出下面异常
 	 * CTS_NoPadding	input is too short!
 	 * CTS_PKCS5Padding	input is too short!
 	 * CBC_NoPadding	Input length not multiple of 8 bytes
 	 * PCBC_NoPadding	Input length not multiple of 8 bytes
 	 * ECB_NoPadding	Input length not multiple of 8 bytes
-	 * 
+	 *
 	 * @param data
 	 *            待加密数据
 	 * @param key
@@ -699,13 +699,13 @@ public enum DESCoder {
 		try {
 			// 还原密钥
 			Key k = toKey(key);
-			
+
 			// 实例化
 			Cipher cipher;
 			cipher = Cipher.getInstance(CIPHER_ALGORITHM);
 			// 初始化，设置为加密模式
 			cipher.init(Cipher.ENCRYPT_MODE, k);
-			
+
 			// 执行操作
 			result = cipher.doFinal(data);
 		} catch (final Exception e) {
@@ -719,7 +719,7 @@ public enum DESCoder {
 	 * 生成密钥 <br>
 	 * Java 6 只支持56bit密钥 <br>
 	 * Bouncy Castle 支持64bit密钥 <br>
-	 * 
+	 *
 	 * @return byte[] 二进制密钥
 	 * @throws Exception
 	 */
@@ -727,7 +727,7 @@ public enum DESCoder {
 
 		/*
 		 * 实例化密钥生成器
-		 * 
+		 *
 		 * 若要使用64bit密钥注意替换 将下述代码中的KeyGenerator.getInstance(CIPHER_ALGORITHM);
 		 * 替换为KeyGenerator.getInstance(CIPHER_ALGORITHM, "BC");
 		 */
@@ -749,7 +749,7 @@ public enum DESCoder {
 		// 获得密钥的二进制编码形式
 		return secretKey.getEncoded();
 	}
-	
+
 
 }
 ```
@@ -760,7 +760,7 @@ public enum DESCoder {
 
 /**
  * AES安全编码组件
- * 
+ *
  */
 public enum AESCoder {
 
@@ -783,10 +783,10 @@ public enum AESCoder {
 	CFB_PKCS5Padding(WorkModel.CFB, Padding.PKCS5Padding),
 	CFB_ISO10126Padding(WorkModel.CFB, Padding.ISO10126Padding),
 	;
-	
+
 	/**
-	 * 加密/解密算法 / 工作模式 / 填充方式 
-	 * Java 6支持PKCS5Padding填充方式 
+	 * 加密/解密算法 / 工作模式 / 填充方式
+	 * Java 6支持PKCS5Padding填充方式
 	 * Bouncy Castle支持PKCS7Padding填充方式
 	 */
 	AESCoder(WorkModel workModel, Padding padding) {
@@ -794,14 +794,14 @@ public enum AESCoder {
 		this.padding = padding;
 		this.workModel = workModel;
 	}
-	
+
 	{
 		Security.addProvider(new BouncyCastleProvider());
 	}
-	
+
 	private Padding padding;
 	private WorkModel workModel;
-	
+
 	/**
 	 * 密钥算法
 	 */
@@ -811,7 +811,7 @@ public enum AESCoder {
 
 	/**
 	 * 转换密钥
-	 * 
+	 *
 	 * @param key 二进制密钥
 	 * @return Key 密钥
 	 * @throws Exception
@@ -826,7 +826,7 @@ public enum AESCoder {
 
 	/**
 	 * 解密
-	 * 
+	 *
 	 * @param data 待解密数据
 	 * @param key 密钥
 	 * @return byte[] 解密数据
@@ -838,8 +838,8 @@ public enum AESCoder {
 		Key k = toKey(key);
 
 		/*
-		 * 实例化 
-		 * 使用PKCS7Padding填充方式，按如下方式实现 
+		 * 实例化
+		 * 使用PKCS7Padding填充方式，按如下方式实现
 		 * Cipher.getInstance(CIPHER_ALGORITHM, "BC");
 		 */
 		try {
@@ -857,7 +857,7 @@ public enum AESCoder {
 
 	/**
 	 * 加密
-	 * 
+	 *
 	 * @param data 待加密数据
 	 * @param key 密钥
 	 * @return byte[] 加密数据
@@ -869,7 +869,7 @@ public enum AESCoder {
 		Key k = toKey(key);
 
 		/*
-		 * 实例化 
+		 * 实例化
 		 * 使用PKCS7Padding填充方式，按如下方式实现
 		 * Cipher.getInstance(CIPHER_ALGORITHM, "BC");
 		 */
@@ -883,13 +883,13 @@ public enum AESCoder {
 		} catch (final Exception e) {
 			System.out.println(this + " - encrypt - " + e.getMessage());
 		}
-		
+
 		return result;
 	}
 
 	/**
 	 * 生成密钥 <br>
-	 * 
+	 *
 	 * @return byte[] 二进制密钥
 	 * @throws Exception
 	 */
@@ -914,7 +914,6 @@ public enum AESCoder {
 		// 获得密钥的二进制编码形式
 		return secretKey.getEncoded();
 	}
-	
+
 }
 ```
-

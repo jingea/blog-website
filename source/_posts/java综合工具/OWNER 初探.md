@@ -56,7 +56,7 @@ public interface ServerConfig extends Config {
 }
 ```
 然后在`test\src\main\resources\ownerTest`目录下创建配置文件`ServerConfig.properties`
-```
+```java
 port=80
 hostname=foobar.com
 maxThreads=100
@@ -76,10 +76,10 @@ public class Main {
 }
 ```
 这时OWNER会自动地将`ServerConfig.properties`配置文件匹配到`ServerConfig`上, 输出结果为
-```
+```java
 Server foobar.com:80 will run 100
 ```
-我们看到在`ServerConfig`里我们使用了一个`@DefaultValue`注解, 当在配置文件里找不到这个值的时候, 这个注解值会为我们设置上注解里的默认值. 
+我们看到在`ServerConfig`里我们使用了一个`@DefaultValue`注解, 当在配置文件里找不到这个值的时候, 这个注解值会为我们设置上注解里的默认值.
 > 如果在配置文件里找不到这个设置也没有添加`@DefaultValue`会产生一个空指针异常
 
 有时候我们在配置文件里会使用`server.http.port=80`的配置, 那么这种情况下我们就在使用`@Key`注解
@@ -101,7 +101,7 @@ public interface ServerConfig extends Config {
 }
 ```
 我们的配置文件如下
-```
+```java
 server.http.port=80
 server.host.name=foobar.com
 server.max.threads=100
@@ -110,8 +110,8 @@ server.max.threads=100
 ## 加载策略
 正如上文所说, OWNER是按照classpath去自动匹配配置类和配置文件的, 但是其实我们可以自定义配置文件的加载策略, 如下例
 ```java
-@Sources({ "file:~/.myapp.config", 
-           "file:/etc/myapp.config", 
+@Sources({ "file:~/.myapp.config",
+           "file:/etc/myapp.config",
            "classpath:foo/bar/baz.properties" })
 public interface ServerConfig extends Config {
     @Key("server.http.port")
@@ -133,8 +133,8 @@ public interface ServerConfig extends Config {
 其实上面的加载策略称为`LoadType.FIRST`(完整注解`@LoadPolicy(LoadType.FIRST)`). 我们还有其他选择`LoadType.MERGE`, 示例如下:
 ```java
 @LoadPolicy(LoadType.MERGE)
-@Sources({ "file:~/.myapp.config", 
-           "file:/etc/myapp.config", 
+@Sources({ "file:~/.myapp.config",
+           "file:/etc/myapp.config",
            "classpath:foo/bar/baz.properties" })
 public interface ServerConfig extends Config {
     ...
@@ -263,9 +263,9 @@ OWNER 支持的全部自动转换类型
 * 枚举
 * java.lang.String
 * java.net.URL, java.net.URI.
-* java.io.File 
-* java.lang.Class 
-* 公有构造器只有一个`java.lang.String`的类 
+* java.io.File
+* java.lang.Class
+* 公有构造器只有一个`java.lang.String`的类
 * 公有构造器只有一个`java.lang.Object`的类
 * 被`public static`修饰, 签名为`valueOf(java.lang.String)`返回自身的方法
 * 带有上述元素的数组
@@ -287,7 +287,7 @@ public interface ConfigWithExpansion extends Config {
 }
 ```
 猜猜会输出什么, 对了
-```
+```java
 The quick brown fox jumped over the lazy dog
 ```
 我们可以在配置文件里引用其他的配置
@@ -334,4 +334,3 @@ public interface Sample extends Config {
     String sayHello();
 }
 ```
-

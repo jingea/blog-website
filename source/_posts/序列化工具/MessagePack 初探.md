@@ -145,7 +145,7 @@ public class Main3 {
         String[] sa = unpacker.read(String[].class);
         byte[] ba = unpacker.read(byte[].class);
 
-        // 反序列化出 String, ByteBuffer, BigInteger, List 和 Map 
+        // 反序列化出 String, ByteBuffer, BigInteger, List 和 Map
         String ws = unpacker.read(String.class);
         ByteBuffer buf = unpacker.read(ByteBuffer.class);
         BigInteger bi = unpacker.read(BigInteger.class);
@@ -225,7 +225,7 @@ public static class MyMessage {
 }
 ```
 
-MessagePack还提供了动态类型特性. 
+MessagePack还提供了动态类型特性.
 ```java
 import java.util.*;
 
@@ -299,7 +299,7 @@ class SeObj {
 }
 ```
 结果为
-```
+```java
 100的结果
 194 : 1960
 50 : 4947

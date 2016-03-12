@@ -1,6 +1,6 @@
 category: JMH
 date: 2016-01-04
-title: 06_FixtureLevel 
+title: 06_FixtureLevel
 ---
 在演示这个示例之前我们先说一下`@State`里Fixture methods的运行级别含义
 * Level.Trial: 整个benchmark, 其含义是iteration的序列集合
@@ -54,7 +54,7 @@ public class JMHSample_06_FixtureLevel {
 }
 ```
 我们观察到的结果是
-```
+```java
 # Warmup: 3 iterations, 1 s each
 # Measurement: 3 iterations, 1 s each
 # Timeout: 10 min per iteration

@@ -24,7 +24,7 @@ IP数据报格式
 路由器会将非路由地址转换为外部地址
 
 URI
-```
+```java
 scheme:scheme-specific-part (模式:模式特有部分)
 ```
 URI模式包含 data, file, ftp, http, news, telnet, urn (还有基于JAVA的rmi, jndi 等非标准模式,也称为protocol)
@@ -33,9 +33,9 @@ URI模式包含 data, file, ftp, http, news, telnet, urn (还有基于JAVA的rmi
 还有的URI路径中含有? 这是URI的查询部分.后面紧跟查询参数,多个参数用&分割. 例如：`git@github.com:ming15/VertxServer.git`该URI中模式为`git` 解析结构为`github.com` 还可以在git和@之间加上用户名和密码`git://username:password@github.com:ming15/VertxServer.git`
 
 URI一般由以下组成
-* 模式 
-* URI解析结构 
-* 资源路径 
+* 模式
+* URI解析结构
+* 资源路径
 * 查询参数构成
 
 

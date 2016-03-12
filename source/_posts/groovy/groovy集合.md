@@ -92,7 +92,7 @@ def emptyList = []
 assert emptyList.size() == 0
 emptyList.add(5)
 assert emptyList.size() == 1
-```groovy
+```
 
 每一个list表达式都是实现自`java.util.List`
 
@@ -788,4 +788,3 @@ assert range.to == 10
 Note that int ranges are implemented efficiently, creating a lightweight Java object containing a from and to value.
 
 Ranges can be used for any Java object which implements java.lang.Comparable for comparison and also have methods next() and previous() to return the next / previous item in the range. For example, you can create a range of String elements:
-

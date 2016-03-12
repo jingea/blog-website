@@ -7,7 +7,7 @@ title: Netty ChannelPipeline
 每当创建一个`Channel`的时候, 都会创建出一个对应的`ChannelPipeline`, 也就是说每个`Channel`都有其自己的`ChannelPipeline`
 
 下面的图给出了IO事件是如何在`ChannelPipeline`里的`ChannelHandler`进行传递处理的. IO事件由`ChannelInboundHandler`或者`ChannelOutboundHandler`处理, 我们在handler中调用`ChannelHandlerContext`中的事件传播方法将event传播给下一个handler继续执行, 例如调用`ChannelHandlerContext#fireChannelRead(Object)`和`ChannelHandlerContext#write(Object)`
-```
+```java
                                                I/O Request
                                           via Channel} or
                                       ChannelHandlerContext}
@@ -63,7 +63,7 @@ p.addLast("4", new OutboundHandlerB());
 p.addLast("5", new InboundOutboundHandlerX());
 ```
 
-事件在`inbound`handler中的执行过程是`1, 2, 3, 4, 5`. 事件在`outbound`handler中的执行过程是`5, 4, 3, 2, 1`. 
+事件在`inbound`handler中的执行过程是`1, 2, 3, 4, 5`. 事件在`outbound`handler中的执行过程是`5, 4, 3, 2, 1`.
 
 但是在真实的执行过程中, 由于`3, 4`并没有实现`ChannelInboundHandler`, 因此inbound流程中真正执行的handler只有`1, 2, 5`. 而由于`1, 2`并没有实现`ChannelOutboundHandler`因此在outbound流程中真正执行的handler只有`5, 4, 3`.
 如果`5`都实现了`ChannelInboundHandler`和`ChannelOutboundHandler`, 那么事件的执行顺序分别是`125`和`543`.
@@ -184,7 +184,7 @@ private void callHandlerAdded0(final ChannelHandlerContext ctx) {
     try {
         ctx.handler().handlerAdded(ctx);
     } catch (Throwable t) {
-       
+
     }
 }
 ```
@@ -206,7 +206,7 @@ for (int i = 0; i < size; i ++) {
 }
 ```
 我们进一步看一下`fireChannelRead()`方法
-```
+```java
 @Override
 public ChannelPipeline fireChannelRead(Object msg) {
 	// 调用ChannelHandlerContext类型的head的fireChannelRead()方法, 然后就通过链式调用开始在一系列ChannelHandler里执行
@@ -215,13 +215,13 @@ public ChannelPipeline fireChannelRead(Object msg) {
 }
 ```
 看`ChannelHandlerContext#fireChannelRead`实现
-```
+```java
 @Override
 public ChannelHandlerContext fireChannelRead(final Object msg) {
     if (msg == null) {
         throw new NullPointerException("msg");
     }
-	
+
 	// 因为我们只是在读取数据, 因此只找到Inbound的ChannelHandler就可以了
     final DefaultChannelHandlerContext next = findContextInbound();
     EventExecutor executor = next.executor();
@@ -268,7 +268,7 @@ protected int doReadMessages(List<Object> buf) throws Exception {
             return 1;
         }
     } catch (Throwable t) {
-      
+
     }
 
     return 0;

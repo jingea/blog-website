@@ -17,17 +17,17 @@ BufferedOutputStream只提供了输出byte数据的方式,因此这种方式只�
 
 > FileOutputStream 一个字节一个字节的向文件里输出数据
 
-## BufferedWriter 
+## BufferedWriter
 1. 支持字符串输出
 2. 支持换行输出
 3. 支持文件追加输出
-```
+```java
 BufferedWriter writer = Files.newBufferedWriter(Paths.get("new.txt"), StandardCharsets.UTF_8);
 writer.write("123456\n"); // 换行输出
 ```
 > 另外还有一点需要提到的是FileWriter, 它一个字符一个字符地输出
 
-## OutputStreamWriter 
+## OutputStreamWriter
 OutputStreamWriter 将字节流转换为字符流。是字节流通向字符流的桥梁。如果不指定字符集编码，该解码过程将使用平台默认的字符编码，如：GBK。
 ```java
 // 写入UTF-8格式编码的文件
@@ -44,7 +44,7 @@ try (Writer out = new BufferedWriter(new OutputStreamWriter(
 }
 ```
 
-## PrintStream 
+## PrintStream
 标准IO重定向
 
 打印输出流,用来装饰其它输出流。它能为其他输出流添加了功能，使它们能够方便地打印各种数据值表示形式。PrintStream永远不会抛出IOException；PrintStream提供了自动flush和字符集设置功能。所谓自动flush，就是往PrintStream写入的数据会立刻调用flush()函数。
@@ -71,7 +71,7 @@ out.close(); // Remember this!
 System.setOut(console);
 ```
 
-## PrintWriter 
+## PrintWriter
 用于向文本输出流打印对象的格式化表示形式。它实现在 PrintStream 中的所有 print 方法。它不包含用于写入原始字节的方法，对于这些字节，程序应该使用未编码的字节流进行写入。
 
 FileWriter可以向文件输出数据. 首先创建一个与指定文件连接的FileWriter.然后使用BufferedWriter对其进行包装进行性能提升 最后使用PrintWriter提供格式化功能

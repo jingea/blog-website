@@ -30,7 +30,7 @@ public class JMHSample_02_BenchmarkModes {
 }
 ```
 结果为
-```
+```java
 # Run progress: 0.00% complete, ETA 00:00:07
 # Fork: 1 of 1
 # Warmup Iteration   1: 10.007 ops/s
@@ -85,7 +85,7 @@ public static void main(String[] args) throws RunnerException {
 }
 ```
 执行结果为
-```
+```java
 # Run progress: 0.00% complete, ETA 00:00:07
 # Fork: 1 of 1
 # Warmup Iteration   1: 99925.584 us/op
@@ -136,7 +136,7 @@ public static void main(String[] args) throws RunnerException {
 }
 ```
 执行结果
-```
+```java
 # Warmup: 3 iterations, 1 s each
 # Measurement: 4 iterations, 1 s each
 # Timeout: 10 min per iteration
@@ -205,7 +205,7 @@ public static void main(String[] args) throws RunnerException {
 }
 ```
 执行结果
-```
+```java
 # Warmup: 3 iterations, single-shot each
 # Measurement: 4 iterations, single-shot each
 # Timeout: 10 min per iteration
@@ -251,7 +251,7 @@ JMH.JMHSample_02_BenchmarkModes.measureSingleShot    ss    4  99335.892 ± 1189.
 
 ## 组合模式
 我们还可以将以上模式组合起来
-```
+```java
 @Benchmark
 @BenchmarkMode({Mode.Throughput, Mode.AverageTime, Mode.SampleTime, Mode.SingleShotTime})
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -262,7 +262,7 @@ public void measureMultiple() throws InterruptedException {
 
 ## 全部依次执行
 
-```
+```java
 @Benchmark
 @BenchmarkMode(Mode.All)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)

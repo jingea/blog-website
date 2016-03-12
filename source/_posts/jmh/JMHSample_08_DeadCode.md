@@ -43,7 +43,7 @@ public class JMHSample_08_DeadCode {
 
 ```
 运行结果为
-```
+```java
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration

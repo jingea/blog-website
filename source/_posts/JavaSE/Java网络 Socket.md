@@ -19,11 +19,11 @@ title: Java Socket
 这个构造函数创建一个指向指定主机指定端口的TCP socket,并尝试连接远程socket.
 
 ### `Socket(InetAddress, int)`
- 
+
 这个构造函数创建一个指向指定主机指定端口的TCP socket,并尝试连接远程socket.在很少的情况下,当你向相同的主机打开很多socket时,先将主机名转换为InetAddress,然后重复使用此InetAddress是更有效的.
 
 ### `connect(SocketAddress)`
- 
+
 我们一般使用INetSocketAddress
 
 ### `close()`
@@ -33,7 +33,7 @@ title: Java Socket
 
 ### `getInputStream()`
 
- 
+
 返回一个输入流,可以将socket的数据读入程序
 
 ### `getPort()`
@@ -47,11 +47,11 @@ socket连接哪台远程服务器,或者当连接已关闭时,告知它连接时
 获取socket绑定于哪个网络接口,一般会在多宿主主机或有多个网络接口的主机使用此方法
 
 ### `setTcpNoDelay(boolean)`
-设置`TCP_NODELAY`为`true`,可确保包会尽快地发送,而无论包的大小.正常情况下,小的包(1byte)在发送前会组合为大点的包.在发送另一个包之前,本地主机要等待远程系统对前一个包的响应,这称为`Nagle`算法.`Nagle`算法的问题是,如果远程系统没有尽可能快地将回应发送回本地系统,那么依赖于小数据量信息稳定传输的应用程序会变得很慢.为true关闭socket缓冲,为false再次打开socket缓冲. 
+设置`TCP_NODELAY`为`true`,可确保包会尽快地发送,而无论包的大小.正常情况下,小的包(1byte)在发送前会组合为大点的包.在发送另一个包之前,本地主机要等待远程系统对前一个包的响应,这称为`Nagle`算法.`Nagle`算法的问题是,如果远程系统没有尽可能快地将回应发送回本地系统,那么依赖于小数据量信息稳定传输的应用程序会变得很慢.为true关闭socket缓冲,为false再次打开socket缓冲.
 
 
 ### `setSoLinger(boolean, int)`
-该设置规定了当socket关闭时如何处理尚未发送的数据报.如果socket关闭(close方法)系统仍会将剩余的数据发送出去.如果延迟时间为0,那所有未发送的数据都会被丢弃.如果延迟时间为任意正数,close方法会被堵塞指定秒数,等待数据发送和接受回应,该段时间过去后socket被关闭,将会关闭输出输入流,既不会接收到数据也不会在发送数据. 
+该设置规定了当socket关闭时如何处理尚未发送的数据报.如果socket关闭(close方法)系统仍会将剩余的数据发送出去.如果延迟时间为0,那所有未发送的数据都会被丢弃.如果延迟时间为任意正数,close方法会被堵塞指定秒数,等待数据发送和接受回应,该段时间过去后socket被关闭,将会关闭输出输入流,既不会接收到数据也不会在发送数据.
 
 ### `sendUrgentData(int)`
 
@@ -69,13 +69,13 @@ socket连接哪台远程服务器,或者当连接已关闭时,告知它连接时
 设置socket网络输入的缓冲区的字节数.大多数TCP栈使用缓冲区提升网络性能,较大的缓冲区会提升快速连接(比如10M或更快)的网络性能,而较慢的拨号连接在较小的缓冲区下表现更加.一般来讲,传输大的连续的数据块(在FTP和HTTP很常见),这可以从大缓冲区收益;而大缓冲区对交互式会话如`telnet`和许多游戏则没有多大帮助.
 
 ### `setKeepAlive(boolean)`
-启用`SO_KEEPALIVE`客户端会偶尔(一般俩个小时)利用一个空闲连接发送一个数据包,确保服务器没有崩溃.如果服务器没有响应,客户端会在11分钟之内持续发送此包,直到接受到服务器的回馈或者到12分钟左右直接将客户端关闭. 
+启用`SO_KEEPALIVE`客户端会偶尔(一般俩个小时)利用一个空闲连接发送一个数据包,确保服务器没有崩溃.如果服务器没有响应,客户端会在11分钟之内持续发送此包,直到接受到服务器的回馈或者到12分钟左右直接将客户端关闭.
 
 ### `setTrafficClass(int)`
 
 
 ### `setReuseAddress(boolean)`
- 
+
 设置主机地址可重用
 
 ### `getReuseAddress()`
@@ -130,7 +130,7 @@ new ServerSocket(port);
 
 在当前主机的所有网络接口或者所以IP地址的该指定port上进行入站监听.如果port为0系统会随意指定一个端口,queueLenght设置入栈请求的队列长度(如果队列超过最大值,会使用系统最大值)
 
-第二个参数为backlog参数,accept()方法，该方法从队列中取出连接请求，使得队列能够及时的腾出空间，以容纳新的连接请求。 即ServerSocket构造函数中的backlog参数时，是可以serverSocket在不调用accept方法取出连接时，能接受的最大连接数 
+第二个参数为backlog参数,accept()方法，该方法从队列中取出连接请求，使得队列能够及时的腾出空间，以容纳新的连接请求。 即ServerSocket构造函数中的backlog参数时，是可以serverSocket在不调用accept方法取出连接时，能接受的最大连接数
 ```
 return new ServerSocket(port, queueLenght);
 ```
@@ -164,7 +164,7 @@ connect.setReuseAddress(isSet);
 
 
 这相当于调用accept()返回的socket的socket.setReceiveBufferSize(size);可以在绑定服务器socket之前或之后设置此选项 除非要设置大于64K的缓冲区大小,这时对于未绑定的ServerSocket必须在绑定他之前设置这个选项
-```
+```java
 public static void setRcvBuf(ServerSocket connect) {
 	int size;
 	try {
@@ -175,6 +175,6 @@ public static void setRcvBuf(ServerSocket connect) {
 	} catch (final Exception e) {
 		e.printStackTrace();
 	}
-	
+
 }
-```	
+```

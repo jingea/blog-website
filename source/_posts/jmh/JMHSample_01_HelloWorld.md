@@ -1,6 +1,6 @@
 category: JMH
 date: 2015-12-28
-title: 01_HelloWorld 
+title: 01_HelloWorld
 ---
 ```java
 import org.openjdk.jmh.annotations.Benchmark;
@@ -42,7 +42,7 @@ public class JMHSample_01_HelloWorld {
 ```
 
 执行结果为
-```
+```java
 # JMH 1.11.2 (released 60 days ago)
 # Warmup: 20 iterations, 1 s each
 # Measurement: 20 iterations, 1 s each

@@ -57,7 +57,7 @@ public class Main {
 }
 ```
 接着执行`mvn package`打出一个包, 然后执行命令
-```
+```java
 java -jar ./target/demo-1.0-SNAPSHOT.jar Args -name "Hello World"
 ```
 最后我们会看到输出

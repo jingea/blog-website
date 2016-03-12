@@ -33,11 +33,11 @@ public class HookTest {
 ```
 
 #### 运行钩子程序
-```
+```java
 nohup java HookTest &
 ```
 #### 关闭程序
-```
+```java
 kill HookTest_PID
 ```
 我们可以在nohup程序中看到Hook execute!!!输出
@@ -51,13 +51,13 @@ public class HookTest {
 		Runtime.getRuntime().addShutdownHook(new Hook());
 		exec();
 	}
-	
+
 	public static void exec() {
 		exec();
 	}
-	
+
 	static class Hook extends Thread{
-		
+
 		@Override
 		public void run() {
 			System.out.println("Hook execute!!!");
@@ -73,9 +73,9 @@ public class HookTest {
 	public static void main(String[] args) {
 		Runtime.getRuntime().addShutdownHook(new Hook());
 	}
-	
+
 	static class Hook extends Thread{
-		
+
 		@Override
 		public void run() {
 			System.out.println("Hook execute!!!");
@@ -91,21 +91,16 @@ public class HookTest {
 	public static void main(String[] args) {
 		Runtime.getRuntime().addShutdownHook(new Hook());
 		System.exit(0);
-		
+
 		System.out.println("Main over");
 	}
-	
+
 	static class Hook extends Thread{
-		
+
 		@Override
 		public void run() {
 			System.out.println("Hook execute!!!");
 		}
 	}
 }
-```
-
-#### 测试
-```java
-
 ```

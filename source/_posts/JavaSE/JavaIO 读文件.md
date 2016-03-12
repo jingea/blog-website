@@ -10,10 +10,10 @@ title: JAVA 读文件
 // 读取二进制文件
 try (BufferedInputStream bf = new BufferedInputStream(
 		new FileInputStream(new File("")));) {
-	
+
 	byte[] data = new byte[bf.available()];
 	bf.read(data);
-	
+
 } catch (final IOException e) {
 	e.printStackTrace();
 }
@@ -26,7 +26,7 @@ try (BufferedInputStream bf = new BufferedInputStream(
 
 ## BufferedReader
 BufferedReader 从字符输入流中读取文本,缓冲各个字符.提供字符、数组和行的高效读取.
-我们有俩种方式创建BufferedReader. 
+我们有俩种方式创建BufferedReader.
 * 使用带缓冲区的写入器 `Files.newBufferedReader(Paths.get("new.txt"), StandardCharsets.UTF_8);`;
 * 读取UTF-8格式编码的文件 `new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))`
 
@@ -41,10 +41,10 @@ reader.lines().forEach(line -> System.out.println(line));
 
 > 另外还有一点需要提到的是FileReader, 它一个字符一个字符地读取.
 
-## LineNumberInputStream 
+## LineNumberInputStream
 此类是一个输入流过滤器,它提供跟踪当前行号的附加功能.行是以回车符 (`\r`)、换行符 (`\n`)或回车符后面紧跟换行符结尾的字节序列.在所有这三种情况下,都以单个换行符形式返回行终止字符.行号以 0 开头,并在 read 返回换行符时递增 1.
 
-## LineNumberReader 
+## LineNumberReader
 跟踪行号的缓冲字符输入流.此类定义了方法 `setLineNumber(int)` 和 `getLineNumber()`,它们可分别用于设置和获取当前行号.默认情况下,行编号从 0 开始.该行号随数据读取在每个行结束符处递增,并且可以通过调用 `setLineNumber(int)` 更改行号.但要注意的是,`setLineNumber(int)` 不会实际更改流中的当前位置；它只更改将由`getLineNumber() `返回的值.可认为行在遇到以下符号之一时结束：换行符（`\n`）、回车符（`\r`）、回车后紧跟换行符.
 ```java
 //  获取行数
@@ -71,7 +71,7 @@ try (RandomAccessFile r = new RandomAccessFile(file, "rw")) {
 	for (int i = 0; i < r.length(); i++) {
 		r.read();	// r.readLine();
 	}
-} 
+}
 
 // 写入数据,第二个参数必须为 "r", "rw", "rws", or "rwd"
 try (RandomAccessFile w = new RandomAccessFile(file, "rw")) {
@@ -81,13 +81,13 @@ try (RandomAccessFile w = new RandomAccessFile(file, "rw")) {
 
 try (FileChannel fc = new RandomAccessFile(new File("temp.tmp"), "rw")
 		.getChannel();) {
-	
+
 	IntBuffer ib = fc.map(FileChannel.MapMode.READ_WRITE, 0, fc.size())
 			.asIntBuffer();
-	
+
 	for (int i = 1; i < 10000; i++)
 		ib.put(ib.get(i - 1));
-	
+
 }
 
 RandomAccessFile raf = new RandomAccessFile(new File("temp.tmp"), "rw");
@@ -103,7 +103,7 @@ raf.close();
 
 ## getResourceAsStream
 我们还可以使用类加载器的`getResourceAsStream()`从指定路径或者jar包中加载文件资源
-```
+```java
 InputStream input = ReloadClass.class.getClassLoader().getResourceAsStream(path);
 try {
 	byte[] bytes = new byte[input.available()];

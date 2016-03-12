@@ -1,6 +1,6 @@
 category: JMH
 date: 2016-01-05
-title: 10_ConstantFold 
+title: 10_ConstantFold
 ---
 ```java
 import org.openjdk.jmh.annotations.*;
@@ -65,7 +65,7 @@ public class JMHSample_10_ConstantFold {
 }
 ```
 执行结果
-```
+```java
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration

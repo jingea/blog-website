@@ -2,9 +2,7 @@ category: JavaSE
 date: 2015-09-08
 title: Java8 时间处理
 ---
-
-# LocalDate
-表示日期的不可变类型，不包含时间和时区。
+LocalDate表示日期的不可变类型，不包含时间和时区。
 ```java
 // 获取当天的日期
 LocalDate now = LocalDate.now();
@@ -42,13 +40,7 @@ LocalDate tomorrow = now.plusDays(1);
 System.out.println(now.isBefore(tomorrow));
 ```
 
-# LocalTime
-```java
-
-```
-
-# LocalDateTime
-
-# Period
-
-# DateTimeFormatter
+* LocalTime
+* LocalDateTime
+* Period
+* DateTimeFormatter

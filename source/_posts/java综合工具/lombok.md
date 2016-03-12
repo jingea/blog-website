@@ -22,7 +22,7 @@ example.add("Hello, World!");
 val foo = example.get(0);
 System.out.println(foo.equals("Hello, World!"));
 ```
-上面这个例子我们使用val代替了`ArrayList`类型. 插件会只能地帮我们识别出这个真正的类型是什么. 
+上面这个例子我们使用val代替了`ArrayList`类型. 插件会只能地帮我们识别出这个真正的类型是什么.
 
 > 注意, `new ArrayList<String>()`菱形符里应该指定类型,否则我们既可以在example上添加String又可以添加int,会带来类型上的不安全
 
@@ -39,7 +39,7 @@ public class TestNonNull {
 }
 ```
 这个注解很简单就是检查参数非null,如果传进的参数为null的就抛出
-```
+```java
 Exception in thread "main" java.lang.NullPointerException: content
 	at Lombok.TestNonNull.print(TestNonNull.java:13)
 	at Lombok.TestNonNull.main(TestNonNull.java:10)
@@ -71,7 +71,7 @@ class A {
 }
 ```
 `@Getter`和`@Setter`注解有一点需要说明的是,我们可以指定他们的访问级别
-```
+```java
 @Setter(value = AccessLevel.MODULE) private String a1;
 ```
 可设置的级别有:
@@ -114,7 +114,7 @@ class C extends B {
 }
 ```
 上面代码输出为
-```
+```java
 C(super=B(b2=null), c1=null, c2=null)
 B(b2=null)
 C(super=B(b2=b_2), c1=c_1, c2=c_2)
@@ -145,7 +145,7 @@ class D {
 `@Value`是`@Data`注解的一个变种, 它是在`@Data`注解的基础将,将类成为不可变的.
 ```java
 @Value class E {
-	
+
 }
 ```
 

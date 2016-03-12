@@ -125,7 +125,7 @@ class Run14 implements Run10, Run13 {
 
 ### 接口静态方法
 我们定义一个接口静态方法
-```
+```java
 interface Run1 {
 	public void runFast();
 
@@ -134,7 +134,7 @@ interface Run1 {
 	}
 }
 
-// 
+//
 Run1.runSlowly();
 ```
 需要注意的是：
@@ -185,7 +185,7 @@ int result = run3.runFast(10);
 -> I am running
 
 run4.runFast("小狗", 10); 小狗 is running
--> 
+->
 ```
 
 #### 注意
@@ -233,7 +233,7 @@ Run1 run1 = () -> {
 	System.out.println("I am running");
 };
 ```
-上面`run1`这个就代表一个函数. 一般我们把属于某个类的函数称为方法, 而不依赖于类而存在的函数称之为方法. 
+上面`run1`这个就代表一个函数. 一般我们把属于某个类的函数称为方法, 而不依赖于类而存在的函数称之为方法.
 
 ### 高阶函数
 如果某个函数A作为函数B的参数或者返回值, 那么我们称函数B为高阶函数,像下面的`run6`就是一个高级函数
@@ -310,7 +310,7 @@ interface Run2 extends Run1 {
 	public void runFast();
 }
 ```
-当我们运行测试代码之后,我们发现输出的`run2`. 
+当我们运行测试代码之后,我们发现输出的`run2`.
 
 当Lambda表达式作为参数时,其类型由它的目标类型推导得出,推导过程遵循如下规则：
 * 如果只有一个可能的目标类型,由相应的函数接口里的参数类型推导得出
@@ -327,7 +327,7 @@ interface Run2 extends Run1 {
 * 数组的构造方法 (TypeName[]::new)
 
 ### 静态方法引用
-```
+```java
 public class Print {
 	public static void main(String[] args) throws Exception {
 		F f = Print::p;
@@ -347,7 +347,7 @@ interface F {
 ```
 
 ### 类型实例方法引用
-```
+```java
 public class Print {
 	public static void main(String[] args) throws Exception {
 		F f = String::length;
@@ -417,4 +417,4 @@ class C {
 	public int count;
 }
 ```
-我们定义了俩个接口, `I`和`J`, 我们在I的lambada中调用J的lambada, 然后让J返回一个定义在I的对象C, 最后我们在main函数中成功的返回了这个对象. 
+我们定义了俩个接口, `I`和`J`, 我们在I的lambada中调用J的lambada, 然后让J返回一个定义在I的对象C, 最后我们在main函数中成功的返回了这个对象.

@@ -235,22 +235,7 @@ assert 034G.class == BigInteger // octal
 * float, double 和 BigDecimal 之间的二进制计算返回的结果都是double类型
 * 俩个BigDecimal之间的二进制运算返回的都是BigDecimal类型.
 
-The following table summarizes those rules:
-```groovy
-
-```
-
 由于Groovy提供了操作符重载功能, BigInteger和BigDecimal之间的算术运算也得以实现, 但是在Java中需要调用一些方法才能计算这些不同类型的数字.
-
-#### The case of the division operator
-
-The division operators / (and /= for division and assignment) produce a double result if either operand is a float or double, and a BigDecimal result otherwise (when both operands are any combination of an integral type short, char, byte, int, long, BigInteger or BigDecimal).
-
-BigDecimal division is performed with the divide() method if the division is exact (ie. yielding a result that can be represented within the bounds of the same precision and scale), or using a MathContext with a precision of the maximum of the two operands' precision plus an extra precision of 10, and a scale of the maximum of 10 and the maximum of the operands' scale.
-
-For integer division like in Java, you should use the intdiv() method, as Groovy doesn’t provide a dedicated integer division operator symbol.
-
-除法操作符`/`(和`/=`)会得到一个double类型的结果,
 
 #### The case of the power operator
 
@@ -264,7 +249,7 @@ Groovy 里有一种强大的操作符`**`, 这个操作符带有base和exponent�
 ```
 
 ##### 如果exponent为整数类型
-```
+```groovy
 1. 如果exponent负数负数, 那就返回Integer, Long 或者Double,
 2. 如果exponent是正数或者0, 那就要根据base来判断了
 	A. 如果base是 BigDecimal, 那就返回BigDecimal类型

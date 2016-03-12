@@ -1,6 +1,6 @@
 category: JMH
 date: 2016-01-05
-title: 09_Blackholes 
+title: 09_Blackholes
 ---
 
 ```java
@@ -64,7 +64,7 @@ public class JMHSample_09_Blackholes {
 }
 ```
 计算结果
-```
+```java
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration
@@ -118,7 +118,7 @@ Result "measureRight_1":
   (min, avg, max) = (38.040, 38.102, 38.232), stdev = 0.076
   CI (99.9%): [37.811, 38.394] (assumes normal distribution)
 
-  
+
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration

@@ -17,10 +17,10 @@ JMH是一个用于java或者其他JVM语言的, 提供构建,运行,分析多种
 </dependency>
 ```
 
-但是, JMH的官方推荐使用方式是,使用MAVEN构建一个基于要测试项目的一个独立的项目. 
+但是, JMH的官方推荐使用方式是,使用MAVEN构建一个基于要测试项目的一个独立的项目.
 
 我们使用archetype生成基准测试项目
-```
+```java
 mvn archetype:generate -DinteractiveMode=false -DarchetypeGroupId=org.openjdk.jmh -DarchetypeArtifactId=jmh-java-benchmark-archetype -DgroupId=wang.ming15.jmh -DartifactId=test -Dversion=1.0
 ```
 执行完该命令后会生成一个新的项目,里面会有一个测试文件

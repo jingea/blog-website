@@ -143,7 +143,7 @@ class SuperParam {
 }
 ```
 结果为
-```
+```java
 SubG1 printValue
 1
 SubG2 printValue
@@ -368,4 +368,3 @@ class SuperParam {}
 
 class Param extends SuperParam {}
 ```
-

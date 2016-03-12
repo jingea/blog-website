@@ -83,78 +83,77 @@ Java安全体系结构通过扩展的方式,加入了更多的算法实现及相
 ##  对称加密算法
 
 * DES
-```
+```java
 56(默认值)
 ECB,CBC,PCBC,CTR,CTS,CFB,CFB8至CFB128,OFB,OFB8至OFB128
 NoPadding,PKCS5Padding,ISO10126Padding
 ```
 * DESede
-```
+```java
 112,168(默认值)
 ECB,CBC,PCBC,CTR,CTS,CFB,CFB8至CFB128,OFB,OFB8至OFB128
 NoPadding,PKCS5Padding,ISO10126Padding
 ```
 * AES
-```
+```java
 128(默认值),192,256
 ECB,CBC,PCBC,CTR,CTS,CFB,CFB8至CFB128,OFB,OFB8至OFB128
 NoPadding,PKCS5Padding,ISO10126Padding
 ```
 * Blowfish
-```
+```java
 32z至448(8的倍数,默认值128)
 ECB,CBC,PCBC,CTR,CTS,CFB,CFB8至CFB128,OFB,OFB8至OFB128
 NoPadding,PKCS5Padding,ISO10126Padding
 ```
 * RC2
-```
+```java
 40至1024(8的倍数,默认值128)
 ECB
 NoPadding
 ```
 * RC4
-```
+```java
 40至1024(8的倍数,默认值128)
 ECB
 NoPadding
 ```
 ## 对称加密算法-PBE
 * PBEWithMD5AndDES
-```
+```java
 56
 CBC
 PKCS5Padding
 ```
 * PBEWithMD5AndTripleDES
-```
+```java
 112,168(默认值)
 CBC
 PKCS5Padding
 ```
 * PBEWithSHA1AndRC2_40
-```
+```java
 112,168(默认值)
 CBC
 PKCS5Padding
 ```
 * PBEWithSHA1AndDESede
-```
+```java
 40至1024(8的整数倍,默认值128)
 CBC
 PKCS5Padding
 ```
 ## 非对称加密算法
 * DH
-```
+```java
 512-1024(64的整数倍)
 ```
 * RSA
-```
+```java
 512-65536(64的整数倍)
 ECB
 ```
 * ECDH
-```
+```java
 112-571
 ```
-

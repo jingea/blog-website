@@ -36,7 +36,7 @@ Base64算法有编码和解码操作可充当加密和解密操作,还有一张�
 5. 将获得的4个8位二进制码转换为10进制码
 6. 将获得的十进制码转换为base64字符表中对应的字符
 
-```
+```java
 对A进行Base64编码
 字符				A
 ASCII码			65
@@ -76,22 +76,22 @@ V E			  V E			V E			  V E
 public class TestBase64 {
 
 	static final String base64 = "base64编码!@#$%^&*()+_=-{}[];:'<>,./?|";
-	
+
 	@before
 	public void before () {
 		System.out.println(base64);
 	}
-	
+
 	@Test
 	public void testUrlBase64() {
 		// 不能编码空格
 		byte[] encode = UrlBase64.encode(base64.getBytes());
 		System.out.println("UrlBase64 : " + new String(encode));
-		
+
 		byte[] decode = UrlBase64.decode(encode);
 		Assert.assertEquals(base64, new String(decode));
 	}
-	
+
 	@Test
 	public void testJavaBase64() {
 		System.out.println();
@@ -100,21 +100,21 @@ public class TestBase64 {
 		byte[] decode = java.util.Base64.getDecoder().decode(encode);
 		Assert.assertEquals(base64, new String(decode));
 	}
-	
+
 	@Test
 	public void testApacheBase64() {
 		String encode = org.apache.commons.codec.binary.Base64.encodeBase64String(base64.getBytes());
 		System.out.println("apacheBase64 : " + encode);
 		byte[] decode = org.apache.commons.codec.binary.Base64.decodeBase64(encode.getBytes());
 		Assert.assertEquals(base64, new String(decode));
-		
+
 		String url = org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString(base64.getBytes());
 		System.out.println("apacheBase64 url : " + url);
 		byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(url);
 		Assert.assertEquals(base64, new String(decoded));
 	}
-	
-	
+
+
 	@Test
 	public void testBouncycastleBase64() {
 		byte[] encode = org.bouncycastle.util.encoders.Base64.encode(base64.getBytes());
@@ -122,11 +122,11 @@ public class TestBase64 {
 		byte[] decode = org.bouncycastle.util.encoders.Base64.decode(encode);
 		Assert.assertEquals(base64, new String(decode));
 	}
-	
+
 	// 解码由x-www-form-url-encoded格式编码的字符串
 	@Test
 	public void testSpace() {
-		String base64 = "wKOS4FsxiFvE48KGGSuSkRui9Iap1ukgl1+eVqZiGhXQYYiP8KGCV%2FRIeTEyMLsWxE%2FEx6jhuW3DPUt4JYX+cohUOqFVVaQ%2FioGZCAge3ygaCz%2Fe4q8o9XQzOEtcdXPywGZ0e5sgE787ij4dRZy2ILK2cxsVvC8yrlIPGZ3LUg8nOj8oEg5l2AnQnA3i+Sxbgqmwe1OjIXVZqPZWb+Y4SVQL8EpWlmEjXb4HjgmGTgVYzwJ64QO7HUPP1yuQHkS0PLS%2FpbPrgL5vqTF7h%2FPvMw=%3D"; 
+		String base64 = "wKOS4FsxiFvE48KGGSuSkRui9Iap1ukgl1+eVqZiGhXQYYiP8KGCV%2FRIeTEyMLsWxE%2FEx6jhuW3DPUt4JYX+cohUOqFVVaQ%2FioGZCAge3ygaCz%2Fe4q8o9XQzOEtcdXPywGZ0e5sgE787ij4dRZy2ILK2cxsVvC8yrlIPGZ3LUg8nOj8oEg5l2AnQnA3i+Sxbgqmwe1OjIXVZqPZWb+Y4SVQL8EpWlmEjXb4HjgmGTgVYzwJ64QO7HUPP1yuQHkS0PLS%2FpbPrgL5vqTF7h%2FPvMw=%3D";
 		String decoded = null;
 		try {
 			decoded = URLDecoder.decode(base64);

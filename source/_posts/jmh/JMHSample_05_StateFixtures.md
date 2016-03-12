@@ -1,6 +1,6 @@
 category: JMH
 date: 2016-01-04
-title: 05_StateFixtures 
+title: 05_StateFixtures
 ---
 ```java
 import org.openjdk.jmh.annotations.*;
@@ -61,7 +61,7 @@ public class JMHSample_05_StateFixtures {
 }
 ```
 执行结果
-```
+```java
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration

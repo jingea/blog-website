@@ -66,11 +66,11 @@ Stream.of(1, 2, 3)
 用于Stream替换值然后将多个流连接到一起
 
 首先我们看一种情况,流里有俩个列表
-```
+```java
  Stream.of(Arrays.asList(1, 2, 3),Arrays.asList(7, 8, 9))
                 .collect(Collectors.toSet())
                 .forEach(ele -> System.out.println(ele));
-                
+
 输出的结果是:
 [1, 2, 3]
 [7, 8, 9]
@@ -117,7 +117,7 @@ Integer sum = Stream.of(1, 2, 3)
                 }).get();
         System.out.println(sum);
 ```
-`reduce`中的`BinaryOperator`类型的lambda表达式第一个参数是上个元素执行`reduce`操作的结果, 第二个参数是流中的每个元素. 
+`reduce`中的`BinaryOperator`类型的lambda表达式第一个参数是上个元素执行`reduce`操作的结果, 第二个参数是流中的每个元素.
 
 另外Stream中还有其他的`reduce`操作,可以指定开始结束的的位置
 

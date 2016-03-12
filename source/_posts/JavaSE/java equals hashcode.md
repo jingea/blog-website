@@ -5,7 +5,7 @@ title: Java equals和hashcode
 Effective Java学习总结
 
 ## euqals
-如果类不具有自己的逻辑相等概念，那么就没有必要自己去覆盖`euqals()`方法. 在这种情况下,每个类的实例都和自身相等. 
+如果类不具有自己的逻辑相等概念，那么就没有必要自己去覆盖`euqals()`方法. 在这种情况下,每个类的实例都和自身相等.
 
 但是如果程序里也关心逻辑上是否是相等,那么在实现`equals()`时就要考虑它的通用约定：
 * 自反性: 对于任何非null的引用值x,`x.equals(x)`必须返回true. 这一点保证的是对象的自身必须等于其自身.
@@ -24,7 +24,7 @@ public boolean equals(Object obj) {
 }
 ```
 
-违反对称性 
+违反对称性
 ```java
 public static void main(String str1[]) {
 
@@ -118,7 +118,7 @@ class N{
 * double采用`Double.compare()`进行判断
 如果是数组可以使用`Arrays.equals()`进行判断.
 
-当equals完成了上述之后,还要对其进行对称性,传递性,一致性进行单元测试. 
+当equals完成了上述之后,还要对其进行对称性,传递性,一致性进行单元测试.
 
 
 ## hashCode
@@ -138,7 +138,7 @@ class N{
 * 如果域是`double`，则计算`Double.doubleToLongBits(f)`,接着调用long类型的计算
 * 如果域是引用类型，则按照`equals()`递归方式,依次递归调用`hashCode()`,如果引用是个`null`,则返回0
 计算完每个关键域的散列值之后,依次进行如下计算
-```
+```java
 int result = 17;
 result = 31 * result + c;
 ```

@@ -16,7 +16,7 @@ SocketAddress add = new InetSocketAddress("proxy.example.com", 80);
 Proxy proxy = new Proxy(Proxy.Type.HTTP, add);
 ```
 
-虚拟机都有一个为不同连接定位代理服务器的`ProxySelector` 对象. 默认的`ProxySelector`只检查各种系统属性和URL协议,决定如何连接到不同的主机. 
+虚拟机都有一个为不同连接定位代理服务器的`ProxySelector` 对象. 默认的`ProxySelector`只检查各种系统属性和URL协议,决定如何连接到不同的主机.
 
 下面`LocalProxySelect`是一个自己实现的选择器
 ```java
@@ -30,11 +30,11 @@ public void testLocalProxySelect() {
 public static class LocalProxySelect extends ProxySelector {
 
 	private List<Object> failed = new ArrayList<>();
-	
+
 	@Override
 	public List<Proxy> select(URI uri) {
 		// uri 连接所需的主机
-		
+
 		List<Proxy> result = new ArrayList<>();
 		if(failed.contains(uri) || "http".equalsIgnoreCase(uri.getScheme())) {
 			result.add(Proxy.NO_PROXY);
@@ -51,11 +51,11 @@ public static class LocalProxySelect extends ProxySelector {
 	public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
 		failed.add(uri);
 	}
-	
+
 }
 ```
 下面实现一个socket代理
-```
+```java
 Socket socket = null;
 try {
 	SocketAddress proxyAddress = new InetSocketAddress("myproxy.example.com", 1080);

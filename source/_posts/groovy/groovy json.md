@@ -101,9 +101,9 @@ assert object.myList == [4, 8, 15, 16, 23, 42]
 
 ### JsonOutput
 
-`JsonOutput`用于将Groovy对象序列化成JSON字符串. 
+`JsonOutput`用于将Groovy对象序列化成JSON字符串.
 
-`JsonOutput` 重载了`toJson`静态方法. 每个不同的`toJson`方法都会接受一个不同的参数类型. 
+`JsonOutput` 重载了`toJson`静态方法. 每个不同的`toJson`方法都会接受一个不同的参数类型.
 
 `toJson`方法返回的是一个包含JSOn格式的字符串
 ```groovy
@@ -113,6 +113,7 @@ assert json == '{"name":"John Doe","age":42}'
 ```
 
 `JsonOutput`不仅支持原生类型, map, list等类型序列化到JSON, 甚至还支持序列化`POGOs</code>(一种比较老的Groovy对象)
+
 ```groovy
 class Person { String name }
 
@@ -169,7 +170,7 @@ but alternatively you can achieve the same effect in a more Groovy idiomatic sty
 
 Ranges can be also used in the switch statement:
 
-```
+```groovy
 switch (years) {
     case 1..10: interestRate = 0.076; break;
     case 11..25: interestRate = 0.052; break;
