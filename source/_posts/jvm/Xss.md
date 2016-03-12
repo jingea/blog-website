@@ -52,7 +52,7 @@ public class Test {
 
 这次的调用次数成了682次,说明局部变量表确实是在影响方法调用的次数.
 
-```
+```java
 public class Test {
 	private static long count = 0;
 	public static void main(String[] main) {
@@ -123,14 +123,13 @@ public class Test {
 ```
 这个很奇怪,
 结果为
-```
+```java
 invoke : 1083
 invoke : 1083
 ```
 或者
-```
+```java
 invoke : 650
 invoke : 1300
 ```
 要不然次数是一样的,要不然次数是个倍数的关系
-

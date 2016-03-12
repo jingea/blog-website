@@ -1,5 +1,4 @@
 category: mgits
-tag: Docker
 date: 2015-06-08
 title: docker命令
 ---
@@ -7,24 +6,24 @@ title: docker命令
 ### `service docker start`  
 安装之后启动 Docker 服务.
 
-### `docker pull` 
+### `docker pull`
 命令来从仓库获取所需要的镜像
-```
+```java
 docker pull ubuntu12.04
 ```
 
-### `docker push` 
+### `docker push`
 把自己创建的镜像上传到仓库中来共享
-```
+```java
 docker push ouruser/sinatra
 ```
 
-### `docker images` 
+### `docker images`
 显示本地已有的镜像.
 
-### `docker commit` 
+### `docker commit`
 使用 docker commit 命令来提交更新后的副本. 这个命令是用来将容器的改变提交到镜像身上.如果目标镜像不存在就创建一个.
-```
+```java
 sudo docker commit -m "Added json gem" -a "Docker Newbee" 0b2616b0e5a8 ouruser/sinatrav2
 ```
 * `-m` : 来指定提交的说明信息，跟我们使用的版本控制工具一样；
@@ -33,47 +32,47 @@ sudo docker commit -m "Added json gem" -a "Docker Newbee" 0b2616b0e5a8 ouruser/s
 * `ouruser/sinatrav2` : 指定目标镜像的仓库名和 tag 信息。
 
 
-### `docker build` 
+### `docker build`
 使用 docker build 来创建一个新的镜像.为此,首先需要创建一个 Dockerfile,包含一些如何创建镜像的指令.
-```
+```java
 docker build -t="ouruser/sinatrav2"
 ```
 * -t 标记来添加 tag,指定新的镜像的用户信息
 
-### `docker tag` 
+### `docker tag`
 命令来修改镜像的标签.
-```
+```java
 docker tag 5db5f8471261 ouruser/sinatradevel
 ```
 
-### `docker import` 
+### `docker import`
 从本地文件系统导入一个镜像,可以使用 openvz(容器虚拟化的先锋技术)的模板来创建 openvz 的模板下载地址为 templates .比如,先下载了一个 ubuntu-14.04 的镜像,之后使用以下命令导入
-```
+```java
 cat ubuntu-14.04-x86_64-minimal.tar.gz  |docker import - ubuntu14.04
 ```
 
-### `docker save` 
+### `docker save`
 导出镜像到本地文件
-```
+```java
 docker save -o ubuntu_14.04.tar ubuntu14.04
 ```
 
-### `docker load` 
-从导出的本地文件中再导入到本地镜像库 
-```
+### `docker load`
+从导出的本地文件中再导入到本地镜像库
+```java
 docker load --input ubuntu_14.04.tar
 docker load < ubuntu_14.04.tar
 ```
 
-### `docker rmi` 
+### `docker rmi`
 移除本地的镜像. 注意在删除镜像之前要先用 docker rm 删掉依赖于这个镜像的所有容器.
-```
+```java
 sudo docker rmi training/sinatra
 ```
 
 ### `docker run`  
 基于镜像新建一个容器并启动
-```
+```java
 docker run ubuntu14.04
 
 docker run -t -i ubuntu14.04 /bin/bash
@@ -87,76 +86,76 @@ docker run -t -i ubuntu14.04 /bin/bash
 
 
 映射所有接口地址： 使用 `hostPort:containerPort` 格式本地的 `5000` 端口映射到容器的 `5000` 端口，可以执行
-```
+```java
 $ sudo docker run -d -p 5000:5000 training/webapp python app.py
 ```
 
 此时默认会绑定本地所有接口上的所有地址。 映射到指定地址的指定端口
 
 可以使用 `ip:hostPort:containerPort` 格式指定映射使用一个特定地址，比如 `localhost` 地址 `127.0.0.1`
-```
+```java
 $ sudo docker run -d -p 127.0.0.1:5000:5000 training/webapp python app.py
 ```
 
 映射到指定地址的任意端口。 使用 `ip::containerPort` 绑定 `localhost` 的任意端口到容器的 `5000` 端口，本地主机会自动分配一个端口。
-```
+```java
 $ sudo docker run -d -p 127.0.0.1::5000 training/webapp python app.py
 ```
 
-### `docker start` 
+### `docker start`
 直接将一个已经终止的容器启动运行
 
-### `docker stop` 
+### `docker stop`
 终止一个运行中的容器.
 
-### `docker restart` 
+### `docker restart`
 将一个运行态的容器终止,然后再重新启动它.
 
-### `docker attach` 
+### `docker attach`
 进入容器
 
-### `docker export ` 
+### `docker export `
 导出本地某个容器
-```
+```java
 docker export 7691a814370e > ubuntu.tar
 ```
 
-### `docker import` 
+### `docker import`
 从容器快照文件中再导入为镜像
-```
+```java
 cat ubuntu.tar | sudo docker import - test/buntuv1.0
 
 docker import http//example.com/exampleimage.tgz example/imagerepo
 ```
 
-### `docker rm` 
+### `docker rm`
 移除容器.删除一个处于终止状态的容器
-```
+```java
 docker rm  trusting_newton
 ```
 
-### `docker search` 
+### `docker search`
 查找官方仓库中的镜像
 
-### `docker ps` 
+### `docker ps`
 
-### `docker logs` 
+### `docker logs`
 获取容器的输出信息
-```
+```java
 docker logs insane_babbage
 ```
 
 ### `docker port`
 查看当前映射的端口配置，也可以查看到绑定的地址
-```
+```java
 docker port nostalgic_morse 5000
 ```
 
 
-## Dockerfile 
+## Dockerfile
 
 Dockerfile中每一条指令都创建镜像的一层,例如
-```
+```java
 # This is a comment
 FROM ubuntu14.04
 MAINTAINER Docker Newbee <newbee@docker.com>
@@ -185,4 +184,3 @@ Dockerfile 基本的语法是
 
 
 `docker load` vs `docker import` 用户既可以使用 `docker load` 来导入镜像存储文件到本地镜像库,也可以使用 `docker import `来导入一个容器快照到本地镜像库.这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息(即仅保存容器当时的快照状态),而镜像存储文件将保存完整记录,体积也要大.此外,从容器快照文件导入时可以重新指定标签等元数据信息.
-

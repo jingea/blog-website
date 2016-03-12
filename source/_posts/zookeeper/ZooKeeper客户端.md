@@ -3,7 +3,7 @@ date: 2013-11-20
 title: ZooKeeper Java客户端
 ---
 我们使用ZooKeeper官方java客户端进行测试,另外可以使用curator.
-```
+```java
 // 连接ZooKeeper服务器
 ZooKeeper zooKeeper = new ZooKeeper("localhost:2181", 15000, event -> {
 	System.out.println(event.toString());

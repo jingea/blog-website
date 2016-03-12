@@ -54,33 +54,33 @@ For more information about the run time options used above and other configurati
 如果你的应用程序连接了多个`replica set`, 每一个`replica set`都应该有一个独立的名字. 某些驱动会根据`replica set`名称将`replica set`连接进行分组.
 
 下面是一个示例：
-```
+```shell
 mongod --replSet "rs0"
 ```
 
 你也通过配置文件设置`replica set`名字. 如果想要通过配置文件启动`mongod`, 那么你需要`--config`选项指定配置文件
-```
+```shell
 mongod --config $HOME/.mongodb/config
 ```
 在生产部署阶段, 你可以通过配置一个控制脚本来管理这个进程. 但是控制脚本的使用超过了该教程的介绍范围.
 
 > 注意:
 >
-> 如果你的c盘没有创建C:/data/db, 那么会抛出 ：Hotfix KB2731284 or later update is not installed. 以及 C:\data\db not found 的字样. 
+> 如果你的c盘没有创建C:/data/db, 那么会抛出 ：Hotfix KB2731284 or later update is not installed. 以及 C:\data\db not found 的字样.
 >
 > 那么你就需要在命令上加上 --dbpath 选项了
 
 ### Connect a mongo shell to a replica set member.
 
 下例展示了如何连接到在`localhost:27017`上运行的`mongod`:
-```
+```shell
 mongo
 ```
 
 ### Initiate the replica set.
 
 接着这`mongo`shell里使用`rs.initiate()`设置成员.
-```
+```shell
 rs.initiate()
 ```
 MongoDB使用`replica set`默认配置启动了一个包含当前成员的`replica set`
@@ -92,7 +92,7 @@ MongoDB使用`replica set`默认配置启动了一个包含当前成员的`repli
 ### Verify the initial replica set configuration.
 
 在`mongo`shell中使用`rs.conf()`输出`replica set`配置:
-```
+```shell
 rs.conf()
 ```
 
@@ -113,7 +113,7 @@ rs.conf()
 ### Add the remaining members to the replica set.
 
 在`mongo`shell中使用`rs.add()`方法添加俩个成员:
-```
+```shell
 rs.add("mongodb1.example.net")
 rs.add("mongodb2.example.net")
 ```
@@ -123,7 +123,7 @@ rs.add("mongodb2.example.net")
 ### Check the status of the replica set.
 
 在`mongo`shell中使用`rs.status()`方法查看`replica set`状态.
-```
+```shell
 rs.status()
 ```
 

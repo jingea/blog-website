@@ -5,7 +5,7 @@ title: logstash读取日志
 启动logstash时,我们需要指定配置文件, 以便让logstash按照我们配置的方式进行工作, 例如`logstash -f ./logstash.conf`
 
 ## 接受标准日志
-```
+```json
 stdin {
         add_field => {"key" => "value"}
         tags => ["add"]
@@ -30,7 +30,7 @@ input {
 ```
 
 ## 接受rsysylog日志
-```
+```json
 input {
 	syslog {
 		port => "514"
@@ -39,7 +39,7 @@ input {
 ```
 
 ## 接受TCP日志
-```
+```json
 input {
 	tcp {
 		port => 8888

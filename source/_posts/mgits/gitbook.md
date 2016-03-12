@@ -1,5 +1,4 @@
 category: mgits
-tag: gitbook
 date: 2014-09-08
 title: gitbook使用
 ---
@@ -25,4 +24,3 @@ title: gitbook使用
 7. 双击运行`build.bat`
 8. 查看`D:\git\demo\branches\gh-pages`是否生成了一个web站点呢？这个就是我们的博客了
 9. 最后在`D:\git\demo`这个目录里上传所有的文件就好了
-

@@ -11,7 +11,7 @@ title: Nginx文件服务器
 * 频率控制
 
 Nginx配置
-```
+```shell
 #user  nobody;
 worker_processes  1;
 

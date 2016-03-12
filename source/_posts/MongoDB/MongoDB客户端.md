@@ -290,7 +290,7 @@ result = builder.execute();
 
 
 > Note:
-> 
+>
 For servers older than 2.6 the API will down convert the operations. To support the correct semantics for BulkWriteResult and BulkWriteException, the operations have to be done one at a time. It’s not possible to down convert 100% so there might be slight edge cases where it cannot correctly report the right numbers.
 
 
@@ -364,7 +364,7 @@ for (String s : db.getCollectionNames()) {
 ```
 
 上面的例子会输出：
-```
+```java
 system.indexes
 testCollection
 ```

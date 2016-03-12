@@ -5,7 +5,7 @@ title: ZooKeeper Started
 演示windows系统下快速使用`Zookeeper3.4.6`版本
 
 我们从Zookeeper官网下载下其最新的压缩包之后,然后解压得到下面的目录：
-```
+```shell
 ├───bin
 ├───conf
 ├───contrib
@@ -25,11 +25,11 @@ title: ZooKeeper Started
 > 如果遇到`java.lang.NumberFormatException: For input string: "E:\zookeeper-3.4.6\bin\..\conf\zoo.cfg"`这个提示,那就要去修改`bin/zkServer.cmd`文件, 将`%*`这个去掉就好了
 
 然后我们执行
-```
+```shell
 bin/zkCli.cmd -server 127.0.0.1:2181
 ```
 就连接上了刚才启动的服务器,进入shell
-```
+```shell
 E:\zookeeper-3.4.6\bin>.\zkCli.cmd -server 127.0.0.1:2181
 Connecting to 127.0.0.1:2181
 2015-11-09 16:04:51,367 [myid:] - INFO  [main:Environment@100] - Client environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT
@@ -50,7 +50,7 @@ JLine support is enabled
 ```
 
 进入到shell之后,我们可以敲人`help`命令，查看我们都能使用哪些命令：
-```
+```shell
 [zk: 127.0.0.1:2181(CONNECTED) 1] help
 ZooKeeper -server host:port cmd args
 	stat path [watch]
@@ -79,7 +79,7 @@ ZooKeeper -server host:port cmd args
 看到了,我们能使用这么多命令，下来我们简单的接受几个命令.
 
 我们使用`create`命令创建一个`znode`(这个node里和字符串"my_data"关联起来了).
-```
+```shell
 [zk: 127.0.0.1:2181(CONNECTED) 1] create /zk_test my_data
 Created /zk_test
 [zk: 127.0.0.1:2181(CONNECTED) 3] ls /
@@ -89,7 +89,7 @@ Created /zk_test
 但是实际上，这个node还没有被创建出来.
 
 下来我们使用`get`命令验证一下`zk_test`是不是真的和"my_data"关联起来了
-```
+```shell
 [zk: 127.0.0.1:2181(CONNECTED) 4] get /zk_test
 my_data
 cZxid = 0x3
@@ -107,7 +107,7 @@ numChildren = 0
 ```
 
 我们还可以使用`set`命令将刚才那个node重新关联
-```
+```shell
 [zk: 127.0.0.1:2181(CONNECTED) 5] set /zk_test new_data
 cZxid = 0x3
 ctime = Mon Nov 09 16:29:12 CST 2015
@@ -137,7 +137,7 @@ numChildren = 0
 ```
 
 最后，我们将这个node删掉
-```
+```shell
 [zk: 127.0.0.1:2181(CONNECTED) 9] delete /zk_test
 [zk: 127.0.0.1:2181(CONNECTED) 10] ls /
 [zookeeper]

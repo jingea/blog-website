@@ -41,7 +41,7 @@ Client client = TransportClient.builder().settings(settings).build()
 
 ## 索引数据
 我们可以使用客户端提供的`prepareIndex()`方法索引数据,也就是向Elasticsearch添加数据
-```
+```java
 IndexResponse indexResponse = client.prepareIndex("idx01", "type01", "01").setSource(jsonObject.toJSONString()).execute().actionGet();
 
 System.out.println("IndexResponse : " + indexResponse.getId());
@@ -50,7 +50,7 @@ System.out.println("IndexResponse : " + indexResponse.getType());
 System.out.println("IndexResponse : " + indexResponse.getVersion());
 ```
 结果输出为
-```
+```java
 IndexResponse : 01
 IndexResponse : idx01
 IndexResponse : type01
@@ -71,7 +71,7 @@ System.out.println("GetResponse : " + getResponse.getVersion());
 System.out.println("GetResponse : " + getResponse.getSourceAsString());
 ```
 结果输出为
-```
+```java
 GetResponse : 01
 GetResponse : idx01
 GetResponse : type01

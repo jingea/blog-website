@@ -91,6 +91,7 @@ unset array[1]
 ### 数组分片
 `${数组名[@或*]:起始位置:长度}`： 切片数组，返回一个用“空格”分割元素的字符串
 > 如果加上`()`，将得到切片数组
+
 ```shell
 c=(${array[@]:1:4})
 ```
@@ -105,11 +106,11 @@ ${array[@]/old/new}
 
 ## 算术运算符
 我们可以使用`expr`, `let`, `(())`, `[]`等四种方式进行算术运算
-* `+`:	加法	`(($a + $b))` 
-* `-	`:	减法`(($a - $b))` 
+* `+`:	加法	`(($a + $b))`
+* `-	`:	减法`(($a - $b))`
 * `*`:	乘法	`(($a \* $b))`
-* `/`:	除法	`(($b / $a))` 
-* `%`:	取余	`(($b % $a))` 
+* `/`:	除法	`(($b / $a))`
+* `%`:	取余	`(($b % $a))`
 * `=`:	赋值	`a=$b`
 * `==`:	相等。用于比较两个数字，相同则返回 true。	`[ $a == $b ]` 返回 false。
 * `!=`:	不相等。用于比较两个数字，不相同则返回 true。	`[ $a != $b ]` 返回 true。
@@ -162,15 +163,15 @@ shell流程控制包含：
 
 ##  if else
 
-### if 
+### if
 语法格式
 ```shell
 if condition
 then
-    command1 
+    command1
     command2
     ...
-    commandN 
+    commandN
 fi
 ```
 示例
@@ -185,10 +186,10 @@ fi
 我们一定要注意if前后的空格
 
 ### if else
-```
+```shell
 if condition
 then
-    command1 
+    command1
     command2
     ...
     commandN
@@ -198,7 +199,7 @@ fi
 ```
 
 ### if else-if else
-```
+```shell
 if condition1
 then
     command1
@@ -209,7 +210,7 @@ else
 fi
 ```
 
-## case 
+## case
  case语句为多选择语句
 ```shell
 case 值 in
@@ -249,7 +250,7 @@ do
 done
 ```
 
-## for 
+## for
 ```shell
 for var in item1 item2 ... itemN
 do
@@ -269,7 +270,7 @@ do
 done
 ```
 
-## while 
+## while
 ```shell
 while condition
 do
@@ -288,7 +289,7 @@ do
 done
 ```
 
-## until 
+## until
 until循环执行一系列命令直至条件为真时停止。
 ```shell
 until condition

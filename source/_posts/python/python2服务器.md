@@ -4,7 +4,7 @@ title: PYTHON2 服务器(Socket/HTTP)
 ---
 
 ## Socket服务器
-```
+```python
 import socket
 
 sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -27,7 +27,7 @@ while True:
 ```
 
 ## HttpServer
-```
+```python
 import BaseHTTPServer
 import urlparse
 class WebRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):

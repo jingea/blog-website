@@ -16,7 +16,7 @@ Instrumentation提供了这样的功能：
 premain函数是JavaSE5中实现instrument的方式.
 
 使用premain我们要自定义MANIFEST.MF文件, 定义Premain-Class
-```
+```java
 Manifest-Version: 1.0
 Premain-Class: wang.ming15.instrument.core.Premain
 ```
@@ -88,11 +88,11 @@ public class PrintObjectSize {
 }
 ```
 然后执行命令
-```
+```java
 java -javaagent:../instrument/target/core-1.0-SNAPSHOT.jar -cp ./target/examples-1.0-SNAPSHOT.jar wang.ming15.instrument.examples.PrintObjectSize
 ```
 然后就会获得对象的大小
-```
+```java
 Hello world, App
 123456789 对象大小: 24
 ```
@@ -145,11 +145,11 @@ public class TestJarLoader {
 }
 ```
 然后执行命令
-```
+```java
 java -javaagent:../instrument/target/core-1.0-SNAPSHOT.jar -cp ./target/examples-1.0-SNAPSHOT.jar wang.ming15.instrument.examples.TestJarLoader D:/workspace/idea/instrument/trunk/print/target/print-1.0-SNAPSHOT.jar
 ```
 结果输出为
-```
+```java
 Now Time is Thu Dec 31 10:50:39 CST 2015
 
 wang.ming15.instrument.print.Print  11
@@ -197,7 +197,7 @@ public static void redefineClasses(Class clazz, String path) {
 }
 ```
 然后我们写一个测试类
-```
+```java
 public class TestClassLoader {
 
 	public static void main(String[] args) throws InterruptedException {
@@ -210,7 +210,7 @@ public class TestClassLoader {
 }
 ```
 最后成功输出
-```
+```java
 I am a big T
 I am a big T
 I am a big T
@@ -227,7 +227,7 @@ I am a big T ok
 在 Java SE 5 中premain 所作的 Instrumentation 也仅限与 main 函数执行前，这样的方式存在一定的局限性。Java SE 6 针对这种状况做出了改进，开发者可以在 main 函数开始执行以后，再启动自己的 Instrumentation 程序。在 Java SE 6 的 Instrumentation 当中，有一个跟 premain“并驾齐驱”的“agentmain”方法，可以在 main 函数开始运行之后再运行。
 
 首先我们还是需要修改MANIFEST.MF文件, 在其中添加
-```
+```java
 Agent-Class: wang.ming15.instrument.core.Agentmain
 ```
 

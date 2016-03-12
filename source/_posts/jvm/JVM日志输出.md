@@ -16,7 +16,7 @@ title: JVM 日志输出
 
 ## gc log
 我使用`-Xmx2048m -Xms2048M  -Xmn1048m`的内存分配方式启动一个JVM,下面是其中一段GC 日志
-```
+```java
 {Heap before GC invocations=196 (full 0):
  par new generation   total 873856K, used 699148K [0x000000077ae00000, 0x00000007bae00000, 0x00000007bae00000)
   eden space 699136K, 100% used [0x000000077ae00000, 0x00000007a58c0000, 0x00000007a58c0000)
@@ -50,4 +50,3 @@ Heap after GC invocations=197 (full 0):
 13. `to space 174720K,   0% used [0x00000007a58c0000, 0x00000007a58c0000, 0x00000007b0360000)`:新生代的survivor2区分配了174720K,使用了0k
 14. `concurrent mark-sweep generation total 1048576K, used 3377K [0x00000007bae00000, 0x00000007fae00000, 0x00000007fae00000)`:
 15. `concurrent-mark-sweep perm gen total 21248K, used 9252K [0x00000007fae00000, 0x00000007fc2c0000, 0x0000000800000000)`:
-

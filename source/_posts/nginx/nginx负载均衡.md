@@ -21,13 +21,13 @@ server = BaseHTTPServer.HTTPServer(('0.0.0.0',int(sys.argv[1])), WebRequestHandl
 server.serve_forever()
 ```
 然后在命令行分别启动
-```
+```shell
 python ./PyHttpServer.py 8091
 python ./PyHttpServer.py 8092
 ```
 
 然后我们配置nginx.conf文件
-```
+```shell
 #user  nobody;
 worker_processes  1;
 
@@ -71,7 +71,7 @@ http {
 > 还有一点很重要的是, 要代理的服务必须在Nginx启动之前都启动完毕, 否则Nginx没办法完成代理工作.
 
 最后我们在浏览器上发送HTTP请求
-```
+```shell
 http://localhost:8090
 ```
 我们发现那俩个python的HTTP服务器果真都有输出了.

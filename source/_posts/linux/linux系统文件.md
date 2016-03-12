@@ -4,7 +4,7 @@ title: Linux系统文件
 ---
 
 ### /proc/cpuinfo
-```
+```shell
 [root@cvs /]# cat /proc/cpuinfo
 processor       : 0
 vendor_id       : GenuineIntel
@@ -56,9 +56,9 @@ power management:
 * `address sizes`   : 可访问地址空间位数
 * `power management`: 对能源管理的支持，有以下几个可选支持功能
 
-### /proc/meminfo 
-```
-[root@cvs /]# cat /proc/meminfo 
+### /proc/meminfo
+```shell
+[root@cvs /]# cat /proc/meminfo
 MemTotal:       16282756 kB
 MemFree:         2012664 kB
 Buffers:          491980 kB
@@ -103,17 +103,17 @@ DirectMap4k:        5056 kB
 DirectMap2M:     2045952 kB
 DirectMap1G:    14680064 kB
 ```
-* `MemTotal`: 
+* `MemTotal`:
 * `MemFree`:空闲内存
 * `Buffers`:给文件的缓冲大小
 * `Cached`: 高速缓冲存储器(http://baike.baidu.com/view/496990.htm)使用的大小
 * `SwapCached`: 被高速缓冲存储用的交换空间大小
 * `Active`: 活跃使用中的高速缓冲存储器页面文件大小
 * `Inactive`: 不经常使用的高速缓冲存储器页面文件大小
-* `Active(anon)`: 
-* `Inactive(anon)`: 
-* `Active(file)`: 
-* `Inactive(file)`: 
+* `Active(anon)`:
+* `Inactive(anon)`:
+* `Active(file)`:
+* `Inactive(file)`:
 * `Unevictable`:
 * `Mlocked`:
 * `SwapTotal`:交换空间总大小
@@ -130,25 +130,25 @@ DirectMap1G:    14680064 kB
 * `PageTables`: 管理内存分页的索引表的大小
 * `NFS_Unstable`: 不稳定页表的大小
 * `Bounce`: bounce:退回
-* `WritebackTmp`: 
+* `WritebackTmp`:
 * `CommitLimit`:
-* `Committed_AS`: 
+* `Committed_AS`:
 * `VmallocTotal`: 虚拟内存大小
 * `VmallocUsed`:已经被使用的虚拟内存大小
-* `VmallocChunk`: 
+* `VmallocChunk`:
 * `HardwareCorrupted`:
 * `AnonHugePages`:
 * `HugePages_Total`:大页面的分配
-* `HugePages_Free`: 
-* `HugePages_Rsvd`: 
-* `HugePages_Surp`: 
-* `Hugepagesize`: 
+* `HugePages_Free`:
+* `HugePages_Rsvd`:
+* `HugePages_Surp`:
+* `Hugepagesize`:
 * `DirectMap4k`:
 * `DirectMap2M`:
 * `DirectMap1G`:
 
 ### /proc/net/dev
-```
+```shell
 [root@cvs /]# cat /proc/net/dev
 Inter-|   Receive                                                |  Transmit
  face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
@@ -161,15 +161,15 @@ Inter-|   Receive                                                |  Transmit
 
 Inter                                                     
 * `face`:接口的名字
- 
+
 Receive
 * `bytes`: 收发的字节数   
 * `packets`: 收发正确的包量
 * `errs`: 收发错误的包量
 * `drop`: 收发丢弃的包量
-* `fifo`: 
-* `frame`: 
-* `compressed`: 
+* `fifo`:
+* `frame`:
+* `compressed`:
 * `multicast`:
 
 Transmit
@@ -177,7 +177,7 @@ Transmit
 * `packets`: 收发正确的包量
 * `errs`: 收发错误的包量
 * `drop`: 收发丢弃的包量
-* `fifo`: 
-* `colls`: 
-* `carrier`: 
+* `fifo`:
+* `colls`:
+* `carrier`:
 * `compressed`:

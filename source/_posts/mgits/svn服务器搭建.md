@@ -8,8 +8,8 @@ title: SVN 总结
 在e盘下创建svn仓库`svnresp` ![](https://raw.githubusercontent.com/ming15/blog-website/images/svn/0.jpg)
 
 创建好版本库后需要将版本库里的配置文件`E:\svnresp\conf\svnserve.conf`文件进行修改
-```[general]
-# password-db = passwd 
+```java
+# password-db = passwd
 将其修改成
 password-db = passwd
 ```
@@ -39,7 +39,7 @@ password-db = passwd
 
 ## 修改服务器地址
 当svn服务器地址变化之后我们使用如下命令进行修改
-```
+```java
 svn switch --relocate http://10.234.10.11/svn/server/ http://10.230.8.116/svn/server/
 ```
-> 在修改前后我们可以使用`svn info`命令进行查看, 当前svn信息. 
+> 在修改前后我们可以使用`svn info`命令进行查看, 当前svn信息.

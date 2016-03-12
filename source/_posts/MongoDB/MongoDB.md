@@ -12,50 +12,51 @@ title: 运行MongoDB
 在环境变量里添加环境变量 `D:\Program Files\MongoDB\Server\3.0\` 然后在Path里添加： `%MONGODB_HOME%\bin`
 
 #### data directory
-```
-MongoDB 需要一个data directory来存储全部的数据. MongoDB默认的data directory路径是\data\db, 
-所以我们需要创建一个data directory. 假设我们在D盘创建了一个这样的目录: D:\mongodb\data\db.
+MongoDB 需要一个data directory来存储全部的数据. MongoDB默认的data directory路径是`\data\db`,
+所以我们需要创建一个data directory. 假设我们在D盘创建了一个这样的目录: `D:\mongodb\data\db`.
 
 你可以通过--dbpath选项给mongod.exe设置另一个data directory.
+```java
 mongod.exe --dbpath D:\mongodb\data\db
-
+```
 如果你的data directory包含空格的话,那么就需要使用""将他们包含起来：
+```java
 mongod.exe --dbpath "d:\test\mongo db data"
 ```
 
 ## 启动MongoDB
 
 ### 使用mongod.exe命令启动mongoDB
-```
+```shell
 	mongod.exe
 ```
 
 ### 启动日志
 最后我们在启动日志里看到
-```
+```shell
 waiting for connections on port 27017
 ```
 
 ### 命令行方式启动
 
 MongoDB 默认存储数据目录为/data/db/ (或者 c:/data/db), 默认端口 27017,默认 HTTP 端口 28017.
-```
+```shell
 mongod --dbpath=/data/db
 ```
 
 ### 配置文件方式启动
 MongoDB 也支持同 mysql 一样的读取启动配置文件的方式来启动数据库,配置文件的内容如下:
-```
+```shell
 cat /etc/mongodb.cnf
 ```
 启动时加上”-f”参数,并指向配置文件即可:
-```
+```shell
 mongod -f /etc/mongodb.cnf
 ```
 
 #### Daemon 方式启动
 MongoDB 提供了一种后台 Daemon 方式启动的选择,只需加上一个” --fork”参数即可,,但如果用到了 ” --fork”参数就必须也启用 ”--logpath”参数,这是强制的
-```
+```shell
 mongod --dbpath=/data/db --logpath=/data/log/r3.log --fork
 ```
 
@@ -83,7 +84,7 @@ mmap 在数据量不超过内存时效率很高.但是数据量超过系统可�
 
 * Control-C
 * shutdownServer()指令
-```
+```shell
 mongo --port 28013
 use admin
 db.shutdownServer()
@@ -103,30 +104,29 @@ MongoDB 在 bin 目录下提供了一系列有用的工具,这些工具提供了
 
 ## 部署 Replica Sets
 * 创建数据文件存储路径
-```
+```shell
 mkdir E:/mongoData/data/r0
 mkdir E:/mongoData/data/r1
 mkdir E:/mongoData/data/r2
 ```
 * 创建日志文件路径
-```
+```shell
 mkdir E:/mongoData/log
 ```
 * 创建主从 key 文件，用于标识集群的私钥的完整路径，如果各个实例的 key file 内容不一致，程序将不能正常用。
-```
+```shell
 mkdir E:/mongoData/key
 echo "this is rs1 super secret key" > E:/mongoData/key/r0
 echo "this is rs1 super secret key" > E:/mongoData/key/r1
 echo "this is rs1 super secret key" > E:/mongoData/key/r2
 ```
 * 启动 3 个实例
-```
+```shell
 mongod --replSet rs1 --keyFile E:/mongoData/key/r0 -fork --port 28010 --dbpath E:/mongoData/data/r0 --logpath=E:/mongoData/log/r0.log --logappend
 mongod --replSet rs1 --keyFile E:/mongoData/key/r1 -fork --port 28011 --dbpath E:/mongoData/data/r1 --logpath=E:/mongoData/log/r1.log --logappend
 mongod --replSet rs1 --keyFile E:/mongoData/key/r2 -fork --port 28012 --dbpath E:/mongoData/data/r2 --logpath=E:/mongoData/log/r2.log --logappend
 ```
 * 配置及初始化 Replica Sets
-```
+```shell
 mongo -port 28010
 ```
-

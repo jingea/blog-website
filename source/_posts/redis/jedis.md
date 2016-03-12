@@ -19,7 +19,7 @@ try (Jedis jedis = pool.getResource()) {
   /// ... do stuff here ... for example
   jedis.set("foo", "bar");
   String foobar = jedis.get("foo");
-  jedis.zadd("sose", 0, "car"); jedis.zadd("sose", 0, "bike"); 
+  jedis.zadd("sose", 0, "car"); jedis.zadd("sose", 0, "bike");
   Set<String> sose = jedis.zrange("sose", 0, -1);
 }
 /// ... when closing your application:
@@ -33,7 +33,7 @@ try {
   /// ... do stuff here ... for example
   jedis.set("foo", "bar");
   String foobar = jedis.get("foo");
-  jedis.zadd("sose", 0, "car"); jedis.zadd("sose", 0, "bike"); 
+  jedis.zadd("sose", 0, "car"); jedis.zadd("sose", 0, "bike");
   Set<String> sose = jedis.zrange("sose", 0, -1);
 } finally {
   if (jedis != null) {
@@ -92,7 +92,7 @@ return : 1
 return : 0
 ```
 当调用`jedis.close();`后,池子里空闲的Jedis对象就多了1个, 可是如果我们注释掉这一行后的结果为
-```
+```java
 begin : 0
 begin : 0
 begin : 0
@@ -163,7 +163,7 @@ public class JedisTest {
 }
 ```
 结果为
-```
+```java
 sleep:4. time:2016-3-4 10:04:03. active: 3. idle: 0
 sleep:4. time:2016-3-4 10:04:03. active: 3. idle: 0
 sleep:3. time:2016-3-4 10:04:03. active: 3. idle: 0

@@ -13,7 +13,7 @@ Maven拥有如下三套相互独立的生命周期,每个生命周期都包含�
 * `clean`
 * `post-clean`
 该生命周期包含的Maven命令：
-```
+```java
 mvn clean
 ```
 
@@ -43,7 +43,7 @@ mvn clean
 * `install`
 * `deploy`
 该生命周期包含的Maven命令：
-```
+```java
 mvn validate
 mvn compile
 mvn test
@@ -53,7 +53,7 @@ mvn install
 mvn deploy
 ```
 
-```
+```java
 mvn install:install-file -DgroupId=demo -DartifactId=test -Dversion=1.0 -Dpackaging=jar -Dfile=E:\Xg-Push-SDK-JAVA-1.1.6\XingeApp.jar
 ```
 
@@ -62,9 +62,9 @@ mvn install:install-file -DgroupId=demo -DartifactId=test -Dversion=1.0 -Dpackag
 * `pre-site`
 * `site`
 * `post-site`
-* `site-deploy` 
+* `site-deploy`
 该生命周期包含的Maven命令：
-```
+```java
 mvn site
 ```
 
@@ -74,7 +74,7 @@ mvn site
 例如`maven-compiler-plugin`的`compile`目标的写法为`compiler:compile`.
 
 ### 插件绑定
-我们可以将插件的目标与生命周期的阶段相绑定. 
+我们可以将插件的目标与生命周期的阶段相绑定.
 
 default生命周期与内置插件绑定关系及具体任务:
 
@@ -129,11 +129,11 @@ deploy                       |maven-deploy-plugin:deploy            |将项目�
 </plugin>
 ```
 下来我们在命令行执行命令：
-```
+```java
 mvn release:clean
 ```
 先执行清除操作,然后执行下列命令准备版本发布：
-```
+```java
 mvn release:prepare
 ```
 该命令包含下列操作：
@@ -150,24 +150,24 @@ mvn release:prepare
 当前俩项检查ok之后,插件会提示用户输出想要发布的版本号,TAG名称和新的快照版本号
 
 我们还可以执行回滚:
-```
+```java
 mvn release:rollback
 ```
 回滚`release:prepare`所执行的操作. 但是需要注意的是在`release:prepare`步骤中打出的TAG并不会被删除,需要手动删除.
 
 接下来就可以执行版本发布了：
-```
+```java
 mvn release:perform
 ```
 它会检出`release:prepare`生成的TAG源码,并在此基础上执行`mvn deploy`,打包并部署到仓库.
 
 
-```
+```java
 mvn release:stage
 ```
 
 还有一个更棒的功能：打分支
-```
+```java
 mvn release:branch
 ```
 通过maven打分支,执行下列操作
@@ -180,7 +180,7 @@ mvn release:branch
 * 提交本地更改
 
 
-```
+```java
 mvn release:update-versions
 ```
 
@@ -188,7 +188,7 @@ mvn release:update-versions
 ## maven属性
 ### 内置属性
 * `${basedir}`: 表示项目根目录,即包含`pom.xml`文件的目录
-* `${version}`:项目版本 
+* `${version}`:项目版本
 
 ### POM属性
 该类属性引用POM文件中对应的元素值,例如：
@@ -212,7 +212,7 @@ mvn release:update-versions
 ## Maven插件
 
 ### 自定义Manifest
-```
+```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-jar-plugin</artifactId>
@@ -232,8 +232,3 @@ mvn release:update-versions
     </configuration>
 </plugin>
 ```
-
-
-
-
-

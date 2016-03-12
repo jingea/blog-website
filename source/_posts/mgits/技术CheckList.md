@@ -7,7 +7,7 @@ title: 技术CheckList
 
 ### 序列化bug
 在项目中运营团队给出了下面这样的一个公告
-```
+```java
 ================================================
 官方QQ群： 467027422
 官方微信号：gm-xyxmp
@@ -49,7 +49,7 @@ title: 技术CheckList
                                                             《西游降魔篇3D》运营团队
 ```
 当我将其赋值到一个对象`obj#value`时,然后使用`JSON.toJSONString(obj)`的时候遇到了下面的异常:
-```
+```java
 Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 160
 	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:868)
 	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:602)

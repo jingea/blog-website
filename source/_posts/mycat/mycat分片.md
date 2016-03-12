@@ -1,4 +1,4 @@
-category: mycat 
+category: mycat
 date: 2015-10-08
 title: Mycat分片
 ---
@@ -19,7 +19,7 @@ title: Mycat分片
 * defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点
 
 在partition-hash-int.txt文件中,采用`x=y`的形式, x是columns值. y是节点值. 所有的节点都是从0开始的.
-```
+```shell
 a=0
 b=1
 c=2
@@ -34,7 +34,7 @@ c=2
 </function>
 ```
 这个规则是约定好,哪个范围的sql对应哪个节点,我们可以这样配置autopartition-long.txt
-```
+```shell
 0-500=0
 500-1000=1
 1000-1500=2
@@ -48,7 +48,7 @@ c=2
   <property name="count">2</property>
 </function>
 ```
-这个是根据column的十进制值进行求模分片. 
+这个是根据column的十进制值进行求模分片.
 
 
 ## 固定分片hash算法

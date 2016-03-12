@@ -3,7 +3,7 @@ date: 2016-03-05
 title: Nginx配置
 ---
 下面我们看一下Nginx官方给出的nginx.config可有的全部配置内容
-```
+```shell
 user       www www;  ## Default: nobody
 # 在Nginx启动的时候会启动一个Master进程,和N个worker进程,Master讲接收到的任务分配给worker进程执行. worker进程数一般与主机的CPU的核心数相等
 worker_processes  5;  ## Default: 1
@@ -107,7 +107,7 @@ http {
 上面谈到的location涉及到的内容较多, 我们单独介绍一下:
 
 nginx location语法
-```
+```shell
 location [=|~|~*|^~] /uri/ { … }
 ```
 * `=` 严格匹配。如果这个查询匹配，那么将停止搜索并立即处理此请求。
@@ -120,7 +120,7 @@ location [=|~|~*|^~] /uri/ { … }
 
 
 上面的配置引用里其他的配置文件,而且很多配置没有配置选项,下面是Nginx官网给出的另一种配置
-```
+```shell
 user  www www;
 worker_processes  2;
 pid /var/run/nginx.pid;

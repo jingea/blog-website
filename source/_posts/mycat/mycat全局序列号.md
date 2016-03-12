@@ -1,4 +1,4 @@
-category: mycat 
+category: mycat
 date: 2015-10-08
 title: Mycat全局序列号
 ---
@@ -38,9 +38,9 @@ DETERMINISTIC
 BEGIN
 	DECLARE retval VARCHAR(64);
 	SET retval="-999999999,null";
-	SELECT CONCAT(CAST(current_value AS CHAR),",",CAST(increment AS CHAR)) 
-	 INTO retval 
-	 FROM MYCAT_SEQUENCE 
+	SELECT CONCAT(CAST(current_value AS CHAR),",",CAST(increment AS CHAR))
+	 INTO retval
+	 FROM MYCAT_SEQUENCE
 	 WHERE NAME = seq_name;
 	 RETURN retval;
 END
@@ -80,7 +80,7 @@ $$
 DELIMITER ;
 ```
 然后修改`sequence_db_conf.properties`这个配置文件
-```
+```shell
 #sequence stored in datanode
 GLOBAL=dn1
 COMPANY=dn1

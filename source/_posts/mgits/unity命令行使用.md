@@ -1,5 +1,4 @@
 category: mgits
-tag: unity
 date: 2015-08-08
 title: unity命令行使用
 ---
@@ -8,11 +7,11 @@ title: unity命令行使用
 当从命令行启动`Unity`时,它可以在启动时接受一些参数和信息, 这种方式可以用于测试用例，自动构建和其他的任务。
 
 在`MacOS`系统下，你可以像下面这样启动
-```
+```java
  /Applications/Unity/Unity.app/Contents/MacOS/Unity
 ```
 当在windows系统里，你就需要执行下面的命令了
-```
+```java
  "C:\Program Files (x86)\Unity\Editor\Unity.exe"
 ```
 
@@ -48,7 +47,7 @@ title: unity命令行使用
 * `-serial <serial>`	Activates Unity with the specified serial key. It is recommended to pass “-batchmode -quit” arguments as well, in order to quit Unity when done, if using this for automated activation of Unity. Please allow a few seconds before license file is created, as Unity needs to communicate with the license server. Make sure that License file folder exists, and has appropriate permissions before running Unity with this argument. In case activation fails, see the Editor.log for info. This option is new in Unity 5.0.
 
 #### Example usage
-```
+```java
 // C# example
 using UnityEditor;
 class MyEditorScript
@@ -73,7 +72,6 @@ static void PerformBuild ()
 * `Mac OS`: `/Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -executeMethod MyEditorScript.MyMethod`
 
 下面的命令在`batch`执行Unity, 同时从`asset server`更新指定项目. 当全部的`asset`下载完之后, 指定的方法会被执行,当方法被完全执行之后,Unity会自动退出.
-```
+```java
 /Applications/Unity/Unity.app/Contents/MacOS/Unity -batchmode -projectPath ~/UnityProjects/AutobuildProject -assetServerUpdate 192.168.1.1 MyGame AutobuildUser l33tpa33 -executeMethod MyEditorScript.PerformBuild -quit
 ```
-

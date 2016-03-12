@@ -7,32 +7,32 @@ memcached是一个高性能内存对象缓存系统. 它基于libevent,可方便
 
 memcached内存分配：
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/memcached/20120314163538_438.png)
-memcached默认情况下采用了名为Slab Allocator的机制分配、管理内存. 
+memcached默认情况下采用了名为Slab Allocator的机制分配、管理内存.
 
 如果我们在启动memcached时没有指定`-m`参数的话, 那么memcached能使用的最大内存为默认的64M,但是memcached启动的时候并不会一次性就都分配出来,而是当发现memcached已被分配的内存不够用的时候才会进行申请. memcached申请内存时一次会申请一个Slab(默认为1M). 然后会将这一个Slab分成不同的Class, 每个Class内部都有N个大小相等的Chunk.每个chunk中都保存了一个item结构体、一对key value键值对.
-	   
+
 ## 安装
 Memcached依赖libevent,所以我们首先需要安装libevent
-```
+```shell
 wget http://jaist.dl.sourceforge.net/project/levent/libevent/libevent-2.0/libevent-2.0.22-stable.tar.gz
 tar -zxvf libevent-2.0.22-stable.tar.gz
 cd libevent-2.0.22-stable
 ./configure --prefix=/usr && make && make install
 ```
 接下来安装Memcached
-```
+```shell
 wget http://memcached.org/latest
 tar -zxvf memcached-1.x.x.tar.gz
 cd memcached-1.x.x
 ./configure --with-libevent=/usr && make && make test && sudo make install
 ```
 
-## `memcached`命令选项 
+## `memcached`命令选项
 
 网络相关
 * `-s <file>` : Unix socket path to listen on (disables network support).
 * `-a <perms>` : 当通过s选项创建socket的时候,我们可以通过-a选项指定创建socket使用的权限(权限为八进制).
-* `-l <ip_addr>` : 监听的主机地址. 默认是本机任何可用的地址. 
+* `-l <ip_addr>` : 监听的主机地址. 默认是本机任何可用的地址.
 * `-d` : 以后台进程方式运行memcached
 * `-u <username>` : memcached不能以root用户运行，如果当前用户为root, 我们需要通过该参数指定用户为root
 * `-c <num>` : 设置最大同时连接数.(默认是1024).
@@ -54,9 +54,9 @@ cd memcached-1.x.x
 * `-k` : 锁定所有的分页内存. 在巨大的缓存系统中,使用这个选项是非常危险的,使用的使用要参考README文件和memcached homepage进行配置.
 * `-L` : 尝试使用尽可能使用到的内存叶. 增加内存叶大小可以减少TLB未命中和提供性能. 为了可以从OS获得更大的内存页,memcached会在一个巨大的chunk上分配所有的item
 * `-I <size>` : 指定slab page大小(默认是1mb,最小是1k, 最大是128m). 改变这个值会增加每个item大小的值.  使用-vv来查看更改后的值
-* `-F` : 关闭`flush_all`命令. 
+* `-F` : 关闭`flush_all`命令.
 
-```
+```shell
 memcached  -d -p 10021 -l 10.234.10.12 -u root -c 1024  -P ./memcached1.pid
 ```
 
@@ -77,25 +77,25 @@ MemcachedClient client = new MemcachedClient(new InetSocketAddress("10.234.10.12
 我们可以使用telnet命令直接连接memcached`telnet 127.0.0.1 10021`,然后输入下列命令查看相关信息
 
 ### stats
-统计memcached的各种信息 
+统计memcached的各种信息
 * `STAT pid 20401` memcache服务器的进程ID
-* `STAT uptime 47`  服务器已经运行的秒数 
-* `STAT time 1447835371` 服务器当前的unix时间戳 
-* `STAT version 1.4.24`  memcache版本 
+* `STAT uptime 47`  服务器已经运行的秒数
+* `STAT time 1447835371` 服务器当前的unix时间戳
+* `STAT version 1.4.24`  memcache版本
 * `STAT libevent 2.0.22-stable` libevent版本
 * `STAT pointer_size 64` 当前操作系统的指针大小（32位系统一般是32bit）
 * `STAT rusage_user 0.002999` 进程的累计用户时间
 * `STAT rusage_system 0.001999` 进程的累计系统时间
-* `STAT curr_connections 10` 当前打开着的连接数 
-* `STAT total_connections 11` 从服务器启动以后曾经打开过的连接数 
+* `STAT curr_connections 10` 当前打开着的连接数
+* `STAT total_connections 11` 从服务器启动以后曾经打开过的连接数
 * `STAT connection_structures 11` 服务器分配的连接构造数
 * `STAT reserved_fds 20`
 * `STAT cmd_get 0`  get命令（获取）总请求次数
-* `STAT cmd_set 0`  set命令（保存）总请求次数 
+* `STAT cmd_set 0`  set命令（保存）总请求次数
 * `STAT cmd_flush 0`
 * `STAT cmd_touch 0`
-* `STAT get_hits 0`  总命中次数 
-* `STAT get_misses 0` 总未命中次数 
+* `STAT get_hits 0`  总命中次数
+* `STAT get_misses 0` 总未命中次数
 * `STAT delete_misses 0` delete命令未命中次数
 * `STAT delete_hits 0`  delete命令命中次数
 * `STAT incr_misses 0`  incr命令未命中次数
@@ -109,23 +109,23 @@ MemcachedClient client = new MemcachedClient(new InetSocketAddress("10.234.10.12
 * `STAT touch_misses 0`  touch命令未命中次数
 * `STAT auth_cmds 0`
 * `STAT auth_errors 0`
-* `STAT bytes_read 7` 总读取字节数（请求字节数） 
-* `STAT bytes_written 0` 总发送字节数（结果字节数） 
+* `STAT bytes_read 7` 总读取字节数（请求字节数）
+* `STAT bytes_written 0` 总发送字节数（结果字节数）
 * `STAT limit_maxbytes 67108864`   分配给memcache的内存大小（字节）
 * `STAT accepting_conns 1`
 * `STAT listen_disabled_num 0`
-* `STAT threads 4`     当前线程数 
+* `STAT threads 4`     当前线程数
 * `STAT conn_yields 0`
 * `STAT hash_power_level 16`  hash等级
 * `STAT hash_bytes 524288`  hash字节数
 * `STAT hash_is_expanding 0`    
 * `STAT malloc_fails 0`  分配失败次数
-* `STAT bytes 0`   当前服务器存储items占用的字节数 
-* `STAT curr_items 0` 服务器当前存储的items数量 
-* `STAT total_items 0` 从服务器启动以后存储的items总数量 
+* `STAT bytes 0`   当前服务器存储items占用的字节数
+* `STAT curr_items 0` 服务器当前存储的items数量
+* `STAT total_items 0` 从服务器启动以后存储的items总数量
 * `STAT expired_unfetched 0`
 * `STAT evicted_unfetched 0`
-* `STAT evictions 0` 为获取空闲内存而删除的items数（分配给memcache的空间用满后需 
+* `STAT evictions 0` 为获取空闲内存而删除的items数（分配给memcache的空间用满后需
 * `STAT reclaimed 0`
 * `STAT crawler_reclaimed 0`
 * `STAT crawler_items_checked 0`
@@ -143,19 +143,19 @@ client.getStats().entrySet().stream().forEach(entry -> {
 ```
 
 ### stats reset
-重新统计数据 
+重新统计数据
 
 ### stats slabs
-显示slabs信息，可以详细看到数据的分段存储情况 
+显示slabs信息，可以详细看到数据的分段存储情况
 * `STAT active_slabs 0`
 * `STAT total_malloced 0`
 
 ### stats items
-显示slab中的item数目 
+显示slab中的item数目
 
 ### stats cachedump 1 0
-列出slabs第一段里存的KEY值 
+列出slabs第一段里存的KEY值
 
 
 ### STAT evictions 0
-表示要腾出新空间给新的item而移动的合法item数目 
+表示要腾出新空间给新的item而移动的合法item数目

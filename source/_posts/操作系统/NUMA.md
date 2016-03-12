@@ -1,6 +1,6 @@
 category: 操作系统
 date: 2015-10-26
-title: NUMA和RDMA 
+title: NUMA和RDMA
 ---
 
 ## 支持NUMA的CPU
@@ -8,17 +8,17 @@ title: NUMA和RDMA
 英特尔系列的
 * Nehalem和Tukwila系列之后的处理器
 * Xeon
-* 至强处理器 E5-2690 
+* 至强处理器 E5-2690
 * i3、i5、i7
 
 HP系列的
 * Superdome
 * SGI的Altix 3000
- 
+
 IBM的
 * p690
 * x440
- 
+
 NEC
 * TX7
 
@@ -31,7 +31,7 @@ AMD
 * NUMASTAT ：获取NUMA内存访问统计信息的命令行工具
 
 开启NUMA
-```
+```java
 numactl --cpunodebind=0 --membind=0 myapp
 ```
 
@@ -77,7 +77,7 @@ SDP配置文件是个文本文件，JVM启动时会从本地文件系统读取�
 1. bind规则：只要TCP套接字绑定到与规则匹配的地址和端口，就会使用SDP协议进行传输。
 2. connect规则：没有绑定的TCP套接字尝试连接匹配规则的地址和端口时，就会使用SDP协议进行传输。
 第一个关键字用来表明规则是bind还是connect。第二部分指定主机名或IP地址。当指定为IP地址时，你也可以指定表示IP地址范围的前缀。第三部分即最后一个部分是端口号或端口号范围。
-```
+```java
 # 绑定到192.168.1.196主机所有端口使用SDP
 bind 192.168.1.196 *
 
@@ -85,7 +85,7 @@ bind 192.168.1.196 *
 connect 192.168.2.0/24 1024-*
 ```
 ### 使用SDP的JVM7
-```
+```java
 java \
 -Dcom.sun.sdp.conf=sdp.conf \
 -Djava.net.preferIPv4Stack=true \
@@ -97,7 +97,7 @@ Application.class
 
 ### 全SSD硬盘的IO阀值
 SSD 硬盘传输速率取 500M/S
-```
+```java
 0.1ms + 0 + 4K/500MB = 0.1 + 0 + 0.008 = 0.108
 
 IOPS = 1/0.108 ms = 9259 IOPS
@@ -107,7 +107,7 @@ IOPS = 1/0.108 ms = 9259 IOPS
 
 ### 1万转机械磁盘的IO阀值
 1 万转机械磁盘传输速率取 200M/S
-```
+```java
 5ms + (60sec/10000RPM/2) + 4K/200MB = 5 + 3 + 0.02 = 8.02 IOPS = 1/8.02s ms = 125 IOPS
 ```
 吞吐率 = `125 * 4K = 500K / 200M = 0.25%`

@@ -10,11 +10,11 @@ title: Redis事务
 * `EXEC`告诉 redis 开始执行事务
 * `DISCARD`告诉 redis 取消事务
 
-`MULTI`命令执行后, redis进入事务状态,redis会持续缓存某个客户端的命令(其他客户端处于饥饿状态). 
+`MULTI`命令执行后, redis进入事务状态,redis会持续缓存某个客户端的命令(其他客户端处于饥饿状态).
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-multi.png)
 当redis接受到客户端的`EXEC`命令后会开始执行刚才缓存在事务队列里的任务. `DISCARD` 会将事务队列清空.
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-tranactions.png)
-```
+```shell
 redis 127.0.0.1:7006> MULTI
 OK
 redis 127.0.0.1:7006> SET a ""redis 127.0.0.1:7006> SET a ""
@@ -48,7 +48,7 @@ redis 127.0.0.1:7006> Get c
 (error) ERR Operation against a key holding the wrong kind of value
 redis 127.0.0.1:7006> GET n
 "n"
-redis 127.0.0.1:7006> 
+redis 127.0.0.1:7006>
 ```
 1. 使用`MULTI`命令开启事务
 2. 输入一个错误的命令,点击回车,redis并没有报错,说明这个命令确实是被缓存起来了没有执行

@@ -1,5 +1,4 @@
 category: Java
-tag : Java工具
 date: 2016-01-30
 title: Typesafe Config 初探
 ---
@@ -42,4 +41,3 @@ ConfigFactory.parseProperties(new Properties());
 ```
 
 > 需要注意的从`Config`实例中得到的`Config`, `ConfigParseOptions`, `ConfigResolveOptions`, `ConfigObject` 得到的对象都是不可变的.
-

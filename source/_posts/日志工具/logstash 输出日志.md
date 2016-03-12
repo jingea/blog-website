@@ -4,7 +4,7 @@ title: logstash输出日志
 ---
 
 ## 标准输出
-```
+```json
 output {
     stdout {
         codec => rubydebug
@@ -15,7 +15,7 @@ output {
 使用`stdout`我们将能将接受到的日志输出到控制台里
 
 ## 输出到文件
-```
+```json
 output {
     file {
         path => "D:\log\generate\%{+yyyy-MM-dd}.log"
@@ -30,7 +30,7 @@ output {
 
 ## 输出到elasticsearch
 将接受到的日志输出到 elasticsearch中
-```
+```json
 output {
     elasticsearch {
         host => "192.168.0.2"

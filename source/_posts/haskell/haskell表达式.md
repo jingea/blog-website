@@ -43,7 +43,7 @@ month _ = error "error"
 ```
 
 # 运算符
-```
+```haskell
 优先级9 : !!, .
 优先级8 : ^, ^^, **
 优先级7 : *, /, div,   mod, rem, quot

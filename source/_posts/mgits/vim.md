@@ -1,5 +1,4 @@
 category: mgits
-tag: vi
 date: 2015-10-08
 title: GVIM
 ---
@@ -13,7 +12,7 @@ title: GVIM
 `set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI`
 
 ## python编译
-```
+```java
 autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  
 autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  
 autocmd BufRead *.py nmap <F5> :!python %<CR>  
@@ -30,7 +29,7 @@ autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗�
 * 复制:`yy`复制一行. `5yy`从当前行开始向下复制5行
 * 粘贴: `p`光标向下移动. `P`光标不动
 * 块选择: `V`多行整行选择. `v`多行字符选择. `ctrl v`矩阵方式选择.
-* 光标移动：`$`移动到行尾. `0`移动到行首. `G`移动到最后一行. `gg`移动到最一行. 
+* 光标移动：`$`移动到行尾. `0`移动到行首. `G`移动到最后一行. `gg`移动到最一行.
 * 窗口编辑: `：split`水平新建窗口. `：vsplit `垂直分割.
 * 在窗口间游走: `Ctrl W` 加 `h, j, k, l`一起使用
 * 分页编辑： `：tabnew`新建分页。 `：tabclose`关闭当前分页. `：tabonly `关闭其他所有的分页
@@ -41,7 +40,7 @@ autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗�
 python自动补全插件
 
 配置,`_vimrc`文件追加
-```
+```java
 filetype plugin on
 let g:pydiction_location = 'D:/Program Files/Vim/pydiction/complete-dict'
 ```
@@ -53,7 +52,7 @@ let g:pydiction_location = 'D:/Program Files/Vim/pydiction/complete-dict'
 * `:NERDTreeClose` 关闭目录树
 
 修改_vimrc配置文件,添加映射
-```
+```java
 nmap <F2> :NERDTreeToggle<CR>  
 ```
 

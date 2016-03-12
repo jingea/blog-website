@@ -4,7 +4,7 @@ title: class文件格式
 ---
 
 ## ClassFile 结构
-```
+```java
 u4              magic;
 u2              minor_version;
 u2              major_version;
@@ -27,7 +27,7 @@ attribute_info  attributes[attributes_count];
 Magic的唯一作用是确定这个文件是否是一个能被虚拟机所接受的Class文件.魔数固定值为`0xCAFEBABY`,不会改变
 
 ### 版本号
-* minor_version副版本号 
+* minor_version副版本号
 * major_version主版本号
 二者共同构成Class文件版本号.假设minor_version为m, major_version为M, 那么class文件的版本号为M.m.在JDK版本在1.k(k>=2)以上时, class文件的版本范围为(45.0 ~ 44+k.0)
 
@@ -321,7 +321,7 @@ SourceFile属性结构
 3. 对于static类型的变量,有俩种赋值方式选择:
    > A: 在类构造器<clinit>中进行
    > B: 使用ConstantValue属性来赋值
-  
+
 前Sun Javac编译器的选择是:如果同时使用final和static来修饰一个变量, 并且这个变量的数据类型是基本类型或者String的话, 就生成ConstantValue属性来初始化, 否则在<clinit>中进行初始化.
 
 
@@ -380,5 +380,3 @@ inner_class_access_flags访问标志
 这俩个属性属于标志型的布尔属性,只有存在不存在的区别.Deprecated 表示某个类或者字段或者方法被作者不再推荐使用,在代码中通过@Deprecated标注Synthetic 代码该字段或者方法并不是由java源码直接产生的,而是由编译器自行添加的.
 
 在JDK1.5以后,标志一个类,字段,方法是编译器自动产生的,也可以设置他们的访问标志中的ACC_SYNTHETIC标志位,最典型的例子就是Bridge Method了. 所有由非用户产生的类,字段,方法都应当至少设置Synthetic属性或者ACC_SYNTHETIC标志位,唯一例外的就是<init>和<clinit>方法.
-
-

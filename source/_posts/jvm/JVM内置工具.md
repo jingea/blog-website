@@ -5,12 +5,12 @@ title: JVM内置工具
 ## JPS
 虚拟机进程状况工具
 
-列出正在运行的虚拟机进程,并显示虚拟机执行主类的名称,以及这些进程的本地虚拟机的唯一ID(LVMID). 
+列出正在运行的虚拟机进程,并显示虚拟机执行主类的名称,以及这些进程的本地虚拟机的唯一ID(LVMID).
 
 对于本地虚拟机进程来说,LVMID与操作系统的进程ID是一致的,使用windwos的任务管理器或者Unix的ps命令也可以查询到虚拟机进程的LVMID,但如果同时启动了多个虚拟机进程,无法根据进程名称定位时,那就只能依赖jps命令显示主类的功能才能区分.
 
 命令格式:
-```
+```java
 jps [ options ] [hostid]
 ```
 jps可以通过RMI协议查询开启了RMI服务的远程虚拟机进程状态,hostid为RMI注册表中注册的主机名
@@ -27,12 +27,12 @@ jps工具主要选项
 用于监视虚拟机各种运行状态信息的命令行工具.它可以显示本地或远程虚拟机进程中的类装载,内存,垃圾收集,JIT编译等运行数据.
 
 jstat命令格式
-```
+```java
 jstat [ option vmid [interval [s|ms] [count]]]
 ```
 对于命令格式中的VMID与LVMID需要特别说明一下:如果是本地虚拟机进程,VMID和LVMID是一致的,如果是远程
 虚拟机进程,那么VMID的格式应该是:
-```
+```java
 [protocol:] [//]lvmid[@hostname [:port] /servername]
 ```
 选项option代表着用户希望查询的虚拟机信息,主要分为三类:类装载,垃圾收集,运行期编译状况.
@@ -59,7 +59,7 @@ Java配置
 
 jinfo的作用是实时查看和调整虚拟机的各项参数.
 ### jinfo命令格式
-```
+```java
 jinfo [ option ] pid
 ```
 
@@ -75,7 +75,7 @@ jmap的作用并不仅仅是为了获取dump文件,它还可以查询`finalize`�
 
 和jinfo命令一样,jmap有不少功能是在windows平台下受限的,除了生成dump文件`-dump`选项和用于查看每个类的实例,空间占用统计的`-histo`选项所有系统操作系统都提供之外,其余选项只能在Linux/Solaris下使用.
 
-```
+```java
 jmap [ option ] vmid
 ```
 
@@ -92,7 +92,7 @@ java堆栈跟踪工具. `jstack`命令用于生成虚拟机当前时刻的线程
 导致长时间等待.
 
 jstack命令格式
-```
+```java
 jstack [ option ] vmid
 ```
 option值：
@@ -105,7 +105,7 @@ option值：
 
 ## jstack日志
 下面摘抄的是NETTY中空epoll的一段记录
-```
+```java
 "nioEventLoopGroup-2461-1" #4955 prio=10 os_prio=0 tid=0x00007fd857e9a000 nid=0x5e19 runnable [0x00007fd7374bc000]
    java.lang.Thread.State: RUNNABLE
 	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
@@ -127,7 +127,7 @@ option值：
 ```
 
 第一行数据分析
-```
+```java
 nioEventLoopGroup-2461-1 表示的是进程名字
 #4955
 prio=10
@@ -139,7 +139,7 @@ runnable
 ```
 
 线程堆栈信息
-```
+```java
 java.lang.Thread.State 线程状态
 locked` 锁住的资源,分别锁住了  <0x00000000e673cf38>, <0x00000000e673cd30>, <0x00000000e673cc58>
 ```
@@ -154,11 +154,9 @@ java.lang.Thread.State 线程状态
 	1. `java.lang.Thread.State: WAITING (parking)`：一直等那个条件发生；
 	2. `java.lang.Thread.State: TIMED_WAITING` (`parking`或`sleeping`)：定时的,那个条件不到来,也将定时唤醒自己.
 
-	
 
-* `in Object.wait()` : 说明它获得了监视器之后,又调用了 `java.lang.Object.wait()` 方法.	
+
+* `in Object.wait()` : 说明它获得了监视器之后,又调用了 `java.lang.Object.wait()` 方法.
 > 每个 Monitor在某个时刻,只能被一个线程拥有,该线程就是 `Active Thread`,而其它线程都是 `Waiting Thread`,分别在两个队列 `Entry Set`和 `Wait Set`里面等候.在 `Entry Set`中等待的线程状态是 `Waiting for monitor entry`,而在 `Wait Set`中等待的线程状态是 `in Object.wait()`.当线程获得了 `Monitor`,如果发现线程继续运行的条件没有满足,它则调用对象(一般就是被 `synchronized` 的对象)的 `wait()` 方法,放弃了 `Monitor`,进入 `Wait Set`队列. 此时线程状态大致为以下几种：
-	1. `java.lang.Thread.State: TIMED_WAITING (on object monitor)`; 
+	1. `java.lang.Thread.State: TIMED_WAITING (on object monitor)`;
 	2. `java.lang.Thread.State: WAITING (on object monitor)`;
-
-

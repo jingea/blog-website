@@ -36,7 +36,7 @@ for line in file:
 ```
 
 ### OS模块文件操作
-```
+```python
 fd = os.open(filename, flag, [mode])
 ```
 filename和mode我们通过上面的描述都知道了,现在我们看一下flag属性值(文件打开方式)
@@ -53,7 +53,6 @@ os.write(fd, "helloworld")
 
 ### 中文乱码
 写入文件时,如果输出中文,我们经常会遇到乱码的问题.只需要在python文件顶部加上以下内容就可以了
-```
+```python
 #-*- coding=utf-8 -*-
 ```
-
