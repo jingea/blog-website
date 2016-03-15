@@ -2,18 +2,8 @@ category: Netty
 date: 2016-02-22
 title: NettyServerBootstrap
 ---
-
+我们首先给出一个Netty上的一个Example示例
 ```java
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.timeout.IdleStateHandler;
-
 public class NettyServerBootstrap {
 	public static void main(String[] args) {
 		int cpuSize = Runtime.getRuntime().availableProcessors();
@@ -41,7 +31,7 @@ public class NettyServerBootstrap {
 							pipeline.addLast(new ProtobufVarint32FrameDecoder());
 							pipeline.addFirst(new IdleStateHandler(5, 5, 10));
 
-							pipeline.addLast(new NioEventLoopGroup(128), new ProtobufVarint32FrameDecoder());
+							pipeline.addLast(new NioEventLoopGroup(1), new ServiceHandler());
 						}
 					});
 
@@ -61,7 +51,8 @@ public class NettyServerBootstrap {
 			workerGroup.shutdownGracefully();
 		}
 	}
-
 }
-
 ```
+在这个示例中, 我们采用了主从Reactor线程模型, 添加了Netty内置的Protobuf编码器. 同时后端业务线程的处理我们也采用了线程池串行的方式.
+
+下来我们分析一下`ServerBootstrap`的源码.
