@@ -45,7 +45,7 @@
 				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -59,7 +59,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
 						</form>
 					
 					</li>
@@ -83,7 +83,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-11T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-12</time>
+    <time datetime="2015-10-11T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-12</time>
     
   </p>
 </header>
@@ -173,301 +173,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/08/mycat/mycat全局序列号/" title="Mycat全局序列号" itemprop="url">Mycat全局序列号</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
-<p>Mycat的全局序列号分为俩部分</p>
-<ul>
-<li>本地文件方式</li>
-<li>数据库方式</li>
-</ul>
-<p>因为本地文件方式当Mycat重启之后，里面记录的数据会被重置，所以我就只记录一下数据库方式.</p>
-<p>在<code>server.xml</code>文件中进行如下配置<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mycat:server</span> <span class="attr">xmlns:mycat</span>=<span class="string">"http://org.opencloudb/"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">system</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"sequnceHandlerType"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">system</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mycat:server</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>接下来我们创建一张表,用于存放ID<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> MYCAT_SEQUENCE;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> db1.MYCAT_SEQUENCE</span><br><span class="line">(</span><br><span class="line">  <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">10</span>),</span><br><span class="line">  currentValue <span class="built_in">BIGINT</span> <span class="keyword">DEFAULT</span> <span class="number">1</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> ,</span><br><span class="line">  <span class="keyword">increment</span> <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="number">1</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span>(<span class="keyword">name</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="built_in">CHAR</span> <span class="keyword">SET</span>=utf8;</span><br></pre></td></tr></table></figure></p>
-<p>获取当前sequence的值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">FUNCTION</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> mycat_seq_currval;</span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> mycat_seq_currval(seq_name <span class="built_in">VARCHAR</span>(<span class="number">50</span>)) <span class="keyword">RETURNS</span> <span class="built_in">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">CHARSET</span> utf8</span><br><span class="line"><span class="keyword">DETERMINISTIC</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">DECLARE</span> retval <span class="built_in">VARCHAR</span>(<span class="number">64</span>);</span><br><span class="line">	<span class="keyword">SET</span> retval=<span class="string">"-999999999,null"</span>;</span><br><span class="line">	<span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="keyword">CAST</span>(current_value <span class="keyword">AS</span> <span class="built_in">CHAR</span>),<span class="string">","</span>,<span class="keyword">CAST</span>(<span class="keyword">increment</span> <span class="keyword">AS</span> <span class="built_in">CHAR</span>))</span><br><span class="line">	 <span class="keyword">INTO</span> retval</span><br><span class="line">	 <span class="keyword">FROM</span> MYCAT_SEQUENCE</span><br><span class="line">	 <span class="keyword">WHERE</span> <span class="keyword">NAME</span> = seq_name;</span><br><span class="line">	 RETURN retval;</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line">$$</span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>这里需要说明一点的是, 由于mysql默认分隔符为<code>;</code>,因此我们要先使用<code>DELIMITER $$</code>将分隔符置为<code>&amp;&amp;</code>,不然的话在函数里也使用到了<code>;</code>会影响到函数,最后再将分隔符置为<code>;</code></p>
-</blockquote>
-<p>设置sequence值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">FUNCTION</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> mycat_seq_setval;</span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> mycat_seq_setval(seq_name <span class="built_in">VARCHAR</span>(<span class="number">50</span>),<span class="keyword">VALUE</span> <span class="built_in">INTEGER</span>) <span class="keyword">RETURNS</span> <span class="built_in">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">CHARSET</span> utf8</span><br><span class="line"><span class="keyword">DETERMINISTIC</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">UPDATE</span> MYCAT_SEQUENCE</span><br><span class="line"><span class="keyword">SET</span> current_value = <span class="keyword">VALUE</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">NAME</span> = seq_name;</span><br><span class="line">RETURN mycat_seq_currval(seq_name);</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line">$$</span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></p>
-<p>获取下一个sequence值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">FUNCTION</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> mycat_seq_nextval;</span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> mycat_seq_nextval(seq_name <span class="built_in">VARCHAR</span>(<span class="number">50</span>)) <span class="keyword">RETURNS</span> <span class="built_in">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">CHARSET</span> utf8</span><br><span class="line"><span class="keyword">DETERMINISTIC</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">UPDATE</span> MYCAT_SEQUENCE</span><br><span class="line"><span class="keyword">SET</span> current_value = current_value + <span class="keyword">increment</span> <span class="keyword">WHERE</span> <span class="keyword">NAME</span> = seq_name;</span><br><span class="line">RETURN mycat_seq_currval(seq_name);</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line">$$</span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></p>
-<p>然后修改<code>sequence_db_conf.properties</code>这个配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#sequence stored in datanode</span><br><span class="line">GLOBAL=dn1</span><br><span class="line">COMPANY=dn1</span><br><span class="line">CUSTOMER=dn1</span><br><span class="line">ORDERS=dn1</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li><code>GLOBAL</code></li>
-<li><code>COMPANY</code></li>
-<li><code>CUSTOMER</code></li>
-<li><code>ORDERS</code></li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mycat/">mycat</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/mycat/mycat全局序列号/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mycat/mycat全局序列号/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/linux/2015-10-12-AWK/" title="AWK" itemprop="url">AWK</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h1><p>awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
-<p>语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk [-F  field-separator]  &apos;commands&apos;  input-file(s)</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>-F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符<code>-F &#39;:&#39;</code>)</li>
-<li>commands: ‘PATTERN{COMMAND}’. PATTERN为模式(正在表达式),COMMAND为要执行的命令.</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk  -F &apos;:&apos;  &apos;BEGIN &#123;print &quot;start&quot;&#125;  &#123;print $1&quot;&#125; END &#123;print &quot;end&quot;&#125;&apos; ./txt</span><br></pre></td></tr></table></figure>
-<p>上面的例子是读取<code>txt</code>文件,然后使用<code>:</code>分割每一行数据,在开始处理的时候输出start，在处理过程中第一列数据，最后输出end。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><p>我们可以在AWK命令中直接使用以下内置变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ARGC               命令行参数个数</span><br><span class="line">ARGV               命令行参数排列</span><br><span class="line">ENVIRON            支持队列中系统环境变量的使用</span><br><span class="line">FILENAME           awk浏览的文件名</span><br><span class="line">FNR                浏览文件的记录数</span><br><span class="line">FS                 设置输入域分隔符，等价于命令行 -F选项</span><br><span class="line">NF                 浏览记录的域的个数</span><br><span class="line">NR                 已读的记录数</span><br><span class="line">OFS                输出域分隔符</span><br><span class="line">ORS                输出记录分隔符</span><br><span class="line">RS                 控制记录分隔符</span><br></pre></td></tr></table></figure></p>
-<p>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print ARGC&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h3 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h3><p>我们通过赋值的方式直接定义一个变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;BEGIN&#123;size=0;&#125; &#123;size=1+size&#125; &#123;print $1&#125; END&#123;print size&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面我们定义了一个数值型的size变量.</p>
-<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><ul>
-<li><code>= += -= *= /= %= ^= **=</code>    赋值</li>
-<li><code>?:</code>    C条件表达式</li>
-<li><code>||</code>    逻辑或</li>
-<li><code>&amp;&amp;</code>    逻辑与</li>
-<li><code>~ ~!</code>    匹配正则表达式和不匹配正则表达式</li>
-<li><code>&lt; &lt;= &gt; &gt;= != ==</code>    关系运算符</li>
-<li><code>空格</code>    连接</li>
-<li><code>+ -</code>    加，减</li>
-<li><code>* / &amp;</code>    乘，除与求余</li>
-<li><code>+ - !</code>    一元加，减和逻辑非</li>
-<li><code>^ ***</code>    求幂</li>
-<li><code>++ --</code>    增加或减少，作为前缀或后缀</li>
-<li><code>$</code>    字段引用</li>
-<li><code>in</code>    数组成员</li>
-</ul>
-<h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>下面输出了大于10000的java进程号<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;BEGIN&#123;size=0&#125; &#123;if($1&gt;10000) &#123;size++;print $1&#125;&#125; END&#123;print size&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><p>awk中的循环语句借鉴于C语言，支持while、do/while、for、break、continue，这些关键字的语义和C语言中的语义完全相同。</p>
-<h1 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h1><h2 id="sub函数"><a href="#sub函数" class="headerlink" title="sub函数"></a>sub函数</h2><p>匹配从左侧开始找到的第一个符合规则的字符串，然后使用替换字符串替换这些字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面这个例子就使用sun这个字符串替换了$2中的moon字符串。</p>
-<p>我们还可以指定在哪列执行查找替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;, $1)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面的例子中我们只在第一列进行查找替换</p>
-<h2 id="gsub函数"><a href="#gsub函数" class="headerlink" title="gsub函数"></a>gsub函数</h2><p>与sub函数不同的是，这个执行的是全局替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;gsub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="index函数"><a href="#index函数" class="headerlink" title="index函数"></a>index函数</h2><p>返回子字符串第一次被匹配的位置，偏移量从位置1开始<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print$2; $2=index($2, &quot;moon&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="length函数"><a href="#length函数" class="headerlink" title="length函数"></a>length函数</h2><p>返回记录的字符数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print$2; $2=length($2)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="substr函数"><a href="#substr函数" class="headerlink" title="substr函数"></a>substr函数</h2><p>返回从位置1开始的子字符串，如果指定长度超过实际长度，就返回整个字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print substr($2, 2, 10)&#125; &apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面的例子将$2字符串从第二个字符还是截取，截取10个长度的字符串出来</p>
-<h2 id="toupper和tolower函数"><a href="#toupper和tolower函数" class="headerlink" title="toupper和tolower函数"></a>toupper和tolower函数</h2><p>可用于字符串大小间的转换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;&#123;print toupper($2)&#125; &apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="split函数"><a href="#split函数" class="headerlink" title="split函数"></a>split函数</h2><p>可按给定的分隔符把字符串分割为一个数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123; split($2, array, &quot;/&quot;); print array[3]&#125; &apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面的例子我们将$2这一列按照<code>/</code>进行分割,然后将分割出的数据存储到array数组里. 注意这里首先不需要转义</p>
-<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id=""><a href="#" class="headerlink" title="\"></a>\</h2><p>将下一字符标记为特殊字符、文本、反向引用或八进制转义符。例如，“n”匹配字符“n”。“\n”匹配换行符。序列“\”匹配“\”，“(”匹配“(”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\\/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<p>过滤出带有<code>\</code>的行</p>
-<h2 id="-1"><a href="#-1" class="headerlink" title="^"></a>^</h2><p>匹配输入字符串与最左侧开始的位置的字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/^\\n/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<p>找到所有以<code>\n</code>字符串开始的数据</p>
-<h2 id="-2"><a href="#-2" class="headerlink" title="$"></a>$</h2><p>匹配输入字符串结尾的位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/)。$/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<p>过滤以<code>)。</code>结尾的行</p>
-<h2 id="-3"><a href="#-3" class="headerlink" title="*"></a>*</h2><p>零次或多次匹配前面的字符或子表达式。例如，zo<em> 匹配“z”和“zoo”。</em> 等效于 {0,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用*/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="-4"><a href="#-4" class="headerlink" title="+"></a>+</h2><p>一次或多次匹配前面的字符或子表达式。例如，“zo+”与“zo”和“zoo”匹配，但与“z”不匹配。+ 等效于 {1,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用+/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="-5"><a href="#-5" class="headerlink" title="?"></a>?</h2><p>零次或一次匹配前面的字符或子表达式。例如，“do(es)?”匹配“do”或“does”中的“do”。? 等效于 {0,1}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用?/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="n"><a href="#n" class="headerlink" title="{n}"></a>{n}</h2><p>n 是非负整数。正好匹配 n 次。例如，“o{2}”与“Bob”中的“o”不匹配，但与“food”中的两个“o”匹配。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="n-1"><a href="#n-1" class="headerlink" title="{n,}"></a>{n,}</h2><p>n 是非负整数。至少匹配 n 次。例如，“o{2,}”不匹配“Bob”中的“o”，而匹配“foooood”中的所有 o。“o{1,}”等效于“o+”。“o{0,}”等效于“o*”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="n-m"><a href="#n-m" class="headerlink" title="{n,m}"></a>{n,m}</h2><p>M 和 n 是非负整数，其中 n &lt;= m。匹配至少 n 次，至多 m 次。例如，“o{1,3}”匹配“fooooood”中的头三个 o。’o{0,1}’ 等效于 ‘o?’。注意：您不能将空格插入逗号和数字之间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="-6"><a href="#-6" class="headerlink" title="."></a>.</h2><p>匹配除“\n”之外的任何单个字符。若要匹配包括“\n”在内的任意字符，请使用诸如“[\s\S]”之类的模式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="pattern"><a href="#pattern" class="headerlink" title="(pattern)"></a>(pattern)</h2><p>匹配 pattern 并捕获该匹配的子表达式。可以使用 $0…$9 属性从结果“匹配”集合中检索捕获的匹配。若要匹配括号字符 ( )，请使用“(”或者“)”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="pattern-1"><a href="#pattern-1" class="headerlink" title="(?:pattern)"></a>(?:pattern)</h2><p>匹配 pattern 但不捕获该匹配的子表达式，即它是一个非捕获匹配，不存储供以后使用的匹配。这对于用“or”字符 (|) 组合模式部件的情况很有用。例如，’industr(?:y|ies) 是比 ‘industry|industries’ 更经济的表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="pattern-2"><a href="#pattern-2" class="headerlink" title="(?=pattern)"></a>(?=pattern)</h2><p>执行正向预测先行搜索的子表达式，该表达式匹配处于匹配 pattern 的字符串的起始点的字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?=95|98|NT|2000)’ 匹配“Windows 2000”中的“Windows”，但不匹配“Windows 3.1”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="pattern-3"><a href="#pattern-3" class="headerlink" title="(?!pattern)"></a>(?!pattern)</h2><p>执行反向预测先行搜索的子表达式，该表达式匹配不处于匹配 pattern 的字符串的起始点的搜索字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?!95|98|NT|2000)’ 匹配“Windows 3.1”中的 “Windows”，但不匹配“Windows 2000”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="x-y"><a href="#x-y" class="headerlink" title="x|y"></a>x|y</h2><p>匹配 x 或 y。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/换页符等|十六进制转义码必须正好是两位数长/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="xyz"><a href="#xyz" class="headerlink" title="[xyz]"></a>[xyz]</h2><p>匹配是否包含xyz中任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[前面至少有]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="xyz-1"><a href="#xyz-1" class="headerlink" title="[^xyz]"></a>[^xyz]</h2><p>匹配不能包含xyz任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[^前面至少有]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="a-z"><a href="#a-z" class="headerlink" title="[a-z]"></a>[a-z]</h2><p>与<code>[xyz]</code>规则相同,只不过这个模式提供了一个范围模式.例如[a-c]实际为匹配[abc]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[a-b]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="a-z-1"><a href="#a-z-1" class="headerlink" title="[^a-z]"></a>[^a-z]</h2><p>反向范围字符。匹配不在指定的范围内的任何字符。例如，“[^a-z]”匹配任何不在“a”到“z”范围内的任何字符。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[^a-z]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<p>需要注意的是’\t’会被匹配出来</p>
-<h2 id="d"><a href="#d" class="headerlink" title="\d"></a>\d</h2><p>数字字符匹配。等效于 [0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\d/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="D"><a href="#D" class="headerlink" title="\D"></a>\D</h2><p>非数字字符匹配。等效于 [^0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\D/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="n-2"><a href="#n-2" class="headerlink" title="\n"></a>\n</h2><p>换行符匹配。等效于 \x0a 和 \cJ。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\n/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="r"><a href="#r" class="headerlink" title="\r"></a>\r</h2><p>匹配一个回车符。等效于 \x0d 和 \cM。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\t/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="s"><a href="#s" class="headerlink" title="\s"></a>\s</h2><p>匹配任何空白字符，包括空格、制表符、换页符等。与 [ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\s/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="S"><a href="#S" class="headerlink" title="\S"></a>\S</h2><p>匹配任何非空白字符。与 [^ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\S/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="w"><a href="#w" class="headerlink" title="\w"></a>\w</h2><p>匹配任何字类字符，包括下划线。与“[A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\w/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="W"><a href="#W" class="headerlink" title="\W"></a>\W</h2><p>与任何非单词字符匹配。与“[^A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\W/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/linux/">linux</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/linux/2015-10-12-AWK/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/2015-10-12-AWK/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/mgits/vim/" title="GVIM" itemprop="url">GVIM</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="vimrc配置文件"><a href="#vimrc配置文件" class="headerlink" title="_vimrc配置文件"></a>_vimrc配置文件</h1><h2 id="GVIM打开即全屏"><a href="#GVIM打开即全屏" class="headerlink" title="GVIM打开即全屏"></a>GVIM打开即全屏</h2><p><code>au GUIEnter * simalt ~x</code></p>
-<h2 id="设置VeraMono字体"><a href="#设置VeraMono字体" class="headerlink" title="设置VeraMono字体"></a>设置VeraMono字体</h2><p><a href="http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf" target="_blank" rel="external">VeraMono</a>需要下载安装(百度字体安装就好)<br><code>set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI</code></p>
-<h2 id="python编译"><a href="#python编译" class="headerlink" title="python编译"></a>python编译</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  </span><br><span class="line">autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  </span><br><span class="line">autocmd BufRead *.py nmap &lt;F5&gt; :!python %&lt;CR&gt;  </span><br><span class="line">autocmd BufRead *.py nmap &lt;F6&gt; :make&lt;CR&gt;  </span><br><span class="line">autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口</span><br></pre></td></tr></table></figure>
-<h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
-<li>搜索：<code>/</code>向下搜索. <code>?</code>向上搜索</li>
-<li>替换： <code>:%s/abc/123/g</code>, 将abc都替换为123</li>
-<li>删除行：<code>dd</code>删除整行. <code>5dd</code>从当前行开始向后删除5整行. <code>D</code>从光标删除到行尾</li>
-<li>删除字符：<code>x</code>向后删除一个字符. <code>X</code>向前删除一个字符</li>
-<li>撤销: <code>u</code></li>
-<li>复制:<code>yy</code>复制一行. <code>5yy</code>从当前行开始向下复制5行</li>
-<li>粘贴: <code>p</code>光标向下移动. <code>P</code>光标不动</li>
-<li>块选择: <code>V</code>多行整行选择. <code>v</code>多行字符选择. <code>ctrl v</code>矩阵方式选择.</li>
-<li>光标移动：<code>$</code>移动到行尾. <code>0</code>移动到行首. <code>G</code>移动到最后一行. <code>gg</code>移动到最一行.</li>
-<li>窗口编辑: <code>：split</code>水平新建窗口. <code>：vsplit</code>垂直分割.</li>
-<li>在窗口间游走: <code>Ctrl W</code> 加 <code>h, j, k, l</code>一起使用</li>
-<li>分页编辑： <code>：tabnew</code>新建分页。 <code>：tabclose</code>关闭当前分页. <code>：tabonly</code>关闭其他所有的分页</li>
-<li>顶部底部跳转： 顶部<code>`, 底部</code>shift + g`</li>
-</ul>
-<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><h2 id="Pydiction"><a href="#Pydiction" class="headerlink" title="Pydiction "></a><a href="http://www.vim.org/scripts/script.php?script_id=850" target="_blank" rel="external">Pydiction </a></h2><p>python自动补全插件</p>
-<p>配置,<code>_vimrc</code>文件追加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">filetype plugin on</span><br><span class="line">let g:pydiction_location = <span class="string">'D:/Program Files/Vim/pydiction/complete-dict'</span></span><br></pre></td></tr></table></figure></p>
-<p>然后将<code>pydiction/after/ftplugin/python_pydiction.vim</code>复制到<code>Vim\vimfiles\ftplugin\python_pydiction.vim</code></p>
-<h2 id="The-NERD-tree"><a href="#The-NERD-tree" class="headerlink" title="The NERD tree"></a><a href="http://www.vim.org/scripts/script.php?script_id=1658" target="_blank" rel="external">The NERD tree</a></h2><p>文件树. 将下载下来的压缩包解压到<code>Vim\vimfiles</code></p>
-<ul>
-<li><code>:NERDTree</code> 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径</li>
-<li><code>:NERDTreeClose</code> 关闭目录树</li>
-</ul>
-<p>修改_vimrc配置文件,添加映射<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="bsh-vim"><a href="#bsh-vim" class="headerlink" title="bsh.vim"></a><a href="http://www.vim.org/scripts/script.php?script_id=1202" target="_blank" rel="external">bsh.vim</a></h2><p>Shell语法高亮</p>
-<p>只需将<code>bsh.vim</code>文件拷贝到<code>Vim\vimfiles\syntax</code>就可以了</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/mgits/vim/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mgits/vim/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/10/08/数据库/数据库事务/" title="数据库事务" itemprop="url">数据库事务</a>
   </h1>
   <p class="article-author">By
@@ -475,7 +180,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
     
   </p>
 </header>
@@ -574,140 +279,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/08/数据库/sql/" title="常用SQL" itemprop="url">常用SQL</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -<span class="keyword">h</span> 主机地址 -<span class="keyword">u</span> 用户名 －p 用户密码 （注:<span class="keyword">u</span>与root可以不用加空格，其它也一样）</span><br></pre></td></tr></table></figure>
-<h2 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h2><p>创建用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'host'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'password'</span>;</span><br></pre></td></tr></table></figure></p>
-<p>授权:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">'username'</span>@<span class="string">'host'</span></span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>privileges - 用户的操作权限,如SELECT,INSERT,UPDATE等.如果要授予所的权限则使用ALL;如果要授予该用户对所有数据库和表的相应操作权限则可用<em>表示, 如</em>.*. </p>
-</blockquote>
-<p>用以上命令授权的用户不能给其它用户授权,如果想让该用户可以授权,用以下命令:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">'username'</span>@<span class="string">'host'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span><br></pre></td></tr></table></figure></p>
-<p>设置与更改用户密码<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> <span class="string">'username'</span>@<span class="string">'host'</span> = <span class="keyword">PASSWORD</span>(<span class="string">'newpassword'</span>);</span><br></pre></td></tr></table></figure></p>
-<p>撤销用户权限<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> privilege <span class="keyword">ON</span> databasename.tablename <span class="keyword">FROM</span> <span class="string">'username'</span>@<span class="string">'host'</span>;</span><br></pre></td></tr></table></figure></p>
-<p>删除用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'host'</span>;</span><br></pre></td></tr></table></figure></p>
-<h2 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h2><ul>
-<li>显示数据库：<code>SHOW databases</code>; </li>
-<li>创建库：<code>CREATE DATABASE 库名</code>; </li>
-<li>删除库：<code>DROP DATABASE 库名</code>; </li>
-<li>使用库(选中库)：<code>USE 库名</code>; </li>
-</ul>
-<h2 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h2><ul>
-<li>显示数据表：<code>SHOW tables</code></li>
-<li>显示表结构：<code>DESC 表名</code></li>
-<li>删除表：<code>DROP TABLE 表名</code>; </li>
-<li>输入创建表的DDL语句 <code>SHOW CREATE TABLE 表名;</code></li>
-<li>创建表：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span>  </span><br><span class="line">    <span class="keyword">USER</span>  </span><br><span class="line">    (  </span><br><span class="line">        <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">        <span class="keyword">id</span> <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">        stu_id <span class="built_in">INT</span>,  </span><br><span class="line">        phone <span class="built_in">VARCHAR</span>(<span class="number">20</span>),  </span><br><span class="line">        address <span class="built_in">VARCHAR</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">        age <span class="built_in">INT</span>(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">        PRIMARY <span class="keyword">KEY</span> (<span class="keyword">name</span>),  </span><br><span class="line">        <span class="keyword">CONSTRAINT</span> stu_id <span class="keyword">UNIQUE</span> (stu_id)  </span><br><span class="line">    )  </span><br><span class="line">    <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="表数据操作"><a href="#表数据操作" class="headerlink" title="表数据操作"></a>表数据操作</h3><ul>
-<li>清空表数据<code>truncate table 表名;</code>. truncate删除后不记录mysql日志，不可以恢复数据。相当于保留mysql表的结构，重新创建了这个表，所有的状态都相当于新表。</li>
-<li>清空表数据<code>delete from 表名</code>. delete的效果有点像将mysql表中所有记录一条一条删除到删完</li>
-</ul>
-<h3 id="修改表结构"><a href="#修改表结构" class="headerlink" title="修改表结构"></a>修改表结构</h3><ul>
-<li>修改列名<code>alter table 表名称 change 字段名称 字段名称</code></li>
-<li>修改表名<code>alter table 表名称 rename 表名称</code></li>
-<li>修改某个表的字段类型及指定为空或非空<code>alter table 表名称 change 字段名称字段名称 字段类型 [null/not null];</code></li>
-<li>修改某个表的字段名称及指定为空或非空<code>alter table 表名称 change 字段原名称字段新名称 字段类型 [null/not null];</code></li>
-<li>增加一个字段(一列)<code>alter table table_name add column column_name type default value;</code> type指该字段的类型,value指该字段的默认值</li>
-<li>更改一个字段名字(也可以改变类型和默认值)<code>alter table table_name change sorce_col_name dest_col_name type defaultvalue;</code> source_col_name指原来的字段名称,dest_col_name指改后的字段名称</li>
-<li>改变一个字段的默认值<code>alter table table_name alter column_name set default value;</code></li>
-<li>改变一个字段的数据类型<code>alter table table_name change column column_name column_name type;</code></li>
-<li>向一个表中增加一个列做为主键<code>alter table table_name add column column_name type auto_increment PRIMARYKEY;</code></li>
-<li>向一个表中增加一个列做为主键<code>alter table table_name add column column_name type auto_increment PRIMARYKEY;</code></li>
-<li>删除字段<code>alter table form1 drop column 列名;</code></li>
-</ul>
-<h3 id="复制表"><a href="#复制表" class="headerlink" title="复制表"></a>复制表</h3><ul>
-<li>含有主键等信息的完整表结构 <code>CREATE table 新表名 LIKE book;</code></li>
-<li>只有表结构，没有主键等信息 `create table 新表名 select * from books;</li>
-<li>将旧表中的数据灌入新表 <code>INSERT INTO 新表 SELECT * FROM 旧表；</code> 注：新表必须已经存在</li>
-</ul>
-<h3 id="导入导出数据库"><a href="#导入导出数据库" class="headerlink" title="导入导出数据库"></a>导入导出数据库</h3><ul>
-<li>数据库某表的备份,在命令行中输入:<code>mysqldump -u root -p database_name table_name &gt; bak_file_name</code></li>
-<li>导出数据<code>select_statment into outfile”dest_file”;</code></li>
-<li>导入数据<code>load data infile”file_name” into table table_name;</code></li>
-<li>将两个表里的数据拼接后插入到另一个表里<code>insert into tx select t1.com1,concat(t1.com2,t2.com1) from t1,t2;</code></li>
-</ul>
-<h3 id="查询表"><a href="#查询表" class="headerlink" title="查询表"></a>查询表</h3><p>mysql查询的五种子句 </p>
-<h4 id="where-条件查询"><a href="#where-条件查询" class="headerlink" title="where(条件查询)"></a>where(条件查询)</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1 <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>数值谓词:<code>&gt;,=,&lt;,&lt;&gt;,!=,!&gt;,!&lt;,=&gt;,=&lt;</code></li>
-<li>字符串谓词：<code>=，like</code></li>
-<li>日期谓词：<code>=</code> (<code>SELECT * from t1 WHERE create_time = &#39;2011-04-08&#39;</code>)</li>
-</ul>
-<h4 id="having（筛选）"><a href="#having（筛选）" class="headerlink" title="having（筛选）"></a>having（筛选）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h4 id="group-by（分组）"><a href="#group-by（分组）" class="headerlink" title="group by（分组）"></a>group by（分组）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">GROUP</span> <span class="keyword">BY</span> vip;</span><br></pre></td></tr></table></figure>
-<h4 id="order-by（排序）"><a href="#order-by（排序）" class="headerlink" title="order by（排序）"></a>order by（排序）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span>;</span><br></pre></td></tr></table></figure>
-<h4 id="limit（限制结果数）"><a href="#limit（限制结果数）" class="headerlink" title="limit（限制结果数）"></a>limit（限制结果数）</h4><p>查询前n条记录(默认从第0个开始)<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">LIMIT</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
-<p>从结果集中第1个开始查询, 查询10个<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">LIMIT</span> <span class="number">1</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
-<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><p>sql语句的执行顺序<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(7)     <span class="keyword">SELECT</span> </span><br><span class="line">(<span class="number">8</span>)     <span class="keyword">DISTINCT</span> &lt;select_list&gt;</span><br><span class="line">(<span class="number">1</span>)     <span class="keyword">FROM</span> &lt;left_table&gt;</span><br><span class="line">(<span class="number">3</span>)     &lt;join_type&gt; <span class="keyword">JOIN</span> &lt;right_table&gt;</span><br><span class="line">(<span class="number">2</span>)     <span class="keyword">ON</span> &lt;join_condition&gt;</span><br><span class="line">(<span class="number">4</span>)     <span class="keyword">WHERE</span> &lt;where_condition&gt;</span><br><span class="line">(<span class="number">5</span>)     <span class="keyword">GROUP</span> <span class="keyword">BY</span> &lt;group_by_list&gt;</span><br><span class="line">(<span class="number">6</span>)     <span class="keyword">HAVING</span> &lt;having_condition&gt;</span><br><span class="line">(<span class="number">9</span>)     <span class="keyword">ORDER</span> <span class="keyword">BY</span> &lt;order_by_condition&gt;</span><br><span class="line">(<span class="number">10</span>)    <span class="keyword">LIMIT</span> &lt;limit_number&gt;</span><br></pre></td></tr></table></figure></p>
-<p>也就是<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span>-&gt;<span class="keyword">ON</span>-&gt;<span class="keyword">JOIN</span>-&gt;<span class="keyword">WHERE</span>-&gt;<span class="keyword">GROUP</span> <span class="keyword">BY</span>-&gt;HAVING-&gt;<span class="keyword">SELECT</span>-&gt;<span class="keyword">DISTINCT</span>-&gt;<span class="keyword">ORDER</span> <span class="keyword">BY</span>-&gt;LIMIT</span><br></pre></td></tr></table></figure></p>
-<h2 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h2><p>一般我们在创建索引的时候都要指定它的索引名字. 当然这个不是必须的.</p>
-<h3 id="普通索引"><a href="#普通索引" class="headerlink" title="普通索引"></a>普通索引</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> idxName <span class="keyword">ON</span> db1.idtable(<span class="keyword">id</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t1 (</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">INDEX</span> (<span class="keyword">id</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h3 id="唯一索引"><a href="#唯一索引" class="headerlink" title="唯一索引"></a>唯一索引</h3><p>与普通索引相比值唯一, 可以有空值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> <span class="keyword">INDEX</span> <span class="keyword">id</span> <span class="keyword">ON</span> db1.idtable(<span class="keyword">id</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t1 (</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">UNIQUE</span> (<span class="keyword">id</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
-<h3 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h3><p>与普通索引相比值唯一, 不可以有空值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t1 (</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="keyword">id</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
-<h3 id="组合索引"><a href="#组合索引" class="headerlink" title="组合索引"></a>组合索引</h3><p>下面我们创建了一个唯一组合索引.<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`t1`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">16</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`idx`</span> (<span class="string">`id`</span>,<span class="string">`name`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure></p>
-<h3 id="索引注意事项"><a href="#索引注意事项" class="headerlink" title="索引注意事项"></a>索引注意事项</h3><ul>
-<li>如果索引上出现<code>NULL</code>值(包含组合索引),那么这一行就不会被索引</li>
-<li>我们要尽可能的使用短索引(指定一个前缀长度),例如对varchar类型进行索引,它的长度是16个字符,但是前6个字符是固定的,那么我们指定前缀长度为6就好了</li>
-<li>尽量不要对索引进行<code>like</code>操作</li>
-<li>不要在索引列上使用<code>NOT IN</code>和<code>&lt;&gt;</code>操作</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/数据库/">数据库</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/数据库/sql/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/sql/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/10/08/linux/DevOps/" title="DevOps" itemprop="url">DevOps</a>
   </h1>
   <p class="article-author">By
@@ -715,7 +286,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
     
   </p>
 </header>
@@ -796,83 +367,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/08/mycat/mycat分片/" title="Mycat分片" itemprop="url">Mycat分片</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
-<p>由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解</p>
-<h2 id="分片枚举"><a href="#分片枚举" class="headerlink" title="分片枚举"></a>分片枚举</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"hash-int"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByFileMap"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-hash-int.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>mapFile: 配置文件名称</li>
-<li>type: 0表示Integer，非零表示String</li>
-<li>defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点</li>
-</ul>
-<p>在partition-hash-int.txt文件中,采用<code>x=y</code>的形式, x是columns值. y是节点值. 所有的节点都是从0开始的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a=0</span><br><span class="line">b=1</span><br><span class="line">c=2</span><br></pre></td></tr></table></figure></p>
-<p>上面这个例子中,columns值为1的sql会路由到1的这个节点上. 节点在schema.xml中配置. 具体0对应哪个节点还需要探寻.</p>
-<h2 id="范围约定"><a href="#范围约定" class="headerlink" title="范围约定"></a>范围约定</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"rang-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.AutoPartitionByLong"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>autopartition-long.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这个规则是约定好,哪个范围的sql对应哪个节点,我们可以这样配置autopartition-long.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0-500=0</span><br><span class="line">500-1000=1</span><br><span class="line">1000-1500=2</span><br></pre></td></tr></table></figure></p>
-<p>这种范围的就只能适应,id分片的了</p>
-<h2 id="求模"><a href="#求模" class="headerlink" title="求模"></a>求模</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"mod-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMod"</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!-- how many data nodes  --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这个是根据column的十进制值进行求模分片.</p>
-<h2 id="固定分片hash算法"><a href="#固定分片hash算法" class="headerlink" title="固定分片hash算法"></a>固定分片hash算法</h2><p>该算法是对columns的二进制的低十位进行取模运算.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"partitionByLong"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>8, 1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>128, 256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>partitionCount 分片个数列表</li>
-<li>partitionLength 分片范围列表<br>这来个参数的长度必须相等. 上面的例子的意思是, 在对低十位取模运算时, 128以内的sql要平均分配到8个分片上执行. 128 ~ 256的sql要到1个分片上执行</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mycat/">mycat</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/mycat/mycat分片/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mycat/mycat分片/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/10/08/linux/shell/" title="Shell" itemprop="url">Shell</a>
   </h1>
   <p class="article-author">By
@@ -880,7 +374,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
     
   </p>
 </header>
@@ -1047,36 +541,92 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/构建工具/Archiva/" title="Archiva 初探" itemprop="url">Archiva 初探</a>
+      <a href="/2015/10/08/linux/2015-10-12-AWK/" title="AWK" itemprop="url">AWK</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><ol>
-<li>从<a href="">Archiva官网</a>下载Archiva后解压到<code>D:\archiva</code>里</li>
-<li>运行<code>bin\archiva.bat install</code>, archiva就启动成功了</li>
-<li>在浏览器运行<code>http://localhost:8080/</code>就可以进入archiva本地主页了</li>
-<li>当进入之后我们需要创建一个账号：<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/0.jpg" alt=""></li>
-<li>接着我们创建一个私有的仓库<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/1.jpg" alt=""></li>
-<li>我们创建一个最简单的私有仓库：<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/2.jpg" alt=""></li>
-<li>创建一个连接器<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/3.jpg" alt=""></li>
-<li>同样我们只选用必须的<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/4.jpg" alt=""></li>
-<li>接着如图操作<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/5.jpg" alt=""></li>
-<li><p>然后我们修改项目中的<code>pom.xml</code>文件!</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span><br><span class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>testMaven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testDeply<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">distributionManagement</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">distributionManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改本地仓库中的<code>setting.xml</code>文件(我的目录<code>C:\Users\Administrator\.m2</code>),我们添加私有仓库的用户名和密码!</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/settings/1.0.0"</span> </span><br><span class="line">          <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> </span><br><span class="line">          <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">	<span class="tag">&lt;<span class="name">servers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">server</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">username</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">password</span>&gt;</span>admin1<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">server</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">servers</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"> <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
+        <h1 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h1><p>awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
+<p>语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk [-F  field-separator]  &apos;commands&apos;  input-file(s)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>-F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符<code>-F &#39;:&#39;</code>)</li>
+<li>commands: ‘PATTERN{COMMAND}’. PATTERN为模式(正在表达式),COMMAND为要执行的命令.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk  -F &apos;:&apos;  &apos;BEGIN &#123;print &quot;start&quot;&#125;  &#123;print $1&quot;&#125; END &#123;print &quot;end&quot;&#125;&apos; ./txt</span><br></pre></td></tr></table></figure>
+<p>上面的例子是读取<code>txt</code>文件,然后使用<code>:</code>分割每一行数据,在开始处理的时候输出start，在处理过程中第一列数据，最后输出end。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><p>我们可以在AWK命令中直接使用以下内置变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ARGC               命令行参数个数</span><br><span class="line">ARGV               命令行参数排列</span><br><span class="line">ENVIRON            支持队列中系统环境变量的使用</span><br><span class="line">FILENAME           awk浏览的文件名</span><br><span class="line">FNR                浏览文件的记录数</span><br><span class="line">FS                 设置输入域分隔符，等价于命令行 -F选项</span><br><span class="line">NF                 浏览记录的域的个数</span><br><span class="line">NR                 已读的记录数</span><br><span class="line">OFS                输出域分隔符</span><br><span class="line">ORS                输出记录分隔符</span><br><span class="line">RS                 控制记录分隔符</span><br></pre></td></tr></table></figure></p>
+<p>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print ARGC&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h3 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h3><p>我们通过赋值的方式直接定义一个变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;BEGIN&#123;size=0;&#125; &#123;size=1+size&#125; &#123;print $1&#125; END&#123;print size&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面我们定义了一个数值型的size变量.</p>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><ul>
+<li><code>= += -= *= /= %= ^= **=</code>    赋值</li>
+<li><code>?:</code>    C条件表达式</li>
+<li><code>||</code>    逻辑或</li>
+<li><code>&amp;&amp;</code>    逻辑与</li>
+<li><code>~ ~!</code>    匹配正则表达式和不匹配正则表达式</li>
+<li><code>&lt; &lt;= &gt; &gt;= != ==</code>    关系运算符</li>
+<li><code>空格</code>    连接</li>
+<li><code>+ -</code>    加，减</li>
+<li><code>* / &amp;</code>    乘，除与求余</li>
+<li><code>+ - !</code>    一元加，减和逻辑非</li>
+<li><code>^ ***</code>    求幂</li>
+<li><code>++ --</code>    增加或减少，作为前缀或后缀</li>
+<li><code>$</code>    字段引用</li>
+<li><code>in</code>    数组成员</li>
+</ul>
+<h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>下面输出了大于10000的java进程号<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;BEGIN&#123;size=0&#125; &#123;if($1&gt;10000) &#123;size++;print $1&#125;&#125; END&#123;print size&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><p>awk中的循环语句借鉴于C语言，支持while、do/while、for、break、continue，这些关键字的语义和C语言中的语义完全相同。</p>
+<h1 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h1><h2 id="sub函数"><a href="#sub函数" class="headerlink" title="sub函数"></a>sub函数</h2><p>匹配从左侧开始找到的第一个符合规则的字符串，然后使用替换字符串替换这些字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面这个例子就使用sun这个字符串替换了$2中的moon字符串。</p>
+<p>我们还可以指定在哪列执行查找替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;, $1)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子中我们只在第一列进行查找替换</p>
+<h2 id="gsub函数"><a href="#gsub函数" class="headerlink" title="gsub函数"></a>gsub函数</h2><p>与sub函数不同的是，这个执行的是全局替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;gsub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="index函数"><a href="#index函数" class="headerlink" title="index函数"></a>index函数</h2><p>返回子字符串第一次被匹配的位置，偏移量从位置1开始<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print$2; $2=index($2, &quot;moon&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="length函数"><a href="#length函数" class="headerlink" title="length函数"></a>length函数</h2><p>返回记录的字符数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print$2; $2=length($2)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="substr函数"><a href="#substr函数" class="headerlink" title="substr函数"></a>substr函数</h2><p>返回从位置1开始的子字符串，如果指定长度超过实际长度，就返回整个字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print substr($2, 2, 10)&#125; &apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子将$2字符串从第二个字符还是截取，截取10个长度的字符串出来</p>
+<h2 id="toupper和tolower函数"><a href="#toupper和tolower函数" class="headerlink" title="toupper和tolower函数"></a>toupper和tolower函数</h2><p>可用于字符串大小间的转换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;&#123;print toupper($2)&#125; &apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="split函数"><a href="#split函数" class="headerlink" title="split函数"></a>split函数</h2><p>可按给定的分隔符把字符串分割为一个数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123; split($2, array, &quot;/&quot;); print array[3]&#125; &apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子我们将$2这一列按照<code>/</code>进行分割,然后将分割出的数据存储到array数组里. 注意这里首先不需要转义</p>
+<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id=""><a href="#" class="headerlink" title="\"></a>\</h2><p>将下一字符标记为特殊字符、文本、反向引用或八进制转义符。例如，“n”匹配字符“n”。“\n”匹配换行符。序列“\”匹配“\”，“(”匹配“(”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\\/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<p>过滤出带有<code>\</code>的行</p>
+<h2 id="-1"><a href="#-1" class="headerlink" title="^"></a>^</h2><p>匹配输入字符串与最左侧开始的位置的字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/^\\n/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<p>找到所有以<code>\n</code>字符串开始的数据</p>
+<h2 id="-2"><a href="#-2" class="headerlink" title="$"></a>$</h2><p>匹配输入字符串结尾的位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/)。$/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<p>过滤以<code>)。</code>结尾的行</p>
+<h2 id="-3"><a href="#-3" class="headerlink" title="*"></a>*</h2><p>零次或多次匹配前面的字符或子表达式。例如，zo<em> 匹配“z”和“zoo”。</em> 等效于 {0,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用*/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="-4"><a href="#-4" class="headerlink" title="+"></a>+</h2><p>一次或多次匹配前面的字符或子表达式。例如，“zo+”与“zo”和“zoo”匹配，但与“z”不匹配。+ 等效于 {1,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用+/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="-5"><a href="#-5" class="headerlink" title="?"></a>?</h2><p>零次或一次匹配前面的字符或子表达式。例如，“do(es)?”匹配“do”或“does”中的“do”。? 等效于 {0,1}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用?/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="n"><a href="#n" class="headerlink" title="{n}"></a>{n}</h2><p>n 是非负整数。正好匹配 n 次。例如，“o{2}”与“Bob”中的“o”不匹配，但与“food”中的两个“o”匹配。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="n-1"><a href="#n-1" class="headerlink" title="{n,}"></a>{n,}</h2><p>n 是非负整数。至少匹配 n 次。例如，“o{2,}”不匹配“Bob”中的“o”，而匹配“foooood”中的所有 o。“o{1,}”等效于“o+”。“o{0,}”等效于“o*”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="n-m"><a href="#n-m" class="headerlink" title="{n,m}"></a>{n,m}</h2><p>M 和 n 是非负整数，其中 n &lt;= m。匹配至少 n 次，至多 m 次。例如，“o{1,3}”匹配“fooooood”中的头三个 o。’o{0,1}’ 等效于 ‘o?’。注意：您不能将空格插入逗号和数字之间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="-6"><a href="#-6" class="headerlink" title="."></a>.</h2><p>匹配除“\n”之外的任何单个字符。若要匹配包括“\n”在内的任意字符，请使用诸如“[\s\S]”之类的模式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="pattern"><a href="#pattern" class="headerlink" title="(pattern)"></a>(pattern)</h2><p>匹配 pattern 并捕获该匹配的子表达式。可以使用 $0…$9 属性从结果“匹配”集合中检索捕获的匹配。若要匹配括号字符 ( )，请使用“(”或者“)”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="pattern-1"><a href="#pattern-1" class="headerlink" title="(?:pattern)"></a>(?:pattern)</h2><p>匹配 pattern 但不捕获该匹配的子表达式，即它是一个非捕获匹配，不存储供以后使用的匹配。这对于用“or”字符 (|) 组合模式部件的情况很有用。例如，’industr(?:y|ies) 是比 ‘industry|industries’ 更经济的表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="pattern-2"><a href="#pattern-2" class="headerlink" title="(?=pattern)"></a>(?=pattern)</h2><p>执行正向预测先行搜索的子表达式，该表达式匹配处于匹配 pattern 的字符串的起始点的字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?=95|98|NT|2000)’ 匹配“Windows 2000”中的“Windows”，但不匹配“Windows 3.1”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="pattern-3"><a href="#pattern-3" class="headerlink" title="(?!pattern)"></a>(?!pattern)</h2><p>执行反向预测先行搜索的子表达式，该表达式匹配不处于匹配 pattern 的字符串的起始点的搜索字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?!95|98|NT|2000)’ 匹配“Windows 3.1”中的 “Windows”，但不匹配“Windows 2000”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="x-y"><a href="#x-y" class="headerlink" title="x|y"></a>x|y</h2><p>匹配 x 或 y。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/换页符等|十六进制转义码必须正好是两位数长/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="xyz"><a href="#xyz" class="headerlink" title="[xyz]"></a>[xyz]</h2><p>匹配是否包含xyz中任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[前面至少有]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="xyz-1"><a href="#xyz-1" class="headerlink" title="[^xyz]"></a>[^xyz]</h2><p>匹配不能包含xyz任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[^前面至少有]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="a-z"><a href="#a-z" class="headerlink" title="[a-z]"></a>[a-z]</h2><p>与<code>[xyz]</code>规则相同,只不过这个模式提供了一个范围模式.例如[a-c]实际为匹配[abc]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[a-b]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="a-z-1"><a href="#a-z-1" class="headerlink" title="[^a-z]"></a>[^a-z]</h2><p>反向范围字符。匹配不在指定的范围内的任何字符。例如，“[^a-z]”匹配任何不在“a”到“z”范围内的任何字符。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[^a-z]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是’\t’会被匹配出来</p>
+<h2 id="d"><a href="#d" class="headerlink" title="\d"></a>\d</h2><p>数字字符匹配。等效于 [0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\d/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="D"><a href="#D" class="headerlink" title="\D"></a>\D</h2><p>非数字字符匹配。等效于 [^0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\D/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="n-2"><a href="#n-2" class="headerlink" title="\n"></a>\n</h2><p>换行符匹配。等效于 \x0a 和 \cJ。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\n/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="r"><a href="#r" class="headerlink" title="\r"></a>\r</h2><p>匹配一个回车符。等效于 \x0d 和 \cM。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\t/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="s"><a href="#s" class="headerlink" title="\s"></a>\s</h2><p>匹配任何空白字符，包括空格、制表符、换页符等。与 [ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\s/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="S"><a href="#S" class="headerlink" title="\S"></a>\S</h2><p>匹配任何非空白字符。与 [^ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\S/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="w"><a href="#w" class="headerlink" title="\w"></a>\w</h2><p>匹配任何字类字符，包括下划线。与“[A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\w/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="W"><a href="#W" class="headerlink" title="\W"></a>\W</h2><p>与任何非单词字符匹配。与“[^A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\W/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
 
         
         
@@ -1089,7 +639,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
+  <a class="article-category-link" href="/categories/linux/">linux</a>
 </div>
 
 
@@ -1101,7 +651,472 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/08/构建工具/Archiva/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/构建工具/Archiva/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/10/08/linux/2015-10-12-AWK/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/2015-10-12-AWK/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/mgits/vim/" title="GVIM" itemprop="url">GVIM</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="vimrc配置文件"><a href="#vimrc配置文件" class="headerlink" title="_vimrc配置文件"></a>_vimrc配置文件</h1><h2 id="GVIM打开即全屏"><a href="#GVIM打开即全屏" class="headerlink" title="GVIM打开即全屏"></a>GVIM打开即全屏</h2><p><code>au GUIEnter * simalt ~x</code></p>
+<h2 id="设置VeraMono字体"><a href="#设置VeraMono字体" class="headerlink" title="设置VeraMono字体"></a>设置VeraMono字体</h2><p><a href="http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf" target="_blank" rel="external">VeraMono</a>需要下载安装(百度字体安装就好)<br><code>set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI</code></p>
+<h2 id="python编译"><a href="#python编译" class="headerlink" title="python编译"></a>python编译</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  </span><br><span class="line">autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  </span><br><span class="line">autocmd BufRead *.py nmap &lt;F5&gt; :!python %&lt;CR&gt;  </span><br><span class="line">autocmd BufRead *.py nmap &lt;F6&gt; :make&lt;CR&gt;  </span><br><span class="line">autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口</span><br></pre></td></tr></table></figure>
+<h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
+<li>搜索：<code>/</code>向下搜索. <code>?</code>向上搜索</li>
+<li>替换： <code>:%s/abc/123/g</code>, 将abc都替换为123</li>
+<li>删除行：<code>dd</code>删除整行. <code>5dd</code>从当前行开始向后删除5整行. <code>D</code>从光标删除到行尾</li>
+<li>删除字符：<code>x</code>向后删除一个字符. <code>X</code>向前删除一个字符</li>
+<li>撤销: <code>u</code></li>
+<li>复制:<code>yy</code>复制一行. <code>5yy</code>从当前行开始向下复制5行</li>
+<li>粘贴: <code>p</code>光标向下移动. <code>P</code>光标不动</li>
+<li>块选择: <code>V</code>多行整行选择. <code>v</code>多行字符选择. <code>ctrl v</code>矩阵方式选择.</li>
+<li>光标移动：<code>$</code>移动到行尾. <code>0</code>移动到行首. <code>G</code>移动到最后一行. <code>gg</code>移动到最一行.</li>
+<li>窗口编辑: <code>：split</code>水平新建窗口. <code>：vsplit</code>垂直分割.</li>
+<li>在窗口间游走: <code>Ctrl W</code> 加 <code>h, j, k, l</code>一起使用</li>
+<li>分页编辑： <code>：tabnew</code>新建分页。 <code>：tabclose</code>关闭当前分页. <code>：tabonly</code>关闭其他所有的分页</li>
+<li>顶部底部跳转： 顶部<code>`, 底部</code>shift + g`</li>
+</ul>
+<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><h2 id="Pydiction"><a href="#Pydiction" class="headerlink" title="Pydiction "></a><a href="http://www.vim.org/scripts/script.php?script_id=850" target="_blank" rel="external">Pydiction </a></h2><p>python自动补全插件</p>
+<p>配置,<code>_vimrc</code>文件追加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">filetype plugin on</span><br><span class="line">let g:pydiction_location = <span class="string">'D:/Program Files/Vim/pydiction/complete-dict'</span></span><br></pre></td></tr></table></figure></p>
+<p>然后将<code>pydiction/after/ftplugin/python_pydiction.vim</code>复制到<code>Vim\vimfiles\ftplugin\python_pydiction.vim</code></p>
+<h2 id="The-NERD-tree"><a href="#The-NERD-tree" class="headerlink" title="The NERD tree"></a><a href="http://www.vim.org/scripts/script.php?script_id=1658" target="_blank" rel="external">The NERD tree</a></h2><p>文件树. 将下载下来的压缩包解压到<code>Vim\vimfiles</code></p>
+<ul>
+<li><code>:NERDTree</code> 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径</li>
+<li><code>:NERDTreeClose</code> 关闭目录树</li>
+</ul>
+<p>修改_vimrc配置文件,添加映射<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="bsh-vim"><a href="#bsh-vim" class="headerlink" title="bsh.vim"></a><a href="http://www.vim.org/scripts/script.php?script_id=1202" target="_blank" rel="external">bsh.vim</a></h2><p>Shell语法高亮</p>
+<p>只需将<code>bsh.vim</code>文件拷贝到<code>Vim\vimfiles\syntax</code>就可以了</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/mgits/vim/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mgits/vim/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/数据库/sql/" title="常用SQL" itemprop="url">常用SQL</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -<span class="keyword">h</span> 主机地址 -<span class="keyword">u</span> 用户名 －p 用户密码 （注:<span class="keyword">u</span>与root可以不用加空格，其它也一样）</span><br></pre></td></tr></table></figure>
+<h2 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h2><p>创建用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'host'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'password'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>授权:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">'username'</span>@<span class="string">'host'</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>privileges - 用户的操作权限,如SELECT,INSERT,UPDATE等.如果要授予所的权限则使用ALL;如果要授予该用户对所有数据库和表的相应操作权限则可用<em>表示, 如</em>.*. </p>
+</blockquote>
+<p>用以上命令授权的用户不能给其它用户授权,如果想让该用户可以授权,用以下命令:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">'username'</span>@<span class="string">'host'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span><br></pre></td></tr></table></figure></p>
+<p>设置与更改用户密码<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> <span class="string">'username'</span>@<span class="string">'host'</span> = <span class="keyword">PASSWORD</span>(<span class="string">'newpassword'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>撤销用户权限<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">REVOKE</span> privilege <span class="keyword">ON</span> databasename.tablename <span class="keyword">FROM</span> <span class="string">'username'</span>@<span class="string">'host'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>删除用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'host'</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h2><ul>
+<li>显示数据库：<code>SHOW databases</code>; </li>
+<li>创建库：<code>CREATE DATABASE 库名</code>; </li>
+<li>删除库：<code>DROP DATABASE 库名</code>; </li>
+<li>使用库(选中库)：<code>USE 库名</code>; </li>
+</ul>
+<h2 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h2><ul>
+<li>显示数据表：<code>SHOW tables</code></li>
+<li>显示表结构：<code>DESC 表名</code></li>
+<li>删除表：<code>DROP TABLE 表名</code>; </li>
+<li>输入创建表的DDL语句 <code>SHOW CREATE TABLE 表名;</code></li>
+<li>创建表：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span>  </span><br><span class="line">    <span class="keyword">USER</span>  </span><br><span class="line">    (  </span><br><span class="line">        <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">        <span class="keyword">id</span> <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">        stu_id <span class="built_in">INT</span>,  </span><br><span class="line">        phone <span class="built_in">VARCHAR</span>(<span class="number">20</span>),  </span><br><span class="line">        address <span class="built_in">VARCHAR</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">        age <span class="built_in">INT</span>(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </span><br><span class="line">        PRIMARY <span class="keyword">KEY</span> (<span class="keyword">name</span>),  </span><br><span class="line">        <span class="keyword">CONSTRAINT</span> stu_id <span class="keyword">UNIQUE</span> (stu_id)  </span><br><span class="line">    )  </span><br><span class="line">    <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="表数据操作"><a href="#表数据操作" class="headerlink" title="表数据操作"></a>表数据操作</h3><ul>
+<li>清空表数据<code>truncate table 表名;</code>. truncate删除后不记录mysql日志，不可以恢复数据。相当于保留mysql表的结构，重新创建了这个表，所有的状态都相当于新表。</li>
+<li>清空表数据<code>delete from 表名</code>. delete的效果有点像将mysql表中所有记录一条一条删除到删完</li>
+</ul>
+<h3 id="修改表结构"><a href="#修改表结构" class="headerlink" title="修改表结构"></a>修改表结构</h3><ul>
+<li>修改列名<code>alter table 表名称 change 字段名称 字段名称</code></li>
+<li>修改表名<code>alter table 表名称 rename 表名称</code></li>
+<li>修改某个表的字段类型及指定为空或非空<code>alter table 表名称 change 字段名称字段名称 字段类型 [null/not null];</code></li>
+<li>修改某个表的字段名称及指定为空或非空<code>alter table 表名称 change 字段原名称字段新名称 字段类型 [null/not null];</code></li>
+<li>增加一个字段(一列)<code>alter table table_name add column column_name type default value;</code> type指该字段的类型,value指该字段的默认值</li>
+<li>更改一个字段名字(也可以改变类型和默认值)<code>alter table table_name change sorce_col_name dest_col_name type defaultvalue;</code> source_col_name指原来的字段名称,dest_col_name指改后的字段名称</li>
+<li>改变一个字段的默认值<code>alter table table_name alter column_name set default value;</code></li>
+<li>改变一个字段的数据类型<code>alter table table_name change column column_name column_name type;</code></li>
+<li>向一个表中增加一个列做为主键<code>alter table table_name add column column_name type auto_increment PRIMARYKEY;</code></li>
+<li>向一个表中增加一个列做为主键<code>alter table table_name add column column_name type auto_increment PRIMARYKEY;</code></li>
+<li>删除字段<code>alter table form1 drop column 列名;</code></li>
+</ul>
+<h3 id="复制表"><a href="#复制表" class="headerlink" title="复制表"></a>复制表</h3><ul>
+<li>含有主键等信息的完整表结构 <code>CREATE table 新表名 LIKE book;</code></li>
+<li>只有表结构，没有主键等信息 `create table 新表名 select * from books;</li>
+<li>将旧表中的数据灌入新表 <code>INSERT INTO 新表 SELECT * FROM 旧表；</code> 注：新表必须已经存在</li>
+</ul>
+<h3 id="导入导出数据库"><a href="#导入导出数据库" class="headerlink" title="导入导出数据库"></a>导入导出数据库</h3><ul>
+<li>数据库某表的备份,在命令行中输入:<code>mysqldump -u root -p database_name table_name &gt; bak_file_name</code></li>
+<li>导出数据<code>select_statment into outfile”dest_file”;</code></li>
+<li>导入数据<code>load data infile”file_name” into table table_name;</code></li>
+<li>将两个表里的数据拼接后插入到另一个表里<code>insert into tx select t1.com1,concat(t1.com2,t2.com1) from t1,t2;</code></li>
+</ul>
+<h3 id="查询表"><a href="#查询表" class="headerlink" title="查询表"></a>查询表</h3><p>mysql查询的五种子句 </p>
+<h4 id="where-条件查询"><a href="#where-条件查询" class="headerlink" title="where(条件查询)"></a>where(条件查询)</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1 <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数值谓词:<code>&gt;,=,&lt;,&lt;&gt;,!=,!&gt;,!&lt;,=&gt;,=&lt;</code></li>
+<li>字符串谓词：<code>=，like</code></li>
+<li>日期谓词：<code>=</code> (<code>SELECT * from t1 WHERE create_time = &#39;2011-04-08&#39;</code>)</li>
+</ul>
+<h4 id="having（筛选）"><a href="#having（筛选）" class="headerlink" title="having（筛选）"></a>having（筛选）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="group-by（分组）"><a href="#group-by（分组）" class="headerlink" title="group by（分组）"></a>group by（分组）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">GROUP</span> <span class="keyword">BY</span> vip;</span><br></pre></td></tr></table></figure>
+<h4 id="order-by（排序）"><a href="#order-by（排序）" class="headerlink" title="order by（排序）"></a>order by（排序）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="limit（限制结果数）"><a href="#limit（限制结果数）" class="headerlink" title="limit（限制结果数）"></a>limit（限制结果数）</h4><p>查询前n条记录(默认从第0个开始)<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">LIMIT</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
+<p>从结果集中第1个开始查询, 查询10个<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">LIMIT</span> <span class="number">1</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><p>sql语句的执行顺序<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(7)     <span class="keyword">SELECT</span> </span><br><span class="line">(<span class="number">8</span>)     <span class="keyword">DISTINCT</span> &lt;select_list&gt;</span><br><span class="line">(<span class="number">1</span>)     <span class="keyword">FROM</span> &lt;left_table&gt;</span><br><span class="line">(<span class="number">3</span>)     &lt;join_type&gt; <span class="keyword">JOIN</span> &lt;right_table&gt;</span><br><span class="line">(<span class="number">2</span>)     <span class="keyword">ON</span> &lt;join_condition&gt;</span><br><span class="line">(<span class="number">4</span>)     <span class="keyword">WHERE</span> &lt;where_condition&gt;</span><br><span class="line">(<span class="number">5</span>)     <span class="keyword">GROUP</span> <span class="keyword">BY</span> &lt;group_by_list&gt;</span><br><span class="line">(<span class="number">6</span>)     <span class="keyword">HAVING</span> &lt;having_condition&gt;</span><br><span class="line">(<span class="number">9</span>)     <span class="keyword">ORDER</span> <span class="keyword">BY</span> &lt;order_by_condition&gt;</span><br><span class="line">(<span class="number">10</span>)    <span class="keyword">LIMIT</span> &lt;limit_number&gt;</span><br></pre></td></tr></table></figure></p>
+<p>也就是<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span>-&gt;<span class="keyword">ON</span>-&gt;<span class="keyword">JOIN</span>-&gt;<span class="keyword">WHERE</span>-&gt;<span class="keyword">GROUP</span> <span class="keyword">BY</span>-&gt;HAVING-&gt;<span class="keyword">SELECT</span>-&gt;<span class="keyword">DISTINCT</span>-&gt;<span class="keyword">ORDER</span> <span class="keyword">BY</span>-&gt;LIMIT</span><br></pre></td></tr></table></figure></p>
+<h2 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h2><p>一般我们在创建索引的时候都要指定它的索引名字. 当然这个不是必须的.</p>
+<h3 id="普通索引"><a href="#普通索引" class="headerlink" title="普通索引"></a>普通索引</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> idxName <span class="keyword">ON</span> db1.idtable(<span class="keyword">id</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t1 (</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">INDEX</span> (<span class="keyword">id</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="唯一索引"><a href="#唯一索引" class="headerlink" title="唯一索引"></a>唯一索引</h3><p>与普通索引相比值唯一, 可以有空值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> <span class="keyword">INDEX</span> <span class="keyword">id</span> <span class="keyword">ON</span> db1.idtable(<span class="keyword">id</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t1 (</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">UNIQUE</span> (<span class="keyword">id</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<h3 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h3><p>与普通索引相比值唯一, 不可以有空值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t1 (</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="keyword">id</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<h3 id="组合索引"><a href="#组合索引" class="headerlink" title="组合索引"></a>组合索引</h3><p>下面我们创建了一个唯一组合索引.<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`t1`</span> (</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">16</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> <span class="string">`idx`</span> (<span class="string">`id`</span>,<span class="string">`name`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure></p>
+<h3 id="索引注意事项"><a href="#索引注意事项" class="headerlink" title="索引注意事项"></a>索引注意事项</h3><ul>
+<li>如果索引上出现<code>NULL</code>值(包含组合索引),那么这一行就不会被索引</li>
+<li>我们要尽可能的使用短索引(指定一个前缀长度),例如对varchar类型进行索引,它的长度是16个字符,但是前6个字符是固定的,那么我们指定前缀长度为6就好了</li>
+<li>尽量不要对索引进行<code>like</code>操作</li>
+<li>不要在索引列上使用<code>NOT IN</code>和<code>&lt;&gt;</code>操作</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/数据库/sql/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/sql/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/mycat/mycat全局序列号/" title="Mycat全局序列号" itemprop="url">Mycat全局序列号</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
+<p>Mycat的全局序列号分为俩部分</p>
+<ul>
+<li>本地文件方式</li>
+<li>数据库方式</li>
+</ul>
+<p>因为本地文件方式当Mycat重启之后，里面记录的数据会被重置，所以我就只记录一下数据库方式.</p>
+<p>在<code>server.xml</code>文件中进行如下配置<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mycat:server</span> <span class="attr">xmlns:mycat</span>=<span class="string">"http://org.opencloudb/"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">system</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"sequnceHandlerType"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">system</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mycat:server</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>接下来我们创建一张表,用于存放ID<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> MYCAT_SEQUENCE;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> db1.MYCAT_SEQUENCE</span><br><span class="line">(</span><br><span class="line">  <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">10</span>),</span><br><span class="line">  currentValue <span class="built_in">BIGINT</span> <span class="keyword">DEFAULT</span> <span class="number">1</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> ,</span><br><span class="line">  <span class="keyword">increment</span> <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="number">1</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span>(<span class="keyword">name</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="built_in">CHAR</span> <span class="keyword">SET</span>=utf8;</span><br></pre></td></tr></table></figure></p>
+<p>获取当前sequence的值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">FUNCTION</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> mycat_seq_currval;</span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> mycat_seq_currval(seq_name <span class="built_in">VARCHAR</span>(<span class="number">50</span>)) <span class="keyword">RETURNS</span> <span class="built_in">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">CHARSET</span> utf8</span><br><span class="line"><span class="keyword">DETERMINISTIC</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="keyword">DECLARE</span> retval <span class="built_in">VARCHAR</span>(<span class="number">64</span>);</span><br><span class="line">	<span class="keyword">SET</span> retval=<span class="string">"-999999999,null"</span>;</span><br><span class="line">	<span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="keyword">CAST</span>(current_value <span class="keyword">AS</span> <span class="built_in">CHAR</span>),<span class="string">","</span>,<span class="keyword">CAST</span>(<span class="keyword">increment</span> <span class="keyword">AS</span> <span class="built_in">CHAR</span>))</span><br><span class="line">	 <span class="keyword">INTO</span> retval</span><br><span class="line">	 <span class="keyword">FROM</span> MYCAT_SEQUENCE</span><br><span class="line">	 <span class="keyword">WHERE</span> <span class="keyword">NAME</span> = seq_name;</span><br><span class="line">	 RETURN retval;</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line">$$</span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这里需要说明一点的是, 由于mysql默认分隔符为<code>;</code>,因此我们要先使用<code>DELIMITER $$</code>将分隔符置为<code>&amp;&amp;</code>,不然的话在函数里也使用到了<code>;</code>会影响到函数,最后再将分隔符置为<code>;</code></p>
+</blockquote>
+<p>设置sequence值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">FUNCTION</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> mycat_seq_setval;</span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> mycat_seq_setval(seq_name <span class="built_in">VARCHAR</span>(<span class="number">50</span>),<span class="keyword">VALUE</span> <span class="built_in">INTEGER</span>) <span class="keyword">RETURNS</span> <span class="built_in">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">CHARSET</span> utf8</span><br><span class="line"><span class="keyword">DETERMINISTIC</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">UPDATE</span> MYCAT_SEQUENCE</span><br><span class="line"><span class="keyword">SET</span> current_value = <span class="keyword">VALUE</span></span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">NAME</span> = seq_name;</span><br><span class="line">RETURN mycat_seq_currval(seq_name);</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line">$$</span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></p>
+<p>获取下一个sequence值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">FUNCTION</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> mycat_seq_nextval;</span><br><span class="line">DELIMITER $$</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> mycat_seq_nextval(seq_name <span class="built_in">VARCHAR</span>(<span class="number">50</span>)) <span class="keyword">RETURNS</span> <span class="built_in">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">CHARSET</span> utf8</span><br><span class="line"><span class="keyword">DETERMINISTIC</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">UPDATE</span> MYCAT_SEQUENCE</span><br><span class="line"><span class="keyword">SET</span> current_value = current_value + <span class="keyword">increment</span> <span class="keyword">WHERE</span> <span class="keyword">NAME</span> = seq_name;</span><br><span class="line">RETURN mycat_seq_currval(seq_name);</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line">$$</span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure></p>
+<p>然后修改<code>sequence_db_conf.properties</code>这个配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#sequence stored in datanode</span><br><span class="line">GLOBAL=dn1</span><br><span class="line">COMPANY=dn1</span><br><span class="line">CUSTOMER=dn1</span><br><span class="line">ORDERS=dn1</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>GLOBAL</code></li>
+<li><code>COMPANY</code></li>
+<li><code>CUSTOMER</code></li>
+<li><code>ORDERS</code></li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mycat/">mycat</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/mycat/mycat全局序列号/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mycat/mycat全局序列号/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/mycat/mycat分片/" title="Mycat分片" itemprop="url">Mycat分片</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
+<p>由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解</p>
+<h2 id="分片枚举"><a href="#分片枚举" class="headerlink" title="分片枚举"></a>分片枚举</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"hash-int"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByFileMap"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-hash-int.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>mapFile: 配置文件名称</li>
+<li>type: 0表示Integer，非零表示String</li>
+<li>defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点</li>
+</ul>
+<p>在partition-hash-int.txt文件中,采用<code>x=y</code>的形式, x是columns值. y是节点值. 所有的节点都是从0开始的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a=0</span><br><span class="line">b=1</span><br><span class="line">c=2</span><br></pre></td></tr></table></figure></p>
+<p>上面这个例子中,columns值为1的sql会路由到1的这个节点上. 节点在schema.xml中配置. 具体0对应哪个节点还需要探寻.</p>
+<h2 id="范围约定"><a href="#范围约定" class="headerlink" title="范围约定"></a>范围约定</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"rang-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.AutoPartitionByLong"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>autopartition-long.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这个规则是约定好,哪个范围的sql对应哪个节点,我们可以这样配置autopartition-long.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0-500=0</span><br><span class="line">500-1000=1</span><br><span class="line">1000-1500=2</span><br></pre></td></tr></table></figure></p>
+<p>这种范围的就只能适应,id分片的了</p>
+<h2 id="求模"><a href="#求模" class="headerlink" title="求模"></a>求模</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"mod-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMod"</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!-- how many data nodes  --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这个是根据column的十进制值进行求模分片.</p>
+<h2 id="固定分片hash算法"><a href="#固定分片hash算法" class="headerlink" title="固定分片hash算法"></a>固定分片hash算法</h2><p>该算法是对columns的二进制的低十位进行取模运算.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"partitionByLong"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>8, 1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>128, 256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>partitionCount 分片个数列表</li>
+<li>partitionLength 分片范围列表<br>这来个参数的长度必须相等. 上面的例子的意思是, 在对低十位取模运算时, 128以内的sql要平均分配到8个分片上执行. 128 ~ 256的sql要到1个分片上执行</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mycat/">mycat</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/mycat/mycat分片/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mycat/mycat分片/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/08/javascript/JavaScript函数/" title="JavaScript函数" itemprop="url">JavaScript函数</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
+<p>JavaScript中函数就是对象。函数对象连接到Function.prototype(该原型连接到Object.prototype).</p>
+<ul>
+<li>每个函数对象在创建时也随配一个prototype属性,它的值是一个拥有constructor属性且值为该函数的对象（这和连接到Function.prototype全完不同）.</li>
+<li>因为函数是对象,所以函数可以保存在变量,对象和数组中. 函数可以当做参数传递给其他函数,函数也可以再返回给函数.而且因为函数是对象,函数还可以拥有方法</li>
+<li>一个函数总会有一个返回值,如果没有指定返回值则返回undefined(如果函数调用前加上了new前缀,且返回的不是一个对象,则返回this)</li>
+</ul>
+<h3 id="函数字面量"><a href="#函数字面量" class="headerlink" title="函数字面量"></a>函数字面量</h3><p>我们定义一个函数字面量<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面这个函数字面量是通过将一个匿名函数赋值给一个变量.</p>
+<p>函数字面量可以出现在任何允许表达式出现的地方. 函数可以被定义在其他函数中. 可以作为函数参数或者函数返回值出现。函数甚至拥有自己的作用域(就像变量有自己的作用域一样)</p>
+<p>每声明一个函数实际是创建了一个Function 实例,上面的函数等价于<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Add = <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"a"</span>,<span class="string">"b"</span>,<span class="string">"a + b;"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> add = <span class="keyword">new</span> Add(<span class="number">1</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><p>内部函数可以访问自己内部的参数和变量还可以访问嵌套在父函数的参数和变量。通过函数字面量创建的函数对象包含了一个连接到外部上下文的连接，这杯称为闭包(每个函数在创建时会附加俩个隐藏属性：函数的上下文和实现函数行为的代码).</p>
+<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><p>当调用函数时除了显示地向其传递的参数,每个函数还会接受俩个附加参数<code>this</code>, <code>arguments</code>. 当实际参数大于形式参数时,多余的参数会被忽略,而当实际参数小于形式,参数时缺少的参数会被赋值为undefined.</p>
+<p>下面会介绍四种调用模式,每种调用模式对<code>this</code>参数的初始化是不一样的.</p>
+<h4 id="方法调用模式"><a href="#方法调用模式" class="headerlink" title="方法调用模式"></a>方法调用模式</h4><p>当一个函数作为一个对象的属性时,我们称其为方法.方法里的this参数被被绑定到该对象上.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">	value : <span class="number">1</span>;</span><br><span class="line">	addOne : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.value += <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.addOne();</span><br></pre></td></tr></table></figure></p>
+<h4 id="函数调用模式"><a href="#函数调用模式" class="headerlink" title="函数调用模式"></a>函数调用模式</h4><p>当一个函数并非一个对象属性时,那么它就被当做是一个函数来调用<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">c = add(<span class="number">1</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这种模式下this被绑定到全局对象上</p>
+<h4 id="构造器调用模式"><a href="#构造器调用模式" class="headerlink" title="构造器调用模式"></a>构造器调用模式</h4><p>一个函数如果创建的目的就是希望集合new关键字来使用,那么它就是构造器函数</p>
+<p>如果在一个函数前面带上一个new来调用,实际上会创建一个连接到该函数prototype成员的新对象,同时this也会绑定到那个新对象上.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Quo = <span class="function"><span class="keyword">function</span>(<span class="params">string</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.status = string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Quo.prototype.get_status = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myQuo = <span class="keyword">new</span> Quo(<span class="string">"hello"</span>);</span><br></pre></td></tr></table></figure></p>
+<h4 id="Apply调用模式"><a href="#Apply调用模式" class="headerlink" title="Apply调用模式"></a>Apply调用模式</h4><p>JavaScript的函数可以拥有方法,apply方法可以让我们构建一个参数数组传递给调用函数. apply方法接受俩个参数<code>this</code>和参数数组.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> argus = [<span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"><span class="keyword">var</span> sum = add.apply(<span class="literal">null</span>, argus);</span><br></pre></td></tr></table></figure></p>
+<h3 id="arguments数组"><a href="#arguments数组" class="headerlink" title="arguments数组"></a>arguments数组</h3><p>在函数内部我们可以通过arguments数组变量访问所有的实际参数<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> sum = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="built_in">arguments</span>.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">		sum += argements[i];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sum = add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>throw语句中断函数的执行,它应该抛出一个exception对象,这个对象包含一个<code>name</code>和<code>message</code>属性(你也可以添加额外的属性).</p>
+<p>我们使用try catch来捕获异常<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="built_in">arguments</span>.length &lt; <span class="number">2</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> &#123;</span><br><span class="line">				name: <span class="string">"arguments error"</span>,</span><br><span class="line">				message: <span class="string">"need more arguments"</span></span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> tryAdd = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> add(a, b);</span><br><span class="line">	&#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">tryAdd(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>代码块是包在一对花括号中的一组语句，JavaScript中的代码块不会创建新的作用域.但是函数确实是有其自己的作用域的,但是在函数内部定义的变量在整个函数体的任意位置都是可见的,因此变量应该被定义在函数的头部。</p>
+<p>作用域的好处是内部函数可以访问定义在他们的外部函数的参数和变量(除了this和arguments)</p>
+<h3 id="闭包-1"><a href="#闭包-1" class="headerlink" title="闭包"></a>闭包</h3><p>当我们在函数A中定义了函数B,函数B引用了函数A中的变量I,当函数A执行完毕,函数B作为返回值继续被执行时,函数A的变量I是仍然可以被访问的,这就是闭包.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> id = <span class="number">1132</span>;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		add: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">			<span class="keyword">return</span> id += <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> if1 = fi();</span><br><span class="line"><span class="keyword">var</span> id = if1.add(); <span class="comment">// 结果是1133</span></span><br></pre></td></tr></table></figure></p>
+<p>简而言之呢,闭包的特性是保存了创建它时的上下文信息.</p>
+<h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>我们可以使用函数和闭包来构造模块. 模块是一个提供接口却隐藏状态与实现的函数或者对象.</p>
+<p>模块的一般形式是：一个定义了私有变量和函数的函数,利用闭包创建可以访问私有变量和函数的特权函数,最后返回这个特权函数,或者将他们保存到一个可访问到的地方.</p>
+<h3 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h3><p>函数也是值,我们可以像往常操作值那样去操作函数, 将函数作为一个变量.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span>(<span class="params">a, b, c</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> f1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> p(<span class="number">1</span>);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> c = f1();</span><br></pre></td></tr></table></figure></p>
+<p>上面就实现了函数的柯里化</p>
+<h3 id="普通函数"><a href="#普通函数" class="headerlink" title="普通函数"></a>普通函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaScript/">JavaScript</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/08/javascript/JavaScript函数/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/javascript/JavaScript函数/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1121,15 +1136,15 @@
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github Card</p>
+<p class="asidetitle">Github 名片</p>
 <div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -1139,7 +1154,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分类</p>
 		<ul>
 		
 		  
@@ -1269,7 +1284,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">Links</p>
+  <p class="asidetitle">友情链接</p>
     <ul>
         
           <li>
@@ -1284,7 +1299,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
+<p class="asidetitle">豆瓣秀</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -1292,11 +1307,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
+  <p class="asidetitle">新浪微博</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -1470,7 +1485,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

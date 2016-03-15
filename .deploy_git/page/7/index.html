@@ -45,7 +45,7 @@
 				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -59,7 +59,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
 						</form>
 					
 					</li>
@@ -76,37 +76,122 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/21/JavaSE/JavaIO 序列化/" title="JAVA 序列化" itemprop="url">JAVA 序列化</a>
+      <a href="/2015/11/21/JavaSE/JavaIO 文件操作/" title="JAVA 文件操作" itemprop="url">JAVA 文件操作</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-21</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h2 id="Externalizable"><a href="#Externalizable" class="headerlink" title="Externalizable"></a>Externalizable</h2><p>Externalizable继承于Serializable，当使用该接口时，序列化的细节需要由程序员去完成. 如上所示的代码，由于writeExternal()与readExternal()方法未作任何处理，那么该序列化行为将不会保存/读取任何一个字段. </p>
-<h2 id="Flushable"><a href="#Flushable" class="headerlink" title="Flushable"></a>Flushable</h2><p>实现了Flushable接口的类的对象，可以强制将缓存的输出写入到与对象关联的流中. 写入流的所有I/O类都实现了Flushable接口. </p>
-<h2 id="ObjectInputValidation"><a href="#ObjectInputValidation" class="headerlink" title="ObjectInputValidation"></a>ObjectInputValidation</h2><p>序列化流验证机制.一般情况下，我们认为序列化流中的数据总是与最初写到流中的数据一致，这并没有问题. 但当黑客获取流信息并篡改一些敏感信息重新序列化到流中后，用户通过反序列化得到的将是被篡改的信息. Java序列化提供一套验证机制. 序列化类通过实现 java.io.ObjectInputValidation接口，就可以做到验证了</p>
-<h2 id="ObjectStreamConstants"><a href="#ObjectStreamConstants" class="headerlink" title="ObjectStreamConstants"></a>ObjectStreamConstants</h2><p>Java序列化序列化对象的信息包括：类元数据描述、类的属性、父类信息以及属性域的值. Java将这些信息分成3部分：序列化头信息、类的描述部分以及属性域的值部分. 现在对a.txt文件加以分析，其中包含一些序列化机制中提供的特殊字段，这些字段被定义在java.io.ObjectStreamConstants接口中.  </p>
-<h2 id="DataInputStream"><a href="#DataInputStream" class="headerlink" title="DataInputStream"></a>DataInputStream</h2><p>用来装饰其它输入流，它“允许应用程序以与机器无关方式从底层输入流中读取基本 Java 数据类型”</p>
-<p>从DataInputStream一次一个字节地读取字符,那么任何值都是合法的,因此返回值不能用来检测输入是否结束.但是可以使用available()函数来查看还有多少字符可供读取</p>
-<p>available()函数的工作方式会随之所读取的媒介类不同而不同, 该函数从字面上的意思来讲就是”在没有阻塞的情况下所能读取的字节数”.对于文件这指的是整个文件,而对于其他流可能就不是这样的</p>
-<p>格式化的内存输入 当读取格式化数据时可以使用DataInputStream，它是一个面向字节的IO类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>(DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(TestDataInputStream.class.getCanonicalName())));) &#123;</span><br><span class="line">	<span class="keyword">while</span> (in.available() != <span class="number">0</span>)</span><br><span class="line">		System.out.print((<span class="keyword">char</span>) in.readByte());</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <h2 id="FileFilter"><a href="#FileFilter" class="headerlink" title="FileFilter"></a>FileFilter</h2><p>检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FileFilter fileFilter = pathname -&gt; &#123;</span><br><span class="line">	System.out.println(pathname.getPath());</span><br><span class="line">	<span class="keyword">return</span> pathname.isFile();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">fileFilter.accept(<span class="keyword">new</span> File(<span class="string">"D:\\hazelcast-documentation-3.5.3.pdf"</span>));</span><br></pre></td></tr></table></figure></p>
+<h2 id="FilenameFilter"><a href="#FilenameFilter" class="headerlink" title="FilenameFilter"></a>FilenameFilter</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FilenameFilter filenameFilter = (dir, name) -&gt; &#123;</span><br><span class="line">	System.out.println(dir);</span><br><span class="line">	System.out.println(name);</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">filenameFilter.accept(<span class="keyword">new</span> File(<span class="string">"D"</span>), <span class="string">"hazelcast-documentation-3.5.3.pdf"</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="File"><a href="#File" class="headerlink" title="File"></a>File</h2><p>File对象给我们提供了以下的功能</p>
+<ul>
+<li>删除文件</li>
+<li>文件重命名</li>
+<li>创建新的文件</li>
+<li>创建新的文件</li>
+<li>获取文件的最后修改时间</li>
+<li>设置文件只读</li>
+<li>设置文件可写</li>
+<li>获取文件长度(总字节数)</li>
+<li>获取文件路径</li>
+<li>获取绝对文件路径</li>
+<li>文件是否隐藏</li>
+<li>获得剩余磁盘空间？</li>
+<li>拷贝文件夹</li>
+<li>遍历文件夹</li>
+<li>检查文件夹是否为空？</li>
+</ul>
+<h2 id="FileDescriptor"><a href="#FileDescriptor" class="headerlink" title="FileDescriptor"></a>FileDescriptor</h2><p>用来表示开放文件、开放套接字等.当FileDescriptor表示某文件时,我们可以通俗的将FileDescriptor看成是该文件.但是,我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作,则需要新创建FileDescriptor对应的FileOutputStream,再对文件进行操作.</p>
+<p>类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件,打开的套接字或其他来源或字节的接收器.以下是关于FileDescriptor要点：</p>
+<ol>
+<li>主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它.</li>
+<li>应用程序不应创建自己的文件描述符.</li>
+</ol>
+<h2 id="FileLock"><a href="#FileLock" class="headerlink" title="FileLock"></a>FileLock</h2><p>锁定文件</p>
+<p>ByteBuffer.allocate()语句改为ByteBuffer.allocateDirect().用来证实性能之间的差异,但是请注意程序的启动时间是否发生了明显的改变.</p>
+<p>修改{@link JGrep}让其使java的nio内存映射文件.</p>
+<p>JDK1.4引入了文件加锁机制,它允许我们同步访问某个作为共享资源的文件.不过,竞争同一文件的两个线程可能在不同的Java虚拟机上;或者一个是Java线程,另一个是操作系统中其他的某个本地线程.</p>
+<p>文件锁对其他的操作系统进程是可见的,因为Java的文件加锁直接映射到了本地操作系统的加锁工具.通过对FileChannel调用tryLock()或lock(),就可以获得整个文件的FileLock.</p>
+<p>(SocketChannel、DatagramChannel和 ServerSocketChannel不需要加锁,因为他们是从单进程实体继承而来;我们通常不在两个进程之间共享网络socket.)</p>
+<p>tryLock()是非阻塞式的,它设法获取锁,但是如果不能获得(当其他一些进程已经持有相同的锁,并且不共享时),它将直接从方法调用返回.lock()则是阻塞式的,它要阻塞进程直至锁可以获得,或调用lock()的线程中断,或调用lock()的通道关闭.</p>
+<p>使用FileLock.release()可以释放锁.</p>
+<p>也可以使用此方法对文件上锁tryLock()或者lock()其中,加锁的区域由size-position决定.第三个参数指定是否是共享锁.</p>
+<p>尽管无参数的加锁方法将根据文件尺寸的变化而变化,但是具有固定尺寸的锁不随文件尺寸的变化而变化.如果你获得了某一区域(从position到position+size)上的锁,当文件增大超出position+size时,那么在position+size之外的部分不会被锁定.无参数的加锁方法会对 整个文件进行加锁,甚至文件变大后也是如此.</p>
+<p>对独占锁或者共享锁的支持必须由底层的操作系统提供.如果操作系统不支持共享锁并为每一个请求都创建一个锁,那么它就会使用独占锁.</p>
+<p>锁的 类型(共享或独占)可以通过FileLock.isShared()进行查询.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"file.txt"</span>);</span><br><span class="line">FileLock fl = fos.getChannel().tryLock();</span><br><span class="line"><span class="keyword">if</span> (fl != <span class="keyword">null</span>) &#123;</span><br><span class="line">	System.out.println(<span class="string">"Locked File"</span>);</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">	fl.release();</span><br><span class="line">	System.out.println(<span class="string">"Released Lock"</span>);</span><br><span class="line">&#125;</span><br><span class="line">fos.close()</span><br></pre></td></tr></table></figure></p>
+<h2 id="DirectoryStream"><a href="#DirectoryStream" class="headerlink" title="DirectoryStream"></a>DirectoryStream</h2><p>遍历某个文件夹内的所有文件,但是不会遍历子目录. 也就是这会遍历当前路径中的所有文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DirectoryStream&lt;Path&gt; paths = Files.newDirectoryStream(Paths.get(<span class="string">"E:"</span>));</span><br><span class="line">paths.forEach(path -&gt; &#123;</span><br><span class="line">	System.out.println(path.getFileName());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <blockquote>
-<p>DataInput 接口用于从二进制流中读取字节，并重构所有 Java 基本类型数据. 同时还提供根据 UTF-8 修改版格式的数据重构 String 的工具. 对于此接口中的所有数据读取例程来说，如果在读取到所需字节数的数据之前已经到达文件末尾 (end of file)，则都将抛出 EOFException（IOException 的一种）. 如果因为文件末尾以外的其他原因无法读取字节，则抛出 IOException而不是 EOFException. 尤其在输入流已关闭的情况下，将抛出 IOException. </p>
+<p>SecureDirectoryStream</p>
 </blockquote>
-<h2 id="DataOutputStream"><a href="#DataOutputStream" class="headerlink" title="DataOutputStream"></a>DataOutputStream</h2><p>用来装饰其它输出流，将DataOutputStream和DataInputStream输入流配合使用，“允许应用程序以与机器无关方式从底层输入流中读写基本 Java 数据类型”. </p>
-<p>我们可以使用DataOutputStream指定格式存储数据, 然后使用DataInputStream轻松的再次指定读取格式来恢复这些数据.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DataOutputStream out = <span class="keyword">new</span> DataOutputStream(<span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"Data.txt"</span>)));</span><br><span class="line">out.writeDouble(<span class="number">3.14159</span>);</span><br><span class="line">out.writeUTF(<span class="string">"That was pi"</span>);</span><br><span class="line">out.writeDouble(<span class="number">1.41413</span>);</span><br><span class="line">out.writeUTF(<span class="string">"Square root of 2"</span>);</span><br><span class="line">out.close();</span><br><span class="line"></span><br><span class="line">DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"Data.txt"</span>)));</span><br><span class="line">System.out.println(in.readDouble());</span><br><span class="line"><span class="comment">// Only readUTF() will recover the Java-UTF String properly:</span></span><br><span class="line">System.out.println(in.readUTF());</span><br><span class="line">System.out.println(in.readDouble());</span><br><span class="line">System.out.println(in.readUTF());</span><br><span class="line"></span><br><span class="line">in.close();</span><br></pre></td></tr></table></figure></p>
+<h2 id="FileVisitor"><a href="#FileVisitor" class="headerlink" title="FileVisitor"></a>FileVisitor</h2><p>遍历某个文件夹内的所有文件接口.</p>
+<p><code>SimpleFileVisitor</code>实现了这个接口. 与<code>DirectoryStream</code> 不同的是,这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SimpleFileVisitor visitor = <span class="keyword">new</span> SimpleFileVisitor&lt;Path&gt;() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> FileVisitResult <span class="title">visitFile</span><span class="params">(Path file, BasicFileAttributes attrs)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				System.out.println(file.getFileName());</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.visitFile(file, attrs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		Files.walkFileTree(Paths.get(<span class="string">"E:"</span>), visitor);</span><br></pre></td></tr></table></figure></p>
+<h2 id="监控文件变化"><a href="#监控文件变化" class="headerlink" title="监控文件变化"></a>监控文件变化</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WatchService service = FileSystems.getDefault().newWatchService();</span><br><span class="line">		Paths.get(<span class="string">"D:/"</span>).register(service,</span><br><span class="line">		ENTRY_CREATE,</span><br><span class="line">		ENTRY_DELETE,</span><br><span class="line">		ENTRY_MODIFY);</span><br><span class="line"></span><br><span class="line">WatchKey watchKey = service.take();</span><br><span class="line"></span><br><span class="line">watchKey.pollEvents().stream().forEach(watchEvent -&gt; &#123;</span><br><span class="line">	System.out.println(watchEvent.context() + <span class="string">"  "</span> + watchEvent.kind());</span><br><span class="line">&#125;);</span><br><span class="line">watchKey.reset();</span><br></pre></td></tr></table></figure>
+<h2 id="Files"><a href="#Files" class="headerlink" title="Files"></a>Files</h2><ol>
+<li>copy</li>
+<li>createDirectories</li>
+<li>createDirectory</li>
+<li>createFile</li>
+<li>createLink</li>
+<li>createSymbolicLink</li>
+<li>createTempDirectory</li>
+<li>createTempFile</li>
+<li>delete</li>
+<li>deleteIfExists</li>
+<li>exists</li>
+<li>getAttribute</li>
+<li>getFileAttributeView</li>
+<li>getFileStore</li>
+<li>getLastModifiedTime</li>
+<li>getOwner</li>
+<li>getPosixFilePermissions</li>
+<li>isDirectory</li>
+<li>isExecutable</li>
+<li>isHidden</li>
+<li>isReadable</li>
+<li>isRegularFile</li>
+<li>isSameFile</li>
+<li>isSymbolicLink</li>
+<li>isWritable</li>
+<li>move</li>
+<li>newBufferedReader</li>
+<li>newBufferedWriter</li>
+<li>newByteChannel</li>
+<li>newDirectoryStream</li>
+<li>newInputStream</li>
+<li>newOutputStream</li>
+<li>notExists</li>
+<li>probeContentType</li>
+<li>readAllBytes</li>
+<li>readAllLines</li>
+<li>readAttributes</li>
+<li>readSymbolicLink</li>
+<li>setAttribute</li>
+<li>setLastModifiedTime</li>
+<li>setOwner</li>
+<li>setPosixFilePermissions</li>
+<li>walkFileTree</li>
+<li>write</li>
+</ol>
+<h2 id="FileStore"><a href="#FileStore" class="headerlink" title="FileStore"></a>FileStore</h2><p>代表了真正的存储设备,提供了设备的详尽信息</p>
+<h2 id="FileSystems"><a href="#FileSystems" class="headerlink" title="FileSystems"></a>FileSystems</h2><ul>
+<li>FileSystems.getDefault() ：返回 JVM 默认的 FileSystem – 一般说来,也就是操作系统的默认文件系统</li>
+<li>FileSystems.getFileSystem(uri) ： 可以获取远程主机的FileSystem<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileSystem system = FileSystems.getDefault();</span><br><span class="line"><span class="comment">// 得到文件系统支持的属性视图列表</span></span><br><span class="line">Set&lt;String&gt; views = system.supportedFileAttributeViews();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 <blockquote>
-<p>DataOutput 接口用于将任意 Java 基本类型转换为一系列字节，并将这些字节写入二进制流. 同时还提供了一个将 String 转换成 UTF-8 修改版格式并写入所得到的系列字节的工具. 对于此接口中写入字节的所有方法，如果由于某种原因无法写入某个字节，则抛出 IOException.</p>
+<p>FileSystem</p>
 </blockquote>
-<h2 id="ObjectInputStream"><a href="#ObjectInputStream" class="headerlink" title="ObjectInputStream"></a>ObjectInputStream</h2><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。</p>
-<h2 id="ObjectOutputStream"><a href="#ObjectOutputStream" class="headerlink" title="ObjectOutputStream"></a>ObjectOutputStream</h2><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。 </p>
+<h2 id="Paths"><a href="#Paths" class="headerlink" title="Paths"></a>Paths</h2><blockquote>
+<p>Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件,但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据,因此在网络环境或在虚拟文件系统中,NIO.2 也完全适用.NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法</p>
+</blockquote>
 
         
         
@@ -131,7 +216,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/11/21/JavaSE/JavaIO 序列化/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 序列化/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/11/21/JavaSE/JavaIO 文件操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 文件操作/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -158,7 +243,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-21</time>
     
   </p>
 </header>
@@ -242,7 +327,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-19T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-20</time>
+    <time datetime="2015-11-19T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-20</time>
     
   </p>
 </header>
@@ -347,6 +432,67 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/19/JavaSE/java小常识/" title="JAVA 小常识" itemprop="url">JAVA 小常识</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="控制台乱码"><a href="#控制台乱码" class="headerlink" title="控制台乱码"></a>控制台乱码</h2><p>在windows系统里,我的cmd控制台的代码页是<code>65001(UTF)</code>,但是当我在指向java命令时却会发生乱码现象,只需要指向<code>chcp 936</code>这个命令,改变一下代码页就好了</p>
+<h2 id="java命令"><a href="#java命令" class="headerlink" title="java命令"></a>java命令</h2><p><code>java  -jar ./tools-1.0-SNAPSHOT.jar</code> 从某个jar运行, mainfest文件必须指定MainClass属性,如果不指定的话,在运行<code>java</code>命令的时候就会产生 xxx.jar中没有主清单属性</p>
+<p><code>java  -jar ./ App</code> 从指定的classpath下所有的jar中,寻找App主类运行</p>
+<h2 id="获取周数"><a href="#获取周数" class="headerlink" title="获取周数"></a>获取周数</h2><p>通过<code>Calendar</code>我们可以知道某个日期处于一年中第几周<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line">calendar.setTime(<span class="keyword">new</span> Date());</span><br><span class="line">System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/19/JavaSE/java小常识/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/19/JavaSE/java小常识/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/19/redis/Redis事务/" title="Redis事务" itemprop="url">Redis事务</a>
   </h1>
   <p class="article-author">By
@@ -354,7 +500,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-18T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-19</time>
+    <time datetime="2015-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-19</time>
     
   </p>
 </header>
@@ -429,23 +575,44 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/19/JavaSE/java小常识/" title="JAVA 小常识" itemprop="url">JAVA 小常识</a>
+      <a href="/2015/11/18/构建工具/gradle/" title="Gradle 初探" itemprop="url">Gradle 初探</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-18T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-19</time>
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-18</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h2 id="控制台乱码"><a href="#控制台乱码" class="headerlink" title="控制台乱码"></a>控制台乱码</h2><p>在windows系统里,我的cmd控制台的代码页是<code>65001(UTF)</code>,但是当我在指向java命令时却会发生乱码现象,只需要指向<code>chcp 936</code>这个命令,改变一下代码页就好了</p>
-<h2 id="java命令"><a href="#java命令" class="headerlink" title="java命令"></a>java命令</h2><p><code>java  -jar ./tools-1.0-SNAPSHOT.jar</code> 从某个jar运行, mainfest文件必须指定MainClass属性,如果不指定的话,在运行<code>java</code>命令的时候就会产生 xxx.jar中没有主清单属性</p>
-<p><code>java  -jar ./ App</code> 从指定的classpath下所有的jar中,寻找App主类运行</p>
-<h2 id="获取周数"><a href="#获取周数" class="headerlink" title="获取周数"></a>获取周数</h2><p>通过<code>Calendar</code>我们可以知道某个日期处于一年中第几周<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line">calendar.setTime(<span class="keyword">new</span> Date());</span><br><span class="line">System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));</span><br></pre></td></tr></table></figure></p>
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>任何一个 Gradle 构建都是由一个或多个 projects 组成。每个 project 都由多个 tasks 组成。每个 task 都代表了构建执行过程中的一个原子性操作。</p>
+<p>我使用idea创建一个gradle项目<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">group <span class="string">'wang.ming15.gradle'</span></span><br><span class="line">version <span class="string">'1.0-SNAPSHOT'</span></span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line"></span><br><span class="line">sourceCompatibility = <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    testCompile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.11'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><h3 id="自定义任务"><a href="#自定义任务" class="headerlink" title="自定义任务"></a>自定义任务</h3><p>我们可以在task内部自由的使用groovy脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task t1 &#123;</span><br><span class="line">    doLast &#123;</span><br><span class="line">        println <span class="string">'task1'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>或者这种方式<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> t2 &lt;&lt; &#123;</span><br><span class="line">        <span class="keyword">println</span> <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>defaultTasks</code>我们可以使用这个命令定义一些默认的task : <code>defaultTasks &#39;t1&#39;, &#39;t2&#39;</code></p>
+</blockquote>
+<h3 id="任务依赖"><a href="#任务依赖" class="headerlink" title="任务依赖"></a>任务依赖</h3><p>我们使用<code>dependsOn</code>语法可以让一个任务依赖于另外一个任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">task t2 &lt;&lt; &#123;</span><br><span class="line">        println <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: t2)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'t3'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种情况下, t2任务会优先于t3任务执行</p>
+<blockquote>
+<p>需要注意的是, 如果t1依赖于t2, 那么当t2执行的时候会先执行t1</p>
+</blockquote>
+<h3 id="延迟依赖"><a href="#延迟依赖" class="headerlink" title="延迟依赖"></a>延迟依赖</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: <span class="string">'t4'</span>)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'task3'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们还可以在定义一个任务之后,再定义其所依赖的任务, 执行顺序仍然是t3 优先于t4</p>
+<h3 id="任务操纵"><a href="#任务操纵" class="headerlink" title="任务操纵"></a>任务操纵</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t5 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task5'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t5.dependsOn t4</span><br></pre></td></tr></table></figure>
+<p>task还有其他一些api,参考<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="external"></a></p>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>如前例所示我们已经使用过Gradle提供的插件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br></pre></td></tr></table></figure></p>
+<p>当我们的项目使用某个插件的时候, 这个项目里就包含了那个插件的任务依赖等等</p>
+<h3 id="java插件任务"><a href="#java插件任务" class="headerlink" title="java插件任务"></a>java插件任务</h3><p>我们使用了java插件, 然后我们打开idea右侧的Gradle标签(我们会看到一些java插件自带的一些task.)：<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/gradle/gradle_ui.jpg" alt=""></p>
+<p>命令含义参考<a href="http://wiki.jikexueyuan.com/project/gradle/java-package.html" target="_blank" rel="external"></a></p>
+<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>在Gradle编译脚本文件中我们还可以自如的使用文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File configFile = file(<span class="string">'src/config.xml'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>file()</code>方法我们就可以打开一个文件.</p>
+<h3 id="文件集合"><a href="#文件集合" class="headerlink" title="文件集合"></a>文件集合</h3><p>我们还可以使用<code>files()</code>方法创建文件集合<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileCollection fils = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以使用<code>+</code>, <code>-</code>符号增加或者删减文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileCollection filc = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br><span class="line">FileCollection newFiles1 = filc + files(<span class="string">"c.txt"</span>)</span><br><span class="line">FileCollection newFiles2 = filc - files(<span class="string">"c.txt"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以使用<code>as</code>将其转换为<code>Set</code>或者<code>List</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set set1 = filc.files</span><br><span class="line">Set set2 = filc as Set</span><br><span class="line">List list = filc as List</span><br></pre></td></tr></table></figure></p>
 
         
         
@@ -458,7 +625,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
 </div>
 
 
@@ -470,7 +637,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/11/19/JavaSE/java小常识/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/19/JavaSE/java小常识/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/11/18/构建工具/gradle/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/构建工具/gradle/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -497,7 +664,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-18</time>
     
   </p>
 </header>
@@ -651,158 +818,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/18/日志工具/Elasticsearch 搜索/" title="Elasticsearch 搜索" itemprop="url">Elasticsearch 搜索</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>首先我们向库里准备一下数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">JSONObject son = <span class="keyword">new</span> JSONObject();</span><br><span class="line">son.put(<span class="string">"name"</span>, <span class="string">"Jerry"</span>);</span><br><span class="line">son.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">son.put(<span class="string">"address"</span>, <span class="string">"baoding"</span>);</span><br><span class="line">son.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line"></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">"name"</span>, <span class="string">"Tom"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"48"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"address"</span>, <span class="string">"beijing"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"son"</span>, son);</span><br><span class="line"></span><br><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx04"</span>)</span><br><span class="line">		.type(<span class="string">"type02"</span>)</span><br><span class="line">		.id(<span class="string">"02"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">client.index(indexRequest).get();</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>Leaf query clauses : 在指定的字段中搜索指定的值,例如使用<code>match</code>, <code>term</code> 或者 <code>range</code> 搜索时</li>
-<li>Compound query clauses :</li>
-</ul>
-<p>首先我们来看一个简单的搜索案例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse response = client.prepareSearch(<span class="string">"idx01"</span>, <span class="string">"idx02"</span>)</span><br><span class="line">				.setTypes(<span class="string">"type01"</span>, <span class="string">"type02"</span>)</span><br><span class="line">				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)</span><br><span class="line">				.setQuery(QueryBuilders.termQuery(<span class="string">"multi"</span>, <span class="string">"test"</span>))                 <span class="comment">// Query</span></span><br><span class="line">				.setPostFilter(QueryBuilders.rangeQuery(<span class="string">"age"</span>).from(<span class="number">12</span>).to(<span class="number">18</span>))     <span class="comment">// Filter</span></span><br><span class="line">				.setFrom(<span class="number">0</span>).setSize(<span class="number">60</span>).setExplain(<span class="keyword">true</span>)</span><br><span class="line">				.execute()</span><br><span class="line">				.actionGet();</span><br></pre></td></tr></table></figure></p>
-<h3 id="Match-All-Query"><a href="#Match-All-Query" class="headerlink" title="Match All Query"></a>Match All Query</h3><p>最简单的搜索, 这个搜索将库中所有的文档都搜索出来<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchAllQuery();</span><br></pre></td></tr></table></figure></p>
-<h3 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h3><h4 id="Match-Query"><a href="#Match-Query" class="headerlink" title="Match Query"></a>Match Query</h4><p>标准搜索, 包含模糊搜索, 短语搜索, 相近搜索<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchQuery(</span><br><span class="line">				<span class="string">"age"</span>,	<span class="comment">// 搜索的字段</span></span><br><span class="line">				<span class="string">"18"</span>	<span class="comment">// 搜索的字段值</span></span><br><span class="line">		);</span><br><span class="line"></span><br><span class="line">		SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">		searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">			System.out.println(hit.getSourceAsString());</span><br><span class="line">		&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>结果为<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"address"</span>:<span class="string">"beijing"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Tom"</span>,<span class="attr">"son"</span>:&#123;<span class="attr">"address"</span>:<span class="string">"baoding"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Jerry"</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="Multi-Match-Query"><a href="#Multi-Match-Query" class="headerlink" title="Multi Match Query"></a>Multi Match Query</h4><p><code>match</code>搜索的多键版本, 会在多个指定字段中进行值匹配查找<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = multiMatchQuery(</span><br><span class="line">		<span class="string">"baoding"</span>,	<span class="comment">// 搜索值</span></span><br><span class="line">		<span class="string">"city"</span>, <span class="string">"country"</span>	<span class="comment">// 搜索的字段</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">	System.out.println(hit.getSourceAsString());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h4 id="Common-Terms-Query"><a href="#Common-Terms-Query" class="headerlink" title="Common Terms Query"></a>Common Terms Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = commonTermsQuery(<span class="string">"name"</span>, <span class="string">"kimchy"</span>);</span><br></pre></td></tr></table></figure>
-<h4 id="Query-String-Query"><a href="#Query-String-Query" class="headerlink" title="Query String Query"></a>Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = queryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
-<h4 id="Simple-Query-String-Query"><a href="#Simple-Query-String-Query" class="headerlink" title="Simple Query String Query"></a>Simple Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = simpleQueryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/18/日志工具/Elasticsearch 搜索/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 搜索/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/11/18/构建工具/gradle/" title="Gradle 初探" itemprop="url">Gradle 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>任何一个 Gradle 构建都是由一个或多个 projects 组成。每个 project 都由多个 tasks 组成。每个 task 都代表了构建执行过程中的一个原子性操作。</p>
-<p>我使用idea创建一个gradle项目<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">group <span class="string">'wang.ming15.gradle'</span></span><br><span class="line">version <span class="string">'1.0-SNAPSHOT'</span></span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line"></span><br><span class="line">sourceCompatibility = <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    testCompile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.11'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><h3 id="自定义任务"><a href="#自定义任务" class="headerlink" title="自定义任务"></a>自定义任务</h3><p>我们可以在task内部自由的使用groovy脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task t1 &#123;</span><br><span class="line">    doLast &#123;</span><br><span class="line">        println <span class="string">'task1'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>或者这种方式<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> t2 &lt;&lt; &#123;</span><br><span class="line">        <span class="keyword">println</span> <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><code>defaultTasks</code>我们可以使用这个命令定义一些默认的task : <code>defaultTasks &#39;t1&#39;, &#39;t2&#39;</code></p>
-</blockquote>
-<h3 id="任务依赖"><a href="#任务依赖" class="headerlink" title="任务依赖"></a>任务依赖</h3><p>我们使用<code>dependsOn</code>语法可以让一个任务依赖于另外一个任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">task t2 &lt;&lt; &#123;</span><br><span class="line">        println <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: t2)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'t3'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这种情况下, t2任务会优先于t3任务执行</p>
-<blockquote>
-<p>需要注意的是, 如果t1依赖于t2, 那么当t2执行的时候会先执行t1</p>
-</blockquote>
-<h3 id="延迟依赖"><a href="#延迟依赖" class="headerlink" title="延迟依赖"></a>延迟依赖</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: <span class="string">'t4'</span>)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'task3'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们还可以在定义一个任务之后,再定义其所依赖的任务, 执行顺序仍然是t3 优先于t4</p>
-<h3 id="任务操纵"><a href="#任务操纵" class="headerlink" title="任务操纵"></a>任务操纵</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t5 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task5'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t5.dependsOn t4</span><br></pre></td></tr></table></figure>
-<p>task还有其他一些api,参考<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="external"></a></p>
-<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>如前例所示我们已经使用过Gradle提供的插件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br></pre></td></tr></table></figure></p>
-<p>当我们的项目使用某个插件的时候, 这个项目里就包含了那个插件的任务依赖等等</p>
-<h3 id="java插件任务"><a href="#java插件任务" class="headerlink" title="java插件任务"></a>java插件任务</h3><p>我们使用了java插件, 然后我们打开idea右侧的Gradle标签(我们会看到一些java插件自带的一些task.)：<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/gradle/gradle_ui.jpg" alt=""></p>
-<p>命令含义参考<a href="http://wiki.jikexueyuan.com/project/gradle/java-package.html" target="_blank" rel="external"></a></p>
-<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>在Gradle编译脚本文件中我们还可以自如的使用文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File configFile = file(<span class="string">'src/config.xml'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>使用<code>file()</code>方法我们就可以打开一个文件.</p>
-<h3 id="文件集合"><a href="#文件集合" class="headerlink" title="文件集合"></a>文件集合</h3><p>我们还可以使用<code>files()</code>方法创建文件集合<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileCollection fils = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br></pre></td></tr></table></figure></p>
-<p>我们还可以使用<code>+</code>, <code>-</code>符号增加或者删减文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileCollection filc = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br><span class="line">FileCollection newFiles1 = filc + files(<span class="string">"c.txt"</span>)</span><br><span class="line">FileCollection newFiles2 = filc - files(<span class="string">"c.txt"</span>)</span><br></pre></td></tr></table></figure></p>
-<p>我们还可以使用<code>as</code>将其转换为<code>Set</code>或者<code>List</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set set1 = filc.files</span><br><span class="line">Set set2 = filc as Set</span><br><span class="line">List list = filc as List</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/18/构建工具/gradle/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/构建工具/gradle/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/18/日志工具/Elasticsearch 基本操作/" title="Elasticsearch 基本操作" itemprop="url">Elasticsearch 基本操作</a>
   </h1>
   <p class="article-author">By
@@ -810,7 +825,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-18</time>
     
   </p>
 </header>
@@ -883,6 +898,76 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/18/日志工具/Elasticsearch 搜索/" title="Elasticsearch 搜索" itemprop="url">Elasticsearch 搜索</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>首先我们向库里准备一下数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">JSONObject son = <span class="keyword">new</span> JSONObject();</span><br><span class="line">son.put(<span class="string">"name"</span>, <span class="string">"Jerry"</span>);</span><br><span class="line">son.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">son.put(<span class="string">"address"</span>, <span class="string">"baoding"</span>);</span><br><span class="line">son.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line"></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">"name"</span>, <span class="string">"Tom"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"48"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"address"</span>, <span class="string">"beijing"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"son"</span>, son);</span><br><span class="line"></span><br><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx04"</span>)</span><br><span class="line">		.type(<span class="string">"type02"</span>)</span><br><span class="line">		.id(<span class="string">"02"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">client.index(indexRequest).get();</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Leaf query clauses : 在指定的字段中搜索指定的值,例如使用<code>match</code>, <code>term</code> 或者 <code>range</code> 搜索时</li>
+<li>Compound query clauses :</li>
+</ul>
+<p>首先我们来看一个简单的搜索案例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse response = client.prepareSearch(<span class="string">"idx01"</span>, <span class="string">"idx02"</span>)</span><br><span class="line">				.setTypes(<span class="string">"type01"</span>, <span class="string">"type02"</span>)</span><br><span class="line">				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)</span><br><span class="line">				.setQuery(QueryBuilders.termQuery(<span class="string">"multi"</span>, <span class="string">"test"</span>))                 <span class="comment">// Query</span></span><br><span class="line">				.setPostFilter(QueryBuilders.rangeQuery(<span class="string">"age"</span>).from(<span class="number">12</span>).to(<span class="number">18</span>))     <span class="comment">// Filter</span></span><br><span class="line">				.setFrom(<span class="number">0</span>).setSize(<span class="number">60</span>).setExplain(<span class="keyword">true</span>)</span><br><span class="line">				.execute()</span><br><span class="line">				.actionGet();</span><br></pre></td></tr></table></figure></p>
+<h3 id="Match-All-Query"><a href="#Match-All-Query" class="headerlink" title="Match All Query"></a>Match All Query</h3><p>最简单的搜索, 这个搜索将库中所有的文档都搜索出来<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchAllQuery();</span><br></pre></td></tr></table></figure></p>
+<h3 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h3><h4 id="Match-Query"><a href="#Match-Query" class="headerlink" title="Match Query"></a>Match Query</h4><p>标准搜索, 包含模糊搜索, 短语搜索, 相近搜索<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchQuery(</span><br><span class="line">				<span class="string">"age"</span>,	<span class="comment">// 搜索的字段</span></span><br><span class="line">				<span class="string">"18"</span>	<span class="comment">// 搜索的字段值</span></span><br><span class="line">		);</span><br><span class="line"></span><br><span class="line">		SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">		searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">			System.out.println(hit.getSourceAsString());</span><br><span class="line">		&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"address"</span>:<span class="string">"beijing"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Tom"</span>,<span class="attr">"son"</span>:&#123;<span class="attr">"address"</span>:<span class="string">"baoding"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Jerry"</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Multi-Match-Query"><a href="#Multi-Match-Query" class="headerlink" title="Multi Match Query"></a>Multi Match Query</h4><p><code>match</code>搜索的多键版本, 会在多个指定字段中进行值匹配查找<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = multiMatchQuery(</span><br><span class="line">		<span class="string">"baoding"</span>,	<span class="comment">// 搜索值</span></span><br><span class="line">		<span class="string">"city"</span>, <span class="string">"country"</span>	<span class="comment">// 搜索的字段</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">	System.out.println(hit.getSourceAsString());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h4 id="Common-Terms-Query"><a href="#Common-Terms-Query" class="headerlink" title="Common Terms Query"></a>Common Terms Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = commonTermsQuery(<span class="string">"name"</span>, <span class="string">"kimchy"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="Query-String-Query"><a href="#Query-String-Query" class="headerlink" title="Query String Query"></a>Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = queryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="Simple-Query-String-Query"><a href="#Simple-Query-String-Query" class="headerlink" title="Simple Query String Query"></a>Simple Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = simpleQueryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/18/日志工具/Elasticsearch 搜索/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 搜索/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/16/redis/Redis_SortedSet/" title="Redis SortedSet" itemprop="url">Redis SortedSet</a>
   </h1>
   <p class="article-author">By
@@ -890,7 +975,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-15T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-16</time>
+    <time datetime="2015-11-15T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-16</time>
     
   </p>
 </header>
@@ -1122,15 +1207,15 @@
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github Card</p>
+<p class="asidetitle">Github 名片</p>
 <div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -1140,7 +1225,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分类</p>
 		<ul>
 		
 		  
@@ -1270,7 +1355,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">Links</p>
+  <p class="asidetitle">友情链接</p>
     <ul>
         
           <li>
@@ -1285,7 +1370,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
+<p class="asidetitle">豆瓣秀</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -1293,11 +1378,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
+  <p class="asidetitle">新浪微博</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -1471,7 +1556,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

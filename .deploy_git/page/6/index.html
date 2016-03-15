@@ -45,7 +45,7 @@
 				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -59,7 +59,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
 						</form>
 					
 					</li>
@@ -76,25 +76,28 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/08/guice/Linked Bindings/" title="Guice Linked Bindings" itemprop="url">Guice Linked Bindings</a>
+      <a href="/2015/12/08/guice/Scopes/" title="Guice Scopes" itemprop="url">Guice Scopes</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		A c = injector.getInstance(C.class);</span><br><span class="line">		c.print();</span><br><span class="line">		A b = injector.getInstance(B.class);</span><br><span class="line">		b.print();</span><br><span class="line">		A a = injector.getInstance(A.class);</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"c"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">		bind(B.class).to(C.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码的最后调用结果都是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c</span><br><span class="line">c</span><br><span class="line">c</span><br></pre></td></tr></table></figure></p>
-<p>这就是Guice的Linked Bindings, 当binding形成一条链之后,会以最终的绑定为最终绑定</p>
-<blockquote>
-<p>注意绑定关系必须是继承关系</p>
-</blockquote>
+        <p>默认的,Guice每次在<code>getInstance()</code>的时候都会返回一个新的对象.</p>
+<h2 id="Singleton"><a href="#Singleton" class="headerlink" title="Singleton"></a>Singleton</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		A b1 = injector.getInstance(A.class);</span><br><span class="line">		A b2 = injector.getInstance(A.class);</span><br><span class="line">		System.out.println(b1 == b2);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> A a;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		requestStaticInjection(Print.class);</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用<code>Singleton</code>注解可以得到一个单例类</p>
+<p>另外,我们还可以在绑定的时候进行设置<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class).in(Singleton.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="web-Scope"><a href="#web-Scope" class="headerlink" title="web Scope"></a>web Scope</h2><p>Guice还对web应用提供了其他俩种socpe</p>
+<ul>
+<li>SessionScoped</li>
+<li>RequestScoped</li>
+</ul>
 
         
         
@@ -119,75 +122,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/12/08/guice/Linked Bindings/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Linked Bindings/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/12/08/guice/Injections/" title="Guice Injections" itemprop="url">Guice Injections</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Constructor-Injection"><a href="#Constructor-Injection" class="headerlink" title="Constructor Injection"></a>Constructor Injection</h2><p>对构造器进行注入<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		Print print = injector.getInstance(Print.class);</span><br><span class="line">		print.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> A a;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	Print(A a) &#123;</span><br><span class="line">		<span class="keyword">this</span>.a = a;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="Method-Injection"><a href="#Method-Injection" class="headerlink" title="Method Injection"></a>Method Injection</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		Print print = injector.getInstance(Print.class);</span><br><span class="line">		print.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> A a;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setA</span><span class="params">(A a)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.a = a;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Guice会自动调用被<code>Inject</code>注解过的方法</p>
-<h2 id="Field-Injection"><a href="#Field-Injection" class="headerlink" title="Field Injection"></a>Field Injection</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		Print print = injector.getInstance(Print.class);</span><br><span class="line">		print.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> A a;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Guice会对被<code>Inject</code>注解过的属性赋值</p>
-<h2 id="Optional-Injections"><a href="#Optional-Injections" class="headerlink" title="Optional Injections"></a>Optional Injections</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		Print print = injector.getInstance(Print.class);</span><br><span class="line">		print.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Inject</span>(optional=<span class="keyword">true</span>)</span><br><span class="line">	<span class="keyword">private</span> A a;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">//		bind(A.class).to(B.class);</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果我将要被<code>Inject</code>注解的属性设置为<code>optional=true</code>的话,当我注释掉绑定代码,在运行代码时会产生一个空指针异常,这是因为当找不到绑定的时候,就不进行注解<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception <span class="keyword">in</span> thread <span class="string">"main"</span> java<span class="selector-class">.lang</span><span class="selector-class">.NullPointerException</span></span><br></pre></td></tr></table></figure></p>
-<p>但是如果我将<code>Inject</code>注解的属性设置为<code>optional=false</code>的话,在运行代码会产生<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> com.google.inject.ConfigurationException: Guice configuration errors:</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>) No implementation <span class="keyword">for</span> guice.A was bound.</span><br><span class="line">  <span class="keyword">while</span> locating guice.A</span><br><span class="line">    <span class="keyword">for</span> field at guice.Print.a(TestLinkedBindings.java:<span class="number">37</span>)</span><br><span class="line">  <span class="keyword">while</span> locating guice.Print</span><br></pre></td></tr></table></figure></p>
-<p>说明如果可选值如果是false的话就必须对其进行绑定</p>
-<h2 id="Static-Injections"><a href="#Static-Injections" class="headerlink" title="Static Injections"></a>Static Injections</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		Print print = injector.getInstance(Print.class);</span><br><span class="line">		print.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> A a;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		requestStaticInjection(Print.class);</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果我们要对某个静态成员进行注解的话，必须在<code>config()</code>方法里调用<code>requestStaticInjection()</code>方法,将静态成员所在类传进去.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/guice/">guice</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/12/08/guice/Injections/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Injections/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/12/08/guice/Scopes/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Scopes/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -214,7 +149,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
     
   </p>
 </header>
@@ -274,6 +209,156 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/12/08/guice/多种实现绑定/" title="Guice 多种实现绑定" itemprop="url">Guice 多种实现绑定</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		Print print = injector.getInstance(Print.class);</span><br><span class="line">		print.printB();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"c"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@BindingAnnotation</span> <span class="meta">@Target</span>(&#123; FIELD, PARAMETER, METHOD &#125;) <span class="meta">@Retention</span>(RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> BType &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@BindingAnnotation</span> <span class="meta">@Target</span>(&#123; FIELD, PARAMETER, METHOD &#125;) <span class="meta">@Retention</span>(RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> CType &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).annotatedWith(Names.named(<span class="string">"BType"</span>)).to(B.class);</span><br><span class="line">		bind(A.class).annotatedWith(Names.named(<span class="string">"CType"</span>)).to(C.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		b.print();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printC</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		c.print();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="meta">@Named</span>(<span class="string">"BType"</span>)</span><br><span class="line">	<span class="keyword">private</span> A b;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="meta">@Named</span>(<span class="string">"CType"</span>)</span><br><span class="line">	<span class="keyword">private</span> A c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种特性是为了,当某个接口有多种实现时,我们可以通过<code>@Named</code>指定我们具体使用哪种实现</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/guice/">guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/08/guice/多种实现绑定/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/多种实现绑定/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/24/jvm/instrument 初探/" title="instrument 初探" itemprop="url">instrument 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至能够替换和修改某些类的定义。</p>
+<p>Instrumentation提供了这样的功能：</p>
+<ul>
+<li>获取某个对象的大小</li>
+<li>热加载class文件</li>
+<li>获取JVM信息</li>
+</ul>
+<blockquote>
+<p>要知道一个对象所使用的内存量,需要将所有实例变量使用的内存和对象本身的开销(一般是16字节)相加.这些开销包括一个指向对象的类的引用,垃圾收集信息和同步信息.另外一般内存的使用会被填充为8字节的倍数.</p>
+</blockquote>
+<h2 id="Premain"><a href="#Premain" class="headerlink" title="Premain"></a>Premain</h2><p>premain函数是JavaSE5中实现instrument的方式.</p>
+<p>使用premain我们要自定义MANIFEST.MF文件, 定义Premain-Class<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Manifest-Version: <span class="number">1.0</span></span><br><span class="line">Premain-Class: wang.ming15.instrument.core.Premain</span><br></pre></td></tr></table></figure></p>
+<p>然后我们在maven文件中输出该文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jar-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">manifestFile</span>&gt;</span></span><br><span class="line">                        src/main/resources/META-INF/MANIFEST.MF</span><br><span class="line">                    <span class="tag">&lt;/<span class="name">manifestFile</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">addClasspath</span>&gt;</span>true<span class="tag">&lt;/<span class="name">addClasspath</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">classpathPrefix</span>&gt;</span>lib/<span class="tag">&lt;/<span class="name">classpathPrefix</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="获取对象大小"><a href="#获取对象大小" class="headerlink" title="获取对象大小"></a>获取对象大小</h3><p>首先我们要写一个代理文件出来(该文件放在<code>core-1.0-SNAPSHOT.jar</code>中)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Premain</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Instrumentation instrumentation;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span> </span>&#123;</span><br><span class="line">		instrumentation = inst;</span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Instrumentation <span class="title">getInstrumentation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> instrumentation;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后在自己的应用程序中引用该文件(在<code>examples-1.0-SNAPSHOT.jar</code>中)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintObjectSize</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Hello world, App"</span>);</span><br><span class="line"></span><br><span class="line">		objectSize();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">objectSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Instrumentation inst = Premain.getInstrumentation();</span><br><span class="line">		String str = <span class="string">"123456789"</span>;</span><br><span class="line">		<span class="keyword">long</span> size = inst.getObjectSize(str);</span><br><span class="line">		System.out.println(str + <span class="string">" 对象大小: "</span> + size);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后执行命令<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:../instrument/target/core-<span class="number">1.0</span>-SNAPSHOT.jar -cp ./target/examples-<span class="number">1.0</span>-SNAPSHOT.jar wang.ming15.instrument.examples.PrintObjectSize</span><br></pre></td></tr></table></figure></p>
+<p>然后就会获得对象的大小<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello world, App</span><br><span class="line"><span class="number">123456789</span> 对象大小: <span class="number">24</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="加载jar包"><a href="#加载jar包" class="headerlink" title="加载jar包"></a>加载jar包</h3><p>我们在Premain类中增加一个加载jar的功能<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">appendJarToSystemClassLoader</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">	JarFile jarFile = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		jarFile = <span class="keyword">new</span> JarFile(path);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	instrumentation.appendToSystemClassLoaderSearch(jarFile);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">appendJarToBootstrapClassLoader</span><span class="params">(Instrumentation inst, String path)</span> </span>&#123;</span><br><span class="line">	JarFile jarFile = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		jarFile = <span class="keyword">new</span> JarFile(path);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	inst.appendToBootstrapClassLoaderSearch(jarFile);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后我们写一个测试类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestJarLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">120</span>; i++) &#123;</span><br><span class="line">			Premain.appendJarToSystemClassLoader(args[<span class="number">0</span>]);</span><br><span class="line">			Print.print();</span><br><span class="line"></span><br><span class="line">			Stream.of(Premain.getInstrumentation().getAllLoadedClasses())</span><br><span class="line">					.filter(clazz -&gt; clazz.getName().contains(<span class="string">"Print"</span>))</span><br><span class="line">					.forEach(aClass -&gt; System.out.println(aClass.getName() + <span class="string">"  "</span> + aClass.getMethods().length));</span><br><span class="line"></span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				TimeUnit.SECONDS.sleep(<span class="number">5</span>);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后执行命令<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:../instrument/target/core-<span class="number">1.0</span>-SNAPSHOT.jar -cp ./target/examples-<span class="number">1.0</span>-SNAPSHOT.jar wang.ming15.instrument.examples.TestJarLoader D:/workspace/idea/instrument/trunk/print/target/print-<span class="number">1.0</span>-SNAPSHOT.jar</span><br></pre></td></tr></table></figure></p>
+<p>结果输出为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Now Time is Thu Dec <span class="number">31</span> <span class="number">10</span>:<span class="number">50</span>:<span class="number">39</span> CST <span class="number">2015</span></span><br><span class="line"></span><br><span class="line">wang.ming15.instrument.print.Print  <span class="number">11</span></span><br><span class="line">java.io.PrintStream  <span class="number">44</span></span><br><span class="line">Now Time is Thu Dec <span class="number">31</span> <span class="number">10</span>:<span class="number">50</span>:<span class="number">44</span> CST <span class="number">2015</span></span><br><span class="line"></span><br><span class="line">wang.ming15.instrument.print.Print  <span class="number">11</span></span><br><span class="line">java.io.PrintStream  <span class="number">44</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="重新加载类"><a href="#重新加载类" class="headerlink" title="重新加载类"></a>重新加载类</h3><p>我们使用<code>redefineClasses()</code>可以使用提供的字节码重新定义Class. 这个方法会使用新的字节码全部替换原先存在的Class字节码. 而如果想要修改原先存在的Class字节码应该使用<code>retransformClasses()</code>方法.</p>
+<p>对于已经在栈帧中的字节码, 他们会继续执行下去, 但是当方法再次调用的时候,则会使用刚刚加载完成的新的字节码.</p>
+<p>同时需要注意的是<code>redefineClasses()</code>并不会触发初始化操作, 也不会抛出初始化时的异常. 因此一些静态属性并不会被重新赋值</p>
+<p>在重新加载类的时候, 该类已经实例化出的对象同时也不会受到影响.</p>
+<p>该方法的操作过程是一个基于操作集合的, 也就是说在redefine的时候, 可能有A B俩个类都进行, 而且A依赖于B, 那么在redefine的时候这俩个操作是同时完成的, 类似于原子操作.</p>
+<p>还需要指明的是, redefine 操作虽然可以改变方法体, 常量池以及属性, 但是redefine过程肯定不能对属性或者方法进行增加,删除,重命名的操作, 也不能修改方法签名以及修改继承关系.</p>
+<p>在redefine过程中,一旦抛出异常, 那么此过程执已经redefine成功的class也会被会滚成原来的.</p>
+<p>想使用这个功能我们需要在MANIFEST.MF文件中增加这样一行<code>Can-Redefine-Classes: true</code>, 然后我们在Premain中增加一个redefine方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">redefineClasses</span><span class="params">(Class clazz, String path)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!instrumentation.isRedefineClassesSupported()) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line"><span class="comment">//		InputStream input = Premain.class.getClassLoader().getResourceAsStream(path);</span></span><br><span class="line">		InputStream input = <span class="keyword">new</span> FileInputStream(path);</span><br><span class="line">		<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[input.available()];</span><br><span class="line">		input.read(bytes);</span><br><span class="line">		instrumentation.redefineClasses(<span class="keyword">new</span> ClassDefinition(clazz, bytes));</span><br><span class="line">	&#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125; <span class="keyword">catch</span> (UnmodifiableClassException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后我们写一个测试类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">			Test.print();</span><br><span class="line">			TimeUnit.SECONDS.sleep(<span class="number">5</span>);</span><br><span class="line">			Premain.redefineClasses(Test.class, <span class="string">"D://Test.class"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后成功输出<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T ok</span><br><span class="line">I am a big T ok</span><br></pre></td></tr></table></figure></p>
+<h2 id="Agentmain"><a href="#Agentmain" class="headerlink" title="Agentmain"></a>Agentmain</h2><p>在 Java SE 5 中premain 所作的 Instrumentation 也仅限与 main 函数执行前，这样的方式存在一定的局限性。Java SE 6 针对这种状况做出了改进，开发者可以在 main 函数开始执行以后，再启动自己的 Instrumentation 程序。在 Java SE 6 的 Instrumentation 当中，有一个跟 premain“并驾齐驱”的“agentmain”方法，可以在 main 函数开始运行之后再运行。</p>
+<p>首先我们还是需要修改MANIFEST.MF文件, 在其中添加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Agent-Class: wang.ming15.instrument.core.Agentmain</span><br></pre></td></tr></table></figure></p>
+<h2 id="获取对象大小-1"><a href="#获取对象大小-1" class="headerlink" title="获取对象大小"></a>获取对象大小</h2><p>同样我们还是先输出一下对象的大小<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/24/jvm/instrument 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/24/jvm/instrument 初探/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/24/mycat/mycat/" title="Mycat配置文件" itemprop="url">Mycat配置文件</a>
   </h1>
   <p class="article-author">By
@@ -281,7 +366,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-24</time>
+    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-24</time>
     
   </p>
 </header>
@@ -448,97 +533,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/24/jvm/instrument 初探/" title="instrument 初探" itemprop="url">instrument 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-24</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至能够替换和修改某些类的定义。</p>
-<p>Instrumentation提供了这样的功能：</p>
-<ul>
-<li>获取某个对象的大小</li>
-<li>热加载class文件</li>
-<li>获取JVM信息</li>
-</ul>
-<blockquote>
-<p>要知道一个对象所使用的内存量,需要将所有实例变量使用的内存和对象本身的开销(一般是16字节)相加.这些开销包括一个指向对象的类的引用,垃圾收集信息和同步信息.另外一般内存的使用会被填充为8字节的倍数.</p>
-</blockquote>
-<h2 id="Premain"><a href="#Premain" class="headerlink" title="Premain"></a>Premain</h2><p>premain函数是JavaSE5中实现instrument的方式.</p>
-<p>使用premain我们要自定义MANIFEST.MF文件, 定义Premain-Class<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Manifest-Version: <span class="number">1.0</span></span><br><span class="line">Premain-Class: wang.ming15.instrument.core.Premain</span><br></pre></td></tr></table></figure></p>
-<p>然后我们在maven文件中输出该文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jar-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">manifestFile</span>&gt;</span></span><br><span class="line">                        src/main/resources/META-INF/MANIFEST.MF</span><br><span class="line">                    <span class="tag">&lt;/<span class="name">manifestFile</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">addClasspath</span>&gt;</span>true<span class="tag">&lt;/<span class="name">addClasspath</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">classpathPrefix</span>&gt;</span>lib/<span class="tag">&lt;/<span class="name">classpathPrefix</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="获取对象大小"><a href="#获取对象大小" class="headerlink" title="获取对象大小"></a>获取对象大小</h3><p>首先我们要写一个代理文件出来(该文件放在<code>core-1.0-SNAPSHOT.jar</code>中)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Premain</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Instrumentation instrumentation;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span> </span>&#123;</span><br><span class="line">		instrumentation = inst;</span><br><span class="line">	&#125;;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Instrumentation <span class="title">getInstrumentation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> instrumentation;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后在自己的应用程序中引用该文件(在<code>examples-1.0-SNAPSHOT.jar</code>中)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintObjectSize</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Hello world, App"</span>);</span><br><span class="line"></span><br><span class="line">		objectSize();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">objectSize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Instrumentation inst = Premain.getInstrumentation();</span><br><span class="line">		String str = <span class="string">"123456789"</span>;</span><br><span class="line">		<span class="keyword">long</span> size = inst.getObjectSize(str);</span><br><span class="line">		System.out.println(str + <span class="string">" 对象大小: "</span> + size);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后执行命令<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:../instrument/target/core-<span class="number">1.0</span>-SNAPSHOT.jar -cp ./target/examples-<span class="number">1.0</span>-SNAPSHOT.jar wang.ming15.instrument.examples.PrintObjectSize</span><br></pre></td></tr></table></figure></p>
-<p>然后就会获得对象的大小<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello world, App</span><br><span class="line"><span class="number">123456789</span> 对象大小: <span class="number">24</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="加载jar包"><a href="#加载jar包" class="headerlink" title="加载jar包"></a>加载jar包</h3><p>我们在Premain类中增加一个加载jar的功能<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">appendJarToSystemClassLoader</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">	JarFile jarFile = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		jarFile = <span class="keyword">new</span> JarFile(path);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	instrumentation.appendToSystemClassLoaderSearch(jarFile);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">appendJarToBootstrapClassLoader</span><span class="params">(Instrumentation inst, String path)</span> </span>&#123;</span><br><span class="line">	JarFile jarFile = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		jarFile = <span class="keyword">new</span> JarFile(path);</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	inst.appendToBootstrapClassLoaderSearch(jarFile);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后我们写一个测试类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestJarLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">120</span>; i++) &#123;</span><br><span class="line">			Premain.appendJarToSystemClassLoader(args[<span class="number">0</span>]);</span><br><span class="line">			Print.print();</span><br><span class="line"></span><br><span class="line">			Stream.of(Premain.getInstrumentation().getAllLoadedClasses())</span><br><span class="line">					.filter(clazz -&gt; clazz.getName().contains(<span class="string">"Print"</span>))</span><br><span class="line">					.forEach(aClass -&gt; System.out.println(aClass.getName() + <span class="string">"  "</span> + aClass.getMethods().length));</span><br><span class="line"></span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				TimeUnit.SECONDS.sleep(<span class="number">5</span>);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后执行命令<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:../instrument/target/core-<span class="number">1.0</span>-SNAPSHOT.jar -cp ./target/examples-<span class="number">1.0</span>-SNAPSHOT.jar wang.ming15.instrument.examples.TestJarLoader D:/workspace/idea/instrument/trunk/print/target/print-<span class="number">1.0</span>-SNAPSHOT.jar</span><br></pre></td></tr></table></figure></p>
-<p>结果输出为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Now Time is Thu Dec <span class="number">31</span> <span class="number">10</span>:<span class="number">50</span>:<span class="number">39</span> CST <span class="number">2015</span></span><br><span class="line"></span><br><span class="line">wang.ming15.instrument.print.Print  <span class="number">11</span></span><br><span class="line">java.io.PrintStream  <span class="number">44</span></span><br><span class="line">Now Time is Thu Dec <span class="number">31</span> <span class="number">10</span>:<span class="number">50</span>:<span class="number">44</span> CST <span class="number">2015</span></span><br><span class="line"></span><br><span class="line">wang.ming15.instrument.print.Print  <span class="number">11</span></span><br><span class="line">java.io.PrintStream  <span class="number">44</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="重新加载类"><a href="#重新加载类" class="headerlink" title="重新加载类"></a>重新加载类</h3><p>我们使用<code>redefineClasses()</code>可以使用提供的字节码重新定义Class. 这个方法会使用新的字节码全部替换原先存在的Class字节码. 而如果想要修改原先存在的Class字节码应该使用<code>retransformClasses()</code>方法.</p>
-<p>对于已经在栈帧中的字节码, 他们会继续执行下去, 但是当方法再次调用的时候,则会使用刚刚加载完成的新的字节码.</p>
-<p>同时需要注意的是<code>redefineClasses()</code>并不会触发初始化操作, 也不会抛出初始化时的异常. 因此一些静态属性并不会被重新赋值</p>
-<p>在重新加载类的时候, 该类已经实例化出的对象同时也不会受到影响.</p>
-<p>该方法的操作过程是一个基于操作集合的, 也就是说在redefine的时候, 可能有A B俩个类都进行, 而且A依赖于B, 那么在redefine的时候这俩个操作是同时完成的, 类似于原子操作.</p>
-<p>还需要指明的是, redefine 操作虽然可以改变方法体, 常量池以及属性, 但是redefine过程肯定不能对属性或者方法进行增加,删除,重命名的操作, 也不能修改方法签名以及修改继承关系.</p>
-<p>在redefine过程中,一旦抛出异常, 那么此过程执已经redefine成功的class也会被会滚成原来的.</p>
-<p>想使用这个功能我们需要在MANIFEST.MF文件中增加这样一行<code>Can-Redefine-Classes: true</code>, 然后我们在Premain中增加一个redefine方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">redefineClasses</span><span class="params">(Class clazz, String path)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!instrumentation.isRedefineClassesSupported()) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line"><span class="comment">//		InputStream input = Premain.class.getClassLoader().getResourceAsStream(path);</span></span><br><span class="line">		InputStream input = <span class="keyword">new</span> FileInputStream(path);</span><br><span class="line">		<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[input.available()];</span><br><span class="line">		input.read(bytes);</span><br><span class="line">		instrumentation.redefineClasses(<span class="keyword">new</span> ClassDefinition(clazz, bytes));</span><br><span class="line">	&#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125; <span class="keyword">catch</span> (UnmodifiableClassException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">		e.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后我们写一个测试类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">			Test.print();</span><br><span class="line">			TimeUnit.SECONDS.sleep(<span class="number">5</span>);</span><br><span class="line">			Premain.redefineClasses(Test.class, <span class="string">"D://Test.class"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>最后成功输出<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T</span><br><span class="line">I am a big T ok</span><br><span class="line">I am a big T ok</span><br></pre></td></tr></table></figure></p>
-<h2 id="Agentmain"><a href="#Agentmain" class="headerlink" title="Agentmain"></a>Agentmain</h2><p>在 Java SE 5 中premain 所作的 Instrumentation 也仅限与 main 函数执行前，这样的方式存在一定的局限性。Java SE 6 针对这种状况做出了改进，开发者可以在 main 函数开始执行以后，再启动自己的 Instrumentation 程序。在 Java SE 6 的 Instrumentation 当中，有一个跟 premain“并驾齐驱”的“agentmain”方法，可以在 main 函数开始运行之后再运行。</p>
-<p>首先我们还是需要修改MANIFEST.MF文件, 在其中添加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Agent-Class: wang.ming15.instrument.core.Agentmain</span><br></pre></td></tr></table></figure></p>
-<h2 id="获取对象大小-1"><a href="#获取对象大小-1" class="headerlink" title="获取对象大小"></a>获取对象大小</h2><p>同样我们还是先输出一下对象的大小<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/24/jvm/instrument 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/24/jvm/instrument 初探/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/23/JavaSE/JavaIO NIO/" title="JDK4 NIO" itemprop="url">JDK4 NIO</a>
   </h1>
   <p class="article-author">By
@@ -546,7 +540,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-23</time>
+    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-23</time>
     
   </p>
 </header>
@@ -628,7 +622,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-23</time>
+    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-23</time>
     
   </p>
 </header>
@@ -745,7 +739,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-21</time>
     
   </p>
 </header>
@@ -808,166 +802,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/21/JavaSE/JavaIO 文件操作/" title="JAVA 文件操作" itemprop="url">JAVA 文件操作</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="FileFilter"><a href="#FileFilter" class="headerlink" title="FileFilter"></a>FileFilter</h2><p>检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FileFilter fileFilter = pathname -&gt; &#123;</span><br><span class="line">	System.out.println(pathname.getPath());</span><br><span class="line">	<span class="keyword">return</span> pathname.isFile();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">fileFilter.accept(<span class="keyword">new</span> File(<span class="string">"D:\\hazelcast-documentation-3.5.3.pdf"</span>));</span><br></pre></td></tr></table></figure></p>
-<h2 id="FilenameFilter"><a href="#FilenameFilter" class="headerlink" title="FilenameFilter"></a>FilenameFilter</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FilenameFilter filenameFilter = (dir, name) -&gt; &#123;</span><br><span class="line">	System.out.println(dir);</span><br><span class="line">	System.out.println(name);</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">filenameFilter.accept(<span class="keyword">new</span> File(<span class="string">"D"</span>), <span class="string">"hazelcast-documentation-3.5.3.pdf"</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="File"><a href="#File" class="headerlink" title="File"></a>File</h2><p>File对象给我们提供了以下的功能</p>
-<ul>
-<li>删除文件</li>
-<li>文件重命名</li>
-<li>创建新的文件</li>
-<li>创建新的文件</li>
-<li>获取文件的最后修改时间</li>
-<li>设置文件只读</li>
-<li>设置文件可写</li>
-<li>获取文件长度(总字节数)</li>
-<li>获取文件路径</li>
-<li>获取绝对文件路径</li>
-<li>文件是否隐藏</li>
-<li>获得剩余磁盘空间？</li>
-<li>拷贝文件夹</li>
-<li>遍历文件夹</li>
-<li>检查文件夹是否为空？</li>
-</ul>
-<h2 id="FileDescriptor"><a href="#FileDescriptor" class="headerlink" title="FileDescriptor"></a>FileDescriptor</h2><p>用来表示开放文件、开放套接字等.当FileDescriptor表示某文件时,我们可以通俗的将FileDescriptor看成是该文件.但是,我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作,则需要新创建FileDescriptor对应的FileOutputStream,再对文件进行操作.</p>
-<p>类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件,打开的套接字或其他来源或字节的接收器.以下是关于FileDescriptor要点：</p>
-<ol>
-<li>主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它.</li>
-<li>应用程序不应创建自己的文件描述符.</li>
-</ol>
-<h2 id="FileLock"><a href="#FileLock" class="headerlink" title="FileLock"></a>FileLock</h2><p>锁定文件</p>
-<p>ByteBuffer.allocate()语句改为ByteBuffer.allocateDirect().用来证实性能之间的差异,但是请注意程序的启动时间是否发生了明显的改变.</p>
-<p>修改{@link JGrep}让其使java的nio内存映射文件.</p>
-<p>JDK1.4引入了文件加锁机制,它允许我们同步访问某个作为共享资源的文件.不过,竞争同一文件的两个线程可能在不同的Java虚拟机上;或者一个是Java线程,另一个是操作系统中其他的某个本地线程.</p>
-<p>文件锁对其他的操作系统进程是可见的,因为Java的文件加锁直接映射到了本地操作系统的加锁工具.通过对FileChannel调用tryLock()或lock(),就可以获得整个文件的FileLock.</p>
-<p>(SocketChannel、DatagramChannel和 ServerSocketChannel不需要加锁,因为他们是从单进程实体继承而来;我们通常不在两个进程之间共享网络socket.)</p>
-<p>tryLock()是非阻塞式的,它设法获取锁,但是如果不能获得(当其他一些进程已经持有相同的锁,并且不共享时),它将直接从方法调用返回.lock()则是阻塞式的,它要阻塞进程直至锁可以获得,或调用lock()的线程中断,或调用lock()的通道关闭.</p>
-<p>使用FileLock.release()可以释放锁.</p>
-<p>也可以使用此方法对文件上锁tryLock()或者lock()其中,加锁的区域由size-position决定.第三个参数指定是否是共享锁.</p>
-<p>尽管无参数的加锁方法将根据文件尺寸的变化而变化,但是具有固定尺寸的锁不随文件尺寸的变化而变化.如果你获得了某一区域(从position到position+size)上的锁,当文件增大超出position+size时,那么在position+size之外的部分不会被锁定.无参数的加锁方法会对 整个文件进行加锁,甚至文件变大后也是如此.</p>
-<p>对独占锁或者共享锁的支持必须由底层的操作系统提供.如果操作系统不支持共享锁并为每一个请求都创建一个锁,那么它就会使用独占锁.</p>
-<p>锁的 类型(共享或独占)可以通过FileLock.isShared()进行查询.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"file.txt"</span>);</span><br><span class="line">FileLock fl = fos.getChannel().tryLock();</span><br><span class="line"><span class="keyword">if</span> (fl != <span class="keyword">null</span>) &#123;</span><br><span class="line">	System.out.println(<span class="string">"Locked File"</span>);</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">	fl.release();</span><br><span class="line">	System.out.println(<span class="string">"Released Lock"</span>);</span><br><span class="line">&#125;</span><br><span class="line">fos.close()</span><br></pre></td></tr></table></figure></p>
-<h2 id="DirectoryStream"><a href="#DirectoryStream" class="headerlink" title="DirectoryStream"></a>DirectoryStream</h2><p>遍历某个文件夹内的所有文件,但是不会遍历子目录. 也就是这会遍历当前路径中的所有文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DirectoryStream&lt;Path&gt; paths = Files.newDirectoryStream(Paths.get(<span class="string">"E:"</span>));</span><br><span class="line">paths.forEach(path -&gt; &#123;</span><br><span class="line">	System.out.println(path.getFileName());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>SecureDirectoryStream</p>
-</blockquote>
-<h2 id="FileVisitor"><a href="#FileVisitor" class="headerlink" title="FileVisitor"></a>FileVisitor</h2><p>遍历某个文件夹内的所有文件接口.</p>
-<p><code>SimpleFileVisitor</code>实现了这个接口. 与<code>DirectoryStream</code> 不同的是,这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SimpleFileVisitor visitor = <span class="keyword">new</span> SimpleFileVisitor&lt;Path&gt;() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> FileVisitResult <span class="title">visitFile</span><span class="params">(Path file, BasicFileAttributes attrs)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				System.out.println(file.getFileName());</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.visitFile(file, attrs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		Files.walkFileTree(Paths.get(<span class="string">"E:"</span>), visitor);</span><br></pre></td></tr></table></figure></p>
-<h2 id="监控文件变化"><a href="#监控文件变化" class="headerlink" title="监控文件变化"></a>监控文件变化</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WatchService service = FileSystems.getDefault().newWatchService();</span><br><span class="line">		Paths.get(<span class="string">"D:/"</span>).register(service,</span><br><span class="line">		ENTRY_CREATE,</span><br><span class="line">		ENTRY_DELETE,</span><br><span class="line">		ENTRY_MODIFY);</span><br><span class="line"></span><br><span class="line">WatchKey watchKey = service.take();</span><br><span class="line"></span><br><span class="line">watchKey.pollEvents().stream().forEach(watchEvent -&gt; &#123;</span><br><span class="line">	System.out.println(watchEvent.context() + <span class="string">"  "</span> + watchEvent.kind());</span><br><span class="line">&#125;);</span><br><span class="line">watchKey.reset();</span><br></pre></td></tr></table></figure>
-<h2 id="Files"><a href="#Files" class="headerlink" title="Files"></a>Files</h2><ol>
-<li>copy</li>
-<li>createDirectories</li>
-<li>createDirectory</li>
-<li>createFile</li>
-<li>createLink</li>
-<li>createSymbolicLink</li>
-<li>createTempDirectory</li>
-<li>createTempFile</li>
-<li>delete</li>
-<li>deleteIfExists</li>
-<li>exists</li>
-<li>getAttribute</li>
-<li>getFileAttributeView</li>
-<li>getFileStore</li>
-<li>getLastModifiedTime</li>
-<li>getOwner</li>
-<li>getPosixFilePermissions</li>
-<li>isDirectory</li>
-<li>isExecutable</li>
-<li>isHidden</li>
-<li>isReadable</li>
-<li>isRegularFile</li>
-<li>isSameFile</li>
-<li>isSymbolicLink</li>
-<li>isWritable</li>
-<li>move</li>
-<li>newBufferedReader</li>
-<li>newBufferedWriter</li>
-<li>newByteChannel</li>
-<li>newDirectoryStream</li>
-<li>newInputStream</li>
-<li>newOutputStream</li>
-<li>notExists</li>
-<li>probeContentType</li>
-<li>readAllBytes</li>
-<li>readAllLines</li>
-<li>readAttributes</li>
-<li>readSymbolicLink</li>
-<li>setAttribute</li>
-<li>setLastModifiedTime</li>
-<li>setOwner</li>
-<li>setPosixFilePermissions</li>
-<li>walkFileTree</li>
-<li>write</li>
-</ol>
-<h2 id="FileStore"><a href="#FileStore" class="headerlink" title="FileStore"></a>FileStore</h2><p>代表了真正的存储设备,提供了设备的详尽信息</p>
-<h2 id="FileSystems"><a href="#FileSystems" class="headerlink" title="FileSystems"></a>FileSystems</h2><ul>
-<li>FileSystems.getDefault() ：返回 JVM 默认的 FileSystem – 一般说来,也就是操作系统的默认文件系统</li>
-<li>FileSystems.getFileSystem(uri) ： 可以获取远程主机的FileSystem<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileSystem system = FileSystems.getDefault();</span><br><span class="line"><span class="comment">// 得到文件系统支持的属性视图列表</span></span><br><span class="line">Set&lt;String&gt; views = system.supportedFileAttributeViews();</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<blockquote>
-<p>FileSystem</p>
-</blockquote>
-<h2 id="Paths"><a href="#Paths" class="headerlink" title="Paths"></a>Paths</h2><blockquote>
-<p>Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件,但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据,因此在网络环境或在虚拟文件系统中,NIO.2 也完全适用.NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法</p>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/21/JavaSE/JavaIO 文件操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 文件操作/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/21/JavaSE/JavaIO 写文件/" title="JAVA 写文件" itemprop="url">JAVA 写文件</a>
   </h1>
   <p class="article-author">By
@@ -975,7 +809,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-21</time>
     
   </p>
 </header>
@@ -1041,21 +875,96 @@
 
 
 
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/21/JavaSE/JavaIO 序列化/" title="JAVA 序列化" itemprop="url">JAVA 序列化</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-21</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Externalizable"><a href="#Externalizable" class="headerlink" title="Externalizable"></a>Externalizable</h2><p>Externalizable继承于Serializable，当使用该接口时，序列化的细节需要由程序员去完成. 如上所示的代码，由于writeExternal()与readExternal()方法未作任何处理，那么该序列化行为将不会保存/读取任何一个字段. </p>
+<h2 id="Flushable"><a href="#Flushable" class="headerlink" title="Flushable"></a>Flushable</h2><p>实现了Flushable接口的类的对象，可以强制将缓存的输出写入到与对象关联的流中. 写入流的所有I/O类都实现了Flushable接口. </p>
+<h2 id="ObjectInputValidation"><a href="#ObjectInputValidation" class="headerlink" title="ObjectInputValidation"></a>ObjectInputValidation</h2><p>序列化流验证机制.一般情况下，我们认为序列化流中的数据总是与最初写到流中的数据一致，这并没有问题. 但当黑客获取流信息并篡改一些敏感信息重新序列化到流中后，用户通过反序列化得到的将是被篡改的信息. Java序列化提供一套验证机制. 序列化类通过实现 java.io.ObjectInputValidation接口，就可以做到验证了</p>
+<h2 id="ObjectStreamConstants"><a href="#ObjectStreamConstants" class="headerlink" title="ObjectStreamConstants"></a>ObjectStreamConstants</h2><p>Java序列化序列化对象的信息包括：类元数据描述、类的属性、父类信息以及属性域的值. Java将这些信息分成3部分：序列化头信息、类的描述部分以及属性域的值部分. 现在对a.txt文件加以分析，其中包含一些序列化机制中提供的特殊字段，这些字段被定义在java.io.ObjectStreamConstants接口中.  </p>
+<h2 id="DataInputStream"><a href="#DataInputStream" class="headerlink" title="DataInputStream"></a>DataInputStream</h2><p>用来装饰其它输入流，它“允许应用程序以与机器无关方式从底层输入流中读取基本 Java 数据类型”</p>
+<p>从DataInputStream一次一个字节地读取字符,那么任何值都是合法的,因此返回值不能用来检测输入是否结束.但是可以使用available()函数来查看还有多少字符可供读取</p>
+<p>available()函数的工作方式会随之所读取的媒介类不同而不同, 该函数从字面上的意思来讲就是”在没有阻塞的情况下所能读取的字节数”.对于文件这指的是整个文件,而对于其他流可能就不是这样的</p>
+<p>格式化的内存输入 当读取格式化数据时可以使用DataInputStream，它是一个面向字节的IO类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>(DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(TestDataInputStream.class.getCanonicalName())));) &#123;</span><br><span class="line">	<span class="keyword">while</span> (in.available() != <span class="number">0</span>)</span><br><span class="line">		System.out.print((<span class="keyword">char</span>) in.readByte());</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>DataInput 接口用于从二进制流中读取字节，并重构所有 Java 基本类型数据. 同时还提供根据 UTF-8 修改版格式的数据重构 String 的工具. 对于此接口中的所有数据读取例程来说，如果在读取到所需字节数的数据之前已经到达文件末尾 (end of file)，则都将抛出 EOFException（IOException 的一种）. 如果因为文件末尾以外的其他原因无法读取字节，则抛出 IOException而不是 EOFException. 尤其在输入流已关闭的情况下，将抛出 IOException. </p>
+</blockquote>
+<h2 id="DataOutputStream"><a href="#DataOutputStream" class="headerlink" title="DataOutputStream"></a>DataOutputStream</h2><p>用来装饰其它输出流，将DataOutputStream和DataInputStream输入流配合使用，“允许应用程序以与机器无关方式从底层输入流中读写基本 Java 数据类型”. </p>
+<p>我们可以使用DataOutputStream指定格式存储数据, 然后使用DataInputStream轻松的再次指定读取格式来恢复这些数据.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DataOutputStream out = <span class="keyword">new</span> DataOutputStream(<span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"Data.txt"</span>)));</span><br><span class="line">out.writeDouble(<span class="number">3.14159</span>);</span><br><span class="line">out.writeUTF(<span class="string">"That was pi"</span>);</span><br><span class="line">out.writeDouble(<span class="number">1.41413</span>);</span><br><span class="line">out.writeUTF(<span class="string">"Square root of 2"</span>);</span><br><span class="line">out.close();</span><br><span class="line"></span><br><span class="line">DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"Data.txt"</span>)));</span><br><span class="line">System.out.println(in.readDouble());</span><br><span class="line"><span class="comment">// Only readUTF() will recover the Java-UTF String properly:</span></span><br><span class="line">System.out.println(in.readUTF());</span><br><span class="line">System.out.println(in.readDouble());</span><br><span class="line">System.out.println(in.readUTF());</span><br><span class="line"></span><br><span class="line">in.close();</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>DataOutput 接口用于将任意 Java 基本类型转换为一系列字节，并将这些字节写入二进制流. 同时还提供了一个将 String 转换成 UTF-8 修改版格式并写入所得到的系列字节的工具. 对于此接口中写入字节的所有方法，如果由于某种原因无法写入某个字节，则抛出 IOException.</p>
+</blockquote>
+<h2 id="ObjectInputStream"><a href="#ObjectInputStream" class="headerlink" title="ObjectInputStream"></a>ObjectInputStream</h2><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。</p>
+<h2 id="ObjectOutputStream"><a href="#ObjectOutputStream" class="headerlink" title="ObjectOutputStream"></a>ObjectOutputStream</h2><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。 </p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/21/JavaSE/JavaIO 序列化/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 序列化/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/5/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/7/">Next<span></span></a>
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github Card</p>
+<p class="asidetitle">Github 名片</p>
 <div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -1065,7 +974,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分类</p>
 		<ul>
 		
 		  
@@ -1195,7 +1104,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">Links</p>
+  <p class="asidetitle">友情链接</p>
     <ul>
         
           <li>
@@ -1210,7 +1119,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
+<p class="asidetitle">豆瓣秀</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -1218,11 +1127,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
+  <p class="asidetitle">新浪微博</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -1396,7 +1305,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
