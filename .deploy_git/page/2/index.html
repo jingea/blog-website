@@ -345,6 +345,89 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/01/11/asm/ASM Core(1) 初探/" title="ASM Core(1) 初探" itemprop="url">ASM Core(1) 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-10T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-11</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="http://download.forge.objectweb.org/asm/asm4-guide.pdf" target="_blank" rel="external">asm4-guide</a>学习心得<br> ASM是一种小巧轻便的 Java 字节码操控框架，它能方便地生成和改造 Java 代码</p>
+<p>ASM通过<code>ClassVisitor</code>来生成和转换class字节码. <code>ClassVisitor</code>中的每个方法都对应着class数据结构, 你可以通过每个方法名轻松的判断出这个方法对应的是哪个数据结构. </p>
+<p><code>ClassVisitor</code>内的方法调用顺序如下:</p>
+<ol>
+<li>visit </li>
+<li>visitSource? </li>
+<li>visitOuterClass? </li>
+<li>( visitAnnotation | visitAttribute )*</li>
+<li>( visitInnerClass | visitField | visitMethod )*</li>
+<li>visitEnd<br>接下来我们分析一下以上的调用过程</li>
+</ol>
+<ul>
+<li>首先调用<code>visit</code>方法(有且仅有调用一次)</li>
+<li>接下来调用<code>visitSource</code>函数(最多调用一次)</li>
+<li>然后调用<code>visitOuterClass</code>函数(最多调用一次)</li>
+<li>接下来调用<code>visitAnnotation</code>和<code>visitAttribute</code>函数, 这俩个函数的调用可调用任意次且不分前后顺序</li>
+<li>然后调用<code>visitInnerClass</code>,<code>visitField</code>和<code>visitMethod</code>函数, 同样对这三个函数的调用不限制次数以及不分前后顺序</li>
+<li>最后调用<code>visitEnd</code>函数(有且仅有调用一次),调用这个函数用于结束整个过程.</li>
+</ul>
+<p>ASM通过基于<code>ClassVisitor</code>的三个API来生成和转换class字节码</p>
+<ul>
+<li><code>ClassReader</code>: 用于解析一个给定的class二进制字节数组, 然后按照上文介绍的顺序依次调用<code>accept()</code>的<code>ClassVisitor</code>参数的方法.</li>
+<li><code>ClassWriter</code> : 一个<code>ClassVisitor</code>的子类, 用于直接生成二进制的字节码. </li>
+<li><code>ClassVisitor</code> : 代理了全部的字节码相关的方法调用. 它接收另一个<code>ClassVisitor</code>对象形成责任链模式调用.</li>
+</ul>
+<p>我们通过<code>ClassReader</code>来解析一个二进制的class结构数据, 然后<code>ClassReader</code>按照一定的顺序调用<code>ClassVisitor</code> 来改变class结构数据, 最后通过<code>ClassVisitor</code>生成新的class二进制数据.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/asm/">asm</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/01/11/asm/ASM Core(1) 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/11/asm/ASM Core(1) 初探/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/01/11/asm/ASM Core(2) 操作/" title="ASM Core(2) 操作" itemprop="url">ASM Core(2) 操作</a>
   </h1>
   <p class="article-author">By
@@ -432,45 +515,22 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/01/11/asm/ASM Core(1) 初探/" title="ASM Core(1) 初探" itemprop="url">ASM Core(1) 初探</a>
+      <a href="/2016/01/05/jmh/JMHSample_08_DeadCode/" title="08_DeadCode" itemprop="url">08_DeadCode</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-10T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-11</time>
+    <time datetime="2016-01-04T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-05</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p><a href="http://download.forge.objectweb.org/asm/asm4-guide.pdf" target="_blank" rel="external">asm4-guide</a>学习心得<br> ASM是一种小巧轻便的 Java 字节码操控框架，它能方便地生成和改造 Java 代码</p>
-<p>ASM通过<code>ClassVisitor</code>来生成和转换class字节码. <code>ClassVisitor</code>中的每个方法都对应着class数据结构, 你可以通过每个方法名轻松的判断出这个方法对应的是哪个数据结构. </p>
-<p><code>ClassVisitor</code>内的方法调用顺序如下:</p>
-<ol>
-<li>visit </li>
-<li>visitSource? </li>
-<li>visitOuterClass? </li>
-<li>( visitAnnotation | visitAttribute )*</li>
-<li>( visitInnerClass | visitField | visitMethod )*</li>
-<li>visitEnd<br>接下来我们分析一下以上的调用过程</li>
-</ol>
-<ul>
-<li>首先调用<code>visit</code>方法(有且仅有调用一次)</li>
-<li>接下来调用<code>visitSource</code>函数(最多调用一次)</li>
-<li>然后调用<code>visitOuterClass</code>函数(最多调用一次)</li>
-<li>接下来调用<code>visitAnnotation</code>和<code>visitAttribute</code>函数, 这俩个函数的调用可调用任意次且不分前后顺序</li>
-<li>然后调用<code>visitInnerClass</code>,<code>visitField</code>和<code>visitMethod</code>函数, 同样对这三个函数的调用不限制次数以及不分前后顺序</li>
-<li>最后调用<code>visitEnd</code>函数(有且仅有调用一次),调用这个函数用于结束整个过程.</li>
-</ul>
-<p>ASM通过基于<code>ClassVisitor</code>的三个API来生成和转换class字节码</p>
-<ul>
-<li><code>ClassReader</code>: 用于解析一个给定的class二进制字节数组, 然后按照上文介绍的顺序依次调用<code>accept()</code>的<code>ClassVisitor</code>参数的方法.</li>
-<li><code>ClassWriter</code> : 一个<code>ClassVisitor</code>的子类, 用于直接生成二进制的字节码. </li>
-<li><code>ClassVisitor</code> : 代理了全部的字节码相关的方法调用. 它接收另一个<code>ClassVisitor</code>对象形成责任链模式调用.</li>
-</ul>
-<p>我们通过<code>ClassReader</code>来解析一个二进制的class结构数据, 然后<code>ClassReader</code>按照一定的顺序调用<code>ClassVisitor</code> 来改变class结构数据, 最后通过<code>ClassVisitor</code>生成新的class二进制数据.</p>
+        <p>下面的benchmark中有许多Dead-Code Elimination, 编译器能够发现那些冗余计算并且消除他们. 但是如果被消除的部分是我们的基准测试部分, 则会引发问题.幸运的的是, JMH提供了一些基础服务来解决这些问题:带有返回结果的基准测试会强制JMH不进行Dead-Code Elimination<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@State</span>(Scope.Thread)</span><br><span class="line"><span class="meta">@BenchmarkMode</span>(Mode.AverageTime)</span><br><span class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.NANOSECONDS)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMHSample_08_DeadCode</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">double</span> x = Math.PI;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">baseline</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 什么都不做，我们将其作为这次基准测试的基准线</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureWrong</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 从结果中我们会观察出, 这个基准测试会进行优化</span></span><br><span class="line">		Math.log(x);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">measureRight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// This is correct: the result is being used.</span></span><br><span class="line">		<span class="keyword">return</span> Math.log(x);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">		Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">				.include(JMHSample_08_DeadCode.class.getSimpleName())</span><br><span class="line">				.warmupIterations(<span class="number">5</span>)</span><br><span class="line">				.measurementIterations(<span class="number">5</span>)</span><br><span class="line">				.forks(<span class="number">1</span>)</span><br><span class="line">				.build();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果为<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"># Warmup: 5 iterations, 1 s each</span><br><span class="line"># Measurement: 5 iterations, 1 s each</span><br><span class="line"># Timeout: 10 min per iteration</span><br><span class="line"># Threads: 1 thread, will synchronize iterations</span><br><span class="line"># Benchmark mode: Average time, time/op</span><br><span class="line"># Benchmark: JMH.JMHSample_08_DeadCode.measureWrong</span><br><span class="line"></span><br><span class="line"># Run progress: 66.67% complete, ETA 00:00:10</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: 0.281 ns/op</span><br><span class="line"># Warmup Iteration   2: 0.281 ns/op</span><br><span class="line"># Warmup Iteration   3: 0.278 ns/op</span><br><span class="line"># Warmup Iteration   4: 0.280 ns/op</span><br><span class="line"># Warmup Iteration   5: 0.278 ns/op</span><br><span class="line">Iteration   1: 0.278 ns/op</span><br><span class="line">Iteration   2: 0.278 ns/op</span><br><span class="line">Iteration   3: 0.278 ns/op</span><br><span class="line">Iteration   4: 0.277 ns/op</span><br><span class="line">Iteration   5: 0.278 ns/op</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Result "measureWrong":</span><br><span class="line">  0.278 ±(99.9%) 0.002 ns/op [Average]</span><br><span class="line">  (min, avg, max) = (0.277, 0.278, 0.278), stdev = 0.001</span><br><span class="line">  CI (99.9%): [0.276, 0.280] (assumes normal distribution)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Run complete. Total time: 00:00:31</span><br><span class="line"></span><br><span class="line">Benchmark                               Mode  Cnt   Score   Error  Units</span><br><span class="line">JMH.JMHSample_08_DeadCode.baseline      avgt    5   0.279 ± 0.004  ns/op</span><br><span class="line">JMH.JMHSample_08_DeadCode.measureRight  avgt    5  21.067 ± 0.288  ns/op</span><br><span class="line">JMH.JMHSample_08_DeadCode.measureWrong  avgt    5   0.278 ± 0.002  ns/op</span><br></pre></td></tr></table></figure></p>
+<p>我们可以看到baseline和measureWrong的测试结果是相近的</p>
 
         
         
@@ -483,7 +543,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/asm/">asm</a>
+  <a class="article-category-link" href="/categories/JMH/">JMH</a>
 </div>
 
 
@@ -495,7 +555,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/01/11/asm/ASM Core(1) 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/11/asm/ASM Core(1) 初探/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/01/05/jmh/JMHSample_08_DeadCode/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/05/jmh/JMHSample_08_DeadCode/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -556,66 +616,6 @@
 	
 	  	<span></span>
 		<a href="/2016/01/05/jmh/JMHSample_10_ConstantFold/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/05/jmh/JMHSample_10_ConstantFold/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/01/05/jmh/JMHSample_08_DeadCode/" title="08_DeadCode" itemprop="url">08_DeadCode</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2016-01-04T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>下面的benchmark中有许多Dead-Code Elimination, 编译器能够发现那些冗余计算并且消除他们. 但是如果被消除的部分是我们的基准测试部分, 则会引发问题.幸运的的是, JMH提供了一些基础服务来解决这些问题:带有返回结果的基准测试会强制JMH不进行Dead-Code Elimination<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@State</span>(Scope.Thread)</span><br><span class="line"><span class="meta">@BenchmarkMode</span>(Mode.AverageTime)</span><br><span class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.NANOSECONDS)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMHSample_08_DeadCode</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">double</span> x = Math.PI;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">baseline</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 什么都不做，我们将其作为这次基准测试的基准线</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureWrong</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 从结果中我们会观察出, 这个基准测试会进行优化</span></span><br><span class="line">		Math.log(x);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">measureRight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// This is correct: the result is being used.</span></span><br><span class="line">		<span class="keyword">return</span> Math.log(x);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">		Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">				.include(JMHSample_08_DeadCode.class.getSimpleName())</span><br><span class="line">				.warmupIterations(<span class="number">5</span>)</span><br><span class="line">				.measurementIterations(<span class="number">5</span>)</span><br><span class="line">				.forks(<span class="number">1</span>)</span><br><span class="line">				.build();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>运行结果为<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"># Warmup: 5 iterations, 1 s each</span><br><span class="line"># Measurement: 5 iterations, 1 s each</span><br><span class="line"># Timeout: 10 min per iteration</span><br><span class="line"># Threads: 1 thread, will synchronize iterations</span><br><span class="line"># Benchmark mode: Average time, time/op</span><br><span class="line"># Benchmark: JMH.JMHSample_08_DeadCode.measureWrong</span><br><span class="line"></span><br><span class="line"># Run progress: 66.67% complete, ETA 00:00:10</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: 0.281 ns/op</span><br><span class="line"># Warmup Iteration   2: 0.281 ns/op</span><br><span class="line"># Warmup Iteration   3: 0.278 ns/op</span><br><span class="line"># Warmup Iteration   4: 0.280 ns/op</span><br><span class="line"># Warmup Iteration   5: 0.278 ns/op</span><br><span class="line">Iteration   1: 0.278 ns/op</span><br><span class="line">Iteration   2: 0.278 ns/op</span><br><span class="line">Iteration   3: 0.278 ns/op</span><br><span class="line">Iteration   4: 0.277 ns/op</span><br><span class="line">Iteration   5: 0.278 ns/op</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Result "measureWrong":</span><br><span class="line">  0.278 ±(99.9%) 0.002 ns/op [Average]</span><br><span class="line">  (min, avg, max) = (0.277, 0.278, 0.278), stdev = 0.001</span><br><span class="line">  CI (99.9%): [0.276, 0.280] (assumes normal distribution)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Run complete. Total time: 00:00:31</span><br><span class="line"></span><br><span class="line">Benchmark                               Mode  Cnt   Score   Error  Units</span><br><span class="line">JMH.JMHSample_08_DeadCode.baseline      avgt    5   0.279 ± 0.004  ns/op</span><br><span class="line">JMH.JMHSample_08_DeadCode.measureRight  avgt    5  21.067 ± 0.288  ns/op</span><br><span class="line">JMH.JMHSample_08_DeadCode.measureWrong  avgt    5   0.278 ± 0.002  ns/op</span><br></pre></td></tr></table></figure></p>
-<p>我们可以看到baseline和measureWrong的测试结果是相近的</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JMH/">JMH</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/01/05/jmh/JMHSample_08_DeadCode/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/05/jmh/JMHSample_08_DeadCode/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1269,7 +1269,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/23/序列化工具/fastjson/" title="fastjson" itemprop="url">fastjson</a>
+      <a href="/2015/12/23/http客户端/Feign/" title="Feign 初探" itemprop="url">Feign 初探</a>
   </h1>
   <p class="article-author">By
        
@@ -1282,9 +1282,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="读取数组"><a href="#读取数组" class="headerlink" title="读取数组"></a>读取数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Reward&gt; rewards = JSONArray.parseArray(jsonStr, Reward.class);</span><br></pre></td></tr></table></figure>
-<h2 id="json和protobuf相互转换"><a href="#json和protobuf相互转换" class="headerlink" title="json和protobuf相互转换"></a>json和protobuf相互转换</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.googlecode.protobuf-java-format<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protobuf-java-format<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>然后使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String string = JsonFormat.printToString(mail);</span><br></pre></td></tr></table></figure></p>
+        <p>RESTful 服务的HTTP客户端连接器<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> feign.gson.GsonDecoder;</span><br><span class="line"><span class="keyword">import</span> feign.gson.GsonEncoder;</span><br><span class="line"><span class="keyword">import</span> feign.httpclient.ApacheHttpClient;</span><br><span class="line"><span class="keyword">import</span> feign.slf4j.Slf4jLogger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.<span class="built_in">List</span>;</span><br><span class="line"></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	public <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>... args) &#123;</span><br><span class="line">		GitHub github = Feign.builder()</span><br><span class="line">				.decoder(<span class="keyword">new</span> GsonDecoder())		<span class="comment">// 设置解码器, 我们使用Gson将应答解析成Contributor</span></span><br><span class="line">				.encoder(<span class="keyword">new</span> GsonEncoder())</span><br><span class="line">				.logger(<span class="keyword">new</span> Slf4jLogger())		<span class="comment">// 设置日志</span></span><br><span class="line">				.client(<span class="keyword">new</span> ApacheHttpClient())		<span class="comment">// 我们使用Apache的HttpClient组件</span></span><br><span class="line">				.target(GitHub.<span class="keyword">class</span>, <span class="string">"https://api.github.com"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">List</span>&lt;Contributor&gt; contributors = github.contributors(<span class="string">"netflix"</span>, <span class="string">"feign"</span>);</span><br><span class="line">		System.out.println(<span class="string">"netflix :"</span> + contributors.size());</span><br><span class="line"></span><br><span class="line">		<span class="built_in">List</span>&lt;Contributor&gt; contributors1 = github.contributors(<span class="string">"ming15"</span>, <span class="string">"VertxServer"</span>);</span><br><span class="line">		System.out.println(<span class="string">"ming15 :"</span> + contributors1.size());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">GitHub</span> </span>&#123;</span><br><span class="line">	<span class="meta">@RequestLine</span>(<span class="string">"GET /repos/&#123;owner&#125;/&#123;repo&#125;/contributors"</span>)</span><br><span class="line">	<span class="meta">@Headers</span>(<span class="string">"Content-Type: application/json"</span>)</span><br><span class="line">	<span class="built_in">List</span>&lt;Contributor&gt; contributors(<span class="meta">@Param</span>(<span class="string">"owner"</span>) <span class="built_in">String</span> owner, <span class="meta">@Param</span>(<span class="string">"repo"</span>) <span class="built_in">String</span> repo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Contributor</span> </span>&#123;</span><br><span class="line">	<span class="built_in">String</span> login;</span><br><span class="line">	<span class="built_in">int</span> contributions;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
         
         
@@ -1297,7 +1295,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/序列化工具/">序列化工具</a>
+  <a class="article-category-link" href="/categories/http客户端/">http客户端</a>
 </div>
 
 
@@ -1309,7 +1307,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/12/23/序列化工具/fastjson/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/序列化工具/fastjson/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/12/23/http客户端/Feign/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/http客户端/Feign/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1389,7 +1387,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/23/http客户端/Feign/" title="Feign 初探" itemprop="url">Feign 初探</a>
+      <a href="/2015/12/23/序列化工具/fastjson/" title="fastjson" itemprop="url">fastjson</a>
   </h1>
   <p class="article-author">By
        
@@ -1402,7 +1400,9 @@
 </header>
     <div class="article-content">
         
-        <p>RESTful 服务的HTTP客户端连接器<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> feign.gson.GsonDecoder;</span><br><span class="line"><span class="keyword">import</span> feign.gson.GsonEncoder;</span><br><span class="line"><span class="keyword">import</span> feign.httpclient.ApacheHttpClient;</span><br><span class="line"><span class="keyword">import</span> feign.slf4j.Slf4jLogger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.<span class="built_in">List</span>;</span><br><span class="line"></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	public <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>... args) &#123;</span><br><span class="line">		GitHub github = Feign.builder()</span><br><span class="line">				.decoder(<span class="keyword">new</span> GsonDecoder())		<span class="comment">// 设置解码器, 我们使用Gson将应答解析成Contributor</span></span><br><span class="line">				.encoder(<span class="keyword">new</span> GsonEncoder())</span><br><span class="line">				.logger(<span class="keyword">new</span> Slf4jLogger())		<span class="comment">// 设置日志</span></span><br><span class="line">				.client(<span class="keyword">new</span> ApacheHttpClient())		<span class="comment">// 我们使用Apache的HttpClient组件</span></span><br><span class="line">				.target(GitHub.<span class="keyword">class</span>, <span class="string">"https://api.github.com"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">List</span>&lt;Contributor&gt; contributors = github.contributors(<span class="string">"netflix"</span>, <span class="string">"feign"</span>);</span><br><span class="line">		System.out.println(<span class="string">"netflix :"</span> + contributors.size());</span><br><span class="line"></span><br><span class="line">		<span class="built_in">List</span>&lt;Contributor&gt; contributors1 = github.contributors(<span class="string">"ming15"</span>, <span class="string">"VertxServer"</span>);</span><br><span class="line">		System.out.println(<span class="string">"ming15 :"</span> + contributors1.size());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">GitHub</span> </span>&#123;</span><br><span class="line">	<span class="meta">@RequestLine</span>(<span class="string">"GET /repos/&#123;owner&#125;/&#123;repo&#125;/contributors"</span>)</span><br><span class="line">	<span class="meta">@Headers</span>(<span class="string">"Content-Type: application/json"</span>)</span><br><span class="line">	<span class="built_in">List</span>&lt;Contributor&gt; contributors(<span class="meta">@Param</span>(<span class="string">"owner"</span>) <span class="built_in">String</span> owner, <span class="meta">@Param</span>(<span class="string">"repo"</span>) <span class="built_in">String</span> repo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Contributor</span> </span>&#123;</span><br><span class="line">	<span class="built_in">String</span> login;</span><br><span class="line">	<span class="built_in">int</span> contributions;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <h2 id="读取数组"><a href="#读取数组" class="headerlink" title="读取数组"></a>读取数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Reward&gt; rewards = JSONArray.parseArray(jsonStr, Reward.class);</span><br></pre></td></tr></table></figure>
+<h2 id="json和protobuf相互转换"><a href="#json和protobuf相互转换" class="headerlink" title="json和protobuf相互转换"></a>json和protobuf相互转换</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.googlecode.protobuf-java-format<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protobuf-java-format<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String string = JsonFormat.printToString(mail);</span><br></pre></td></tr></table></figure></p>
 
         
         
@@ -1415,7 +1415,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/http客户端/">http客户端</a>
+  <a class="article-category-link" href="/categories/序列化工具/">序列化工具</a>
 </div>
 
 
@@ -1427,7 +1427,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/12/23/http客户端/Feign/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/http客户端/Feign/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/12/23/序列化工具/fastjson/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/序列化工具/fastjson/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 

@@ -76,166 +76,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/21/JavaSE/JavaIO 文件操作/" title="JAVA 文件操作" itemprop="url">JAVA 文件操作</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="FileFilter"><a href="#FileFilter" class="headerlink" title="FileFilter"></a>FileFilter</h2><p>检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FileFilter fileFilter = pathname -&gt; &#123;</span><br><span class="line">	System.out.println(pathname.getPath());</span><br><span class="line">	<span class="keyword">return</span> pathname.isFile();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">fileFilter.accept(<span class="keyword">new</span> File(<span class="string">"D:\\hazelcast-documentation-3.5.3.pdf"</span>));</span><br></pre></td></tr></table></figure></p>
-<h2 id="FilenameFilter"><a href="#FilenameFilter" class="headerlink" title="FilenameFilter"></a>FilenameFilter</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FilenameFilter filenameFilter = (dir, name) -&gt; &#123;</span><br><span class="line">	System.out.println(dir);</span><br><span class="line">	System.out.println(name);</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">filenameFilter.accept(<span class="keyword">new</span> File(<span class="string">"D"</span>), <span class="string">"hazelcast-documentation-3.5.3.pdf"</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="File"><a href="#File" class="headerlink" title="File"></a>File</h2><p>File对象给我们提供了以下的功能</p>
-<ul>
-<li>删除文件</li>
-<li>文件重命名</li>
-<li>创建新的文件</li>
-<li>创建新的文件</li>
-<li>获取文件的最后修改时间</li>
-<li>设置文件只读</li>
-<li>设置文件可写</li>
-<li>获取文件长度(总字节数)</li>
-<li>获取文件路径</li>
-<li>获取绝对文件路径</li>
-<li>文件是否隐藏</li>
-<li>获得剩余磁盘空间？</li>
-<li>拷贝文件夹</li>
-<li>遍历文件夹</li>
-<li>检查文件夹是否为空？</li>
-</ul>
-<h2 id="FileDescriptor"><a href="#FileDescriptor" class="headerlink" title="FileDescriptor"></a>FileDescriptor</h2><p>用来表示开放文件、开放套接字等.当FileDescriptor表示某文件时,我们可以通俗的将FileDescriptor看成是该文件.但是,我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作,则需要新创建FileDescriptor对应的FileOutputStream,再对文件进行操作.</p>
-<p>类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件,打开的套接字或其他来源或字节的接收器.以下是关于FileDescriptor要点：</p>
-<ol>
-<li>主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它.</li>
-<li>应用程序不应创建自己的文件描述符.</li>
-</ol>
-<h2 id="FileLock"><a href="#FileLock" class="headerlink" title="FileLock"></a>FileLock</h2><p>锁定文件</p>
-<p>ByteBuffer.allocate()语句改为ByteBuffer.allocateDirect().用来证实性能之间的差异,但是请注意程序的启动时间是否发生了明显的改变.</p>
-<p>修改{@link JGrep}让其使java的nio内存映射文件.</p>
-<p>JDK1.4引入了文件加锁机制,它允许我们同步访问某个作为共享资源的文件.不过,竞争同一文件的两个线程可能在不同的Java虚拟机上;或者一个是Java线程,另一个是操作系统中其他的某个本地线程.</p>
-<p>文件锁对其他的操作系统进程是可见的,因为Java的文件加锁直接映射到了本地操作系统的加锁工具.通过对FileChannel调用tryLock()或lock(),就可以获得整个文件的FileLock.</p>
-<p>(SocketChannel、DatagramChannel和 ServerSocketChannel不需要加锁,因为他们是从单进程实体继承而来;我们通常不在两个进程之间共享网络socket.)</p>
-<p>tryLock()是非阻塞式的,它设法获取锁,但是如果不能获得(当其他一些进程已经持有相同的锁,并且不共享时),它将直接从方法调用返回.lock()则是阻塞式的,它要阻塞进程直至锁可以获得,或调用lock()的线程中断,或调用lock()的通道关闭.</p>
-<p>使用FileLock.release()可以释放锁.</p>
-<p>也可以使用此方法对文件上锁tryLock()或者lock()其中,加锁的区域由size-position决定.第三个参数指定是否是共享锁.</p>
-<p>尽管无参数的加锁方法将根据文件尺寸的变化而变化,但是具有固定尺寸的锁不随文件尺寸的变化而变化.如果你获得了某一区域(从position到position+size)上的锁,当文件增大超出position+size时,那么在position+size之外的部分不会被锁定.无参数的加锁方法会对 整个文件进行加锁,甚至文件变大后也是如此.</p>
-<p>对独占锁或者共享锁的支持必须由底层的操作系统提供.如果操作系统不支持共享锁并为每一个请求都创建一个锁,那么它就会使用独占锁.</p>
-<p>锁的 类型(共享或独占)可以通过FileLock.isShared()进行查询.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"file.txt"</span>);</span><br><span class="line">FileLock fl = fos.getChannel().tryLock();</span><br><span class="line"><span class="keyword">if</span> (fl != <span class="keyword">null</span>) &#123;</span><br><span class="line">	System.out.println(<span class="string">"Locked File"</span>);</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">	fl.release();</span><br><span class="line">	System.out.println(<span class="string">"Released Lock"</span>);</span><br><span class="line">&#125;</span><br><span class="line">fos.close()</span><br></pre></td></tr></table></figure></p>
-<h2 id="DirectoryStream"><a href="#DirectoryStream" class="headerlink" title="DirectoryStream"></a>DirectoryStream</h2><p>遍历某个文件夹内的所有文件,但是不会遍历子目录. 也就是这会遍历当前路径中的所有文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DirectoryStream&lt;Path&gt; paths = Files.newDirectoryStream(Paths.get(<span class="string">"E:"</span>));</span><br><span class="line">paths.forEach(path -&gt; &#123;</span><br><span class="line">	System.out.println(path.getFileName());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>SecureDirectoryStream</p>
-</blockquote>
-<h2 id="FileVisitor"><a href="#FileVisitor" class="headerlink" title="FileVisitor"></a>FileVisitor</h2><p>遍历某个文件夹内的所有文件接口.</p>
-<p><code>SimpleFileVisitor</code>实现了这个接口. 与<code>DirectoryStream</code> 不同的是,这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SimpleFileVisitor visitor = <span class="keyword">new</span> SimpleFileVisitor&lt;Path&gt;() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> FileVisitResult <span class="title">visitFile</span><span class="params">(Path file, BasicFileAttributes attrs)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				System.out.println(file.getFileName());</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.visitFile(file, attrs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		Files.walkFileTree(Paths.get(<span class="string">"E:"</span>), visitor);</span><br></pre></td></tr></table></figure></p>
-<h2 id="监控文件变化"><a href="#监控文件变化" class="headerlink" title="监控文件变化"></a>监控文件变化</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WatchService service = FileSystems.getDefault().newWatchService();</span><br><span class="line">		Paths.get(<span class="string">"D:/"</span>).register(service,</span><br><span class="line">		ENTRY_CREATE,</span><br><span class="line">		ENTRY_DELETE,</span><br><span class="line">		ENTRY_MODIFY);</span><br><span class="line"></span><br><span class="line">WatchKey watchKey = service.take();</span><br><span class="line"></span><br><span class="line">watchKey.pollEvents().stream().forEach(watchEvent -&gt; &#123;</span><br><span class="line">	System.out.println(watchEvent.context() + <span class="string">"  "</span> + watchEvent.kind());</span><br><span class="line">&#125;);</span><br><span class="line">watchKey.reset();</span><br></pre></td></tr></table></figure>
-<h2 id="Files"><a href="#Files" class="headerlink" title="Files"></a>Files</h2><ol>
-<li>copy</li>
-<li>createDirectories</li>
-<li>createDirectory</li>
-<li>createFile</li>
-<li>createLink</li>
-<li>createSymbolicLink</li>
-<li>createTempDirectory</li>
-<li>createTempFile</li>
-<li>delete</li>
-<li>deleteIfExists</li>
-<li>exists</li>
-<li>getAttribute</li>
-<li>getFileAttributeView</li>
-<li>getFileStore</li>
-<li>getLastModifiedTime</li>
-<li>getOwner</li>
-<li>getPosixFilePermissions</li>
-<li>isDirectory</li>
-<li>isExecutable</li>
-<li>isHidden</li>
-<li>isReadable</li>
-<li>isRegularFile</li>
-<li>isSameFile</li>
-<li>isSymbolicLink</li>
-<li>isWritable</li>
-<li>move</li>
-<li>newBufferedReader</li>
-<li>newBufferedWriter</li>
-<li>newByteChannel</li>
-<li>newDirectoryStream</li>
-<li>newInputStream</li>
-<li>newOutputStream</li>
-<li>notExists</li>
-<li>probeContentType</li>
-<li>readAllBytes</li>
-<li>readAllLines</li>
-<li>readAttributes</li>
-<li>readSymbolicLink</li>
-<li>setAttribute</li>
-<li>setLastModifiedTime</li>
-<li>setOwner</li>
-<li>setPosixFilePermissions</li>
-<li>walkFileTree</li>
-<li>write</li>
-</ol>
-<h2 id="FileStore"><a href="#FileStore" class="headerlink" title="FileStore"></a>FileStore</h2><p>代表了真正的存储设备,提供了设备的详尽信息</p>
-<h2 id="FileSystems"><a href="#FileSystems" class="headerlink" title="FileSystems"></a>FileSystems</h2><ul>
-<li>FileSystems.getDefault() ：返回 JVM 默认的 FileSystem – 一般说来,也就是操作系统的默认文件系统</li>
-<li>FileSystems.getFileSystem(uri) ： 可以获取远程主机的FileSystem<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileSystem system = FileSystems.getDefault();</span><br><span class="line"><span class="comment">// 得到文件系统支持的属性视图列表</span></span><br><span class="line">Set&lt;String&gt; views = system.supportedFileAttributeViews();</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<blockquote>
-<p>FileSystem</p>
-</blockquote>
-<h2 id="Paths"><a href="#Paths" class="headerlink" title="Paths"></a>Paths</h2><blockquote>
-<p>Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件,但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据,因此在网络环境或在虚拟文件系统中,NIO.2 也完全适用.NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法</p>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/21/JavaSE/JavaIO 文件操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 文件操作/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/21/JavaSE/JavaIO 内存IO/" title="JAVA 内存IO" itemprop="url">JAVA 内存IO</a>
   </h1>
   <p class="article-author">By
@@ -287,6 +127,85 @@
 	
 	  	<span></span>
 		<a href="/2015/11/21/JavaSE/JavaIO 内存IO/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 内存IO/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/21/JavaSE/JavaIO 写文件/" title="JAVA 写文件" itemprop="url">JAVA 写文件</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="BufferedOutputStream"><a href="#BufferedOutputStream" class="headerlink" title="BufferedOutputStream"></a>BufferedOutputStream</h2><p>我们使用<code>FileOutputStream</code>, <code>BufferedOutputStream</code>来读取文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (BufferedOutputStream bf = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(<span class="string">""</span>)));) &#123;</span><br><span class="line">	bf.write(<span class="number">1</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>BufferedOutputStream 缓冲输出流。它继承于FilterOutputStream。作用是为另一个输出流提供“缓冲功能”。输出byte[]字节数组<br>BufferedOutputStream只提供了输出byte数据的方式,因此这种方式只能读取二进制流</p>
+<blockquote>
+<p>FileOutputStream 一个字节一个字节的向文件里输出数据</p>
+</blockquote>
+<h2 id="BufferedWriter"><a href="#BufferedWriter" class="headerlink" title="BufferedWriter"></a>BufferedWriter</h2><ol>
+<li>支持字符串输出</li>
+<li>支持换行输出</li>
+<li>支持文件追加输出<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BufferedWriter writer = Files.newBufferedWriter(Paths.get(<span class="string">"new.txt"</span>), StandardCharsets.UTF_8);</span><br><span class="line">writer.write(<span class="string">"123456\n"</span>); <span class="comment">// 换行输出</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<p>另外还有一点需要提到的是FileWriter, 它一个字符一个字符地输出</p>
+</blockquote>
+<h2 id="OutputStreamWriter"><a href="#OutputStreamWriter" class="headerlink" title="OutputStreamWriter"></a>OutputStreamWriter</h2><p>OutputStreamWriter 将字节流转换为字符流。是字节流通向字符流的桥梁。如果不指定字符集编码，该解码过程将使用平台默认的字符编码，如：GBK。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写入UTF-8格式编码的文件</span></span><br><span class="line">StringBuffer buffer = <span class="keyword">new</span> StringBuffer();</span><br><span class="line"><span class="keyword">try</span> (Writer out = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(</span><br><span class="line">		<span class="keyword">new</span> FileOutputStream(file), <span class="string">"UTF8"</span>))) &#123;</span><br><span class="line"></span><br><span class="line">	out.append(<span class="string">"Website UTF-8"</span>).append(<span class="string">"\r\n"</span>);</span><br><span class="line">	out.append(<span class="string">"中文 UTF-8"</span>).append(<span class="string">"\r\n"</span>);</span><br><span class="line"></span><br><span class="line">	out.flush();</span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="PrintStream"><a href="#PrintStream" class="headerlink" title="PrintStream"></a>PrintStream</h2><p>标准IO重定向</p>
+<p>打印输出流,用来装饰其它输出流。它能为其他输出流添加了功能，使它们能够方便地打印各种数据值表示形式。PrintStream永远不会抛出IOException；PrintStream提供了自动flush和字符集设置功能。所谓自动flush，就是往PrintStream写入的数据会立刻调用flush()函数。</p>
+<p>System类提供了一些简单的静态方法调用,以允许我们对标准输入,输出和错误IO进行重定向IO重定向是对字节流的操纵而不是字符流,因此在该例中使用的是InputStream和OutputStream而不是Reader和Writer</p>
+<p>示例 如果在显示器上创建大量输出,而这些输出滚动地太快而无法阅读时,IO重定向就显得很有用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">PrintStream console = System.out;</span><br><span class="line">BufferedInputStream in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"Redirecting.java"</span>));</span><br><span class="line"></span><br><span class="line">PrintStream out = <span class="keyword">new</span> PrintStream(<span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"MapDB.test.out"</span>)));</span><br><span class="line"></span><br><span class="line">System.setIn(in);</span><br><span class="line">System.setOut(out);</span><br><span class="line">System.setErr(out);</span><br><span class="line"></span><br><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">String s;</span><br><span class="line"><span class="keyword">while</span> ((s = br.readLine()) != <span class="keyword">null</span>)</span><br><span class="line">	System.out.println(s);</span><br><span class="line"></span><br><span class="line">out.close(); <span class="comment">// Remember this!</span></span><br><span class="line">System.setOut(console);</span><br></pre></td></tr></table></figure></p>
+<h2 id="PrintWriter"><a href="#PrintWriter" class="headerlink" title="PrintWriter"></a>PrintWriter</h2><p>用于向文本输出流打印对象的格式化表示形式。它实现在 PrintStream 中的所有 print 方法。它不包含用于写入原始字节的方法，对于这些字节，程序应该使用未编码的字节流进行写入。</p>
+<p>FileWriter可以向文件输出数据. 首先创建一个与指定文件连接的FileWriter.然后使用BufferedWriter对其进行包装进行性能提升 最后使用PrintWriter提供格式化功能<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (PrintWriter out = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(file)));) &#123;</span><br><span class="line">	out.println(string);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>System.out 是一个PrintStream,而PrintStream是一个OutputStream而PrintWriter有一个参数是接受OutputStream,因此我们可以将System.out转换成PrintWriter<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (PrintWriter out = <span class="keyword">new</span> PrintWriter(System.out);) &#123;</span><br><span class="line">out.println(string);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/21/JavaSE/JavaIO 写文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 写文件/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -561,6 +480,158 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/18/构建工具/gradle/" title="Gradle 初探" itemprop="url">Gradle 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>任何一个 Gradle 构建都是由一个或多个 projects 组成。每个 project 都由多个 tasks 组成。每个 task 都代表了构建执行过程中的一个原子性操作。</p>
+<p>我使用idea创建一个gradle项目<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">group <span class="string">'wang.ming15.gradle'</span></span><br><span class="line">version <span class="string">'1.0-SNAPSHOT'</span></span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line"></span><br><span class="line">sourceCompatibility = <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    testCompile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.11'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><h3 id="自定义任务"><a href="#自定义任务" class="headerlink" title="自定义任务"></a>自定义任务</h3><p>我们可以在task内部自由的使用groovy脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task t1 &#123;</span><br><span class="line">    doLast &#123;</span><br><span class="line">        println <span class="string">'task1'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>或者这种方式<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> t2 &lt;&lt; &#123;</span><br><span class="line">        <span class="keyword">println</span> <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>defaultTasks</code>我们可以使用这个命令定义一些默认的task : <code>defaultTasks &#39;t1&#39;, &#39;t2&#39;</code></p>
+</blockquote>
+<h3 id="任务依赖"><a href="#任务依赖" class="headerlink" title="任务依赖"></a>任务依赖</h3><p>我们使用<code>dependsOn</code>语法可以让一个任务依赖于另外一个任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">task t2 &lt;&lt; &#123;</span><br><span class="line">        println <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: t2)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'t3'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种情况下, t2任务会优先于t3任务执行</p>
+<blockquote>
+<p>需要注意的是, 如果t1依赖于t2, 那么当t2执行的时候会先执行t1</p>
+</blockquote>
+<h3 id="延迟依赖"><a href="#延迟依赖" class="headerlink" title="延迟依赖"></a>延迟依赖</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: <span class="string">'t4'</span>)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'task3'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们还可以在定义一个任务之后,再定义其所依赖的任务, 执行顺序仍然是t3 优先于t4</p>
+<h3 id="任务操纵"><a href="#任务操纵" class="headerlink" title="任务操纵"></a>任务操纵</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t5 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task5'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t5.dependsOn t4</span><br></pre></td></tr></table></figure>
+<p>task还有其他一些api,参考<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="external"></a></p>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>如前例所示我们已经使用过Gradle提供的插件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br></pre></td></tr></table></figure></p>
+<p>当我们的项目使用某个插件的时候, 这个项目里就包含了那个插件的任务依赖等等</p>
+<h3 id="java插件任务"><a href="#java插件任务" class="headerlink" title="java插件任务"></a>java插件任务</h3><p>我们使用了java插件, 然后我们打开idea右侧的Gradle标签(我们会看到一些java插件自带的一些task.)：<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/gradle/gradle_ui.jpg" alt=""></p>
+<p>命令含义参考<a href="http://wiki.jikexueyuan.com/project/gradle/java-package.html" target="_blank" rel="external"></a></p>
+<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>在Gradle编译脚本文件中我们还可以自如的使用文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File configFile = file(<span class="string">'src/config.xml'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>file()</code>方法我们就可以打开一个文件.</p>
+<h3 id="文件集合"><a href="#文件集合" class="headerlink" title="文件集合"></a>文件集合</h3><p>我们还可以使用<code>files()</code>方法创建文件集合<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileCollection fils = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以使用<code>+</code>, <code>-</code>符号增加或者删减文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileCollection filc = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br><span class="line">FileCollection newFiles1 = filc + files(<span class="string">"c.txt"</span>)</span><br><span class="line">FileCollection newFiles2 = filc - files(<span class="string">"c.txt"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以使用<code>as</code>将其转换为<code>Set</code>或者<code>List</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set set1 = filc.files</span><br><span class="line">Set set2 = filc as Set</span><br><span class="line">List list = filc as List</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/18/构建工具/gradle/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/构建工具/gradle/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/18/日志工具/Elasticsearch 搜索/" title="Elasticsearch 搜索" itemprop="url">Elasticsearch 搜索</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>首先我们向库里准备一下数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">JSONObject son = <span class="keyword">new</span> JSONObject();</span><br><span class="line">son.put(<span class="string">"name"</span>, <span class="string">"Jerry"</span>);</span><br><span class="line">son.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">son.put(<span class="string">"address"</span>, <span class="string">"baoding"</span>);</span><br><span class="line">son.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line"></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">"name"</span>, <span class="string">"Tom"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"48"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"address"</span>, <span class="string">"beijing"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"son"</span>, son);</span><br><span class="line"></span><br><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx04"</span>)</span><br><span class="line">		.type(<span class="string">"type02"</span>)</span><br><span class="line">		.id(<span class="string">"02"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">client.index(indexRequest).get();</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Leaf query clauses : 在指定的字段中搜索指定的值,例如使用<code>match</code>, <code>term</code> 或者 <code>range</code> 搜索时</li>
+<li>Compound query clauses :</li>
+</ul>
+<p>首先我们来看一个简单的搜索案例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse response = client.prepareSearch(<span class="string">"idx01"</span>, <span class="string">"idx02"</span>)</span><br><span class="line">				.setTypes(<span class="string">"type01"</span>, <span class="string">"type02"</span>)</span><br><span class="line">				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)</span><br><span class="line">				.setQuery(QueryBuilders.termQuery(<span class="string">"multi"</span>, <span class="string">"test"</span>))                 <span class="comment">// Query</span></span><br><span class="line">				.setPostFilter(QueryBuilders.rangeQuery(<span class="string">"age"</span>).from(<span class="number">12</span>).to(<span class="number">18</span>))     <span class="comment">// Filter</span></span><br><span class="line">				.setFrom(<span class="number">0</span>).setSize(<span class="number">60</span>).setExplain(<span class="keyword">true</span>)</span><br><span class="line">				.execute()</span><br><span class="line">				.actionGet();</span><br></pre></td></tr></table></figure></p>
+<h3 id="Match-All-Query"><a href="#Match-All-Query" class="headerlink" title="Match All Query"></a>Match All Query</h3><p>最简单的搜索, 这个搜索将库中所有的文档都搜索出来<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchAllQuery();</span><br></pre></td></tr></table></figure></p>
+<h3 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h3><h4 id="Match-Query"><a href="#Match-Query" class="headerlink" title="Match Query"></a>Match Query</h4><p>标准搜索, 包含模糊搜索, 短语搜索, 相近搜索<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchQuery(</span><br><span class="line">				<span class="string">"age"</span>,	<span class="comment">// 搜索的字段</span></span><br><span class="line">				<span class="string">"18"</span>	<span class="comment">// 搜索的字段值</span></span><br><span class="line">		);</span><br><span class="line"></span><br><span class="line">		SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">		searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">			System.out.println(hit.getSourceAsString());</span><br><span class="line">		&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"address"</span>:<span class="string">"beijing"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Tom"</span>,<span class="attr">"son"</span>:&#123;<span class="attr">"address"</span>:<span class="string">"baoding"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Jerry"</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Multi-Match-Query"><a href="#Multi-Match-Query" class="headerlink" title="Multi Match Query"></a>Multi Match Query</h4><p><code>match</code>搜索的多键版本, 会在多个指定字段中进行值匹配查找<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = multiMatchQuery(</span><br><span class="line">		<span class="string">"baoding"</span>,	<span class="comment">// 搜索值</span></span><br><span class="line">		<span class="string">"city"</span>, <span class="string">"country"</span>	<span class="comment">// 搜索的字段</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">	System.out.println(hit.getSourceAsString());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h4 id="Common-Terms-Query"><a href="#Common-Terms-Query" class="headerlink" title="Common Terms Query"></a>Common Terms Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = commonTermsQuery(<span class="string">"name"</span>, <span class="string">"kimchy"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="Query-String-Query"><a href="#Query-String-Query" class="headerlink" title="Query String Query"></a>Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = queryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="Simple-Query-String-Query"><a href="#Simple-Query-String-Query" class="headerlink" title="Simple Query String Query"></a>Simple Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = simpleQueryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/18/日志工具/Elasticsearch 搜索/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 搜索/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/18/memcached/Memcache/" title="memcached" itemprop="url">memcached</a>
   </h1>
   <p class="article-author">By
@@ -783,158 +854,6 @@
 	
 	  	<span></span>
 		<a href="/2015/11/18/日志工具/Elasticsearch 基本操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 基本操作/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/11/18/构建工具/gradle/" title="Gradle 初探" itemprop="url">Gradle 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>任何一个 Gradle 构建都是由一个或多个 projects 组成。每个 project 都由多个 tasks 组成。每个 task 都代表了构建执行过程中的一个原子性操作。</p>
-<p>我使用idea创建一个gradle项目<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">group <span class="string">'wang.ming15.gradle'</span></span><br><span class="line">version <span class="string">'1.0-SNAPSHOT'</span></span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line"></span><br><span class="line">sourceCompatibility = <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    testCompile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.11'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><h3 id="自定义任务"><a href="#自定义任务" class="headerlink" title="自定义任务"></a>自定义任务</h3><p>我们可以在task内部自由的使用groovy脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task t1 &#123;</span><br><span class="line">    doLast &#123;</span><br><span class="line">        println <span class="string">'task1'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>或者这种方式<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> t2 &lt;&lt; &#123;</span><br><span class="line">        <span class="keyword">println</span> <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><code>defaultTasks</code>我们可以使用这个命令定义一些默认的task : <code>defaultTasks &#39;t1&#39;, &#39;t2&#39;</code></p>
-</blockquote>
-<h3 id="任务依赖"><a href="#任务依赖" class="headerlink" title="任务依赖"></a>任务依赖</h3><p>我们使用<code>dependsOn</code>语法可以让一个任务依赖于另外一个任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">task t2 &lt;&lt; &#123;</span><br><span class="line">        println <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: t2)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'t3'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这种情况下, t2任务会优先于t3任务执行</p>
-<blockquote>
-<p>需要注意的是, 如果t1依赖于t2, 那么当t2执行的时候会先执行t1</p>
-</blockquote>
-<h3 id="延迟依赖"><a href="#延迟依赖" class="headerlink" title="延迟依赖"></a>延迟依赖</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: <span class="string">'t4'</span>)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'task3'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们还可以在定义一个任务之后,再定义其所依赖的任务, 执行顺序仍然是t3 优先于t4</p>
-<h3 id="任务操纵"><a href="#任务操纵" class="headerlink" title="任务操纵"></a>任务操纵</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t5 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task5'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t5.dependsOn t4</span><br></pre></td></tr></table></figure>
-<p>task还有其他一些api,参考<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="external"></a></p>
-<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>如前例所示我们已经使用过Gradle提供的插件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br></pre></td></tr></table></figure></p>
-<p>当我们的项目使用某个插件的时候, 这个项目里就包含了那个插件的任务依赖等等</p>
-<h3 id="java插件任务"><a href="#java插件任务" class="headerlink" title="java插件任务"></a>java插件任务</h3><p>我们使用了java插件, 然后我们打开idea右侧的Gradle标签(我们会看到一些java插件自带的一些task.)：<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/gradle/gradle_ui.jpg" alt=""></p>
-<p>命令含义参考<a href="http://wiki.jikexueyuan.com/project/gradle/java-package.html" target="_blank" rel="external"></a></p>
-<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>在Gradle编译脚本文件中我们还可以自如的使用文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File configFile = file(<span class="string">'src/config.xml'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>使用<code>file()</code>方法我们就可以打开一个文件.</p>
-<h3 id="文件集合"><a href="#文件集合" class="headerlink" title="文件集合"></a>文件集合</h3><p>我们还可以使用<code>files()</code>方法创建文件集合<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileCollection fils = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br></pre></td></tr></table></figure></p>
-<p>我们还可以使用<code>+</code>, <code>-</code>符号增加或者删减文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileCollection filc = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br><span class="line">FileCollection newFiles1 = filc + files(<span class="string">"c.txt"</span>)</span><br><span class="line">FileCollection newFiles2 = filc - files(<span class="string">"c.txt"</span>)</span><br></pre></td></tr></table></figure></p>
-<p>我们还可以使用<code>as</code>将其转换为<code>Set</code>或者<code>List</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set set1 = filc.files</span><br><span class="line">Set set2 = filc as Set</span><br><span class="line">List list = filc as List</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/18/构建工具/gradle/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/构建工具/gradle/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/11/18/日志工具/Elasticsearch 搜索/" title="Elasticsearch 搜索" itemprop="url">Elasticsearch 搜索</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>首先我们向库里准备一下数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">JSONObject son = <span class="keyword">new</span> JSONObject();</span><br><span class="line">son.put(<span class="string">"name"</span>, <span class="string">"Jerry"</span>);</span><br><span class="line">son.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">son.put(<span class="string">"address"</span>, <span class="string">"baoding"</span>);</span><br><span class="line">son.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line"></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">"name"</span>, <span class="string">"Tom"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"48"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"address"</span>, <span class="string">"beijing"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"son"</span>, son);</span><br><span class="line"></span><br><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx04"</span>)</span><br><span class="line">		.type(<span class="string">"type02"</span>)</span><br><span class="line">		.id(<span class="string">"02"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">client.index(indexRequest).get();</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>Leaf query clauses : 在指定的字段中搜索指定的值,例如使用<code>match</code>, <code>term</code> 或者 <code>range</code> 搜索时</li>
-<li>Compound query clauses :</li>
-</ul>
-<p>首先我们来看一个简单的搜索案例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse response = client.prepareSearch(<span class="string">"idx01"</span>, <span class="string">"idx02"</span>)</span><br><span class="line">				.setTypes(<span class="string">"type01"</span>, <span class="string">"type02"</span>)</span><br><span class="line">				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)</span><br><span class="line">				.setQuery(QueryBuilders.termQuery(<span class="string">"multi"</span>, <span class="string">"test"</span>))                 <span class="comment">// Query</span></span><br><span class="line">				.setPostFilter(QueryBuilders.rangeQuery(<span class="string">"age"</span>).from(<span class="number">12</span>).to(<span class="number">18</span>))     <span class="comment">// Filter</span></span><br><span class="line">				.setFrom(<span class="number">0</span>).setSize(<span class="number">60</span>).setExplain(<span class="keyword">true</span>)</span><br><span class="line">				.execute()</span><br><span class="line">				.actionGet();</span><br></pre></td></tr></table></figure></p>
-<h3 id="Match-All-Query"><a href="#Match-All-Query" class="headerlink" title="Match All Query"></a>Match All Query</h3><p>最简单的搜索, 这个搜索将库中所有的文档都搜索出来<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchAllQuery();</span><br></pre></td></tr></table></figure></p>
-<h3 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h3><h4 id="Match-Query"><a href="#Match-Query" class="headerlink" title="Match Query"></a>Match Query</h4><p>标准搜索, 包含模糊搜索, 短语搜索, 相近搜索<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchQuery(</span><br><span class="line">				<span class="string">"age"</span>,	<span class="comment">// 搜索的字段</span></span><br><span class="line">				<span class="string">"18"</span>	<span class="comment">// 搜索的字段值</span></span><br><span class="line">		);</span><br><span class="line"></span><br><span class="line">		SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">		searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">			System.out.println(hit.getSourceAsString());</span><br><span class="line">		&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>结果为<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"address"</span>:<span class="string">"beijing"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Tom"</span>,<span class="attr">"son"</span>:&#123;<span class="attr">"address"</span>:<span class="string">"baoding"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Jerry"</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="Multi-Match-Query"><a href="#Multi-Match-Query" class="headerlink" title="Multi Match Query"></a>Multi Match Query</h4><p><code>match</code>搜索的多键版本, 会在多个指定字段中进行值匹配查找<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = multiMatchQuery(</span><br><span class="line">		<span class="string">"baoding"</span>,	<span class="comment">// 搜索值</span></span><br><span class="line">		<span class="string">"city"</span>, <span class="string">"country"</span>	<span class="comment">// 搜索的字段</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">	System.out.println(hit.getSourceAsString());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h4 id="Common-Terms-Query"><a href="#Common-Terms-Query" class="headerlink" title="Common Terms Query"></a>Common Terms Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = commonTermsQuery(<span class="string">"name"</span>, <span class="string">"kimchy"</span>);</span><br></pre></td></tr></table></figure>
-<h4 id="Query-String-Query"><a href="#Query-String-Query" class="headerlink" title="Query String Query"></a>Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = queryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
-<h4 id="Simple-Query-String-Query"><a href="#Simple-Query-String-Query" class="headerlink" title="Simple Query String Query"></a>Simple Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = simpleQueryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/18/日志工具/Elasticsearch 搜索/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 搜索/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1291,66 +1210,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/08/网络/会话层/" title="会话层" itemprop="url">会话层</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>这一层负责连接如何建立,如何断开,以及保持多长时间.但是该层并不具有实际的传输数据的功能.</p>
-<p>它会在表示层前边添加会话层首部.</p>
-<p>例如,主机A向主机B发送5条消息,那么会话层就决定着是每个消息都进行一次连接建立断开,还是五条消息在同一个连接中建立断开.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/TCP-IP/">TCP IP</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/08/网络/会话层/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/08/网络/会话层/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/08/网络/传输层/" title="传输层" itemprop="url">传输层</a>
   </h1>
   <p class="article-author">By
@@ -1421,6 +1280,66 @@
 	
 	  	<span></span>
 		<a href="/2015/11/08/网络/传输层/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/08/网络/传输层/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/08/网络/会话层/" title="会话层" itemprop="url">会话层</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>这一层负责连接如何建立,如何断开,以及保持多长时间.但是该层并不具有实际的传输数据的功能.</p>
+<p>它会在表示层前边添加会话层首部.</p>
+<p>例如,主机A向主机B发送5条消息,那么会话层就决定着是每个消息都进行一次连接建立断开,还是五条消息在同一个连接中建立断开.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/TCP-IP/">TCP IP</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/08/网络/会话层/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/08/网络/会话层/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1748,6 +1667,228 @@
 	
 	  	<span></span>
 		<a href="/2015/10/26/操作系统/NUMA/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/26/操作系统/NUMA/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/15/mgits/技术CheckList/" title="技术CheckList" itemprop="url">技术CheckList</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="FastJSON"><a href="#FastJSON" class="headerlink" title="FastJSON"></a>FastJSON</h2><h3 id="序列化bug"><a href="#序列化bug" class="headerlink" title="序列化bug"></a>序列化bug</h3><p>在项目中运营团队给出了下面这样的一个公告<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">================================================</span><br><span class="line">官方QQ群： <span class="number">467027422</span></span><br><span class="line">官方微信号：gm-xyxmp</span><br><span class="line">微信订阅号：xyxmpsy</span><br><span class="line"></span><br><span class="line">亲爱的小伙伴：</span><br><span class="line"></span><br><span class="line">大家好，老猪给各位请安了！</span><br><span class="line"></span><br><span class="line">首款能交易的<span class="number">3</span>D卡牌游戏，星爷独家正版授权《西游降魔篇<span class="number">3</span>D》</span><br><span class="line">自<span class="number">2015</span>年<span class="number">7</span>月<span class="number">21</span>日正式登陆iOS平台后，大量玩家热情涌入游戏</span><br><span class="line">，老猪我面对此景喜极而泣，为了让更多小伙伴加入到咱们的</span><br><span class="line">大团队中，老猪我决定[FFFF00]<span class="number">10</span>月<span class="number">16</span>日<span class="number">11</span>：<span class="number">00</span>开启新服N23-物华天宝 [-]，</span><br><span class="line">诚邀各位新老玩家的加入！</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">新服开启，精彩纷呈的活动期待各位的参与，丰厚的大礼拿到手</span><br><span class="line">抽筋，在《西游降魔篇<span class="number">3</span>D》西行的途中，让我们一同感受友情，</span><br><span class="line">感受激情，感受无限快乐！</span><br><span class="line"></span><br><span class="line">服务器名称：[FFFF00]N23-物华天宝 [-]</span><br><span class="line">开服时间：[FFFF00]<span class="number">2015</span>年<span class="number">10</span>月<span class="number">16</span>日<span class="number">11</span>：<span class="number">00</span>（周五）[-]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">伴随开服的同时，多个活动前来助阵！</span><br><span class="line">[FFFF00]活动一：连续登陆送豪礼[-]</span><br><span class="line">[FFFF00]活动二：冲级领元宝[-]</span><br><span class="line">[FFFF00]活动三：战力大比拼[-]</span><br><span class="line">[FFFF00]活动四：五星神将双倍抽[-]</span><br><span class="line">[FFFF00]活动五：天天有礼送段小姐[-]</span><br><span class="line">[FFFF00]活动六：累积充值送玉帝[-]</span><br><span class="line">[FFFF00]活动七：每日礼包大回馈[-]</span><br><span class="line">[FFFF00]活动八：首充翻倍送豪礼[-]</span><br><span class="line">[FFFF00]活动九：签到送好礼[-]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">活动详情请查看游戏内公告！</span><br><span class="line">================================================</span><br><span class="line">                                                            《西游降魔篇<span class="number">3</span>D》运营团队</span><br></pre></td></tr></table></figure></p>
+<p>当我将其赋值到一个对象<code>obj#value</code>时,然后使用<code>JSON.toJSONString(obj)</code>的时候遇到了下面的异常:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> java.lang.ArrayIndexOutOfBoundsException: <span class="number">160</span></span><br><span class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:<span class="number">868</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:<span class="number">602</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeString(SerializeWriter.java:<span class="number">1366</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.StringCodec.write(StringCodec.java:<span class="number">49</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.StringCodec.write(StringCodec.java:<span class="number">34</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.JSONSerializer.write(JSONSerializer.java:<span class="number">369</span>)</span><br><span class="line">	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:<span class="number">430</span>)</span><br><span class="line">	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:<span class="number">418</span>)</span><br><span class="line">	at Print1.main(Print1.java:<span class="number">52</span>)</span><br></pre></td></tr></table></figure></p>
+<p>出现的原因是:<code>服务器名称：[FFFF00]N23-物华天宝 [-]</code>物华天宝后面跟的空格，不是我们常用的ascii码为32的空格，而是一个ascii码为160特殊的空格符,导致JSON序列化时失败.</p>
+<h2 id="用户名字符集"><a href="#用户名字符集" class="headerlink" title="用户名字符集"></a>用户名字符集</h2><p>用户可能输入emoji表情符号,这种符号普遍存在iOS与android系统中,这种表情不处理直接存储到MySQL5.5以下的版本会报错</p>
+<blockquote>
+<p>这种符号采用Unicode 6标准4个bytes作为存储单元,MySQL存储这种字符需要修改数据库字符集为utf8mb4,但数据回传给网页或者移动客户端时则需要做兼容处理</p>
+</blockquote>
+<h2 id="日志问题"><a href="#日志问题" class="headerlink" title="日志问题"></a>日志问题</h2><p>在项目的开发过程中不允许使用debug模式, 一定要使用日志分析问题, 因为在线上时候, 没办法使用debug的方式, 因此在记录的日志的时候, 一定要记录的全(每个数据变化都要记录下来), 简(剩下来的就是钱)</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/15/mgits/技术CheckList/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/mgits/技术CheckList/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/15/linux/linux系统文件/" title="Linux系统文件" itemprop="url">Linux系统文件</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="proc-cpuinfo"><a href="#proc-cpuinfo" class="headerlink" title="/proc/cpuinfo"></a>/proc/cpuinfo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@cvs /]# cat /proc/cpuinfo</span><br><span class="line">processor       : 0</span><br><span class="line">vendor_id       : GenuineIntel</span><br><span class="line">cpu family      : 6</span><br><span class="line">model           : 45</span><br><span class="line">model name      : Intel(R) Xeon(R) CPU E5-2603 0 @ 1.80GHz</span><br><span class="line">stepping        : 7</span><br><span class="line">cpu MHz         : 1800.009</span><br><span class="line">cache size      : 10240 KB</span><br><span class="line">physical id     : 0</span><br><span class="line">siblings        : 4</span><br><span class="line">core id         : 0</span><br><span class="line">cpu cores       : 4</span><br><span class="line">apicid          : 0</span><br><span class="line">initial apicid  : 0</span><br><span class="line">fpu             : yes</span><br><span class="line">fpu_exception   : yes</span><br><span class="line">cpuid level     : 13</span><br><span class="line">wp              : yes</span><br><span class="line">flags           : fpu vme de pse tsc msr pae mce ...</span><br><span class="line">bogomips        : 3600.01</span><br><span class="line">clflush size    : 64</span><br><span class="line">cache_alignment : 64</span><br><span class="line">address sizes   : 46 bits physical, 48 bits virtual</span><br><span class="line">power management:</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>processor</code>       : CPU号</li>
+<li><code>vendor_id</code>       : CPU制造商   </li>
+<li><code>cpu family</code>      : CPU产品系列代号</li>
+<li><code>model</code>           : CPU属于其系列中的哪一代的代号</li>
+<li><code>model name</code>      : CPU属于的名字及其编号、标称主频</li>
+<li><code>stepping</code>        : CPU属于制作更新版本</li>
+<li><code>cpu MHz</code>         : CPU的实际使用主频</li>
+<li><code>cache size</code>      : CPU二级缓存大小</li>
+<li><code>physical id</code>     : 单个CPU的标号</li>
+<li><code>siblings</code>        : 单个CPU逻辑物理核数</li>
+<li><code>core id</code>         : 当前物理核在其所处CPU中的编号，这个编号不一定连续</li>
+<li><code>cpu cores</code>       : 该逻辑核所处CPU的物理核数</li>
+<li><code>apicid</code>          : 用来区分不同逻辑核的编号，系统中每个逻辑核的此编号必然不同，此编号不一定连续</li>
+<li><code>initial apicid</code>  :</li>
+<li><code>fpu</code>             : 是否具有浮点运算单元（Floating Point Unit）</li>
+<li><code>fpu_exception</code>   : 是否支持浮点计算异常</li>
+<li><code>cpuid level</code>     : 执行cpuid指令前，eax寄存器中的值，根据不同的值cpuid指令会返回不同的内容</li>
+<li><code>wp</code>              : 表明当前CPU是否在内核态支持对用户空间的写保护（Write Protection）</li>
+<li><code>flags</code>           : 当前CPU支持的功能</li>
+<li><code>bogomips</code>        : 在系统内核启动时粗略测算的CPU速度（Million Instructions Per Second）</li>
+<li><code>clflush size</code>    : 每次刷新缓存的大小单位</li>
+<li><code>cache_alignment</code> : 缓存地址对齐单位</li>
+<li><code>address sizes</code>   : 可访问地址空间位数</li>
+<li><code>power management</code>: 对能源管理的支持，有以下几个可选支持功能</li>
+</ul>
+<h3 id="proc-meminfo"><a href="#proc-meminfo" class="headerlink" title="/proc/meminfo"></a>/proc/meminfo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">[root@cvs /]# cat /proc/meminfo</span><br><span class="line">MemTotal:       16282756 kB</span><br><span class="line">MemFree:         2012664 kB</span><br><span class="line">Buffers:          491980 kB</span><br><span class="line">Cached:          5477644 kB</span><br><span class="line">SwapCached:       110344 kB</span><br><span class="line">Active:          9224100 kB</span><br><span class="line">Inactive:        4478716 kB</span><br><span class="line">Active(anon):    6410680 kB</span><br><span class="line">Inactive(anon):  1322576 kB</span><br><span class="line">Active(file):    2813420 kB</span><br><span class="line">Inactive(file):  3156140 kB</span><br><span class="line">Unevictable:           0 kB</span><br><span class="line">Mlocked:               0 kB</span><br><span class="line">SwapTotal:      10239992 kB</span><br><span class="line">SwapFree:        8921364 kB</span><br><span class="line">Dirty:              1176 kB</span><br><span class="line">Writeback:             0 kB</span><br><span class="line">AnonPages:       7679964 kB</span><br><span class="line">Mapped:            25344 kB</span><br><span class="line">Shmem:                36 kB</span><br><span class="line">Slab:             328340 kB</span><br><span class="line">SReclaimable:     284284 kB</span><br><span class="line">SUnreclaim:        44056 kB</span><br><span class="line">KernelStack:        8504 kB</span><br><span class="line">PageTables:        27520 kB</span><br><span class="line">NFS_Unstable:          0 kB</span><br><span class="line">Bounce:                0 kB</span><br><span class="line">WritebackTmp:          0 kB</span><br><span class="line">CommitLimit:    18381368 kB</span><br><span class="line">Committed_AS:   11103356 kB</span><br><span class="line">VmallocTotal:   34359738367 kB</span><br><span class="line">VmallocUsed:      307784 kB</span><br><span class="line">VmallocChunk:   34350792204 kB</span><br><span class="line">HardwareCorrupted:     0 kB</span><br><span class="line">AnonHugePages:   6842368 kB</span><br><span class="line">HugePages_Total:       0</span><br><span class="line">HugePages_Free:        0</span><br><span class="line">HugePages_Rsvd:        0</span><br><span class="line">HugePages_Surp:        0</span><br><span class="line">Hugepagesize:       2048 kB</span><br><span class="line">DirectMap4k:        5056 kB</span><br><span class="line">DirectMap2M:     2045952 kB</span><br><span class="line">DirectMap1G:    14680064 kB</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>MemTotal</code>:</li>
+<li><code>MemFree</code>:空闲内存</li>
+<li><code>Buffers</code>:给文件的缓冲大小</li>
+<li><code>Cached</code>: 高速缓冲存储器(<a href="http://baike.baidu.com/view/496990.htm)使用的大小" target="_blank" rel="external">http://baike.baidu.com/view/496990.htm)使用的大小</a></li>
+<li><code>SwapCached</code>: 被高速缓冲存储用的交换空间大小</li>
+<li><code>Active</code>: 活跃使用中的高速缓冲存储器页面文件大小</li>
+<li><code>Inactive</code>: 不经常使用的高速缓冲存储器页面文件大小</li>
+<li><code>Active(anon)</code>:</li>
+<li><code>Inactive(anon)</code>:</li>
+<li><code>Active(file)</code>:</li>
+<li><code>Inactive(file)</code>:</li>
+<li><code>Unevictable</code>:</li>
+<li><code>Mlocked</code>:</li>
+<li><code>SwapTotal</code>:交换空间总大小</li>
+<li><code>SwapFree</code>: 空闲交换空间</li>
+<li><code>Dirty</code>:等待被写回到磁盘的大小</li>
+<li><code>Writeback</code>:正在被写回的大小</li>
+<li><code>AnonPages</code>:未映射的页的大小</li>
+<li><code>Mapped</code>: 设备和文件映射的大小</li>
+<li><code>Shmem</code>:</li>
+<li><code>Slab</code>: 内核数据结构缓存的大小，可减少申请和释放内存带来的消耗</li>
+<li><code>SReclaimable</code>: 可收回slab的大小</li>
+<li><code>SUnreclaim</code>: 不可收回的slab的大小23204+14164=37368</li>
+<li><code>KernelStack</code>:</li>
+<li><code>PageTables</code>: 管理内存分页的索引表的大小</li>
+<li><code>NFS_Unstable</code>: 不稳定页表的大小</li>
+<li><code>Bounce</code>: bounce:退回</li>
+<li><code>WritebackTmp</code>:</li>
+<li><code>CommitLimit</code>:</li>
+<li><code>Committed_AS</code>:</li>
+<li><code>VmallocTotal</code>: 虚拟内存大小</li>
+<li><code>VmallocUsed</code>:已经被使用的虚拟内存大小</li>
+<li><code>VmallocChunk</code>:</li>
+<li><code>HardwareCorrupted</code>:</li>
+<li><code>AnonHugePages</code>:</li>
+<li><code>HugePages_Total</code>:大页面的分配</li>
+<li><code>HugePages_Free</code>:</li>
+<li><code>HugePages_Rsvd</code>:</li>
+<li><code>HugePages_Surp</code>:</li>
+<li><code>Hugepagesize</code>:</li>
+<li><code>DirectMap4k</code>:</li>
+<li><code>DirectMap2M</code>:</li>
+<li><code>DirectMap1G</code>:</li>
+</ul>
+<h3 id="proc-net-dev"><a href="#proc-net-dev" class="headerlink" title="/proc/net/dev"></a>/proc/net/dev</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@cvs /]# cat /proc/net/dev</span><br><span class="line">Inter-|   Receive                                                |  Transmit</span><br><span class="line"> face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed</span><br><span class="line">    lo:365528559149 865504543    0    0    0     0          0         0 365528559149 865504543    0    0    0     0       0          0</span><br><span class="line">   em1:542483270223 575346473    0    0    0    62          0   8267561 580200919340 586706511    0    0    0     0       0          0</span><br><span class="line">   em2:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0</span><br><span class="line">   em3:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0</span><br><span class="line">   em4:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0</span><br></pre></td></tr></table></figure>
+<p>Inter                                                     </p>
+<ul>
+<li><code>face</code>:接口的名字</li>
+</ul>
+<p>Receive</p>
+<ul>
+<li><code>bytes</code>: 收发的字节数   </li>
+<li><code>packets</code>: 收发正确的包量</li>
+<li><code>errs</code>: 收发错误的包量</li>
+<li><code>drop</code>: 收发丢弃的包量</li>
+<li><code>fifo</code>:</li>
+<li><code>frame</code>:</li>
+<li><code>compressed</code>:</li>
+<li><code>multicast</code>:</li>
+</ul>
+<p>Transmit</p>
+<ul>
+<li><code>bytes</code>: 收发的字节数   </li>
+<li><code>packets</code>: 收发正确的包量</li>
+<li><code>errs</code>: 收发错误的包量</li>
+<li><code>drop</code>: 收发丢弃的包量</li>
+<li><code>fifo</code>:</li>
+<li><code>colls</code>:</li>
+<li><code>carrier</code>:</li>
+<li><code>compressed</code>:</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/linux/">linux</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/15/linux/linux系统文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/linux/linux系统文件/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -2194,228 +2335,6 @@
 	
 	  	<span></span>
 		<a href="/2015/10/15/linux/Linux常用命令/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/linux/Linux常用命令/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/15/linux/linux系统文件/" title="Linux系统文件" itemprop="url">Linux系统文件</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h3 id="proc-cpuinfo"><a href="#proc-cpuinfo" class="headerlink" title="/proc/cpuinfo"></a>/proc/cpuinfo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@cvs /]# cat /proc/cpuinfo</span><br><span class="line">processor       : 0</span><br><span class="line">vendor_id       : GenuineIntel</span><br><span class="line">cpu family      : 6</span><br><span class="line">model           : 45</span><br><span class="line">model name      : Intel(R) Xeon(R) CPU E5-2603 0 @ 1.80GHz</span><br><span class="line">stepping        : 7</span><br><span class="line">cpu MHz         : 1800.009</span><br><span class="line">cache size      : 10240 KB</span><br><span class="line">physical id     : 0</span><br><span class="line">siblings        : 4</span><br><span class="line">core id         : 0</span><br><span class="line">cpu cores       : 4</span><br><span class="line">apicid          : 0</span><br><span class="line">initial apicid  : 0</span><br><span class="line">fpu             : yes</span><br><span class="line">fpu_exception   : yes</span><br><span class="line">cpuid level     : 13</span><br><span class="line">wp              : yes</span><br><span class="line">flags           : fpu vme de pse tsc msr pae mce ...</span><br><span class="line">bogomips        : 3600.01</span><br><span class="line">clflush size    : 64</span><br><span class="line">cache_alignment : 64</span><br><span class="line">address sizes   : 46 bits physical, 48 bits virtual</span><br><span class="line">power management:</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>processor</code>       : CPU号</li>
-<li><code>vendor_id</code>       : CPU制造商   </li>
-<li><code>cpu family</code>      : CPU产品系列代号</li>
-<li><code>model</code>           : CPU属于其系列中的哪一代的代号</li>
-<li><code>model name</code>      : CPU属于的名字及其编号、标称主频</li>
-<li><code>stepping</code>        : CPU属于制作更新版本</li>
-<li><code>cpu MHz</code>         : CPU的实际使用主频</li>
-<li><code>cache size</code>      : CPU二级缓存大小</li>
-<li><code>physical id</code>     : 单个CPU的标号</li>
-<li><code>siblings</code>        : 单个CPU逻辑物理核数</li>
-<li><code>core id</code>         : 当前物理核在其所处CPU中的编号，这个编号不一定连续</li>
-<li><code>cpu cores</code>       : 该逻辑核所处CPU的物理核数</li>
-<li><code>apicid</code>          : 用来区分不同逻辑核的编号，系统中每个逻辑核的此编号必然不同，此编号不一定连续</li>
-<li><code>initial apicid</code>  :</li>
-<li><code>fpu</code>             : 是否具有浮点运算单元（Floating Point Unit）</li>
-<li><code>fpu_exception</code>   : 是否支持浮点计算异常</li>
-<li><code>cpuid level</code>     : 执行cpuid指令前，eax寄存器中的值，根据不同的值cpuid指令会返回不同的内容</li>
-<li><code>wp</code>              : 表明当前CPU是否在内核态支持对用户空间的写保护（Write Protection）</li>
-<li><code>flags</code>           : 当前CPU支持的功能</li>
-<li><code>bogomips</code>        : 在系统内核启动时粗略测算的CPU速度（Million Instructions Per Second）</li>
-<li><code>clflush size</code>    : 每次刷新缓存的大小单位</li>
-<li><code>cache_alignment</code> : 缓存地址对齐单位</li>
-<li><code>address sizes</code>   : 可访问地址空间位数</li>
-<li><code>power management</code>: 对能源管理的支持，有以下几个可选支持功能</li>
-</ul>
-<h3 id="proc-meminfo"><a href="#proc-meminfo" class="headerlink" title="/proc/meminfo"></a>/proc/meminfo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">[root@cvs /]# cat /proc/meminfo</span><br><span class="line">MemTotal:       16282756 kB</span><br><span class="line">MemFree:         2012664 kB</span><br><span class="line">Buffers:          491980 kB</span><br><span class="line">Cached:          5477644 kB</span><br><span class="line">SwapCached:       110344 kB</span><br><span class="line">Active:          9224100 kB</span><br><span class="line">Inactive:        4478716 kB</span><br><span class="line">Active(anon):    6410680 kB</span><br><span class="line">Inactive(anon):  1322576 kB</span><br><span class="line">Active(file):    2813420 kB</span><br><span class="line">Inactive(file):  3156140 kB</span><br><span class="line">Unevictable:           0 kB</span><br><span class="line">Mlocked:               0 kB</span><br><span class="line">SwapTotal:      10239992 kB</span><br><span class="line">SwapFree:        8921364 kB</span><br><span class="line">Dirty:              1176 kB</span><br><span class="line">Writeback:             0 kB</span><br><span class="line">AnonPages:       7679964 kB</span><br><span class="line">Mapped:            25344 kB</span><br><span class="line">Shmem:                36 kB</span><br><span class="line">Slab:             328340 kB</span><br><span class="line">SReclaimable:     284284 kB</span><br><span class="line">SUnreclaim:        44056 kB</span><br><span class="line">KernelStack:        8504 kB</span><br><span class="line">PageTables:        27520 kB</span><br><span class="line">NFS_Unstable:          0 kB</span><br><span class="line">Bounce:                0 kB</span><br><span class="line">WritebackTmp:          0 kB</span><br><span class="line">CommitLimit:    18381368 kB</span><br><span class="line">Committed_AS:   11103356 kB</span><br><span class="line">VmallocTotal:   34359738367 kB</span><br><span class="line">VmallocUsed:      307784 kB</span><br><span class="line">VmallocChunk:   34350792204 kB</span><br><span class="line">HardwareCorrupted:     0 kB</span><br><span class="line">AnonHugePages:   6842368 kB</span><br><span class="line">HugePages_Total:       0</span><br><span class="line">HugePages_Free:        0</span><br><span class="line">HugePages_Rsvd:        0</span><br><span class="line">HugePages_Surp:        0</span><br><span class="line">Hugepagesize:       2048 kB</span><br><span class="line">DirectMap4k:        5056 kB</span><br><span class="line">DirectMap2M:     2045952 kB</span><br><span class="line">DirectMap1G:    14680064 kB</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>MemTotal</code>:</li>
-<li><code>MemFree</code>:空闲内存</li>
-<li><code>Buffers</code>:给文件的缓冲大小</li>
-<li><code>Cached</code>: 高速缓冲存储器(<a href="http://baike.baidu.com/view/496990.htm)使用的大小" target="_blank" rel="external">http://baike.baidu.com/view/496990.htm)使用的大小</a></li>
-<li><code>SwapCached</code>: 被高速缓冲存储用的交换空间大小</li>
-<li><code>Active</code>: 活跃使用中的高速缓冲存储器页面文件大小</li>
-<li><code>Inactive</code>: 不经常使用的高速缓冲存储器页面文件大小</li>
-<li><code>Active(anon)</code>:</li>
-<li><code>Inactive(anon)</code>:</li>
-<li><code>Active(file)</code>:</li>
-<li><code>Inactive(file)</code>:</li>
-<li><code>Unevictable</code>:</li>
-<li><code>Mlocked</code>:</li>
-<li><code>SwapTotal</code>:交换空间总大小</li>
-<li><code>SwapFree</code>: 空闲交换空间</li>
-<li><code>Dirty</code>:等待被写回到磁盘的大小</li>
-<li><code>Writeback</code>:正在被写回的大小</li>
-<li><code>AnonPages</code>:未映射的页的大小</li>
-<li><code>Mapped</code>: 设备和文件映射的大小</li>
-<li><code>Shmem</code>:</li>
-<li><code>Slab</code>: 内核数据结构缓存的大小，可减少申请和释放内存带来的消耗</li>
-<li><code>SReclaimable</code>: 可收回slab的大小</li>
-<li><code>SUnreclaim</code>: 不可收回的slab的大小23204+14164=37368</li>
-<li><code>KernelStack</code>:</li>
-<li><code>PageTables</code>: 管理内存分页的索引表的大小</li>
-<li><code>NFS_Unstable</code>: 不稳定页表的大小</li>
-<li><code>Bounce</code>: bounce:退回</li>
-<li><code>WritebackTmp</code>:</li>
-<li><code>CommitLimit</code>:</li>
-<li><code>Committed_AS</code>:</li>
-<li><code>VmallocTotal</code>: 虚拟内存大小</li>
-<li><code>VmallocUsed</code>:已经被使用的虚拟内存大小</li>
-<li><code>VmallocChunk</code>:</li>
-<li><code>HardwareCorrupted</code>:</li>
-<li><code>AnonHugePages</code>:</li>
-<li><code>HugePages_Total</code>:大页面的分配</li>
-<li><code>HugePages_Free</code>:</li>
-<li><code>HugePages_Rsvd</code>:</li>
-<li><code>HugePages_Surp</code>:</li>
-<li><code>Hugepagesize</code>:</li>
-<li><code>DirectMap4k</code>:</li>
-<li><code>DirectMap2M</code>:</li>
-<li><code>DirectMap1G</code>:</li>
-</ul>
-<h3 id="proc-net-dev"><a href="#proc-net-dev" class="headerlink" title="/proc/net/dev"></a>/proc/net/dev</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@cvs /]# cat /proc/net/dev</span><br><span class="line">Inter-|   Receive                                                |  Transmit</span><br><span class="line"> face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed</span><br><span class="line">    lo:365528559149 865504543    0    0    0     0          0         0 365528559149 865504543    0    0    0     0       0          0</span><br><span class="line">   em1:542483270223 575346473    0    0    0    62          0   8267561 580200919340 586706511    0    0    0     0       0          0</span><br><span class="line">   em2:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0</span><br><span class="line">   em3:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0</span><br><span class="line">   em4:       0       0    0    0    0     0          0         0        0       0    0    0    0     0       0          0</span><br></pre></td></tr></table></figure>
-<p>Inter                                                     </p>
-<ul>
-<li><code>face</code>:接口的名字</li>
-</ul>
-<p>Receive</p>
-<ul>
-<li><code>bytes</code>: 收发的字节数   </li>
-<li><code>packets</code>: 收发正确的包量</li>
-<li><code>errs</code>: 收发错误的包量</li>
-<li><code>drop</code>: 收发丢弃的包量</li>
-<li><code>fifo</code>:</li>
-<li><code>frame</code>:</li>
-<li><code>compressed</code>:</li>
-<li><code>multicast</code>:</li>
-</ul>
-<p>Transmit</p>
-<ul>
-<li><code>bytes</code>: 收发的字节数   </li>
-<li><code>packets</code>: 收发正确的包量</li>
-<li><code>errs</code>: 收发错误的包量</li>
-<li><code>drop</code>: 收发丢弃的包量</li>
-<li><code>fifo</code>:</li>
-<li><code>colls</code>:</li>
-<li><code>carrier</code>:</li>
-<li><code>compressed</code>:</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/linux/">linux</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/15/linux/linux系统文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/linux/linux系统文件/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/15/mgits/技术CheckList/" title="技术CheckList" itemprop="url">技术CheckList</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="FastJSON"><a href="#FastJSON" class="headerlink" title="FastJSON"></a>FastJSON</h2><h3 id="序列化bug"><a href="#序列化bug" class="headerlink" title="序列化bug"></a>序列化bug</h3><p>在项目中运营团队给出了下面这样的一个公告<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">================================================</span><br><span class="line">官方QQ群： <span class="number">467027422</span></span><br><span class="line">官方微信号：gm-xyxmp</span><br><span class="line">微信订阅号：xyxmpsy</span><br><span class="line"></span><br><span class="line">亲爱的小伙伴：</span><br><span class="line"></span><br><span class="line">大家好，老猪给各位请安了！</span><br><span class="line"></span><br><span class="line">首款能交易的<span class="number">3</span>D卡牌游戏，星爷独家正版授权《西游降魔篇<span class="number">3</span>D》</span><br><span class="line">自<span class="number">2015</span>年<span class="number">7</span>月<span class="number">21</span>日正式登陆iOS平台后，大量玩家热情涌入游戏</span><br><span class="line">，老猪我面对此景喜极而泣，为了让更多小伙伴加入到咱们的</span><br><span class="line">大团队中，老猪我决定[FFFF00]<span class="number">10</span>月<span class="number">16</span>日<span class="number">11</span>：<span class="number">00</span>开启新服N23-物华天宝 [-]，</span><br><span class="line">诚邀各位新老玩家的加入！</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">新服开启，精彩纷呈的活动期待各位的参与，丰厚的大礼拿到手</span><br><span class="line">抽筋，在《西游降魔篇<span class="number">3</span>D》西行的途中，让我们一同感受友情，</span><br><span class="line">感受激情，感受无限快乐！</span><br><span class="line"></span><br><span class="line">服务器名称：[FFFF00]N23-物华天宝 [-]</span><br><span class="line">开服时间：[FFFF00]<span class="number">2015</span>年<span class="number">10</span>月<span class="number">16</span>日<span class="number">11</span>：<span class="number">00</span>（周五）[-]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">伴随开服的同时，多个活动前来助阵！</span><br><span class="line">[FFFF00]活动一：连续登陆送豪礼[-]</span><br><span class="line">[FFFF00]活动二：冲级领元宝[-]</span><br><span class="line">[FFFF00]活动三：战力大比拼[-]</span><br><span class="line">[FFFF00]活动四：五星神将双倍抽[-]</span><br><span class="line">[FFFF00]活动五：天天有礼送段小姐[-]</span><br><span class="line">[FFFF00]活动六：累积充值送玉帝[-]</span><br><span class="line">[FFFF00]活动七：每日礼包大回馈[-]</span><br><span class="line">[FFFF00]活动八：首充翻倍送豪礼[-]</span><br><span class="line">[FFFF00]活动九：签到送好礼[-]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">活动详情请查看游戏内公告！</span><br><span class="line">================================================</span><br><span class="line">                                                            《西游降魔篇<span class="number">3</span>D》运营团队</span><br></pre></td></tr></table></figure></p>
-<p>当我将其赋值到一个对象<code>obj#value</code>时,然后使用<code>JSON.toJSONString(obj)</code>的时候遇到了下面的异常:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> java.lang.ArrayIndexOutOfBoundsException: <span class="number">160</span></span><br><span class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:<span class="number">868</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:<span class="number">602</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeString(SerializeWriter.java:<span class="number">1366</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.StringCodec.write(StringCodec.java:<span class="number">49</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.StringCodec.write(StringCodec.java:<span class="number">34</span>)</span><br><span class="line">	at com.alibaba.fastjson.serializer.JSONSerializer.write(JSONSerializer.java:<span class="number">369</span>)</span><br><span class="line">	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:<span class="number">430</span>)</span><br><span class="line">	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:<span class="number">418</span>)</span><br><span class="line">	at Print1.main(Print1.java:<span class="number">52</span>)</span><br></pre></td></tr></table></figure></p>
-<p>出现的原因是:<code>服务器名称：[FFFF00]N23-物华天宝 [-]</code>物华天宝后面跟的空格，不是我们常用的ascii码为32的空格，而是一个ascii码为160特殊的空格符,导致JSON序列化时失败.</p>
-<h2 id="用户名字符集"><a href="#用户名字符集" class="headerlink" title="用户名字符集"></a>用户名字符集</h2><p>用户可能输入emoji表情符号,这种符号普遍存在iOS与android系统中,这种表情不处理直接存储到MySQL5.5以下的版本会报错</p>
-<blockquote>
-<p>这种符号采用Unicode 6标准4个bytes作为存储单元,MySQL存储这种字符需要修改数据库字符集为utf8mb4,但数据回传给网页或者移动客户端时则需要做兼容处理</p>
-</blockquote>
-<h2 id="日志问题"><a href="#日志问题" class="headerlink" title="日志问题"></a>日志问题</h2><p>在项目的开发过程中不允许使用debug模式, 一定要使用日志分析问题, 因为在线上时候, 没办法使用debug的方式, 因此在记录的日志的时候, 一定要记录的全(每个数据变化都要记录下来), 简(剩下来的就是钱)</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/15/mgits/技术CheckList/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/mgits/技术CheckList/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
