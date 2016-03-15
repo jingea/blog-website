@@ -1,0 +1,1150 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ming15">
+<meta property="og:url" content="http://www.ming15.wang/page/5/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ming15">
+<meta name="twitter:description">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/16/php/PHP 语法初探/" title="PHP 语法初探" itemprop="url">PHP 语法初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-15T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-16</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>PHP 脚本以 <code>&lt;?php 开头，以 ?&gt;</code> 结尾：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 此处是 PHP 代码</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// 定义一个变量</span></span><br><span class="line">$x=<span class="number">5</span>;</span><br><span class="line"><span class="comment">// 调用echo函数输出变量x的值</span></span><br><span class="line"><span class="keyword">echo</span> $x;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>PHP 有三种不同的变量作用域：</p>
+<ul>
+<li>local : 函数里定义的变量,只能在函数内部访问,函数外部不可访问</li>
+<li>global: 函数外部定义的变量,只能在函数外部访问,函数内部不可访问</li>
+<li>static: 当变量脱离它的作用域之后,并不会被删除掉,而是缓存起来</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$x=<span class="number">5</span>; <span class="comment">// 全局作用域</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">socpePrint</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  $y=<span class="number">10</span>; <span class="comment">// 局部作用域</span></span><br><span class="line">  <span class="keyword">echo</span> $y;</span><br><span class="line">  <span class="keyword">echo</span> $x;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">myTest();</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> $y;</span><br><span class="line"><span class="keyword">echo</span> $x;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>刚才我们只是介绍了<code>global</code>这个作用域,其实还有<code>global</code>关键字,这个关键字是在函数内部定义一个全局变量,让函数外访问函数内部的变量<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">socpePrint</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">global</span> $x=<span class="number">10</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">socpePrint();</span><br><span class="line"><span class="keyword">echo</span> $x;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>php里有如下的数据类型</p>
+<ul>
+<li>字符串</li>
+<li>整数</li>
+<li>浮点数</li>
+<li>逻辑</li>
+<li>数组</li>
+<li>对象</li>
+<li>NULL<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$stringVar=<span class="string">"this is a string"</span>;	<span class="comment">// 定义一个字符串</span></span><br><span class="line">$numVar=<span class="number">10</span>;	<span class="comment">// 定义一个整数</span></span><br><span class="line">$floatVar=<span class="number">1.0</span>;	<span class="comment">// 定义一个浮点数</span></span><br><span class="line">$boolVar=<span class="keyword">true</span>;		<span class="comment">// 定义一个布尔值</span></span><br><span class="line">$arrayVar=<span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>);	<span class="comment">// 定义一个数组</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>数组相关操作<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$arrayVar=<span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>);	<span class="comment">// 定义一个数组</span></span><br><span class="line">$ele1=$arrayVar[<span class="number">0</span>];	<span class="comment">// 访问数组第一个元素</span></span><br><span class="line">$arrayCount=count($arrayVar);	<span class="comment">// 求数组长度</span></span><br><span class="line">$arrayVar[<span class="number">2</span>]=<span class="number">3</span>;		<span class="comment">// 向数组中追加元素</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>下面我们定义了一个求和函数, 这个函数定义了俩个参数<code>x, y</code>, 其中y是一个默认参数,它有一个默认值, 最后我们还定义了一个函数返回值.<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span><span class="params">($x,$y=<span class="number">5</span>)</span> </span>&#123;</span><br><span class="line">  $z=$x+$y;</span><br><span class="line">  <span class="keyword">return</span> $z;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> sum(<span class="number">5</span>,<span class="number">10</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="常量函数"><a href="#常量函数" class="headerlink" title="常量函数"></a>常量函数</h3><p>在php中,我们如果想要定义一个常量,则必须使用常量函数<code>define()</code><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">define(<span class="string">"constant"</span>, <span class="string">"I am constant"</span>, <span class="keyword">true</span>);</span><br><span class="line"><span class="keyword">echo</span> CONSTANT;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>最后一个参数是一个可选参数,如果设置为true,则说明访问常量的时候是不区分大小写的. 访问常量则不需要<code>$</code>符号</p>
+<h3 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h3><p>我们使用<code>date(format,timestamp)</code>函数来获得系统的时间, 第二个参数是可选的,如果不填则是当前时间. 第一个参数则是格式化时间戳的格式, 有如下选项</p>
+<ul>
+<li><code>d</code> - 表示月里的某天（01-31）</li>
+<li><code>m</code> - 表示月（01-12）</li>
+<li><code>Y</code> - 表示年（四位数）</li>
+<li><code>1</code> - 表示周里的某天</li>
+<li><code>h</code> - 带有首位零的 12 小时小时格式</li>
+<li><code>i</code> - 带有首位零的分钟</li>
+<li><code>s</code> - 带有首位零的秒（00 -59）</li>
+<li><code>a</code> - 小写的午前和午后（am 或 pm）<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$now = date(<span class="string">"Y-m-d h:i:sa"</span>);</span><br><span class="line"><span class="keyword">echo</span> $now;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h2><h3 id="if-else"><a href="#if-else" class="headerlink" title="if else"></a>if else</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">define(<span class="string">"TEN"</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (TEN&lt;<span class="string">"20"</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"10 &lt; 20"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"ERROR"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果还有其他条件的话我们可以采用<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">define(<span class="string">"TEN"</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (TEN&lt;<span class="number">20</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"10 &lt; 20"</span>;</span><br><span class="line">&#125; <span class="keyword">elseif</span> (TEN==<span class="number">20</span>) &#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">"ERROR"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"ERROR"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">switch</span> ($x)</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">"Number 1"</span>;</span><br><span class="line">  <span class="keyword">break</span>;</span><br><span class="line"><span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">"Number 2"</span>;</span><br><span class="line">  <span class="keyword">break</span>;</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">"No number between 1 and 3"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$x=<span class="number">1</span>; </span><br><span class="line"><span class="keyword">while</span>($x&lt;=<span class="number">5</span>) &#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">"这个数字是：$x &lt;br&gt;"</span>;</span><br><span class="line">  $x++;</span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">for</span> ($x=<span class="number">0</span>; $x&lt;=<span class="number">10</span>; $x++) &#123;</span><br><span class="line">  <span class="keyword">echo</span> $x;</span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>另外还有一种适用于数组的foreach<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$colors = <span class="keyword">array</span>(<span class="string">"red"</span>,<span class="string">"green"</span>,<span class="string">"blue"</span>,<span class="string">"yellow"</span>); </span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> ($colors <span class="keyword">as</span> $value) &#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">"$value"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果我们遍历数组的时候,数组的元素是一个键值对的话, 我们可以这样处理<br>&lt;?php<br>$colors = array(“red:555”,”green:123”,”blue:856”); </p>
+<p>foreach ($colors as $colerKey =&gt; $colorValue) {<br>  echo “$colerKey  is $colorValue”;<br>}<br>?&gt;<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">`=&gt;`</span>就表示一个键值对</span><br><span class="line"></span><br><span class="line"><span class="section">## 文件</span></span><br><span class="line">我们使用<span class="code">`fopen(fileName, openMode)`</span>函数打开文件, 第一个参数是文件名, 第二个参数打开模式</span><br><span class="line"><span class="bullet">* </span><span class="code">`r`</span>:	打开文件为只读。文件指针在文件的开头开始。</span><br><span class="line"><span class="bullet">* </span><span class="code">`w`</span>:	打开文件为只写。删除文件的内容或创建一个新的文件，如果它不存在。文件指针在文件的开头开始。</span><br><span class="line"><span class="bullet">* </span><span class="code">`a`</span>:	打开文件为只写。文件中的现有数据会被保留。文件指针在文件结尾开始。创建新的文件，如果文件不存在。</span><br><span class="line"><span class="bullet">* </span><span class="code">`x`</span>:	创建新文件为只写。返回 FALSE 和错误，如果文件已存在。</span><br><span class="line"><span class="bullet">* </span><span class="code">`r+`</span>:	打开文件为读/写、文件指针在文件开头开始。</span><br><span class="line"><span class="bullet">* </span><span class="code">`w+`</span>:	打开文件为读/写。删除文件内容或创建新文件，如果它不存在。文件指针在文件开头开始。</span><br><span class="line"><span class="bullet">* </span><span class="code">`a+`</span>:	打开文件为读/写。文件中已有的数据会被保留。文件指针在文件结尾开始。创建新文件，如果它不存在。</span><br><span class="line"><span class="bullet">* </span><span class="code">`x+`</span>:	创建新文件为读/写。返回 FALSE 和错误，如果文件已存在。</span><br><span class="line"><span class="code">```</span>php</span><br><span class="line"><span class="xml"><span class="php"><span class="meta">&lt;?php</span></span><br><span class="line">$demofile = fopen(<span class="string">"demo.txt"</span>, <span class="string">"r"</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to open file!"</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span></span></span><br></pre></td></tr></table></figure></p>
+<p>读取文件内容, <code>fread()</code>函数会读取整个文件内容<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$demofile = fopen(<span class="string">"demo.txt"</span>, <span class="string">"r"</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to open file!"</span>);</span><br><span class="line">fread($demofile,filesize(<span class="string">"demo.txt"</span>));</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>按行读取<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$demofile = fopen(<span class="string">"demo.txt"</span>, <span class="string">"r"</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to open file!"</span>);</span><br><span class="line"><span class="keyword">while</span>(!feof($demofile)) &#123;	<span class="comment">// 如果文件没有到达结尾的话,则继续读取</span></span><br><span class="line">  <span class="keyword">echo</span> fgets($demofile);	<span class="comment">// 读取一行</span></span><br><span class="line">&#125;</span><br><span class="line">fclose($myfile);		<span class="comment">// 关闭文件</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>向文件中写入数据<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">$demofile = fopen(<span class="string">"demo.txt"</span>, <span class="string">"w"</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to open file!"</span>);</span><br><span class="line">fwrite($demofile, <span class="string">"hello world"</span>);</span><br><span class="line">fclose($myfile);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><p>建立连接<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="comment">// 建立mysql连接</span></span><br><span class="line">$con = mysql_connect(<span class="string">"localhost"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);</span><br><span class="line"><span class="keyword">if</span> (!$con) &#123;</span><br><span class="line">  <span class="keyword">die</span>(<span class="string">'Could not connect: '</span> . mysql_error());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 选择数据库</span></span><br><span class="line">mysql_select_db(<span class="string">"my_db"</span>, $con);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行sql语句</span></span><br><span class="line">$result = mysql_query(<span class="string">"SELECT * FROM Persons"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 遍历结果</span></span><br><span class="line"><span class="keyword">while</span>($row = mysql_fetch_array($result)) &#123;</span><br><span class="line">	<span class="comment">// 输出某个列元素</span></span><br><span class="line">  <span class="keyword">echo</span> $row[<span class="string">'FirstName'</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 关闭连接</span></span><br><span class="line">mysql_close($con);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Php/">Php</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/16/php/PHP 语法初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/16/php/PHP 语法初探/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/15/日志工具/logstash 编解码日志/" title="logstash编解码日志" itemprop="url">logstash编解码日志</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>我们可以在<code>input</code>或者<code>ouput</code>插件里使用<code>codec</code>插件, 正如logstash流程那样<code>input -&gt; decode -&gt; fliter -&gt; encode -&gt; output</code></p>
+<h2 id="json"><a href="#json" class="headerlink" title="json"></a>json</h2><p>当我们向文件输出日志的时候, 如果不指定编码的话<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">output &#123;</span><br><span class="line">    file &#123;</span><br><span class="line">        path =&gt; "D:\log\generate\%&#123;+yyyy-MM-dd hh-MM&#125;.log"</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>会将<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">moon3  <span class="number">2015</span>-<span class="number">12</span>-<span class="number">15</span> <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span>,<span class="number">008</span> [ThreadPoolTaskExecutor-<span class="number">1</span>] PlayerManagerImpl(<span class="number">506</span>) ERROR ERROR update player error <span class="number">2</span>:<span class="number">1362104689008</span></span><br></pre></td></tr></table></figure></p>
+<p>输出为<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"message"</span>:<span class="string">"moon3  2015-12-15 00:00:00,008 [ThreadPoolTaskExecutor-1] PlayerManagerImpl(506) ERROR ERROR update player error 2:1362104689008"</span>,<span class="attr">"@version"</span>:<span class="string">"1"</span>,<span class="attr">"@timestamp"</span>:<span class="string">"2015-12-16T03:43:14.112Z"</span>,<span class="attr">"host"</span>:<span class="string">"wangming-PC"</span>,<span class="attr">"path"</span>:<span class="string">"D:/log/logs/moon-alert-2015-12-15.log"</span>,<span class="attr">"type"</span>:<span class="string">"system"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而我们指定编码为json的话</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/15/日志工具/logstash 编解码日志/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/15/日志工具/logstash 编解码日志/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/15/日志工具/logstash 输出日志/" title="logstash输出日志" itemprop="url">logstash输出日志</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="标准输出"><a href="#标准输出" class="headerlink" title="标准输出"></a>标准输出</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">output &#123;</span><br><span class="line">    stdout &#123;</span><br><span class="line">        codec =&gt; rubydebug</span><br><span class="line">        workers =&gt; 2</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<code>stdout</code>我们将能将接受到的日志输出到控制台里</p>
+<h2 id="输出到文件"><a href="#输出到文件" class="headerlink" title="输出到文件"></a>输出到文件</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">output &#123;</span><br><span class="line">    file &#123;</span><br><span class="line">        path =&gt; "D:\log\generate\%&#123;+yyyy-MM-dd&#125;.log"</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>采用这个插件日志就会输出到<code>D:\log\generate</code>目录下的2015-12-15.log文件中.</p>
+<p>在file插件里,除了path字段之外,我们还有俩个字段<code>message_format</code>和<code>gzip</code></p>
+<ul>
+<li><code>message_format</code> ：选择要输出的内容,默认是输出整个event的JSON形式字符串, 我们可以将其设置为<code>%{message}</code>, 这样我们就只会输出日志内容了</li>
+<li><code>gzip</code> : 启用这个参数是采用gzip压缩.</li>
+</ul>
+<h2 id="输出到elasticsearch"><a href="#输出到elasticsearch" class="headerlink" title="输出到elasticsearch"></a>输出到elasticsearch</h2><p>将接受到的日志输出到 elasticsearch中<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">output &#123;</span><br><span class="line">    elasticsearch &#123;</span><br><span class="line">        host =&gt; "192.168.0.2"</span><br><span class="line">        protocol =&gt; "http"</span><br><span class="line">        index =&gt; "logstash-%&#123;type&#125;-%&#123;+YYYY.MM.dd&#125;"</span><br><span class="line">        index_type =&gt; "%&#123;type&#125;"</span><br><span class="line">        workers =&gt; 5</span><br><span class="line">        template_overwrite =&gt; true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/15/日志工具/logstash 输出日志/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/15/日志工具/logstash 输出日志/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/15/日志工具/logstash 过滤日志/" title="logstash过滤日志" itemprop="url">logstash过滤日志</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h3 id="filter插件"><a href="#filter插件" class="headerlink" title="filter插件"></a>filter插件</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">filter &#123;</span><br><span class="line">	#命名正则表达式，在稍后(grok参数或者其他正则表达式里)引用它</span><br><span class="line">    grok &#123;</span><br><span class="line">        match =&gt; ["message",  "%&#123;COMBINEDAPACHELOG&#125;"]</span><br><span class="line">    &#125;</span><br><span class="line">	date &#123;</span><br><span class="line">        match =&gt; ["logdate", "dd/MMM/yyyy:HH:mm:ss Z"]</span><br><span class="line">    &#125;</span><br><span class="line">	json &#123;</span><br><span class="line">        source =&gt; "message"</span><br><span class="line">        target =&gt; "jsoncontent"</span><br><span class="line">    &#125;</span><br><span class="line">	mutate &#123;</span><br><span class="line">		#类型转换</span><br><span class="line">        convert =&gt; ["request_time", "float"]</span><br><span class="line">		#字符串处理</span><br><span class="line">		gsub 	=&gt; ["urlparams", "[\\?#]", "_"]</span><br><span class="line">		split 	=&gt; ["message", "|"]</span><br><span class="line">		join 	=&gt; ["message", ","]</span><br><span class="line">		merge 	=&gt; ["message", "message"]</span><br><span class="line">		#字段处理</span><br><span class="line">		rename =&gt; ["syslog_host", "host"]</span><br><span class="line">		update =&gt; ["syslog_host", "host"]</span><br><span class="line">		replace =&gt; ["syslog_host", "host"]</span><br><span class="line">    &#125;</span><br><span class="line">	ruby &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">	split &#123;</span><br><span class="line">        field =&gt; "message"</span><br><span class="line">        terminator =&gt; "#"</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/15/日志工具/logstash 过滤日志/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/15/日志工具/logstash 过滤日志/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/09/java综合工具/lombok/" title="Lombok初探" itemprop="url">Lombok初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-08T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-09</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>参考文档<a href="https://projectlombok.org/features/index.html" target="_blank" rel="external">lombok</a><br>在使用lombok的时候, 我们需要在IDE上安装上lombok插件以及引用相关的jar包依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.16.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>lombok其实帮我们做的事情是, 在编译java源码的时候,会根据相关注解编译出相关的代码. 例如如果我们使用<code>@Setter</code>注解的话,那么在编译的会在class文件中添加相应的setter代码</p>
+<h2 id="val"><a href="#val" class="headerlink" title="val"></a>val</h2><p>下来我们看一个小例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val example = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">example.add(<span class="string">"Hello, World!"</span>);</span><br><span class="line">val foo = example.get(<span class="number">0</span>);</span><br><span class="line">System.out.println(foo.equals(<span class="string">"Hello, World!"</span>));</span><br></pre></td></tr></table></figure></p>
+<p>上面这个例子我们使用val代替了<code>ArrayList</code>类型. 插件会只能地帮我们识别出这个真正的类型是什么.</p>
+<blockquote>
+<p>注意, <code>new ArrayList&lt;String&gt;()</code>菱形符里应该指定类型,否则我们既可以在example上添加String又可以添加int,会带来类型上的不安全</p>
+</blockquote>
+<h2 id="NonNull"><a href="#NonNull" class="headerlink" title="NonNull"></a>NonNull</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestNonNull</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		print(<span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(@NonNull String content)</span> </span>&#123;</span><br><span class="line">		System.out.println(content);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个注解很简单就是检查参数非null,如果传进的参数为null的就抛出<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">"main"</span> java.lang.NullPointerException: content</span><br><span class="line">	at Lombok.TestNonNull.print(TestNonNull.java:<span class="number">13</span>)</span><br><span class="line">	at Lombok.TestNonNull.main(TestNonNull.java:<span class="number">10</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="Cleanup"><a href="#Cleanup" class="headerlink" title="Cleanup"></a>Cleanup</h2><p>这个注解会在资源在其作用域离开之后,自动将资源关闭掉<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Cleanup</span> BufferedReader fileReader1 = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(<span class="string">"D://hazelcast-documentation-3.5.3.pdf"</span>));</span><br></pre></td></tr></table></figure></p>
+<h2 id="Getter-Setter"><a href="#Getter-Setter" class="headerlink" title="Getter Setter"></a>Getter Setter</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGetterSetter</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		A a = <span class="keyword">new</span> A();</span><br><span class="line">		a.getA2();</span><br><span class="line">		a.getA3();</span><br><span class="line">		a.setA1(<span class="string">"a1"</span>);</span><br><span class="line">		a.setA3(<span class="string">"a3"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Setter</span> <span class="keyword">private</span> String a1;</span><br><span class="line">	<span class="meta">@Getter</span> <span class="keyword">private</span> String a2;</span><br><span class="line">	<span class="meta">@Setter</span> <span class="meta">@Getter</span> <span class="keyword">private</span> String a3;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>@Getter</code>和<code>@Setter</code>注解有一点需要说明的是,我们可以指定他们的访问级别<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Setter</span>(value = AccessLevel.MODULE) <span class="keyword">private</span> String a1;</span><br></pre></td></tr></table></figure></p>
+<p>可设置的级别有:</p>
+<ul>
+<li>PUBLIC,</li>
+<li>MODULE,</li>
+<li>PROTECTED,</li>
+<li>PACKAGE,</li>
+<li>PRIVATE,</li>
+<li>NONE;</li>
+</ul>
+<h2 id="ToString"><a href="#ToString" class="headerlink" title="ToString"></a>ToString</h2><p><code>@ToString</code>注解既可以用在类上可以用在方法上, 这个注解会修改类的<code>toString()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestToString</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		C c = <span class="keyword">new</span> C();</span><br><span class="line">		c.c1 = <span class="string">"c_1"</span>;</span><br><span class="line">		c.c2 = <span class="string">"c_2"</span>;</span><br><span class="line">		c.b1 = <span class="string">"b_1"</span>;</span><br><span class="line">		c.b2 = <span class="string">"b_2"</span>;</span><br><span class="line">		System.out.println(c);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// toString()中不包含b1和b2这俩个属性</span></span><br><span class="line"><span class="meta">@ToString</span>(exclude=&#123;<span class="string">"b1"</span>, <span class="string">"b2"</span>&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> String b1;</span><br><span class="line">	<span class="keyword">public</span> String b2;</span><br><span class="line">	<span class="keyword">public</span> String b3;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用父类的toString和在输出时包含字段名称</span></span><br><span class="line"><span class="meta">@ToString</span>(callSuper=<span class="keyword">true</span>, includeFieldNames = <span class="keyword">true</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> String c1;</span><br><span class="line">	<span class="keyword">public</span> String c2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码输出为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C(<span class="keyword">super</span>=B(b2=<span class="keyword">null</span>), c1=<span class="keyword">null</span>, c2=<span class="keyword">null</span>)</span><br><span class="line">B(b2=<span class="keyword">null</span>)</span><br><span class="line">C(<span class="keyword">super</span>=B(b2=b_2), c1=c_1, c2=c_2)</span><br></pre></td></tr></table></figure></p>
+<h2 id="EqualsAndHashCode"><a href="#EqualsAndHashCode" class="headerlink" title="EqualsAndHashCode"></a>EqualsAndHashCode</h2><p>这个注解人如其名, 会为我们生成俩个规范的<code>equals()</code>和<code>hashCode()</code>方法, 至于什么是规范的,参考Effective java这本书<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EqualsAndHashCode</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">D</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h2><p><code>@Data</code>注解是<code>@ToString, @EqualsAndHashCode, @Getter / @Setter and @RequiredArgsConstructor</code>这些注解的一个集合. 它会默认地为我们使用那些注解.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span> <span class="class"><span class="keyword">class</span> <span class="title">Simple</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		setId(<span class="number">123</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Value"><a href="#Value" class="headerlink" title="Value"></a>Value</h2><p><code>@Value</code>是<code>@Data</code>注解的一个变种, 它是在<code>@Data</code>注解的基础将,将类成为不可变的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span> <span class="class"><span class="keyword">class</span> <span class="title">E</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Builder"><a href="#Builder" class="headerlink" title="Builder"></a>Builder</h2><p><code>@Builder</code>将类修改成Builder模式(同样参考Effective Java).</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestBuilder</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		F f = F.builder().f1(<span class="string">"fff"</span>).fAB(<span class="number">123</span>).build();</span><br><span class="line">		System.out.println(f.getF1());</span><br><span class="line">		System.out.println(f.getFABs().size());</span><br><span class="line"></span><br><span class="line">		G g = G.GBuilder().buildG();</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Builder</span> <span class="class"><span class="keyword">class</span> <span class="title">F</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Getter</span> <span class="keyword">private</span> String f1;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Singular</span> <span class="meta">@Getter</span> <span class="keyword">private</span> Set&lt;Integer&gt; fABs;</span><br><span class="line">	<span class="meta">@Singular</span> <span class="meta">@Getter</span> <span class="keyword">private</span> Set&lt;Integer&gt; fAsBs;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Builder</span>(builderClassName = <span class="string">"GBuilder"</span>, buildMethodName = <span class="string">"buildG"</span>, builderMethodName = <span class="string">"GBuilder"</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printG</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"GGG"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<code>@Singular</code>注解的集合属性名必须使用<code>s</code>结尾, lombok会将属性名结尾的<code>s</code>去掉,剩余的名字会作为方法名, 向这个集合中添加元素</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java工具/">Java工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/09/java综合工具/lombok/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/09/java综合工具/lombok/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/09/guice/mybatis-guice  Getting started/" title="Mybatis Guice 初探" itemprop="url">Mybatis Guice 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-08T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-09</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>参考文档<a href="http://mybatis.org/guice/index.html" target="_blank" rel="external">mybatis-guice</a></p>
+<p>mybatis-guice需要依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.inject<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guice<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-guice<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.inject.extensions<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guice-multibindings<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.37<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>一个完整的使用例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.google.inject.*;</span><br><span class="line"><span class="keyword">import</span> com.google.inject.name.Names;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Param;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Select;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.executor.Executor;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.executor.statement.StatementHandler;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.mapping.MappedStatement;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.plugin.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.ExecutorType;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.ResultHandler;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.RowBounds;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;</span><br><span class="line"><span class="keyword">import</span> org.mybatis.guice.MyBatisModule;</span><br><span class="line"><span class="keyword">import</span> org.mybatis.guice.datasource.builtin.PooledDataSourceProvider;</span><br><span class="line"><span class="keyword">import</span> org.mybatis.guice.datasource.helper.JdbcHelper;</span><br><span class="line"><span class="keyword">import</span> org.mybatis.guice.transactional.Isolation;</span><br><span class="line"><span class="keyword">import</span> org.mybatis.guice.transactional.Transactional;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GettingStarted</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = singleDatasource();</span><br><span class="line"></span><br><span class="line">		FooService fooService = injector.getInstance(FooService.class);</span><br><span class="line">		User user = fooService.getUser(<span class="string">"1"</span>);</span><br><span class="line">		System.out.println(user.name);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 配置一个数据源</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Injector <span class="title">singleDatasource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Guice.createInjector(</span><br><span class="line">				JdbcHelper.MySQL,	<span class="comment">// initialize()方法里使用 install(JdbcHelper.MySQL);</span></span><br><span class="line">				<span class="keyword">new</span> MysqlModule()</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 配置多个数据源</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Injector <span class="title">multipleDatasource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Guice.createInjector(</span><br><span class="line">				<span class="comment">// 为了代码的简洁性,我在这里配置了俩个相同的数据源</span></span><br><span class="line">				<span class="keyword">new</span> MysqlModule(), <span class="keyword">new</span> MysqlModule()</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlModule</span> <span class="keyword">extends</span> <span class="title">MyBatisModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bindDataSourceProviderType(PooledDataSourceProvider.class);</span><br><span class="line">		bindTransactionFactoryType(JdbcTransactionFactory.class);</span><br><span class="line">		Names.bindProperties(binder(), createUnpooledProperties());</span><br><span class="line">		addPooledProperties(binder());</span><br><span class="line">		addC3P0Properties(binder());</span><br><span class="line"></span><br><span class="line">		addMapperClass();</span><br><span class="line">		bindService();</span><br><span class="line">		addInterceptor();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 添加映射类</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addMapperClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		addMapperClass(UserMapper.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">bindService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(FooService.class).to(FooServiceMapperImpl.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 添加自己的拦截器</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addInterceptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		addInterceptorClass(MySqlInterceptor.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 添加自己的类型转换器</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addTypeHandlers</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">//		handleType().with();</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addSimpleAlias</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		addSimpleAlias(User.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addAlias</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		addAlias(<span class="string">"AUser"</span>).to(User.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> Properties <span class="title">createUnpooledProperties</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Properties myBatisProperties = <span class="keyword">new</span> Properties();</span><br><span class="line">		myBatisProperties.setProperty(<span class="string">"mybatis.environment.id"</span>, <span class="string">"test"</span>);</span><br><span class="line">		myBatisProperties.setProperty(<span class="string">"JDBC.schema"</span>, <span class="string">"mybatis-guice"</span>);</span><br><span class="line"><span class="comment">//		myBatisProperties.setProperty("JDBC.url", "localhost");</span></span><br><span class="line"><span class="comment">//		myBatisProperties.setProperty("JDBC.driver", "");</span></span><br><span class="line">		myBatisProperties.setProperty(<span class="string">"JDBC.username"</span>, <span class="string">"root"</span>);</span><br><span class="line">		myBatisProperties.setProperty(<span class="string">"JDBC.password"</span>, <span class="string">"root"</span>);</span><br><span class="line">		myBatisProperties.setProperty(<span class="string">"JDBC.loginTimeout"</span>, <span class="string">"10"</span>);</span><br><span class="line">		myBatisProperties.setProperty(<span class="string">"JDBC.autoCommit"</span>, <span class="string">"false"</span>);</span><br><span class="line">		myBatisProperties.setProperty(<span class="string">"derby.create"</span>, <span class="string">"true"</span>);</span><br><span class="line">		<span class="keyword">return</span> myBatisProperties;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addPooledProperties</span><span class="params">(Binder binder)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 连接池并发访问数据的连接数, 默认为10</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.maximumActiveConnections"</span>)).to(<span class="number">10</span>);</span><br><span class="line">		<span class="comment">// 在被强制返回之前，池中连接被检查的时间</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.maximumCheckoutTime"</span>)).to(<span class="number">20000</span>);</span><br><span class="line">		<span class="comment">// 连接池里空闲连接数, 默认为5</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.maximumIdleConnections"</span>)).to(<span class="number">5</span>);</span><br><span class="line">		<span class="comment">// 由于数据库会检查连接达到8小时(默认值)闲置会单方面断开连接, 而客户端如果继续使用已经断开的连接,则会产生异常.</span></span><br><span class="line">		<span class="comment">// mybatis里内带了ping机制, 设置该值为true的话, 就开启了ping机制</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.pingEnabled"</span>)).to(<span class="keyword">false</span>);</span><br><span class="line">		<span class="comment">// 设置空闲连接ping时间间隔, 如果超时就进行ping,查看连接是否有效</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.pingConnectionsNotUsedFor"</span>)).to(<span class="number">3600000</span>);</span><br><span class="line">		<span class="comment">// 执行ping时执行的语句</span></span><br><span class="line"><span class="comment">//		binder.bindConstant().annotatedWith(Names.named("mybatis.pooled.pingQuery")).to("");</span></span><br><span class="line">		<span class="comment">// 这是一个低层设置，如果获取连接花费的相当长的时间，它会给连接池打印日志并重新尝试获取一个连接的机会（避免在误配置的情况下一直安静的失败），默认值：20000 毫秒（即 20 秒）。</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.timeToWait"</span>)).to(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addC3P0Properties</span><span class="params">(Binder binder)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 当连接池中的的连接耗尽的时候c3p0一次同时获取的连接数，但是池中最大数不会超过maxPoolSize</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.acquireIncrement"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		<span class="comment">// 从数据库请求连接失败之后,尝试的次数</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.acquireRetryAttempts"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		<span class="comment">// 连接池耗尽, 连续获得俩个连接直接的间隔时间. 单位ms</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.acquireRetryDelay"</span>)).to(<span class="number">1000</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.automaticTestTable"</span>)).to(<span class="string">"test"</span>);</span><br><span class="line">		<span class="comment">// 如果为true，则当连接获取失败时自动关闭数据源</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.breakAfterAcquireFailure"</span>)).to(<span class="keyword">false</span>);</span><br><span class="line">		<span class="comment">// 连接池所有连接耗尽时,应用程序获得新的连接的等待时间. 为0则无限等待直至有其他连接释放或者创建新的连接，</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.checkoutTimeout"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.connectionCustomizerClassName"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.connectionTesterClassName"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		<span class="comment">// 检查所有连接池中的空闲连接的时间间隔, 单位秒</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.idleConnectionTestPeriod"</span>)).to(<span class="number">900</span>);</span><br><span class="line">		<span class="comment">// 连接池初始化时创建的连接数,default : 3</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.initialPoolSize"</span>)).to(<span class="number">3</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxAdministrativeTaskTime"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxConnectionAge"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		<span class="comment">// 池中连接最大空闲时长,如果超时则断开这个连接. 单位是秒</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxIdleTime"</span>)).to(<span class="number">600</span>);</span><br><span class="line"></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxIdleTimeExcessConnections"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		<span class="comment">// 接池中拥有的最大连接数，如果获得新连接时会使连接总数超过这个值则不会再获取新连接，而是等待其他连接释放</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxPoolSize"</span>)).to(<span class="number">15</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxStatements"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxStatementsPerConnection"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		<span class="comment">// 连接池保持的最小连接数</span></span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.minPoolSize"</span>)).to(<span class="number">3</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.preferredTestQuery"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.propertyCycle"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.testConnectionOnCheckin"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.testConnectionOnCheckout"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.unreturnedConnectionTimeout"</span>)).to(<span class="number">1</span>);</span><br><span class="line">		binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.usesTraditionalReflectiveProxies"</span>)).to(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> String userId;</span><br><span class="line">	<span class="keyword">public</span> String name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">UserMapper</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Select</span>(<span class="string">"SELECT * FROM user WHERE userId = #&#123;userId&#125;"</span>)</span><br><span class="line">	<span class="function">User <span class="title">getUser</span><span class="params">(@Param(<span class="string">"userId"</span>)</span> String userId)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">FooService</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">(String userId)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooServiceMapperImpl</span> <span class="keyword">implements</span> <span class="title">FooService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> UserMapper userMapper;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 开启事务</span></span><br><span class="line">	<span class="meta">@Transactional</span>(</span><br><span class="line">			executorType = ExecutorType.BATCH,</span><br><span class="line">			isolation = Isolation.READ_UNCOMMITTED,</span><br><span class="line"><span class="comment">//			rethrowExceptionsAs = MyDaoException.class,</span></span><br><span class="line">			exceptionMessage = <span class="string">"Something went wrong"</span></span><br><span class="line">	)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">(String userId)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.userMapper.getUser(userId);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * 定义自己的拦截器</span><br><span class="line"> * 每个<span class="doctag">@Signature</span>注解都是一个拦截点.</span><br><span class="line"> *</span><br><span class="line"> *  Mybatis拦截器只能拦截四种类型的接口：Executor、StatementHandler、ParameterHandler和ResultSetHandler。</span><br><span class="line"> *  Mybatis可以对这四个接口中所有的方法进行拦截。</span><br><span class="line"> */</span></span><br><span class="line"><span class="meta">@Intercepts</span>( &#123;</span><br><span class="line">		<span class="comment">// 拦截Executor的query方法</span></span><br><span class="line">		<span class="meta">@Signature</span>(args = &#123; MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class &#125;, method = <span class="string">"query"</span>, type = Executor.class ),</span><br><span class="line">		<span class="meta">@Signature</span>(args = &#123; Connection.class &#125;, method = <span class="string">"prepare"</span>, type = StatementHandler.class)</span><br><span class="line">&#125; )</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySqlInterceptor</span> <span class="keyword">implements</span> <span class="title">Interceptor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Invocation invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">		Object result = invocation.proceed();</span><br><span class="line">		System.out.println(<span class="string">"Invocation result:"</span> + result);</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">plugin</span><span class="params">(Object target)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> Plugin.wrap(target, <span class="keyword">this</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setProperties</span><span class="params">(Properties properties)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 添加mybatis属性</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>表结构<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (</span><br><span class="line">  <span class="string">`userId`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span></span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</span><br></pre></td></tr></table></figure></p>
+<p>我们在<code>MyBatisModule</code>里创建Mybatis的核心模块,包括</p>
+<ul>
+<li><code>org.apache.ibatis.session.SqlSessionFactory</code></li>
+<li><code>org.apache.ibatis.session.SqlSessionManager</code></li>
+<li>以及添加那些映射关系类</li>
+</ul>
+<p>对于Mybatis的属性添加</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/guice/">guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/09/guice/mybatis-guice  Getting started/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/09/guice/mybatis-guice  Getting started/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/08/guice/多种实现绑定/" title="Guice 多种实现绑定" itemprop="url">Guice 多种实现绑定</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		Print print = injector.getInstance(Print.class);</span><br><span class="line">		print.printB();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"c"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@BindingAnnotation</span> <span class="meta">@Target</span>(&#123; FIELD, PARAMETER, METHOD &#125;) <span class="meta">@Retention</span>(RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> BType &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@BindingAnnotation</span> <span class="meta">@Target</span>(&#123; FIELD, PARAMETER, METHOD &#125;) <span class="meta">@Retention</span>(RUNTIME)</span><br><span class="line"><span class="meta">@interface</span> CType &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).annotatedWith(Names.named(<span class="string">"BType"</span>)).to(B.class);</span><br><span class="line">		bind(A.class).annotatedWith(Names.named(<span class="string">"CType"</span>)).to(C.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		b.print();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printC</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		c.print();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="meta">@Named</span>(<span class="string">"BType"</span>)</span><br><span class="line">	<span class="keyword">private</span> A b;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="meta">@Named</span>(<span class="string">"CType"</span>)</span><br><span class="line">	<span class="keyword">private</span> A c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种特性是为了,当某个接口有多种实现时,我们可以通过<code>@Named</code>指定我们具体使用哪种实现</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/guice/">guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/08/guice/多种实现绑定/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/多种实现绑定/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/08/guice/guice初探/" title="Guice 初探" itemprop="url">Guice 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Google Guice 是一个轻量级的依赖注入框架</p>
+<p>在Guice的依赖注入中我们使用如下API进行注入</p>
+<ul>
+<li><code>Binder</code></li>
+<li><code>Injector</code></li>
+<li><code>Module</code></li>
+<li><code>Guice</code><br>直接看例子<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CarModule</span> <span class="keyword">implements</span> <span class="title">Module</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Binder binder)</span> </span>&#123;</span><br><span class="line">		binder.bind(Car.class).to(Benci.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Benci</span> <span class="keyword">implements</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Benci Run"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Injector injector = Guice.createInjector(<span class="keyword">new</span> CarModule());</span><br><span class="line">Car benci = injector.getInstance(Car.class);</span><br><span class="line">benci.run();</span><br></pre></td></tr></table></figure></p>
+<h2 id="ImplementedBy"><a href="#ImplementedBy" class="headerlink" title="ImplementedBy"></a>ImplementedBy</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LunYu</span> <span class="keyword">implements</span> <span class="title">Book</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">content</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"Lunyu"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@ImplementedBy</span>(LunYu.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Book</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">content</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadBook</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readLunyu</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(book.content());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> Book book;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Injector intjector = Guice.createInjector();</span><br><span class="line">Book lunyu = intjector.getInstance(Book.class);</span><br><span class="line">System.out.println(lunyu.content());</span><br></pre></td></tr></table></figure></p>
+<h2 id="Inject"><a href="#Inject" class="headerlink" title="Inject"></a>Inject</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Man</span> <span class="keyword">implements</span> <span class="title">People</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">name</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"Tom"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">People</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">name</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PeopleModule</span> <span class="keyword">implements</span> <span class="title">Module</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Binder binder)</span> </span>&#123;</span><br><span class="line">		binder.bind(People.class).to(Man.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintName</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(man.name());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> People man;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Injector intjector = Guice.createInjector(<span class="keyword">new</span> PeopleModule());</span><br><span class="line">PrintName pn = intjector.getInstance(PrintName.class);</span><br><span class="line">pn.print();</span><br></pre></td></tr></table></figure></p>
+<h2 id="Singleton"><a href="#Singleton" class="headerlink" title="Singleton"></a>Singleton</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Apple</span> <span class="keyword">implements</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Apple Run"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhoneModule</span> <span class="keyword">implements</span> <span class="title">Module</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Binder binder)</span> </span>&#123;</span><br><span class="line">		binder.bind(Phone.class).to(Apple.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Injector injector = Guice.createInjector(<span class="keyword">new</span> PhoneModule());</span><br><span class="line">Phone apple6 = injector.getInstance(Phone.class);</span><br><span class="line">apple6.run();</span><br><span class="line">Phone apple6s = injector.getInstance(Phone.class);</span><br><span class="line">System.out.println(apple6s.equals(apple6));</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/guice/">guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/08/guice/guice初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/guice初探/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/08/guice/Scopes/" title="Guice Scopes" itemprop="url">Guice Scopes</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>默认的,Guice每次在<code>getInstance()</code>的时候都会返回一个新的对象.</p>
+<h2 id="Singleton"><a href="#Singleton" class="headerlink" title="Singleton"></a>Singleton</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		A b1 = injector.getInstance(A.class);</span><br><span class="line">		A b2 = injector.getInstance(A.class);</span><br><span class="line">		System.out.println(b1 == b2);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> A a;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		requestStaticInjection(Print.class);</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用<code>Singleton</code>注解可以得到一个单例类</p>
+<p>另外,我们还可以在绑定的时候进行设置<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class).in(Singleton.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="web-Scope"><a href="#web-Scope" class="headerlink" title="web Scope"></a>web Scope</h2><p>Guice还对web应用提供了其他俩种socpe</p>
+<ul>
+<li>SessionScoped</li>
+<li>RequestScoped</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/guice/">guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/08/guice/Scopes/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Scopes/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/08/guice/Multiple Modules/" title="Guice Multiple Modules" itemprop="url">Guice Multiple Modules</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		AbstractModule module1 = <span class="keyword">new</span> AbstractModule() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				bind(A.class).to(B.class).in(Singleton.class);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">		AbstractModule module2 = <span class="keyword">new</span> AbstractModule() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				bind(A.class).to(B.class).in(Singleton.class);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">		Injector injector = Guice.createInjector(module1, module2);</span><br><span class="line">		A b1 = injector.getInstance(A.class);</span><br><span class="line">		A b2 = injector.getInstance(A.class);</span><br><span class="line">		System.out.println(b1 == b2);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"C"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> A a;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>module1和module2里对A只能进行相同的绑定,也就是说即使在不同的module里也不能即A绑定到B又绑定到C</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/guice/">guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/08/guice/Multiple Modules/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Multiple Modules/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <a class="extend prev" rel="prev" href="/page/4/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/6/">Next<span></span></a>
+  </nav>
+
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Groovy/" title="Groovy">Groovy<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Haskell/" title="Haskell">Haskell<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JMH/" title="JMH">JMH<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaSE/" title="JavaSE">JavaSE<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java工具/" title="Java工具">Java工具<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MongoDB/" title="MongoDB">MongoDB<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Php/" title="Php">Php<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Reids/" title="Reids">Reids<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/TCP-IP/" title="TCP IP">TCP IP<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/guice/" title="guice">guice<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http客户端/" title="http客户端">http客户端<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http服务器/" title="http服务器">http服务器<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/memcached/" title="memcached">memcached<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mycat/" title="mycat">mycat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python2/" title="python2">python2<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/并发编程/" title="并发编程">并发编程<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/序列化工具/" title="序列化工具">序列化工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/日志工具/" title="日志工具">日志工具<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/构建工具/" title="构建工具">构建工具<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+ </html>

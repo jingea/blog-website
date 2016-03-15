@@ -1,0 +1,638 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>JVM 日志输出 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="PrintGC在jvm选项上添加上这个参数,只要遇上GC就会输出GC日志
+PrintGCDetails这个参数相比于PrintGC,会输出更加详细的信息.
+PrintHeapAtGC这个参数会在GC前后打印出堆内信息
+PrintGCTimeStamps这个参数会在每次GC的时候,输出GC发生的时间
+gc log我使用-Xmx2048m -Xms2048M  -Xmn1048m的内存分配方式启动一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM 日志输出">
+<meta property="og:url" content="http://www.ming15.wang/2014/11/28/jvm/JVM日志输出/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="PrintGC在jvm选项上添加上这个参数,只要遇上GC就会输出GC日志
+PrintGCDetails这个参数相比于PrintGC,会输出更加详细的信息.
+PrintHeapAtGC这个参数会在GC前后打印出堆内信息
+PrintGCTimeStamps这个参数会在每次GC的时候,输出GC发生的时间
+gc log我使用-Xmx2048m -Xms2048M  -Xmn1048m的内存分配方式启动一个">
+<meta property="og:updated_time" content="2016-03-15T11:47:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM 日志输出">
+<meta name="twitter:description" content="PrintGC在jvm选项上添加上这个参数,只要遇上GC就会输出GC日志
+PrintGCDetails这个参数相比于PrintGC,会输出更加详细的信息.
+PrintHeapAtGC这个参数会在GC前后打印出堆内信息
+PrintGCTimeStamps这个参数会在每次GC的时候,输出GC发生的时间
+gc log我使用-Xmx2048m -Xms2048M  -Xmn1048m的内存分配方式启动一个">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/11/28/jvm/JVM日志输出/" title="JVM 日志输出" itemprop="url">JVM 日志输出</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-27T16:00:00.000Z" itemprop="datePublished"> Published 2014-11-28</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintGC"><span class="toc-number">1.</span> <span class="toc-text">PrintGC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintGCDetails"><span class="toc-number">2.</span> <span class="toc-text">PrintGCDetails</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintHeapAtGC"><span class="toc-number">3.</span> <span class="toc-text">PrintHeapAtGC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintGCTimeStamps"><span class="toc-number">4.</span> <span class="toc-text">PrintGCTimeStamps</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gc-log"><span class="toc-number">5.</span> <span class="toc-text">gc log</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="PrintGC"><a href="#PrintGC" class="headerlink" title="PrintGC"></a>PrintGC</h2><p>在jvm选项上添加上这个参数,只要遇上GC就会输出GC日志</p>
+<h2 id="PrintGCDetails"><a href="#PrintGCDetails" class="headerlink" title="PrintGCDetails"></a>PrintGCDetails</h2><p>这个参数相比于PrintGC,会输出更加详细的信息.</p>
+<h2 id="PrintHeapAtGC"><a href="#PrintHeapAtGC" class="headerlink" title="PrintHeapAtGC"></a>PrintHeapAtGC</h2><p>这个参数会在GC前后打印出堆内信息</p>
+<h2 id="PrintGCTimeStamps"><a href="#PrintGCTimeStamps" class="headerlink" title="PrintGCTimeStamps"></a>PrintGCTimeStamps</h2><p>这个参数会在每次GC的时候,输出GC发生的时间</p>
+<h2 id="gc-log"><a href="#gc-log" class="headerlink" title="gc log"></a>gc log</h2><p>我使用<code>-Xmx2048m -Xms2048M  -Xmn1048m</code>的内存分配方式启动一个JVM,下面是其中一段GC 日志<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;Heap before GC invocations=<span class="number">196</span> (full <span class="number">0</span>):</span><br><span class="line"> par <span class="keyword">new</span> generation   total <span class="number">873856</span>K, used <span class="number">699148</span>K [<span class="number">0x000000077ae00000</span>, <span class="number">0x00000007bae00000</span>, <span class="number">0x00000007bae00000</span>)</span><br><span class="line">  eden space <span class="number">699136</span>K, <span class="number">100</span>% used [<span class="number">0x000000077ae00000</span>, <span class="number">0x00000007a58c0000</span>, <span class="number">0x00000007a58c0000</span>)</span><br><span class="line">  from space <span class="number">174720</span>K,   <span class="number">0</span>% used [<span class="number">0x00000007a58c0000</span>, <span class="number">0x00000007a58c30d8</span>, <span class="number">0x00000007b0360000</span>)</span><br><span class="line">  to   space <span class="number">174720</span>K,   <span class="number">0</span>% used [<span class="number">0x00000007b0360000</span>, <span class="number">0x00000007b0360000</span>, <span class="number">0x00000007bae00000</span>)</span><br><span class="line"> concurrent mark-sweep generation total <span class="number">1048576</span>K, used <span class="number">3377</span>K [<span class="number">0x00000007bae00000</span>, <span class="number">0x00000007fae00000</span>, <span class="number">0x00000007fae00000</span>)</span><br><span class="line"> concurrent-mark-sweep perm gen total <span class="number">21248</span>K, used <span class="number">9252</span>K [<span class="number">0x00000007fae00000</span>, <span class="number">0x00000007fc2c0000</span>, <span class="number">0x0000000800000000</span>)</span><br><span class="line"><span class="number">670.529</span>: [GC670.529: [ParNew: <span class="number">699148</span>K-&gt;<span class="number">10</span>K(<span class="number">873856</span>K), <span class="number">0.0047350</span> secs] <span class="number">702525</span>K-&gt;<span class="number">3387</span>K(<span class="number">1922432</span>K), <span class="number">0.0048480</span> secs] [Times: user=<span class="number">0.03</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs]</span><br><span class="line">Heap after GC invocations=<span class="number">197</span> (full <span class="number">0</span>):</span><br><span class="line"> par <span class="keyword">new</span> generation   total <span class="number">873856</span>K, used <span class="number">10</span>K [<span class="number">0x000000077ae00000</span>, <span class="number">0x00000007bae00000</span>, <span class="number">0x00000007bae00000</span>)</span><br><span class="line">  eden space <span class="number">699136</span>K,   <span class="number">0</span>% used [<span class="number">0x000000077ae00000</span>, <span class="number">0x000000077ae00000</span>, <span class="number">0x00000007a58c0000</span>)</span><br><span class="line">  from space <span class="number">174720</span>K,   <span class="number">0</span>% used [<span class="number">0x00000007b0360000</span>, <span class="number">0x00000007b03628d8</span>, <span class="number">0x00000007bae00000</span>)</span><br><span class="line">  to   space <span class="number">174720</span>K,   <span class="number">0</span>% used [<span class="number">0x00000007a58c0000</span>, <span class="number">0x00000007a58c0000</span>, <span class="number">0x00000007b0360000</span>)</span><br><span class="line"> concurrent mark-sweep generation total <span class="number">1048576</span>K, used <span class="number">3377</span>K [<span class="number">0x00000007bae00000</span>, <span class="number">0x00000007fae00000</span>, <span class="number">0x00000007fae00000</span>)</span><br><span class="line"> concurrent-mark-sweep perm gen total <span class="number">21248</span>K, used <span class="number">9252</span>K [<span class="number">0x00000007fae00000</span>, <span class="number">0x00000007fc2c0000</span>, <span class="number">0x0000000800000000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><code>Heap before GC invocations=196 (full 0)</code>: 这一行表示在调用第196GC, 第0次full GC之前的jvm内存分配情况.</li>
+<li><code>par new generation   total 873856K, used 699148K [0x000000077ae00000, 0x00000007bae00000, 0x00000007bae00000)</code>: 这一行的意思是新生代总共分配了873856K内存,使用了699148K的内存.</li>
+<li><code>eden space 699136K, 100% used [0x000000077ae00000, 0x00000007a58c0000, 0x00000007a58c0000)</code>:新生代的eden区分配了699136K内存,并且使用了100%</li>
+<li><code>from space 174720K,   0% used [0x00000007a58c0000, 0x00000007a58c30d8, 0x00000007b0360000)</code>: survivor1区分配了174720K内存,没有使用</li>
+<li><code>to   space 174720K,   0% used [0x00000007b0360000, 0x00000007b0360000, 0x00000007bae00000)</code>: survivor2区分配了174720K内存,没有使用</li>
+<li><code>concurrent mark-sweep generation total 1048576K, used 3377K [0x00000007bae00000, 0x00000007fae00000, 0x00000007fae00000)</code> ：采用并发标记清除算法对新生代共分配1048576K, 其中有3377K大小在使用着</li>
+<li><code>concurrent-mark-sweep perm gen total 21248K, used 9252K [0x00000007fae00000, 0x00000007fc2c0000, 0x0000000800000000)</code>: 采用并发标记清除算法对永久代共分配21248K大小内存,使用了9252K.</li>
+<li><code>670.529: [GC670.529: [ParNew: 699148K-&gt;10K(873856K), 0.0047350 secs] 702525K-&gt;3387K(1922432K), 0.0048480 secs] [Times:</code>: user=0.03 sys=0.00, real=0.00 secs]`:开始gc,ParNew垃圾收集器的新生代经过0.0047350秒后,将699148K内存进行垃圾收集, gc后有10K内存在使用.</li>
+<li><code>Heap after GC invocations=197 (full 0)</code>:在对堆进行197次gc后的内存分配情况：</li>
+<li><code>par new generation   total 873856K, used 10K [0x000000077ae00000, 0x00000007bae00000, 0x00000007bae00000)</code>:新生代分配了873856K大小，使用了10K</li>
+<li><code>eden space 699136K,   0% used [0x000000077ae00000, 0x000000077ae00000, 0x00000007a58c0000)</code>:新生代eden区分配了699136K大小,使用了0k</li>
+<li><code>from space 174720K,   0% used [0x00000007b0360000, 0x00000007b03628d8, 0x00000007bae00000)</code>:新生代的survivor1区分配了174720K,使用了0k</li>
+<li><code>to space 174720K,   0% used [0x00000007a58c0000, 0x00000007a58c0000, 0x00000007b0360000)</code>:新生代的survivor2区分配了174720K,使用了0k</li>
+<li><code>concurrent mark-sweep generation total 1048576K, used 3377K [0x00000007bae00000, 0x00000007fae00000, 0x00000007fae00000)</code>:</li>
+<li><code>concurrent-mark-sweep perm gen total 21248K, used 9252K [0x00000007fae00000, 0x00000007fc2c0000, 0x0000000800000000)</code>:</li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2014/11/28/jvm/JVM日志输出/" data-title="JVM 日志输出 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/12/06/jvm/栈上分配/" title="栈上分配">
+  <strong>上一篇：</strong><br/>
+  <span>
+  栈上分配</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/11/28/jvm/Xmx/"  title="Xmx参数">
+ <strong>下一篇：</strong><br/> 
+ <span>Xmx参数
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2014/11/28/jvm/JVM日志输出/" data-title="JVM 日志输出" data-url="http://www.ming15.wang/2014/11/28/jvm/JVM日志输出/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintGC"><span class="toc-number">1.</span> <span class="toc-text">PrintGC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintGCDetails"><span class="toc-number">2.</span> <span class="toc-text">PrintGCDetails</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintHeapAtGC"><span class="toc-number">3.</span> <span class="toc-text">PrintHeapAtGC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrintGCTimeStamps"><span class="toc-number">4.</span> <span class="toc-text">PrintGCTimeStamps</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gc-log"><span class="toc-number">5.</span> <span class="toc-text">gc log</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Groovy/" title="Groovy">Groovy<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Haskell/" title="Haskell">Haskell<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JMH/" title="JMH">JMH<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaSE/" title="JavaSE">JavaSE<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java工具/" title="Java工具">Java工具<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MongoDB/" title="MongoDB">MongoDB<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Php/" title="Php">Php<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Reids/" title="Reids">Reids<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/TCP-IP/" title="TCP IP">TCP IP<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/guice/" title="guice">guice<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http客户端/" title="http客户端">http客户端<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http服务器/" title="http服务器">http服务器<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/memcached/" title="memcached">memcached<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mycat/" title="mycat">mycat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python2/" title="python2">python2<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/并发编程/" title="并发编程">并发编程<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/序列化工具/" title="序列化工具">序列化工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/日志工具/" title="日志工具">日志工具<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/构建工具/" title="构建工具">构建工具<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

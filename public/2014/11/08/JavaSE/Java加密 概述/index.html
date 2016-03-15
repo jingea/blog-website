@@ -1,0 +1,725 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Java加密 -- 概述 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="Java加密Java安全领域组成部分Java安全领域总共分为4个部分:
+
+JCA(Java Cryptography Architecture,Java加密体系结构). JCA提供基本的加密框架,如证书、数字签名、消息摘要和密钥对产生器.
+
+JCE(Java Cryptography Extension,Java加密扩展包).JCE在JCA的基础上作了扩展,提供了各种加密算法、消息摘要算法和密钥管">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java加密 -- 概述">
+<meta property="og:url" content="http://www.ming15.wang/2014/11/08/JavaSE/Java加密 概述/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="Java加密Java安全领域组成部分Java安全领域总共分为4个部分:
+
+JCA(Java Cryptography Architecture,Java加密体系结构). JCA提供基本的加密框架,如证书、数字签名、消息摘要和密钥对产生器.
+
+JCE(Java Cryptography Extension,Java加密扩展包).JCE在JCA的基础上作了扩展,提供了各种加密算法、消息摘要算法和密钥管">
+<meta property="og:updated_time" content="2016-03-15T11:47:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java加密 -- 概述">
+<meta name="twitter:description" content="Java加密Java安全领域组成部分Java安全领域总共分为4个部分:
+
+JCA(Java Cryptography Architecture,Java加密体系结构). JCA提供基本的加密框架,如证书、数字签名、消息摘要和密钥对产生器.
+
+JCE(Java Cryptography Extension,Java加密扩展包).JCE在JCA的基础上作了扩展,提供了各种加密算法、消息摘要算法和密钥管">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/11/08/JavaSE/Java加密 概述/" title="Java加密 -- 概述" itemprop="url">Java加密 -- 概述</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2014-11-07T16:00:00.000Z" itemprop="datePublished"> Published 2014-11-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java加密"><span class="toc-number">1.</span> <span class="toc-text">Java加密</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java安全领域组成部分"><span class="toc-number">1.1.</span> <span class="toc-text">Java安全领域组成部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全提供者体系结构"><span class="toc-number">1.2.</span> <span class="toc-text">安全提供者体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#以下内容是JDK-1-7所提供的安全提供者的配置信息"><span class="toc-number">1.2.1.</span> <span class="toc-text">以下内容是JDK 1.7所提供的安全提供者的配置信息.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全提供者实现了两个概念的抽象"><span class="toc-number">1.2.2.</span> <span class="toc-text">安全提供者实现了两个概念的抽象:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本文全貌"><span class="toc-number">1.2.3.</span> <span class="toc-text">本文全貌</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息摘要算法"><span class="toc-number">1.3.</span> <span class="toc-text">消息摘要算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MD系列"><span class="toc-number">1.4.</span> <span class="toc-text">MD系列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SHA系列"><span class="toc-number">1.5.</span> <span class="toc-text">SHA系列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hmac系列"><span class="toc-number">1.6.</span> <span class="toc-text">Hmac系列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对称加密算法"><span class="toc-number">1.7.</span> <span class="toc-text">对称加密算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对称加密算法-PBE"><span class="toc-number">1.8.</span> <span class="toc-text">对称加密算法-PBE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非对称加密算法"><span class="toc-number">1.9.</span> <span class="toc-text">非对称加密算法</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h1 id="Java加密"><a href="#Java加密" class="headerlink" title="Java加密"></a>Java加密</h1><h2 id="Java安全领域组成部分"><a href="#Java安全领域组成部分" class="headerlink" title="Java安全领域组成部分"></a>Java安全领域组成部分</h2><p>Java安全领域总共分为4个部分:</p>
+<ul>
+<li><p><code>JCA</code>(<code>Java Cryptography Architecture</code>,Java加密体系结构). JCA提供基本的加密框架,如证书、数字签名、消息摘要和密钥对产生器.</p>
+</li>
+<li><p><code>JCE</code>(<code>Java Cryptography Extension</code>,Java加密扩展包).JCE在JCA的基础上作了扩展,提供了各种加密算法、消息摘要算法和密钥管理等功能.我们已经有所了解的DES算法、AES算法、RSA算法、DSA算法等就是通过JCE来提供的.有关JCE的实现主要在javax.crypto包(及其子包)中.</p>
+</li>
+<li><p><code>JSSE</code>(<code>Java Secure Sockets Extension</code>,Java安全套接字扩展包). JSSE提供了基于SSL(Secure Sockets Layer,安全套接字层)的加密功能.在网络的传输过程中,信息会经过多个主机(很有可能其中一台就被窃听),最终传送给接收者,这是不安全的.这种确保网络通信安全的服务就是由JSSE来提供的.</p>
+</li>
+<li><p><code>JAAS</code>(<code>Java Authentication and Authentication Service</code>,Java鉴别与安全服务).JAAS提供了在Java平台上进行用户身份鉴别的功能.如何提供一个符合标准安全机制的登录模块,通过可配置的方式集成至各个系统中呢？这是由JAAS来提供的.</p>
+</li>
+</ul>
+<p>JCA和JCE是Java平台提供的用于安全和加密服务的两组API.它们并不执行任何算法,它们只是连接应用和实际算法实现程序的一组接口.软件开发商可以根据JCE接口(又称安全提供者接口)将各种算法实现后,打包成一个Provider(安全提供者),动态地加载到Java运行环境中.</p>
+<p>根据美国出口限制规定,JCA可出口(JCA和Sun的一些默认实现包含在Java发行版中),但JCE对部分国家是限制出口的.因此,要实现一个完整的安全结构,就需要一个或多个第三方厂商提供的JCE产品,称为安全提供者.BouncyCastle JCE就是其中的一个安全提供者.</p>
+<p>安全提供者是承担特定安全机制实现的第三方.有些提供者是完全免费的,而另一些提供者则需要付费.提供安全提供者的公司有Sun、Bouncy Castle等,Sun提供了如何开发安全提供者的细节.Bouncy Castle提供了可以在J2ME/J2EE/J2SE平台得到支持的API,而且Bouncy Castle的API是免费的.</p>
+<p>JDK 1.4版本及其后续版本中包含了上述扩展包,无须进行配置.在此之前,安装JDK后需要对上述扩展包进行相应配置.</p>
+<h2 id="安全提供者体系结构"><a href="#安全提供者体系结构" class="headerlink" title="安全提供者体系结构"></a>安全提供者体系结构</h2><p>Java安全体系结构通过扩展的方式,加入了更多的算法实现及相应的安全机制.我们把这些提供者称为安全提供者(以下简称“提供者”).</p>
+<h3 id="以下内容是JDK-1-7所提供的安全提供者的配置信息"><a href="#以下内容是JDK-1-7所提供的安全提供者的配置信息" class="headerlink" title="以下内容是JDK 1.7所提供的安全提供者的配置信息."></a>以下内容是JDK 1.7所提供的安全提供者的配置信息.</h3><ul>
+<li>security.provider.1=sun.security.provider.Sun</li>
+<li>security.provider.2=sun.security.rsa.SunRsaSign</li>
+<li>security.provider.3=sun.security.ec.SunEC</li>
+<li>security.provider.4=com.sun.net.ssl.internal.ssl.Provider</li>
+<li>security.provider.5=com.sun.crypto.provider.SunJCE</li>
+<li>security.provider.6=sun.security.jgss.SunProvider</li>
+<li>security.provider.7=com.sun.security.sasl.Provider</li>
+<li>security.provider.8=org.jcp.xml.dsig.internal.dom.XMLDSigRI</li>
+<li>security.provider.9=sun.security.smartcardio.SunPCSC</li>
+<li>security.provider.10=sun.security.mscapi.SunMSCAPI</li>
+</ul>
+<blockquote>
+<p>上述这些提供者均是<code>Provider</code>类(<code>java.security.Provider</code>)的子类.其中<code>sun.security.provider.Sun</code>是基本安全提供者,<code>sun.security.rsa.SunRsaSign</code>是实现RSA算法的提供者.</p>
+<p>与上一版本对比,Java 7新增了EC算法安全提供者—<code>sun.security.ec.SunEC</code>,暗示在该版本中可能支持相应的算法实现.</p>
+<p>Java安全体系不仅支持来自Sun官方提供的安全提供者,同时也可配置第三方安全提供者以扩展相应的算法实现等.</p>
+</blockquote>
+<h3 id="安全提供者实现了两个概念的抽象"><a href="#安全提供者实现了两个概念的抽象" class="headerlink" title="安全提供者实现了两个概念的抽象:"></a>安全提供者实现了两个概念的抽象:</h3><ul>
+<li>引擎:    可以理解为操作,如加密、解密等.</li>
+<li>算法: 定义了操作如何执行,如一个算法可以理解为一个引擎的具体实现.当然,一个算法可以有多种实现方式,这就意味着同一个算法可能与多个引擎的具体实现相对应.</li>
+</ul>
+<blockquote>
+<p>安全提供者接口的目的就是提供一个简单的机制,从而可以很方便地改变或替换算法及其实现.在实际开发中,程序员只需要用引擎类实现特定的操作,而不需要关心实际进行运算的类是哪一个.</p>
+<p><code>Provider</code>类和<code>Security</code>类(<code>java.security.Security</code>)共同构成了安全提供者的概念.</p>
+</blockquote>
+<h3 id="本文全貌"><a href="#本文全貌" class="headerlink" title="本文全貌"></a>本文全貌</h3><ul>
+<li>主要详解了<code>java.security</code>包与<code>javax.crypto包</code>,这两个包中包含了Java加密与解密的核心部分.</li>
+<li>在<code>java.security.interfaces</code>包和<code>javax.crypto.interfaces</code>包中包含了密钥相关的接口.</li>
+<li>在<code>java.security.spec</code>包和<code>javax.crypto.spec</code>包中包含了密钥规范和算法参数规范的类和接口.</li>
+</ul>
+<p>#java7支持的算法</p>
+<h2 id="消息摘要算法"><a href="#消息摘要算法" class="headerlink" title="消息摘要算法"></a>消息摘要算法</h2><h2 id="MD系列"><a href="#MD系列" class="headerlink" title="MD系列"></a>MD系列</h2><ul>
+<li>MD2             128位</li>
+<li>MD5             128位</li>
+</ul>
+<h2 id="SHA系列"><a href="#SHA系列" class="headerlink" title="SHA系列"></a>SHA系列</h2><ul>
+<li>SHA-1           160位</li>
+<li>SHA-256         256位</li>
+<li>SHA-384         384位</li>
+<li>SHA-512         512位</li>
+</ul>
+<h2 id="Hmac系列"><a href="#Hmac系列" class="headerlink" title="Hmac系列"></a>Hmac系列</h2><ul>
+<li>HmacMD5        128位</li>
+<li>HmacSHA1       160位</li>
+<li>HmacSHA256     256位</li>
+<li>HmacSHA384     384位</li>
+<li>HmacSHA512     512位</li>
+</ul>
+<h2 id="对称加密算法"><a href="#对称加密算法" class="headerlink" title="对称加密算法"></a>对称加密算法</h2><ul>
+<li><p>DES</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">56</span>(默认值)</span><br><span class="line">ECB,CBC,PCBC,CTR,CTS,CFB,CFB8至CFB128,OFB,OFB8至OFB128</span><br><span class="line">NoPadding,PKCS5Padding,ISO10126Padding</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>DESede</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">112</span>,<span class="number">168</span>(默认值)</span><br><span class="line">ECB,CBC,PCBC,CTR,CTS,CFB,CFB8至CFB128,OFB,OFB8至OFB128</span><br><span class="line">NoPadding,PKCS5Padding,ISO10126Padding</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>AES</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">128</span>(默认值),<span class="number">192</span>,<span class="number">256</span></span><br><span class="line">ECB,CBC,PCBC,CTR,CTS,CFB,CFB8至CFB128,OFB,OFB8至OFB128</span><br><span class="line">NoPadding,PKCS5Padding,ISO10126Padding</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Blowfish</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">32</span>z至<span class="number">448</span>(<span class="number">8</span>的倍数,默认值<span class="number">128</span>)</span><br><span class="line">ECB,CBC,PCBC,CTR,CTS,CFB,CFB8至CFB128,OFB,OFB8至OFB128</span><br><span class="line">NoPadding,PKCS5Padding,ISO10126Padding</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RC2</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">40</span>至<span class="number">1024</span>(<span class="number">8</span>的倍数,默认值<span class="number">128</span>)</span><br><span class="line">ECB</span><br><span class="line">NoPadding</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RC4</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">40</span>至<span class="number">1024</span>(<span class="number">8</span>的倍数,默认值<span class="number">128</span>)</span><br><span class="line">ECB</span><br><span class="line">NoPadding</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="对称加密算法-PBE"><a href="#对称加密算法-PBE" class="headerlink" title="对称加密算法-PBE"></a>对称加密算法-PBE</h2><ul>
+<li><p>PBEWithMD5AndDES</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">56</span></span><br><span class="line">CBC</span><br><span class="line">PKCS5Padding</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PBEWithMD5AndTripleDES</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">112</span>,<span class="number">168</span>(默认值)</span><br><span class="line">CBC</span><br><span class="line">PKCS5Padding</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PBEWithSHA1AndRC2_40</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">112</span>,<span class="number">168</span>(默认值)</span><br><span class="line">CBC</span><br><span class="line">PKCS5Padding</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PBEWithSHA1AndDESede</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">40</span>至<span class="number">1024</span>(<span class="number">8</span>的整数倍,默认值<span class="number">128</span>)</span><br><span class="line">CBC</span><br><span class="line">PKCS5Padding</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="非对称加密算法"><a href="#非对称加密算法" class="headerlink" title="非对称加密算法"></a>非对称加密算法</h2><ul>
+<li><p>DH</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">512</span>-<span class="number">1024</span>(<span class="number">64</span>的整数倍)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RSA</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">512</span>-<span class="number">65536</span>(<span class="number">64</span>的整数倍)</span><br><span class="line">ECB</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ECDH</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">112</span>-<span class="number">571</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2014/11/08/JavaSE/Java加密 概述/" data-title="Java加密 -- 概述 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/11/08/JavaSE/Java加密 非对称加密实现/" title="Java加密 -- 非对称加密">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Java加密 -- 非对称加密</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/11/08/JavaSE/Java加密 辅助工具/"  title="Java加密 -- 辅助工具">
+ <strong>下一篇：</strong><br/> 
+ <span>Java加密 -- 辅助工具
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2014/11/08/JavaSE/Java加密 概述/" data-title="Java加密 -- 概述" data-url="http://www.ming15.wang/2014/11/08/JavaSE/Java加密 概述/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java加密"><span class="toc-number">1.</span> <span class="toc-text">Java加密</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java安全领域组成部分"><span class="toc-number">1.1.</span> <span class="toc-text">Java安全领域组成部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全提供者体系结构"><span class="toc-number">1.2.</span> <span class="toc-text">安全提供者体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#以下内容是JDK-1-7所提供的安全提供者的配置信息"><span class="toc-number">1.2.1.</span> <span class="toc-text">以下内容是JDK 1.7所提供的安全提供者的配置信息.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全提供者实现了两个概念的抽象"><span class="toc-number">1.2.2.</span> <span class="toc-text">安全提供者实现了两个概念的抽象:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本文全貌"><span class="toc-number">1.2.3.</span> <span class="toc-text">本文全貌</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息摘要算法"><span class="toc-number">1.3.</span> <span class="toc-text">消息摘要算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MD系列"><span class="toc-number">1.4.</span> <span class="toc-text">MD系列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SHA系列"><span class="toc-number">1.5.</span> <span class="toc-text">SHA系列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hmac系列"><span class="toc-number">1.6.</span> <span class="toc-text">Hmac系列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对称加密算法"><span class="toc-number">1.7.</span> <span class="toc-text">对称加密算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对称加密算法-PBE"><span class="toc-number">1.8.</span> <span class="toc-text">对称加密算法-PBE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非对称加密算法"><span class="toc-number">1.9.</span> <span class="toc-text">非对称加密算法</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Groovy/" title="Groovy">Groovy<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Haskell/" title="Haskell">Haskell<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JMH/" title="JMH">JMH<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaSE/" title="JavaSE">JavaSE<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java工具/" title="Java工具">Java工具<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MongoDB/" title="MongoDB">MongoDB<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Php/" title="Php">Php<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Reids/" title="Reids">Reids<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/TCP-IP/" title="TCP IP">TCP IP<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/guice/" title="guice">guice<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http客户端/" title="http客户端">http客户端<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http服务器/" title="http服务器">http服务器<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/memcached/" title="memcached">memcached<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mycat/" title="mycat">mycat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python2/" title="python2">python2<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/并发编程/" title="并发编程">并发编程<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/序列化工具/" title="序列化工具">序列化工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/日志工具/" title="日志工具">日志工具<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/构建工具/" title="构建工具">构建工具<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

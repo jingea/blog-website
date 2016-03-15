@@ -1,0 +1,1258 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ming15">
+<meta property="og:url" content="http://www.ming15.wang/page/2/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ming15">
+<meta name="twitter:description">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/02/redis/jedis/" title="Jedis 初探" itemprop="url">Jedis 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-01T16:00:00.000Z" itemprop="datePublished"> Published 2016-03-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="using-Jedis-in-a-multithreaded-environment"><a href="#using-Jedis-in-a-multithreaded-environment" class="headerlink" title="using Jedis in a multithreaded environment"></a>using Jedis in a multithreaded environment</h2><p>我们不应该在多线程的情况下使用同一个Jedis实例对象, 因为在Jedis本身不是线程安全的, 它可能会引发一些奇奇怪怪的问题. 但是如果我们在每个线程中都创建一个Jedis实例对象的话这也是不可取的, 因为每个Jedis对象的创建都意味着socket和网络连接的创建. 为了避免这种情况,我们应该使用<code>JedisPool</code>, 它是一个线程安全的网络连接池. 我们可以通过池子创建多个Jedis实例对象, 当使用完之后再将它返回给池子.</p>
+<p>在下面的实例中我们初始化一个池子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JedisPool pool = <span class="keyword">new</span> JedisPool(<span class="keyword">new</span> JedisPoolConfig(), <span class="string">"localhost"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>因为JedisPool是线程安全的, 因此我们可以将它缓存起来, 供所有线程使用.</p>
+<p><code>JedisPoolConfig</code>包含了一个丰富有用的Redis连接配置参数. <code>JedisPoolConfig</code>基于<a href="http://commons.apache.org/proper/commons-pool/apidocs/org/apache/commons/pool2/impl/GenericObjectPoolConfig.html" target="_blank" rel="external">Commons Pool 2</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// Jedis implements Closable. Hence, the jedis instance will be auto-closed after the last statement.</span></span><br><span class="line"><span class="keyword">try</span> (Jedis jedis = pool.getResource()) &#123;</span><br><span class="line">  <span class="comment">/// ... do stuff here ... for example</span></span><br><span class="line">  jedis.set(<span class="string">"foo"</span>, <span class="string">"bar"</span>);</span><br><span class="line">  String foobar = jedis.get(<span class="string">"foo"</span>);</span><br><span class="line">  jedis.zadd(<span class="string">"sose"</span>, <span class="number">0</span>, <span class="string">"car"</span>); jedis.zadd(<span class="string">"sose"</span>, <span class="number">0</span>, <span class="string">"bike"</span>);</span><br><span class="line">  Set&lt;String&gt; sose = jedis.zrange(<span class="string">"sose"</span>, <span class="number">0</span>, -<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/// ... when closing your application:</span></span><br><span class="line">pool.destroy();</span><br></pre></td></tr></table></figure>
+<p>如果你不喜欢<code>try-with-resource</code>这种语法, 那么你可以使用<code>Jedis.close()</code>.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  jedis = pool.getResource();</span><br><span class="line">  <span class="comment">/// ... do stuff here ... for example</span></span><br><span class="line">  jedis.set(<span class="string">"foo"</span>, <span class="string">"bar"</span>);</span><br><span class="line">  String foobar = jedis.get(<span class="string">"foo"</span>);</span><br><span class="line">  jedis.zadd(<span class="string">"sose"</span>, <span class="number">0</span>, <span class="string">"car"</span>); jedis.zadd(<span class="string">"sose"</span>, <span class="number">0</span>, <span class="string">"bike"</span>);</span><br><span class="line">  Set&lt;String&gt; sose = jedis.zrange(<span class="string">"sose"</span>, <span class="number">0</span>, -<span class="number">1</span>);</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (jedis != <span class="keyword">null</span>) &#123;</span><br><span class="line">    jedis.close();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/// ... when closing your application:</span></span><br><span class="line">pool.destroy();</span><br></pre></td></tr></table></figure></p>
+<p>If Jedis was borrowed from pool, it will be returned to pool with proper method since it already determines there was JedisConnectionException occurred. If Jedis wasn’t borrowed from pool, it will be disconnected and closed.</p>
+<p>下来我们来看一段测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPoolConfig;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        JedisPoolConfig jedisPoolConfig = <span class="keyword">new</span> JedisPoolConfig();</span><br><span class="line">        jedisPoolConfig.setMaxTotal(<span class="number">10</span>);</span><br><span class="line">        JedisPool pool = <span class="keyword">new</span> JedisPool(jedisPoolConfig, <span class="string">"10.1.4.110"</span>);</span><br><span class="line">        System.out.println(<span class="string">"begin : "</span> + pool.getNumActive());</span><br><span class="line">        System.out.println(<span class="string">"begin : "</span> + pool.getNumIdle());</span><br><span class="line">        System.out.println(<span class="string">"begin : "</span> + pool.getNumWaiters());</span><br><span class="line">        Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            jedis = pool.getResource();</span><br><span class="line">            System.out.println(<span class="string">"borrow : "</span> + pool.getNumActive());</span><br><span class="line">            System.out.println(<span class="string">"borrow : "</span> + pool.getNumIdle());</span><br><span class="line">            System.out.println(<span class="string">"borrow : "</span> + pool.getNumWaiters());</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (jedis != <span class="keyword">null</span>) &#123;</span><br><span class="line">                jedis.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">"return : "</span> + pool.getNumActive());</span><br><span class="line">        System.out.println(<span class="string">"return : "</span> + pool.getNumIdle());</span><br><span class="line">        System.out.println(<span class="string">"return : "</span> + pool.getNumWaiters());</span><br><span class="line">        pool.destroy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">begin : <span class="number">0</span></span><br><span class="line">begin : <span class="number">0</span></span><br><span class="line">begin : <span class="number">0</span></span><br><span class="line">borrow : <span class="number">1</span></span><br><span class="line">borrow : <span class="number">0</span></span><br><span class="line">borrow : <span class="number">0</span></span><br><span class="line"><span class="keyword">return</span> : <span class="number">0</span></span><br><span class="line"><span class="keyword">return</span> : <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> : <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>当调用<code>jedis.close();</code>后,池子里空闲的Jedis对象就多了1个, 可是如果我们注释掉这一行后的结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">begin : <span class="number">0</span></span><br><span class="line">begin : <span class="number">0</span></span><br><span class="line">begin : <span class="number">0</span></span><br><span class="line">borrow : <span class="number">1</span></span><br><span class="line">borrow : <span class="number">0</span></span><br><span class="line">borrow : <span class="number">0</span></span><br><span class="line"><span class="keyword">return</span> : <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> : <span class="number">0</span></span><br><span class="line"><span class="keyword">return</span> : <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>我们发现那个Jedis仍然处于激活状态, 在Jedis 2.8.0版本以前当我们从池子里借用一个Jedis之后还需要将其还回去<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(Jedis resource)</span> </span>&#123;</span><br><span class="line">    jedisPool.returnResource(resource);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是现在已经不需要了, 而且Jedis已经将这个<code>returnResource()</code>的方法舍弃掉了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@deprecated</span> */</span></span><br><span class="line"><span class="meta">@Deprecated</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">returnResource</span><span class="params">(Jedis resource)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(resource != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            resource.resetState();</span><br><span class="line">            <span class="keyword">this</span>.returnResourceObject(resource);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var3) &#123;</span><br><span class="line">            <span class="keyword">this</span>.returnBrokenResource(resource);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> JedisException(<span class="string">"Could not return the resource to the pool"</span>, var3);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来我们看一下多线程情况<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        JedisPoolConfig jedisPoolConfig = <span class="keyword">new</span> JedisPoolConfig();</span><br><span class="line">        jedisPoolConfig.setMaxTotal(<span class="number">3</span>);</span><br><span class="line">        JedisPool pool = <span class="keyword">new</span> JedisPool(jedisPoolConfig, <span class="string">"10.1.4.110"</span>);</span><br><span class="line">        List&lt;Thread&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">            Runnable runnable = () -&gt; &#123;</span><br><span class="line">                Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    jedis = pool.getResource();</span><br><span class="line">                    <span class="keyword">int</span> sleep = <span class="keyword">new</span> Random().nextInt(<span class="number">5</span>);</span><br><span class="line">                    System.out.println(<span class="string">"sleep:"</span> + sleep + <span class="string">". time:"</span> + <span class="keyword">new</span> Date().toLocaleString() + <span class="string">". active: "</span> + pool.getNumActive() + <span class="string">". idle: "</span> + pool.getNumIdle());</span><br><span class="line"></span><br><span class="line">                    TimeUnit.SECONDS.sleep(sleep);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (jedis != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        jedis.close();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line">            list.add(<span class="keyword">new</span> Thread(runnable));</span><br><span class="line">        &#125;</span><br><span class="line">        list.forEach(thread -&gt; thread.start());</span><br><span class="line"></span><br><span class="line">        Thread.currentThread().join();</span><br><span class="line">        pool.destroy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sleep:<span class="number">4</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">03</span>. active: <span class="number">3</span>. idle: <span class="number">0</span></span><br><span class="line">sleep:<span class="number">4</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">03</span>. active: <span class="number">3</span>. idle: <span class="number">0</span></span><br><span class="line">sleep:<span class="number">3</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">03</span>. active: <span class="number">3</span>. idle: <span class="number">0</span></span><br><span class="line">sleep:<span class="number">3</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">06</span>. active: <span class="number">3</span>. idle: <span class="number">0</span></span><br><span class="line">sleep:<span class="number">3</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">07</span>. active: <span class="number">2</span>. idle: <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Reids/">Reids</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/02/redis/jedis/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/02/redis/jedis/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/23/netty/Unsafe/" title="Netty Unsafe" itemprop="url">Netty Unsafe</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-22T16:00:00.000Z" itemprop="datePublished"> Published 2016-02-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>AbstractNioUnsafe<br>NioMessageUnsafe</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Netty/">Netty</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/02/23/netty/Unsafe/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/23/netty/Unsafe/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/22/netty/ServerBootstrap/" title="NettyServerBootstrap" itemprop="url">NettyServerBootstrap</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-21T16:00:00.000Z" itemprop="datePublished"> Published 2016-02-22</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>我们首先给出一个Netty上的一个Example示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyServerBootstrap</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> cpuSize = Runtime.getRuntime().availableProcessors();</span><br><span class="line">		<span class="comment">// 配置服务端的NIO线程组</span></span><br><span class="line">		EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup();			<span class="comment">// mainReactor负责监听server socket,accept新连接</span></span><br><span class="line">		EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup(cpuSize);<span class="comment">// subReactor负责多路分离已连接的socket,读写网 络数据,对业务处理功能,其扔给worker线程池完成</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			ServerBootstrap b = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line">			b.group(bossGroup, workerGroup)</span><br><span class="line">					<span class="comment">// 设置nio类型的channel,根据channel.class来实例化ChannelFactory对象</span></span><br><span class="line">					.channel(NioServerSocketChannel.class)</span><br><span class="line">					.option(ChannelOption.SO_BACKLOG, <span class="number">128</span>)</span><br><span class="line">					.option(ChannelOption.TCP_NODELAY, <span class="keyword">true</span>)</span><br><span class="line">					.option(ChannelOption.AUTO_READ, <span class="keyword">true</span>)</span><br><span class="line">					<span class="comment">// 设置AbstractBootstrap(bossGroup) handler,该handler每个ServerBootstrap 只有一个</span></span><br><span class="line">					.handler(<span class="keyword">new</span> LoggingHandler(LogLevel.INFO))</span><br><span class="line">					<span class="comment">//有连接到达时会创建一个channel</span></span><br><span class="line">					.childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;</span><br><span class="line">						<span class="meta">@Override</span></span><br><span class="line">						<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> </span>&#123;</span><br><span class="line">							<span class="comment">// pipeline管理channel中的Handler,在channel队列中添加一个handler来处理业务</span></span><br><span class="line">							ChannelPipeline pipeline = ch.pipeline();</span><br><span class="line"></span><br><span class="line">							pipeline.addLast(<span class="keyword">new</span> ProtobufVarint32FrameDecoder());</span><br><span class="line">							pipeline.addFirst(<span class="keyword">new</span> IdleStateHandler(<span class="number">5</span>, <span class="number">5</span>, <span class="number">10</span>));</span><br><span class="line"></span><br><span class="line">							pipeline.addLast(<span class="keyword">new</span> NioEventLoopGroup(<span class="number">1</span>), <span class="keyword">new</span> ServiceHandler());</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 绑定端口,同步等待成功</span></span><br><span class="line">			ChannelFuture f = <span class="keyword">null</span>;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="comment">// 配置完成,开始绑定server,通过调用sync同步方法阻塞直到绑定成功</span></span><br><span class="line">				f = b.bind(<span class="number">8880</span>).sync();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="comment">// 优雅退出,释放线程池资源</span></span><br><span class="line">			<span class="comment">//关闭EventLoopGroup,释放掉所有资源包括创建的线程</span></span><br><span class="line">			bossGroup.shutdownGracefully();</span><br><span class="line">			workerGroup.shutdownGracefully();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这个示例中, 我们采用了主从Reactor线程模型, 添加了Netty内置的Protobuf编码器. 同时后端业务线程的处理我们也采用了线程池串行的方式.</p>
+<p>下来我们分析一下<code>ServerBootstrap</code>的源码.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Netty/">Netty</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/02/22/netty/ServerBootstrap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/22/netty/ServerBootstrap/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/03/序列化工具/MessagePack 初探/" title="MessagePack 初探" itemprop="url">MessagePack 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-02T16:00:00.000Z" itemprop="datePublished"> Published 2016-02-03</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>MessagePack 是一个高效的二进制数据序列化工具. 使用它可以让你像使用JSON那样在多种语言中进行数据交换, 但是它比JSON更加小巧,迅捷.</p>
+<p>在Java中使用的话, 我们首先添加maven依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.msgpack<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>msgpack<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.6.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>首先看一个简单的示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.annotation.Message;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main1</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Message</span> <span class="comment">// Annotation</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessage</span> </span>&#123;</span><br><span class="line">        <span class="comment">// public fields are serialized.</span></span><br><span class="line">        <span class="keyword">public</span> String name;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">double</span> version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MyMessage src = <span class="keyword">new</span> MyMessage();</span><br><span class="line">        src.name = <span class="string">"msgpack"</span>;</span><br><span class="line">        src.version = <span class="number">0.6</span>;</span><br><span class="line"></span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line">        <span class="comment">// Serialize</span></span><br><span class="line">        <span class="keyword">byte</span>[] bytes = msgpack.write(src);</span><br><span class="line">        <span class="comment">// Deserialize</span></span><br><span class="line">        MyMessage dst = msgpack.read(bytes, MyMessage.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在上面的例子中我们看到将一个<code>MyMessage</code>序列化成byte数组, 同时又将其反序列化出来了. 但是如果我们要同时序列化多个对象呢？那么我们就可以使用<code>Packer</code>和<code>Unpacker</code>.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.annotation.Message;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.packer.Packer;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.unpacker.Unpacker;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main2</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Message</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessage</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> String name;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">double</span> version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MyMessage src1 = <span class="keyword">new</span> MyMessage();</span><br><span class="line">        src1.name = <span class="string">"msgpack"</span>;</span><br><span class="line">        src1.version = <span class="number">0.6</span>;</span><br><span class="line">        MyMessage src2 = <span class="keyword">new</span> MyMessage();</span><br><span class="line">        src2.name = <span class="string">"muga"</span>;</span><br><span class="line">        src2.version = <span class="number">10.0</span>;</span><br><span class="line">        MyMessage src3 = <span class="keyword">new</span> MyMessage();</span><br><span class="line">        src3.name = <span class="string">"frsyukik"</span>;</span><br><span class="line">        src3.version = <span class="number">1.0</span>;</span><br><span class="line"></span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line">        <span class="comment">// Serialize</span></span><br><span class="line">        ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        Packer packer = msgpack.createPacker(out);</span><br><span class="line">        packer.write(src1);</span><br><span class="line">        packer.write(src2);</span><br><span class="line">        packer.write(src3);</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = out.toByteArray();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Deserialize</span></span><br><span class="line">        ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">        Unpacker unpacker = msgpack.createUnpacker(in);</span><br><span class="line">        MyMessage dst1 = unpacker.read(MyMessage.class);</span><br><span class="line">        MyMessage dst2 = unpacker.read(MyMessage.class);</span><br><span class="line">        MyMessage dst3 = unpacker.read(MyMessage.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实<code>Packer</code>和<code>Unpacker</code>内置了非常多了序列化类型<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.math.BigInteger;</span><br><span class="line"><span class="keyword">import</span> java.nio.ByteBuffer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.packer.Packer;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.unpacker.Unpacker;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main3</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Serialization</span></span><br><span class="line">        ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        Packer packer = msgpack.createPacker(out);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对原生类型进行序列化</span></span><br><span class="line">        packer.write(<span class="keyword">true</span>); <span class="comment">// boolean value</span></span><br><span class="line">        packer.write(<span class="number">10</span>); <span class="comment">// int value</span></span><br><span class="line">        packer.write(<span class="number">10.5</span>); <span class="comment">// double value</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对原生包装类型进行序列化</span></span><br><span class="line">        packer.write(Boolean.TRUE);</span><br><span class="line">        packer.write(<span class="keyword">new</span> Integer(<span class="number">10</span>));</span><br><span class="line">        packer.write(<span class="keyword">new</span> Double(<span class="number">10.5</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对数组进行序列化</span></span><br><span class="line">        packer.write(<span class="keyword">new</span> <span class="keyword">int</span>[] &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span> &#125;);</span><br><span class="line">        packer.write(<span class="keyword">new</span> Double[] &#123; <span class="number">10.5</span>, <span class="number">20.5</span> &#125;);</span><br><span class="line">        packer.write(<span class="keyword">new</span> String[] &#123; <span class="string">"msg"</span>, <span class="string">"pack"</span>, <span class="string">"for"</span>, <span class="string">"java"</span> &#125;);</span><br><span class="line">        packer.write(<span class="keyword">new</span> <span class="keyword">byte</span>[] &#123; <span class="number">0x30</span>, <span class="number">0x31</span>, <span class="number">0x32</span> &#125;); <span class="comment">// byte array</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对其他引用类型进行序列化</span></span><br><span class="line">        packer.write(<span class="string">"MessagePack"</span>); <span class="comment">// String object</span></span><br><span class="line">        packer.write(ByteBuffer.wrap(<span class="keyword">new</span> <span class="keyword">byte</span>[] &#123; <span class="number">0x30</span>, <span class="number">0x31</span>, <span class="number">0x32</span> &#125;)); <span class="comment">// ByteBuffer object</span></span><br><span class="line">        packer.write(BigInteger.ONE); <span class="comment">// BigInteger object</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化</span></span><br><span class="line">        <span class="keyword">byte</span>[] bytes = out.toByteArray();</span><br><span class="line">        ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">        Unpacker unpacker = msgpack.createUnpacker(in);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化出原生类型</span></span><br><span class="line">        <span class="keyword">boolean</span> b = unpacker.readBoolean(); <span class="comment">// boolean value</span></span><br><span class="line">        <span class="keyword">int</span> i = unpacker.readInt(); <span class="comment">// int value</span></span><br><span class="line">        <span class="keyword">double</span> d = unpacker.readDouble(); <span class="comment">// double value</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化出原生包装类型</span></span><br><span class="line">        Boolean wb = unpacker.read(Boolean.class);</span><br><span class="line">        Integer wi = unpacker.read(Integer.class);</span><br><span class="line">        Double wd = unpacker.read(Double.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化出数组</span></span><br><span class="line">        <span class="keyword">int</span>[] ia = unpacker.read(<span class="keyword">int</span>[].class);</span><br><span class="line">        Double[] da = unpacker.read(Double[].class);</span><br><span class="line">        String[] sa = unpacker.read(String[].class);</span><br><span class="line">        <span class="keyword">byte</span>[] ba = unpacker.read(<span class="keyword">byte</span>[].class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化出 String, ByteBuffer, BigInteger, List 和 Map</span></span><br><span class="line">        String ws = unpacker.read(String.class);</span><br><span class="line">        ByteBuffer buf = unpacker.read(ByteBuffer.class);</span><br><span class="line">        BigInteger bi = unpacker.read(BigInteger.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于<code>List, Map</code>这俩种类型的序列化, 我们需要额外说明一下. 在序列化<code>List, Map</code>的时候, 我们需要使用<code>Template</code>对其进行转换.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.packer.Packer;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.template.Template;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.unpacker.Unpacker;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.msgpack.template.Templates.tList;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.msgpack.template.Templates.tMap;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.msgpack.template.Templates.TString;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main4</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 创建序列化/反序列化 List 和 Map 对象的模板</span></span><br><span class="line">		Template&lt;List&lt;String&gt;&gt; listTmpl = tList(TString);</span><br><span class="line">		Template&lt;Map&lt;String, String&gt;&gt; mapTmpl = tMap(TString, TString);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 开始序列化</span></span><br><span class="line">		ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">		Packer packer = msgpack.createPacker(out);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 序列化 List 对象</span></span><br><span class="line">		List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">		list.add(<span class="string">"msgpack"</span>);</span><br><span class="line">		list.add(<span class="string">"for"</span>);</span><br><span class="line">		list.add(<span class="string">"java"</span>);</span><br><span class="line">		packer.write(list); <span class="comment">// List object</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 序列化 Map 对象</span></span><br><span class="line">		Map&lt;String, String&gt; map = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</span><br><span class="line">		map.put(<span class="string">"sadayuki"</span>, <span class="string">"furuhashi"</span>);</span><br><span class="line">		map.put(<span class="string">"muga"</span>, <span class="string">"nishizawa"</span>);</span><br><span class="line">		packer.write(map); <span class="comment">// Map object</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 开始反序列化</span></span><br><span class="line">		<span class="keyword">byte</span>[] bytes = out.toByteArray();</span><br><span class="line">		ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">		Unpacker unpacker = msgpack.createUnpacker(in);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 反序列化出 List 对象</span></span><br><span class="line">		List&lt;String&gt; dstList = unpacker.read(listTmpl);</span><br><span class="line"></span><br><span class="line">		<span class="comment">//  反序列化出 Map 对象</span></span><br><span class="line">		Map&lt;String, String&gt; dstMap = unpacker.read(mapTmpl);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有时候我们可能没有办法将POJO类添加上<code>Message</code>注解(可能没有访问那个类的权限), 但是我们又想对其进行序列化, 那怎么办呢？<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line">msgpack.<span class="keyword">register</span>(MyMessage2.<span class="keyword">class</span>);</span><br></pre></td></tr></table></figure></p>
+<p>我们只要向需要序列化的类注册到<code>MessagePack</code>上就可以了.</p>
+<p>有时候,我们可能不需要对某个属性进行序列化, 例如线上某个老版本里并没有A属性, 但是在新的版本里填上了A属性, 但是又要兼容老版本怎么办呢？我们可以使用<code>@Optional</code>注解<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Message</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessage</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> version;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// new field</span></span><br><span class="line">    <span class="meta">@Optional</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> flag = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>MessagePack还提供了动态类型特性.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.type.Value;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.unpacker.Converter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.msgpack.template.Templates.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main5</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// Create serialize objects.</span></span><br><span class="line">        List&lt;String&gt; src = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        src.add(<span class="string">"msgpack"</span>);</span><br><span class="line">        src.add(<span class="string">"kumofs"</span>);</span><br><span class="line">        src.add(<span class="string">"viver"</span>);</span><br><span class="line"></span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line">        <span class="comment">// Serialize</span></span><br><span class="line">        <span class="keyword">byte</span>[] raw = msgpack.write(src);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Deserialize directly using a template</span></span><br><span class="line">        List&lt;String&gt; dst1 = msgpack.read(raw, tList(TString));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Or, Deserialze to Value then convert type.</span></span><br><span class="line">        Value dynamic = msgpack.read(raw);</span><br><span class="line">        List&lt;String&gt; dst2 = <span class="keyword">new</span> Converter(dynamic).read(tList(TString));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当从MessagePack里读取数据的时候, 我们可以先不指定其转换的类型,　使用<code>Value</code>来代替, 等后期我们再使用<code>Converter</code> 对其转换.</p>
+<p>接下来我们对其与JSON进行对比<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">msgpack</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line"></span><br><span class="line">		List&lt;SeObj&gt; list = list();</span><br><span class="line">		<span class="keyword">long</span> start1 = System.currentTimeMillis();</span><br><span class="line">		<span class="keyword">byte</span>[] bytes1 = msgpack.write(list);</span><br><span class="line">		<span class="keyword">long</span> end1 = System.currentTimeMillis();</span><br><span class="line">		System.out.println((end1 - start1) + <span class="string">" : "</span> + bytes1.length);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">long</span> start2 = System.currentTimeMillis();</span><br><span class="line">		String json = JSON.toJSONString(list);</span><br><span class="line">		<span class="keyword">long</span> end2 = System.currentTimeMillis();</span><br><span class="line">		System.out.println((end2 - start2) + <span class="string">" : "</span> + json.getBytes().length);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;SeObj&gt; <span class="title">list</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		List&lt;SeObj&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		Random random = <span class="keyword">new</span> Random();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">			SeObj seObj = <span class="keyword">new</span> SeObj();</span><br><span class="line">			seObj.id = random.nextInt(<span class="number">100000</span>);</span><br><span class="line">			seObj.tall = random.nextFloat();</span><br><span class="line">			seObj.name = <span class="string">"name"</span> + random.nextInt(<span class="number">100000</span>);</span><br><span class="line">			list.add(seObj);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> list;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Message</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SeObj</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line">	<span class="keyword">public</span> String name;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">float</span> tall;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span>的结果</span><br><span class="line"><span class="number">194</span> : <span class="number">1960</span></span><br><span class="line"><span class="number">50</span> : <span class="number">4947</span></span><br><span class="line"><span class="number">1000</span>的结果</span><br><span class="line"><span class="number">210</span> : <span class="number">19589</span></span><br><span class="line"><span class="number">70</span> : <span class="number">49424</span></span><br><span class="line"><span class="number">10000</span>的结果</span><br><span class="line"><span class="number">212</span> : <span class="number">195765</span></span><br><span class="line"><span class="number">160</span> : <span class="number">493987</span></span><br><span class="line"><span class="number">100000</span>的结果</span><br><span class="line"><span class="number">283</span> : <span class="number">1956964</span></span><br><span class="line"><span class="number">330</span> : <span class="number">4940270</span></span><br><span class="line"><span class="number">1000000</span>的结果</span><br><span class="line"><span class="number">649</span> : <span class="number">19573508</span></span><br><span class="line"><span class="number">1878</span> : <span class="number">49404120</span></span><br></pre></td></tr></table></figure></p>
+<p>我们发现MessagePack的耗时相对来说是比较稳定的, 但是在生成的数据量上比JSON要强一倍多</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/序列化工具/">序列化工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/02/03/序列化工具/MessagePack 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/03/序列化工具/MessagePack 初探/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/02/JavaSE/java volatile/" title="volatile 使用" itemprop="url">volatile 使用</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-01T16:00:00.000Z" itemprop="datePublished"> Published 2016-02-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在讲<code>volatile</code>的之前,我们先看一下java的内存模型. 我们知道当我们<code>new</code>出来一个对象的时候,这个对象会被直接分配到堆上(暂不考虑栈上分配等技术). 而程序的逻辑是在方法中定义的,方法运行在线程里也就是栈上. 因此JVM会将线程里使用的数据从堆上拷贝到线程的本地存储上. 这个过程涉及了下列8个操作</p>
+<ol>
+<li>lock: 将堆上的变量标志为某个线程独享的状态</li>
+<li>unlock: 将堆上的变量释放出来, 以便被其他线程锁定</li>
+<li>read: 将某个变量从堆上拷贝到线程的工作内存上</li>
+<li>load: 将已经从堆上拷贝到线程的工作内存上的变量放入到变量副本中</li>
+<li>use: 将线程变量副本中的变量传递给虚拟机执行引擎. (每当虚拟机遇到一个需要使用该变量的字节码指令时,都会执行该操作)</li>
+<li>assign: 将虚拟机执行引擎返回的变量的值赋值到工作变量中</li>
+<li>store: 将工作变量值传递到堆内存中.</li>
+<li>write: 将从线程工作变量中接受到的值写入到主内存变量中</li>
+</ol>
+<p>当一个变量被<code>volatile</code>修饰后, 每次<code>load</code>操作都是从堆中获取值, <code>assign</code>的时候也是直接写回到堆中内存变量中, 而不是在线程本地变量中操作.</p>
+<p>volatile变量具备俩种特性</p>
+<ul>
+<li>线程可见性: 某个线程修改了被<code>volatile</code>修饰的变量后,其他线程可以里面看见这个最新的值.</li>
+<li>禁止指令重排序优化</li>
+</ul>
+<blockquote>
+<p><code>volatile</code>最适用的场景是一个线程写,多个线程读的场景. 如果有多个线程同时写的话还是需要锁或者并发容器等等进行保护</p>
+</blockquote>
+<p>下面我们看一个指令重排序的例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> stop = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">			<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">while</span> (!stop) &#123;</span><br><span class="line">				i++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">		thread.start();</span><br><span class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">		stop = <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的这段代码会被优化成(这种优化也被称为提升优化)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> stop = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">			<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">if</span> (!stop) &#123;</span><br><span class="line">				<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">					i++;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">		thread.start();</span><br><span class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">		stop = <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但是如果<code>stop</code>变量被<code>volatile</code>修饰后<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> stop = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">			<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">while</span> (!stop) &#123;</span><br><span class="line">				i++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">		thread.start();</span><br><span class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</span><br><span class="line">		stop = <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>程序就能正确的停止运行了</p>
+<blockquote>
+<p>Java中对于重排序是这样规定的, 只要在单线程环境中, 重排序前后代码的运行结果总是一致的, 那么这段代码的重排序就是合法的. 但是当在多线程的环境中, 重排序就会影响到程序的执行, 就像刚才我们的例子展示的那样. 例外还有一点值得说明的是, 当代码中运行时包含<code>native</code>方法时, 会打断编译器的重排序(例如<code>System.out.println()</code>或者<code>Threads.sleep()</code>)</p>
+</blockquote>
+<p><code>volatile</code>并不能解决并发写的情况, 正如我们开头所说的<code>volatile</code>最适用的场景是一个线程写,多个线程读的场景. 例如下面的程序, 无论我是否对<code>counter</code>进行<code>volatile</code>修饰都不能解决并发异常的问题<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		List&lt;Thread&gt; threads = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">			Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">				<span class="comment">// 并发写counter</span></span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					TimeUnit.MILLISECONDS.sleep(<span class="number">50</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">				counter++;</span><br><span class="line">			&#125;);</span><br><span class="line"></span><br><span class="line">			thread.start();</span><br><span class="line">			threads.add(thread);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		threads.forEach(thread -&gt; &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				thread.join();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line">		System.out.println(counter);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的程序最后的输出结果, 总是小于100000.</p>
+<blockquote>
+<p>还有一点需要说明的是,<code>volatile</code>修饰的数组,只能保证数组本身的内存可见性,但是对于其中的元素的修改是不会保证的.</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/02/02/JavaSE/java volatile/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/02/JavaSE/java volatile/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/02/netty/ChannelPipeline/" title="Netty ChannelPipeline" itemprop="url">Netty ChannelPipeline</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-01T16:00:00.000Z" itemprop="datePublished"> Published 2016-02-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><code>ChannelPipeline</code>是一个<code>ChannelHandler</code>的集合, 用于处理或者截断<code>Channel</code>的<code>inbound events</code>和<code>outbound operations</code>. <code>ChannelPipeline</code>是<a href="http://www.oracle.com/technetwork/java/interceptingfilter-142169.html" target="_blank" rel="external">Intercepting Filter</a>的一个高级实现, 它保证了用户对事件处理的完整控制权以及确保了<code>ChannelHandler</code>在pipeline中的运行方式.</p>
+<p>每当创建一个<code>Channel</code>的时候, 都会创建出一个对应的<code>ChannelPipeline</code>, 也就是说每个<code>Channel</code>都有其自己的<code>ChannelPipeline</code></p>
+<p>下面的图给出了IO事件是如何在<code>ChannelPipeline</code>里的<code>ChannelHandler</code>进行传递处理的. IO事件由<code>ChannelInboundHandler</code>或者<code>ChannelOutboundHandler</code>处理, 我们在handler中调用<code>ChannelHandlerContext</code>中的事件传播方法将event传播给下一个handler继续执行, 例如调用<code>ChannelHandlerContext#fireChannelRead(Object)</code>和<code>ChannelHandlerContext#write(Object)</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">                                               I/O Request</span><br><span class="line">                                          via Channel&#125; or</span><br><span class="line">                                      ChannelHandlerContext&#125;</span><br><span class="line">                                                    |</span><br><span class="line">+---------------------------------------------------+---------------+</span><br><span class="line">|                           ChannelPipeline         |               |</span><br><span class="line">|                                                  \|/              |</span><br><span class="line">|    +---------------------+            +-----------+----------+    |</span><br><span class="line">|    | Inbound Handler  N  |            | Outbound Handler  <span class="number">1</span>  |    |</span><br><span class="line">|    +----------+----------+            +-----------+----------+    |</span><br><span class="line">|              /|\                                  |               |</span><br><span class="line">|               |                                  \|/              |</span><br><span class="line">|    +----------+----------+            +-----------+----------+    |</span><br><span class="line">|    | Inbound Handler N-<span class="number">1</span> |            | Outbound Handler  <span class="number">2</span>  |    |</span><br><span class="line">|    +----------+----------+            +-----------+----------+    |</span><br><span class="line">|              /|\                                  .               |</span><br><span class="line">|               .                                   .               |</span><br><span class="line">| ChannelHandlerContext.fireIN_EVT() ChannelHandlerContext.OUT_EVT()|</span><br><span class="line">|        [ method call]                       [method call]         |</span><br><span class="line">|               .                                   .               |</span><br><span class="line">|               .                                  \|/              |</span><br><span class="line">|    +----------+----------+            +-----------+----------+    |</span><br><span class="line">|    | Inbound Handler  <span class="number">2</span>  |            | Outbound Handler M-<span class="number">1</span> |    |</span><br><span class="line">|    +----------+----------+            +-----------+----------+    |</span><br><span class="line">|              /|\                                  |               |</span><br><span class="line">|               |                                  \|/              |</span><br><span class="line">|    +----------+----------+            +-----------+----------+    |</span><br><span class="line">|    | Inbound Handler  <span class="number">1</span>  |            | Outbound Handler  M  |    |</span><br><span class="line">|    +----------+----------+            +-----------+----------+    |</span><br><span class="line">|              /|\                                  |               |</span><br><span class="line">+---------------+-----------------------------------+---------------+</span><br><span class="line">                |                                  \|/</span><br><span class="line">+---------------+-----------------------------------+---------------+</span><br><span class="line">|               |                                   |               |</span><br><span class="line">|       [ Socket.read() ]                    [ Socket.write() ]     |</span><br><span class="line">|                                                                   |</span><br><span class="line">|  Netty Internal I/<span class="function">O <span class="title">Threads</span> <span class="params">(Transport Implementation)</span>            |</span><br><span class="line">+-------------------------------------------------------------------+</span></span><br></pre></td></tr></table></figure></p>
+<p>从上图中我们可以看出左边是<code>inbound</code>handler(从下向上进行处理), 右图是<code>outbound</code>流程(从上向下进行处理).<code>inbound</code>handler通常处理的是由IO线程生成的<code>inbound</code>数据(例如<code>SocketChannel#read(ByteBuffer)</code>).<br><code>outbound</code>handler一般由write请求生成或者转换传输数据. 如果<code>outbound</code>数据传输到上图的底部后, 它就会被绑定到<code>Channel</code>上的IO线程进行操作. IO线程一般会进行<code>SocketChannel#write(ByteBuffer)</code>数据输出操作.</p>
+<blockquote>
+<p>底层的<code>SocketChannel#read()</code>方法读取<code>ByteBuf</code>, 然后由IO线程<code>NioEventLoop</code>调用<code>ChannelPipeline#fireChannelRead()</code>方法,将消息<code>ByteBuf</code>传递到<code>ChannelPipeline</code>中.</p>
+</blockquote>
+<p>在下面的示例中我们分别在pipeline中添加俩个<code>inbound</code>handler和俩个<code>outbound</code>handler.(以<code>Inbound</code>开头的类名表示为一个<code>inbound</code>handler, 以<code>Outbound</code>开头的类名表示为一个<code>outbound</code>handler.)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ChannelPipeline p = ...;</span><br><span class="line">p.addLast(<span class="string">"1"</span>, <span class="keyword">new</span> InboundHandlerA());</span><br><span class="line">p.addLast(<span class="string">"2"</span>, <span class="keyword">new</span> InboundHandlerB());</span><br><span class="line">p.addLast(<span class="string">"3"</span>, <span class="keyword">new</span> OutboundHandlerA());</span><br><span class="line">p.addLast(<span class="string">"4"</span>, <span class="keyword">new</span> OutboundHandlerB());</span><br><span class="line">p.addLast(<span class="string">"5"</span>, <span class="keyword">new</span> InboundOutboundHandlerX());</span><br></pre></td></tr></table></figure></p>
+<p>事件在<code>inbound</code>handler中的执行过程是<code>1, 2, 3, 4, 5</code>. 事件在<code>outbound</code>handler中的执行过程是<code>5, 4, 3, 2, 1</code>.</p>
+<p>但是在真实的执行过程中, 由于<code>3, 4</code>并没有实现<code>ChannelInboundHandler</code>, 因此inbound流程中真正执行的handler只有<code>1, 2, 5</code>. 而由于<code>1, 2</code>并没有实现<code>ChannelOutboundHandler</code>因此在outbound流程中真正执行的handler只有<code>5, 4, 3</code>.<br>如果<code>5</code>都实现了<code>ChannelInboundHandler</code>和<code>ChannelOutboundHandler</code>, 那么事件的执行顺序分别是<code>125</code>和<code>543</code>.</p>
+<p>也许你已经注意到了, 在handler中不得不调用<code>ChannelHandlerContext</code>的事件传播方法, 将事件传递给下一个handler. 下面的是<br>能够触发<code>inbound</code>事件的方法</p>
+<ul>
+<li><code>ChannelHandlerContext#fireChannelRegistered()</code> Channel注册事件</li>
+<li><code>ChannelHandlerContext#fireChannelActive()</code> TCP链路建立成功,Channel激活事件</li>
+<li><code>ChannelHandlerContext#fireChannelRead(Object var1)</code> 读事件</li>
+<li><code>ChannelHandlerContext#fireChannelReadComplete()</code> 读操作完成通知事件</li>
+<li><code>ChannelHandlerContext#fireExceptionCaught(Throwable var1)</code> 异常通知事件</li>
+<li><code>ChannelHandlerContext#fireUserEventTriggered(Object var1)</code> 用户自定义事件</li>
+<li><code>ChannelHandlerContext#fireChannelWritabilityChanged()</code> Channel的可写状态变化通知事件</li>
+<li><code>ChannelHandlerContext#fireChannelInactive()</code> TCP链路关闭, 链路不可用通知事件<br>触发<code>outbound</code>事件的方法有</li>
+<li><code>ChannelHandlerContext#bind(SocketAddress var1, ChannelPromise var2)</code> 绑定本地地址事件</li>
+<li><code>ChannelHandlerContext#connect(SocketAddress var1, ChannelPromise var2)</code> 连接服务端事件</li>
+<li><code>ChannelHandlerContext#flush()</code> 刷新事件</li>
+<li><code>ChannelHandlerContext#read()</code> 读事件</li>
+<li><code>ChannelHandlerContext#disconnect(ChannelPromise var1)</code> 断开连接事件</li>
+<li><code>ChannelHandlerContext#close(ChannelPromise var1)</code> 关闭当前Channel事件</li>
+</ul>
+<p>下面我们看一下如何自己实现一个inbound和outbound handler<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyInboundHandler</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Connected!"</span>);</span><br><span class="line">        ctx.fireChannelActive();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> clas MyOutboundHandler extends ChannelOutboundHandlerAdapter &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(ChannelHandlerContext ctx, ChannelPromise&#125; promise)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Closing .."</span>);</span><br><span class="line">        ctx.close(promise);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以预想到的是, 用户在使用pipeline中肯定最少会有一个<code>ChannelHandler</code>用来接受IO事件(例如read操作)和响应IO操作(例如write和close). 例如一个标准的服务器在每个channel中的pipeline中会有如下的handler</p>
+<ul>
+<li>Protocol Decoder ： 将二进制的字节码(例如<code>ByteBuf</code>中的数据)解析成Java对象</li>
+<li>Protocol Encoder :  将Java对象转换成二进制数据进行网络传输</li>
+<li>Business Logic Handler : 执行真正的业务逻辑</li>
+</ul>
+<p>下面我们将上面的流程转换成一个真实的示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> EventExecutorGroup group = <span class="keyword">new</span> DefaultEventExecutorGroup(<span class="number">16</span>);</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">ChannelPipeline&#125; pipeline = ch.pipeline();</span><br><span class="line"></span><br><span class="line">pipeline.addLast(<span class="string">"decoder"</span>, <span class="keyword">new</span> MyProtocolDecoder());</span><br><span class="line">pipeline.addLast(<span class="string">"encoder"</span>, <span class="keyword">new</span> MyProtocolEncoder());</span><br><span class="line"></span><br><span class="line"><span class="comment">// Tell the pipeline to run MyBusinessLogicHandler's event handler methods</span></span><br><span class="line"><span class="comment">// in a different thread than an I/O thread so that the I/O thread is not blocked by</span></span><br><span class="line"><span class="comment">// a time-consuming task.</span></span><br><span class="line"><span class="comment">// If your business logic is fully asynchronous or finished very quickly, you don't</span></span><br><span class="line"><span class="comment">// need to specify a group.</span></span><br><span class="line">pipeline.addLast(group, <span class="string">"handler"</span>, <span class="keyword">new</span> MyBusinessLogicHandler());</span><br></pre></td></tr></table></figure></p>
+<p>我们可以在任何时间在<code>ChannelPipeline</code>上添加或者移除<code>ChannelHandler</code>, 因为<code>ChannelPipeline</code>是线程安全的. 例如我们可以在线上环境中因为业务原因动态的添加或者移除handler.</p>
+<p>下来我们看一下<code>ChannelPipeline</code>的默认实现<code>DefaultChannelPipeline</code>里的数据结构<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> AbstractChannel channel;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> DefaultChannelHandlerContext head;</span><br><span class="line"><span class="keyword">final</span> DefaultChannelHandlerContext tail;</span><br></pre></td></tr></table></figure></p>
+<p><code>DefaultChannelPipeline</code>采用链式方式存储<code>ChannelHandlerContext</code>(内部存储的的是<code>ChannelHandler</code>). 当我们增加一个<code>ChannelHandler</code>时<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ChannelPipeline <span class="title">addFirst</span><span class="params">(EventExecutorGroup group, <span class="keyword">final</span> String name, ChannelHandler handler)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">        checkDuplicateName(name);</span><br><span class="line">        DefaultChannelHandlerContext newCtx = <span class="keyword">new</span> DefaultChannelHandlerContext(<span class="keyword">this</span>, group, name, handler);</span><br><span class="line">        addFirst0(name, newCtx);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addFirst0</span><span class="params">(String name, DefaultChannelHandlerContext newCtx)</span> </span>&#123;</span><br><span class="line">    checkMultiplicity(newCtx);</span><br><span class="line"></span><br><span class="line">    DefaultChannelHandlerContext nextCtx = head.next;</span><br><span class="line">    newCtx.prev = head;</span><br><span class="line">    newCtx.next = nextCtx;</span><br><span class="line">    head.next = newCtx;</span><br><span class="line">    nextCtx.prev = newCtx;</span><br><span class="line"></span><br><span class="line">    name2ctx.put(name, newCtx);</span><br><span class="line"></span><br><span class="line">    callHandlerAdded(newCtx);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们看到在<code>addFirst0()</code>方法里将<code>newCtx</code>放到了首位上,然后内部调用了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">callHandlerAdded</span><span class="params">(<span class="keyword">final</span> ChannelHandlerContext ctx)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ctx.channel().isRegistered() &amp;&amp; !ctx.executor().inEventLoop()) &#123;</span><br><span class="line">        ctx.executor().execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                callHandlerAdded0(ctx);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    callHandlerAdded0(ctx);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">callHandlerAdded0</span><span class="params">(<span class="keyword">final</span> ChannelHandlerContext ctx)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ctx.handler().handlerAdded(ctx);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们看到最终的时候在<code>ChannelHandler</code>里添加了<code>ChannelHandlerContext</code>.</p>
+<p>接下来我们看一下<code>ChannelPipeline</code>的read数据流程, 由于Netty的真实读写IO操作是封装了Unsafe里，因此我们直接在<code>NioMessageUnsafe</code>中看看<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> List&lt;Object&gt; readBuf = <span class="keyword">new</span> ArrayList&lt;Object&gt;();</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">int</span> localRead = doReadMessages(readBuf);</span><br><span class="line"><span class="keyword">int</span> size = readBuf.size();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i ++) &#123;</span><br><span class="line">	<span class="comment">// 在此处ChannelPipeline开始触发读流程</span></span><br><span class="line">    pipeline.fireChannelRead(readBuf.get(i));</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们进一步看一下<code>fireChannelRead()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ChannelPipeline <span class="title">fireChannelRead</span><span class="params">(Object msg)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 调用ChannelHandlerContext类型的head的fireChannelRead()方法, 然后就通过链式调用开始在一系列ChannelHandler里执行</span></span><br><span class="line">    head.fireChannelRead(msg);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看<code>ChannelHandlerContext#fireChannelRead</code>实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ChannelHandlerContext <span class="title">fireChannelRead</span><span class="params">(<span class="keyword">final</span> Object msg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (msg == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"msg"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 因为我们只是在读取数据, 因此只找到Inbound的ChannelHandler就可以了</span></span><br><span class="line">    <span class="keyword">final</span> DefaultChannelHandlerContext next = findContextInbound();</span><br><span class="line">    EventExecutor executor = next.executor();</span><br><span class="line">    <span class="keyword">if</span> (executor.inEventLoop()) &#123;</span><br><span class="line">        next.invokeChannelRead(msg);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// 提交任务, 让任务在EventLoop中执行</span></span><br><span class="line">        executor.execute(<span class="keyword">new</span> OneTimeTask() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                next.invokeChannelRead(msg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> DefaultChannelHandlerContext <span class="title">findContextInbound</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    DefaultChannelHandlerContext ctx = <span class="keyword">this</span>;</span><br><span class="line">    do &#123;</span><br><span class="line">        ctx = ctx.next;</span><br><span class="line">    &#125; <span class="keyword">while</span> (!ctx.inbound);</span><br><span class="line">    <span class="keyword">return</span> ctx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invokeChannelRead</span><span class="params">(Object msg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="comment">// 调用handler里的真实的读取channelRead方法</span></span><br><span class="line">        ((ChannelInboundHandler) handler).channelRead(<span class="keyword">this</span>, msg);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">        notifyHandlerException(t);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>那么<code>Object msg</code> 是什么呢？<code>doReadMessages(readBuf)</code>我们看一下这个方法实现(由于Unsafe是Channel的内部类, 因此Unsafe实际上调用的也是Channel的doReadMessages). 我们直接看一下的实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">doReadMessages</span><span class="params">(List&lt;Object&gt; buf)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    SocketChannel ch = javaChannel().accept();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (ch != <span class="keyword">null</span>) &#123;</span><br><span class="line">            buf.add(<span class="keyword">new</span> NioSocketChannel(<span class="keyword">this</span>, ch));</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Netty/">Netty</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/02/02/netty/ChannelPipeline/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/02/netty/ChannelPipeline/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/30/java综合工具/Typesafe Config 初探/" title="Typesafe Config 初探" itemprop="url">Typesafe Config 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-29T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>Typesafe Config 是为JVM平台语言提供的配置类库.</p>
+<p>目前config只支持配置文件，如果想从数据库获取配置文件，需要自己diy。 config库很擅长合并配置。</p>
+<p>我们可以直接使用maven方式依赖该库<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.typesafe<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>API示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.typesafe.config.ConfigFactory</span><br><span class="line"></span><br><span class="line">Config conf = ConfigFactory.load();</span><br><span class="line"><span class="keyword">int</span> bar1 = conf.getInt(<span class="string">"foo.bar"</span>);</span><br><span class="line">Config foo = conf.getConfig(<span class="string">"foo"</span>);</span><br><span class="line"><span class="keyword">int</span> bar2 = foo.getInt(<span class="string">"bar"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>在上面的例子中我们使用了最简单的方式<code>ConfigFactory.load()</code>加载出了一个配置类<code>Config</code>, config会自动去classPath中查找<code>reference.conf</code>. <code>ConfigFactory.load()</code>会按照下面的优先级依次从classpath中查找文件进行加载</p>
+<ol>
+<li><code>system properties</code></li>
+<li><code>application.conf</code> (all resources on classpath with this name)</li>
+<li><code>application.json</code> (all resources on classpath with this name)</li>
+<li><code>application.properties</code> (all resources on classpath with this name)</li>
+<li><code>reference.conf</code> (all resources on classpath with this name)<br>如果我们不想要使用上面的文件名或者我们将配置分配到多个文件中,那么我们可以使用<code>ConfigFactory.load(&quot;test.conf&quot;);</code></li>
+</ol>
+<p>当然如果你想自己创建<code>Config</code>也可以调用<code>ConfigFactory</code>的<code>parseXXX</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ConfigFactory.parseFile(<span class="keyword">new</span> File(<span class="string">""</span>));</span><br><span class="line">ConfigFactory.parseMap(<span class="keyword">new</span> HashMap&lt;&gt;());</span><br><span class="line">ConfigFactory.parseProperties(<span class="keyword">new</span> Properties());</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>需要注意的从<code>Config</code>实例中得到的<code>Config</code>, <code>ConfigParseOptions</code>, <code>ConfigResolveOptions</code>, <code>ConfigObject</code> 得到的对象都是不可变的.</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java工具/">Java工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/01/30/java综合工具/Typesafe Config 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/30/java综合工具/Typesafe Config 初探/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/29/jvm/使用Classloader加载类/" title="使用Classloader加载类" itemprop="url">使用Classloader加载类</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-28T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>类加载器不单单是用于实现类的加载动作, 对于任意一个类,都需要由加载它的类加载器和类本身一同确立其在java虚拟机中的唯一性.换句话说:比较俩个类是否相等,只有在这俩个类是由同一个类加载器加载的前提下才有意义. 否则即使来自同一个源文件,只要加载它们的类加载器不同,这俩个类就必定不相等.</p>
+<blockquote>
+<p>判断俩个类相等可以通过下面方法: <code>Class</code>对象的<code>equals()</code>方法, <code>isAssignbleFrom()</code>方法, <code>isInstance()</code>方法的返回结果, 也包括使用<code>instanceof</code>关键字做对象所属关系判断等. 不同的类加载器对<code>instanceof</code>关键字运算结果的影响</p>
+</blockquote>
+<h2 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h2><p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/jvm/ClassLoader%E7%9A%84%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="ClassLoader的体系架构"><br>从JVM来角度讲, 只存在俩种不同的类加载器:</p>
+<ul>
+<li>启动类加载器: 使用C++语言实践,是虚拟机自身的一部分. </li>
+<li>其他类加载器: 这些类加载器都由java语言实现,独立于虚拟机外部,并且全部都继承自抽象类:<code>java.lang.ClassLoader</code></li>
+</ul>
+<p>系统提供的类加载器</p>
+<ul>
+<li>启动类加载器 : 这个类加载器负责将<code>&lt;JAVA_HOME&gt;\lib</code>目录中的,或者<code>-Xbootclasspath</code>参数所指定的路径中的,并且是虚拟机识别的(仅按照文件名识别,如rt,jar,名字不符合的类库即使放在lib目录里也不会被加载)类库加载到虚拟机内存中,启动类加载器无法被java程序直接使用.</li>
+<li>扩展类加载器 : 这个类加载器由<code>sun.misc.Launcher$ExtClassLoader</code>实现,负责加载<code>&lt;JAVA_HOME&gt;\lib\ext</code>目录中的,或者被<code>java.ext.dirs</code>系统变量所指定的路径中的所有类库, 开发者可以直接使用扩展类加载器.</li>
+<li>应用程序加载器 : 这个类加载器由<code>sun.misc.Launcher$AppClassLoader</code>来实现. 由于类加载器是<code>ClassLoader</code>中<code>getSystemClassLoader()</code>方法的返回值,所以一般也称它为系统类加载器. 它负责加载用户类路径(ClassPath)上所指定的类库,开发者可以直接使用这个类加载器,如果应用程序中没有自定义过自己的类加载器,一般情况下就是程序中默认的类加载器.</li>
+</ul>
+<p>类加载器收到类加载请求,它不会自己去尝试加载这个类,而把这个请求委派给父类加载器去完成,每一个层次的类加载都是如此,因此所有的类加请求最终都应该传送到顶层的启动类加载器中,只有当父加载器反馈自己无法完成这个加载请求(它的搜索范围中没有找到所需的类)时,子类加载器才会尝试自己去加载.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</span><br><span class="line">       <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">   &#123;</span><br><span class="line">       <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">           <span class="comment">// 第一步检查被加载的类是否已经被加载进入了虚拟机</span></span><br><span class="line">           Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">           <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="comment">// 如果没有被加载进虚拟机中则进行加载</span></span><br><span class="line">               <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="comment">// 优先从父类加载器中进行加载, 所有的类加请求最终都应该传送到顶层的启动类加载器中</span></span><br><span class="line">                   <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                       c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">                   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="comment">// </span></span><br><span class="line">                       c = findBootstrapClassOrNull(name);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                   <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">                   <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">               &#125;</span><br><span class="line">			</span><br><span class="line">               <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">                   <span class="comment">// 父类加载器找不到则调用自己的findClass(name)找到类然后进行加载</span></span><br><span class="line">                   <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">                   c = findClass(name);</span><br><span class="line"></span><br><span class="line">                   <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">                   sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">                   sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">                   sun.misc.PerfCounter.getFindClasses().increment();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">               resolveClass(c);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">return</span> c;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用双亲委派模型来组织类加载之间的关系, 可以确保我们自己JVM的安全. 因为当我们自己写一个 <code>java.lang.Object</code>, 这个类虽然能够被正常编译, 但是它永远不会被加载器虚拟机中, 因为这个类会在启动类加载器中完成了加载.</p>
+</blockquote>
+<p>在刚才的<code>loadClass()</code>方法中我们看到最终我们自己实现类加载的逻辑是在<code>findClass()</code>中进行的, 这是为了向前兼容,JDK1.2之后添加的方法.JDK1.2之后已不提倡用户再去覆盖<code>loadClass()</code>方法,而在<code>loadClass()</code>方法的逻辑里如果父类加载失败,则会调用自己的<code>findClass()</code>方法来完成加载,这样就可以保证新写出来的类加载器是符合双亲委派规则的.</p>
+<blockquote>
+<p>为了解决各个类加载器的基础类调用用户代码, java设计团队引入了这样一个设计:线程上下文类加载器,这个类加载器可以通过<code>java.lang.Thread</code>类的<code>setContextClassLoaser()</code>方法进行设置,如果创建线程时还未设置,它将会从父线程中继承一个:如果在应用程序的全局范围内都没有设置过,那么这个类加载器默认就是应用程序类加载器.有了线程上下文类加载器,JNDI服务使用这个线程上下文类加载器去加载所需要的SPI代码,也就是父类加载器请求子类加载器去完成类加载的动作,这种行为实际就是打通了双亲委派模型的层次结构来逆向使用类加载器,已经违背了双亲委派模型的一般性原则.</p>
+</blockquote>
+<p>上面所说只完成了类加载的动作, 但是如果我们想要实现热更代码的这种功能的话,就不能单纯依赖重写<code>findClass(name)</code>了，而是要重写<code>loadClass(String name)</code>了，这是因为在<code>ClassLoader</code>中的<code>loadClass(String name)</code>方法当发现已经加载过的类就不会再重新加载了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.net.URLClassLoader;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.objectweb.asm.Opcodes.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">		URL url = <span class="keyword">new</span> File(<span class="string">"."</span>).toURL();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">			MyClassLoader myLoader = <span class="keyword">new</span> MyClassLoader(<span class="keyword">new</span> URL[]&#123;url&#125;);</span><br><span class="line">			Class&lt;?&gt; obj = myLoader.loadClass(<span class="string">"Mesurable"</span>);</span><br><span class="line">			<span class="keyword">for</span> (Field field : obj.getFields()) &#123;</span><br><span class="line">				System.out.println(field.getName());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">URLClassLoader</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MyClassLoader</span><span class="params">(URL[] urls)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(urls);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">		Class&lt;?&gt; loadClass = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">if</span> (name.contains(<span class="string">"java.lang.Object"</span>)) &#123;</span><br><span class="line">			<span class="comment">// 因为我们的父类是java.lang.Object, 因此我们要调用父类加载器进行加载</span></span><br><span class="line">			loadClass = <span class="keyword">super</span>.loadClass(name);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			loadClass = findLoadedClass(name);</span><br><span class="line">			<span class="keyword">if</span> (loadClass != <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> loadClass;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">byte</span>[] bytes = generateClass();</span><br><span class="line">			loadClass = defineClass(name, bytes, <span class="number">0</span>, bytes.length);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> loadClass;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">byte</span>[] generateClass() &#123;</span><br><span class="line">		ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</span><br><span class="line">		cw.visit(V1_8,											<span class="comment">// 指定class文件版本号, 我们将其设置为java8</span></span><br><span class="line">				ACC_PUBLIC,	<span class="comment">// 设置接口的修饰符</span></span><br><span class="line">				<span class="string">"Mesurable"</span>,								<span class="comment">// 我们设置classname, 需要在这里指定全限定名</span></span><br><span class="line">				<span class="keyword">null</span>,											<span class="comment">// 设置泛型信息, 因为我们的接口是非泛化的, 因此我们将其设置为null</span></span><br><span class="line">				<span class="string">"java/lang/Object"</span>,							<span class="comment">// 设置父类, 同时需要设定全限定名</span></span><br><span class="line">				<span class="keyword">null</span>);			<span class="comment">// 设置接口, 同样需要设置全限定名</span></span><br><span class="line"></span><br><span class="line">		cw.visitField(</span><br><span class="line">				ACC_PUBLIC,	<span class="comment">// 设置字段的修饰符</span></span><br><span class="line">				<span class="string">"LESS__"</span> + random.nextInt(<span class="number">100</span>),										<span class="comment">// 设置字段名</span></span><br><span class="line">				<span class="string">"I"</span>,										<span class="comment">// 设置字段类型</span></span><br><span class="line">				<span class="keyword">null</span>,										<span class="comment">// 设置泛型信息</span></span><br><span class="line">				<span class="keyword">new</span> Long(-<span class="number">1</span>))							<span class="comment">// 设置字面量值.</span></span><br><span class="line">				.visitEnd();</span><br><span class="line"></span><br><span class="line">		cw.visitEnd();</span><br><span class="line">		<span class="keyword">return</span> cw.toByteArray();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Random random = <span class="keyword">new</span> Random();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>URLClassLoader</code>根据<code>URL</code>指定的路径从<code>JAR</code>文件或者目录里加载<code>class</code>文件或者其他资源文件. 如果<code>URL</code>以<code>/</code>结束,就表示到某个目录里进行加载. 否则就表示到某个<code>JAR</code>文件里进行加载. 线程里用于创建<code>URLClassLoader</code>实例的<code>AccessControlContext</code>会在加载类文件以及资源文件时使用到. <code>URLClassLoader</code>实例创建好之后会根据默认的授权权限依据指定的<code>URL</code>来进行加载类.</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/01/29/jvm/使用Classloader加载类/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/29/jvm/使用Classloader加载类/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/23/netty/ChannelHandler/" title="Netty ChannelHandler" itemprop="url">Netty ChannelHandler</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-22T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>首先我们看一下<code>ChannelHandler</code>的继承结构<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/netty/netty%20ChannelHadler.jpg" alt=""></p>
+<ul>
+<li><code>ChannelHandler</code></li>
+<li><code>ChannelInboundHandler</code></li>
+<li><code>ChannelOutboundHandler</code></li>
+<li><code>ChannelInboundHandlerAdapter</code></li>
+<li><code>ChannelOutboundHandlerAdapter</code></li>
+<li><code>ChannelHandlerAdapter</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ChannelHandler</span></span><br><span class="line"><span class="title">public</span> <span class="title">interface</span> <span class="title">ChannelInboundHandler</span> <span class="keyword">extends</span> <span class="title">ChannelHandler</span></span><br><span class="line"><span class="title">public</span> <span class="title">interface</span> <span class="title">ChannelOutboundHandler</span> <span class="keyword">extends</span> <span class="title">ChannelHandler</span></span><br><span class="line"><span class="title">public</span> <span class="title">abstract</span> <span class="title">class</span> <span class="title">ChannelHandlerAdapter</span> <span class="keyword">implements</span> <span class="title">ChannelHandler</span></span><br><span class="line"><span class="title">public</span> <span class="title">class</span> <span class="title">ChannelInboundHandlerAdapter</span> <span class="keyword">extends</span> <span class="title">ChannelHandlerAdapter</span> <span class="keyword">implements</span> <span class="title">ChannelInboundHandler</span></span><br><span class="line"><span class="title">public</span> <span class="title">class</span> <span class="title">ChannelOutboundHandlerAdapter</span> <span class="keyword">extends</span> <span class="title">ChannelHandlerAdapter</span> <span class="keyword">implements</span> <span class="title">ChannelOutboundHandler</span></span></span><br></pre></td></tr></table></figure>
+<p>之所以在提供了handle的接口之后还提供Adapter, 是因为如果我们直接实现handler接口的话, 那么我们就需要实现handler里的所有方法, 但是我们可能要在不同的handler里实现不同的功能, 而这些功能恰巧由不同的handler里的方法实现, 那么每个实现了handler接口的类都会有大量的冗余代码. 但是如果我们继承Adapter的话, 我们只需要重写需要实现功能的方法就可以了.</p>
+<blockquote>
+<p>IdleStateHandler</p>
+</blockquote>
+<h2 id="解码器"><a href="#解码器" class="headerlink" title="解码器"></a>解码器</h2><p>为了解决网络数据流的拆包粘包问题,Netty为我们内置了如下的解码器</p>
+<ul>
+<li>ByteToMessageDecoder</li>
+<li>MessageToMessageDecoder</li>
+<li>LineBasedFrameDecoder</li>
+<li>StringDecoder</li>
+<li>DelimiterBasedFrameDecoder</li>
+<li>FixedLengthFrameDecoder</li>
+<li>ProtoBufVarint32FrameDecoder</li>
+<li>ProtobufDecoder</li>
+<li>LengthFieldBasedFrameDecoder</li>
+</ul>
+<p>Netty还内置了如下的编码器</p>
+<ul>
+<li>ProtobufEncoder</li>
+<li>MessageToByteEncoder</li>
+<li>MessageToMessageEncoder</li>
+<li>LengthFieldPrepender</li>
+</ul>
+<p>Netty还为我们提供HTTP相关的编解码器</p>
+<ul>
+<li><code>HttpRequestDecoder</code> : Http消息解码器</li>
+<li><code>HttpObjectAggregator</code> : 将多个消息转换为单一的<code>FullHttpRequest</code>或者<code>FullHttpResponse</code></li>
+<li><code>HttpResponseEncoder</code> : 对Http消息影响进行编码</li>
+<li><code>ChunkedWriteHandler</code> : 异步大码流消息发送</li>
+</ul>
+<h2 id="ByteToMessageDecoder"><a href="#ByteToMessageDecoder" class="headerlink" title="ByteToMessageDecoder"></a>ByteToMessageDecoder</h2><p>如果我们自己想要实现自己的半包解码器,我们可以继承<code>ByteToMessageDecoder</code>, 实现更加复杂的半包解码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ByteToMessageDecoder</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span></span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><a href="">ChannelInboundHandlerAdapter</a>参考</p>
+</blockquote>
+<p>我们只需要继承该类并实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out)</span> <span class="keyword">throws</span> Exception</span>;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法, 在这个方法里完成byte字节到java对象的转换, 也就是我们将<code>ByteBuf</code>解析成java对象然后抛给<code>List&lt;Object&gt; out</code>就可以了.</p>
+<blockquote>
+<p>需要注意的这个类没有实现粘包组包等情况, 这个就需要我们自己实现了.</p>
+</blockquote>
+<h2 id="MessageToMessageDecoder"><a href="#MessageToMessageDecoder" class="headerlink" title="MessageToMessageDecoder"></a>MessageToMessageDecoder</h2><p><code>MessageToMessageDecoder</code>一般作为二次解码器, 当我们在<code>ByteToMessageDecoder</code>将一个bytes数组转换成一个java对象的时候, 我们可能还需要将这个对象进行二次解码成其他对象, 我们就可以继承这个类,<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageToMessageDecoder</span>&lt;<span class="title">I</span>&gt; <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span></span></span><br></pre></td></tr></table></figure></p>
+<p>然后实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, I msg, List&lt;Object&gt; out)</span> <span class="keyword">throws</span> Exception</span>;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法就可以了</p>
+<h2 id="LineBasedFrameDecoder"><a href="#LineBasedFrameDecoder" class="headerlink" title="LineBasedFrameDecoder"></a>LineBasedFrameDecoder</h2><p><code>LineBasedFrameDecoder</code>的原理是从<code>ByteBuf</code>的可读字节中找到<code>\n</code>或者<code>\r\n</code>,找到之后就以此为结束,然后将当前读取到的数据组成一行.</p>
+<p>如果我们设置每一行的最大长度, 但是当达到最大长度之后还没有找到结束符,就会抛出异常,同时将读取的数据舍弃掉.</p>
+<p><code>LineBasedFrameDecoder</code>的用法很简单, 我们可以向其指定大小或者不指定大小<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">ch.pipline().addLast(<span class="keyword">new</span> LineBasedFrameDecoder());</span><br><span class="line">...</span><br><span class="line">或者</span><br><span class="line">...</span><br><span class="line">ch.pipline().addLast(<span class="keyword">new</span> LineBasedFrameDecoder(<span class="number">1024</span>));</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<h2 id="DelimiterBasedFrameDecoder"><a href="#DelimiterBasedFrameDecoder" class="headerlink" title="DelimiterBasedFrameDecoder"></a>DelimiterBasedFrameDecoder</h2><p>使用<code>DelimiterBasedFrameDecoder</code>我们可以自定义设定分隔符<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">ByteBuf delimiter = Unpooled.copiedBuffer(<span class="string">"$_"</span>.getBytes());</span><br><span class="line">ch.pipline().addLast(<span class="keyword">new</span> DelimiterBasedFrameDecoder(<span class="number">1024</span>, delimiter));</span><br></pre></td></tr></table></figure></p>
+<p>在上面的例子中我们使用了自定义的分隔符<code>$_</code>, 同样的如果在1024个字节中找不到<code>$_</code>, 也会抛出.</p>
+<h2 id="FixedLengthFrameDecoder"><a href="#FixedLengthFrameDecoder" class="headerlink" title="FixedLengthFrameDecoder"></a>FixedLengthFrameDecoder</h2><p><code>FixedLengthFrameDecoder</code>为定长解码器, 它会按照指定长度对消息进行解码.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ch.pipline().addLast(<span class="keyword">new</span> FixedLengthFrameDecoder(<span class="number">1024</span>));</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子会每隔1024个长度之后进行消息解码,如果不足1024,则会将消息缓存起来,然后再进行解码</p>
+<h2 id="ProtobufVarint32FrameDecoder"><a href="#ProtobufVarint32FrameDecoder" class="headerlink" title="ProtobufVarint32FrameDecoder"></a>ProtobufVarint32FrameDecoder</h2><p><code>ProtoBufVarint32FrameDecoder</code>是Netty为我们提供的Protobuf半包解码器, 通过它配合使用<code>ProtobufDecoder</code>和<code>ProtobufEncoder</code>我们就可以使用Protobuf进行通信了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch.pipline().addLast(<span class="keyword">new</span> ProtobufVarint32FrameDecoder());</span><br><span class="line">ch.pipline().addLast(<span class="keyword">new</span> ProtobufDecoder());</span><br><span class="line">ch.pipline().addLast(<span class="keyword">new</span> ProtobufEncoder());</span><br></pre></td></tr></table></figure></p>
+<h2 id="LengthFieldBasedFrameDecoder"><a href="#LengthFieldBasedFrameDecoder" class="headerlink" title="LengthFieldBasedFrameDecoder"></a>LengthFieldBasedFrameDecoder</h2><p><code>LengthFieldBasedFrameDecoder</code>是Netty为我们提供的通用半包解码器.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LengthFieldBasedFrameDecoder</span> <span class="keyword">extends</span> <span class="title">ByteToMessageDecoder</span></span></span><br></pre></td></tr></table></figure></p>
+<p>这个类的半包读取策略由下面的属性控制</p>
+<ul>
+<li><code>lengthFieldOffset</code> : 标志长度字段的偏移量. 也就是在一个bytes字节流中,表示消息长度的字段是从流中哪个位置开始的.</li>
+<li><code>lengthFieldLength</code> : 长度字段的长度(单位byte)</li>
+<li><code>lengthAdjustment</code> : 当消息长度包含了消息头的长度的时候,需要使用这个变量进行校正, 例如lengthFieldOffset为0,lengthFieldLength为2, 那么消息正体在解析时就需要校正2个字节, 故这里为-2.</li>
+<li><code>initialBytesToStrip</code>: 这个是当我们解析<code>ByteBuf</code>时要跳过的那些字段, (一般为lengthFieldOffset + lengthFieldLength)</li>
+</ul>
+<h2 id="MessageToByteEncoder"><a href="#MessageToByteEncoder" class="headerlink" title="MessageToByteEncoder"></a>MessageToByteEncoder</h2><p>该类负责将java对象编码成<code>ByteBuf</code>, 我们只需要继承该类然后实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">encode</span><span class="params">(ChannelHandlerContext ctx, I msg, ByteBuf out)</span> <span class="keyword">throws</span> Exception</span>;</span><br></pre></td></tr></table></figure></p>
+<p>方法就可以了</p>
+<h2 id="MessageToMessageEncoder"><a href="#MessageToMessageEncoder" class="headerlink" title="MessageToMessageEncoder"></a>MessageToMessageEncoder</h2><p>如果要将java对象不编码成<code>ByteBuf</code>, 而是编译成, 其他对象, 那我们可以继承这个类实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">encode</span><span class="params">(ChannelHandlerContext ctx, I msg, List&lt;Object&gt; out)</span> <span class="keyword">throws</span> Exception</span>;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法就可以了</p>
+<blockquote>
+<p>这个类与<code>MessageToByteEncoder</code>的不同是, 将java对象放到一个<code>List&lt;Object&gt; out</code>, 而不是编码成<code>ByteBuf</code>发送</p>
+</blockquote>
+<h2 id="LengthFieldPrepender"><a href="#LengthFieldPrepender" class="headerlink" title="LengthFieldPrepender"></a>LengthFieldPrepender</h2><p><code>LengthFieldPrepender</code>是一个非常实用的工具类, 如果我们在发送消息的时候采用的是:消息长度字段+原始消息的形式, 那么我们就可以使用<code>LengthFieldPrepender</code>了. 这是因为<code>LengthFieldPrepender</code>可以将待发送消息的长度(二进制字节长度)写到<code>ByteBuf</code>的前俩个字节.例如:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello,World</span><br></pre></td></tr></table></figure></p>
+<p>编码前是12个字节,但是经过<code>LengthFieldPrepender</code>编码后变成了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x000E</span> Hello,World</span><br></pre></td></tr></table></figure></p>
+<p>成为了14个字节</p>
+<h2 id="HTTP解码器"><a href="#HTTP解码器" class="headerlink" title="HTTP解码器"></a>HTTP解码器</h2><blockquote>
+<p>使用<code>HttpObjectAggregator</code>是因为在解码Http消息中会产生多个对象(<code>HttpRequest</code>, <code>HttpResponse</code>, <code>HttpContent</code>, <code>LastHttpContent</code>), 使用<code>HttpObjectAggregator</code>我们可以将这些对象都组合到一起去. 然后当我们自己在处理消息时就可以直接使用<code>FullHttpRequest了</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ch.pipline().addLast(<span class="string">"http-decoder"</span>, <span class="keyword">new</span> HttpRequestDecoder());</span><br><span class="line">ch.pipline().addLast(<span class="string">"http-aggregator"</span>, <span class="keyword">new</span> HttpObjectAggregator());</span><br><span class="line">ch.pipline().addLast(<span class="string">"http-encoder"</span>, <span class="keyword">new</span> HttpResponseEncoder());</span><br><span class="line">ch.pipline().addLast(<span class="string">"http-chunked"</span>, <span class="keyword">new</span> ChunkedWriteHandler());</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Netty/">Netty</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/01/23/netty/ChannelHandler/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/23/netty/ChannelHandler/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/20/http客户端/Retrofit/" title="Retrofit 初探" itemprop="url">Retrofit 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-19T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-20</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Get请求"><a href="#Get请求" class="headerlink" title="Get请求"></a>Get请求</h2><p>Retrofit 将HTTP API转换为了接口形式, 如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">GitHubService</span> </span>&#123;</span><br><span class="line">  <span class="meta">@GET</span>(<span class="string">"users/&#123;user&#125;/repos"</span>)</span><br><span class="line">  Call&lt;List&lt;Repo&gt;&gt; listRepos(<span class="meta">@Path</span>(<span class="string">"user"</span>) String user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后<code>Retrofit</code>会自动完成其实现类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Retrofit retrofit = <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">    .baseUrl(<span class="string">"https://api.github.com"</span>)</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line">GitHubService service = retrofit.create(GitHubService.class);</span><br></pre></td></tr></table></figure></p>
+<p>在上面的示例中我们完成了一个<code>Get</code>请求, 然后使用<code>@Path</code>进行参数替换</p>
+<h2 id="Post请求"><a href="#Post请求" class="headerlink" title="Post请求"></a>Post请求</h2><p>上面我们展示的是一个<code>Get</code>请求, 下面我们再看一个<code>Post</code>请求的示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@POST</span>(<span class="string">"users/new"</span>)</span><br><span class="line"><span class="function">Call&lt;User&gt; <span class="title">createUser</span><span class="params">(@Body User user)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p><code>@Body</code>注解会将<code>User</code>对象转换为请求体</p>
+<h2 id="form-encoded"><a href="#form-encoded" class="headerlink" title="form-encoded"></a>form-encoded</h2><p>我们我们想要将格式转换为<code>form-encoded</code>形式, 参考如下示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FormUrlEncoded</span></span><br><span class="line"><span class="meta">@POST</span>(<span class="string">"user/edit"</span>)</span><br><span class="line"><span class="function">Call&lt;User&gt; <span class="title">updateUser</span><span class="params">(@Field(<span class="string">"first_name"</span>)</span> String first, @<span class="title">Field</span><span class="params">(<span class="string">"last_name"</span>)</span> String last)</span>;</span><br></pre></td></tr></table></figure></p>
+<p><code>@Field</code>注解会组成一个个字典结构的数据进行发送.</p>
+<h2 id="HEADER"><a href="#HEADER" class="headerlink" title="HEADER"></a>HEADER</h2><p>有时候我们也许想要设置其他的消息头, 我们可以如此做<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Headers</span>(<span class="string">"Cache-Control: max-age=640000"</span>)</span><br><span class="line"><span class="meta">@GET</span>(<span class="string">"widget/list"</span>)</span><br><span class="line">Call&lt;List&lt;Widget&gt;&gt; widgetList();</span><br></pre></td></tr></table></figure></p>
+<h2 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h2><p>我们在<code>Call</code>对象中分别可以调用异步和同步方法进行通信<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Retrofit retrofit = <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">		.baseUrl(<span class="string">"https://api.github.com"</span>)</span><br><span class="line">		.build();</span><br><span class="line"></span><br><span class="line">GitHubService service = retrofit.create(GitHubService.class);</span><br><span class="line"></span><br><span class="line">Call&lt;List&lt;String&gt;&gt; repos = service.listRepos(<span class="string">"octocat"</span>);</span><br><span class="line">	<span class="comment">// 同步调用</span></span><br><span class="line">	Response&lt;List&lt;String&gt;&gt; result = repos.execute();</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 异步调用</span></span><br><span class="line">	repos.enqueue(<span class="keyword">new</span> Callback() &#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Response response)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Throwable t)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/http客户端/">http客户端</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/01/20/http客户端/Retrofit/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/20/http客户端/Retrofit/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
+  </nav>
+
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Groovy/" title="Groovy">Groovy<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Haskell/" title="Haskell">Haskell<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JMH/" title="JMH">JMH<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaSE/" title="JavaSE">JavaSE<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java工具/" title="Java工具">Java工具<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MongoDB/" title="MongoDB">MongoDB<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Php/" title="Php">Php<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Reids/" title="Reids">Reids<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/TCP-IP/" title="TCP IP">TCP IP<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/guice/" title="guice">guice<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http客户端/" title="http客户端">http客户端<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http服务器/" title="http服务器">http服务器<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/memcached/" title="memcached">memcached<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mycat/" title="mycat">mycat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python2/" title="python2">python2<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/并发编程/" title="并发编程">并发编程<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/序列化工具/" title="序列化工具">序列化工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/日志工具/" title="日志工具">日志工具<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/构建工具/" title="构建工具">构建工具<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+ </html>

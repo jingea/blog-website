@@ -1,0 +1,621 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>MessagePack 初探 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="MessagePack 是一个高效的二进制数据序列化工具. 使用它可以让你像使用JSON那样在多种语言中进行数据交换, 但是它比JSON更加小巧,迅捷.
+在Java中使用的话, 我们首先添加maven依赖12345 &amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.msgpack&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;msgpac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MessagePack 初探">
+<meta property="og:url" content="http://www.ming15.wang/2016/02/03/序列化工具/MessagePack 初探/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="MessagePack 是一个高效的二进制数据序列化工具. 使用它可以让你像使用JSON那样在多种语言中进行数据交换, 但是它比JSON更加小巧,迅捷.
+在Java中使用的话, 我们首先添加maven依赖12345 &amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.msgpack&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;msgpac">
+<meta property="og:updated_time" content="2016-03-15T11:47:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MessagePack 初探">
+<meta name="twitter:description" content="MessagePack 是一个高效的二进制数据序列化工具. 使用它可以让你像使用JSON那样在多种语言中进行数据交换, 但是它比JSON更加小巧,迅捷.
+在Java中使用的话, 我们首先添加maven依赖12345 &amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.msgpack&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;msgpac">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/02/03/序列化工具/MessagePack 初探/" title="MessagePack 初探" itemprop="url">MessagePack 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-02-02T16:00:00.000Z" itemprop="datePublished"> Published 2016-02-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			
+		
+		</div>
+		
+		<p>MessagePack 是一个高效的二进制数据序列化工具. 使用它可以让你像使用JSON那样在多种语言中进行数据交换, 但是它比JSON更加小巧,迅捷.</p>
+<p>在Java中使用的话, 我们首先添加maven依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.msgpack<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>msgpack<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.6.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>首先看一个简单的示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.annotation.Message;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main1</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Message</span> <span class="comment">// Annotation</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessage</span> </span>&#123;</span><br><span class="line">        <span class="comment">// public fields are serialized.</span></span><br><span class="line">        <span class="keyword">public</span> String name;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">double</span> version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MyMessage src = <span class="keyword">new</span> MyMessage();</span><br><span class="line">        src.name = <span class="string">"msgpack"</span>;</span><br><span class="line">        src.version = <span class="number">0.6</span>;</span><br><span class="line"></span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line">        <span class="comment">// Serialize</span></span><br><span class="line">        <span class="keyword">byte</span>[] bytes = msgpack.write(src);</span><br><span class="line">        <span class="comment">// Deserialize</span></span><br><span class="line">        MyMessage dst = msgpack.read(bytes, MyMessage.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在上面的例子中我们看到将一个<code>MyMessage</code>序列化成byte数组, 同时又将其反序列化出来了. 但是如果我们要同时序列化多个对象呢？那么我们就可以使用<code>Packer</code>和<code>Unpacker</code>.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.annotation.Message;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.packer.Packer;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.unpacker.Unpacker;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main2</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Message</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessage</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> String name;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">double</span> version;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MyMessage src1 = <span class="keyword">new</span> MyMessage();</span><br><span class="line">        src1.name = <span class="string">"msgpack"</span>;</span><br><span class="line">        src1.version = <span class="number">0.6</span>;</span><br><span class="line">        MyMessage src2 = <span class="keyword">new</span> MyMessage();</span><br><span class="line">        src2.name = <span class="string">"muga"</span>;</span><br><span class="line">        src2.version = <span class="number">10.0</span>;</span><br><span class="line">        MyMessage src3 = <span class="keyword">new</span> MyMessage();</span><br><span class="line">        src3.name = <span class="string">"frsyukik"</span>;</span><br><span class="line">        src3.version = <span class="number">1.0</span>;</span><br><span class="line"></span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line">        <span class="comment">// Serialize</span></span><br><span class="line">        ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        Packer packer = msgpack.createPacker(out);</span><br><span class="line">        packer.write(src1);</span><br><span class="line">        packer.write(src2);</span><br><span class="line">        packer.write(src3);</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = out.toByteArray();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Deserialize</span></span><br><span class="line">        ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">        Unpacker unpacker = msgpack.createUnpacker(in);</span><br><span class="line">        MyMessage dst1 = unpacker.read(MyMessage.class);</span><br><span class="line">        MyMessage dst2 = unpacker.read(MyMessage.class);</span><br><span class="line">        MyMessage dst3 = unpacker.read(MyMessage.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实<code>Packer</code>和<code>Unpacker</code>内置了非常多了序列化类型<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.math.BigInteger;</span><br><span class="line"><span class="keyword">import</span> java.nio.ByteBuffer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.packer.Packer;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.unpacker.Unpacker;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main3</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Serialization</span></span><br><span class="line">        ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        Packer packer = msgpack.createPacker(out);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对原生类型进行序列化</span></span><br><span class="line">        packer.write(<span class="keyword">true</span>); <span class="comment">// boolean value</span></span><br><span class="line">        packer.write(<span class="number">10</span>); <span class="comment">// int value</span></span><br><span class="line">        packer.write(<span class="number">10.5</span>); <span class="comment">// double value</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对原生包装类型进行序列化</span></span><br><span class="line">        packer.write(Boolean.TRUE);</span><br><span class="line">        packer.write(<span class="keyword">new</span> Integer(<span class="number">10</span>));</span><br><span class="line">        packer.write(<span class="keyword">new</span> Double(<span class="number">10.5</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对数组进行序列化</span></span><br><span class="line">        packer.write(<span class="keyword">new</span> <span class="keyword">int</span>[] &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span> &#125;);</span><br><span class="line">        packer.write(<span class="keyword">new</span> Double[] &#123; <span class="number">10.5</span>, <span class="number">20.5</span> &#125;);</span><br><span class="line">        packer.write(<span class="keyword">new</span> String[] &#123; <span class="string">"msg"</span>, <span class="string">"pack"</span>, <span class="string">"for"</span>, <span class="string">"java"</span> &#125;);</span><br><span class="line">        packer.write(<span class="keyword">new</span> <span class="keyword">byte</span>[] &#123; <span class="number">0x30</span>, <span class="number">0x31</span>, <span class="number">0x32</span> &#125;); <span class="comment">// byte array</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 对其他引用类型进行序列化</span></span><br><span class="line">        packer.write(<span class="string">"MessagePack"</span>); <span class="comment">// String object</span></span><br><span class="line">        packer.write(ByteBuffer.wrap(<span class="keyword">new</span> <span class="keyword">byte</span>[] &#123; <span class="number">0x30</span>, <span class="number">0x31</span>, <span class="number">0x32</span> &#125;)); <span class="comment">// ByteBuffer object</span></span><br><span class="line">        packer.write(BigInteger.ONE); <span class="comment">// BigInteger object</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化</span></span><br><span class="line">        <span class="keyword">byte</span>[] bytes = out.toByteArray();</span><br><span class="line">        ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">        Unpacker unpacker = msgpack.createUnpacker(in);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化出原生类型</span></span><br><span class="line">        <span class="keyword">boolean</span> b = unpacker.readBoolean(); <span class="comment">// boolean value</span></span><br><span class="line">        <span class="keyword">int</span> i = unpacker.readInt(); <span class="comment">// int value</span></span><br><span class="line">        <span class="keyword">double</span> d = unpacker.readDouble(); <span class="comment">// double value</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化出原生包装类型</span></span><br><span class="line">        Boolean wb = unpacker.read(Boolean.class);</span><br><span class="line">        Integer wi = unpacker.read(Integer.class);</span><br><span class="line">        Double wd = unpacker.read(Double.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化出数组</span></span><br><span class="line">        <span class="keyword">int</span>[] ia = unpacker.read(<span class="keyword">int</span>[].class);</span><br><span class="line">        Double[] da = unpacker.read(Double[].class);</span><br><span class="line">        String[] sa = unpacker.read(String[].class);</span><br><span class="line">        <span class="keyword">byte</span>[] ba = unpacker.read(<span class="keyword">byte</span>[].class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 反序列化出 String, ByteBuffer, BigInteger, List 和 Map</span></span><br><span class="line">        String ws = unpacker.read(String.class);</span><br><span class="line">        ByteBuffer buf = unpacker.read(ByteBuffer.class);</span><br><span class="line">        BigInteger bi = unpacker.read(BigInteger.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于<code>List, Map</code>这俩种类型的序列化, 我们需要额外说明一下. 在序列化<code>List, Map</code>的时候, 我们需要使用<code>Template</code>对其进行转换.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.packer.Packer;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.template.Template;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.unpacker.Unpacker;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.msgpack.template.Templates.tList;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.msgpack.template.Templates.tMap;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.msgpack.template.Templates.TString;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main4</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 创建序列化/反序列化 List 和 Map 对象的模板</span></span><br><span class="line">		Template&lt;List&lt;String&gt;&gt; listTmpl = tList(TString);</span><br><span class="line">		Template&lt;Map&lt;String, String&gt;&gt; mapTmpl = tMap(TString, TString);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 开始序列化</span></span><br><span class="line">		ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">		Packer packer = msgpack.createPacker(out);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 序列化 List 对象</span></span><br><span class="line">		List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">		list.add(<span class="string">"msgpack"</span>);</span><br><span class="line">		list.add(<span class="string">"for"</span>);</span><br><span class="line">		list.add(<span class="string">"java"</span>);</span><br><span class="line">		packer.write(list); <span class="comment">// List object</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 序列化 Map 对象</span></span><br><span class="line">		Map&lt;String, String&gt; map = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</span><br><span class="line">		map.put(<span class="string">"sadayuki"</span>, <span class="string">"furuhashi"</span>);</span><br><span class="line">		map.put(<span class="string">"muga"</span>, <span class="string">"nishizawa"</span>);</span><br><span class="line">		packer.write(map); <span class="comment">// Map object</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 开始反序列化</span></span><br><span class="line">		<span class="keyword">byte</span>[] bytes = out.toByteArray();</span><br><span class="line">		ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line">		Unpacker unpacker = msgpack.createUnpacker(in);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 反序列化出 List 对象</span></span><br><span class="line">		List&lt;String&gt; dstList = unpacker.read(listTmpl);</span><br><span class="line"></span><br><span class="line">		<span class="comment">//  反序列化出 Map 对象</span></span><br><span class="line">		Map&lt;String, String&gt; dstMap = unpacker.read(mapTmpl);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有时候我们可能没有办法将POJO类添加上<code>Message</code>注解(可能没有访问那个类的权限), 但是我们又想对其进行序列化, 那怎么办呢？<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line">msgpack.<span class="keyword">register</span>(MyMessage2.<span class="keyword">class</span>);</span><br></pre></td></tr></table></figure></p>
+<p>我们只要向需要序列化的类注册到<code>MessagePack</code>上就可以了.</p>
+<p>有时候,我们可能不需要对某个属性进行序列化, 例如线上某个老版本里并没有A属性, 但是在新的版本里填上了A属性, 但是又要兼容老版本怎么办呢？我们可以使用<code>@Optional</code>注解<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Message</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMessage</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String name;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> version;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// new field</span></span><br><span class="line">    <span class="meta">@Optional</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> flag = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>MessagePack还提供了动态类型特性.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.msgpack.MessagePack;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.type.Value;</span><br><span class="line"><span class="keyword">import</span> org.msgpack.unpacker.Converter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.msgpack.template.Templates.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main5</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// Create serialize objects.</span></span><br><span class="line">        List&lt;String&gt; src = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">        src.add(<span class="string">"msgpack"</span>);</span><br><span class="line">        src.add(<span class="string">"kumofs"</span>);</span><br><span class="line">        src.add(<span class="string">"viver"</span>);</span><br><span class="line"></span><br><span class="line">        MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line">        <span class="comment">// Serialize</span></span><br><span class="line">        <span class="keyword">byte</span>[] raw = msgpack.write(src);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Deserialize directly using a template</span></span><br><span class="line">        List&lt;String&gt; dst1 = msgpack.read(raw, tList(TString));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Or, Deserialze to Value then convert type.</span></span><br><span class="line">        Value dynamic = msgpack.read(raw);</span><br><span class="line">        List&lt;String&gt; dst2 = <span class="keyword">new</span> Converter(dynamic).read(tList(TString));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当从MessagePack里读取数据的时候, 我们可以先不指定其转换的类型,　使用<code>Value</code>来代替, 等后期我们再使用<code>Converter</code> 对其转换.</p>
+<p>接下来我们对其与JSON进行对比<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">msgpack</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		MessagePack msgpack = <span class="keyword">new</span> MessagePack();</span><br><span class="line"></span><br><span class="line">		List&lt;SeObj&gt; list = list();</span><br><span class="line">		<span class="keyword">long</span> start1 = System.currentTimeMillis();</span><br><span class="line">		<span class="keyword">byte</span>[] bytes1 = msgpack.write(list);</span><br><span class="line">		<span class="keyword">long</span> end1 = System.currentTimeMillis();</span><br><span class="line">		System.out.println((end1 - start1) + <span class="string">" : "</span> + bytes1.length);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">long</span> start2 = System.currentTimeMillis();</span><br><span class="line">		String json = JSON.toJSONString(list);</span><br><span class="line">		<span class="keyword">long</span> end2 = System.currentTimeMillis();</span><br><span class="line">		System.out.println((end2 - start2) + <span class="string">" : "</span> + json.getBytes().length);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;SeObj&gt; <span class="title">list</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		List&lt;SeObj&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		Random random = <span class="keyword">new</span> Random();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">			SeObj seObj = <span class="keyword">new</span> SeObj();</span><br><span class="line">			seObj.id = random.nextInt(<span class="number">100000</span>);</span><br><span class="line">			seObj.tall = random.nextFloat();</span><br><span class="line">			seObj.name = <span class="string">"name"</span> + random.nextInt(<span class="number">100000</span>);</span><br><span class="line">			list.add(seObj);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> list;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Message</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SeObj</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">int</span> id;</span><br><span class="line">	<span class="keyword">public</span> String name;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">float</span> tall;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span>的结果</span><br><span class="line"><span class="number">194</span> : <span class="number">1960</span></span><br><span class="line"><span class="number">50</span> : <span class="number">4947</span></span><br><span class="line"><span class="number">1000</span>的结果</span><br><span class="line"><span class="number">210</span> : <span class="number">19589</span></span><br><span class="line"><span class="number">70</span> : <span class="number">49424</span></span><br><span class="line"><span class="number">10000</span>的结果</span><br><span class="line"><span class="number">212</span> : <span class="number">195765</span></span><br><span class="line"><span class="number">160</span> : <span class="number">493987</span></span><br><span class="line"><span class="number">100000</span>的结果</span><br><span class="line"><span class="number">283</span> : <span class="number">1956964</span></span><br><span class="line"><span class="number">330</span> : <span class="number">4940270</span></span><br><span class="line"><span class="number">1000000</span>的结果</span><br><span class="line"><span class="number">649</span> : <span class="number">19573508</span></span><br><span class="line"><span class="number">1878</span> : <span class="number">49404120</span></span><br></pre></td></tr></table></figure></p>
+<p>我们发现MessagePack的耗时相对来说是比较稳定的, 但是在生成的数据量上比JSON要强一倍多</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/序列化工具/">序列化工具</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2016/02/03/序列化工具/MessagePack 初探/" data-title="MessagePack 初探 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/02/22/netty/ServerBootstrap/" title="NettyServerBootstrap">
+  <strong>上一篇：</strong><br/>
+  <span>
+  NettyServerBootstrap</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/02/02/JavaSE/java volatile/"  title="volatile 使用">
+ <strong>下一篇：</strong><br/> 
+ <span>volatile 使用
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/02/03/序列化工具/MessagePack 初探/" data-title="MessagePack 初探" data-url="http://www.ming15.wang/2016/02/03/序列化工具/MessagePack 初探/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Groovy/" title="Groovy">Groovy<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Haskell/" title="Haskell">Haskell<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JMH/" title="JMH">JMH<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaSE/" title="JavaSE">JavaSE<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java工具/" title="Java工具">Java工具<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MongoDB/" title="MongoDB">MongoDB<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Php/" title="Php">Php<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Reids/" title="Reids">Reids<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/TCP-IP/" title="TCP IP">TCP IP<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/guice/" title="guice">guice<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http客户端/" title="http客户端">http客户端<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http服务器/" title="http服务器">http服务器<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/memcached/" title="memcached">memcached<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mycat/" title="mycat">mycat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python2/" title="python2">python2<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/并发编程/" title="并发编程">并发编程<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/序列化工具/" title="序列化工具">序列化工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/日志工具/" title="日志工具">日志工具<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/构建工具/" title="构建工具">构建工具<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -1,0 +1,1078 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ming15">
+<meta property="og:url" content="http://www.ming15.wang/page/4/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ming15">
+<meta name="twitter:description">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main">
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/04/jmh/JMHSample_06_FixtureLevel/" title="06_FixtureLevel" itemprop="url">06_FixtureLevel</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-01-03T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-04</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在演示这个示例之前我们先说一下<code>@State</code>里Fixture methods的运行级别含义</p>
+<ul>
+<li>Level.Trial: 整个benchmark, 其含义是iteration的序列集合</li>
+<li>Level.Iteration: benchmark里单个iteration,　包含统计内调用方法的集合</li>
+<li>Level.Invocation:　单个benchmark方法的调用</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@State</span>(Scope.Thread)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMHSample_06_FixtureLevel</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">double</span> x;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Fixture methods有三种不同的运行级别:</span><br><span class="line">     *</span><br><span class="line">     * Level.Trial: 在整个benchmark之前或者之后运行</span><br><span class="line">     * Level.Iteration: 在每个benchmark iteration 之前或者之后运行</span><br><span class="line">     * Level.Invocation: 在每个 benchmark method 调用之前或者之后运行</span><br><span class="line">     *</span><br><span class="line">     * fixture methods 所消耗的事件并不会统计在最终结果中, 因此我们可以在这些方法中做一些耗时操作</span><br><span class="line">     */</span></span><br><span class="line"></span><br><span class="line">	<span class="meta">@TearDown</span>(Level.Iteration)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">check</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">assert</span> x &gt; Math.PI : <span class="string">"Nothing changed?"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureRight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		x++;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureWrong</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">double</span> x = <span class="number">0</span>;</span><br><span class="line">		x++;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">		Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">				.include(JMHSample_06_FixtureLevel.class.getSimpleName())</span><br><span class="line">				.warmupIterations(<span class="number">3</span>)</span><br><span class="line">				.measurementIterations(<span class="number">3</span>)</span><br><span class="line">				.forks(<span class="number">1</span>)</span><br><span class="line">				.jvmArgs(<span class="string">"-ea"</span>)</span><br><span class="line">				.shouldFailOnError(<span class="keyword">false</span>) <span class="comment">// switch to "true" to fail the complete run</span></span><br><span class="line">				.build();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们观察到的结果是<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"># Warmup: 3 iterations, 1 s each</span><br><span class="line"># Measurement: 3 iterations, 1 s each</span><br><span class="line"># Timeout: 10 min per iteration</span><br><span class="line"># Threads: 1 thread, will synchronize iterations</span><br><span class="line"># Benchmark mode: Throughput, ops/time</span><br><span class="line"># Benchmark: JMH.JMHSample_06_FixtureLevel.measureRight</span><br><span class="line"></span><br><span class="line"># Run progress: 0.00% complete, ETA 00:00:12</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: 399616586.177 ops/s</span><br><span class="line"># Warmup Iteration   2: 399871057.355 ops/s</span><br><span class="line"># Warmup Iteration   3: 400062522.871 ops/s</span><br><span class="line">Iteration   1: 399026547.186 ops/s</span><br><span class="line">Iteration   2: 400226493.878 ops/s</span><br><span class="line">Iteration   3: 398754925.120 ops/s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Result "measureRight":</span><br><span class="line">  399335988.728 ±(99.9%) 14286060.402 ops/s [Average]</span><br><span class="line">  (min, avg, max) = (398754925.120, 399335988.728, 400226493.878), stdev = 783067.177</span><br><span class="line">  CI (99.9%): [385049928.326, 413622049.130] (assumes normal distribution)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Warmup: 3 iterations, 1 s each</span><br><span class="line"># Measurement: 3 iterations, 1 s each</span><br><span class="line"># Timeout: 10 min per iteration</span><br><span class="line"># Threads: 1 thread, will synchronize iterations</span><br><span class="line"># Benchmark mode: Throughput, ops/time</span><br><span class="line"># Benchmark: JMH.JMHSample_06_FixtureLevel.measureWrong</span><br><span class="line"></span><br><span class="line"># Run progress: 50.00% complete, ETA 00:00:06</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: &lt;failure&gt;</span><br><span class="line"></span><br><span class="line">java.lang.AssertionError: Nothing changed?</span><br><span class="line">	at JMH.JMHSample_06_FixtureLevel.check(JMHSample_06_FixtureLevel.java:28)</span><br><span class="line">	at JMH.generated.JMHSample_06_FixtureLevel_measureWrong_jmhTest.measureWrong_Throughput(JMHSample_06_FixtureLevel_measureWrong_jmhTest.java:80)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Method.java:497)</span><br><span class="line">	at org.openjdk.jmh.runner.BenchmarkHandler$BenchmarkTask.call(BenchmarkHandler.java:430)</span><br><span class="line">	at org.openjdk.jmh.runner.BenchmarkHandler$BenchmarkTask.call(BenchmarkHandler.java:412)</span><br><span class="line">	at java.util.concurrent.FutureTask.run(FutureTask.java:266)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:745)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Run complete. Total time: 00:00:08</span><br><span class="line"></span><br><span class="line">Benchmark                                    Mode  Cnt          Score          Error  Units</span><br><span class="line">JMH.JMHSample_06_FixtureLevel.measureRight  thrpt    3  399335988.728 ± 14286060.402  ops/s</span><br></pre></td></tr></table></figure></p>
+<p>从结果中我们可以看到在测试measureWrong时，刚执行完一个iteration就产生了异常</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JMH/">JMH</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/01/04/jmh/JMHSample_06_FixtureLevel/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/04/jmh/JMHSample_06_FixtureLevel/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/01/jmh/JMHSample_04_DefaultState/" title="04_DefaultState" itemprop="url">04_DefaultState</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-31T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * 幸运的是, 在大多数情况下我们只需要一个状态对象, 因此我们可以将@State注解到Benchmark类的自身, 然后</span><br><span class="line"> * 让所有的benchmark函数都可以对其进行访问</span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@State</span>(Scope.Thread)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMHSample_04_DefaultState</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">double</span> x = Math.PI;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Benchmark</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        x++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">        Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">                .include(JMHSample_04_DefaultState.class.getSimpleName())</span><br><span class="line">                .warmupIterations(<span class="number">5</span>)</span><br><span class="line">                .measurementIterations(<span class="number">5</span>)</span><br><span class="line">                .forks(<span class="number">1</span>)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JMH/">JMH</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/01/01/jmh/JMHSample_04_DefaultState/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/01/jmh/JMHSample_04_DefaultState/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/01/jmh/JMHSample_03_States/" title="03_States" itemprop="url">03_States</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-31T16:00:00.000Z" itemprop="datePublished"> Published 2016-01-01</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在很多种情况下, 在benchmark运行的过程中, 你可能需要维持一些状态, 但是JMH被设计成经常并发的执行benchmark, 因此JMH提供了一些用于保存状态的对象.</p>
+<p>我们可以使用<code>@State</code>赋予其一个生命周期. 如下例所示,<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.openjdk.jmh.annotations.Benchmark;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.annotations.Scope;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.annotations.State;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.Runner;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.RunnerException;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.options.Options;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.options.OptionsBuilder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMHSample_03_States</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@State</span>(Scope.Benchmark)</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">BenchmarkState</span> </span>&#123;</span><br><span class="line">        <span class="keyword">volatile</span> <span class="keyword">double</span> x = Math.PI;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@State</span>(Scope.Thread)</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadState</span> </span>&#123;</span><br><span class="line">        <span class="keyword">volatile</span> <span class="keyword">double</span> x = Math.PI;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span><br><span class="line">     * Benchmark函数可以引用哪些状态对象, 这些状态对象的值由JMH负责注入. Benchmark函数可以没有状态对象,</span><br><span class="line">     * 也可以有一个或者多个状态对象引用. 我们可以很轻松的构建一个多线程的Benchmark.</span><br><span class="line">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Benchmark</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureUnshared</span><span class="params">(ThreadState state)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 所有的Benchmark线程都会调用这个方法,但是由于`ThreadState`作用在了Scope.Thread, 因此每个线程都会有一个自己的本地</span></span><br><span class="line">        <span class="comment">// 状态数据拷贝, 线程间的状态数据并不会进行共享</span></span><br><span class="line">        state.x++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Benchmark</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureShared</span><span class="params">(BenchmarkState state)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 所有的benchmark都会调用这个方法, 由于BenchmarkState是作用于Scope.Benchmark, 因此所有的线程都会共享同一个</span></span><br><span class="line">        <span class="comment">// BenchmarkState实例</span></span><br><span class="line">        state.x++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">        Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">                .include(JMHSample_03_States.class.getSimpleName())</span><br><span class="line">                .warmupIterations(<span class="number">5</span>)</span><br><span class="line">                .measurementIterations(<span class="number">5</span>)</span><br><span class="line">                .threads(<span class="number">4</span>)</span><br><span class="line">                .forks(<span class="number">1</span>)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有一点非常重要的是state由对其进行访问的benchmark线程实例化.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JMH/">JMH</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/01/01/jmh/JMHSample_03_States/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/01/jmh/JMHSample_03_States/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/30/java综合工具/args4j/" title="args4j 初探" itemprop="url">args4j 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-29T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-30</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>args4j可以方便地解析CUI（命令行接口）程序的输入参数或选项, 将其解析到一个参数类中.</p>
+<p>我们使用MAVEN测试一下这个工具, 首先我们创建一个MAVEN项目<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span><br><span class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wang.ming15.args4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>demo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>args4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>args4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.32<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后创建一个参数类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Args</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> String name;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Args Init"</span>);</span><br><span class="line">		System.out.println(<span class="string">"- name: "</span> + name);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后写一个主类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.kohsuke.args4j.CmdLineException;</span><br><span class="line"><span class="keyword">import</span> org.kohsuke.args4j.CmdLineParser;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Args args1 = <span class="keyword">new</span> Args();</span><br><span class="line">		CmdLineParser parser = <span class="keyword">new</span> CmdLineParser(args1);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			parser.parseArgument(args);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (CmdLineException e) &#123;</span><br><span class="line">			<span class="comment">// handling of wrong arguments</span></span><br><span class="line">			System.err.println(e.getMessage());</span><br><span class="line">			parser.printUsage(System.err);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(args1.name);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接着执行<code>mvn package</code>打出一个包, 然后执行命令<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar ./target/demo-<span class="number">1.0</span>-SNAPSHOT.jar Args -name <span class="string">"Hello World"</span></span><br></pre></td></tr></table></figure></p>
+<p>最后我们会看到输出</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java工具/">Java工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/30/java综合工具/args4j/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/30/java综合工具/args4j/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/28/jmh/JMH初探/" title="JMH 环境搭建" itemprop="url">JMH 环境搭建</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-27T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-28</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>JMH是一个用于java或者其他JVM语言的, 提供构建,运行,分析多种基准的工具.<br>我们通过使用引入依赖的方式,在我们的项目中添加基准测试<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.openjdk.jmh<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jmh-generator-annprocess<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.11.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.openjdk.jmh<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jmh-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.11.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>但是, JMH的官方推荐使用方式是,使用MAVEN构建一个基于要测试项目的一个独立的项目.</p>
+<p>我们使用archetype生成基准测试项目<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn archetype:generate -DinteractiveMode=<span class="keyword">false</span> -DarchetypeGroupId=org.openjdk.jmh -DarchetypeArtifactId=jmh-java-benchmark-archetype -DgroupId=wang.ming15.jmh -DartifactId=test -Dversion=<span class="number">1.0</span></span><br></pre></td></tr></table></figure></p>
+<p>执行完该命令后会生成一个新的项目,里面会有一个测试文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> wang.ming15.jmh;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.annotations.Benchmark;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyBenchmark</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Benchmark</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// This is a demo/sample template for building your JMH benchmarks. Edit as needed.</span></span><br><span class="line">        <span class="comment">// Put your benchmark code here.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后我们依赖要测试的项目就可以在新的项目中写基准测试到代码了</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JMH/">JMH</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/28/jmh/JMH初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/28/jmh/JMH初探/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/28/jmh/JMHSample_02_BenchmarkModes/" title="02_BenchmarkModes" itemprop="url">02_BenchmarkModes</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-27T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-28</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>当benchmark编译过程中, JMH会为此生成大量的额外代码. JMH可以在多种不同的模式下进行基准测试.</p>
+<h2 id="吞吐量"><a href="#吞吐量" class="headerlink" title="吞吐量"></a>吞吐量</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMHSample_02_BenchmarkModes</span> </span>&#123;</span><br><span class="line">	<span class="comment">/*</span><br><span class="line">     * Mode.Throughput, 统计一段时间内可持续调用基准测试方法的次数.</span><br><span class="line">     */</span></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="meta">@BenchmarkMode</span>(Mode.Throughput)</span><br><span class="line">	<span class="meta">@OutputTimeUnit</span>(TimeUnit.SECONDS)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureThroughput</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">		Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">				.include(JMHSample_02_BenchmarkModes.class.getSimpleName())</span><br><span class="line">				.warmupIterations(<span class="number">3</span>)	<span class="comment">// 热身3次</span></span><br><span class="line">				.measurementIterations(<span class="number">4</span>)	<span class="comment">// 执行4次</span></span><br><span class="line">				.forks(<span class="number">1</span>)</span><br><span class="line">				.build();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果为<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># Run progress: 0.00% complete, ETA 00:00:07</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: 10.007 ops/s</span><br><span class="line"># Warmup Iteration   2: 10.006 ops/s</span><br><span class="line"># Warmup Iteration   3: 10.004 ops/s</span><br><span class="line">Iteration   1: 9.987 ops/s</span><br><span class="line">Iteration   2: 10.005 ops/s</span><br><span class="line">Iteration   3: 10.002 ops/s</span><br><span class="line">Iteration   4: 9.999 ops/s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Result "measureThroughput":</span><br><span class="line">  9.999 ±(99.9%) 0.051 ops/s [Average]</span><br><span class="line">  (min, avg, max) = (9.987, 9.999, 10.005), stdev = 0.008</span><br><span class="line">  CI (99.9%): [9.947, 10.050] (assumes normal distribution)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Run complete. Total time: 00:00:07</span><br><span class="line"></span><br><span class="line">Benchmark                                           Mode  Cnt  Score   Error  Units</span><br><span class="line">JMH.JMHSample_02_BenchmarkModes.measureThroughput  thrpt    4  9.999 ± 0.051  ops/s</span><br></pre></td></tr></table></figure></p>
+<p>从上面的结果中我们可以看到</p>
+<ul>
+<li>Benchmark：执行的基准测试为<code>JMH.JMHSample_02_BenchmarkModes.measureThroughput</code></li>
+<li>Mode：执行模式为thrpt, 即Throughput</li>
+<li>Cnt：执行次数为4</li>
+<li>Score： 平均得分为9.999</li>
+<li>Error：差值为0.051</li>
+<li>Units：执行单元为ops/s</li>
+</ul>
+<h2 id="平均执行时间"><a href="#平均执行时间" class="headerlink" title="平均执行时间"></a>平均执行时间</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * Mode.AverageTime 测试每个操作的平均执行时间.</span><br><span class="line"> */</span></span><br><span class="line"><span class="meta">@Benchmark</span></span><br><span class="line"><span class="meta">@BenchmarkMode</span>(Mode.AverageTime)</span><br><span class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.MICROSECONDS)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureAvgTime</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">	Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">			.include(JMHSample_02_BenchmarkModes.class.getSimpleName())</span><br><span class="line">			.warmupIterations(<span class="number">3</span>)	<span class="comment">// 热身3次</span></span><br><span class="line">			.measurementIterations(<span class="number">4</span>)	<span class="comment">// 执行4次</span></span><br><span class="line">			.forks(<span class="number">1</span>)</span><br><span class="line">			.build();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果为<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># Run progress: 0.00% complete, ETA 00:00:07</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: 99925.584 us/op</span><br><span class="line"># Warmup Iteration   2: 99961.273 us/op</span><br><span class="line"># Warmup Iteration   3: 100001.479 us/op</span><br><span class="line">Iteration   1: 99958.320 us/op</span><br><span class="line">Iteration   2: 99991.971 us/op</span><br><span class="line">Iteration   3: 99951.680 us/op</span><br><span class="line">Iteration   4: 100001.128 us/op</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Result "measureAvgTime":</span><br><span class="line">  99975.775 ±(99.9%) 157.859 us/op [Average]</span><br><span class="line">  (min, avg, max) = (99951.680, 99975.775, 100001.128), stdev = 24.429</span><br><span class="line">  CI (99.9%): [99817.916, 100133.634] (assumes normal distribution)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Run complete. Total time: 00:00:07</span><br><span class="line"></span><br><span class="line">Benchmark                                       Mode  Cnt      Score     Error  Units</span><br><span class="line">JMH.JMHSample_02_BenchmarkModes.measureAvgTime  avgt    4  99975.775 ± 157.859  us/op</span><br></pre></td></tr></table></figure></p>
+<p>在这个测试中我们要注意的是<code>us</code>和<code>MICROSECONDS</code>都是同一个含义, 都是微秒. 每个操作的平均值为100000微妙左右,也就是100毫秒左右,而我们的操作是sleep 100毫秒,和我们的预期结果相近</p>
+<h2 id="采样"><a href="#采样" class="headerlink" title="采样"></a>采样</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * Mode.SampleTime 会对执行时间进行采样.</span><br><span class="line"> *</span><br><span class="line"> * JMH还会对采样自动调节频率, 如果方法足够长的话, 我们会得到所有的采样</span><br><span class="line"> */</span></span><br><span class="line"><span class="meta">@Benchmark</span></span><br><span class="line"><span class="meta">@BenchmarkMode</span>(Mode.SampleTime)</span><br><span class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.MILLISECONDS)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureSamples</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">	Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">			.include(JMHSample_02_BenchmarkModes.class.getSimpleName())</span><br><span class="line">			.warmupIterations(<span class="number">3</span>)	<span class="comment">// 热身3次</span></span><br><span class="line">			.measurementIterations(<span class="number">4</span>)	<span class="comment">// 执行4次</span></span><br><span class="line">			.forks(<span class="number">1</span>)</span><br><span class="line">			.build();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"># Warmup: 3 iterations, 1 s each</span><br><span class="line"># Measurement: 4 iterations, 1 s each</span><br><span class="line"># Timeout: 10 min per iteration</span><br><span class="line"># Threads: 1 thread, will synchronize iterations</span><br><span class="line"># Benchmark mode: Sampling time</span><br><span class="line"># Benchmark: JMH.JMHSample_02_BenchmarkModes.measureSamples</span><br><span class="line"></span><br><span class="line"># Run progress: 0.00% complete, ETA 00:00:07</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: n = 10, mean = 100 ms/op, p&#123;0.00, 0.50, 0.90, 0.95, 0.99, 0.999, 0.9999, 1.00&#125; = 99, 100, 100, 100, 100, 100, 100, 100 ms/op</span><br><span class="line"># Warmup Iteration   2: n = 10, mean = 100 ms/op, p&#123;0.00, 0.50, 0.90, 0.95, 0.99, 0.999, 0.9999, 1.00&#125; = 100, 100, 100, 100, 100, 100, 100, 100 ms/op</span><br><span class="line"># Warmup Iteration   3: n = 10, mean = 100 ms/op, p&#123;0.00, 0.50, 0.90, 0.95, 0.99, 0.999, 0.9999, 1.00&#125; = 99, 100, 100, 100, 100, 100, 100, 100 ms/op</span><br><span class="line">Iteration   1: n = 11, mean = 100 ms/op, p&#123;0.00, 0.50, 0.90, 0.95, 0.99, 0.999, 0.9999, 1.00&#125; = 100, 100, 100, 100, 100, 100, 100, 100 ms/op</span><br><span class="line">Iteration   2: n = 10, mean = 100 ms/op, p&#123;0.00, 0.50, 0.90, 0.95, 0.99, 0.999, 0.9999, 1.00&#125; = 100, 100, 100, 100, 100, 100, 100, 100 ms/op</span><br><span class="line">Iteration   3: n = 10, mean = 100 ms/op, p&#123;0.00, 0.50, 0.90, 0.95, 0.99, 0.999, 0.9999, 1.00&#125; = 99, 100, 100, 100, 100, 100, 100, 100 ms/op</span><br><span class="line">Iteration   4: n = 10, mean = 100 ms/op, p&#123;0.00, 0.50, 0.90, 0.95, 0.99, 0.999, 0.9999, 1.00&#125; = 99, 100, 100, 100, 100, 100, 100, 100 ms/op</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Result "measureSamples":</span><br><span class="line">  99.886 ±(99.9%) 0.088 ms/op [Average]</span><br><span class="line">  (min, avg, max) = (99.222, 99.886, 100.008), stdev = 0.159</span><br><span class="line">  CI (99.9%): [99.798, 99.975] (assumes normal distribution)</span><br><span class="line">  Samples, N = 41</span><br><span class="line">        mean =     99.886 ±(99.9%) 0.088 ms/op</span><br><span class="line">         min =     99.222 ms/op</span><br><span class="line">  p( 0.0000) =     99.222 ms/op</span><br><span class="line">  p(50.0000) =     99.877 ms/op</span><br><span class="line">  p(90.0000) =    100.008 ms/op</span><br><span class="line">  p(95.0000) =    100.008 ms/op</span><br><span class="line">  p(99.0000) =    100.008 ms/op</span><br><span class="line">  p(99.9000) =    100.008 ms/op</span><br><span class="line">  p(99.9900) =    100.008 ms/op</span><br><span class="line">  p(99.9990) =    100.008 ms/op</span><br><span class="line">  p(99.9999) =    100.008 ms/op</span><br><span class="line">         max =    100.008 ms/op</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Run complete. Total time: 00:00:07</span><br><span class="line"></span><br><span class="line">Benchmark                                         Mode  Cnt   Score   Error  Units</span><br><span class="line">JMH.JMHSample_02_BenchmarkModes.measureSamples  sample   41  99.886 ± 0.088  ms/op</span><br></pre></td></tr></table></figure></p>
+<h2 id="单次执行"><a href="#单次执行" class="headerlink" title="单次执行"></a>单次执行</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * Mode.SingleShotTime 测试单个方法的调用时间. 我们只会调用一次基准方法. 这个模式非常适用于你不想要持续执行基准测试</span><br><span class="line"> * 的冷启动测试</span><br><span class="line"> */</span></span><br><span class="line"><span class="meta">@Benchmark</span></span><br><span class="line"><span class="meta">@BenchmarkMode</span>(Mode.SingleShotTime)</span><br><span class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.MICROSECONDS)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureSingleShot</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">	Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">			.include(JMHSample_02_BenchmarkModes.class.getSimpleName())</span><br><span class="line">			.warmupIterations(<span class="number">3</span>)	<span class="comment">// 热身3次</span></span><br><span class="line">			.measurementIterations(<span class="number">4</span>)	<span class="comment">// 执行4次</span></span><br><span class="line">			.forks(<span class="number">1</span>)</span><br><span class="line">			.build();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"># Warmup: 3 iterations, single-shot each</span><br><span class="line"># Measurement: 4 iterations, single-shot each</span><br><span class="line"># Timeout: 10 min per iteration</span><br><span class="line"># Threads: 1 thread</span><br><span class="line"># Benchmark mode: Single shot invocation time</span><br><span class="line"># Benchmark: JMH.JMHSample_02_BenchmarkModes.measureSingleShot</span><br><span class="line"></span><br><span class="line"># Run progress: 0.00% complete, ETA 00:00:00</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: 99620.910 us/op</span><br><span class="line"># Warmup Iteration   2: 99072.153 us/op</span><br><span class="line"># Warmup Iteration   3: 99502.285 us/op</span><br><span class="line">Iteration   1: 99269.561 us/op</span><br><span class="line">Iteration   2: 99170.555 us/op</span><br><span class="line">Iteration   3: 99598.574 us/op</span><br><span class="line">Iteration   4: 99304.877 us/op</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Result "measureSingleShot":</span><br><span class="line">  99335.892 ±(99.9%) 1189.778 us/op [Average]</span><br><span class="line">  (min, avg, max) = (99170.555, 99335.892, 99598.574), stdev = 184.119</span><br><span class="line">  CI (99.9%): [98146.114, 100525.670] (assumes normal distribution)</span><br><span class="line">  Samples, N = 4</span><br><span class="line">        mean =  99335.892 ±(99.9%) 1189.778 us/op</span><br><span class="line">         min =  99170.555 us/op</span><br><span class="line">  p( 0.0000) =  99170.555 us/op</span><br><span class="line">  p(50.0000) =  99287.219 us/op</span><br><span class="line">  p(90.0000) =  99598.574 us/op</span><br><span class="line">  p(95.0000) =  99598.574 us/op</span><br><span class="line">  p(99.0000) =  99598.574 us/op</span><br><span class="line">  p(99.9000) =  99598.574 us/op</span><br><span class="line">  p(99.9900) =  99598.574 us/op</span><br><span class="line">  p(99.9990) =  99598.574 us/op</span><br><span class="line">  p(99.9999) =  99598.574 us/op</span><br><span class="line">         max =  99598.574 us/op</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Run complete. Total time: 00:00:01</span><br><span class="line"></span><br><span class="line">Benchmark                                          Mode  Cnt      Score      Error  Units</span><br><span class="line">JMH.JMHSample_02_BenchmarkModes.measureSingleShot    ss    4  99335.892 ± 1189.778  us/op</span><br></pre></td></tr></table></figure></p>
+<h2 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h2><p>我们还可以将以上模式组合起来<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Benchmark</span></span><br><span class="line"><span class="meta">@BenchmarkMode</span>(&#123;Mode.Throughput, Mode.AverageTime, Mode.SampleTime, Mode.SingleShotTime&#125;)</span><br><span class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.MICROSECONDS)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureMultiple</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="全部依次执行"><a href="#全部依次执行" class="headerlink" title="全部依次执行"></a>全部依次执行</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Benchmark</span></span><br><span class="line"><span class="meta">@BenchmarkMode</span>(Mode.All)</span><br><span class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.MICROSECONDS)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureAll</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JMH/">JMH</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/28/jmh/JMHSample_02_BenchmarkModes/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/28/jmh/JMHSample_02_BenchmarkModes/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/28/jmh/JMHSample_01_HelloWorld/" title="01_HelloWorld" itemprop="url">01_HelloWorld</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-27T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-28</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.openjdk.jmh.annotations.Benchmark;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.Runner;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.RunnerException;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.options.Options;</span><br><span class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.options.OptionsBuilder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMHSample_01_HelloWorld</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span><br><span class="line">     * 这是我们的第一个基准函数</span><br><span class="line">     *</span><br><span class="line">     * JMH通过如下流程工作: 用户通过@Benchmark注解基准函数, 然后JMH在执行基准测试时会自动生成一些代码.</span><br><span class="line">     * @Benchmark注解的详细信息可以参考其Javadoc,但是我们可以简单地将其想象成有效负载测试.</span><br><span class="line">     *</span><br><span class="line">     * 我们可以在同一个类中定义多个benchmark函数, 函数名都无所谓, 但是我们应该尽可能的起一个有意义的名字.</span><br><span class="line">     *</span><br><span class="line">     * 需要注意的是, 如果函数没有执行完的话, JMH也不会停止运行. 如果函数中抛出异常, 那JMH同样的会停止运行, 执行下一个benchmark</span><br><span class="line">     *</span><br><span class="line">     * 尽管我们实例中并没有测试任何功能, 但是这个例子却能展示出当你进行基准测试时, 基础设施的基准线.</span><br><span class="line">     */</span></span><br><span class="line"></span><br><span class="line">	<span class="meta">@Benchmark</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">wellHelloThere</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 我们故意将该函数留空</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</span><br><span class="line">		Options opt = <span class="keyword">new</span> OptionsBuilder()</span><br><span class="line">				.include(JMHSample_01_HelloWorld.class.getSimpleName())</span><br><span class="line">				.forks(<span class="number">1</span>)</span><br><span class="line">				.build();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">new</span> Runner(opt).run();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果为<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"># JMH 1.11.2 (released 60 days ago)</span><br><span class="line"># Warmup: 20 iterations, 1 s each</span><br><span class="line"># Measurement: 20 iterations, 1 s each</span><br><span class="line"># Timeout: 10 min per iteration</span><br><span class="line"># Threads: 1 thread, will synchronize iterations</span><br><span class="line"># Benchmark mode: Throughput, ops/time</span><br><span class="line"># Benchmark: JMH.JMHSample_01_HelloWorld.wellHelloThere</span><br><span class="line"></span><br><span class="line"># Run progress: 0.00% complete, ETA 00:00:40</span><br><span class="line"># Fork: 1 of 1</span><br><span class="line"># Warmup Iteration   1: 3385522466.026 ops/s</span><br><span class="line"># Warmup Iteration   2: 3522171101.974 ops/s</span><br><span class="line"># Warmup Iteration   3: 3565836983.445 ops/s</span><br><span class="line"># Warmup Iteration   4: 3515408341.483 ops/s</span><br><span class="line"># Warmup Iteration   5: 3588745518.898 ops/s</span><br><span class="line"># Warmup Iteration   6: 3565087523.829 ops/s</span><br><span class="line"># Warmup Iteration   7: 3562771873.632 ops/s</span><br><span class="line"># Warmup Iteration   8: 3583632296.413 ops/s</span><br><span class="line"># Warmup Iteration   9: 3565611310.891 ops/s</span><br><span class="line"># Warmup Iteration  10: 3590948927.976 ops/s</span><br><span class="line"># Warmup Iteration  11: 3576434147.340 ops/s</span><br><span class="line"># Warmup Iteration  12: 3588304463.970 ops/s</span><br><span class="line"># Warmup Iteration  13: 3581233142.118 ops/s</span><br><span class="line"># Warmup Iteration  14: 3575921198.480 ops/s</span><br><span class="line"># Warmup Iteration  15: 3581761922.835 ops/s</span><br><span class="line"># Warmup Iteration  16: 3589445022.964 ops/s</span><br><span class="line"># Warmup Iteration  17: 3566869657.337 ops/s</span><br><span class="line"># Warmup Iteration  18: 3537779750.878 ops/s</span><br><span class="line"># Warmup Iteration  19: 3568040140.557 ops/s</span><br><span class="line"># Warmup Iteration  20: 3590220221.972 ops/s</span><br><span class="line">Iteration   1: 3583340988.084 ops/s</span><br><span class="line">Iteration   2: 3582273415.857 ops/s</span><br><span class="line">Iteration   3: 3581430663.273 ops/s</span><br><span class="line">Iteration   4: 3573066377.669 ops/s</span><br><span class="line">Iteration   5: 3578876607.022 ops/s</span><br><span class="line">Iteration   6: 3581448410.242 ops/s</span><br><span class="line">Iteration   7: 3566004905.951 ops/s</span><br><span class="line">Iteration   8: 3585318369.276 ops/s</span><br><span class="line">Iteration   9: 3559148782.715 ops/s</span><br><span class="line">Iteration  10: 3545919918.740 ops/s</span><br><span class="line">Iteration  11: 3594271895.253 ops/s</span><br><span class="line">Iteration  12: 3570179893.808 ops/s</span><br><span class="line">Iteration  13: 3566673424.322 ops/s</span><br><span class="line">Iteration  14: 3568946183.344 ops/s</span><br><span class="line">Iteration  15: 3554498386.309 ops/s</span><br><span class="line">Iteration  16: 3586741606.233 ops/s</span><br><span class="line">Iteration  17: 3583433388.045 ops/s</span><br><span class="line">Iteration  18: 3583027708.144 ops/s</span><br><span class="line">Iteration  19: 3569799683.683 ops/s</span><br><span class="line">Iteration  20: 3581887656.086 ops/s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Result "wellHelloThere":</span><br><span class="line">  3574814413.203 ±(99.9%) 10497360.400 ops/s [Average]</span><br><span class="line">  (min, avg, max) = (3545919918.740, 3574814413.203, 3594271895.253), stdev = 12088775.847</span><br><span class="line">  CI (99.9%): [3564317052.803, 3585311773.603] (assumes normal distribution)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Run complete. Total time: 00:00:40</span><br><span class="line"></span><br><span class="line">Benchmark                                    Mode  Cnt           Score          Error  Units</span><br><span class="line">JMH.JMHSample_01_HelloWorld.wellHelloThere  thrpt   20  3574814413.203 ± 10497360.400  ops/s</span><br></pre></td></tr></table></figure></p>
+<p>上面的输出依次为</p>
+<ol>
+<li>JMH执行版本</li>
+<li>执行20次热身, 每次执行1秒</li>
+<li>测试20次, 每次执行1秒</li>
+<li>每次执行的超时时间, 默认是10分钟</li>
+<li>执行线程, 我们设置的是1个线程, 且测试是同步执行的</li>
+<li>基准模式是每秒执行的吞吐量</li>
+<li>下面的执行结果是, 热身执行了20次, 每次执行的吞吐量大概为35亿次</li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JMH/">JMH</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/28/jmh/JMHSample_01_HelloWorld/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/28/jmh/JMHSample_01_HelloWorld/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/23/序列化工具/fastjson/" title="fastjson" itemprop="url">fastjson</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="读取数组"><a href="#读取数组" class="headerlink" title="读取数组"></a>读取数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Reward&gt; rewards = JSONArray.parseArray(jsonStr, Reward.class);</span><br></pre></td></tr></table></figure>
+<h2 id="json和protobuf相互转换"><a href="#json和protobuf相互转换" class="headerlink" title="json和protobuf相互转换"></a>json和protobuf相互转换</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.googlecode.protobuf-java-format<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protobuf-java-format<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String string = JsonFormat.printToString(mail);</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/序列化工具/">序列化工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/23/序列化工具/fastjson/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/序列化工具/fastjson/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/23/java综合工具/正则表达式/" title="Java Verbal Expressions 初探" itemprop="url">Java Verbal Expressions 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>java的一个正则表达式框架, 使用这个框架我们可以轻松实现正则表达式的判断.</p>
+<p>添加依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ru.lanwen.verbalregex<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>java-verbal-expressions<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>是否包含非数字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VerbalExpression regex = VerbalExpression.regex().nonDigit().build();</span><br><span class="line">Assert.assertTrue(regex.test(<span class="string">"abc"</span>));</span><br><span class="line">Assert.assertTrue(regex.test(<span class="string">"abc1"</span>));</span><br><span class="line">Assert.assertFalse(regex.test(<span class="string">"1"</span>));</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java工具/">Java工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/23/java综合工具/正则表达式/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/java综合工具/正则表达式/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/23/http客户端/Feign/" title="Feign 初探" itemprop="url">Feign 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>RESTful 服务的HTTP客户端连接器<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> feign.gson.GsonDecoder;</span><br><span class="line"><span class="keyword">import</span> feign.gson.GsonEncoder;</span><br><span class="line"><span class="keyword">import</span> feign.httpclient.ApacheHttpClient;</span><br><span class="line"><span class="keyword">import</span> feign.slf4j.Slf4jLogger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.<span class="built_in">List</span>;</span><br><span class="line"></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	public <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>... args) &#123;</span><br><span class="line">		GitHub github = Feign.builder()</span><br><span class="line">				.decoder(<span class="keyword">new</span> GsonDecoder())		<span class="comment">// 设置解码器, 我们使用Gson将应答解析成Contributor</span></span><br><span class="line">				.encoder(<span class="keyword">new</span> GsonEncoder())</span><br><span class="line">				.logger(<span class="keyword">new</span> Slf4jLogger())		<span class="comment">// 设置日志</span></span><br><span class="line">				.client(<span class="keyword">new</span> ApacheHttpClient())		<span class="comment">// 我们使用Apache的HttpClient组件</span></span><br><span class="line">				.target(GitHub.<span class="keyword">class</span>, <span class="string">"https://api.github.com"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">List</span>&lt;Contributor&gt; contributors = github.contributors(<span class="string">"netflix"</span>, <span class="string">"feign"</span>);</span><br><span class="line">		System.out.println(<span class="string">"netflix :"</span> + contributors.size());</span><br><span class="line"></span><br><span class="line">		<span class="built_in">List</span>&lt;Contributor&gt; contributors1 = github.contributors(<span class="string">"ming15"</span>, <span class="string">"VertxServer"</span>);</span><br><span class="line">		System.out.println(<span class="string">"ming15 :"</span> + contributors1.size());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">GitHub</span> </span>&#123;</span><br><span class="line">	<span class="meta">@RequestLine</span>(<span class="string">"GET /repos/&#123;owner&#125;/&#123;repo&#125;/contributors"</span>)</span><br><span class="line">	<span class="meta">@Headers</span>(<span class="string">"Content-Type: application/json"</span>)</span><br><span class="line">	<span class="built_in">List</span>&lt;Contributor&gt; contributors(<span class="meta">@Param</span>(<span class="string">"owner"</span>) <span class="built_in">String</span> owner, <span class="meta">@Param</span>(<span class="string">"repo"</span>) <span class="built_in">String</span> repo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Contributor</span> </span>&#123;</span><br><span class="line">	<span class="built_in">String</span> login;</span><br><span class="line">	<span class="built_in">int</span> contributions;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/http客户端/">http客户端</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/23/http客户端/Feign/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/http客户端/Feign/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+
+  <nav id="page-nav" class="clearfix">
+    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
+  </nav>
+
+</div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/Groovy/" title="Groovy">Groovy<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Haskell/" title="Haskell">Haskell<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JMH/" title="JMH">JMH<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>14</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaSE/" title="JavaSE">JavaSE<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java工具/" title="Java工具">Java工具<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/MongoDB/" title="MongoDB">MongoDB<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Php/" title="Php">Php<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Reids/" title="Reids">Reids<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/TCP-IP/" title="TCP IP">TCP IP<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/guice/" title="guice">guice<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http客户端/" title="http客户端">http客户端<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/http服务器/" title="http服务器">http服务器<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/memcached/" title="memcached">memcached<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mycat/" title="mycat">mycat<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python2/" title="python2">python2<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/并发编程/" title="并发编程">并发编程<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/序列化工具/" title="序列化工具">序列化工具<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/操作系统/" title="操作系统">操作系统<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/日志工具/" title="日志工具">日志工具<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/构建工具/" title="构建工具">构建工具<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+ </html>
