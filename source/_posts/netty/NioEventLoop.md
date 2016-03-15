@@ -57,3 +57,7 @@ protected EventExecutor newChild(ThreadFactory threadFactory, Object... args) th
     return new NioEventLoop(this, threadFactory, (SelectorProvider) args[0]);
 }
 ```
+它是直接生成了一个`NioEventLoop`的实例出来. 下来我们看一下`NioEventLoop`的实现
+```
+
+```
