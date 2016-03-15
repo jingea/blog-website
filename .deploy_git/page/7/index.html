@@ -45,7 +45,7 @@
 				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -59,7 +59,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
 						</form>
 					
 					</li>
@@ -76,6 +76,90 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/21/JavaSE/JavaIO 读文件/" title="JAVA 读文件" itemprop="url">JAVA 读文件</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="BufferedInputStream"><a href="#BufferedInputStream" class="headerlink" title="BufferedInputStream"></a>BufferedInputStream</h2><p>我们使用<code>FileInputStream</code>, <code>BufferedInputStream</code>来读取文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读取二进制文件</span></span><br><span class="line"><span class="keyword">try</span> (BufferedInputStream bf = <span class="keyword">new</span> BufferedInputStream(</span><br><span class="line">		<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">""</span>)));) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[bf.available()];</span><br><span class="line">	bf.read(data);</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>BufferedInputStream</code>是一个带有缓冲区域的<code>InputStream</code>, 支持<code>mark()</code>标记和<code>reset()</code>重置方法.输入到byte[]数组里.</p>
+<p><code>BufferedInputStream</code>只将数据读取进byte字节数组里, 因此这种方式只能读取二进制字节流</p>
+<blockquote>
+<p>FileInputStream 一个字节一个字节的从文件里读取数据</p>
+</blockquote>
+<h2 id="BufferedReader"><a href="#BufferedReader" class="headerlink" title="BufferedReader"></a>BufferedReader</h2><p>BufferedReader 从字符输入流中读取文本,缓冲各个字符.提供字符、数组和行的高效读取.<br>我们有俩种方式创建BufferedReader.</p>
+<ul>
+<li>使用带缓冲区的写入器 <code>Files.newBufferedReader(Paths.get(&quot;new.txt&quot;), StandardCharsets.UTF_8);</code>;</li>
+<li>读取UTF-8格式编码的文件 <code>new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))</code></li>
+</ul>
+<blockquote>
+<p>InputStreamReader 是字节流通向字符流的桥梁：它使用指定的 charset 读写字节并将其解码为字符.将“字节输入流”转换成“字符输入流”.它继承于Reader.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BufferedReader reader = Files.newBufferedReader(Paths.get(<span class="string">"new.txt"</span>), StandardCharsets.UTF_8);</span><br><span class="line">reader.lines().forEach(line -&gt; System.out.println(line));</span><br></pre></td></tr></table></figure>
+<p>我们可以使用JAVA8中的Stream来快捷的遍历每一行</p>
+<blockquote>
+<p>从标准IO中输入. 按照标准的IO模型,Java提供了<code>System.out, System.out, System.err System.out,System.err</code> 已经被包装成了<code>PrintStream</code>对象,但是<code>System.in</code>作为原生<code>InputStream</code>却没有进行过任何包装. 所以在使用<code>System.in</code>时必须对其进行包装,下例中展示了,我们使用<code>InputStreamReader</code>将<code>System.in</code>包装<code>Reader</code>,然后再包装一层<code>BufferedReader</code></p>
+<p>另外还有一点需要提到的是FileReader, 它一个字符一个字符地读取.</p>
+</blockquote>
+<h2 id="LineNumberInputStream"><a href="#LineNumberInputStream" class="headerlink" title="LineNumberInputStream"></a>LineNumberInputStream</h2><p>此类是一个输入流过滤器,它提供跟踪当前行号的附加功能.行是以回车符 (<code>\r</code>)、换行符 (<code>\n</code>)或回车符后面紧跟换行符结尾的字节序列.在所有这三种情况下,都以单个换行符形式返回行终止字符.行号以 0 开头,并在 read 返回换行符时递增 1.</p>
+<h2 id="LineNumberReader"><a href="#LineNumberReader" class="headerlink" title="LineNumberReader"></a>LineNumberReader</h2><p>跟踪行号的缓冲字符输入流.此类定义了方法 <code>setLineNumber(int)</code> 和 <code>getLineNumber()</code>,它们可分别用于设置和获取当前行号.默认情况下,行编号从 0 开始.该行号随数据读取在每个行结束符处递增,并且可以通过调用 <code>setLineNumber(int)</code> 更改行号.但要注意的是,<code>setLineNumber(int)</code> 不会实际更改流中的当前位置；它只更改将由<code>getLineNumber()</code>返回的值.可认为行在遇到以下符号之一时结束：换行符（<code>\n</code>）、回车符（<code>\r</code>）、回车后紧跟换行符.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  获取行数</span></span><br><span class="line"><span class="keyword">int</span> lineCount = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">try</span> (FileReader reader = <span class="keyword">new</span> FileReader(IOUtils.newFile(<span class="string">""</span>));</span><br><span class="line">		LineNumberReader lnr = <span class="keyword">new</span> LineNumberReader(reader);) &#123;</span><br><span class="line">	<span class="keyword">while</span> (lnr.readLine() != <span class="keyword">null</span>) &#123;</span><br><span class="line">		lineCount++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="RandomAccessFile"><a href="#RandomAccessFile" class="headerlink" title="RandomAccessFile"></a>RandomAccessFile</h2><p>读写随机访问文件 <code>RandomAccessFile</code>除了实现了<code>DataInput</code>和<code>DataOutput</code>接口之外,有效地与IO继承层次结构的其他部分实现了分离.</p>
+<p>因为它不支持装饰模式,所以不能将其与<code>InputStream</code>和<code>OutputStream</code>子类的任何部分组合起来而且必须假定<code>RandomAccessFile</code>已经被正确的缓冲</p>
+<p>用来访问那些保存数据记录的文件的,你就可以用<code>seek()</code>方法来访问记录,并进行读写了.这些记录的大小不必相同；但是其大小和位置必须是可知的.但是该类仅限于操作文件.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读取所有的行</span></span><br><span class="line"><span class="keyword">try</span> (RandomAccessFile r = <span class="keyword">new</span> RandomAccessFile(file, <span class="string">"rw"</span>)) &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; r.length(); i++) &#123;</span><br><span class="line">		r.read();	<span class="comment">// r.readLine();</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写入数据,第二个参数必须为 "r", "rw", "rws", or "rwd"</span></span><br><span class="line"><span class="keyword">try</span> (RandomAccessFile w = <span class="keyword">new</span> RandomAccessFile(file, <span class="string">"rw"</span>)) &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span>; i++)</span><br><span class="line">		w.writeByte(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> (FileChannel fc = <span class="keyword">new</span> RandomAccessFile(<span class="keyword">new</span> File(<span class="string">"temp.tmp"</span>), <span class="string">"rw"</span>)</span><br><span class="line">		.getChannel();) &#123;</span><br><span class="line"></span><br><span class="line">	IntBuffer ib = fc.map(FileChannel.MapMode.READ_WRITE, <span class="number">0</span>, fc.size())</span><br><span class="line">			.asIntBuffer();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">10000</span>; i++)</span><br><span class="line">		ib.put(ib.get(i - <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">RandomAccessFile raf = <span class="keyword">new</span> RandomAccessFile(<span class="keyword">new</span> File(<span class="string">"temp.tmp"</span>), <span class="string">"rw"</span>);</span><br><span class="line">raf.writeInt(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2000000</span>; i++) &#123;</span><br><span class="line">	raf.seek(raf.length() - <span class="number">4</span>);</span><br><span class="line">	raf.writeInt(raf.readInt());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">raf.close();</span><br></pre></td></tr></table></figure></p>
+<h2 id="getResourceAsStream"><a href="#getResourceAsStream" class="headerlink" title="getResourceAsStream"></a>getResourceAsStream</h2><p>我们还可以使用类加载器的<code>getResourceAsStream()</code>从指定路径或者jar包中加载文件资源<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">InputStream input = ReloadClass.class.getClassLoader().getResourceAsStream(path);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[input.available()];</span><br><span class="line">	input.read(bytes);</span><br><span class="line">	<span class="keyword">return</span> bytes;</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/21/JavaSE/JavaIO 读文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 读文件/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/21/JavaSE/JavaIO 文件操作/" title="JAVA 文件操作" itemprop="url">JAVA 文件操作</a>
   </h1>
   <p class="article-author">By
@@ -83,7 +167,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-21</time>
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
     
   </p>
 </header>
@@ -236,90 +320,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/21/JavaSE/JavaIO 读文件/" title="JAVA 读文件" itemprop="url">JAVA 读文件</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-21</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="BufferedInputStream"><a href="#BufferedInputStream" class="headerlink" title="BufferedInputStream"></a>BufferedInputStream</h2><p>我们使用<code>FileInputStream</code>, <code>BufferedInputStream</code>来读取文件</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读取二进制文件</span></span><br><span class="line"><span class="keyword">try</span> (BufferedInputStream bf = <span class="keyword">new</span> BufferedInputStream(</span><br><span class="line">		<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">""</span>)));) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[bf.available()];</span><br><span class="line">	bf.read(data);</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>BufferedInputStream</code>是一个带有缓冲区域的<code>InputStream</code>, 支持<code>mark()</code>标记和<code>reset()</code>重置方法.输入到byte[]数组里.</p>
-<p><code>BufferedInputStream</code>只将数据读取进byte字节数组里, 因此这种方式只能读取二进制字节流</p>
-<blockquote>
-<p>FileInputStream 一个字节一个字节的从文件里读取数据</p>
-</blockquote>
-<h2 id="BufferedReader"><a href="#BufferedReader" class="headerlink" title="BufferedReader"></a>BufferedReader</h2><p>BufferedReader 从字符输入流中读取文本,缓冲各个字符.提供字符、数组和行的高效读取.<br>我们有俩种方式创建BufferedReader.</p>
-<ul>
-<li>使用带缓冲区的写入器 <code>Files.newBufferedReader(Paths.get(&quot;new.txt&quot;), StandardCharsets.UTF_8);</code>;</li>
-<li>读取UTF-8格式编码的文件 <code>new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))</code></li>
-</ul>
-<blockquote>
-<p>InputStreamReader 是字节流通向字符流的桥梁：它使用指定的 charset 读写字节并将其解码为字符.将“字节输入流”转换成“字符输入流”.它继承于Reader.</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BufferedReader reader = Files.newBufferedReader(Paths.get(<span class="string">"new.txt"</span>), StandardCharsets.UTF_8);</span><br><span class="line">reader.lines().forEach(line -&gt; System.out.println(line));</span><br></pre></td></tr></table></figure>
-<p>我们可以使用JAVA8中的Stream来快捷的遍历每一行</p>
-<blockquote>
-<p>从标准IO中输入. 按照标准的IO模型,Java提供了<code>System.out, System.out, System.err System.out,System.err</code> 已经被包装成了<code>PrintStream</code>对象,但是<code>System.in</code>作为原生<code>InputStream</code>却没有进行过任何包装. 所以在使用<code>System.in</code>时必须对其进行包装,下例中展示了,我们使用<code>InputStreamReader</code>将<code>System.in</code>包装<code>Reader</code>,然后再包装一层<code>BufferedReader</code></p>
-<p>另外还有一点需要提到的是FileReader, 它一个字符一个字符地读取.</p>
-</blockquote>
-<h2 id="LineNumberInputStream"><a href="#LineNumberInputStream" class="headerlink" title="LineNumberInputStream"></a>LineNumberInputStream</h2><p>此类是一个输入流过滤器,它提供跟踪当前行号的附加功能.行是以回车符 (<code>\r</code>)、换行符 (<code>\n</code>)或回车符后面紧跟换行符结尾的字节序列.在所有这三种情况下,都以单个换行符形式返回行终止字符.行号以 0 开头,并在 read 返回换行符时递增 1.</p>
-<h2 id="LineNumberReader"><a href="#LineNumberReader" class="headerlink" title="LineNumberReader"></a>LineNumberReader</h2><p>跟踪行号的缓冲字符输入流.此类定义了方法 <code>setLineNumber(int)</code> 和 <code>getLineNumber()</code>,它们可分别用于设置和获取当前行号.默认情况下,行编号从 0 开始.该行号随数据读取在每个行结束符处递增,并且可以通过调用 <code>setLineNumber(int)</code> 更改行号.但要注意的是,<code>setLineNumber(int)</code> 不会实际更改流中的当前位置；它只更改将由<code>getLineNumber()</code>返回的值.可认为行在遇到以下符号之一时结束：换行符（<code>\n</code>）、回车符（<code>\r</code>）、回车后紧跟换行符.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  获取行数</span></span><br><span class="line"><span class="keyword">int</span> lineCount = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">try</span> (FileReader reader = <span class="keyword">new</span> FileReader(IOUtils.newFile(<span class="string">""</span>));</span><br><span class="line">		LineNumberReader lnr = <span class="keyword">new</span> LineNumberReader(reader);) &#123;</span><br><span class="line">	<span class="keyword">while</span> (lnr.readLine() != <span class="keyword">null</span>) &#123;</span><br><span class="line">		lineCount++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="RandomAccessFile"><a href="#RandomAccessFile" class="headerlink" title="RandomAccessFile"></a>RandomAccessFile</h2><p>读写随机访问文件 <code>RandomAccessFile</code>除了实现了<code>DataInput</code>和<code>DataOutput</code>接口之外,有效地与IO继承层次结构的其他部分实现了分离.</p>
-<p>因为它不支持装饰模式,所以不能将其与<code>InputStream</code>和<code>OutputStream</code>子类的任何部分组合起来而且必须假定<code>RandomAccessFile</code>已经被正确的缓冲</p>
-<p>用来访问那些保存数据记录的文件的,你就可以用<code>seek()</code>方法来访问记录,并进行读写了.这些记录的大小不必相同；但是其大小和位置必须是可知的.但是该类仅限于操作文件.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 读取所有的行</span></span><br><span class="line"><span class="keyword">try</span> (RandomAccessFile r = <span class="keyword">new</span> RandomAccessFile(file, <span class="string">"rw"</span>)) &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; r.length(); i++) &#123;</span><br><span class="line">		r.read();	<span class="comment">// r.readLine();</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 写入数据,第二个参数必须为 "r", "rw", "rws", or "rwd"</span></span><br><span class="line"><span class="keyword">try</span> (RandomAccessFile w = <span class="keyword">new</span> RandomAccessFile(file, <span class="string">"rw"</span>)) &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span>; i++)</span><br><span class="line">		w.writeByte(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> (FileChannel fc = <span class="keyword">new</span> RandomAccessFile(<span class="keyword">new</span> File(<span class="string">"temp.tmp"</span>), <span class="string">"rw"</span>)</span><br><span class="line">		.getChannel();) &#123;</span><br><span class="line"></span><br><span class="line">	IntBuffer ib = fc.map(FileChannel.MapMode.READ_WRITE, <span class="number">0</span>, fc.size())</span><br><span class="line">			.asIntBuffer();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">10000</span>; i++)</span><br><span class="line">		ib.put(ib.get(i - <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">RandomAccessFile raf = <span class="keyword">new</span> RandomAccessFile(<span class="keyword">new</span> File(<span class="string">"temp.tmp"</span>), <span class="string">"rw"</span>);</span><br><span class="line">raf.writeInt(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2000000</span>; i++) &#123;</span><br><span class="line">	raf.seek(raf.length() - <span class="number">4</span>);</span><br><span class="line">	raf.writeInt(raf.readInt());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">raf.close();</span><br></pre></td></tr></table></figure></p>
-<h2 id="getResourceAsStream"><a href="#getResourceAsStream" class="headerlink" title="getResourceAsStream"></a>getResourceAsStream</h2><p>我们还可以使用类加载器的<code>getResourceAsStream()</code>从指定路径或者jar包中加载文件资源<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">InputStream input = ReloadClass.class.getClassLoader().getResourceAsStream(path);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[input.available()];</span><br><span class="line">	input.read(bytes);</span><br><span class="line">	<span class="keyword">return</span> bytes;</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/21/JavaSE/JavaIO 读文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 读文件/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/20/netty/ByteBuf/" title="Netty ByteBuf" itemprop="url">Netty ByteBuf</a>
   </h1>
   <p class="article-author">By
@@ -327,7 +327,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-19T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-20</time>
+    <time datetime="2015-11-19T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-20</time>
     
   </p>
 </header>
@@ -439,7 +439,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-19</time>
+    <time datetime="2015-11-18T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-19</time>
     
   </p>
 </header>
@@ -500,7 +500,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-18T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-19</time>
+    <time datetime="2015-11-18T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-19</time>
     
   </p>
 </header>
@@ -582,7 +582,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-18</time>
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
     
   </p>
 </header>
@@ -664,7 +664,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-18</time>
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
     
   </p>
 </header>
@@ -818,6 +818,76 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/18/日志工具/Elasticsearch 搜索/" title="Elasticsearch 搜索" itemprop="url">Elasticsearch 搜索</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>首先我们向库里准备一下数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">JSONObject son = <span class="keyword">new</span> JSONObject();</span><br><span class="line">son.put(<span class="string">"name"</span>, <span class="string">"Jerry"</span>);</span><br><span class="line">son.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">son.put(<span class="string">"address"</span>, <span class="string">"baoding"</span>);</span><br><span class="line">son.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line"></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">"name"</span>, <span class="string">"Tom"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"48"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"address"</span>, <span class="string">"beijing"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"son"</span>, son);</span><br><span class="line"></span><br><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx04"</span>)</span><br><span class="line">		.type(<span class="string">"type02"</span>)</span><br><span class="line">		.id(<span class="string">"02"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">client.index(indexRequest).get();</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>Leaf query clauses : 在指定的字段中搜索指定的值,例如使用<code>match</code>, <code>term</code> 或者 <code>range</code> 搜索时</li>
+<li>Compound query clauses :</li>
+</ul>
+<p>首先我们来看一个简单的搜索案例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse response = client.prepareSearch(<span class="string">"idx01"</span>, <span class="string">"idx02"</span>)</span><br><span class="line">				.setTypes(<span class="string">"type01"</span>, <span class="string">"type02"</span>)</span><br><span class="line">				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)</span><br><span class="line">				.setQuery(QueryBuilders.termQuery(<span class="string">"multi"</span>, <span class="string">"test"</span>))                 <span class="comment">// Query</span></span><br><span class="line">				.setPostFilter(QueryBuilders.rangeQuery(<span class="string">"age"</span>).from(<span class="number">12</span>).to(<span class="number">18</span>))     <span class="comment">// Filter</span></span><br><span class="line">				.setFrom(<span class="number">0</span>).setSize(<span class="number">60</span>).setExplain(<span class="keyword">true</span>)</span><br><span class="line">				.execute()</span><br><span class="line">				.actionGet();</span><br></pre></td></tr></table></figure></p>
+<h3 id="Match-All-Query"><a href="#Match-All-Query" class="headerlink" title="Match All Query"></a>Match All Query</h3><p>最简单的搜索, 这个搜索将库中所有的文档都搜索出来<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchAllQuery();</span><br></pre></td></tr></table></figure></p>
+<h3 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h3><h4 id="Match-Query"><a href="#Match-Query" class="headerlink" title="Match Query"></a>Match Query</h4><p>标准搜索, 包含模糊搜索, 短语搜索, 相近搜索<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchQuery(</span><br><span class="line">				<span class="string">"age"</span>,	<span class="comment">// 搜索的字段</span></span><br><span class="line">				<span class="string">"18"</span>	<span class="comment">// 搜索的字段值</span></span><br><span class="line">		);</span><br><span class="line"></span><br><span class="line">		SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">		searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">			System.out.println(hit.getSourceAsString());</span><br><span class="line">		&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"address"</span>:<span class="string">"beijing"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Tom"</span>,<span class="attr">"son"</span>:&#123;<span class="attr">"address"</span>:<span class="string">"baoding"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Jerry"</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Multi-Match-Query"><a href="#Multi-Match-Query" class="headerlink" title="Multi Match Query"></a>Multi Match Query</h4><p><code>match</code>搜索的多键版本, 会在多个指定字段中进行值匹配查找<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = multiMatchQuery(</span><br><span class="line">		<span class="string">"baoding"</span>,	<span class="comment">// 搜索值</span></span><br><span class="line">		<span class="string">"city"</span>, <span class="string">"country"</span>	<span class="comment">// 搜索的字段</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">	System.out.println(hit.getSourceAsString());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h4 id="Common-Terms-Query"><a href="#Common-Terms-Query" class="headerlink" title="Common Terms Query"></a>Common Terms Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = commonTermsQuery(<span class="string">"name"</span>, <span class="string">"kimchy"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="Query-String-Query"><a href="#Query-String-Query" class="headerlink" title="Query String Query"></a>Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = queryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="Simple-Query-String-Query"><a href="#Simple-Query-String-Query" class="headerlink" title="Simple Query String Query"></a>Simple Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = simpleQueryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/18/日志工具/Elasticsearch 搜索/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 搜索/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/18/日志工具/Elasticsearch 基本操作/" title="Elasticsearch 基本操作" itemprop="url">Elasticsearch 基本操作</a>
   </h1>
   <p class="article-author">By
@@ -825,7 +895,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-18</time>
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
     
   </p>
 </header>
@@ -898,76 +968,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/18/日志工具/Elasticsearch 搜索/" title="Elasticsearch 搜索" itemprop="url">Elasticsearch 搜索</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>首先我们向库里准备一下数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">JSONObject son = <span class="keyword">new</span> JSONObject();</span><br><span class="line">son.put(<span class="string">"name"</span>, <span class="string">"Jerry"</span>);</span><br><span class="line">son.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">son.put(<span class="string">"address"</span>, <span class="string">"baoding"</span>);</span><br><span class="line">son.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line"></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">"name"</span>, <span class="string">"Tom"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"48"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"address"</span>, <span class="string">"beijing"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"country"</span>, <span class="string">"china"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"son"</span>, son);</span><br><span class="line"></span><br><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx04"</span>)</span><br><span class="line">		.type(<span class="string">"type02"</span>)</span><br><span class="line">		.id(<span class="string">"02"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">client.index(indexRequest).get();</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>Leaf query clauses : 在指定的字段中搜索指定的值,例如使用<code>match</code>, <code>term</code> 或者 <code>range</code> 搜索时</li>
-<li>Compound query clauses :</li>
-</ul>
-<p>首先我们来看一个简单的搜索案例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse response = client.prepareSearch(<span class="string">"idx01"</span>, <span class="string">"idx02"</span>)</span><br><span class="line">				.setTypes(<span class="string">"type01"</span>, <span class="string">"type02"</span>)</span><br><span class="line">				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)</span><br><span class="line">				.setQuery(QueryBuilders.termQuery(<span class="string">"multi"</span>, <span class="string">"test"</span>))                 <span class="comment">// Query</span></span><br><span class="line">				.setPostFilter(QueryBuilders.rangeQuery(<span class="string">"age"</span>).from(<span class="number">12</span>).to(<span class="number">18</span>))     <span class="comment">// Filter</span></span><br><span class="line">				.setFrom(<span class="number">0</span>).setSize(<span class="number">60</span>).setExplain(<span class="keyword">true</span>)</span><br><span class="line">				.execute()</span><br><span class="line">				.actionGet();</span><br></pre></td></tr></table></figure></p>
-<h3 id="Match-All-Query"><a href="#Match-All-Query" class="headerlink" title="Match All Query"></a>Match All Query</h3><p>最简单的搜索, 这个搜索将库中所有的文档都搜索出来<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchAllQuery();</span><br></pre></td></tr></table></figure></p>
-<h3 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h3><h4 id="Match-Query"><a href="#Match-Query" class="headerlink" title="Match Query"></a>Match Query</h4><p>标准搜索, 包含模糊搜索, 短语搜索, 相近搜索<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = matchQuery(</span><br><span class="line">				<span class="string">"age"</span>,	<span class="comment">// 搜索的字段</span></span><br><span class="line">				<span class="string">"18"</span>	<span class="comment">// 搜索的字段值</span></span><br><span class="line">		);</span><br><span class="line"></span><br><span class="line">		SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">		searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">			System.out.println(hit.getSourceAsString());</span><br><span class="line">		&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>结果为<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"address"</span>:<span class="string">"beijing"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Tom"</span>,<span class="attr">"son"</span>:&#123;<span class="attr">"address"</span>:<span class="string">"baoding"</span>,<span class="attr">"age"</span>:<span class="string">"18"</span>,<span class="attr">"country"</span>:<span class="string">"china"</span>,<span class="attr">"name"</span>:<span class="string">"Jerry"</span>&#125;&#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="Multi-Match-Query"><a href="#Multi-Match-Query" class="headerlink" title="Multi Match Query"></a>Multi Match Query</h4><p><code>match</code>搜索的多键版本, 会在多个指定字段中进行值匹配查找<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = multiMatchQuery(</span><br><span class="line">		<span class="string">"baoding"</span>,	<span class="comment">// 搜索值</span></span><br><span class="line">		<span class="string">"city"</span>, <span class="string">"country"</span>	<span class="comment">// 搜索的字段</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">SearchResponse searchResponse = client.prepareSearch(<span class="string">"idx04"</span>).setQuery(qb).execute().get();</span><br><span class="line">searchResponse.getHits().forEach(hit -&gt; &#123;</span><br><span class="line">	System.out.println(hit.getSourceAsString());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h4 id="Common-Terms-Query"><a href="#Common-Terms-Query" class="headerlink" title="Common Terms Query"></a>Common Terms Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = commonTermsQuery(<span class="string">"name"</span>, <span class="string">"kimchy"</span>);</span><br></pre></td></tr></table></figure>
-<h4 id="Query-String-Query"><a href="#Query-String-Query" class="headerlink" title="Query String Query"></a>Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = queryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
-<h4 id="Simple-Query-String-Query"><a href="#Simple-Query-String-Query" class="headerlink" title="Simple Query String Query"></a>Simple Query String Query</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QueryBuilder qb = simpleQueryStringQuery(<span class="string">"+kimchy -elasticsearch"</span>);</span><br></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/18/日志工具/Elasticsearch 搜索/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 搜索/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/16/redis/Redis_SortedSet/" title="Redis SortedSet" itemprop="url">Redis SortedSet</a>
   </h1>
   <p class="article-author">By
@@ -975,7 +975,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-15T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-16</time>
+    <time datetime="2015-11-15T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-16</time>
     
   </p>
 </header>
@@ -1207,15 +1207,15 @@
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github 名片</p>
+<p class="asidetitle">Github Card</p>
 <div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -1225,7 +1225,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -1355,7 +1355,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -1370,7 +1370,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
+<p class="asidetitle">Douban Show</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -1378,11 +1378,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
+  <p class="asidetitle">Weibo</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -1556,7 +1556,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

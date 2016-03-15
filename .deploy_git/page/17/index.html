@@ -45,7 +45,7 @@
 				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -59,7 +59,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
 						</form>
 					
 					</li>
@@ -76,14 +76,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/04/08/groovy/groovy字符串/" title="groovy字符串" itemprop="url">groovy字符串</a>
+      <a href="/2014/04/08/groovy/groovy ant/" title="groovy ANT" itemprop="url">groovy ANT</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-04-08</time>
+    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> Published 2014-04-08</time>
     
   </p>
 </header>
@@ -92,80 +92,20 @@
         <blockquote>
 <p>本文是对Groovy部分官方文档进行了翻译</p>
 </blockquote>
-<p>在Groovy文本字面量被称为String,这是以字符链的形式出现的. Groovy允许你实例化<code>java.lang.String</code>,像  GStrings (<code>groovy.lang.GString</code>)那样, (GString还被称为插值字符串)</p>
-<h3 id="单引号字符"><a href="#单引号字符" class="headerlink" title="单引号字符"></a>单引号字符</h3><p>单引号字符串是通过单引号括起来的一列字符<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'a single quoted string'</span></span><br></pre></td></tr></table></figure></p>
-<p>单引号字符和<code>java.lang.String</code>是同一个东西, 同时它也不允许插值的出现</p>
-<h3 id="字符串连接"><a href="#字符串连接" class="headerlink" title="字符串连接"></a>字符串连接</h3><p>Groovy里所有的字符串都可以通过 <code>+</code> 连接起来<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="string">'ab'</span> == <span class="string">'a'</span> + <span class="string">'b'</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="三重单引号字符串"><a href="#三重单引号字符串" class="headerlink" title="三重单引号字符串"></a>三重单引号字符串</h3><p>三重单引号字符串 是通过三个单引号 包围起来的字符序列.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''a triple single quoted string'''</span></span><br></pre></td></tr></table></figure></p>
-<p>三重单引号字符串就是纯<code>java.lang.String</code> 而且不允许插值.<br>三重单引号字符串可以多行赋值.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> aMultilineString = <span class="string">'''line one</span><br><span class="line">line two</span><br><span class="line">line three'''</span></span><br></pre></td></tr></table></figure></p>
-<p>如果你的代码进行了缩进, 例如类中的方法体, 那跨行的三重单引号字符串也会包含缩进. 不过可以调用<code>String#stripIndent()</code> 去除掉缩进. <code>String#stripMargin()</code>方法会通过分割符从字符串的开头<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> startingAndEndingWithANewline = <span class="string">'''</span><br><span class="line">line one</span><br><span class="line">line two</span><br><span class="line">line three</span><br><span class="line">'''</span></span><br></pre></td></tr></table></figure></p>
-<p>你也许会注意到最终得到的字符串会包含一个换行符.It is possible to strip that character by escaping the newline with a backslash:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> strippedFirstNewline = <span class="string">'''\</span><br><span class="line">line one</span><br><span class="line">line two</span><br><span class="line">line three</span><br><span class="line">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> !strippedFirstNewline.startsWith(<span class="string">'\n'</span>)</span><br></pre></td></tr></table></figure></p>
-<h4 id="更换特殊字符"><a href="#更换特殊字符" class="headerlink" title="更换特殊字符"></a>更换特殊字符</h4><p>可以通过<code>\</code>字符在<code>&#39;&#39;</code>继续引用<code>&#39;</code><br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'an escaped single quote: \' needs a backslash'</span></span><br></pre></td></tr></table></figure></p>
-<p>当然也可以通过<code>\</code>来引用它自身<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'an escaped escape character: \\ needs a double backslash'</span></span><br></pre></td></tr></table></figure></p>
-<p>还有一些其他的特殊字符需要<code>\</code>来引用<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Escape sequence	Character</span><br><span class="line"><span class="string">'\t'</span>	tabulation</span><br><span class="line"><span class="string">'\b'</span>	backspace</span><br><span class="line"><span class="string">'\n'</span>	newline</span><br><span class="line"><span class="string">'\r'</span>	carriage <span class="keyword">return</span></span><br><span class="line"><span class="string">'\f'</span>	formfeed</span><br><span class="line"><span class="string">'\\'</span>	backslash</span><br><span class="line"><span class="string">'\''</span>	single quote (<span class="keyword">for</span> single quoted and triple single quoted strings)</span><br><span class="line"><span class="string">'\"'</span>	<span class="keyword">double</span> quote (<span class="keyword">for</span> <span class="keyword">double</span> quoted and triple <span class="keyword">double</span> quoted strings)</span><br></pre></td></tr></table></figure></p>
-<h4 id="Unicode-转义序列"><a href="#Unicode-转义序列" class="headerlink" title="Unicode 转义序列"></a>Unicode 转义序列</h4><p>有一些字符并不能通过键盘输出, 那么此时就可以通过Unicode 转义序列来实现. 例如<code>backslash</code>, 在u后跟4个16进制数字即可.</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'The Euro currency symbol: \u20AC'</span></span><br></pre></td></tr></table></figure>
-<h3 id="双引号包含的-string"><a href="#双引号包含的-string" class="headerlink" title="双引号包含的 string"></a>双引号包含的 string</h3><p>通过双引号包括起来的字符串<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"a double quoted string"</span></span><br></pre></td></tr></table></figure></p>
-<p>当双引号字符串内没有插值(<code>${}</code>)的时候, 那它就等同于<code>java.lang.String</code>, 当有插值的时候那么双引号字符串就是<code>groovy.lang.GString</code>的实例</p>
-<h4 id="String-插值"><a href="#String-插值" class="headerlink" title="String 插值"></a>String 插值</h4><p>任何表达式都可以嵌入到除了单引号和三引号的所有字符串常量中. 当对字符串求值的时候, 插值会使用他的值来替换掉字符串里的占位符. 占位符表达式通过<code>${}</code> 或者 <code>$</code>来实现. 占位符里的表达式值会被转换成其字符串表示形式, 转换是通过调用表达式<code>toString()</code>方法,通过传递一个String参数.</p>
-<p>下面的例子展示的是字符串里的占位符定位本地变量<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> name = <span class="string">'Guillaume'</span> <span class="comment">// a plain string</span></span><br><span class="line"><span class="keyword">def</span> greeting = <span class="string">"Hello $&#123;name&#125;"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> greeting.toString() == <span class="string">'Hello Guillaume'</span></span><br></pre></td></tr></table></figure></p>
-<p>但是并非所有的表达式都是合法的, 像下面我们列举的这个算术表达式</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> sum = <span class="string">"The sum of 2 and 3 equals $&#123;2 + 3&#125;"</span></span><br><span class="line"><span class="keyword">assert</span> sum.toString() == <span class="string">'The sum of 2 and 3 equals 5'</span></span><br></pre></td></tr></table></figure>
-<p>其实并不是只有表达式允许出现在<code>${}</code>表达式里. Statements 同样可以在<code>${}</code> 占位符里出现, 但是statement的值会是null. 如果有N个statements出现在<code>${}</code>里,那么最后一个statement应该返回一个有效值,以便被插入到字符串里. 例如<code>&quot;The sum of 1 and 2 is equal to ${def a = 1; def b = 2; a + b}&quot;</code> 是允许的,而且也会像语法预期的那样执行, 但是习惯上,GString 占位符里应该更多的是使用简单表达式.<br>除了<code>${}</code>占位符之外, 我们也可以使用<code>$</code>标记前缀点缀表达式：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> person = [<span class="string">name:</span> <span class="string">'Guillaume'</span>, <span class="string">age:</span> <span class="number">36</span>]</span><br><span class="line"><span class="keyword">assert</span> <span class="string">"$person.name is $person.age years old"</span> == <span class="string">'Guillaume is 36 years old'</span></span><br></pre></td></tr></table></figure>
-<p>但是仅仅一下形式的点缀表达式是合法的：a.b, a.b.c,etc.但是那些包含括号的表达式(例如方法调用,花括号为闭包,算术运算符)是无效的.<br>下面给出了一个定义成数字形式的变量.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> number = <span class="number">3.14</span></span><br></pre></td></tr></table></figure></p>
-<p>下面的 statement 将会抛出一个<code>groovy.lang.MissingPropertyException</code> 异常,因为Groovy认为你正在尝试访问那个数字的不存在的toString属性.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">shouldFail(MissingPropertyException) &#123;</span><br><span class="line">    println <span class="string">"$number.toString()"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>你可以理解成解析器会将<code>&quot;$number.toString()&quot;</code> 解释成 <code>&quot;${number.toString}()&quot;</code>.如果你想要在GString中避免<code>$</code>或者<code>${}</code> 称为插值的话,只需要在它们前面加上<code>\</code>即可.</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="string">'$&#123;name&#125;'</span> == <span class="string">"\$&#123;name&#125;"</span></span><br></pre></td></tr></table></figure>
-<h4 id="特殊插值形式-闭包表达式"><a href="#特殊插值形式-闭包表达式" class="headerlink" title="特殊插值形式-闭包表达式"></a>特殊插值形式-闭包表达式</h4><p>到目前为止,我们看到可以在${}占位符里插入任何的表达式, 但还有一种特殊的表达式-闭包表达式. 当占位符内好汉一个箭头时<code>${→}</code>,这个表达式实际上就是一个闭包表达式.</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> sParameterLessClosure = <span class="string">"1 + 2 == $&#123;-&gt; 3&#125;"</span> (<span class="number">1</span>)</span><br><span class="line"><span class="keyword">assert</span> sParameterLessClosure == <span class="string">'1 + 2 == 3'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> sOneParamClosure = <span class="string">"1 + 2 == $&#123; w -&gt; w &lt;&lt; 3&#125;"</span> (<span class="number">2</span>)</span><br><span class="line"><span class="keyword">assert</span> sOneParamClosure == <span class="string">'1 + 2 == 3'</span></span><br></pre></td></tr></table></figure>
+<p>虽然<code>Ant</code>只是一个构建工具, 但其提供了例如能够操作文件(包括zip文件), 拷贝, 资源管理等诸多实用功能. 然而如果你不喜欢使用<code>build.xml</code>文件或者<code>Jelly</code>脚本, 而是想要一种清晰简洁的构建方式, 那么你就可以试试使用Groovy编写构建过程.</p>
+<p>Groovy提供了一个辅助类<code>AntBuilder</code>帮忙编写Ant构建任务. 它看起来很像一个不带尖括号的Ant’s XML的简洁版本. 因此你可以在脚本中混合和匹配标记. Ant本身是一组Jar文件的集合. 将这组jar文件添加到你的classpath上, 你就可以在Groovy中轻轻松松的使用它们.</p>
+<p><code>AntBuilder</code>通过便捷的构造器语法直接暴露了Ant task. 下面是一个简单的示例, 它的功能是在标准输出上输出一条消息.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> ant = <span class="keyword">new</span> AntBuilder()          </span><br><span class="line">ant.echo(<span class="string">'hello from Ant!'</span>)</span><br></pre></td></tr></table></figure></p>
 <ol>
-<li>由于闭包不用声明参数, 所以在使用闭包时,我们不必对其传参</li>
-<li>上例中,闭包中使用了一个<code>java.io.StringWriter argument</code>参数, 我们可以使用<code>&lt;&lt;</code>操作符添加内容.不论任何情况, 占位符都被嵌入了闭包.</li>
+<li>创建一个<code>AntBuilder</code>实例</li>
+<li>执行<code>AntBuilder</code>实例的echo task</li>
 </ol>
-<p>上面的表达式看起来更像是使用了一个啰嗦的方式去定义插值表达式, 但是闭包有个有趣又高级的特性：惰性计算:</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> number = <span class="number">1</span> (<span class="number">1</span>)</span><br><span class="line"><span class="keyword">def</span> eagerGString = <span class="string">"value == $&#123;number&#125;"</span></span><br><span class="line"><span class="keyword">def</span> lazyGString = <span class="string">"value == $&#123; -&gt; number &#125;"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> eagerGString == <span class="string">"value == 1"</span> (<span class="number">2</span>)</span><br><span class="line"><span class="keyword">assert</span> lazyGString ==  <span class="string">"value == 1"</span> (<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">number = <span class="number">2</span> (<span class="number">4</span>)</span><br><span class="line"><span class="keyword">assert</span> eagerGString == <span class="string">"value == 1"</span> (<span class="number">5</span>)</span><br><span class="line"><span class="keyword">assert</span> lazyGString ==  <span class="string">"value == 2"</span> (<span class="number">6</span>)</span><br></pre></td></tr></table></figure>
-<ol>
-<li>我们定义了数值为1的number类型变量, 它稍后会作为插值出现在俩个GString中,</li>
-<li>我们希望eagerGString 产生的字符串包含着相同的值 1</li>
-<li>同样我们也希望lazyGString 产生的字符串包含着相同的值 1</li>
-<li>然后我们将number改变一个值.</li>
-<li>With a plain interpolated expression, the value was actually bound at the time of creation of the GString.</li>
-<li>But with a closure expression, the closure is called upon each coercion of the GString into String, resulting in an updated string containing the new number value.</li>
-</ol>
-<p>An embedded closure expression taking more than one parameter will generate an exception at runtime. Only closures with zero or one parameters are allowed.</p>
-<h4 id="Inteoperability-with-Java"><a href="#Inteoperability-with-Java" class="headerlink" title="Inteoperability with Java"></a>Inteoperability with Java</h4><p>当一个方法(不管是在Java还是在Groovy中定义的)带有一个<code>java.lang.String</code>参数, 但我们传递一个<code>groovy.lang.GString instance</code>实例, GString会自动调用toString()方法.</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">String takeString(String message) &#123;         (<span class="number">4</span>)</span><br><span class="line">    <span class="keyword">assert</span> message <span class="keyword">instanceof</span> String        (<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">return</span> message</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> message = <span class="string">"The message is $&#123;'hello'&#125;"</span>   (<span class="number">1</span>)</span><br><span class="line"><span class="keyword">assert</span> message <span class="keyword">instanceof</span> GString           (<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> result = takeString(message)            (<span class="number">3</span>)</span><br><span class="line"><span class="keyword">assert</span> result <span class="keyword">instanceof</span> String</span><br><span class="line"><span class="keyword">assert</span> result == <span class="string">'The message is hello'</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>首先我们创建一个GString变量</li>
-<li>然后我们检查一下声明的变量是否是GString的实例</li>
-<li>接着我们向一个方法(参数为String类型)传递GString类型变量</li>
-<li>takeString()显式地指出了它唯一的参数为String</li>
-<li>我们再次验证所需的参数是String 而不是GString</li>
-</ol>
-<h4 id="GString-and-String-hashCodes"><a href="#GString-and-String-hashCodes" class="headerlink" title="GString and String hashCodes"></a>GString and String hashCodes</h4><p>尽管插值字符串能被用来代替<code>Java strings</code>, 但是他们在某些地方并不是完全一样的—— 他们的hashCodes是不同的. Java Strig是<code>immutable</code>, 然而, GString通过它的内插值 生成的字符串是可以改变的. 即使生成完全一样的字符串, GStrings 和 Strings的 hashCode 仍然是不一样的.</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="string">"one: $&#123;1&#125;"</span>.hashCode() != <span class="string">"one: 1"</span>.hashCode()</span><br></pre></td></tr></table></figure>
-<p>GString 和 Strings 拥有不同的hashCode值, 在Map中应该避免使用GString作为key, 特别的,当我们想要检索值的之后应该使用String,而不是GString.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> key = <span class="string">"a"</span></span><br><span class="line"><span class="keyword">def</span> m = [<span class="string">"$&#123;key&#125;"</span>: <span class="string">"letter $&#123;key&#125;"</span>]     (<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> m[<span class="string">"a"</span>] == <span class="literal">null</span>                   (<span class="number">2</span>)</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>map使用一对键值被创建了出来,其key是GString类型</li>
-<li>当我们通过一个String类型的key进行检索值的时候,我们会得到一个null的结果, 产生这样的现象正是由于String和GString拥有不同的hashCode</li>
-</ol>
-<h3 id="Triple-double-quoted-string"><a href="#Triple-double-quoted-string" class="headerlink" title="Triple double quoted string"></a>Triple double quoted string</h3><p>三重双引号字符串其使用和双引号字符串及其相像, 但与双引号字符串不同的一点是：它们是可以换行的(像三重单引号字符串那样)<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> name = <span class="string">'Groovy'</span></span><br><span class="line"><span class="keyword">def</span> template = <span class="string">"""</span><br><span class="line">    Dear Mr $&#123;name&#125;,</span><br><span class="line"></span><br><span class="line">    You're the winner of the lottery!</span><br><span class="line"></span><br><span class="line">    Yours sincerly,</span><br><span class="line"></span><br><span class="line">    Dave</span><br><span class="line">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> template.toString().contains(<span class="string">'Groovy'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>在三重双引号字符串中,不管是双引号还是单引号都不需要escaped</p>
-<h3 id="Slashy-string"><a href="#Slashy-string" class="headerlink" title="Slashy string"></a>Slashy string</h3><p>除了引号字符串, Groovy还提供了slashy字符串(使用/作为分隔符). Slashy字符串对定义正则表达式和正则模式是非常有用的.</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> fooPattern = <span class="regexp">/.*foo.*/</span></span><br><span class="line"><span class="keyword">assert</span> fooPattern == <span class="string">'.*foo.*'</span></span><br></pre></td></tr></table></figure>
-<p>只有在<code>/ slashes</code>中需要使用\ 来escaped<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> escapeSlash = <span class="regexp">/The character \/</span> is a forward slash/</span><br><span class="line"><span class="keyword">assert</span> escapeSlash == <span class="string">'The character / is a forward slash'</span></span><br></pre></td></tr></table></figure></p>
-<p>Slashy字符串也可以是多行的<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> multilineSlashy = /one</span><br><span class="line">    two</span><br><span class="line">    three/</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> multilineSlashy.contains(<span class="string">'\n'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>Slashy字符串也可以插值形式出现(像GString一样)<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> color = <span class="string">'blue'</span></span><br><span class="line"><span class="keyword">def</span> interpolatedSlashy = <span class="regexp">/a $&#123;color&#125; car/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> interpolatedSlashy == <span class="string">'a blue car'</span></span><br></pre></td></tr></table></figure></p>
-<p>下面有一些常识方面的东西需要你知道：<br><code>//</code>不会被解释为空Slashy字符串,这代表着行注释.</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="string">''</span> == <span class="comment">//</span></span><br></pre></td></tr></table></figure>
-<h3 id="Dollar-slashy-string"><a href="#Dollar-slashy-string" class="headerlink" title="Dollar slashy string"></a>Dollar slashy string</h3><p>Dollar slashy字符串 通过<code>$/``/$</code> 来实现多行GString. 美元符作为转义字符, 而且它还能转义另一个美元符号, 或者一个 forward slash. 除了要实现像GString占位符和闭包美元符slashy的开头美元符之外, 美元符和forward slashes都不需要转义<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> name = <span class="string">"Guillaume"</span></span><br><span class="line"><span class="keyword">def</span> date = <span class="string">"April, 1st"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> dollarSlashy = <span class="string">$/</span><br><span class="line">    Hello $name,</span><br><span class="line">    today we're $&#123;date&#125;.</span><br><span class="line"></span><br><span class="line">    $ dollar sign</span><br><span class="line">    $$ escaped dollar sign</span><br><span class="line">    \ backslash</span><br><span class="line">    / forward slash</span><br><span class="line">    $/ escaped forward slash</span><br><span class="line">    $/$</span> escaped dollar slashy string delimiter</span><br><span class="line">/$</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> [</span><br><span class="line">    <span class="string">'Guillaume'</span>,</span><br><span class="line">    <span class="string">'April, 1st'</span>,</span><br><span class="line">    <span class="string">'$ dollar sign'</span>,</span><br><span class="line">    <span class="string">'$ escaped dollar sign'</span>,</span><br><span class="line">    <span class="string">'\\ backslash'</span>,</span><br><span class="line">    <span class="string">'/ forward slash'</span>,</span><br><span class="line">        <span class="string">'$/ escaped forward slash'</span>,</span><br><span class="line">        <span class="string">'/$ escaped dollar slashy string delimiter'</span></span><br><span class="line"></span><br><span class="line">        ].each &#123; dollarSlashy.contains(it) &#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Characters"><a href="#Characters" class="headerlink" title="Characters"></a>Characters</h3><p>不像java, Groovy里没有显式的字符字面量. 可以通过下面三种方式,显式地生成Groovy 字符变量<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> c1 = <span class="string">'A'</span> (<span class="number">1</span>)</span><br><span class="line"><span class="keyword">assert</span> c1 <span class="keyword">instanceof</span> Character</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> c2 = <span class="string">'B'</span> <span class="keyword">as</span> <span class="keyword">char</span> (<span class="number">2</span>)</span><br><span class="line"><span class="keyword">assert</span> c2 <span class="keyword">instanceof</span> Character</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> c3 = (<span class="keyword">char</span>)<span class="string">'C'</span> (<span class="number">3</span>)</span><br><span class="line"><span class="keyword">assert</span> c3 <span class="keyword">instanceof</span> Character</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>通过指定char类型来显式地声明一个character变量</li>
-<li>通过操作符强制转换类型</li>
-<li>通过强制转换成指定类型</li>
-</ol>
+<p>假设,现在你需要创建一个ZIP文件：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> ant = <span class="keyword">new</span> AntBuilder()</span><br><span class="line">ant.zip(<span class="string">destfile:</span> <span class="string">'sources.zip'</span>, <span class="string">basedir:</span> <span class="string">'src'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>在下面的例子中, 我们将展示在Groovy中使用传统的Ant 模式通过<code>AntBuilder</code>拷贝一组文件.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lets just call one task</span></span><br><span class="line">ant.echo(<span class="string">"hello"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// here is an example of a block of Ant inside GroovyMarkup</span></span><br><span class="line">ant.sequential &#123;</span><br><span class="line">    echo(<span class="string">"inside sequential"</span>)</span><br><span class="line">    <span class="keyword">def</span> myDir = <span class="string">"target/AntTest/"</span></span><br><span class="line">    mkdir(<span class="string">dir:</span> myDir)</span><br><span class="line">    copy(<span class="string">todir:</span> myDir) &#123;</span><br><span class="line">        fileset(<span class="string">dir:</span> <span class="string">"src/test"</span>) &#123;</span><br><span class="line">            include(<span class="string">name:</span> <span class="string">"**/*.groovy"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    echo(<span class="string">"done"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// now lets do some normal Groovy again</span></span><br><span class="line"><span class="keyword">def</span> file = <span class="keyword">new</span> File(ant.project.baseDir,<span class="string">"target/AntTest/groovy/util/AntTest.groovy"</span>)</span><br><span class="line"><span class="keyword">assert</span> file.exists()</span><br></pre></td></tr></table></figure></p>
+<p>下面的例子是遍历一组文件, 然后将每个文件根据特殊模式进行匹配.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lets create a scanner of filesets</span></span><br><span class="line"><span class="keyword">def</span> scanner = ant.fileScanner &#123;</span><br><span class="line">    fileset(<span class="string">dir:</span><span class="string">"src/test"</span>) &#123;</span><br><span class="line">        include(<span class="string">name:</span><span class="string">"**/Ant*.groovy"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// now lets iterate over</span></span><br><span class="line"><span class="keyword">def</span> found = <span class="literal">false</span></span><br><span class="line"><span class="keyword">for</span> (f <span class="keyword">in</span> scanner) &#123;</span><br><span class="line">    println(<span class="string">"Found file $f"</span>)</span><br><span class="line">    found = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">assert</span> f <span class="keyword">instanceof</span> File</span><br><span class="line">    <span class="keyword">assert</span> f.name.endsWith(<span class="string">".groovy"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">assert</span> found</span><br></pre></td></tr></table></figure></p>
+<p>Or execute a JUnit test:</p>
+<p>下面我们执行JUnit<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lets create a scanner of filesets</span></span><br><span class="line">ant.junit &#123;</span><br><span class="line">    test(<span class="string">name:</span><span class="string">'groovy.util.SomethingThatDoesNotExist'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在, 让我们的步子迈地更大一点：在Groovy中编译然后执行一个Java文件.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ant.echo(<span class="string">file:</span><span class="string">'Temp.java'</span>, <span class="string">'''</span><br><span class="line">    class Temp &#123;</span><br><span class="line">        public static void main(String[] args) &#123;</span><br><span class="line">            System.out.println("Hello");</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">'''</span>)</span><br><span class="line">ant.javac(<span class="string">srcdir:</span><span class="string">'.'</span>, <span class="string">includes:</span><span class="string">'Temp.java'</span>, <span class="string">fork:</span><span class="string">'true'</span>)</span><br><span class="line">ant.java(<span class="string">classpath:</span><span class="string">'.'</span>, <span class="string">classname:</span><span class="string">'Temp'</span>, <span class="string">fork:</span><span class="string">'true'</span>)</span><br><span class="line">ant.echo(<span class="string">'Done'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>需要提及的是, <code>AntBuilder</code>是内嵌于<code>Gradle</code>中的. 你可以像在Groovy中那样, 在<code>Gradle</code>使用<code>AntBuilder</code></p>
 
         
         
@@ -190,7 +130,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2014/04/08/groovy/groovy字符串/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/04/08/groovy/groovy字符串/" data-count-type="comments">&nbsp;</a>
+		<a href="/2014/04/08/groovy/groovy ant/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/04/08/groovy/groovy ant/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -217,7 +157,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2013-11-19T16:00:00.000Z" itemprop="datePublished"> 发表于 2013-11-20</time>
+    <time datetime="2013-11-19T16:00:00.000Z" itemprop="datePublished"> Published 2013-11-20</time>
     
   </p>
 </header>
@@ -275,7 +215,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2013-09-12T16:00:00.000Z" itemprop="datePublished"> 发表于 2013-09-13</time>
+    <time datetime="2013-09-12T16:00:00.000Z" itemprop="datePublished"> Published 2013-09-13</time>
     
   </p>
 </header>
@@ -377,7 +317,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2013-09-12T16:00:00.000Z" itemprop="datePublished"> 发表于 2013-09-13</time>
+    <time datetime="2013-09-12T16:00:00.000Z" itemprop="datePublished"> Published 2013-09-13</time>
     
   </p>
 </header>
@@ -456,7 +396,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2012-08-19T16:00:00.000Z" itemprop="datePublished"> 发表于 2012-08-20</time>
+    <time datetime="2012-08-19T16:00:00.000Z" itemprop="datePublished"> Published 2012-08-20</time>
     
   </p>
 </header>
@@ -523,15 +463,15 @@
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github 名片</p>
+<p class="asidetitle">Github Card</p>
 <div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -541,7 +481,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -671,7 +611,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -686,7 +626,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
+<p class="asidetitle">Douban Show</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -694,11 +634,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
+  <p class="asidetitle">Weibo</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -872,7 +812,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
