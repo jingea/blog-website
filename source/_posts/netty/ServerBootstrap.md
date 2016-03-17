@@ -4,55 +4,238 @@ title: NettyServerBootstrap
 ---
 我们首先给出一个Netty上的一个Example示例
 ```java
-public class NettyServerBootstrap {
-	public static void main(String[] args) {
-		int cpuSize = Runtime.getRuntime().availableProcessors();
-		// 配置服务端的NIO线程组
-		EventLoopGroup bossGroup = new NioEventLoopGroup();			// mainReactor负责监听server socket,accept新连接
-		EventLoopGroup workerGroup = new NioEventLoopGroup(cpuSize);// subReactor负责多路分离已连接的socket,读写网 络数据,对业务处理功能,其扔给worker线程池完成
+public class NettyServer {
+    public static void main(String[] args) throws InterruptedException {
+        int cpuSize = Runtime.getRuntime().availableProcessors();
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        EventLoopGroup workerGroup = new NioEventLoopGroup(cpuSize);
+        try {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(bossGroup, workerGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .option(ChannelOption.AUTO_READ, true)
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) {
+                            ch.pipeline().addLast(new InHandler());
+                        }
+                    });
 
-		try {
-			ServerBootstrap b = new ServerBootstrap();
-			b.group(bossGroup, workerGroup)
-					// 设置nio类型的channel,根据channel.class来实例化ChannelFactory对象
-					.channel(NioServerSocketChannel.class)
-					.option(ChannelOption.SO_BACKLOG, 128)
-					.option(ChannelOption.TCP_NODELAY, true)
-					.option(ChannelOption.AUTO_READ, true)
-					// 设置AbstractBootstrap(bossGroup) handler,该handler每个ServerBootstrap 只有一个
-					.handler(new LoggingHandler(LogLevel.INFO))
-					//有连接到达时会创建一个channel
-					.childHandler(new ChannelInitializer<SocketChannel>() {
-						@Override
-						public void initChannel(SocketChannel ch) {
-							// pipeline管理channel中的Handler,在channel队列中添加一个handler来处理业务
-							ChannelPipeline pipeline = ch.pipeline();
+            ChannelFuture f = b.bind(8881).sync();
+            f.channel().closeFuture().sync();
+        } finally {
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+        }
+    }
+}
 
-							pipeline.addLast(new ProtobufVarint32FrameDecoder());
-							pipeline.addFirst(new IdleStateHandler(5, 5, 10));
-
-							pipeline.addLast(new NioEventLoopGroup(1), new ServiceHandler());
-						}
-					});
-
-			// 绑定端口,同步等待成功
-			ChannelFuture f = null;
-			try {
-				// 配置完成,开始绑定server,通过调用sync同步方法阻塞直到绑定成功
-				f = b.bind(8880).sync();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-		} finally {
-			// 优雅退出,释放线程池资源
-			//关闭EventLoopGroup,释放掉所有资源包括创建的线程
-			bossGroup.shutdownGracefully();
-			workerGroup.shutdownGracefully();
-		}
-	}
+class InHandler extends ChannelInboundHandlerAdapter {
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ctx.write(msg);
+    }
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
 }
 ```
 在这个示例中, 我们采用了主从Reactor线程模型, 添加了Netty内置的Protobuf编码器. 同时后端业务线程的处理我们也采用了线程池串行的方式.
 
-下来我们分析一下`ServerBootstrap`的源码.
+下来我们分析一下`ServerBootstrap`的源码. 我们从`bind()`方法入手. `bind()`最终调用的是父类的`doBind()`方法
+```java
+private ChannelFuture doBind(final SocketAddress localAddress) {
+				// 初始化NioServerSocketChannel
+        final ChannelFuture regFuture = initAndRegister();
+        final Channel channel = regFuture.channel();
+        if (regFuture.cause() != null) {
+            return regFuture;
+        }
+
+        if (regFuture.isDone()) {
+            ChannelPromise promise = channel.newPromise();
+            doBind0(regFuture, channel, localAddress, promise);
+            return promise;
+        } else {
+            ...
+            return promise;
+        }
+    }
+```
+
+接下来我们看一下`initAndRegister()`方法
+```java
+final ChannelFuture initAndRegister() {
+				// 因为我们调用过channel(NioServerSocketChannel.class)方法, 因此下面这个Channel是NioServerSocketChannel类型
+        final Channel channel = channelFactory().newChannel();
+        try {
+					  // 当channel接受到网络连接的时候, 会生成NioSocketChannel, 将NioSocketChannel与从Reactor进行绑定
+            init(channel);
+        } catch (Throwable t) {
+
+        }
+
+				// 将Reactor模型中的主Reactor线程注册到NioServerSocketChannel的Unsafe对象里.
+				// 此时就将NioServerSocketChannel与Reactor主线程关联起来了
+				ChannelFuture regFuture = group().register(channel);
+        if (regFuture.cause() != null) {
+            if (channel.isRegistered()) {
+                channel.close();
+            } else {
+                channel.unsafe().closeForcibly();
+            }
+        }
+    }
+```
+`init()`的具体实现是由子类`ServerBootstrap`实现的
+```java
+@Override
+void init(Channel channel) throws Exception {
+			 // 获取NioServerSocketChannel的Pipeline
+			 ChannelPipeline p = channel.pipeline();
+			 if (handler() != null) {
+					 p.addLast(handler());
+			 }
+
+			 final EventLoopGroup currentChildGroup = childGroup;
+			 final ChannelHandler currentChildHandler = childHandler;
+			 final Entry<ChannelOption<?>, Object>[] currentChildOptions;
+			 final Entry<AttributeKey<?>, Object>[] currentChildAttrs;
+
+			 p.addLast(new ChannelInitializer<Channel>() {
+					 @Override
+					 public void initChannel(Channel ch) throws Exception {
+						 	 // 这里主要是产生网络连接时将处理数据的channel与Reactor从线程关联起来
+							 ch.pipeline().addLast(new ServerBootstrapAcceptor(
+											 currentChildGroup, currentChildHandler, currentChildOptions, currentChildAttrs));
+					 }
+			 });
+	 }
+```
+
+我们看到`ServerBootstrapAcceptor`也是实现自`ChannelInboundHandlerAdapter`
+```java
+private static class ServerBootstrapAcceptor extends ChannelInboundHandlerAdapter {
+
+        private final EventLoopGroup childGroup;
+        private final ChannelHandler childHandler;
+        ServerBootstrapAcceptor(
+                EventLoopGroup childGroup, ChannelHandler childHandler) {
+            this.childGroup = childGroup;
+            this.childHandler = childHandler;
+        }
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) {
+            final Channel child = (Channel) msg;
+            child.pipeline().addLast(childHandler);
+            try {
+							  // 将处理数据的NioSocketChannel与主从Reactor模型中的从Reactor线程关联起来
+                childGroup.register(child).addListener(new ChannelFutureListener());
+            } catch (Throwable t) {
+            }
+        }
+    }
+```
+然后我们看一下`NioEventLoop`的`register()`方法过程. 这个方法调用其实最终调用的是
+```java
+SingleThreadEventLoop
+
+@Override
+	 public ChannelFuture register(final Channel channel, final ChannelPromise promise) {
+			 channel.unsafe().register(this, promise);
+			 return promise;
+	 }
+```
+然后后续调用到了`AbstractUnsafe`的`register()`方法
+```java
+@Override
+        public final void register(EventLoop eventLoop, final ChannelPromise promise) {
+              AbstractChannel.this.eventLoop = eventLoop;
+
+            if (eventLoop.inEventLoop()) {
+                register0(promise);
+            } else {
+                try {
+                    eventLoop.execute(new OneTimeTask() {
+                        @Override
+                        public void run() {
+                            register0(promise);
+                        }
+                    });
+                } catch (Throwable t) {
+                }
+            }
+        }
+
+				private void register0(ChannelPromise promise) {
+            try {
+                doRegister();
+                pipeline.fireChannelRegistered();
+                // Only fire a channelActive if the channel has never been registered. This prevents firing
+                // multiple channel actives if the channel is deregistered and re-registered.
+                if (firstRegistration && isActive()) {
+                    pipeline.fireChannelActive();
+                }
+            } catch (Throwable t) {
+            }
+        }
+```
+接着调用`AbstractNioChannel`的`doRegister()`
+```java
+protected void doRegister() throws Exception {
+        boolean selected = false;
+        for (;;) {
+            try {
+                selectionKey = javaChannel().register(eventLoop().selector, 0, this);
+                return;
+            } catch (CancelledKeyException e) {
+            }
+        }
+    }
+```
+最终我们看到了, 当前JDK里的Channel注册到了EventLoop的IO多路复用器上面
+
+看到这里之后, 我们再接着返回到`doBind()`方法继续看`doBind0()`方法
+```java
+private static void doBind0(
+            final ChannelFuture regFuture, final Channel channel,
+            final SocketAddress localAddress, final ChannelPromise promise) {
+
+        // This method is invoked before channelRegistered() is triggered.  Give user handlers a chance to set up
+        // the pipeline in its channelRegistered() implementation.
+        channel.eventLoop().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (regFuture.isSuccess()) {
+                    channel.bind(localAddress, promise).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+                } else {
+                    promise.setFailure(regFuture.cause());
+                }
+            }
+        });
+    }
+```
+我们看到当在bind的时候也是调用的channel的bind(), 真实的bind是在`AbstractChannel`里发生的
+```java
+public ChannelFuture bind(SocketAddress localAddress, ChannelPromise promise) {
+		return pipeline.bind(localAddress, promise);
+}
+```
+然后调用的是`DefaultChannelPipeline`的`bind()`方法
+```java
+@Override
+ public ChannelFuture bind(SocketAddress localAddress, ChannelPromise promise) {
+		 return tail.bind(localAddress, promise);
+ }
+```
+再具体的bind的话, 就要参考`DeaultChannelPipeline`的实现了
+
+最后我们总结一下
+1. 首先将NioServerSocketChannel与主Reactor线程池的Selector进行注册绑定
+2. 当NioServerSocketChannel接收到网络连接的时候(doReadMessage())会生成一个`NioSocketChannel`的消息列表
+3. 然后`ServerBootstrapAcceptor`负责将`NioSocketChannel`与从Reactor的Selector进行注册绑定
+4. 最后由从Reactor线程池中的Selector进行IO调度, 读写网络数据

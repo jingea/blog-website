@@ -73,3 +73,13 @@ for i in range(0, 2000, 1):
        print "Error: unable to start thread  " + str(count)
 ```
 由于测试机配置问题, 我的python程序只能启动2000个Socket连接, 但是也无所谓, 我们看一下在这俩千个Socket连接时, Netty服务器的消耗
+
+我们首先看一下客户端连接运行之前的Netty程序的内存占用
+![]()
+我们看到了在top中为46M, 在visualVM中分配的30M堆内存也只使用了10M, 而且一直在GC.
+
+那么我们再看一下压测之后的内?
+![]()
+top中显示占用了58M的内存, 而在visualVM只不过偶尔比10M多一点的内存,而且又很快的GC掉了.
+
+那么top中多出的12M内存是怎么回事呢?这是因为Netty默认的使用的是UnpooledDirectByteBuf(姑且是这么个名字吧), 它使用的是非池化的直接内存, 也就是说在接受网络连接数据的时候,它并没有直接使用堆内内存,而是使用的堆外的. 
