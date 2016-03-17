@@ -37,3 +37,9 @@ else:
     print('loop over')
 ```
 
+或者
+```python
+#  从0开始步增到10
+for i in range(0, 10, 1)
+    print(i)
+```

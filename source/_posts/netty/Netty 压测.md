@@ -1,0 +1,75 @@
+category: Netty
+date: 2016-03-17
+title: Netty 压测
+---
+我们知道Netty的性能是非常好的,那究竟有多好呢? 今天我写了一个小程序测试了一下
+```java
+public class NettyServer {
+    public static void main(String[] args) throws InterruptedException {
+        int cpuSize = Runtime.getRuntime().availableProcessors();
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        EventLoopGroup workerGroup = new NioEventLoopGroup(cpuSize);
+        try {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(bossGroup, workerGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .option(ChannelOption.AUTO_READ, true)
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) {
+                            ch.pipeline().addLast(new InHandler());
+                        }
+                    });
+
+            ChannelFuture f = b.bind(8881).sync();
+            f.channel().closeFuture().sync();
+        } finally {
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+        }
+    }
+}
+
+class InHandler extends ChannelInboundHandlerAdapter {
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ctx.write(msg);
+    }
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
+}
+```
+上面是一个简单的Socket服务器, 不做任何的编解码工作, 当接收到数据之后, 直接返回给客户端.
+
+在启动的这个服务器的时候加上指定虚拟机的堆大小(我们指定了大小为固定的30M)
+```
+-Xmx30m -Xms30m
+````
+然后写一个Socket客户端程序(原谅我客户端是用python写的, 现在我正在把我业余时间写代码的语言替换成python)
+```python
+import socket
+import threading
+import time
+
+count = 0
+def socketSendData():
+    client=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    client.connect(('localhost',8881))
+    client.send('2')
+    time.sleep(60)
+
+
+
+for i in range(0, 2000, 1):
+    try:
+       t = threading.Thread(target=socketSendData)
+       info = t.start()
+    except:
+       count += 1
+       print "Error: unable to start thread  " + str(count)
+```
+由于测试机配置问题, 我的python程序只能启动2000个Socket连接, 但是也无所谓, 我们看一下在这俩千个Socket连接时, Netty服务器的消耗

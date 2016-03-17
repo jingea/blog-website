@@ -1,6 +1,6 @@
 category: python2
 date: 2016-03-06
-title: PYTHON2 服务器(Socket/HTTP)
+title: PYTHON2 网络编程
 ---
 
 ## Socket服务器
@@ -53,3 +53,13 @@ self 还有如下参数
 * self.headers
 * self.send_response(200)
 * self.end_headers()
+
+## Socket客户端
+```python
+client=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+client.connect(('localhost',8880))
+
+client.send('2')
+recvData=client.recv(1024)
+print recvData
+```
