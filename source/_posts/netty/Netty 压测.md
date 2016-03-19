@@ -75,7 +75,7 @@ for i in range(0, 2000, 1):
 由于测试机配置问题, 我的python程序只能启动2000个Socket连接, 但是也无所谓, 我们看一下在这俩千个Socket连接时, Netty服务器的消耗
 
 我们首先看一下客户端连接运行之前的Netty程序的内存占用
-![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/Netty%20压测1.jpg)
+![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/netty%20压测1.jpg)
 我们看到了在top中为46M, 在visualVM中分配的30M堆内存也只使用了10M, 而且一直在GC.
 
 那么我们再看一下压测之后的内?
