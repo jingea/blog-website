@@ -571,6 +571,169 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/08/mgits/vim/" title="GVIM" itemprop="url">GVIM</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="vimrc配置文件"><a href="#vimrc配置文件" class="headerlink" title="_vimrc配置文件"></a>_vimrc配置文件</h1><h2 id="GVIM打开即全屏"><a href="#GVIM打开即全屏" class="headerlink" title="GVIM打开即全屏"></a>GVIM打开即全屏</h2><p><code>au GUIEnter * simalt ~x</code></p>
+<h2 id="设置VeraMono字体"><a href="#设置VeraMono字体" class="headerlink" title="设置VeraMono字体"></a>设置VeraMono字体</h2><p><a href="http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf" target="_blank" rel="external">VeraMono</a>需要下载安装(百度字体安装就好)<br><code>set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI</code></p>
+<h2 id="python编译"><a href="#python编译" class="headerlink" title="python编译"></a>python编译</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  </span><br><span class="line">autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  </span><br><span class="line">autocmd BufRead *.py nmap &lt;F5&gt; :!python %&lt;CR&gt;  </span><br><span class="line">autocmd BufRead *.py nmap &lt;F6&gt; :make&lt;CR&gt;  </span><br><span class="line">autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口</span><br></pre></td></tr></table></figure>
+<h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
+<li>搜索：<code>/</code>向下搜索. <code>?</code>向上搜索</li>
+<li>替换： <code>:%s/abc/123/g</code>, 将abc都替换为123</li>
+<li>删除行：<code>dd</code>删除整行. <code>5dd</code>从当前行开始向后删除5整行. <code>D</code>从光标删除到行尾</li>
+<li>删除字符：<code>x</code>向后删除一个字符. <code>X</code>向前删除一个字符</li>
+<li>撤销: <code>u</code></li>
+<li>复制:<code>yy</code>复制一行. <code>5yy</code>从当前行开始向下复制5行</li>
+<li>粘贴: <code>p</code>光标向下移动. <code>P</code>光标不动</li>
+<li>块选择: <code>V</code>多行整行选择. <code>v</code>多行字符选择. <code>ctrl v</code>矩阵方式选择.</li>
+<li>光标移动：<code>$</code>移动到行尾. <code>0</code>移动到行首. <code>G</code>移动到最后一行. <code>gg</code>移动到最一行.</li>
+<li>窗口编辑: <code>：split</code>水平新建窗口. <code>：vsplit</code>垂直分割.</li>
+<li>在窗口间游走: <code>Ctrl W</code> 加 <code>h, j, k, l</code>一起使用</li>
+<li>分页编辑： <code>：tabnew</code>新建分页。 <code>：tabclose</code>关闭当前分页. <code>：tabonly</code>关闭其他所有的分页</li>
+<li>顶部底部跳转： 顶部<code>`, 底部</code>shift + g`</li>
+</ul>
+<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><h2 id="Pydiction"><a href="#Pydiction" class="headerlink" title="Pydiction "></a><a href="http://www.vim.org/scripts/script.php?script_id=850" target="_blank" rel="external">Pydiction </a></h2><p>python自动补全插件</p>
+<p>配置,<code>_vimrc</code>文件追加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">filetype plugin on</span><br><span class="line">let g:pydiction_location = <span class="string">'D:/Program Files/Vim/pydiction/complete-dict'</span></span><br></pre></td></tr></table></figure></p>
+<p>然后将<code>pydiction/after/ftplugin/python_pydiction.vim</code>复制到<code>Vim\vimfiles\ftplugin\python_pydiction.vim</code></p>
+<h2 id="The-NERD-tree"><a href="#The-NERD-tree" class="headerlink" title="The NERD tree"></a><a href="http://www.vim.org/scripts/script.php?script_id=1658" target="_blank" rel="external">The NERD tree</a></h2><p>文件树. 将下载下来的压缩包解压到<code>Vim\vimfiles</code></p>
+<ul>
+<li><code>:NERDTree</code> 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径</li>
+<li><code>:NERDTreeClose</code> 关闭目录树</li>
+</ul>
+<p>修改_vimrc配置文件,添加映射<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="bsh-vim"><a href="#bsh-vim" class="headerlink" title="bsh.vim"></a><a href="http://www.vim.org/scripts/script.php?script_id=1202" target="_blank" rel="external">bsh.vim</a></h2><p>Shell语法高亮</p>
+<p>只需将<code>bsh.vim</code>文件拷贝到<code>Vim\vimfiles\syntax</code>就可以了</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/mgits/vim/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mgits/vim/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/mycat/mycat分片/" title="Mycat分片" itemprop="url">Mycat分片</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
+<p>由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解</p>
+<h2 id="分片枚举"><a href="#分片枚举" class="headerlink" title="分片枚举"></a>分片枚举</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"hash-int"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByFileMap"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-hash-int.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>mapFile: 配置文件名称</li>
+<li>type: 0表示Integer，非零表示String</li>
+<li>defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点</li>
+</ul>
+<p>在partition-hash-int.txt文件中,采用<code>x=y</code>的形式, x是columns值. y是节点值. 所有的节点都是从0开始的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a=0</span><br><span class="line">b=1</span><br><span class="line">c=2</span><br></pre></td></tr></table></figure></p>
+<p>上面这个例子中,columns值为1的sql会路由到1的这个节点上. 节点在schema.xml中配置. 具体0对应哪个节点还需要探寻.</p>
+<h2 id="范围约定"><a href="#范围约定" class="headerlink" title="范围约定"></a>范围约定</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"rang-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.AutoPartitionByLong"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>autopartition-long.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这个规则是约定好,哪个范围的sql对应哪个节点,我们可以这样配置autopartition-long.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0-500=0</span><br><span class="line">500-1000=1</span><br><span class="line">1000-1500=2</span><br></pre></td></tr></table></figure></p>
+<p>这种范围的就只能适应,id分片的了</p>
+<h2 id="求模"><a href="#求模" class="headerlink" title="求模"></a>求模</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"mod-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMod"</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!-- how many data nodes  --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这个是根据column的十进制值进行求模分片.</p>
+<h2 id="固定分片hash算法"><a href="#固定分片hash算法" class="headerlink" title="固定分片hash算法"></a>固定分片hash算法</h2><p>该算法是对columns的二进制的低十位进行取模运算.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"partitionByLong"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>8, 1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>128, 256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>partitionCount 分片个数列表</li>
+<li>partitionLength 分片范围列表<br>这来个参数的长度必须相等. 上面的例子的意思是, 在对低十位取模运算时, 128以内的sql要平均分配到8个分片上执行. 128 ~ 256的sql要到1个分片上执行</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mycat/">mycat</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/mycat/mycat分片/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mycat/mycat分片/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/08/mycat/mycat全局序列号/" title="Mycat全局序列号" itemprop="url">Mycat全局序列号</a>
   </h1>
   <p class="article-author">By
@@ -650,6 +813,92 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/08/linux/DevOps/" title="DevOps" itemprop="url">DevOps</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Mac"><a href="#Mac" class="headerlink" title="Mac"></a>Mac</h2><h3 id="Screenhero"><a href="#Screenhero" class="headerlink" title="Screenhero"></a>Screenhero</h3><p>协作编程工具：双方都能控制鼠标/键盘</p>
+<h3 id="asciinema"><a href="#asciinema" class="headerlink" title="asciinema"></a><a href="https://asciinema.org" target="_blank" rel="external">asciinema</a></h3><p>终端录制与屏幕分享工具</p>
+<h3 id="keen-io"><a href="#keen-io" class="headerlink" title="keen.io"></a><a href="https://keen.io" target="_blank" rel="external">keen.io</a></h3><p>用来追踪时间段发生的一系列事件</p>
+<h3 id="CakeBrew"><a href="#CakeBrew" class="headerlink" title="CakeBrew"></a>CakeBrew</h3><p>图形化管理homebrew的工具</p>
+<h3 id="CMAKE"><a href="#CMAKE" class="headerlink" title="CMAKE"></a><a href="https://cmake.org/" target="_blank" rel="external">CMAKE</a></h3><p>CMake 是一个跨平台的自动化建构系统,它使用一个名为 CMakeLists.txt 的文件来描述构建过程,可以产生标准的构建文件</p>
+<h3 id="Patterns"><a href="#Patterns" class="headerlink" title="Patterns"></a>Patterns</h3><p>用来复查正则表达式</p>
+<h3 id="CheatSheet"><a href="#CheatSheet" class="headerlink" title="CheatSheet"></a>CheatSheet</h3><p>CheatSheet在后台运行</p>
+<h3 id="SonarQube"><a href="#SonarQube" class="headerlink" title="SonarQube"></a><a href="http://www.sonarqube.org/" target="_blank" rel="external">SonarQube</a></h3><p>代码质量管理的开源平台</p>
+<h3 id="Keka"><a href="#Keka" class="headerlink" title="Keka"></a><a href="http://www.kekaosx.com/zh-cn/" target="_blank" rel="external">Keka</a></h3><p>免费的 Mac OS X 文件解压缩程序。</p>
+<p>Keka 所支持的文件压缩格式：7z, Zip, Tar, Gzip, Bzip2, DMG, ISO</p>
+<p>Keka 所支持的文件解压格式：RAR, 7z, Lzma, xz, Zip, Tar, Gzip, Bzip2, ISO, EXE, CAB, PAX, ACE (PPC)</p>
+<h3 id="Tuxera-NTFS"><a href="#Tuxera-NTFS" class="headerlink" title="Tuxera NTFS"></a><a href="http://www.tuxera.com/products/tuxera-ntfs-for-mac/" target="_blank" rel="external">Tuxera NTFS</a></h3><p>为 Mac用户提供的专业 NTFS 驱动软件</p>
+<h3 id="PopClip"><a href="#PopClip" class="headerlink" title="PopClip"></a><a href="http://sspai.com/25483" target="_blank" rel="external">PopClip</a></h3><p>Mac上的小工具，简单高效，具有强大的拓展功能</p>
+<h3 id="Transmit"><a href="#Transmit" class="headerlink" title="Transmit"></a><a href="">Transmit</a></h3><p>FTP 客户端软件</p>
+<h3 id="MacVim"><a href="#MacVim" class="headerlink" title="MacVim"></a><a href="http://www.macupdate.com/app/mac/25988/macvim" target="_blank" rel="external">MacVim</a></h3><p>vim的mac移植版本</p>
+<h2 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h2><h3 id="babun"><a href="#babun" class="headerlink" title="babun"></a><a href="http://babun.github.io/" target="_blank" rel="external">babun</a></h3><p>Windows 上的开箱即用的壳程序，基于 Cygwin，胜于 Cygwin</p>
+<h3 id="msys2"><a href="#msys2" class="headerlink" title="msys2"></a><a href="http://msys2.github.io/" target="_blank" rel="external">msys2</a></h3><p>用于 shell 命令行开发环境</p>
+<h3 id="gitbook"><a href="#gitbook" class="headerlink" title="gitbook"></a><a href="">gitbook</a></h3><p>markdown写书工具</p>
+<h3 id="PowerCMD"><a href="#PowerCMD" class="headerlink" title="PowerCMD"></a><a href="http://www.powercmd.com/" target="_blank" rel="external">PowerCMD</a></h3><p>增强版本的CMD工具</p>
+<h3 id="Cyberduck"><a href="#Cyberduck" class="headerlink" title="Cyberduck"></a><a href="https://cyberduck.io/" target="_blank" rel="external">Cyberduck</a></h3><p>FTP客户端软件,同样适用于Mac</p>
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><h3 id="nload"><a href="#nload" class="headerlink" title="nload"></a>nload</h3><p>可以分开来监控入站流量和出站流量</p>
+<h3 id="iftop"><a href="#iftop" class="headerlink" title="iftop"></a>iftop</h3><p>可测量通过每一个套接字连接传输的数据</p>
+<h3 id="nethogs"><a href="#nethogs" class="headerlink" title="nethogs"></a>nethogs</h3><p>显示每个进程所使用的带宽</p>
+<h3 id="bmon"><a href="#bmon" class="headerlink" title="bmon"></a>bmon</h3><p>一款类似nload的工具，它可以显示系统上所有网络接口的流量负载</p>
+<h3 id="speedometer"><a href="#speedometer" class="headerlink" title="speedometer"></a>speedometer</h3><p>绘制外观漂亮的图形，显示通过某个接口传输的入站流量和出站流量。</p>
+<h3 id="pktstat"><a href="#pktstat" class="headerlink" title="pktstat"></a>pktstat</h3><p>实时显示所有活动连接，并显示哪些数据通过这些活动连接传输的速度。它还可以显示连接类型，比如TCP连接或UDP连接；如果涉及HTTP连接，还会显示关于HTTP请求的详细信息。</p>
+<h3 id="dstat"><a href="#dstat" class="headerlink" title="dstat"></a>dstat</h3><p>监控系统的不同统计信息，并使用批处理模式来报告，或者将相关数据记入到CSV或类似的文件</p>
+<h3 id="ngxtop"><a href="#ngxtop" class="headerlink" title="ngxtop"></a>ngxtop</h3><p><a href="https://linux.cn/article-3205-1.html" target="_blank" rel="external">ngxtop：在命令行实时监控 Nginx 的神器</a></p>
+<h3 id="Supervisor"><a href="#Supervisor" class="headerlink" title="Supervisor"></a>Supervisor</h3><p><a href="http://www.tuicool.com/articles/Ejm2u2" target="_blank" rel="external">Supervisor的安装与使用入门</a></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/linux/">linux</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/linux/DevOps/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/DevOps/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/08/linux/zsh iterm2/" title="iTerm2 plus Oh My Zsh" itemprop="url">iTerm2 plus Oh My Zsh</a>
   </h1>
   <p class="article-author">By
@@ -689,6 +938,136 @@
 	
 	  	<span></span>
 		<a href="/2015/10/08/linux/zsh iterm2/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/zsh iterm2/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/linux/2015-10-12-AWK/" title="AWK" itemprop="url">AWK</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h1><p>awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
+<p>语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk [-F  field-separator]  &apos;commands&apos;  input-file(s)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>-F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符<code>-F &#39;:&#39;</code>)</li>
+<li>commands: ‘PATTERN{COMMAND}’. PATTERN为模式(正在表达式),COMMAND为要执行的命令.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk  -F &apos;:&apos;  &apos;BEGIN &#123;print &quot;start&quot;&#125;  &#123;print $1&quot;&#125; END &#123;print &quot;end&quot;&#125;&apos; ./txt</span><br></pre></td></tr></table></figure>
+<p>上面的例子是读取<code>txt</code>文件,然后使用<code>:</code>分割每一行数据,在开始处理的时候输出start，在处理过程中第一列数据，最后输出end。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><p>我们可以在AWK命令中直接使用以下内置变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ARGC               命令行参数个数</span><br><span class="line">ARGV               命令行参数排列</span><br><span class="line">ENVIRON            支持队列中系统环境变量的使用</span><br><span class="line">FILENAME           awk浏览的文件名</span><br><span class="line">FNR                浏览文件的记录数</span><br><span class="line">FS                 设置输入域分隔符，等价于命令行 -F选项</span><br><span class="line">NF                 浏览记录的域的个数</span><br><span class="line">NR                 已读的记录数</span><br><span class="line">OFS                输出域分隔符</span><br><span class="line">ORS                输出记录分隔符</span><br><span class="line">RS                 控制记录分隔符</span><br></pre></td></tr></table></figure></p>
+<p>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print ARGC&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h3 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h3><p>我们通过赋值的方式直接定义一个变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;BEGIN&#123;size=0;&#125; &#123;size=1+size&#125; &#123;print $1&#125; END&#123;print size&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面我们定义了一个数值型的size变量.</p>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><ul>
+<li><code>= += -= *= /= %= ^= **=</code>    赋值</li>
+<li><code>?:</code>    C条件表达式</li>
+<li><code>||</code>    逻辑或</li>
+<li><code>&amp;&amp;</code>    逻辑与</li>
+<li><code>~ ~!</code>    匹配正则表达式和不匹配正则表达式</li>
+<li><code>&lt; &lt;= &gt; &gt;= != ==</code>    关系运算符</li>
+<li><code>空格</code>    连接</li>
+<li><code>+ -</code>    加，减</li>
+<li><code>* / &amp;</code>    乘，除与求余</li>
+<li><code>+ - !</code>    一元加，减和逻辑非</li>
+<li><code>^ ***</code>    求幂</li>
+<li><code>++ --</code>    增加或减少，作为前缀或后缀</li>
+<li><code>$</code>    字段引用</li>
+<li><code>in</code>    数组成员</li>
+</ul>
+<h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>下面输出了大于10000的java进程号<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;BEGIN&#123;size=0&#125; &#123;if($1&gt;10000) &#123;size++;print $1&#125;&#125; END&#123;print size&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><p>awk中的循环语句借鉴于C语言，支持while、do/while、for、break、continue，这些关键字的语义和C语言中的语义完全相同。</p>
+<h1 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h1><h2 id="sub函数"><a href="#sub函数" class="headerlink" title="sub函数"></a>sub函数</h2><p>匹配从左侧开始找到的第一个符合规则的字符串，然后使用替换字符串替换这些字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面这个例子就使用sun这个字符串替换了$2中的moon字符串。</p>
+<p>我们还可以指定在哪列执行查找替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;, $1)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子中我们只在第一列进行查找替换</p>
+<h2 id="gsub函数"><a href="#gsub函数" class="headerlink" title="gsub函数"></a>gsub函数</h2><p>与sub函数不同的是，这个执行的是全局替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;gsub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="index函数"><a href="#index函数" class="headerlink" title="index函数"></a>index函数</h2><p>返回子字符串第一次被匹配的位置，偏移量从位置1开始<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print$2; $2=index($2, &quot;moon&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="length函数"><a href="#length函数" class="headerlink" title="length函数"></a>length函数</h2><p>返回记录的字符数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print$2; $2=length($2)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="substr函数"><a href="#substr函数" class="headerlink" title="substr函数"></a>substr函数</h2><p>返回从位置1开始的子字符串，如果指定长度超过实际长度，就返回整个字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print substr($2, 2, 10)&#125; &apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子将$2字符串从第二个字符还是截取，截取10个长度的字符串出来</p>
+<h2 id="toupper和tolower函数"><a href="#toupper和tolower函数" class="headerlink" title="toupper和tolower函数"></a>toupper和tolower函数</h2><p>可用于字符串大小间的转换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;&#123;print toupper($2)&#125; &apos;</span><br></pre></td></tr></table></figure></p>
+<h2 id="split函数"><a href="#split函数" class="headerlink" title="split函数"></a>split函数</h2><p>可按给定的分隔符把字符串分割为一个数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123; split($2, array, &quot;/&quot;); print array[3]&#125; &apos;</span><br></pre></td></tr></table></figure></p>
+<p>上面的例子我们将$2这一列按照<code>/</code>进行分割,然后将分割出的数据存储到array数组里. 注意这里首先不需要转义</p>
+<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id=""><a href="#" class="headerlink" title="\"></a>\</h2><p>将下一字符标记为特殊字符、文本、反向引用或八进制转义符。例如，“n”匹配字符“n”。“\n”匹配换行符。序列“\”匹配“\”，“(”匹配“(”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\\/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<p>过滤出带有<code>\</code>的行</p>
+<h2 id="-1"><a href="#-1" class="headerlink" title="^"></a>^</h2><p>匹配输入字符串与最左侧开始的位置的字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/^\\n/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<p>找到所有以<code>\n</code>字符串开始的数据</p>
+<h2 id="-2"><a href="#-2" class="headerlink" title="$"></a>$</h2><p>匹配输入字符串结尾的位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/)。$/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<p>过滤以<code>)。</code>结尾的行</p>
+<h2 id="-3"><a href="#-3" class="headerlink" title="*"></a>*</h2><p>零次或多次匹配前面的字符或子表达式。例如，zo<em> 匹配“z”和“zoo”。</em> 等效于 {0,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用*/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="-4"><a href="#-4" class="headerlink" title="+"></a>+</h2><p>一次或多次匹配前面的字符或子表达式。例如，“zo+”与“zo”和“zoo”匹配，但与“z”不匹配。+ 等效于 {1,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用+/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="-5"><a href="#-5" class="headerlink" title="?"></a>?</h2><p>零次或一次匹配前面的字符或子表达式。例如，“do(es)?”匹配“do”或“does”中的“do”。? 等效于 {0,1}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用?/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="n"><a href="#n" class="headerlink" title="{n}"></a>{n}</h2><p>n 是非负整数。正好匹配 n 次。例如，“o{2}”与“Bob”中的“o”不匹配，但与“food”中的两个“o”匹配。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="n-1"><a href="#n-1" class="headerlink" title="{n,}"></a>{n,}</h2><p>n 是非负整数。至少匹配 n 次。例如，“o{2,}”不匹配“Bob”中的“o”，而匹配“foooood”中的所有 o。“o{1,}”等效于“o+”。“o{0,}”等效于“o*”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="n-m"><a href="#n-m" class="headerlink" title="{n,m}"></a>{n,m}</h2><p>M 和 n 是非负整数，其中 n &lt;= m。匹配至少 n 次，至多 m 次。例如，“o{1,3}”匹配“fooooood”中的头三个 o。’o{0,1}’ 等效于 ‘o?’。注意：您不能将空格插入逗号和数字之间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="-6"><a href="#-6" class="headerlink" title="."></a>.</h2><p>匹配除“\n”之外的任何单个字符。若要匹配包括“\n”在内的任意字符，请使用诸如“[\s\S]”之类的模式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="pattern"><a href="#pattern" class="headerlink" title="(pattern)"></a>(pattern)</h2><p>匹配 pattern 并捕获该匹配的子表达式。可以使用 $0…$9 属性从结果“匹配”集合中检索捕获的匹配。若要匹配括号字符 ( )，请使用“(”或者“)”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="pattern-1"><a href="#pattern-1" class="headerlink" title="(?:pattern)"></a>(?:pattern)</h2><p>匹配 pattern 但不捕获该匹配的子表达式，即它是一个非捕获匹配，不存储供以后使用的匹配。这对于用“or”字符 (|) 组合模式部件的情况很有用。例如，’industr(?:y|ies) 是比 ‘industry|industries’ 更经济的表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="pattern-2"><a href="#pattern-2" class="headerlink" title="(?=pattern)"></a>(?=pattern)</h2><p>执行正向预测先行搜索的子表达式，该表达式匹配处于匹配 pattern 的字符串的起始点的字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?=95|98|NT|2000)’ 匹配“Windows 2000”中的“Windows”，但不匹配“Windows 3.1”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="pattern-3"><a href="#pattern-3" class="headerlink" title="(?!pattern)"></a>(?!pattern)</h2><p>执行反向预测先行搜索的子表达式，该表达式匹配不处于匹配 pattern 的字符串的起始点的搜索字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?!95|98|NT|2000)’ 匹配“Windows 3.1”中的 “Windows”，但不匹配“Windows 2000”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="x-y"><a href="#x-y" class="headerlink" title="x|y"></a>x|y</h2><p>匹配 x 或 y。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/换页符等|十六进制转义码必须正好是两位数长/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="xyz"><a href="#xyz" class="headerlink" title="[xyz]"></a>[xyz]</h2><p>匹配是否包含xyz中任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[前面至少有]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="xyz-1"><a href="#xyz-1" class="headerlink" title="[^xyz]"></a>[^xyz]</h2><p>匹配不能包含xyz任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[^前面至少有]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="a-z"><a href="#a-z" class="headerlink" title="[a-z]"></a>[a-z]</h2><p>与<code>[xyz]</code>规则相同,只不过这个模式提供了一个范围模式.例如[a-c]实际为匹配[abc]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[a-b]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="a-z-1"><a href="#a-z-1" class="headerlink" title="[^a-z]"></a>[^a-z]</h2><p>反向范围字符。匹配不在指定的范围内的任何字符。例如，“[^a-z]”匹配任何不在“a”到“z”范围内的任何字符。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[^a-z]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是’\t’会被匹配出来</p>
+<h2 id="d"><a href="#d" class="headerlink" title="\d"></a>\d</h2><p>数字字符匹配。等效于 [0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\d/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="D"><a href="#D" class="headerlink" title="\D"></a>\D</h2><p>非数字字符匹配。等效于 [^0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\D/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="n-2"><a href="#n-2" class="headerlink" title="\n"></a>\n</h2><p>换行符匹配。等效于 \x0a 和 \cJ。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\n/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="r"><a href="#r" class="headerlink" title="\r"></a>\r</h2><p>匹配一个回车符。等效于 \x0d 和 \cM。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\t/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="s"><a href="#s" class="headerlink" title="\s"></a>\s</h2><p>匹配任何空白字符，包括空格、制表符、换页符等。与 [ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\s/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="S"><a href="#S" class="headerlink" title="\S"></a>\S</h2><p>匹配任何非空白字符。与 [^ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\S/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="w"><a href="#w" class="headerlink" title="\w"></a>\w</h2><p>匹配任何字类字符，包括下划线。与“[A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\w/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+<h2 id="W"><a href="#W" class="headerlink" title="\W"></a>\W</h2><p>与任何非单词字符匹配。与“[^A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\W/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/linux/">linux</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/linux/2015-10-12-AWK/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/2015-10-12-AWK/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -863,385 +1242,6 @@
 	
 	  	<span></span>
 		<a href="/2015/10/08/linux/shell/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/shell/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/mycat/mycat分片/" title="Mycat分片" itemprop="url">Mycat分片</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
-<p>由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解</p>
-<h2 id="分片枚举"><a href="#分片枚举" class="headerlink" title="分片枚举"></a>分片枚举</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"hash-int"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByFileMap"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-hash-int.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>mapFile: 配置文件名称</li>
-<li>type: 0表示Integer，非零表示String</li>
-<li>defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点</li>
-</ul>
-<p>在partition-hash-int.txt文件中,采用<code>x=y</code>的形式, x是columns值. y是节点值. 所有的节点都是从0开始的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a=0</span><br><span class="line">b=1</span><br><span class="line">c=2</span><br></pre></td></tr></table></figure></p>
-<p>上面这个例子中,columns值为1的sql会路由到1的这个节点上. 节点在schema.xml中配置. 具体0对应哪个节点还需要探寻.</p>
-<h2 id="范围约定"><a href="#范围约定" class="headerlink" title="范围约定"></a>范围约定</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"rang-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.AutoPartitionByLong"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>autopartition-long.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这个规则是约定好,哪个范围的sql对应哪个节点,我们可以这样配置autopartition-long.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0-500=0</span><br><span class="line">500-1000=1</span><br><span class="line">1000-1500=2</span><br></pre></td></tr></table></figure></p>
-<p>这种范围的就只能适应,id分片的了</p>
-<h2 id="求模"><a href="#求模" class="headerlink" title="求模"></a>求模</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"mod-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMod"</span>&gt;</span></span><br><span class="line"> <span class="comment">&lt;!-- how many data nodes  --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这个是根据column的十进制值进行求模分片.</p>
-<h2 id="固定分片hash算法"><a href="#固定分片hash算法" class="headerlink" title="固定分片hash算法"></a>固定分片hash算法</h2><p>该算法是对columns的二进制的低十位进行取模运算.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"partitionByLong"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>8, 1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>128, 256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>partitionCount 分片个数列表</li>
-<li>partitionLength 分片范围列表<br>这来个参数的长度必须相等. 上面的例子的意思是, 在对低十位取模运算时, 128以内的sql要平均分配到8个分片上执行. 128 ~ 256的sql要到1个分片上执行</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mycat/">mycat</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/mycat/mycat分片/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mycat/mycat分片/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/mgits/vim/" title="GVIM" itemprop="url">GVIM</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="vimrc配置文件"><a href="#vimrc配置文件" class="headerlink" title="_vimrc配置文件"></a>_vimrc配置文件</h1><h2 id="GVIM打开即全屏"><a href="#GVIM打开即全屏" class="headerlink" title="GVIM打开即全屏"></a>GVIM打开即全屏</h2><p><code>au GUIEnter * simalt ~x</code></p>
-<h2 id="设置VeraMono字体"><a href="#设置VeraMono字体" class="headerlink" title="设置VeraMono字体"></a>设置VeraMono字体</h2><p><a href="http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf" target="_blank" rel="external">VeraMono</a>需要下载安装(百度字体安装就好)<br><code>set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI</code></p>
-<h2 id="python编译"><a href="#python编译" class="headerlink" title="python编译"></a>python编译</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  </span><br><span class="line">autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  </span><br><span class="line">autocmd BufRead *.py nmap &lt;F5&gt; :!python %&lt;CR&gt;  </span><br><span class="line">autocmd BufRead *.py nmap &lt;F6&gt; :make&lt;CR&gt;  </span><br><span class="line">autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口</span><br></pre></td></tr></table></figure>
-<h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
-<li>搜索：<code>/</code>向下搜索. <code>?</code>向上搜索</li>
-<li>替换： <code>:%s/abc/123/g</code>, 将abc都替换为123</li>
-<li>删除行：<code>dd</code>删除整行. <code>5dd</code>从当前行开始向后删除5整行. <code>D</code>从光标删除到行尾</li>
-<li>删除字符：<code>x</code>向后删除一个字符. <code>X</code>向前删除一个字符</li>
-<li>撤销: <code>u</code></li>
-<li>复制:<code>yy</code>复制一行. <code>5yy</code>从当前行开始向下复制5行</li>
-<li>粘贴: <code>p</code>光标向下移动. <code>P</code>光标不动</li>
-<li>块选择: <code>V</code>多行整行选择. <code>v</code>多行字符选择. <code>ctrl v</code>矩阵方式选择.</li>
-<li>光标移动：<code>$</code>移动到行尾. <code>0</code>移动到行首. <code>G</code>移动到最后一行. <code>gg</code>移动到最一行.</li>
-<li>窗口编辑: <code>：split</code>水平新建窗口. <code>：vsplit</code>垂直分割.</li>
-<li>在窗口间游走: <code>Ctrl W</code> 加 <code>h, j, k, l</code>一起使用</li>
-<li>分页编辑： <code>：tabnew</code>新建分页。 <code>：tabclose</code>关闭当前分页. <code>：tabonly</code>关闭其他所有的分页</li>
-<li>顶部底部跳转： 顶部<code>`, 底部</code>shift + g`</li>
-</ul>
-<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><h2 id="Pydiction"><a href="#Pydiction" class="headerlink" title="Pydiction "></a><a href="http://www.vim.org/scripts/script.php?script_id=850" target="_blank" rel="external">Pydiction </a></h2><p>python自动补全插件</p>
-<p>配置,<code>_vimrc</code>文件追加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">filetype plugin on</span><br><span class="line">let g:pydiction_location = <span class="string">'D:/Program Files/Vim/pydiction/complete-dict'</span></span><br></pre></td></tr></table></figure></p>
-<p>然后将<code>pydiction/after/ftplugin/python_pydiction.vim</code>复制到<code>Vim\vimfiles\ftplugin\python_pydiction.vim</code></p>
-<h2 id="The-NERD-tree"><a href="#The-NERD-tree" class="headerlink" title="The NERD tree"></a><a href="http://www.vim.org/scripts/script.php?script_id=1658" target="_blank" rel="external">The NERD tree</a></h2><p>文件树. 将下载下来的压缩包解压到<code>Vim\vimfiles</code></p>
-<ul>
-<li><code>:NERDTree</code> 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径</li>
-<li><code>:NERDTreeClose</code> 关闭目录树</li>
-</ul>
-<p>修改_vimrc配置文件,添加映射<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="bsh-vim"><a href="#bsh-vim" class="headerlink" title="bsh.vim"></a><a href="http://www.vim.org/scripts/script.php?script_id=1202" target="_blank" rel="external">bsh.vim</a></h2><p>Shell语法高亮</p>
-<p>只需将<code>bsh.vim</code>文件拷贝到<code>Vim\vimfiles\syntax</code>就可以了</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/mgits/vim/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mgits/vim/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/linux/2015-10-12-AWK/" title="AWK" itemprop="url">AWK</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h1><p>awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
-<p>语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk [-F  field-separator]  &apos;commands&apos;  input-file(s)</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>-F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符<code>-F &#39;:&#39;</code>)</li>
-<li>commands: ‘PATTERN{COMMAND}’. PATTERN为模式(正在表达式),COMMAND为要执行的命令.</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk  -F &apos;:&apos;  &apos;BEGIN &#123;print &quot;start&quot;&#125;  &#123;print $1&quot;&#125; END &#123;print &quot;end&quot;&#125;&apos; ./txt</span><br></pre></td></tr></table></figure>
-<p>上面的例子是读取<code>txt</code>文件,然后使用<code>:</code>分割每一行数据,在开始处理的时候输出start，在处理过程中第一列数据，最后输出end。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><p>我们可以在AWK命令中直接使用以下内置变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ARGC               命令行参数个数</span><br><span class="line">ARGV               命令行参数排列</span><br><span class="line">ENVIRON            支持队列中系统环境变量的使用</span><br><span class="line">FILENAME           awk浏览的文件名</span><br><span class="line">FNR                浏览文件的记录数</span><br><span class="line">FS                 设置输入域分隔符，等价于命令行 -F选项</span><br><span class="line">NF                 浏览记录的域的个数</span><br><span class="line">NR                 已读的记录数</span><br><span class="line">OFS                输出域分隔符</span><br><span class="line">ORS                输出记录分隔符</span><br><span class="line">RS                 控制记录分隔符</span><br></pre></td></tr></table></figure></p>
-<p>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print ARGC&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h3 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h3><p>我们通过赋值的方式直接定义一个变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;BEGIN&#123;size=0;&#125; &#123;size=1+size&#125; &#123;print $1&#125; END&#123;print size&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面我们定义了一个数值型的size变量.</p>
-<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><ul>
-<li><code>= += -= *= /= %= ^= **=</code>    赋值</li>
-<li><code>?:</code>    C条件表达式</li>
-<li><code>||</code>    逻辑或</li>
-<li><code>&amp;&amp;</code>    逻辑与</li>
-<li><code>~ ~!</code>    匹配正则表达式和不匹配正则表达式</li>
-<li><code>&lt; &lt;= &gt; &gt;= != ==</code>    关系运算符</li>
-<li><code>空格</code>    连接</li>
-<li><code>+ -</code>    加，减</li>
-<li><code>* / &amp;</code>    乘，除与求余</li>
-<li><code>+ - !</code>    一元加，减和逻辑非</li>
-<li><code>^ ***</code>    求幂</li>
-<li><code>++ --</code>    增加或减少，作为前缀或后缀</li>
-<li><code>$</code>    字段引用</li>
-<li><code>in</code>    数组成员</li>
-</ul>
-<h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>下面输出了大于10000的java进程号<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;BEGIN&#123;size=0&#125; &#123;if($1&gt;10000) &#123;size++;print $1&#125;&#125; END&#123;print size&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><p>awk中的循环语句借鉴于C语言，支持while、do/while、for、break、continue，这些关键字的语义和C语言中的语义完全相同。</p>
-<h1 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h1><h2 id="sub函数"><a href="#sub函数" class="headerlink" title="sub函数"></a>sub函数</h2><p>匹配从左侧开始找到的第一个符合规则的字符串，然后使用替换字符串替换这些字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面这个例子就使用sun这个字符串替换了$2中的moon字符串。</p>
-<p>我们还可以指定在哪列执行查找替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;, $1)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面的例子中我们只在第一列进行查找替换</p>
-<h2 id="gsub函数"><a href="#gsub函数" class="headerlink" title="gsub函数"></a>gsub函数</h2><p>与sub函数不同的是，这个执行的是全局替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;gsub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="index函数"><a href="#index函数" class="headerlink" title="index函数"></a>index函数</h2><p>返回子字符串第一次被匹配的位置，偏移量从位置1开始<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print$2; $2=index($2, &quot;moon&quot;)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="length函数"><a href="#length函数" class="headerlink" title="length函数"></a>length函数</h2><p>返回记录的字符数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print$2; $2=length($2)&#125; &#123;print $2&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="substr函数"><a href="#substr函数" class="headerlink" title="substr函数"></a>substr函数</h2><p>返回从位置1开始的子字符串，如果指定长度超过实际长度，就返回整个字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123;print substr($2, 2, 10)&#125; &apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面的例子将$2字符串从第二个字符还是截取，截取10个长度的字符串出来</p>
-<h2 id="toupper和tolower函数"><a href="#toupper和tolower函数" class="headerlink" title="toupper和tolower函数"></a>toupper和tolower函数</h2><p>可用于字符串大小间的转换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;&#123;print toupper($2)&#125; &apos;</span><br></pre></td></tr></table></figure></p>
-<h2 id="split函数"><a href="#split函数" class="headerlink" title="split函数"></a>split函数</h2><p>可按给定的分隔符把字符串分割为一个数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -l | awk &apos;&#123; split($2, array, &quot;/&quot;); print array[3]&#125; &apos;</span><br></pre></td></tr></table></figure></p>
-<p>上面的例子我们将$2这一列按照<code>/</code>进行分割,然后将分割出的数据存储到array数组里. 注意这里首先不需要转义</p>
-<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id=""><a href="#" class="headerlink" title="\"></a>\</h2><p>将下一字符标记为特殊字符、文本、反向引用或八进制转义符。例如，“n”匹配字符“n”。“\n”匹配换行符。序列“\”匹配“\”，“(”匹配“(”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\\/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<p>过滤出带有<code>\</code>的行</p>
-<h2 id="-1"><a href="#-1" class="headerlink" title="^"></a>^</h2><p>匹配输入字符串与最左侧开始的位置的字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/^\\n/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<p>找到所有以<code>\n</code>字符串开始的数据</p>
-<h2 id="-2"><a href="#-2" class="headerlink" title="$"></a>$</h2><p>匹配输入字符串结尾的位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/)。$/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<p>过滤以<code>)。</code>结尾的行</p>
-<h2 id="-3"><a href="#-3" class="headerlink" title="*"></a>*</h2><p>零次或多次匹配前面的字符或子表达式。例如，zo<em> 匹配“z”和“zoo”。</em> 等效于 {0,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用*/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="-4"><a href="#-4" class="headerlink" title="+"></a>+</h2><p>一次或多次匹配前面的字符或子表达式。例如，“zo+”与“zo”和“zoo”匹配，但与“z”不匹配。+ 等效于 {1,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用+/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="-5"><a href="#-5" class="headerlink" title="?"></a>?</h2><p>零次或一次匹配前面的字符或子表达式。例如，“do(es)?”匹配“do”或“does”中的“do”。? 等效于 {0,1}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/反向引用?/&#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="n"><a href="#n" class="headerlink" title="{n}"></a>{n}</h2><p>n 是非负整数。正好匹配 n 次。例如，“o{2}”与“Bob”中的“o”不匹配，但与“food”中的两个“o”匹配。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="n-1"><a href="#n-1" class="headerlink" title="{n,}"></a>{n,}</h2><p>n 是非负整数。至少匹配 n 次。例如，“o{2,}”不匹配“Bob”中的“o”，而匹配“foooood”中的所有 o。“o{1,}”等效于“o+”。“o{0,}”等效于“o*”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="n-m"><a href="#n-m" class="headerlink" title="{n,m}"></a>{n,m}</h2><p>M 和 n 是非负整数，其中 n &lt;= m。匹配至少 n 次，至多 m 次。例如，“o{1,3}”匹配“fooooood”中的头三个 o。’o{0,1}’ 等效于 ‘o?’。注意：您不能将空格插入逗号和数字之间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="-6"><a href="#-6" class="headerlink" title="."></a>.</h2><p>匹配除“\n”之外的任何单个字符。若要匹配包括“\n”在内的任意字符，请使用诸如“[\s\S]”之类的模式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="pattern"><a href="#pattern" class="headerlink" title="(pattern)"></a>(pattern)</h2><p>匹配 pattern 并捕获该匹配的子表达式。可以使用 $0…$9 属性从结果“匹配”集合中检索捕获的匹配。若要匹配括号字符 ( )，请使用“(”或者“)”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="pattern-1"><a href="#pattern-1" class="headerlink" title="(?:pattern)"></a>(?:pattern)</h2><p>匹配 pattern 但不捕获该匹配的子表达式，即它是一个非捕获匹配，不存储供以后使用的匹配。这对于用“or”字符 (|) 组合模式部件的情况很有用。例如，’industr(?:y|ies) 是比 ‘industry|industries’ 更经济的表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="pattern-2"><a href="#pattern-2" class="headerlink" title="(?=pattern)"></a>(?=pattern)</h2><p>执行正向预测先行搜索的子表达式，该表达式匹配处于匹配 pattern 的字符串的起始点的字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?=95|98|NT|2000)’ 匹配“Windows 2000”中的“Windows”，但不匹配“Windows 3.1”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="pattern-3"><a href="#pattern-3" class="headerlink" title="(?!pattern)"></a>(?!pattern)</h2><p>执行反向预测先行搜索的子表达式，该表达式匹配不处于匹配 pattern 的字符串的起始点的搜索字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?!95|98|NT|2000)’ 匹配“Windows 3.1”中的 “Windows”，但不匹配“Windows 2000”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
-<h2 id="x-y"><a href="#x-y" class="headerlink" title="x|y"></a>x|y</h2><p>匹配 x 或 y。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/换页符等|十六进制转义码必须正好是两位数长/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="xyz"><a href="#xyz" class="headerlink" title="[xyz]"></a>[xyz]</h2><p>匹配是否包含xyz中任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[前面至少有]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="xyz-1"><a href="#xyz-1" class="headerlink" title="[^xyz]"></a>[^xyz]</h2><p>匹配不能包含xyz任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[^前面至少有]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="a-z"><a href="#a-z" class="headerlink" title="[a-z]"></a>[a-z]</h2><p>与<code>[xyz]</code>规则相同,只不过这个模式提供了一个范围模式.例如[a-c]实际为匹配[abc]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[a-b]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="a-z-1"><a href="#a-z-1" class="headerlink" title="[^a-z]"></a>[^a-z]</h2><p>反向范围字符。匹配不在指定的范围内的任何字符。例如，“[^a-z]”匹配任何不在“a”到“z”范围内的任何字符。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/[^a-z]/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<p>需要注意的是’\t’会被匹配出来</p>
-<h2 id="d"><a href="#d" class="headerlink" title="\d"></a>\d</h2><p>数字字符匹配。等效于 [0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\d/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="D"><a href="#D" class="headerlink" title="\D"></a>\D</h2><p>非数字字符匹配。等效于 [^0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\D/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="n-2"><a href="#n-2" class="headerlink" title="\n"></a>\n</h2><p>换行符匹配。等效于 \x0a 和 \cJ。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\n/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="r"><a href="#r" class="headerlink" title="\r"></a>\r</h2><p>匹配一个回车符。等效于 \x0d 和 \cM。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\t/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="s"><a href="#s" class="headerlink" title="\s"></a>\s</h2><p>匹配任何空白字符，包括空格、制表符、换页符等。与 [ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\s/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="S"><a href="#S" class="headerlink" title="\S"></a>\S</h2><p>匹配任何非空白字符。与 [^ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\S/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="w"><a href="#w" class="headerlink" title="\w"></a>\w</h2><p>匹配任何字类字符，包括下划线。与“[A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\w/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-<h2 id="W"><a href="#W" class="headerlink" title="\W"></a>\W</h2><p>与任何非单词字符匹配。与“[^A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &apos;/\W/ &#123;print $0&#125;&apos; ./txt</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/linux/">linux</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/linux/2015-10-12-AWK/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/2015-10-12-AWK/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/linux/DevOps/" title="DevOps" itemprop="url">DevOps</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Mac"><a href="#Mac" class="headerlink" title="Mac"></a>Mac</h2><h3 id="Screenhero"><a href="#Screenhero" class="headerlink" title="Screenhero"></a>Screenhero</h3><p>协作编程工具：双方都能控制鼠标/键盘</p>
-<h3 id="asciinema"><a href="#asciinema" class="headerlink" title="asciinema"></a><a href="https://asciinema.org" target="_blank" rel="external">asciinema</a></h3><p>终端录制与屏幕分享工具</p>
-<h3 id="keen-io"><a href="#keen-io" class="headerlink" title="keen.io"></a><a href="https://keen.io" target="_blank" rel="external">keen.io</a></h3><p>用来追踪时间段发生的一系列事件</p>
-<h3 id="CakeBrew"><a href="#CakeBrew" class="headerlink" title="CakeBrew"></a>CakeBrew</h3><p>图形化管理homebrew的工具</p>
-<h3 id="CMAKE"><a href="#CMAKE" class="headerlink" title="CMAKE"></a><a href="https://cmake.org/" target="_blank" rel="external">CMAKE</a></h3><p>CMake 是一个跨平台的自动化建构系统,它使用一个名为 CMakeLists.txt 的文件来描述构建过程,可以产生标准的构建文件</p>
-<h3 id="Patterns"><a href="#Patterns" class="headerlink" title="Patterns"></a>Patterns</h3><p>用来复查正则表达式</p>
-<h3 id="CheatSheet"><a href="#CheatSheet" class="headerlink" title="CheatSheet"></a>CheatSheet</h3><p>CheatSheet在后台运行</p>
-<h3 id="SonarQube"><a href="#SonarQube" class="headerlink" title="SonarQube"></a><a href="http://www.sonarqube.org/" target="_blank" rel="external">SonarQube</a></h3><p>代码质量管理的开源平台</p>
-<h3 id="Keka"><a href="#Keka" class="headerlink" title="Keka"></a><a href="http://www.kekaosx.com/zh-cn/" target="_blank" rel="external">Keka</a></h3><p>免费的 Mac OS X 文件解压缩程序。</p>
-<p>Keka 所支持的文件压缩格式：7z, Zip, Tar, Gzip, Bzip2, DMG, ISO</p>
-<p>Keka 所支持的文件解压格式：RAR, 7z, Lzma, xz, Zip, Tar, Gzip, Bzip2, ISO, EXE, CAB, PAX, ACE (PPC)</p>
-<h3 id="Tuxera-NTFS"><a href="#Tuxera-NTFS" class="headerlink" title="Tuxera NTFS"></a><a href="http://www.tuxera.com/products/tuxera-ntfs-for-mac/" target="_blank" rel="external">Tuxera NTFS</a></h3><p>为 Mac用户提供的专业 NTFS 驱动软件</p>
-<h3 id="PopClip"><a href="#PopClip" class="headerlink" title="PopClip"></a><a href="http://sspai.com/25483" target="_blank" rel="external">PopClip</a></h3><p>Mac上的小工具，简单高效，具有强大的拓展功能</p>
-<h3 id="Transmit"><a href="#Transmit" class="headerlink" title="Transmit"></a><a href="">Transmit</a></h3><p>FTP 客户端软件</p>
-<h3 id="MacVim"><a href="#MacVim" class="headerlink" title="MacVim"></a><a href="http://www.macupdate.com/app/mac/25988/macvim" target="_blank" rel="external">MacVim</a></h3><p>vim的mac移植版本</p>
-<h2 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h2><h3 id="babun"><a href="#babun" class="headerlink" title="babun"></a><a href="http://babun.github.io/" target="_blank" rel="external">babun</a></h3><p>Windows 上的开箱即用的壳程序，基于 Cygwin，胜于 Cygwin</p>
-<h3 id="msys2"><a href="#msys2" class="headerlink" title="msys2"></a><a href="http://msys2.github.io/" target="_blank" rel="external">msys2</a></h3><p>用于 shell 命令行开发环境</p>
-<h3 id="gitbook"><a href="#gitbook" class="headerlink" title="gitbook"></a><a href="">gitbook</a></h3><p>markdown写书工具</p>
-<h3 id="PowerCMD"><a href="#PowerCMD" class="headerlink" title="PowerCMD"></a><a href="http://www.powercmd.com/" target="_blank" rel="external">PowerCMD</a></h3><p>增强版本的CMD工具</p>
-<h3 id="Cyberduck"><a href="#Cyberduck" class="headerlink" title="Cyberduck"></a><a href="https://cyberduck.io/" target="_blank" rel="external">Cyberduck</a></h3><p>FTP客户端软件,同样适用于Mac</p>
-<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><h3 id="nload"><a href="#nload" class="headerlink" title="nload"></a>nload</h3><p>可以分开来监控入站流量和出站流量</p>
-<h3 id="iftop"><a href="#iftop" class="headerlink" title="iftop"></a>iftop</h3><p>可测量通过每一个套接字连接传输的数据</p>
-<h3 id="nethogs"><a href="#nethogs" class="headerlink" title="nethogs"></a>nethogs</h3><p>显示每个进程所使用的带宽</p>
-<h3 id="bmon"><a href="#bmon" class="headerlink" title="bmon"></a>bmon</h3><p>一款类似nload的工具，它可以显示系统上所有网络接口的流量负载</p>
-<h3 id="speedometer"><a href="#speedometer" class="headerlink" title="speedometer"></a>speedometer</h3><p>绘制外观漂亮的图形，显示通过某个接口传输的入站流量和出站流量。</p>
-<h3 id="pktstat"><a href="#pktstat" class="headerlink" title="pktstat"></a>pktstat</h3><p>实时显示所有活动连接，并显示哪些数据通过这些活动连接传输的速度。它还可以显示连接类型，比如TCP连接或UDP连接；如果涉及HTTP连接，还会显示关于HTTP请求的详细信息。</p>
-<h3 id="dstat"><a href="#dstat" class="headerlink" title="dstat"></a>dstat</h3><p>监控系统的不同统计信息，并使用批处理模式来报告，或者将相关数据记入到CSV或类似的文件</p>
-<h3 id="ngxtop"><a href="#ngxtop" class="headerlink" title="ngxtop"></a>ngxtop</h3><p><a href="https://linux.cn/article-3205-1.html" target="_blank" rel="external">ngxtop：在命令行实时监控 Nginx 的神器</a></p>
-<h3 id="Supervisor"><a href="#Supervisor" class="headerlink" title="Supervisor"></a>Supervisor</h3><p><a href="http://www.tuicool.com/articles/Ejm2u2" target="_blank" rel="external">Supervisor的安装与使用入门</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/linux/">linux</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/linux/DevOps/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/DevOps/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1576,7 +1576,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/JavaSE/java8 time/" title="Java8 时间处理" itemprop="url">Java8 时间处理</a>
+      <a href="/2015/09/08/操作系统/io/" title="IO" itemprop="url">IO</a>
   </h1>
   <p class="article-author">By
        
@@ -1589,13 +1589,42 @@
 </header>
     <div class="article-content">
         
-        <p>LocalDate表示日期的不可变类型，不包含时间和时区。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取当天的日期</span></span><br><span class="line">LocalDate now = LocalDate.now();</span><br><span class="line"><span class="comment">// 2015-09-21</span></span><br><span class="line">System.out.println(now.toString());</span><br><span class="line"><span class="comment">// 获取当前日期的月份,注意这个值是一个英文月份：例如,SEPTEMBER</span></span><br><span class="line">System.out.println(now.getMonth());</span><br><span class="line"><span class="comment">// 这个方式用来获取数字月份</span></span><br><span class="line">System.out.println(now.getMonth().getValue());</span><br><span class="line"><span class="comment">// 获取今天是这个月中的第几天</span></span><br><span class="line">System.out.println(now.getDayOfMonth());</span><br><span class="line"><span class="comment">// 获取今天是这周中的第几天</span></span><br><span class="line">System.out.println(now.getDayOfWeek());</span><br><span class="line"><span class="comment">// 获取今天是今年当中第几天</span></span><br><span class="line">System.out.println(now.getDayOfYear());</span><br><span class="line"><span class="comment">// 这个方式用来获取数字月份 等同于 System.out.println(now.getMonth().getValue());</span></span><br><span class="line">System.out.println(now.getMonthValue());</span><br><span class="line"><span class="comment">// 获取今年年份</span></span><br><span class="line">System.out.println(now.getYear());</span><br><span class="line"><span class="comment">// 根据指定日期生成一个LocalDate 对象</span></span><br><span class="line">LocalDate someDay = LocalDate.of(<span class="number">2015</span>, <span class="number">8</span>, <span class="number">16</span>);</span><br><span class="line">System.out.println(someDay.toString());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在当前日期行指定一个时间</span></span><br><span class="line">System.out.println(now.atTime(<span class="number">12</span>, <span class="number">59</span>, <span class="number">59</span>));</span><br><span class="line"></span><br><span class="line">LocalDate someDay1 = LocalDate.of(<span class="number">2015</span>, <span class="number">8</span>, <span class="number">16</span>);</span><br><span class="line">LocalDate someDay2 = LocalDate.of(<span class="number">2015</span>, <span class="number">8</span>, <span class="number">17</span>);</span><br><span class="line"><span class="comment">// 判断俩天是否是同一天</span></span><br><span class="line">System.out.println(someDay1.equals(someDay2));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们获取明天的日期</span></span><br><span class="line">LocalDate tomorrow = now.plusDays(<span class="number">1</span>);</span><br><span class="line"><span class="comment">// 判断今天是否在明天之前</span></span><br><span class="line">System.out.println(now.isBefore(tomorrow));</span><br></pre></td></tr></table></figure></p>
+        <h2 id="IO概念"><a href="#IO概念" class="headerlink" title="IO概念"></a>IO概念</h2><p>linux内核将内分分成内核区和用户区俩个区域：</p>
+<ol>
+<li>用户区进程A向内核发起一个读文件的系统调用(进程A阻塞)</li>
+<li>linux在内核区生成一个文件句柄fd(该文件句柄指向了一个内核缓冲区)</li>
+<li>linux通过驱动程序向磁盘读取指定文件</li>
+<li>驱动程序将读取到的数据存储在内核区的缓冲区内</li>
+<li>当内核缓冲区的大小大于进程A设置的读取文件的大小时发生读就绪,内核缓冲区的数据刷新到用户区内</li>
+</ol>
+<h2 id="IO类型"><a href="#IO类型" class="headerlink" title="IO类型"></a>IO类型</h2><h3 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h3><p>在进程空间中调用recvfrom,其系统调用直到数据报到达且被拷贝到应用进程的缓冲区中或者发生错误才返回,期间一直在等待.我们就说进程在从调用recvfrom开始到它返回的整段时间内是被阻塞的.<br><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/阻塞IO.jpg" alt="阻塞IO.jpg"></p>
+<h3 id="非阻塞IO"><a href="#非阻塞IO" class="headerlink" title="非阻塞IO"></a>非阻塞IO</h3><p>这种情况下用户空间的进程不断地向内核空间轮询是否有数据到达,如果没有达到不进入阻塞(睡眠)而是直接返回一个错误.<br><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/非阻塞IO.jpg" alt="非阻塞IO.jpg"><br>这种操作效率是及其低下的,因为它把密集型IO操作变成了IO密集和计算密集的操作.</p>
+<h3 id="SIGIO"><a href="#SIGIO" class="headerlink" title="SIGIO"></a>SIGIO</h3><p>首先开启套接口信号驱动I/O功能,并通过系统调用sigaction安装一个信号处理函数(此系统调用立即返回,进程继续工作,它是非阻塞的).当数据报准备好被读时,就为该进程生成一个SIGIO信号.随即可以在信号处理程序中调用recvfrom来读数据报,井通知主循环数据已准备好被处理中.也可以通知主循环,让它来读数据报.<br><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/信号驱动IO.jpg" alt="信号驱动IO.jpg"></p>
+<h3 id="IO复用"><a href="#IO复用" class="headerlink" title="IO复用"></a>IO复用</h3><p>在<code>select/poll</code>上注册多个<code>fd</code>, 然后<code>select/poll</code>顺序轮询所有的<code>fd</code>,如果轮询到某个<code>fd</code>读就绪或者写就绪就取出该<code>fd</code>进行读写数据,但是由于<code>select/poll</code>支持的<code>fd</code>数量有限而且是顺序扫描的,因此它的性能仍然会达不到要求. 于是<code>epoll</code>出现了,它是基于事件驱动方式,而不是顺序扫描,当有fd就绪时,立即回调函数rollback；<br><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/IO复用.jpg" alt="IO复用.jpg"></p>
+<h3 id="windows的IOCP"><a href="#windows的IOCP" class="headerlink" title="windows的IOCP"></a>windows的IOCP</h3><p>告知内核启动某个操作,并让内核在整个操作完成后(包括将数据从内核拷贝到用户自己的缓冲区)通知我们.这种模型与信号驱动模型的主要区别是：</p>
 <ul>
-<li>LocalTime</li>
-<li>LocalDateTime</li>
-<li>Period</li>
-<li>DateTimeFormatter</li>
+<li>信号驱动I/O：由内核通知我们何时可以启动一个I/O操作；</li>
+<li>异步I/O模型：由内核通知我们I/O操作何时完成.<br><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/异步IO.jpg" alt="异步IO.jpg"></li>
 </ul>
+<h2 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h2><p>Java 类库通过 <code>java.nio.channels.FileChannel</code> 中的 <code>transferTo()</code> 方法来在 Linux 和 UNIX 系统上支持零拷贝.可以使用 <code>transferTo()</code> 方法直接将字节从它被调用的通道上传输到另外一个可写字节通道上,数据无需流经应用程序.本文首先展示了通过传统拷贝语义进行的简单文件传输引发的开销,然后展示了使用 <code>transferTo()</code> 零拷贝技巧如何提高性能.</p>
+<h3 id="传统方法数据传输"><a href="#传统方法数据传输" class="headerlink" title="传统方法数据传输"></a>传统方法数据传输</h3><p><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/transfer_copy.jpg" alt="传统的数据拷贝方法.gif"><br><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/transfer_context.gif" alt="传统上下文切换.gif"></p>
+<ol>
+<li>read() 调用引发了一次从用户模式到内核模式的上下文切换.在内部,发出 <code>sys_read()</code>(或等效内容)以从文件中读取数据.直接内存存取(<code>direct memory access</code>,DMA)引擎执行了第一次拷贝,它从磁盘中读取文件内容,然后将它们存储到一个内核地址空间缓存区中.</li>
+<li>所需的数据被从读取缓冲区拷贝到用户缓冲区,read() 调用返回.该调用的返回引发了内核模式到用户模式的上下文切换(又一次上下文切换).现在数据被储存在用户地址空间缓冲区.</li>
+<li><code>send()</code> 套接字调用引发了从用户模式到内核模式的上下文切换.数据被第三次拷贝,并被再次放置在内核地址空间缓冲区.但是这一次放置的缓冲区不同,该缓冲区与目标套接字相关联.</li>
+<li><code>send()</code> 系统调用返回,结果导致了第四次的上下文切换.DMA 引擎将数据从内核缓冲区传到协议引擎,第四次拷贝独立地、异步地发生 .</li>
+</ol>
+<p>使用中间内核缓冲区(而不是直接将数据传输到用户缓冲区)看起来可能有点效率低下.但是之所以引入中间内核缓冲区的目的是想提高性能.在读取方面使用中间内核缓冲区,可以允许内核缓冲区在应用程序不需要内核缓冲区内的全部数据时,充当 “预读高速缓存(readahead cache)” 的角色.这在所需数据量小于内核缓冲区大小时极大地提高了性能.在写入方面的中间缓冲区则可以让写入过程异步完成.</p>
+<p>不幸的是,如果所需数据量远大于内核缓冲区大小的话,这个方法本身可能成为一个性能瓶颈.数据在被最终传入到应用程序前,在磁盘、内核缓冲区和用户缓冲区中被拷贝了多次.零拷贝通过消除这些冗余的数据拷贝而提高了性能.</p>
+<p><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/transferTo_copy.gif" alt="使用 transferTo() 方法的数据拷贝.gif"><br><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/transferTo_context.gif" alt="使用 transferTo() 方法的上下文切换.gif"></p>
+<ol>
+<li><p>transferTo() 方法引发 DMA 引擎将文件内容拷贝到一个读取缓冲区.然后由内核将数据拷贝到与输出套接字相关联的内核缓冲区.</p>
+</li>
+<li><p>数据的第三次复制发生在DMA引擎将数据从内核套接字缓冲区传到协议引擎时.改进的地方：我们将上下文切换的次数从四次减少到了两次,将数据复制的次数从四次减少到了三次(其中只有一次涉及到了CPU).但是这个代码尚未达到我们的零拷贝要求.如果底层网络接口卡支持收集操作的话,那么我们就可以进一步减少内核的数据复制.在Linux内核2.4及后期版本中,套接字缓冲区描述符就做了相应调整,以满足该需求.这种方法不仅可以减少多个上下文切换,还可以消除需要涉及CPU的重复的数据拷贝.对于用户方面,用法还是一样的,但是内部操作已经发生了改变：</p>
+</li>
+</ol>
+<p>A. transferTo() 方法引发 DMA 引擎将文件内容拷贝到内核缓冲区.<br>B. 数据未被拷贝到套接字缓冲区.取而代之的是,只有包含关于数据的位置和长度的信息的描述符被追加到了套接字缓冲区.DMA 引擎直接把数据从内核缓冲区传输到协议引擎,从而消除了剩下的最后一次 CPU 拷贝.</p>
+<p><img src="https://raw.githubusercontent.com/wanggnim/website/images/net/transferTo_collect.gif" alt="结合使用 transferTo() 和收集操作时的数据拷贝.gif"></p>
 
         
         
@@ -1608,7 +1637,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+  <a class="article-category-link" href="/categories/操作系统/">操作系统</a>
 </div>
 
 
@@ -1620,7 +1649,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/08/JavaSE/java8 time/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/JavaSE/java8 time/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/08/操作系统/io/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/操作系统/io/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1640,7 +1669,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/JavaSE/java8 lambda/" title="java lambda" itemprop="url">java lambda</a>
+      <a href="/2015/09/08/构建工具/Archiva/" title="Archiva 初探" itemprop="url">Archiva 初探</a>
   </h1>
   <p class="article-author">By
        
@@ -1653,74 +1682,23 @@
 </header>
     <div class="article-content">
         
-        <h2 id="函数接口"><a href="#函数接口" class="headerlink" title="函数接口"></a>函数接口</h2><h3 id="函数接口定义"><a href="#函数接口定义" class="headerlink" title="函数接口定义"></a>函数接口定义</h3><p>函数接口只是一个抽象方法的接口,用作lambda表达式类型.</p>
-<p>注意, 上面这个定义有三个需要注意的地方</p>
-<ol>
-<li>函数接口是一个接口</li>
-<li>函数接口有且只有一个抽象方法(只有一个表示数量上是唯一的,重载也是不可以)</li>
-<li>函数接口用作lambda表达式类型</li>
+        <h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><ol>
+<li>从<a href="">Archiva官网</a>下载Archiva后解压到<code>D:\archiva</code>里</li>
+<li>运行<code>bin\archiva.bat install</code>, archiva就启动成功了</li>
+<li>在浏览器运行<code>http://localhost:8080/</code>就可以进入archiva本地主页了</li>
+<li>当进入之后我们需要创建一个账号：<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/0.jpg" alt=""></li>
+<li>接着我们创建一个私有的仓库<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/1.jpg" alt=""></li>
+<li>我们创建一个最简单的私有仓库：<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/2.jpg" alt=""></li>
+<li>创建一个连接器<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/3.jpg" alt=""></li>
+<li>同样我们只选用必须的<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/4.jpg" alt=""></li>
+<li>接着如图操作<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/5.jpg" alt=""></li>
+<li><p>然后我们修改项目中的<code>pom.xml</code>文件!</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span><br><span class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>testMaven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testDeply<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">distributionManagement</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">distributionManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改本地仓库中的<code>setting.xml</code>文件(我的目录<code>C:\Users\Administrator\.m2</code>),我们添加私有仓库的用户名和密码!</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/settings/1.0.0"</span> </span><br><span class="line">          <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> </span><br><span class="line">          <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">	<span class="tag">&lt;<span class="name">servers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">server</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">username</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">password</span>&gt;</span>admin1<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">server</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">servers</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"> <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
 </ol>
-<h3 id="函数接口示例"><a href="#函数接口示例" class="headerlink" title="函数接口示例:"></a>函数接口示例:</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个非泛型没有返回值没有参数的函数接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run1</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 定义一个非泛型没有返回值有参数的函数接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run2</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">(<span class="keyword">int</span> seconds)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 定义一个非泛型有返回值有参数的函数接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run3</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">runFast</span><span class="params">(<span class="keyword">int</span> seconds)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 定义一个泛型有返回值有参数的函数接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run4</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">runFast</span><span class="params">(T t, <span class="keyword">int</span> seconds)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="默认方法"><a href="#默认方法" class="headerlink" title="默认方法"></a>默认方法</h3><p>我们知道java8对核心集合类进行了大幅度修改,例如<code>Collection</code>接口添加了<code>stream()</code>方法. 那么所有的<code>Collection</code>实现类都必须来实现该方法. 为了保持二进制接口的兼容性,java8提供了默认方法,来保证这一兼容性(例如来源在java1到jav7平台写出的代码仍然可以在java8平台上编译运行)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run10</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"run10 runAt9Clock"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run11</span>  <span class="keyword">extends</span> <span class="title">Run10</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用</span></span><br><span class="line">Run11 run11 = () -&gt; &#123;</span><br><span class="line">	System.out.println();</span><br><span class="line">&#125;;</span><br><span class="line">run11.runAt9Clock();</span><br></pre></td></tr></table></figure></p>
-<p>那么所有的子类都可以来调用这个默认方法, 而不必实现它。</p>
-<blockquote>
-<p>如果接口中只有一个默认方法,那么这个接口就不是接口函数.</p>
-</blockquote>
-<h4 id="继承默认方法"><a href="#继承默认方法" class="headerlink" title="继承默认方法"></a>继承默认方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run11</span> <span class="keyword">extends</span> <span class="title">Run10</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"run11 runAt9Clock"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Run12</span> <span class="keyword">implements</span> <span class="title">Run10</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"run12 runAt9Clock"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>从上面的例子中我们可以看到如果接口<code>Run11</code>继承了接口<code>Run10</code>, 同时重载了默认方法, 那么<code>Run11</code>中的默认方法也必须含有<code>default</code>关键字. 但是在类中重载的话,就可以不必存在了.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Run11 run11 = () -&gt; &#123;</span><br><span class="line">	System.out.println();</span><br><span class="line">&#125;;</span><br><span class="line">run11.runAt9Clock();</span><br><span class="line"></span><br><span class="line">Run12 run12 = <span class="keyword">new</span> Run12();</span><br><span class="line">run12.runAt9Clock();</span><br><span class="line"></span><br><span class="line"><span class="comment">//result</span></span><br><span class="line">run11 runAt9Clock</span><br><span class="line">run12 runAt9Clock</span><br></pre></td></tr></table></figure></p>
-<p>接着我们都调用默认方法,我们发现当调用默认方法时都会优先调用子类中的方法.</p>
-<h4 id="多重继承"><a href="#多重继承" class="headerlink" title="多重继承"></a>多重继承</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run10</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"run10 runAt9Clock"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run13</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"run13 runAt9Clock"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Run14</span> <span class="keyword">implements</span> <span class="title">Run10</span>, <span class="title">Run13</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在上面这个情况下,我们需要手动在<code>Run14</code>这个类中指定重载哪个方法, 否则会产生编译错误：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Run14</span> <span class="keyword">implements</span> <span class="title">Run10</span>, <span class="title">Run13</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Run10.<span class="keyword">super</span>.runAt9Clock();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="接口静态方法"><a href="#接口静态方法" class="headerlink" title="接口静态方法"></a>接口静态方法</h3><p>我们定义一个接口静态方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run1</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runSlowly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"run1 run slowly"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line">Run1.runSlowly();</span><br></pre></td></tr></table></figure></p>
-<p>需要注意的是：</p>
-<ul>
-<li>接口静态方法不会被继承到子接口或者子类中</li>
-</ul>
-<h3 id="FunctionalInterface"><a href="#FunctionalInterface" class="headerlink" title="@FunctionalInterface"></a>@FunctionalInterface</h3><p>所有的函数接口都应该添加<code>@FunctionalInterface</code>注释. 该注释会强制检查javac检查一个接口是否符合函数接口的标准. 如果将这个注释添加给类，枚举，多个方法的接口都会产生编译错误.</p>
-<h2 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h2><h3 id="lambda表达式定义"><a href="#lambda表达式定义" class="headerlink" title="lambda表达式定义"></a>lambda表达式定义</h3><p>接下来我们根据上面定义的函数接口来定义一下lambda表达式<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不带参数的版本</span></span><br><span class="line">Run1 run1 = () -&gt; &#123;</span><br><span class="line">	System.out.println(<span class="string">"I am running"</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 参数要指定</span></span><br><span class="line">Run2 run2 = seconds -&gt; &#123;</span><br><span class="line">	System.out.println(<span class="string">"I am running "</span> + seconds + <span class="string">" seconds"</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面这个版本就必须要有个返回值了</span></span><br><span class="line">Run3 run3 = seconds -&gt; &#123;</span><br><span class="line">	System.out.println(<span class="string">"I am running"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们在下面的版本中指定了它的泛型信息</span></span><br><span class="line">Run4&lt;String&gt; run4 = (name, seconds) -&gt; &#123;</span><br><span class="line">	System.out.println(name + <span class="string">" is running"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<h3 id="lambda表达式使用"><a href="#lambda表达式使用" class="headerlink" title="lambda表达式使用"></a>lambda表达式使用</h3><p>接下来我们使用上面定义的lambda表达式<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">run1.runFast();</span><br><span class="line">-&gt; I am running</span><br><span class="line"></span><br><span class="line">run2.runFast(<span class="number">10</span>);</span><br><span class="line">-&gt; I am running <span class="number">10</span> seconds</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> result = run3.runFast(<span class="number">10</span>);</span><br><span class="line">-&gt; I am running</span><br><span class="line"></span><br><span class="line">run4.runFast(<span class="string">"小狗"</span>, <span class="number">10</span>); 小狗 is running</span><br><span class="line">-&gt;</span><br></pre></td></tr></table></figure></p>
-<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>我们引用lambda表达式外部的一个变量<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String name = <span class="string">"sam"</span>;</span><br><span class="line">Run1 run1 = () -&gt; &#123;</span><br><span class="line">	System.out.println(name + <span class="string">" am running"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>编译运行通过没有问题,但是如果我们将name在lambda表达式内部重新赋值的话</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String name = <span class="string">"sam"</span>;</span><br><span class="line">Run1 run1 = () -&gt; &#123;</span><br><span class="line">	name = <span class="string">""</span>;</span><br><span class="line">	System.out.println(name + <span class="string">" am running"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>会提示<code>variable used in lambda expression shouble be final</code>, 这说明lambda其实内部引用的是值而不是变量.</p>
-<p>好,接下来我们换种方式再次验证一下我们的结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String name = <span class="string">"sam"</span>;</span><br><span class="line">name = <span class="string">"Jams"</span>;</span><br><span class="line">Run1 run1 = () -&gt; &#123;</span><br><span class="line">	System.out.println(name + <span class="string">" am running"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>同样的产生了编译错误.</p>
-<h4 id="java中重要的函数接口"><a href="#java中重要的函数接口" class="headerlink" title="java中重要的函数接口"></a>java中重要的函数接口</h4><ul>
-<li><code>Predicate&lt;T&gt;</code>: <code>boolean test(T t)</code> 判断输入的对象是否符合某个条件</li>
-<li><code>Consumer&lt;T&gt;</code>: <code>void accept(T t);</code>  接收一个输入参数并且没有返回值</li>
-<li><code>Supplier&lt;T&gt;</code>: <code>T get();</code>  可以看成一个对象的工厂，每次调用返回一个给定类型的对象</li>
-<li><code>UnaryOperator&lt;T&gt;</code>: ``</li>
-<li><code>BinaryOperator&lt;T&gt;</code>: ``</li>
-</ul>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>在Java8中什么是函数呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Run1 run1 = () -&gt; &#123;</span><br><span class="line">	System.out.println(<span class="string">"I am running"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>上面<code>run1</code>这个就代表一个函数. 一般我们把属于某个类的函数称为方法, 而不依赖于类而存在的函数称之为方法.</p>
-<h3 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h3><p>如果某个函数A作为函数B的参数或者返回值, 那么我们称函数B为高阶函数,像下面的<code>run6</code>就是一个高级函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run6</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Run1 run1)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Run6 run6 = run1Param -&gt; &#123;</span><br><span class="line">			System.out.println(<span class="string">"run6"</span>);</span><br><span class="line">			run1Param.runFast();</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">run6.run(run1);</span><br></pre></td></tr></table></figure></p>
-<p>我们将<code>run1</code>这个函数作为方法传递给了<code>run6</code>.</p>
-<h4 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run8</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(String name, <span class="keyword">int</span> second, <span class="keyword">int</span> mils)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run9</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> Run8 <span class="title">run</span><span class="params">(Run8 run8)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Run8 run8 = (name, second, mils) -&gt; &#123;</span><br><span class="line">	System.out.println();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Run9 run9 = run8Param -&gt; &#123;</span><br><span class="line">	<span class="keyword">return</span> run8Param.run(<span class="string">"lily"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>在上述的例子中产生了编译错误, 在<code>Haskell</code>这种纯FP语言中可以将一个调用函数但是参数不完整的函数从某个参数中返回或者定义一个参数不完整的函数值.</p>
-<h3 id="重载解析"><a href="#重载解析" class="headerlink" title="重载解析"></a>重载解析</h3><p>我们使用函数接口作为方法参数,然后进行重载<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义函数接口</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run1</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run2</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义重载代码</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Run1 run1)</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"run1"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Run2 run2)</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"run2"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义运行代码</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	run(() -&gt; System.out.println());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>当我们进行如上定义时,javac提示了编译错误：不确定的方法调用,<code>run(Run1 run1)</code>和<code>run(Run2 run2)</code>都符合.</p>
-<p>但是如果<code>Run2</code>继承了<code>Run1</code>这个接口之后<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run1</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run2</span> <span class="keyword">extends</span> <span class="title">Run1</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>当我们运行测试代码之后,我们发现输出的<code>run2</code>.</p>
-<p>当Lambda表达式作为参数时,其类型由它的目标类型推导得出,推导过程遵循如下规则：</p>
-<ul>
-<li>如果只有一个可能的目标类型,由相应的函数接口里的参数类型推导得出</li>
-<li>如果有多个可能的目标类型，由最具体的类型推导得出</li>
-<li>如果有多个可能的目标类型且最具体的类型不明确，则需要人为指定类型</li>
-</ul>
-<h2 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h2><p>方法引用是简洁的Lambda表达式，能够用于已经拥有名称的方法。</p>
-<ul>
-<li>静态方法 (ClassName::methName)</li>
-<li>对象实例方法 (instanceRef::methName)</li>
-<li>类型的实例方法 (ClassName::methName, 引用时和静态方法是一样的，但这里的 methName 是个实例方法)</li>
-<li>构造方法 (ClassName::new)</li>
-<li>数组的构造方法 (TypeName[]::new)</li>
-</ul>
-<h3 id="静态方法引用"><a href="#静态方法引用" class="headerlink" title="静态方法引用"></a>静态方法引用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		F f = Print::p;</span><br><span class="line">		f.m();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">p</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Print"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">F</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">m</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="类型实例方法引用"><a href="#类型实例方法引用" class="headerlink" title="类型实例方法引用"></a>类型实例方法引用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		F f = String::length;</span><br><span class="line">		<span class="keyword">int</span> len = f.m(<span class="string">"12"</span>);</span><br><span class="line">		System.out.println(len);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">F</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">m</span><span class="params">(String p)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="构造方法引用"><a href="#构造方法引用" class="headerlink" title="构造方法引用"></a>构造方法引用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		F f = Print::<span class="keyword">new</span>;</span><br><span class="line">		Print p = f.m();</span><br><span class="line">		System.out.println(p == <span class="keyword">null</span>);	<span class="comment">// 结果为null</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">F</span> </span>&#123;</span><br><span class="line">	<span class="function">Print <span class="title">m</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><p>Java8还提供了闭包这个特性,虽然我不知道闭包这个特性有啥用,但是还是实验了一下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Java8</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		I i = () -&gt; &#123;</span><br><span class="line">			C c = <span class="keyword">new</span> C();</span><br><span class="line">			c.count = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">			J j = () -&gt; &#123;</span><br><span class="line">				System.out.println(<span class="string">"J print c:"</span> + c.count);</span><br><span class="line">				<span class="keyword">return</span> c;</span><br><span class="line">			&#125;;</span><br><span class="line"></span><br><span class="line">			System.out.println(<span class="string">"I print c:"</span> + c.count);</span><br><span class="line">			<span class="keyword">return</span> j;</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		J j = i.r();</span><br><span class="line">		C c = j.c();</span><br><span class="line">		c.count = <span class="number">20</span>;</span><br><span class="line">		System.out.println(<span class="string">"main print c:"</span> + c.count);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">I</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> J <span class="title">r</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">J</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> C <span class="title">c</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">int</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们定义了俩个接口, <code>I</code>和<code>J</code>, 我们在I的lambada中调用J的lambada, 然后让J返回一个定义在I的对象C, 最后我们在main函数中成功的返回了这个对象.</p>
 
         
         
@@ -1733,7 +1711,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
 </div>
 
 
@@ -1745,7 +1723,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/08/JavaSE/java8 lambda/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/JavaSE/java8 lambda/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/08/构建工具/Archiva/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/构建工具/Archiva/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1852,6 +1830,70 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/09/08/JavaSE/java8 time/" title="Java8 时间处理" itemprop="url">Java8 时间处理</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>LocalDate表示日期的不可变类型，不包含时间和时区。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取当天的日期</span></span><br><span class="line">LocalDate now = LocalDate.now();</span><br><span class="line"><span class="comment">// 2015-09-21</span></span><br><span class="line">System.out.println(now.toString());</span><br><span class="line"><span class="comment">// 获取当前日期的月份,注意这个值是一个英文月份：例如,SEPTEMBER</span></span><br><span class="line">System.out.println(now.getMonth());</span><br><span class="line"><span class="comment">// 这个方式用来获取数字月份</span></span><br><span class="line">System.out.println(now.getMonth().getValue());</span><br><span class="line"><span class="comment">// 获取今天是这个月中的第几天</span></span><br><span class="line">System.out.println(now.getDayOfMonth());</span><br><span class="line"><span class="comment">// 获取今天是这周中的第几天</span></span><br><span class="line">System.out.println(now.getDayOfWeek());</span><br><span class="line"><span class="comment">// 获取今天是今年当中第几天</span></span><br><span class="line">System.out.println(now.getDayOfYear());</span><br><span class="line"><span class="comment">// 这个方式用来获取数字月份 等同于 System.out.println(now.getMonth().getValue());</span></span><br><span class="line">System.out.println(now.getMonthValue());</span><br><span class="line"><span class="comment">// 获取今年年份</span></span><br><span class="line">System.out.println(now.getYear());</span><br><span class="line"><span class="comment">// 根据指定日期生成一个LocalDate 对象</span></span><br><span class="line">LocalDate someDay = LocalDate.of(<span class="number">2015</span>, <span class="number">8</span>, <span class="number">16</span>);</span><br><span class="line">System.out.println(someDay.toString());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在当前日期行指定一个时间</span></span><br><span class="line">System.out.println(now.atTime(<span class="number">12</span>, <span class="number">59</span>, <span class="number">59</span>));</span><br><span class="line"></span><br><span class="line">LocalDate someDay1 = LocalDate.of(<span class="number">2015</span>, <span class="number">8</span>, <span class="number">16</span>);</span><br><span class="line">LocalDate someDay2 = LocalDate.of(<span class="number">2015</span>, <span class="number">8</span>, <span class="number">17</span>);</span><br><span class="line"><span class="comment">// 判断俩天是否是同一天</span></span><br><span class="line">System.out.println(someDay1.equals(someDay2));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们获取明天的日期</span></span><br><span class="line">LocalDate tomorrow = now.plusDays(<span class="number">1</span>);</span><br><span class="line"><span class="comment">// 判断今天是否在明天之前</span></span><br><span class="line">System.out.println(now.isBefore(tomorrow));</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>LocalTime</li>
+<li>LocalDateTime</li>
+<li>Period</li>
+<li>DateTimeFormatter</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/08/JavaSE/java8 time/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/JavaSE/java8 time/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/09/08/javascript/JavaScript函数/" title="JavaScript函数" itemprop="url">JavaScript函数</a>
   </h1>
   <p class="article-author">By
@@ -1922,159 +1964,6 @@
 	
 	  	<span></span>
 		<a href="/2015/09/08/javascript/JavaScript函数/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/javascript/JavaScript函数/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/08/javascript/JavaScript/" title="JavaScript变量和流程控制" itemprop="url">JavaScript变量和流程控制</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
-<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h3 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h3><p>JavaScript只有一个数字类型,它在内部被表示为64位的浮点数. 它没有分离出整数类型,因此1和1.0的值是相同的</p>
-<p>NaN是一个数值，它表示一个不能产生正常结果的运算结果。<code>NaN</code>不等于任何值，包括它自己。可以使用函数<code>isNaN</code>来检测<code>NaN</code>。</p>
-<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>字符串可以由一对单引号或者一对双引号构成，可以包含0到多个字符。<code>\</code>是转义字符。JavaScript采用Unicode16作为字符集，因此所有的字符都是16位的。</p>
-<p>字符串有一个length属性，可以获得字符串长度。</p>
-<p>字符串同样也是不可变的。一旦字符串被创建出来就无法改变它。我们同+链接其他字符串创建一个新的字符串。俩个包含着相同字符且字符顺序也相同的字符被认为是同一个字符串。<code>===</code>进行字符串判断。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>我们通过 <code>var</code>关键字来声明一个变量</p>
-<h3 id="函数私有变量"><a href="#函数私有变量" class="headerlink" title="函数私有变量"></a>函数私有变量</h3><p>JavaScript通过函数管理作用域。在函数内部声明的变量只在这个函数内部可用，而在函数外面不可用。</p>
-<h3 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h3><p>每个JavaScript环境有一个全局对象，当你在任意的函数外面使用this的时候可以访问到。你创建的每一个全局变量都成了这个全局对象的属性。</p>
-<h2 id="控制流程"><a href="#控制流程" class="headerlink" title="控制流程"></a>控制流程</h2><p>我们可以通过条件语句(if和switch),循环语句（while，for和do）强制跳转语句（break,return，throw）和函数调用来改变执行序列。</p>
-<h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><p>进行if判断时，下列值被作为假：</p>
-<ul>
-<li>false</li>
-<li>null</li>
-<li>空字符串 <code>&#39;&#39;</code></li>
-<li>数字0</li>
-<li>数字NaN</li>
-</ul>
-<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><p>其表达式的值和case条件进行匹配。表达式可以是字符串或者数字。case表达式不一定必须是常量<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (num)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">	  x=<span class="string">"输入正确"</span>;</span><br><span class="line">	  <span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">	  x=<span class="string">"输入错误"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (i&lt;<span class="number">5</span>)</span><br><span class="line">&#123;</span><br><span class="line">	sum += i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">	sum += i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>for…in<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> array)</span><br><span class="line">&#123;</span><br><span class="line">	sum += i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JavaScript/">JavaScript</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/08/javascript/JavaScript/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/javascript/JavaScript/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/08/构建工具/Archiva/" title="Archiva 初探" itemprop="url">Archiva 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><ol>
-<li>从<a href="">Archiva官网</a>下载Archiva后解压到<code>D:\archiva</code>里</li>
-<li>运行<code>bin\archiva.bat install</code>, archiva就启动成功了</li>
-<li>在浏览器运行<code>http://localhost:8080/</code>就可以进入archiva本地主页了</li>
-<li>当进入之后我们需要创建一个账号：<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/0.jpg" alt=""></li>
-<li>接着我们创建一个私有的仓库<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/1.jpg" alt=""></li>
-<li>我们创建一个最简单的私有仓库：<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/2.jpg" alt=""></li>
-<li>创建一个连接器<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/3.jpg" alt=""></li>
-<li>同样我们只选用必须的<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/4.jpg" alt=""></li>
-<li>接着如图操作<img src="https://raw.githubusercontent.com/wanggnim/website/images/Archiva/5.jpg" alt=""></li>
-<li><p>然后我们修改项目中的<code>pom.xml</code>文件!</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span><br><span class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span><br><span class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>testMaven<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testDeply<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">distributionManagement</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>NAME2015_09_17<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8080/repository/ID2015_09_17<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">distributionManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改本地仓库中的<code>setting.xml</code>文件(我的目录<code>C:\Users\Administrator\.m2</code>),我们添加私有仓库的用户名和密码!</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/settings/1.0.0"</span> </span><br><span class="line">          <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> </span><br><span class="line">          <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">	<span class="tag">&lt;<span class="name">servers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">server</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>ID2015_09_17<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">username</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">password</span>&gt;</span>admin1<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">server</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">servers</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"> <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/08/构建工具/Archiva/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/构建工具/Archiva/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -2220,6 +2109,85 @@
 	
 	  	<span></span>
 		<a href="/2015/09/08/JavaSE/java8 流/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/JavaSE/java8 流/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/08/javascript/JavaScript/" title="JavaScript变量和流程控制" itemprop="url">JavaScript变量和流程控制</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h3 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h3><p>JavaScript只有一个数字类型,它在内部被表示为64位的浮点数. 它没有分离出整数类型,因此1和1.0的值是相同的</p>
+<p>NaN是一个数值，它表示一个不能产生正常结果的运算结果。<code>NaN</code>不等于任何值，包括它自己。可以使用函数<code>isNaN</code>来检测<code>NaN</code>。</p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>字符串可以由一对单引号或者一对双引号构成，可以包含0到多个字符。<code>\</code>是转义字符。JavaScript采用Unicode16作为字符集，因此所有的字符都是16位的。</p>
+<p>字符串有一个length属性，可以获得字符串长度。</p>
+<p>字符串同样也是不可变的。一旦字符串被创建出来就无法改变它。我们同+链接其他字符串创建一个新的字符串。俩个包含着相同字符且字符顺序也相同的字符被认为是同一个字符串。<code>===</code>进行字符串判断。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>我们通过 <code>var</code>关键字来声明一个变量</p>
+<h3 id="函数私有变量"><a href="#函数私有变量" class="headerlink" title="函数私有变量"></a>函数私有变量</h3><p>JavaScript通过函数管理作用域。在函数内部声明的变量只在这个函数内部可用，而在函数外面不可用。</p>
+<h3 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h3><p>每个JavaScript环境有一个全局对象，当你在任意的函数外面使用this的时候可以访问到。你创建的每一个全局变量都成了这个全局对象的属性。</p>
+<h2 id="控制流程"><a href="#控制流程" class="headerlink" title="控制流程"></a>控制流程</h2><p>我们可以通过条件语句(if和switch),循环语句（while，for和do）强制跳转语句（break,return，throw）和函数调用来改变执行序列。</p>
+<h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><p>进行if判断时，下列值被作为假：</p>
+<ul>
+<li>false</li>
+<li>null</li>
+<li>空字符串 <code>&#39;&#39;</code></li>
+<li>数字0</li>
+<li>数字NaN</li>
+</ul>
+<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><p>其表达式的值和case条件进行匹配。表达式可以是字符串或者数字。case表达式不一定必须是常量<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (num)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">	  x=<span class="string">"输入正确"</span>;</span><br><span class="line">	  <span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">	  x=<span class="string">"输入错误"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (i&lt;<span class="number">5</span>)</span><br><span class="line">&#123;</span><br><span class="line">	sum += i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">	sum += i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>for…in<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> array = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> array)</span><br><span class="line">&#123;</span><br><span class="line">	sum += i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaScript/">JavaScript</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/08/javascript/JavaScript/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/javascript/JavaScript/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 

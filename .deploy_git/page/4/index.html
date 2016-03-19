@@ -155,241 +155,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/21/JavaSE/JavaIO 序列化/" title="JAVA 序列化" itemprop="url">JAVA 序列化</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Externalizable"><a href="#Externalizable" class="headerlink" title="Externalizable"></a>Externalizable</h2><p>Externalizable继承于Serializable，当使用该接口时，序列化的细节需要由程序员去完成. 如上所示的代码，由于writeExternal()与readExternal()方法未作任何处理，那么该序列化行为将不会保存/读取任何一个字段. </p>
-<h2 id="Flushable"><a href="#Flushable" class="headerlink" title="Flushable"></a>Flushable</h2><p>实现了Flushable接口的类的对象，可以强制将缓存的输出写入到与对象关联的流中. 写入流的所有I/O类都实现了Flushable接口. </p>
-<h2 id="ObjectInputValidation"><a href="#ObjectInputValidation" class="headerlink" title="ObjectInputValidation"></a>ObjectInputValidation</h2><p>序列化流验证机制.一般情况下，我们认为序列化流中的数据总是与最初写到流中的数据一致，这并没有问题. 但当黑客获取流信息并篡改一些敏感信息重新序列化到流中后，用户通过反序列化得到的将是被篡改的信息. Java序列化提供一套验证机制. 序列化类通过实现 java.io.ObjectInputValidation接口，就可以做到验证了</p>
-<h2 id="ObjectStreamConstants"><a href="#ObjectStreamConstants" class="headerlink" title="ObjectStreamConstants"></a>ObjectStreamConstants</h2><p>Java序列化序列化对象的信息包括：类元数据描述、类的属性、父类信息以及属性域的值. Java将这些信息分成3部分：序列化头信息、类的描述部分以及属性域的值部分. 现在对a.txt文件加以分析，其中包含一些序列化机制中提供的特殊字段，这些字段被定义在java.io.ObjectStreamConstants接口中.  </p>
-<h2 id="DataInputStream"><a href="#DataInputStream" class="headerlink" title="DataInputStream"></a>DataInputStream</h2><p>用来装饰其它输入流，它“允许应用程序以与机器无关方式从底层输入流中读取基本 Java 数据类型”</p>
-<p>从DataInputStream一次一个字节地读取字符,那么任何值都是合法的,因此返回值不能用来检测输入是否结束.但是可以使用available()函数来查看还有多少字符可供读取</p>
-<p>available()函数的工作方式会随之所读取的媒介类不同而不同, 该函数从字面上的意思来讲就是”在没有阻塞的情况下所能读取的字节数”.对于文件这指的是整个文件,而对于其他流可能就不是这样的</p>
-<p>格式化的内存输入 当读取格式化数据时可以使用DataInputStream，它是一个面向字节的IO类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>(DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(TestDataInputStream.class.getCanonicalName())));) &#123;</span><br><span class="line">	<span class="keyword">while</span> (in.available() != <span class="number">0</span>)</span><br><span class="line">		System.out.print((<span class="keyword">char</span>) in.readByte());</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>DataInput 接口用于从二进制流中读取字节，并重构所有 Java 基本类型数据. 同时还提供根据 UTF-8 修改版格式的数据重构 String 的工具. 对于此接口中的所有数据读取例程来说，如果在读取到所需字节数的数据之前已经到达文件末尾 (end of file)，则都将抛出 EOFException（IOException 的一种）. 如果因为文件末尾以外的其他原因无法读取字节，则抛出 IOException而不是 EOFException. 尤其在输入流已关闭的情况下，将抛出 IOException. </p>
-</blockquote>
-<h2 id="DataOutputStream"><a href="#DataOutputStream" class="headerlink" title="DataOutputStream"></a>DataOutputStream</h2><p>用来装饰其它输出流，将DataOutputStream和DataInputStream输入流配合使用，“允许应用程序以与机器无关方式从底层输入流中读写基本 Java 数据类型”. </p>
-<p>我们可以使用DataOutputStream指定格式存储数据, 然后使用DataInputStream轻松的再次指定读取格式来恢复这些数据.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DataOutputStream out = <span class="keyword">new</span> DataOutputStream(<span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"Data.txt"</span>)));</span><br><span class="line">out.writeDouble(<span class="number">3.14159</span>);</span><br><span class="line">out.writeUTF(<span class="string">"That was pi"</span>);</span><br><span class="line">out.writeDouble(<span class="number">1.41413</span>);</span><br><span class="line">out.writeUTF(<span class="string">"Square root of 2"</span>);</span><br><span class="line">out.close();</span><br><span class="line"></span><br><span class="line">DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"Data.txt"</span>)));</span><br><span class="line">System.out.println(in.readDouble());</span><br><span class="line"><span class="comment">// Only readUTF() will recover the Java-UTF String properly:</span></span><br><span class="line">System.out.println(in.readUTF());</span><br><span class="line">System.out.println(in.readDouble());</span><br><span class="line">System.out.println(in.readUTF());</span><br><span class="line"></span><br><span class="line">in.close();</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>DataOutput 接口用于将任意 Java 基本类型转换为一系列字节，并将这些字节写入二进制流. 同时还提供了一个将 String 转换成 UTF-8 修改版格式并写入所得到的系列字节的工具. 对于此接口中写入字节的所有方法，如果由于某种原因无法写入某个字节，则抛出 IOException.</p>
-</blockquote>
-<h2 id="ObjectInputStream"><a href="#ObjectInputStream" class="headerlink" title="ObjectInputStream"></a>ObjectInputStream</h2><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。</p>
-<h2 id="ObjectOutputStream"><a href="#ObjectOutputStream" class="headerlink" title="ObjectOutputStream"></a>ObjectOutputStream</h2><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。 </p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/21/JavaSE/JavaIO 序列化/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 序列化/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/11/21/JavaSE/JavaIO 文件操作/" title="JAVA 文件操作" itemprop="url">JAVA 文件操作</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="FileFilter"><a href="#FileFilter" class="headerlink" title="FileFilter"></a>FileFilter</h2><p>检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FileFilter fileFilter = pathname -&gt; &#123;</span><br><span class="line">	System.out.println(pathname.getPath());</span><br><span class="line">	<span class="keyword">return</span> pathname.isFile();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">fileFilter.accept(<span class="keyword">new</span> File(<span class="string">"D:\\hazelcast-documentation-3.5.3.pdf"</span>));</span><br></pre></td></tr></table></figure></p>
-<h2 id="FilenameFilter"><a href="#FilenameFilter" class="headerlink" title="FilenameFilter"></a>FilenameFilter</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FilenameFilter filenameFilter = (dir, name) -&gt; &#123;</span><br><span class="line">	System.out.println(dir);</span><br><span class="line">	System.out.println(name);</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">filenameFilter.accept(<span class="keyword">new</span> File(<span class="string">"D"</span>), <span class="string">"hazelcast-documentation-3.5.3.pdf"</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="File"><a href="#File" class="headerlink" title="File"></a>File</h2><p>File对象给我们提供了以下的功能</p>
-<ul>
-<li>删除文件</li>
-<li>文件重命名</li>
-<li>创建新的文件</li>
-<li>创建新的文件</li>
-<li>获取文件的最后修改时间</li>
-<li>设置文件只读</li>
-<li>设置文件可写</li>
-<li>获取文件长度(总字节数)</li>
-<li>获取文件路径</li>
-<li>获取绝对文件路径</li>
-<li>文件是否隐藏</li>
-<li>获得剩余磁盘空间？</li>
-<li>拷贝文件夹</li>
-<li>遍历文件夹</li>
-<li>检查文件夹是否为空？</li>
-</ul>
-<h2 id="FileDescriptor"><a href="#FileDescriptor" class="headerlink" title="FileDescriptor"></a>FileDescriptor</h2><p>用来表示开放文件、开放套接字等.当FileDescriptor表示某文件时,我们可以通俗的将FileDescriptor看成是该文件.但是,我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作,则需要新创建FileDescriptor对应的FileOutputStream,再对文件进行操作.</p>
-<p>类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件,打开的套接字或其他来源或字节的接收器.以下是关于FileDescriptor要点：</p>
-<ol>
-<li>主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它.</li>
-<li>应用程序不应创建自己的文件描述符.</li>
-</ol>
-<h2 id="FileLock"><a href="#FileLock" class="headerlink" title="FileLock"></a>FileLock</h2><p>锁定文件</p>
-<p>ByteBuffer.allocate()语句改为ByteBuffer.allocateDirect().用来证实性能之间的差异,但是请注意程序的启动时间是否发生了明显的改变.</p>
-<p>修改{@link JGrep}让其使java的nio内存映射文件.</p>
-<p>JDK1.4引入了文件加锁机制,它允许我们同步访问某个作为共享资源的文件.不过,竞争同一文件的两个线程可能在不同的Java虚拟机上;或者一个是Java线程,另一个是操作系统中其他的某个本地线程.</p>
-<p>文件锁对其他的操作系统进程是可见的,因为Java的文件加锁直接映射到了本地操作系统的加锁工具.通过对FileChannel调用tryLock()或lock(),就可以获得整个文件的FileLock.</p>
-<p>(SocketChannel、DatagramChannel和 ServerSocketChannel不需要加锁,因为他们是从单进程实体继承而来;我们通常不在两个进程之间共享网络socket.)</p>
-<p>tryLock()是非阻塞式的,它设法获取锁,但是如果不能获得(当其他一些进程已经持有相同的锁,并且不共享时),它将直接从方法调用返回.lock()则是阻塞式的,它要阻塞进程直至锁可以获得,或调用lock()的线程中断,或调用lock()的通道关闭.</p>
-<p>使用FileLock.release()可以释放锁.</p>
-<p>也可以使用此方法对文件上锁tryLock()或者lock()其中,加锁的区域由size-position决定.第三个参数指定是否是共享锁.</p>
-<p>尽管无参数的加锁方法将根据文件尺寸的变化而变化,但是具有固定尺寸的锁不随文件尺寸的变化而变化.如果你获得了某一区域(从position到position+size)上的锁,当文件增大超出position+size时,那么在position+size之外的部分不会被锁定.无参数的加锁方法会对 整个文件进行加锁,甚至文件变大后也是如此.</p>
-<p>对独占锁或者共享锁的支持必须由底层的操作系统提供.如果操作系统不支持共享锁并为每一个请求都创建一个锁,那么它就会使用独占锁.</p>
-<p>锁的 类型(共享或独占)可以通过FileLock.isShared()进行查询.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"file.txt"</span>);</span><br><span class="line">FileLock fl = fos.getChannel().tryLock();</span><br><span class="line"><span class="keyword">if</span> (fl != <span class="keyword">null</span>) &#123;</span><br><span class="line">	System.out.println(<span class="string">"Locked File"</span>);</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">	fl.release();</span><br><span class="line">	System.out.println(<span class="string">"Released Lock"</span>);</span><br><span class="line">&#125;</span><br><span class="line">fos.close()</span><br></pre></td></tr></table></figure></p>
-<h2 id="DirectoryStream"><a href="#DirectoryStream" class="headerlink" title="DirectoryStream"></a>DirectoryStream</h2><p>遍历某个文件夹内的所有文件,但是不会遍历子目录. 也就是这会遍历当前路径中的所有文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DirectoryStream&lt;Path&gt; paths = Files.newDirectoryStream(Paths.get(<span class="string">"E:"</span>));</span><br><span class="line">paths.forEach(path -&gt; &#123;</span><br><span class="line">	System.out.println(path.getFileName());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>SecureDirectoryStream</p>
-</blockquote>
-<h2 id="FileVisitor"><a href="#FileVisitor" class="headerlink" title="FileVisitor"></a>FileVisitor</h2><p>遍历某个文件夹内的所有文件接口.</p>
-<p><code>SimpleFileVisitor</code>实现了这个接口. 与<code>DirectoryStream</code> 不同的是,这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SimpleFileVisitor visitor = <span class="keyword">new</span> SimpleFileVisitor&lt;Path&gt;() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> FileVisitResult <span class="title">visitFile</span><span class="params">(Path file, BasicFileAttributes attrs)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				System.out.println(file.getFileName());</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.visitFile(file, attrs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		Files.walkFileTree(Paths.get(<span class="string">"E:"</span>), visitor);</span><br></pre></td></tr></table></figure></p>
-<h2 id="监控文件变化"><a href="#监控文件变化" class="headerlink" title="监控文件变化"></a>监控文件变化</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WatchService service = FileSystems.getDefault().newWatchService();</span><br><span class="line">		Paths.get(<span class="string">"D:/"</span>).register(service,</span><br><span class="line">		ENTRY_CREATE,</span><br><span class="line">		ENTRY_DELETE,</span><br><span class="line">		ENTRY_MODIFY);</span><br><span class="line"></span><br><span class="line">WatchKey watchKey = service.take();</span><br><span class="line"></span><br><span class="line">watchKey.pollEvents().stream().forEach(watchEvent -&gt; &#123;</span><br><span class="line">	System.out.println(watchEvent.context() + <span class="string">"  "</span> + watchEvent.kind());</span><br><span class="line">&#125;);</span><br><span class="line">watchKey.reset();</span><br></pre></td></tr></table></figure>
-<h2 id="Files"><a href="#Files" class="headerlink" title="Files"></a>Files</h2><ol>
-<li>copy</li>
-<li>createDirectories</li>
-<li>createDirectory</li>
-<li>createFile</li>
-<li>createLink</li>
-<li>createSymbolicLink</li>
-<li>createTempDirectory</li>
-<li>createTempFile</li>
-<li>delete</li>
-<li>deleteIfExists</li>
-<li>exists</li>
-<li>getAttribute</li>
-<li>getFileAttributeView</li>
-<li>getFileStore</li>
-<li>getLastModifiedTime</li>
-<li>getOwner</li>
-<li>getPosixFilePermissions</li>
-<li>isDirectory</li>
-<li>isExecutable</li>
-<li>isHidden</li>
-<li>isReadable</li>
-<li>isRegularFile</li>
-<li>isSameFile</li>
-<li>isSymbolicLink</li>
-<li>isWritable</li>
-<li>move</li>
-<li>newBufferedReader</li>
-<li>newBufferedWriter</li>
-<li>newByteChannel</li>
-<li>newDirectoryStream</li>
-<li>newInputStream</li>
-<li>newOutputStream</li>
-<li>notExists</li>
-<li>probeContentType</li>
-<li>readAllBytes</li>
-<li>readAllLines</li>
-<li>readAttributes</li>
-<li>readSymbolicLink</li>
-<li>setAttribute</li>
-<li>setLastModifiedTime</li>
-<li>setOwner</li>
-<li>setPosixFilePermissions</li>
-<li>walkFileTree</li>
-<li>write</li>
-</ol>
-<h2 id="FileStore"><a href="#FileStore" class="headerlink" title="FileStore"></a>FileStore</h2><p>代表了真正的存储设备,提供了设备的详尽信息</p>
-<h2 id="FileSystems"><a href="#FileSystems" class="headerlink" title="FileSystems"></a>FileSystems</h2><ul>
-<li>FileSystems.getDefault() ：返回 JVM 默认的 FileSystem – 一般说来,也就是操作系统的默认文件系统</li>
-<li>FileSystems.getFileSystem(uri) ： 可以获取远程主机的FileSystem<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileSystem system = FileSystems.getDefault();</span><br><span class="line"><span class="comment">// 得到文件系统支持的属性视图列表</span></span><br><span class="line">Set&lt;String&gt; views = system.supportedFileAttributeViews();</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<blockquote>
-<p>FileSystem</p>
-</blockquote>
-<h2 id="Paths"><a href="#Paths" class="headerlink" title="Paths"></a>Paths</h2><blockquote>
-<p>Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件,但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据,因此在网络环境或在虚拟文件系统中,NIO.2 也完全适用.NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法</p>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/21/JavaSE/JavaIO 文件操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 文件操作/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/21/JavaSE/JavaIO 读文件/" title="JAVA 读文件" itemprop="url">JAVA 读文件</a>
   </h1>
   <p class="article-author">By
@@ -455,6 +220,151 @@
 	
 	  	<span></span>
 		<a href="/2015/11/21/JavaSE/JavaIO 读文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 读文件/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/21/JavaSE/JavaIO 内存IO/" title="JAVA 内存IO" itemprop="url">JAVA 内存IO</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="ByteArrayInputStream"><a href="#ByteArrayInputStream" class="headerlink" title="ByteArrayInputStream"></a>ByteArrayInputStream</h2><p>从byte[]数组中读取数据到缓存中.可以将字节数组转化为输入流此类中的方法在关闭此流后仍可被调用，而不会产生任何 <code>IOException</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buff = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">try</span>(ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(buff)) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span>(in.available() != <span class="number">0</span>)</span><br><span class="line">		System.out.println(in.read());</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="ByteArrayOutputStream"><a href="#ByteArrayOutputStream" class="headerlink" title="ByteArrayOutputStream"></a>ByteArrayOutputStream</h2><p>输出数据到byte[]数组里，可以捕获内存缓冲区的数据，转换成字节数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray()和 toString()获取数据。    关闭 <code>ByteArrayOutputStream</code>无效。此类中的方法在关闭此流后仍可被调用，而不会产生任何<code>IOException</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buff = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">try</span>(ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream()) &#123;</span><br><span class="line">	out.write(buff);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">byte</span>[] byteArray = out.toByteArray();</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">byte</span> b : byteArray) &#123;</span><br><span class="line">		System.out.println(<span class="string">"flush before : "</span> + b);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	out.flush();</span><br><span class="line"></span><br><span class="line">	byteArray = out.toByteArray();</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">byte</span> b : byteArray) &#123;</span><br><span class="line">		System.out.println(<span class="string">"flush after : "</span> + b);</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="CharArrayReader"><a href="#CharArrayReader" class="headerlink" title="CharArrayReader"></a>CharArrayReader</h2><p>与ByteArrayInputStream对应。 支持mark和reset读取char[] 数组<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>[] array = &#123;<span class="string">'a'</span>, <span class="string">'z'</span>, <span class="string">'g'</span>&#125;;</span><br><span class="line"><span class="keyword">try</span>(CharArrayReader in = <span class="keyword">new</span> CharArrayReader(array)) &#123;</span><br><span class="line">	<span class="keyword">while</span>(in.ready())</span><br><span class="line">		System.out.println(in.read());</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="CharArrayWriter"><a href="#CharArrayWriter" class="headerlink" title="CharArrayWriter"></a>CharArrayWriter</h2><p>向内部char[] 缓冲区存储数据.  支持rest, 文件追加写操作, 支持string write<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>(CharArrayWriter out = <span class="keyword">new</span> CharArrayWriter()) &#123;</span><br><span class="line">	out.write(<span class="string">"TestChararray"</span>);</span><br><span class="line">	System.out.println(out.toString());</span><br><span class="line">	out.append(<span class="string">"test_"</span>);</span><br><span class="line">	System.out.println(out.toString());</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="PushbackInputStream"><a href="#PushbackInputStream" class="headerlink" title="PushbackInputStream"></a>PushbackInputStream</h2><p>拥有一个PushBack缓冲区，从PushbackInputStream读出数据后，只要PushBack缓冲区没有满，就可以使用unread()将数据推回流的前端。</p>
+<h2 id="PushbackReader"><a href="#PushbackReader" class="headerlink" title="PushbackReader"></a>PushbackReader</h2><p>允许将字符推回到流的字符流 reader。当程序调用推回输入流的unread()方法时，系统会把指定数组的内容推回到该缓冲区中，而推回输入流每次调用read()方法时，总是先从推回缓冲区读取内容，只有完全读取了推回缓冲区里的内容后，但是还没有装满read()所需要的数组时才会从原输入流中读取<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (</span><br><span class="line"><span class="comment">// 创建一个PushbackReader对象，指定推回缓冲区的长度为64</span></span><br><span class="line">PushbackReader pr = <span class="keyword">new</span> PushbackReader(<span class="keyword">new</span> FileReader(<span class="string">"PushBackTest.java"</span>), <span class="number">64</span>);</span><br><span class="line"><span class="keyword">char</span>[] buf = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">32</span>];</span><br><span class="line"><span class="comment">// 用以保存上次读取字符串的内容</span></span><br><span class="line">String lastContent = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">int</span> hasRead = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 循环读取文件内容</span></span><br><span class="line"><span class="keyword">while</span> ((hasRead = pr.read(buf)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">	<span class="comment">// 将读取的内容转化为字符串</span></span><br><span class="line">	String content = <span class="keyword">new</span> String(buf, <span class="number">0</span>, hasRead);</span><br><span class="line">	<span class="keyword">int</span> targetIndex = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 将上次读取的字符串和本次读取的字符串拼接起来</span></span><br><span class="line">	<span class="comment">// 查看是否包含目标字符串，</span></span><br><span class="line">	<span class="comment">// 如果包含目标字符串</span></span><br><span class="line">	<span class="keyword">if</span> ((targetIndex = (lastContent + content)</span><br><span class="line">			.indexOf(<span class="string">"new PushbackReader"</span>)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">// 将本次的内容和上次的内容一起推回缓冲区</span></span><br><span class="line">		pr.unread((lastContent + content).toCharArray());</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 重现定义一个长度为targetIndex的char类型的数组</span></span><br><span class="line">		<span class="keyword">if</span> (targetIndex &gt; <span class="number">32</span>) &#123;</span><br><span class="line">			buf = <span class="keyword">new</span> <span class="keyword">char</span>[targetIndex];</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 再次读取指定长度的内容，即目标字符串之前的内容</span></span><br><span class="line">		pr.read(buf, <span class="number">0</span>, targetIndex);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 答应读取指定长度的内容</span></span><br><span class="line">		System.out.println(<span class="keyword">new</span> String(buf, <span class="number">0</span>, targetIndex));</span><br><span class="line">		System.exit(<span class="number">0</span>);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 打印上次读取的内容</span></span><br><span class="line">		System.out.println(lastContent);</span><br><span class="line">		<span class="comment">// 将本次读取的内容设置为上次读取的内容</span></span><br><span class="line">		lastContent = content;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="PipedReader"><a href="#PipedReader" class="headerlink" title="PipedReader"></a>PipedReader</h2><p>PipedWriter 是字符管道输出流,可以通过管道进行线程间的通讯。</p>
+<h2 id="PipedWriter"><a href="#PipedWriter" class="headerlink" title="PipedWriter"></a>PipedWriter</h2><p>PipedReader 是字符管道输入流,可以通过管道进行线程间的通讯。</p>
+<h2 id="PipedInputStream"><a href="#PipedInputStream" class="headerlink" title="PipedInputStream"></a>PipedInputStream</h2><p>管道输入流是让多线程可以通过管道进行线程间的通讯</p>
+<h2 id="PipedOutputStream"><a href="#PipedOutputStream" class="headerlink" title="PipedOutputStream"></a>PipedOutputStream</h2><p>管道输出流是让多线程可以通过管道进行线程间的通讯</p>
+<h2 id="SequenceInputStream"><a href="#SequenceInputStream" class="headerlink" title="SequenceInputStream"></a>SequenceInputStream</h2><p>从多个输入流中向程序读入数据。此时，可以使用合并流，将多个输入流合并成一个SequenceInputStream流对象。SequenceInputStream会将与之相连接的流集组合成一个输入流并从第一个输入流开始读取，直到到达文件末尾，接着从第二个输入流读取，依次类推，直到到达包含的最后一个输入流的文件末 尾为止。 合并流的作用是将多个源合并合一个源。</p>
+<h2 id="StreamTokenizer"><a href="#StreamTokenizer" class="headerlink" title="StreamTokenizer"></a>StreamTokenizer</h2><p>获取输入流并将其解析为“标记”，允许一次读取一个标记。解析过程由一个表和许多可以设置为各种状态的标志控制。该流的标记生成器可以识别标识符、数字、引用的字符串和各种注释样式等。</p>
+<h2 id="Console"><a href="#Console" class="headerlink" title="Console"></a>Console</h2><p>专用来访问基于字符的控制台设备。如果你的Java程序要与Windows下的cmd或者Linux下的Terminal交互，就可以用这个Java Console类java.io.Console 只能用在标准输入、输出流未被重定向的原始控制台中使用，在 Eclipse 或者其他 IDE 的控制台是用不了的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Console cons = System.console();</span><br><span class="line"><span class="keyword">if</span> (cons != <span class="keyword">null</span>) &#123;</span><br><span class="line">	<span class="comment">// -------------------------</span></span><br><span class="line">	PrintWriter printWriter = cons.writer();</span><br><span class="line">	printWriter.write(<span class="string">"input:"</span>);</span><br><span class="line">	cons.flush();</span><br><span class="line">	String str1 = cons.readLine();</span><br><span class="line">	cons.format(<span class="string">"%s"</span>, str1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/21/JavaSE/JavaIO 内存IO/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 内存IO/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/21/JavaSE/JavaIO 序列化/" title="JAVA 序列化" itemprop="url">JAVA 序列化</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Externalizable"><a href="#Externalizable" class="headerlink" title="Externalizable"></a>Externalizable</h2><p>Externalizable继承于Serializable，当使用该接口时，序列化的细节需要由程序员去完成. 如上所示的代码，由于writeExternal()与readExternal()方法未作任何处理，那么该序列化行为将不会保存/读取任何一个字段. </p>
+<h2 id="Flushable"><a href="#Flushable" class="headerlink" title="Flushable"></a>Flushable</h2><p>实现了Flushable接口的类的对象，可以强制将缓存的输出写入到与对象关联的流中. 写入流的所有I/O类都实现了Flushable接口. </p>
+<h2 id="ObjectInputValidation"><a href="#ObjectInputValidation" class="headerlink" title="ObjectInputValidation"></a>ObjectInputValidation</h2><p>序列化流验证机制.一般情况下，我们认为序列化流中的数据总是与最初写到流中的数据一致，这并没有问题. 但当黑客获取流信息并篡改一些敏感信息重新序列化到流中后，用户通过反序列化得到的将是被篡改的信息. Java序列化提供一套验证机制. 序列化类通过实现 java.io.ObjectInputValidation接口，就可以做到验证了</p>
+<h2 id="ObjectStreamConstants"><a href="#ObjectStreamConstants" class="headerlink" title="ObjectStreamConstants"></a>ObjectStreamConstants</h2><p>Java序列化序列化对象的信息包括：类元数据描述、类的属性、父类信息以及属性域的值. Java将这些信息分成3部分：序列化头信息、类的描述部分以及属性域的值部分. 现在对a.txt文件加以分析，其中包含一些序列化机制中提供的特殊字段，这些字段被定义在java.io.ObjectStreamConstants接口中.  </p>
+<h2 id="DataInputStream"><a href="#DataInputStream" class="headerlink" title="DataInputStream"></a>DataInputStream</h2><p>用来装饰其它输入流，它“允许应用程序以与机器无关方式从底层输入流中读取基本 Java 数据类型”</p>
+<p>从DataInputStream一次一个字节地读取字符,那么任何值都是合法的,因此返回值不能用来检测输入是否结束.但是可以使用available()函数来查看还有多少字符可供读取</p>
+<p>available()函数的工作方式会随之所读取的媒介类不同而不同, 该函数从字面上的意思来讲就是”在没有阻塞的情况下所能读取的字节数”.对于文件这指的是整个文件,而对于其他流可能就不是这样的</p>
+<p>格式化的内存输入 当读取格式化数据时可以使用DataInputStream，它是一个面向字节的IO类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>(DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(TestDataInputStream.class.getCanonicalName())));) &#123;</span><br><span class="line">	<span class="keyword">while</span> (in.available() != <span class="number">0</span>)</span><br><span class="line">		System.out.print((<span class="keyword">char</span>) in.readByte());</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>DataInput 接口用于从二进制流中读取字节，并重构所有 Java 基本类型数据. 同时还提供根据 UTF-8 修改版格式的数据重构 String 的工具. 对于此接口中的所有数据读取例程来说，如果在读取到所需字节数的数据之前已经到达文件末尾 (end of file)，则都将抛出 EOFException（IOException 的一种）. 如果因为文件末尾以外的其他原因无法读取字节，则抛出 IOException而不是 EOFException. 尤其在输入流已关闭的情况下，将抛出 IOException. </p>
+</blockquote>
+<h2 id="DataOutputStream"><a href="#DataOutputStream" class="headerlink" title="DataOutputStream"></a>DataOutputStream</h2><p>用来装饰其它输出流，将DataOutputStream和DataInputStream输入流配合使用，“允许应用程序以与机器无关方式从底层输入流中读写基本 Java 数据类型”. </p>
+<p>我们可以使用DataOutputStream指定格式存储数据, 然后使用DataInputStream轻松的再次指定读取格式来恢复这些数据.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DataOutputStream out = <span class="keyword">new</span> DataOutputStream(<span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"Data.txt"</span>)));</span><br><span class="line">out.writeDouble(<span class="number">3.14159</span>);</span><br><span class="line">out.writeUTF(<span class="string">"That was pi"</span>);</span><br><span class="line">out.writeDouble(<span class="number">1.41413</span>);</span><br><span class="line">out.writeUTF(<span class="string">"Square root of 2"</span>);</span><br><span class="line">out.close();</span><br><span class="line"></span><br><span class="line">DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"Data.txt"</span>)));</span><br><span class="line">System.out.println(in.readDouble());</span><br><span class="line"><span class="comment">// Only readUTF() will recover the Java-UTF String properly:</span></span><br><span class="line">System.out.println(in.readUTF());</span><br><span class="line">System.out.println(in.readDouble());</span><br><span class="line">System.out.println(in.readUTF());</span><br><span class="line"></span><br><span class="line">in.close();</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>DataOutput 接口用于将任意 Java 基本类型转换为一系列字节，并将这些字节写入二进制流. 同时还提供了一个将 String 转换成 UTF-8 修改版格式并写入所得到的系列字节的工具. 对于此接口中写入字节的所有方法，如果由于某种原因无法写入某个字节，则抛出 IOException.</p>
+</blockquote>
+<h2 id="ObjectInputStream"><a href="#ObjectInputStream" class="headerlink" title="ObjectInputStream"></a>ObjectInputStream</h2><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。</p>
+<h2 id="ObjectOutputStream"><a href="#ObjectOutputStream" class="headerlink" title="ObjectOutputStream"></a>ObjectOutputStream</h2><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。 </p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JavaSE/">JavaSE</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/21/JavaSE/JavaIO 序列化/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 序列化/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -729,168 +639,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/18/构建工具/gradle/" title="Gradle 初探" itemprop="url">Gradle 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>任何一个 Gradle 构建都是由一个或多个 projects 组成。每个 project 都由多个 tasks 组成。每个 task 都代表了构建执行过程中的一个原子性操作。</p>
-<p>我使用idea创建一个gradle项目<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">group <span class="string">'wang.ming15.gradle'</span></span><br><span class="line">version <span class="string">'1.0-SNAPSHOT'</span></span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line"></span><br><span class="line">sourceCompatibility = <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    testCompile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.11'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><h3 id="自定义任务"><a href="#自定义任务" class="headerlink" title="自定义任务"></a>自定义任务</h3><p>我们可以在task内部自由的使用groovy脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task t1 &#123;</span><br><span class="line">    doLast &#123;</span><br><span class="line">        println <span class="string">'task1'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>或者这种方式<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> t2 &lt;&lt; &#123;</span><br><span class="line">        <span class="keyword">println</span> <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><code>defaultTasks</code>我们可以使用这个命令定义一些默认的task : <code>defaultTasks &#39;t1&#39;, &#39;t2&#39;</code></p>
-</blockquote>
-<h3 id="任务依赖"><a href="#任务依赖" class="headerlink" title="任务依赖"></a>任务依赖</h3><p>我们使用<code>dependsOn</code>语法可以让一个任务依赖于另外一个任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">task t2 &lt;&lt; &#123;</span><br><span class="line">        println <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: t2)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'t3'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这种情况下, t2任务会优先于t3任务执行</p>
-<blockquote>
-<p>需要注意的是, 如果t1依赖于t2, 那么当t2执行的时候会先执行t1</p>
-</blockquote>
-<h3 id="延迟依赖"><a href="#延迟依赖" class="headerlink" title="延迟依赖"></a>延迟依赖</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: <span class="string">'t4'</span>)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'task3'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们还可以在定义一个任务之后,再定义其所依赖的任务, 执行顺序仍然是t3 优先于t4</p>
-<h3 id="任务操纵"><a href="#任务操纵" class="headerlink" title="任务操纵"></a>任务操纵</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t5 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task5'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t5.dependsOn t4</span><br></pre></td></tr></table></figure>
-<p>task还有其他一些api,参考<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="external"></a></p>
-<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>如前例所示我们已经使用过Gradle提供的插件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br></pre></td></tr></table></figure></p>
-<p>当我们的项目使用某个插件的时候, 这个项目里就包含了那个插件的任务依赖等等</p>
-<h3 id="java插件任务"><a href="#java插件任务" class="headerlink" title="java插件任务"></a>java插件任务</h3><p>我们使用了java插件, 然后我们打开idea右侧的Gradle标签(我们会看到一些java插件自带的一些task.)：<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/gradle/gradle_ui.jpg" alt=""></p>
-<p>命令含义参考<a href="http://wiki.jikexueyuan.com/project/gradle/java-package.html" target="_blank" rel="external"></a></p>
-<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>在Gradle编译脚本文件中我们还可以自如的使用文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File configFile = file(<span class="string">'src/config.xml'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>使用<code>file()</code>方法我们就可以打开一个文件.</p>
-<h3 id="文件集合"><a href="#文件集合" class="headerlink" title="文件集合"></a>文件集合</h3><p>我们还可以使用<code>files()</code>方法创建文件集合<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileCollection fils = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br></pre></td></tr></table></figure></p>
-<p>我们还可以使用<code>+</code>, <code>-</code>符号增加或者删减文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileCollection filc = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br><span class="line">FileCollection newFiles1 = filc + files(<span class="string">"c.txt"</span>)</span><br><span class="line">FileCollection newFiles2 = filc - files(<span class="string">"c.txt"</span>)</span><br></pre></td></tr></table></figure></p>
-<p>我们还可以使用<code>as</code>将其转换为<code>Set</code>或者<code>List</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set set1 = filc.files</span><br><span class="line">Set set2 = filc as Set</span><br><span class="line">List list = filc as List</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/18/构建工具/gradle/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/构建工具/gradle/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/11/18/日志工具/Elasticsearch 基本操作/" title="Elasticsearch 基本操作" itemprop="url">Elasticsearch 基本操作</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>使用Elasticsearch自带的客户端,添加maven依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.elasticsearch<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>elasticsearch<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>注意,依赖里的版本号要和Elasticsearch服务器的版本号一致</p>
-</blockquote>
-<h2 id="节点客户端"><a href="#节点客户端" class="headerlink" title="节点客户端"></a>节点客户端</h2><p>节点客户端以一个 无数据节点 的身份加入了一个集群。换句话说，它自身是没有任何数据的，但是他知道什么数据在集群中的哪一个节点上，然后就可以请求转发到正确的节点上并进行连接。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Settings.Builder settings = Settings.settingsBuilder()</span><br><span class="line">		.put(<span class="string">"http.enabled"</span>, <span class="keyword">false</span>)</span><br><span class="line">		.put(<span class="string">"path.home"</span>, <span class="string">"D:\\log\\elasticsearch-1.7.1"</span>)</span><br><span class="line">		;</span><br><span class="line"></span><br><span class="line">Node node = nodeBuilder()</span><br><span class="line">		.local(<span class="keyword">true</span>)</span><br><span class="line">		.settings(settings)</span><br><span class="line">		.node();</span><br><span class="line"></span><br><span class="line">Client client = node.client();</span><br></pre></td></tr></table></figure></p>
-<h2 id="传输客户端"><a href="#传输客户端" class="headerlink" title="传输客户端"></a>传输客户端</h2><p>更加轻量的传输客户端可以被用来向远程集群发送请求。他并不加入集群本身，而是把请求转发到集群中的节点。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Settings settings = Settings.settingsBuilder().build();</span><br><span class="line"></span><br><span class="line">Client client = TransportClient.builder().settings(settings).build()</span><br><span class="line">		.addTransportAddress(<span class="keyword">new</span> InetSocketTransportAddress(InetAddress.getByName(<span class="string">"localhost"</span>), <span class="number">9300</span>));</span><br></pre></td></tr></table></figure></p>
-<h2 id="索引数据"><a href="#索引数据" class="headerlink" title="索引数据"></a>索引数据</h2><p>我们可以使用客户端提供的<code>prepareIndex()</code>方法索引数据,也就是向Elasticsearch添加数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IndexResponse indexResponse = client.prepareIndex(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>).setSource(jsonObject.toJSONString()).execute().actionGet();</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"IndexResponse : "</span> + indexResponse.getId());</span><br><span class="line">System.out.println(<span class="string">"IndexResponse : "</span> + indexResponse.getIndex());</span><br><span class="line">System.out.println(<span class="string">"IndexResponse : "</span> + indexResponse.getType());</span><br><span class="line">System.out.println(<span class="string">"IndexResponse : "</span> + indexResponse.getVersion());</span><br></pre></td></tr></table></figure></p>
-<p>结果输出为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IndexResponse : <span class="number">01</span></span><br><span class="line">IndexResponse : idx01</span><br><span class="line">IndexResponse : type01</span><br><span class="line">IndexResponse : <span class="number">3</span></span><br></pre></td></tr></table></figure></p>
-<p>idx01为索引值, type01为类型值, 01为id. 当我们重复的使用这三个值向 Elasticsearch 索引数据时是合法的,但是我们会得不到不同的版本号，也就是最好的输出的那个值</p>
-<h2 id="检索数据"><a href="#检索数据" class="headerlink" title="检索数据"></a>检索数据</h2><p>我们可以使用客户端提供的<code>prepareGet()</code>方法检索数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GetResponse getResponse = client.prepareGet(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>)</span><br><span class="line">				.setOperationThreaded(<span class="keyword">false</span>)</span><br><span class="line">				.get();</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getId());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getIndex());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getType());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getVersion());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getSourceAsString());</span><br></pre></td></tr></table></figure></p>
-<p>结果输出为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GetResponse : <span class="number">01</span></span><br><span class="line">GetResponse : idx01</span><br><span class="line">GetResponse : type01</span><br><span class="line">GetResponse : <span class="number">4</span></span><br><span class="line">GetResponse : &#123;<span class="string">"age"</span>:<span class="string">"19"</span>,<span class="string">"name"</span>:<span class="string">"Tom"</span>&#125;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><code>setOperationThreaded()</code>这个方法是用来设置, 操作是否在其他的线程中执行, 设置为true就是在其他的线程中执行. 注意该操作仍然是异步执行的.</p>
-</blockquote>
-<h4 id="检索多个数据"><a href="#检索多个数据" class="headerlink" title="检索多个数据"></a>检索多个数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">client.prepareMultiGet()</span><br><span class="line">	  .add(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>)</span><br><span class="line">	  .add(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"02"</span>)</span><br><span class="line">	  .get()</span><br><span class="line">	  .forEach(response -&gt; System.out.println(JSON.toJSONString(response, <span class="keyword">true</span>)));</span><br></pre></td></tr></table></figure>
-<h2 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DeleteResponse deleteResponse = client.prepareDelete(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>).get();</span><br><span class="line">System.out.println(<span class="string">"DeleteResponse : "</span> + deleteResponse.getId());</span><br><span class="line">System.out.println(<span class="string">"DeleteResponse : "</span> + deleteResponse.getIndex());</span><br><span class="line">System.out.println(<span class="string">"DeleteResponse : "</span> + deleteResponse.getType());</span><br><span class="line">System.out.println(<span class="string">"DeleteResponse : "</span> + deleteResponse.getVersion());</span><br></pre></td></tr></table></figure>
-<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DeleteResponse : <span class="number">01</span></span><br><span class="line">DeleteResponse : idx01</span><br><span class="line">DeleteResponse : type01</span><br><span class="line">DeleteResponse : <span class="number">6</span></span><br></pre></td></tr></table></figure></p>
-<p>如果我们再检索一边数据的话,会得到结果<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GetResponse : <span class="number">01</span></span><br><span class="line">GetResponse : idx01</span><br><span class="line">GetResponse : type01</span><br><span class="line">GetResponse : -<span class="number">1</span></span><br><span class="line">GetResponse : <span class="keyword">null</span></span><br></pre></td></tr></table></figure></p>
-<p>说明那个文档已经被删除了</p>
-<h2 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h2><p>我们可以使用<code>UpdateRequest</code>或者<code>prepareUpdate()</code>方法来对数据进行更新<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">UpdateRequest updateRequest = <span class="keyword">new</span> UpdateRequest();</span><br><span class="line">updateRequest.index(<span class="string">"idx01"</span>);</span><br><span class="line">updateRequest.type(<span class="string">"type01"</span>);</span><br><span class="line">updateRequest.id(<span class="string">"01"</span>);</span><br><span class="line">updateRequest.doc(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">client.update(updateRequest).get();</span><br></pre></td></tr></table></figure></p>
-<p>当我们在通过<code>get</code>获取数据的时候,会发现数据已经发生了变化</p>
-<p>更新还有一个有用的功能,就是在更新的时候能实现如果有就更新,没有就插入<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx01"</span>)</span><br><span class="line">		.type(<span class="string">"type01"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">UpdateRequest updateRequest = <span class="keyword">new</span> UpdateRequest()</span><br><span class="line">		.index(<span class="string">"idx01"</span>)</span><br><span class="line">		.type(<span class="string">"type02"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>)</span><br><span class="line">		.doc(jsonObject.toJSONString())</span><br><span class="line">		.upsert(indexRequest);</span><br><span class="line"></span><br><span class="line">client.update(updateRequest).get();</span><br></pre></td></tr></table></figure></p>
-<h2 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h2><p>elasticsearch内置的客户端中还有批处理功能,但是批处理只支持增删改, 不支持查询的功能<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">BulkRequestBuilder bulkRequest = client.prepareBulk();</span><br><span class="line"></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">"name"</span>, <span class="string">"Tom"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line"></span><br><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx02"</span>)</span><br><span class="line">		.type(<span class="string">"type01"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line">bulkRequest.add(indexRequest);</span><br><span class="line"></span><br><span class="line">UpdateRequest updateRequest = <span class="keyword">new</span> UpdateRequest()</span><br><span class="line">		.index(<span class="string">"idx02"</span>)</span><br><span class="line">		.type(<span class="string">"type01"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>)</span><br><span class="line">		.doc(jsonObject.toJSONString());</span><br><span class="line">bulkRequest.add(updateRequest);</span><br><span class="line"></span><br><span class="line">DeleteRequest deleteRequest = <span class="keyword">new</span> DeleteRequest()</span><br><span class="line">		.index(<span class="string">"idx02"</span>)</span><br><span class="line">		.type(<span class="string">"type01"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>);</span><br><span class="line">bulkRequest.add(deleteRequest);</span><br><span class="line">BulkResponse bulkResponse = bulkRequest.get();</span><br><span class="line">bulkResponse.forEach(response -&gt; System.out.println(response.getId()));</span><br><span class="line"></span><br><span class="line">GetResponse getResponse = client.prepareGet(<span class="string">"idx02"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>)</span><br><span class="line">		.setOperationThreaded(<span class="keyword">false</span>)</span><br><span class="line">		.get();</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getId());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getIndex());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getType());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getVersion());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getSourceAsString());</span><br></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/18/日志工具/Elasticsearch 基本操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 基本操作/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/11/18/memcached/Memcache/" title="memcached" itemprop="url">memcached</a>
   </h1>
   <p class="article-author">By
@@ -1052,6 +800,88 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/18/构建工具/gradle/" title="Gradle 初探" itemprop="url">Gradle 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>任何一个 Gradle 构建都是由一个或多个 projects 组成。每个 project 都由多个 tasks 组成。每个 task 都代表了构建执行过程中的一个原子性操作。</p>
+<p>我使用idea创建一个gradle项目<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">group <span class="string">'wang.ming15.gradle'</span></span><br><span class="line">version <span class="string">'1.0-SNAPSHOT'</span></span><br><span class="line"></span><br><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line"></span><br><span class="line">sourceCompatibility = <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line">repositories &#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    testCompile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.11'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><h3 id="自定义任务"><a href="#自定义任务" class="headerlink" title="自定义任务"></a>自定义任务</h3><p>我们可以在task内部自由的使用groovy脚本<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task t1 &#123;</span><br><span class="line">    doLast &#123;</span><br><span class="line">        println <span class="string">'task1'</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>或者这种方式<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">task</span> t2 &lt;&lt; &#123;</span><br><span class="line">        <span class="keyword">println</span> <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>defaultTasks</code>我们可以使用这个命令定义一些默认的task : <code>defaultTasks &#39;t1&#39;, &#39;t2&#39;</code></p>
+</blockquote>
+<h3 id="任务依赖"><a href="#任务依赖" class="headerlink" title="任务依赖"></a>任务依赖</h3><p>我们使用<code>dependsOn</code>语法可以让一个任务依赖于另外一个任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">task t2 &lt;&lt; &#123;</span><br><span class="line">        println <span class="string">'t2'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: t2)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'t3'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种情况下, t2任务会优先于t3任务执行</p>
+<blockquote>
+<p>需要注意的是, 如果t1依赖于t2, 那么当t2执行的时候会先执行t1</p>
+</blockquote>
+<h3 id="延迟依赖"><a href="#延迟依赖" class="headerlink" title="延迟依赖"></a>延迟依赖</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">task <span class="title">t3</span><span class="params">(dependsOn: <span class="string">'t4'</span>)</span> </span>&#123;</span><br><span class="line">    println <span class="string">'task3'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们还可以在定义一个任务之后,再定义其所依赖的任务, 执行顺序仍然是t3 优先于t4</p>
+<h3 id="任务操纵"><a href="#任务操纵" class="headerlink" title="任务操纵"></a>任务操纵</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">task t4 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task4'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task t5 &lt;&lt; &#123;</span><br><span class="line">    println <span class="string">'task5'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t5.dependsOn t4</span><br></pre></td></tr></table></figure>
+<p>task还有其他一些api,参考<a href="https://docs.gradle.org/current/javadoc/org/gradle/api/Task.html" target="_blank" rel="external"></a></p>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>如前例所示我们已经使用过Gradle提供的插件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br></pre></td></tr></table></figure></p>
+<p>当我们的项目使用某个插件的时候, 这个项目里就包含了那个插件的任务依赖等等</p>
+<h3 id="java插件任务"><a href="#java插件任务" class="headerlink" title="java插件任务"></a>java插件任务</h3><p>我们使用了java插件, 然后我们打开idea右侧的Gradle标签(我们会看到一些java插件自带的一些task.)：<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/gradle/gradle_ui.jpg" alt=""></p>
+<p>命令含义参考<a href="http://wiki.jikexueyuan.com/project/gradle/java-package.html" target="_blank" rel="external"></a></p>
+<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>在Gradle编译脚本文件中我们还可以自如的使用文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File configFile = file(<span class="string">'src/config.xml'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>file()</code>方法我们就可以打开一个文件.</p>
+<h3 id="文件集合"><a href="#文件集合" class="headerlink" title="文件集合"></a>文件集合</h3><p>我们还可以使用<code>files()</code>方法创建文件集合<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FileCollection fils = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以使用<code>+</code>, <code>-</code>符号增加或者删减文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileCollection filc = files(<span class="string">"t.txt"</span>, <span class="keyword">new</span> File(<span class="string">"d.txt"</span>), [<span class="string">"a.txt"</span>, <span class="string">'b.txt'</span>])</span><br><span class="line">FileCollection newFiles1 = filc + files(<span class="string">"c.txt"</span>)</span><br><span class="line">FileCollection newFiles2 = filc - files(<span class="string">"c.txt"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>我们还可以使用<code>as</code>将其转换为<code>Set</code>或者<code>List</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set set1 = filc.files</span><br><span class="line">Set set2 = filc as Set</span><br><span class="line">List list = filc as List</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/构建工具/">构建工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/18/构建工具/gradle/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/构建工具/gradle/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/18/日志工具/Elasticsearch 搜索/" title="Elasticsearch 搜索" itemprop="url">Elasticsearch 搜索</a>
   </h1>
   <p class="article-author">By
@@ -1103,6 +933,86 @@
 	
 	  	<span></span>
 		<a href="/2015/11/18/日志工具/Elasticsearch 搜索/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 搜索/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/18/日志工具/Elasticsearch 基本操作/" title="Elasticsearch 基本操作" itemprop="url">Elasticsearch 基本操作</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>使用Elasticsearch自带的客户端,添加maven依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.elasticsearch<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>elasticsearch<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意,依赖里的版本号要和Elasticsearch服务器的版本号一致</p>
+</blockquote>
+<h2 id="节点客户端"><a href="#节点客户端" class="headerlink" title="节点客户端"></a>节点客户端</h2><p>节点客户端以一个 无数据节点 的身份加入了一个集群。换句话说，它自身是没有任何数据的，但是他知道什么数据在集群中的哪一个节点上，然后就可以请求转发到正确的节点上并进行连接。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Settings.Builder settings = Settings.settingsBuilder()</span><br><span class="line">		.put(<span class="string">"http.enabled"</span>, <span class="keyword">false</span>)</span><br><span class="line">		.put(<span class="string">"path.home"</span>, <span class="string">"D:\\log\\elasticsearch-1.7.1"</span>)</span><br><span class="line">		;</span><br><span class="line"></span><br><span class="line">Node node = nodeBuilder()</span><br><span class="line">		.local(<span class="keyword">true</span>)</span><br><span class="line">		.settings(settings)</span><br><span class="line">		.node();</span><br><span class="line"></span><br><span class="line">Client client = node.client();</span><br></pre></td></tr></table></figure></p>
+<h2 id="传输客户端"><a href="#传输客户端" class="headerlink" title="传输客户端"></a>传输客户端</h2><p>更加轻量的传输客户端可以被用来向远程集群发送请求。他并不加入集群本身，而是把请求转发到集群中的节点。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Settings settings = Settings.settingsBuilder().build();</span><br><span class="line"></span><br><span class="line">Client client = TransportClient.builder().settings(settings).build()</span><br><span class="line">		.addTransportAddress(<span class="keyword">new</span> InetSocketTransportAddress(InetAddress.getByName(<span class="string">"localhost"</span>), <span class="number">9300</span>));</span><br></pre></td></tr></table></figure></p>
+<h2 id="索引数据"><a href="#索引数据" class="headerlink" title="索引数据"></a>索引数据</h2><p>我们可以使用客户端提供的<code>prepareIndex()</code>方法索引数据,也就是向Elasticsearch添加数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IndexResponse indexResponse = client.prepareIndex(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>).setSource(jsonObject.toJSONString()).execute().actionGet();</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"IndexResponse : "</span> + indexResponse.getId());</span><br><span class="line">System.out.println(<span class="string">"IndexResponse : "</span> + indexResponse.getIndex());</span><br><span class="line">System.out.println(<span class="string">"IndexResponse : "</span> + indexResponse.getType());</span><br><span class="line">System.out.println(<span class="string">"IndexResponse : "</span> + indexResponse.getVersion());</span><br></pre></td></tr></table></figure></p>
+<p>结果输出为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IndexResponse : <span class="number">01</span></span><br><span class="line">IndexResponse : idx01</span><br><span class="line">IndexResponse : type01</span><br><span class="line">IndexResponse : <span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<p>idx01为索引值, type01为类型值, 01为id. 当我们重复的使用这三个值向 Elasticsearch 索引数据时是合法的,但是我们会得不到不同的版本号，也就是最好的输出的那个值</p>
+<h2 id="检索数据"><a href="#检索数据" class="headerlink" title="检索数据"></a>检索数据</h2><p>我们可以使用客户端提供的<code>prepareGet()</code>方法检索数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GetResponse getResponse = client.prepareGet(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>)</span><br><span class="line">				.setOperationThreaded(<span class="keyword">false</span>)</span><br><span class="line">				.get();</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getId());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getIndex());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getType());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getVersion());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getSourceAsString());</span><br></pre></td></tr></table></figure></p>
+<p>结果输出为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GetResponse : <span class="number">01</span></span><br><span class="line">GetResponse : idx01</span><br><span class="line">GetResponse : type01</span><br><span class="line">GetResponse : <span class="number">4</span></span><br><span class="line">GetResponse : &#123;<span class="string">"age"</span>:<span class="string">"19"</span>,<span class="string">"name"</span>:<span class="string">"Tom"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>setOperationThreaded()</code>这个方法是用来设置, 操作是否在其他的线程中执行, 设置为true就是在其他的线程中执行. 注意该操作仍然是异步执行的.</p>
+</blockquote>
+<h4 id="检索多个数据"><a href="#检索多个数据" class="headerlink" title="检索多个数据"></a>检索多个数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">client.prepareMultiGet()</span><br><span class="line">	  .add(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>)</span><br><span class="line">	  .add(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"02"</span>)</span><br><span class="line">	  .get()</span><br><span class="line">	  .forEach(response -&gt; System.out.println(JSON.toJSONString(response, <span class="keyword">true</span>)));</span><br></pre></td></tr></table></figure>
+<h2 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">DeleteResponse deleteResponse = client.prepareDelete(<span class="string">"idx01"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>).get();</span><br><span class="line">System.out.println(<span class="string">"DeleteResponse : "</span> + deleteResponse.getId());</span><br><span class="line">System.out.println(<span class="string">"DeleteResponse : "</span> + deleteResponse.getIndex());</span><br><span class="line">System.out.println(<span class="string">"DeleteResponse : "</span> + deleteResponse.getType());</span><br><span class="line">System.out.println(<span class="string">"DeleteResponse : "</span> + deleteResponse.getVersion());</span><br></pre></td></tr></table></figure>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DeleteResponse : <span class="number">01</span></span><br><span class="line">DeleteResponse : idx01</span><br><span class="line">DeleteResponse : type01</span><br><span class="line">DeleteResponse : <span class="number">6</span></span><br></pre></td></tr></table></figure></p>
+<p>如果我们再检索一边数据的话,会得到结果<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GetResponse : <span class="number">01</span></span><br><span class="line">GetResponse : idx01</span><br><span class="line">GetResponse : type01</span><br><span class="line">GetResponse : -<span class="number">1</span></span><br><span class="line">GetResponse : <span class="keyword">null</span></span><br></pre></td></tr></table></figure></p>
+<p>说明那个文档已经被删除了</p>
+<h2 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h2><p>我们可以使用<code>UpdateRequest</code>或者<code>prepareUpdate()</code>方法来对数据进行更新<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">UpdateRequest updateRequest = <span class="keyword">new</span> UpdateRequest();</span><br><span class="line">updateRequest.index(<span class="string">"idx01"</span>);</span><br><span class="line">updateRequest.type(<span class="string">"type01"</span>);</span><br><span class="line">updateRequest.id(<span class="string">"01"</span>);</span><br><span class="line">updateRequest.doc(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">client.update(updateRequest).get();</span><br></pre></td></tr></table></figure></p>
+<p>当我们在通过<code>get</code>获取数据的时候,会发现数据已经发生了变化</p>
+<p>更新还有一个有用的功能,就是在更新的时候能实现如果有就更新,没有就插入<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx01"</span>)</span><br><span class="line">		.type(<span class="string">"type01"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line"></span><br><span class="line">UpdateRequest updateRequest = <span class="keyword">new</span> UpdateRequest()</span><br><span class="line">		.index(<span class="string">"idx01"</span>)</span><br><span class="line">		.type(<span class="string">"type02"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>)</span><br><span class="line">		.doc(jsonObject.toJSONString())</span><br><span class="line">		.upsert(indexRequest);</span><br><span class="line"></span><br><span class="line">client.update(updateRequest).get();</span><br></pre></td></tr></table></figure></p>
+<h2 id="批处理"><a href="#批处理" class="headerlink" title="批处理"></a>批处理</h2><p>elasticsearch内置的客户端中还有批处理功能,但是批处理只支持增删改, 不支持查询的功能<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">BulkRequestBuilder bulkRequest = client.prepareBulk();</span><br><span class="line"></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">"name"</span>, <span class="string">"Tom"</span>);</span><br><span class="line">jsonObject.put(<span class="string">"age"</span>, <span class="string">"18"</span>);</span><br><span class="line"></span><br><span class="line">IndexRequest indexRequest = <span class="keyword">new</span> IndexRequest()</span><br><span class="line">		.index(<span class="string">"idx02"</span>)</span><br><span class="line">		.type(<span class="string">"type01"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>)</span><br><span class="line">		.source(jsonObject.toJSONString());</span><br><span class="line">bulkRequest.add(indexRequest);</span><br><span class="line"></span><br><span class="line">UpdateRequest updateRequest = <span class="keyword">new</span> UpdateRequest()</span><br><span class="line">		.index(<span class="string">"idx02"</span>)</span><br><span class="line">		.type(<span class="string">"type01"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>)</span><br><span class="line">		.doc(jsonObject.toJSONString());</span><br><span class="line">bulkRequest.add(updateRequest);</span><br><span class="line"></span><br><span class="line">DeleteRequest deleteRequest = <span class="keyword">new</span> DeleteRequest()</span><br><span class="line">		.index(<span class="string">"idx02"</span>)</span><br><span class="line">		.type(<span class="string">"type01"</span>)</span><br><span class="line">		.id(<span class="string">"01"</span>);</span><br><span class="line">bulkRequest.add(deleteRequest);</span><br><span class="line">BulkResponse bulkResponse = bulkRequest.get();</span><br><span class="line">bulkResponse.forEach(response -&gt; System.out.println(response.getId()));</span><br><span class="line"></span><br><span class="line">GetResponse getResponse = client.prepareGet(<span class="string">"idx02"</span>, <span class="string">"type01"</span>, <span class="string">"01"</span>)</span><br><span class="line">		.setOperationThreaded(<span class="keyword">false</span>)</span><br><span class="line">		.get();</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getId());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getIndex());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getType());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getVersion());</span><br><span class="line">System.out.println(<span class="string">"GetResponse : "</span> + getResponse.getSourceAsString());</span><br></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/日志工具/">日志工具</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/18/日志工具/Elasticsearch 基本操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/18/日志工具/Elasticsearch 基本操作/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1421,6 +1331,104 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/08/网络/数据链路层/" title="数据链路层" itemprop="url">数据链路层</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>物理层负责将实际设备过程中的电压的高低,光的闪灭,电波的强弱新号等与二进制0,1进行转换. 而数据链路层则负责将0,1数据集合成帧块后进行传输.</p>
+<ul>
+<li>数据链路段： 数据链路段是指一个被分割的网络.</li>
+</ul>
+<p>网络拓扑： 网络的连接与构成的形态被称为网络拓扑，有以下分类</p>
+<ul>
+<li><a href="">总线型</a></li>
+<li><a href="">环形</a></li>
+<li><a href="">星形</a></li>
+<li><a href="">混合型</a></li>
+</ul>
+<h3 id="MAC地址"><a href="#MAC地址" class="headerlink" title="MAC地址"></a>MAC地址</h3><p>MAC地址用于识别数据链路中的互联的节点. 不论哪种数据链路的网络(以太网,FDDI,ATM,无线LAN),他们彼此的MAC地址都是唯一的.MAC地址总长46位,一般用16进制表示.</p>
+<ul>
+<li>第一位:单播地址(0)/多播地址(1)</li>
+<li>第2位: 全局地址(0)/本地地址(1)</li>
+<li>第3-24位:由IEEE管理并保证各厂家不重复</li>
+<li>第25-48位:由厂商管理并保证产品之间不重复</li>
+</ul>
+<h3 id="通信介质"><a href="#通信介质" class="headerlink" title="通信介质"></a>通信介质</h3><p>从通信介质的使用方法来看,网络可以分为共享型介质和非共享型介质:</p>
+<p>共享介质型网络：是指多个设备共享一个通信介质的网络.在这种方式下多个设备使用同一个载波信道进行发送和接受,基本上采用半双工通信.</p>
+<ul>
+<li>半双工: 在数据链路上同时只发送或者只接受的通信方式</li>
+<li>全双工: 在数据链路上同时即可以发送也可以接受数据的通信方式</li>
+</ul>
+<p>共享介质型网络有俩种访问控制方式:</p>
+<ul>
+<li>争用方式:</li>
+<li>令牌传递方式:</li>
+</ul>
+<p>非共享介质:</p>
+<h3 id="分组交换"><a href="#分组交换" class="headerlink" title="分组交换"></a>分组交换</h3><p>目前网络通信方式大致分为俩种：</p>
+<ul>
+<li>电路交换：这种交换技术主要应用于过去的电话网. 在这种交换中,交换机主要负责数据的中转处理. 计算机之间的连接是通过交换机连接上的,当俩个计算机通信之后,他们俩者就一直占用着这条线路</li>
+<li>分组交换：由于电路交换, 俩台计算机会一直占用某条线路,当有新的计算机连接到这条线路上想要通信时,就只能等当前通信的计算机断开连接,于是噩梦就这样产生了.</li>
+</ul>
+<p>在这种情况下,人们提出了分组交换. 即将数据进行分组成多个数据包,每个分组首部已经写入了发送端和接收端地址,然后当分组交换机(路由器)接收到分组数据之后,会将其缓存到自己的缓冲区中,然后再按照先进先出的规则将数据转发出去. 这样在同一条线路上也可以为多个计算机服务.</p>
+<p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/net/%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2.jpg" alt="分组交换"></p>
+<h3 id="VLAN"><a href="#VLAN" class="headerlink" title="VLAN"></a>VLAN</h3><h3 id="网桥"><a href="#网桥" class="headerlink" title="网桥"></a>网桥</h3><p>网桥交换机在数据链路层上连接俩个网络设备. 它使用物理地址(MAC地址)进行处理.</p>
+<p>网桥能够识别数据链路中的数据帧,并将其缓存起来重新生成新的数据帧发送给另一个网段. 得益于网桥的缓存功能,使得网桥能够连接传输速率完全不同的数据链路,并且不限制连接网段的个数.</p>
+<h2 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h2><h3 id="中继器"><a href="#中继器" class="headerlink" title="中继器"></a>中继器</h3><p>由电缆传过来的电信号或者光信号经由中继器的波形调整和放大再传给另一个电缆</p>
+<p>一般中继器俩段连接的是相同的媒介,但有的中继器也可以连接不同的媒介. 例如同轴电缆与光缆之间的信号调整,但是即使在这种情况下,TA也只是单纯的负责信号在0和1比特流之间的替换,并不判断数据是否有错误. 同时它只负责将电信号转换为光信号,因此不能在不同的媒介之间进行转发.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/TCP-IP/">TCP IP</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/08/网络/数据链路层/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/08/网络/数据链路层/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/08/网络/网络层/" title="网络层" itemprop="url">网络层</a>
   </h1>
   <p class="article-author">By
@@ -1530,104 +1538,6 @@
 	
 	  	<span></span>
 		<a href="/2015/11/08/网络/网络层/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/08/网络/网络层/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/11/08/网络/数据链路层/" title="数据链路层" itemprop="url">数据链路层</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>物理层负责将实际设备过程中的电压的高低,光的闪灭,电波的强弱新号等与二进制0,1进行转换. 而数据链路层则负责将0,1数据集合成帧块后进行传输.</p>
-<ul>
-<li>数据链路段： 数据链路段是指一个被分割的网络.</li>
-</ul>
-<p>网络拓扑： 网络的连接与构成的形态被称为网络拓扑，有以下分类</p>
-<ul>
-<li><a href="">总线型</a></li>
-<li><a href="">环形</a></li>
-<li><a href="">星形</a></li>
-<li><a href="">混合型</a></li>
-</ul>
-<h3 id="MAC地址"><a href="#MAC地址" class="headerlink" title="MAC地址"></a>MAC地址</h3><p>MAC地址用于识别数据链路中的互联的节点. 不论哪种数据链路的网络(以太网,FDDI,ATM,无线LAN),他们彼此的MAC地址都是唯一的.MAC地址总长46位,一般用16进制表示.</p>
-<ul>
-<li>第一位:单播地址(0)/多播地址(1)</li>
-<li>第2位: 全局地址(0)/本地地址(1)</li>
-<li>第3-24位:由IEEE管理并保证各厂家不重复</li>
-<li>第25-48位:由厂商管理并保证产品之间不重复</li>
-</ul>
-<h3 id="通信介质"><a href="#通信介质" class="headerlink" title="通信介质"></a>通信介质</h3><p>从通信介质的使用方法来看,网络可以分为共享型介质和非共享型介质:</p>
-<p>共享介质型网络：是指多个设备共享一个通信介质的网络.在这种方式下多个设备使用同一个载波信道进行发送和接受,基本上采用半双工通信.</p>
-<ul>
-<li>半双工: 在数据链路上同时只发送或者只接受的通信方式</li>
-<li>全双工: 在数据链路上同时即可以发送也可以接受数据的通信方式</li>
-</ul>
-<p>共享介质型网络有俩种访问控制方式:</p>
-<ul>
-<li>争用方式:</li>
-<li>令牌传递方式:</li>
-</ul>
-<p>非共享介质:</p>
-<h3 id="分组交换"><a href="#分组交换" class="headerlink" title="分组交换"></a>分组交换</h3><p>目前网络通信方式大致分为俩种：</p>
-<ul>
-<li>电路交换：这种交换技术主要应用于过去的电话网. 在这种交换中,交换机主要负责数据的中转处理. 计算机之间的连接是通过交换机连接上的,当俩个计算机通信之后,他们俩者就一直占用着这条线路</li>
-<li>分组交换：由于电路交换, 俩台计算机会一直占用某条线路,当有新的计算机连接到这条线路上想要通信时,就只能等当前通信的计算机断开连接,于是噩梦就这样产生了.</li>
-</ul>
-<p>在这种情况下,人们提出了分组交换. 即将数据进行分组成多个数据包,每个分组首部已经写入了发送端和接收端地址,然后当分组交换机(路由器)接收到分组数据之后,会将其缓存到自己的缓冲区中,然后再按照先进先出的规则将数据转发出去. 这样在同一条线路上也可以为多个计算机服务.</p>
-<p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/net/%E5%88%86%E7%BB%84%E4%BA%A4%E6%8D%A2.jpg" alt="分组交换"></p>
-<h3 id="VLAN"><a href="#VLAN" class="headerlink" title="VLAN"></a>VLAN</h3><h3 id="网桥"><a href="#网桥" class="headerlink" title="网桥"></a>网桥</h3><p>网桥交换机在数据链路层上连接俩个网络设备. 它使用物理地址(MAC地址)进行处理.</p>
-<p>网桥能够识别数据链路中的数据帧,并将其缓存起来重新生成新的数据帧发送给另一个网段. 得益于网桥的缓存功能,使得网桥能够连接传输速率完全不同的数据链路,并且不限制连接网段的个数.</p>
-<h2 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h2><h3 id="中继器"><a href="#中继器" class="headerlink" title="中继器"></a>中继器</h3><p>由电缆传过来的电信号或者光信号经由中继器的波形调整和放大再传给另一个电缆</p>
-<p>一般中继器俩段连接的是相同的媒介,但有的中继器也可以连接不同的媒介. 例如同轴电缆与光缆之间的信号调整,但是即使在这种情况下,TA也只是单纯的负责信号在0和1比特流之间的替换,并不判断数据是否有错误. 同时它只负责将电信号转换为光信号,因此不能在不同的媒介之间进行转发.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/TCP-IP/">TCP IP</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/11/08/网络/数据链路层/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/08/网络/数据链路层/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
