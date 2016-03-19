@@ -404,3 +404,5 @@ protected int doReadMessages(List<Object> buf) throws Exception {
    }
 ```
 这个方法调用主要是由`NioMessageUnsafe`的`read()`方法调用
+
+## NioSocketChannel

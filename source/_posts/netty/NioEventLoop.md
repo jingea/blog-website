@@ -124,7 +124,6 @@ protected SingleThreadEventExecutor(
                 }
             }
         });
-
         taskQueue = newTaskQueue();
     }
 
@@ -154,6 +153,7 @@ protected abstract void run();
                 cancelledKeys = 0;
                 needsToSelectAgain = false;
                 final int ioRatio = this.ioRatio;
+                // 如果当前线程是百分百执行的话, 则直接处理所有的任务
                 if (ioRatio == 100) {
                     processSelectedKeys();
                     runAllTasks();
@@ -166,6 +166,7 @@ protected abstract void run();
                     runAllTasks(ioTime * (100 - ioRatio) / ioRatio);
                 }
 
+                //
                 if (isShuttingDown()) {
                     closeAll();
                     if (confirmShutdown()) {
@@ -173,16 +174,103 @@ protected abstract void run();
                     }
                 }
             } catch (Throwable t) {
-                logger.warn("Unexpected exception in the selector loop.", t);
-
-                // Prevent possible consecutive immediate failures that lead to
-                // excessive CPU consumption.
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // Ignore.
-                }
             }
         }
     }
 ```
+上面的`run()`就是不断的轮询当前`NioEventLoop`里是否有任务. 然后处理Selector上已经就绪的Channel和任务队列里的任务.
+然后我们接着往下看`processSelectedKeys()`方法
+```java
+private void processSelectedKeys() {
+       if (selectedKeys != null) {
+           processSelectedKeysOptimized(selectedKeys.flip());
+       } else {
+           processSelectedKeysPlain(selector.selectedKeys());
+       }
+   }
+
+
+   private void processSelectedKeysPlain(Set<SelectionKey> selectedKeys) {
+           // check if the set is empty and if so just return to not create garbage by
+           // creating a new Iterator every time even if there is nothing to process.
+           // See https://github.com/netty/netty/issues/597
+           if (selectedKeys.isEmpty()) {
+               return;
+           }
+
+           Iterator<SelectionKey> i = selectedKeys.iterator();
+           for (;;) {
+               final SelectionKey k = i.next();
+               // 取出SelectionKey的附件
+               final Object a = k.attachment();
+               i.remove();
+
+               if (a instanceof AbstractNioChannel) {
+                 // a有可能是NioServerSocketChannel或者NioSocketChannel
+                   processSelectedKey(k, (AbstractNioChannel) a);
+               } else {
+                   // 如果a不是Channel的话, 那就是NioTask了
+                   @SuppressWarnings("unchecked")
+                   NioTask<SelectableChannel> task = (NioTask<SelectableChannel>) a;
+                   processSelectedKey(k, task);
+               }
+
+               if (!i.hasNext()) {
+                   break;
+               }
+
+               if (needsToSelectAgain) {
+                   selectAgain();
+                   selectedKeys = selector.selectedKeys();
+
+                   // Create the iterator again to avoid ConcurrentModificationException
+                   if (selectedKeys.isEmpty()) {
+                       break;
+                   } else {
+                       i = selectedKeys.iterator();
+                   }
+               }
+           }
+       }
+```
+然后咱们接着往下看对Channel的处理
+```java
+private static void processSelectedKey(SelectionKey k, AbstractNioChannel ch) {
+    final NioUnsafe unsafe = ch.unsafe();
+
+    try {
+        int readyOps = k.readyOps();
+        // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead
+        // to a spin loop
+        if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
+            // 如果是读事件或者连接的事件,则直接调用read方法
+            unsafe.read();
+            if (!ch.isOpen()) {
+                // Connection already closed - no need to handle write.
+                return;
+            }
+        }
+        if ((readyOps & SelectionKey.OP_WRITE) != 0) {
+            // 如果是写操作位, 则说明有半包消息没有写完, 需要继续
+            ch.unsafe().forceFlush();
+        }
+        if ((readyOps & SelectionKey.OP_CONNECT) != 0) {
+            // remove OP_CONNECT as otherwise Selector.select(..) will always return without blocking
+            // See https://github.com/netty/netty/issues/924
+            int ops = k.interestOps();
+            ops &= ~SelectionKey.OP_CONNECT;
+            k.interestOps(ops);
+
+            unsafe.finishConnect();
+        }
+    } catch (CancelledKeyException ignored) {
+        unsafe.close(unsafe.voidPromise());
+    }
+}
+```
+
+> 在unsafe的多态这我们要多说一些, 我们知道NioEventLoop内部处理的Channel其实是有俩种类型的, 一个是`NioServerScoketChannel`一个是`NioSocketChannel`.
+>
+> `NioServerSocketChannel`继承自`AbstractNioMessageChannel`, 而这个父类实现了一个`NioMessageUnsafe`的一个内部类, 这个内部类的`read()`方法会调用Channel里的`doReadMessage()`方法. 父类的`doReadMessage()`方法是由子类来具体实现的. 在`NioServerScoketChannel`中是生成了一个`NioSocketChannel`的列表作为消息返回, 然后再让`ServerBootstrapAcceptor`将`NioSocketChannel`绑定到从Reactor上.
+>
+> `NioSocketChannel`继承自`AbstractNioByteChannel`, 这个父类实现了一个`NioByteUnsafe`, 这个Unsafe就负责创建ByteBuf, 接受真正的网络数据了.

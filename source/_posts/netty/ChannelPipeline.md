@@ -2,6 +2,8 @@ category: Netty
 date: 2016-02-02
 title: Netty ChannelPipeline
 ---
+
+## 简介
 `ChannelPipeline`是一个`ChannelHandler`的集合, 用于处理或者截断`Channel`的`inbound events`和`outbound operations`. `ChannelPipeline`是[Intercepting Filter](http://www.oracle.com/technetwork/java/interceptingfilter-142169.html)的一个高级实现, 它保证了用户对事件处理的完整控制权以及确保了`ChannelHandler`在pipeline中的运行方式.
 
 每当创建一个`Channel`的时候, 都会创建出一个对应的`ChannelPipeline`, 也就是说每个`Channel`都有其自己的`ChannelPipeline`
@@ -52,41 +54,7 @@ title: Netty ChannelPipeline
 
 > 底层的`SocketChannel#read()`方法读取`ByteBuf`, 然后由IO线程`NioEventLoop`调用`ChannelPipeline#fireChannelRead()`方法,将消息`ByteBuf`传递到`ChannelPipeline`中.
 
-
-在下面的示例中我们分别在pipeline中添加俩个`inbound`handler和俩个`outbound`handler.(以`Inbound`开头的类名表示为一个`inbound`handler, 以`Outbound`开头的类名表示为一个`outbound`handler.)
-```java
-ChannelPipeline p = ...;
-p.addLast("1", new InboundHandlerA());
-p.addLast("2", new InboundHandlerB());
-p.addLast("3", new OutboundHandlerA());
-p.addLast("4", new OutboundHandlerB());
-p.addLast("5", new InboundOutboundHandlerX());
-```
-
-事件在`inbound`handler中的执行过程是`1, 2, 3, 4, 5`. 事件在`outbound`handler中的执行过程是`5, 4, 3, 2, 1`.
-
-但是在真实的执行过程中, 由于`3, 4`并没有实现`ChannelInboundHandler`, 因此inbound流程中真正执行的handler只有`1, 2, 5`. 而由于`1, 2`并没有实现`ChannelOutboundHandler`因此在outbound流程中真正执行的handler只有`5, 4, 3`.
-如果`5`都实现了`ChannelInboundHandler`和`ChannelOutboundHandler`, 那么事件的执行顺序分别是`125`和`543`.
-
-也许你已经注意到了, 在handler中不得不调用`ChannelHandlerContext`的事件传播方法, 将事件传递给下一个handler. 下面的是
-能够触发`inbound`事件的方法
-* `ChannelHandlerContext#fireChannelRegistered()` Channel注册事件
-* `ChannelHandlerContext#fireChannelActive()` TCP链路建立成功,Channel激活事件
-* `ChannelHandlerContext#fireChannelRead(Object var1)` 读事件
-* `ChannelHandlerContext#fireChannelReadComplete()` 读操作完成通知事件
-* `ChannelHandlerContext#fireExceptionCaught(Throwable var1)` 异常通知事件
-* `ChannelHandlerContext#fireUserEventTriggered(Object var1)` 用户自定义事件
-* `ChannelHandlerContext#fireChannelWritabilityChanged()` Channel的可写状态变化通知事件
-* `ChannelHandlerContext#fireChannelInactive()` TCP链路关闭, 链路不可用通知事件
-触发`outbound`事件的方法有
-* `ChannelHandlerContext#bind(SocketAddress var1, ChannelPromise var2)` 绑定本地地址事件
-* `ChannelHandlerContext#connect(SocketAddress var1, ChannelPromise var2)` 连接服务端事件
-* `ChannelHandlerContext#flush()` 刷新事件
-* `ChannelHandlerContext#read()` 读事件
-* `ChannelHandlerContext#disconnect(ChannelPromise var1)` 断开连接事件
-* `ChannelHandlerContext#close(ChannelPromise var1)` 关闭当前Channel事件
-
-
+## handler实现
 下面我们看一下如何自己实现一个inbound和outbound handler
 ```java
 public class MyInboundHandler extends ChannelInboundHandlerAdapter {
@@ -131,6 +99,7 @@ pipeline.addLast(group, "handler", new MyBusinessLogicHandler());
 
 我们可以在任何时间在`ChannelPipeline`上添加或者移除`ChannelHandler`, 因为`ChannelPipeline`是线程安全的. 例如我们可以在线上环境中因为业务原因动态的添加或者移除handler.
 
+## 源码剖析
 下来我们看一下`ChannelPipeline`的默认实现`DefaultChannelPipeline`里的数据结构
 ```java
 final AbstractChannel channel;
@@ -190,87 +159,36 @@ private void callHandlerAdded0(final ChannelHandlerContext ctx) {
 ```
 我们看到最终的时候在`ChannelHandler`里添加了`ChannelHandlerContext`.
 
-接下来我们看一下`ChannelPipeline`的read数据流程, 由于Netty的真实读写IO操作是封装了Unsafe里，因此我们直接在`NioMessageUnsafe`中看看
+## 事件触发
+在下面的示例中我们分别在pipeline中添加俩个`inbound`handler和俩个`outbound`handler.(以`Inbound`开头的类名表示为一个`inbound`handler, 以`Outbound`开头的类名表示为一个`outbound`handler.)
 ```java
-...
-private final List<Object> readBuf = new ArrayList<Object>();
-public void read() {
-...
-int localRead = doReadMessages(readBuf);
-int size = readBuf.size();
-for (int i = 0; i < size; i ++) {
-	// 在此处ChannelPipeline开始触发读流程
-    pipeline.fireChannelRead(readBuf.get(i));
-}
-...
-}
+ChannelPipeline p = ...;
+p.addLast("1", new InboundHandlerA());
+p.addLast("2", new InboundHandlerB());
+p.addLast("3", new OutboundHandlerA());
+p.addLast("4", new OutboundHandlerB());
+p.addLast("5", new InboundOutboundHandlerX());
 ```
-我们进一步看一下`fireChannelRead()`方法
-```java
-@Override
-public ChannelPipeline fireChannelRead(Object msg) {
-	// 调用ChannelHandlerContext类型的head的fireChannelRead()方法, 然后就通过链式调用开始在一系列ChannelHandler里执行
-    head.fireChannelRead(msg);
-    return this;
-}
-```
-看`ChannelHandlerContext#fireChannelRead`实现
-```java
-@Override
-public ChannelHandlerContext fireChannelRead(final Object msg) {
-    if (msg == null) {
-        throw new NullPointerException("msg");
-    }
 
-	// 因为我们只是在读取数据, 因此只找到Inbound的ChannelHandler就可以了
-    final DefaultChannelHandlerContext next = findContextInbound();
-    EventExecutor executor = next.executor();
-    if (executor.inEventLoop()) {
-        next.invokeChannelRead(msg);
-    } else {
-		// 提交任务, 让任务在EventLoop中执行
-        executor.execute(new OneTimeTask() {
-            @Override
-            public void run() {
-                next.invokeChannelRead(msg);
-            }
-        });
-    }
-    return this;
-}
+事件在`inbound`handler中的执行过程是`1, 2, 3, 4, 5`. 事件在`outbound`handler中的执行过程是`5, 4, 3, 2, 1`.
 
-private DefaultChannelHandlerContext findContextInbound() {
-    DefaultChannelHandlerContext ctx = this;
-    do {
-        ctx = ctx.next;
-    } while (!ctx.inbound);
-    return ctx;
-}
+但是在真实的执行过程中, 由于`3, 4`并没有实现`ChannelInboundHandler`, 因此inbound流程中真正执行的handler只有`1, 2, 5`. 而由于`1, 2`并没有实现`ChannelOutboundHandler`因此在outbound流程中真正执行的handler只有`5, 4, 3`.
+如果`5`都实现了`ChannelInboundHandler`和`ChannelOutboundHandler`, 那么事件的执行顺序分别是`125`和`543`.
 
-private void invokeChannelRead(Object msg) {
-    try {
-		// 调用handler里的真实的读取channelRead方法
-        ((ChannelInboundHandler) handler).channelRead(this, msg);
-    } catch (Throwable t) {
-        notifyHandlerException(t);
-    }
-}
-```
-那么`Object msg` 是什么呢？`doReadMessages(readBuf)`我们看一下这个方法实现(由于Unsafe是Channel的内部类, 因此Unsafe实际上调用的也是Channel的doReadMessages). 我们直接看一下的实现
-```java
-@Override
-protected int doReadMessages(List<Object> buf) throws Exception {
-    SocketChannel ch = javaChannel().accept();
-
-    try {
-        if (ch != null) {
-            buf.add(new NioSocketChannel(this, ch));
-            return 1;
-        }
-    } catch (Throwable t) {
-
-    }
-
-    return 0;
-}
-```
+也许你已经注意到了, 在handler中不得不调用`ChannelHandlerContext`的事件传播方法, 将事件传递给下一个handler. 下面的是
+能够触发`inbound`事件的方法
+* `ChannelHandlerContext#fireChannelRegistered()` Channel注册事件
+* `ChannelHandlerContext#fireChannelActive()` TCP链路建立成功,Channel激活事件
+* `ChannelHandlerContext#fireChannelRead(Object var1)` 读事件
+* `ChannelHandlerContext#fireChannelReadComplete()` 读操作完成通知事件
+* `ChannelHandlerContext#fireExceptionCaught(Throwable var1)` 异常通知事件
+* `ChannelHandlerContext#fireUserEventTriggered(Object var1)` 用户自定义事件
+* `ChannelHandlerContext#fireChannelWritabilityChanged()` Channel的可写状态变化通知事件
+* `ChannelHandlerContext#fireChannelInactive()` TCP链路关闭, 链路不可用通知事件
+触发`outbound`事件的方法有
+* `ChannelHandlerContext#bind(SocketAddress var1, ChannelPromise var2)` 绑定本地地址事件
+* `ChannelHandlerContext#connect(SocketAddress var1, ChannelPromise var2)` 连接服务端事件
+* `ChannelHandlerContext#flush()` 刷新事件
+* `ChannelHandlerContext#read()` 读事件
+* `ChannelHandlerContext#disconnect(ChannelPromise var1)` 断开连接事件
+* `ChannelHandlerContext#close(ChannelPromise var1)` 关闭当前Channel事件
