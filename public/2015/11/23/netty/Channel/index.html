@@ -32,7 +32,7 @@ localAddress() : 当前Channel的本地绑定地址
 eventLoop() : 当前Channel注册到的EventLoop对象
 config() : 获取当前C">
 <meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/netty/channel.jpg">
-<meta property="og:updated_time" content="2016-03-15T14:38:26.000Z">
+<meta property="og:updated_time" content="2016-03-19T09:02:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty Channel">
 <meta name="twitter:description" content="Channel是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等.
@@ -114,7 +114,7 @@ config() : 获取当前C">
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractChannel"><span class="toc-number">1.</span> <span class="toc-text">AbstractChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioChannel"><span class="toc-number">2.</span> <span class="toc-text">AbstractNioChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioByteChannel"><span class="toc-number">3.</span> <span class="toc-text">AbstractNioByteChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioMessageChannel"><span class="toc-number">4.</span> <span class="toc-text">AbstractNioMessageChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioServerSocketChannel"><span class="toc-number">5.</span> <span class="toc-text">NioServerSocketChannel</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractChannel"><span class="toc-number">1.</span> <span class="toc-text">AbstractChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioChannel"><span class="toc-number">2.</span> <span class="toc-text">AbstractNioChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioByteChannel"><span class="toc-number">3.</span> <span class="toc-text">AbstractNioByteChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioMessageChannel"><span class="toc-number">4.</span> <span class="toc-text">AbstractNioMessageChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioServerSocketChannel"><span class="toc-number">5.</span> <span class="toc-text">NioServerSocketChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioSocketChannel"><span class="toc-number">6.</span> <span class="toc-text">NioSocketChannel</span></a></li></ol>
 		
 		</div>
 		
@@ -178,7 +178,7 @@ config() : 获取当前C">
 <h2 id="AbstractNioMessageChannel"><a href="#AbstractNioMessageChannel" class="headerlink" title="AbstractNioMessageChannel"></a>AbstractNioMessageChannel</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doWrite</span><span class="params">(ChannelOutboundBuffer in)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">       <span class="keyword">final</span> SelectionKey key = selectionKey();</span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span> interestOps = key.interestOps();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">           <span class="comment">// 从环形队列中获取一条消息</span></span><br><span class="line">           Object msg = in.current();</span><br><span class="line">           <span class="keyword">if</span> (msg == <span class="keyword">null</span>) &#123;</span><br><span class="line">               <span class="comment">// 消息为空,说明所有的消息都已经发送出去了. TODO</span></span><br><span class="line">               <span class="keyword">if</span> ((interestOps &amp; SelectionKey.OP_WRITE) != <span class="number">0</span>) &#123;</span><br><span class="line">                   key.interestOps(interestOps &amp; ~SelectionKey.OP_WRITE);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               <span class="keyword">boolean</span> done = <span class="keyword">false</span>;</span><br><span class="line">               <span class="keyword">for</span> (<span class="keyword">int</span> i = config().getWriteSpinCount() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">                   <span class="comment">// 在配置的最大次数下,将msg发送出去</span></span><br><span class="line">                   <span class="keyword">if</span> (doWriteMessage(msg, in)) &#123;</span><br><span class="line">                       done = <span class="keyword">true</span>;</span><br><span class="line">                       <span class="keyword">break</span>;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line"></span><br><span class="line">               <span class="keyword">if</span> (done) &#123;</span><br><span class="line">                   <span class="comment">// 如果消息发送完毕累, 则将其从环形数组中删除</span></span><br><span class="line">                   in.remove();</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   <span class="comment">//  如果没有发送完毕, 则设置SelectionKey为写操作位, 让多路复用器不断的轮训channel,发送剩余的数据</span></span><br><span class="line">                   <span class="keyword">if</span> ((interestOps &amp; SelectionKey.OP_WRITE) == <span class="number">0</span>) &#123;</span><br><span class="line">                       key.interestOps(interestOps | SelectionKey.OP_WRITE);</span><br><span class="line">                   &#125;</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">               <span class="keyword">if</span> (continueOnWriteError()) &#123;</span><br><span class="line">                   in.remove(e);</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   <span class="keyword">throw</span> e;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 <h2 id="NioServerSocketChannel"><a href="#NioServerSocketChannel" class="headerlink" title="NioServerSocketChannel"></a>NioServerSocketChannel</h2><p><code>NioServerSocketChannel</code>的主要作用是接受客户端连接<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">doReadMessages</span><span class="params">(List&lt;Object&gt; buf)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">       SocketChannel ch = javaChannel().accept();</span><br><span class="line"></span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="keyword">if</span> (ch != <span class="keyword">null</span>) &#123;</span><br><span class="line">               buf.add(<span class="keyword">new</span> NioSocketChannel(<span class="keyword">this</span>, ch));</span><br><span class="line">               <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">           logger.warn(<span class="string">"Failed to create a new channel from an accepted socket."</span>, t);</span><br><span class="line"></span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               ch.close();</span><br><span class="line">           &#125; <span class="keyword">catch</span> (Throwable t2) &#123;</span><br><span class="line">               logger.warn(<span class="string">"Failed to close a socket."</span>, t2);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
 <p>这个方法调用主要是由<code>NioMessageUnsafe</code>的<code>read()</code>方法调用</p>
-  
+<h2 id="NioSocketChannel"><a href="#NioSocketChannel" class="headerlink" title="NioSocketChannel"></a>NioSocketChannel</h2>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -218,9 +218,9 @@ config() : 获取当前C">
 
 
 <div class="next">
-<a href="/2015/11/21/JavaSE/JavaIO 序列化/"  title="JAVA 序列化">
+<a href="/2015/11/21/JavaSE/JavaIO 内存IO/"  title="JAVA 内存IO">
  <strong>下一篇：</strong><br/> 
- <span>JAVA 序列化
+ <span>JAVA 内存IO
 </span>
 </a>
 </div>
@@ -239,7 +239,7 @@ config() : 获取当前C">
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractChannel"><span class="toc-number">1.</span> <span class="toc-text">AbstractChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioChannel"><span class="toc-number">2.</span> <span class="toc-text">AbstractNioChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioByteChannel"><span class="toc-number">3.</span> <span class="toc-text">AbstractNioByteChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioMessageChannel"><span class="toc-number">4.</span> <span class="toc-text">AbstractNioMessageChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioServerSocketChannel"><span class="toc-number">5.</span> <span class="toc-text">NioServerSocketChannel</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractChannel"><span class="toc-number">1.</span> <span class="toc-text">AbstractChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioChannel"><span class="toc-number">2.</span> <span class="toc-text">AbstractNioChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioByteChannel"><span class="toc-number">3.</span> <span class="toc-text">AbstractNioByteChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioMessageChannel"><span class="toc-number">4.</span> <span class="toc-text">AbstractNioMessageChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioServerSocketChannel"><span class="toc-number">5.</span> <span class="toc-text">NioServerSocketChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioSocketChannel"><span class="toc-number">6.</span> <span class="toc-text">NioSocketChannel</span></a></li></ol>
  
   </div>
 
@@ -295,7 +295,7 @@ config() : 获取当前C">
 		  
 		
 		  
-			<li><a href="/categories/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
 		  
 		
 		  
@@ -335,7 +335,7 @@ config() : 获取当前C">
 		  
 		
 		  
-			<li><a href="/categories/linux/" title="linux">linux<sup>6</sup></a></li>
+			<li><a href="/categories/linux/" title="linux">linux<sup>7</sup></a></li>
 		  
 		
 		  
@@ -351,7 +351,7 @@ config() : 获取当前C">
 		  
 		
 		  
-			<li><a href="/categories/python2/" title="python2">python2<sup>10</sup></a></li>
+			<li><a href="/categories/python2/" title="python2">python2<sup>11</sup></a></li>
 		  
 		
 		  
@@ -367,7 +367,7 @@ config() : 获取当前C">
 		  
 		
 		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>2</sup></a></li>
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>3</sup></a></li>
 		  
 		
 		  
