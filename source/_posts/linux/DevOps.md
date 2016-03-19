@@ -13,12 +13,6 @@ title: DevOps
 ### [keen.io](https://keen.io)
 用来追踪时间段发生的一系列事件
 
-### [iTerm2](http://www.iterm2.com/)
-命令行工具 
-
-### [Oh My Zsh](http://ohmyz.sh/)
-mac下的shell,你懂得
-
 ### CakeBrew
 图形化管理homebrew的工具
 
@@ -98,5 +92,3 @@ FTP客户端软件,同样适用于Mac
 
 ### Supervisor
 [Supervisor的安装与使用入门](http://www.tuicool.com/articles/Ejm2u2)
-
-

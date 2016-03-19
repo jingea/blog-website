@@ -308,7 +308,7 @@ protected void doWrite(ChannelOutboundBuffer in) throws Exception {
 `doWrite()`方法是由`AbstractUnsafe`的`flush()`调用的. 从`AbstractUnsafe`我们可以看到每个Unsafe类都有一个`ChannelOutboundBuffer`属性.
 
 下来我们看一下`incompleteWrite()`方法实现
-```
+```java
 protected final void incompleteWrite(boolean setOpWrite) {
         // 从doWrite()方法中可以看到只有当TCP缓冲区已满的时候才会设置写半包操作
         if (setOpWrite) {
