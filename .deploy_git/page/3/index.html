@@ -45,7 +45,7 @@
 				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -59,7 +59,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
 						</form>
 					
 					</li>
@@ -83,7 +83,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-23</time>
+    <time datetime="2015-12-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-23</time>
     
   </p>
 </header>
@@ -136,20 +136,22 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/23/http客户端/Feign/" title="Feign 初探" itemprop="url">Feign 初探</a>
+      <a href="/2015/12/23/序列化工具/fastjson/" title="fastjson" itemprop="url">fastjson</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-23</time>
+    <time datetime="2015-12-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-23</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>RESTful 服务的HTTP客户端连接器<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> feign.gson.GsonDecoder;</span><br><span class="line"><span class="keyword">import</span> feign.gson.GsonEncoder;</span><br><span class="line"><span class="keyword">import</span> feign.httpclient.ApacheHttpClient;</span><br><span class="line"><span class="keyword">import</span> feign.slf4j.Slf4jLogger;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.<span class="built_in">List</span>;</span><br><span class="line"></span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	public <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="built_in">String</span>... args) &#123;</span><br><span class="line">		GitHub github = Feign.builder()</span><br><span class="line">				.decoder(<span class="keyword">new</span> GsonDecoder())		<span class="comment">// 设置解码器, 我们使用Gson将应答解析成Contributor</span></span><br><span class="line">				.encoder(<span class="keyword">new</span> GsonEncoder())</span><br><span class="line">				.logger(<span class="keyword">new</span> Slf4jLogger())		<span class="comment">// 设置日志</span></span><br><span class="line">				.client(<span class="keyword">new</span> ApacheHttpClient())		<span class="comment">// 我们使用Apache的HttpClient组件</span></span><br><span class="line">				.target(GitHub.<span class="keyword">class</span>, <span class="string">"https://api.github.com"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">List</span>&lt;Contributor&gt; contributors = github.contributors(<span class="string">"netflix"</span>, <span class="string">"feign"</span>);</span><br><span class="line">		System.out.println(<span class="string">"netflix :"</span> + contributors.size());</span><br><span class="line"></span><br><span class="line">		<span class="built_in">List</span>&lt;Contributor&gt; contributors1 = github.contributors(<span class="string">"ming15"</span>, <span class="string">"VertxServer"</span>);</span><br><span class="line">		System.out.println(<span class="string">"ming15 :"</span> + contributors1.size());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">GitHub</span> </span>&#123;</span><br><span class="line">	<span class="meta">@RequestLine</span>(<span class="string">"GET /repos/&#123;owner&#125;/&#123;repo&#125;/contributors"</span>)</span><br><span class="line">	<span class="meta">@Headers</span>(<span class="string">"Content-Type: application/json"</span>)</span><br><span class="line">	<span class="built_in">List</span>&lt;Contributor&gt; contributors(<span class="meta">@Param</span>(<span class="string">"owner"</span>) <span class="built_in">String</span> owner, <span class="meta">@Param</span>(<span class="string">"repo"</span>) <span class="built_in">String</span> repo);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Contributor</span> </span>&#123;</span><br><span class="line">	<span class="built_in">String</span> login;</span><br><span class="line">	<span class="built_in">int</span> contributions;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <h2 id="读取数组"><a href="#读取数组" class="headerlink" title="读取数组"></a>读取数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Reward&gt; rewards = JSONArray.parseArray(jsonStr, Reward.class);</span><br></pre></td></tr></table></figure>
+<h2 id="json和protobuf相互转换"><a href="#json和protobuf相互转换" class="headerlink" title="json和protobuf相互转换"></a>json和protobuf相互转换</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.googlecode.protobuf-java-format<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protobuf-java-format<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String string = JsonFormat.printToString(mail);</span><br></pre></td></tr></table></figure></p>
 
         
         
@@ -162,7 +164,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/http客户端/">http客户端</a>
+  <a class="article-category-link" href="/categories/序列化工具/">序列化工具</a>
 </div>
 
 
@@ -174,7 +176,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/12/23/http客户端/Feign/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/http客户端/Feign/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/12/23/序列化工具/fastjson/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/23/序列化工具/fastjson/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -201,7 +203,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-15T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-16</time>
+    <time datetime="2015-12-15T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-16</time>
     
   </p>
 </header>
@@ -307,7 +309,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-15</time>
+    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-15</time>
     
   </p>
 </header>
@@ -365,7 +367,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-15</time>
+    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-15</time>
     
   </p>
 </header>
@@ -427,7 +429,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-15</time>
+    <time datetime="2015-12-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-15</time>
     
   </p>
 </header>
@@ -494,7 +496,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-08T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-09</time>
+    <time datetime="2015-12-08T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-09</time>
     
   </p>
 </header>
@@ -562,7 +564,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-08T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-09</time>
+    <time datetime="2015-12-08T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-09</time>
     
   </p>
 </header>
@@ -642,72 +644,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/08/guice/Scopes/" title="Guice Scopes" itemprop="url">Guice Scopes</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>默认的,Guice每次在<code>getInstance()</code>的时候都会返回一个新的对象.</p>
-<h2 id="Singleton"><a href="#Singleton" class="headerlink" title="Singleton"></a>Singleton</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		A b1 = injector.getInstance(A.class);</span><br><span class="line">		A b2 = injector.getInstance(A.class);</span><br><span class="line">		System.out.println(b1 == b2);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> A a;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		requestStaticInjection(Print.class);</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我们使用<code>Singleton</code>注解可以得到一个单例类</p>
-<p>另外,我们还可以在绑定的时候进行设置<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class).in(Singleton.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="web-Scope"><a href="#web-Scope" class="headerlink" title="web Scope"></a>web Scope</h2><p>Guice还对web应用提供了其他俩种socpe</p>
-<ul>
-<li>SessionScoped</li>
-<li>RequestScoped</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/guice/">guice</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/12/08/guice/Scopes/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Scopes/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/12/08/guice/多种实现绑定/" title="Guice 多种实现绑定" itemprop="url">Guice 多种实现绑定</a>
   </h1>
   <p class="article-author">By
@@ -715,7 +651,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
     
   </p>
 </header>
@@ -774,7 +710,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
     
   </p>
 </header>
@@ -840,6 +776,72 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/12/08/guice/Scopes/" title="Guice Scopes" itemprop="url">Guice Scopes</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>默认的,Guice每次在<code>getInstance()</code>的时候都会返回一个新的对象.</p>
+<h2 id="Singleton"><a href="#Singleton" class="headerlink" title="Singleton"></a>Singleton</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		A b1 = injector.getInstance(A.class);</span><br><span class="line">		A b2 = injector.getInstance(A.class);</span><br><span class="line">		System.out.println(b1 == b2);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Inject</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> A a;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		requestStaticInjection(Print.class);</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用<code>Singleton</code>注解可以得到一个单例类</p>
+<p>另外,我们还可以在绑定的时候进行设置<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class).in(Singleton.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="web-Scope"><a href="#web-Scope" class="headerlink" title="web Scope"></a>web Scope</h2><p>Guice还对web应用提供了其他俩种socpe</p>
+<ul>
+<li>SessionScoped</li>
+<li>RequestScoped</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/guice/">guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/08/guice/Scopes/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Scopes/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/12/08/guice/Provides Methods/" title="Guice Provides Methods" itemprop="url">Guice Provides Methods</a>
   </h1>
   <p class="article-author">By
@@ -847,7 +849,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
     
   </p>
 </header>
@@ -914,7 +916,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
     
   </p>
 </header>
@@ -966,69 +968,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/08/guice/Linked Bindings/" title="Guice Linked Bindings" itemprop="url">Guice Linked Bindings</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		A c = injector.getInstance(C.class);</span><br><span class="line">		c.print();</span><br><span class="line">		A b = injector.getInstance(B.class);</span><br><span class="line">		b.print();</span><br><span class="line">		A a = injector.getInstance(A.class);</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"c"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">		bind(B.class).to(C.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码的最后调用结果都是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c</span><br><span class="line">c</span><br><span class="line">c</span><br></pre></td></tr></table></figure></p>
-<p>这就是Guice的Linked Bindings, 当binding形成一条链之后,会以最终的绑定为最终绑定</p>
-<blockquote>
-<p>注意绑定关系必须是继承关系</p>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/guice/">guice</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/12/08/guice/Linked Bindings/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Linked Bindings/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/12/08/guice/Injections/" title="Guice Injections" itemprop="url">Guice Injections</a>
   </h1>
   <p class="article-author">By
@@ -1036,7 +975,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> Published 2015-12-08</time>
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
     
   </p>
 </header>
@@ -1097,6 +1036,69 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/12/08/guice/Linked Bindings/" title="Guice Linked Bindings" itemprop="url">Guice Linked Bindings</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-12-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestLinkedBindings</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Injector injector = Guice.createInjector(<span class="keyword">new</span> ABCModule());</span><br><span class="line">		A c = injector.getInstance(C.class);</span><br><span class="line">		c.print();</span><br><span class="line">		A b = injector.getInstance(B.class);</span><br><span class="line">		b.print();</span><br><span class="line">		A a = injector.getInstance(A.class);</span><br><span class="line">		a.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">implements</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"B"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">B</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"c"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ABCModule</span> <span class="keyword">extends</span> <span class="title">AbstractModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		bind(A.class).to(B.class);</span><br><span class="line">		bind(B.class).to(C.class);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码的最后调用结果都是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c</span><br><span class="line">c</span><br><span class="line">c</span><br></pre></td></tr></table></figure></p>
+<p>这就是Guice的Linked Bindings, 当binding形成一条链之后,会以最终的绑定为最终绑定</p>
+<blockquote>
+<p>注意绑定关系必须是继承关系</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/guice/">guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/12/08/guice/Linked Bindings/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/08/guice/Linked Bindings/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/24/mycat/mycat/" title="Mycat配置文件" itemprop="url">Mycat配置文件</a>
   </h1>
   <p class="article-author">By
@@ -1104,7 +1106,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-24</time>
+    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-24</time>
     
   </p>
 </header>
@@ -1278,7 +1280,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-24</time>
+    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-24</time>
     
   </p>
 </header>
@@ -1369,7 +1371,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-23</time>
+    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-23</time>
     
   </p>
 </header>
@@ -1486,7 +1488,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-23</time>
+    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-23</time>
     
   </p>
 </header>
@@ -1561,122 +1563,32 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/21/JavaSE/JavaIO 文件操作/" title="JAVA 文件操作" itemprop="url">JAVA 文件操作</a>
+      <a href="/2015/11/21/JavaSE/JavaIO 内存IO/" title="JAVA 内存IO" itemprop="url">JAVA 内存IO</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    <time datetime="2015-11-20T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-21</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h2 id="FileFilter"><a href="#FileFilter" class="headerlink" title="FileFilter"></a>FileFilter</h2><p>检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FileFilter fileFilter = pathname -&gt; &#123;</span><br><span class="line">	System.out.println(pathname.getPath());</span><br><span class="line">	<span class="keyword">return</span> pathname.isFile();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">fileFilter.accept(<span class="keyword">new</span> File(<span class="string">"D:\\hazelcast-documentation-3.5.3.pdf"</span>));</span><br></pre></td></tr></table></figure></p>
-<h2 id="FilenameFilter"><a href="#FilenameFilter" class="headerlink" title="FilenameFilter"></a>FilenameFilter</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FilenameFilter filenameFilter = (dir, name) -&gt; &#123;</span><br><span class="line">	System.out.println(dir);</span><br><span class="line">	System.out.println(name);</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">filenameFilter.accept(<span class="keyword">new</span> File(<span class="string">"D"</span>), <span class="string">"hazelcast-documentation-3.5.3.pdf"</span>);</span><br></pre></td></tr></table></figure>
-<h2 id="File"><a href="#File" class="headerlink" title="File"></a>File</h2><p>File对象给我们提供了以下的功能</p>
-<ul>
-<li>删除文件</li>
-<li>文件重命名</li>
-<li>创建新的文件</li>
-<li>创建新的文件</li>
-<li>获取文件的最后修改时间</li>
-<li>设置文件只读</li>
-<li>设置文件可写</li>
-<li>获取文件长度(总字节数)</li>
-<li>获取文件路径</li>
-<li>获取绝对文件路径</li>
-<li>文件是否隐藏</li>
-<li>获得剩余磁盘空间？</li>
-<li>拷贝文件夹</li>
-<li>遍历文件夹</li>
-<li>检查文件夹是否为空？</li>
-</ul>
-<h2 id="FileDescriptor"><a href="#FileDescriptor" class="headerlink" title="FileDescriptor"></a>FileDescriptor</h2><p>用来表示开放文件、开放套接字等.当FileDescriptor表示某文件时,我们可以通俗的将FileDescriptor看成是该文件.但是,我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作,则需要新创建FileDescriptor对应的FileOutputStream,再对文件进行操作.</p>
-<p>类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件,打开的套接字或其他来源或字节的接收器.以下是关于FileDescriptor要点：</p>
-<ol>
-<li>主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它.</li>
-<li>应用程序不应创建自己的文件描述符.</li>
-</ol>
-<h2 id="FileLock"><a href="#FileLock" class="headerlink" title="FileLock"></a>FileLock</h2><p>锁定文件</p>
-<p>ByteBuffer.allocate()语句改为ByteBuffer.allocateDirect().用来证实性能之间的差异,但是请注意程序的启动时间是否发生了明显的改变.</p>
-<p>修改{@link JGrep}让其使java的nio内存映射文件.</p>
-<p>JDK1.4引入了文件加锁机制,它允许我们同步访问某个作为共享资源的文件.不过,竞争同一文件的两个线程可能在不同的Java虚拟机上;或者一个是Java线程,另一个是操作系统中其他的某个本地线程.</p>
-<p>文件锁对其他的操作系统进程是可见的,因为Java的文件加锁直接映射到了本地操作系统的加锁工具.通过对FileChannel调用tryLock()或lock(),就可以获得整个文件的FileLock.</p>
-<p>(SocketChannel、DatagramChannel和 ServerSocketChannel不需要加锁,因为他们是从单进程实体继承而来;我们通常不在两个进程之间共享网络socket.)</p>
-<p>tryLock()是非阻塞式的,它设法获取锁,但是如果不能获得(当其他一些进程已经持有相同的锁,并且不共享时),它将直接从方法调用返回.lock()则是阻塞式的,它要阻塞进程直至锁可以获得,或调用lock()的线程中断,或调用lock()的通道关闭.</p>
-<p>使用FileLock.release()可以释放锁.</p>
-<p>也可以使用此方法对文件上锁tryLock()或者lock()其中,加锁的区域由size-position决定.第三个参数指定是否是共享锁.</p>
-<p>尽管无参数的加锁方法将根据文件尺寸的变化而变化,但是具有固定尺寸的锁不随文件尺寸的变化而变化.如果你获得了某一区域(从position到position+size)上的锁,当文件增大超出position+size时,那么在position+size之外的部分不会被锁定.无参数的加锁方法会对 整个文件进行加锁,甚至文件变大后也是如此.</p>
-<p>对独占锁或者共享锁的支持必须由底层的操作系统提供.如果操作系统不支持共享锁并为每一个请求都创建一个锁,那么它就会使用独占锁.</p>
-<p>锁的 类型(共享或独占)可以通过FileLock.isShared()进行查询.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"file.txt"</span>);</span><br><span class="line">FileLock fl = fos.getChannel().tryLock();</span><br><span class="line"><span class="keyword">if</span> (fl != <span class="keyword">null</span>) &#123;</span><br><span class="line">	System.out.println(<span class="string">"Locked File"</span>);</span><br><span class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</span><br><span class="line">	fl.release();</span><br><span class="line">	System.out.println(<span class="string">"Released Lock"</span>);</span><br><span class="line">&#125;</span><br><span class="line">fos.close()</span><br></pre></td></tr></table></figure></p>
-<h2 id="DirectoryStream"><a href="#DirectoryStream" class="headerlink" title="DirectoryStream"></a>DirectoryStream</h2><p>遍历某个文件夹内的所有文件,但是不会遍历子目录. 也就是这会遍历当前路径中的所有文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DirectoryStream&lt;Path&gt; paths = Files.newDirectoryStream(Paths.get(<span class="string">"E:"</span>));</span><br><span class="line">paths.forEach(path -&gt; &#123;</span><br><span class="line">	System.out.println(path.getFileName());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>SecureDirectoryStream</p>
-</blockquote>
-<h2 id="FileVisitor"><a href="#FileVisitor" class="headerlink" title="FileVisitor"></a>FileVisitor</h2><p>遍历某个文件夹内的所有文件接口.</p>
-<p><code>SimpleFileVisitor</code>实现了这个接口. 与<code>DirectoryStream</code> 不同的是,这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SimpleFileVisitor visitor = <span class="keyword">new</span> SimpleFileVisitor&lt;Path&gt;() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> FileVisitResult <span class="title">visitFile</span><span class="params">(Path file, BasicFileAttributes attrs)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				System.out.println(file.getFileName());</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.visitFile(file, attrs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		Files.walkFileTree(Paths.get(<span class="string">"E:"</span>), visitor);</span><br></pre></td></tr></table></figure></p>
-<h2 id="监控文件变化"><a href="#监控文件变化" class="headerlink" title="监控文件变化"></a>监控文件变化</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WatchService service = FileSystems.getDefault().newWatchService();</span><br><span class="line">		Paths.get(<span class="string">"D:/"</span>).register(service,</span><br><span class="line">		ENTRY_CREATE,</span><br><span class="line">		ENTRY_DELETE,</span><br><span class="line">		ENTRY_MODIFY);</span><br><span class="line"></span><br><span class="line">WatchKey watchKey = service.take();</span><br><span class="line"></span><br><span class="line">watchKey.pollEvents().stream().forEach(watchEvent -&gt; &#123;</span><br><span class="line">	System.out.println(watchEvent.context() + <span class="string">"  "</span> + watchEvent.kind());</span><br><span class="line">&#125;);</span><br><span class="line">watchKey.reset();</span><br></pre></td></tr></table></figure>
-<h2 id="Files"><a href="#Files" class="headerlink" title="Files"></a>Files</h2><ol>
-<li>copy</li>
-<li>createDirectories</li>
-<li>createDirectory</li>
-<li>createFile</li>
-<li>createLink</li>
-<li>createSymbolicLink</li>
-<li>createTempDirectory</li>
-<li>createTempFile</li>
-<li>delete</li>
-<li>deleteIfExists</li>
-<li>exists</li>
-<li>getAttribute</li>
-<li>getFileAttributeView</li>
-<li>getFileStore</li>
-<li>getLastModifiedTime</li>
-<li>getOwner</li>
-<li>getPosixFilePermissions</li>
-<li>isDirectory</li>
-<li>isExecutable</li>
-<li>isHidden</li>
-<li>isReadable</li>
-<li>isRegularFile</li>
-<li>isSameFile</li>
-<li>isSymbolicLink</li>
-<li>isWritable</li>
-<li>move</li>
-<li>newBufferedReader</li>
-<li>newBufferedWriter</li>
-<li>newByteChannel</li>
-<li>newDirectoryStream</li>
-<li>newInputStream</li>
-<li>newOutputStream</li>
-<li>notExists</li>
-<li>probeContentType</li>
-<li>readAllBytes</li>
-<li>readAllLines</li>
-<li>readAttributes</li>
-<li>readSymbolicLink</li>
-<li>setAttribute</li>
-<li>setLastModifiedTime</li>
-<li>setOwner</li>
-<li>setPosixFilePermissions</li>
-<li>walkFileTree</li>
-<li>write</li>
-</ol>
-<h2 id="FileStore"><a href="#FileStore" class="headerlink" title="FileStore"></a>FileStore</h2><p>代表了真正的存储设备,提供了设备的详尽信息</p>
-<h2 id="FileSystems"><a href="#FileSystems" class="headerlink" title="FileSystems"></a>FileSystems</h2><ul>
-<li>FileSystems.getDefault() ：返回 JVM 默认的 FileSystem – 一般说来,也就是操作系统的默认文件系统</li>
-<li>FileSystems.getFileSystem(uri) ： 可以获取远程主机的FileSystem<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileSystem system = FileSystems.getDefault();</span><br><span class="line"><span class="comment">// 得到文件系统支持的属性视图列表</span></span><br><span class="line">Set&lt;String&gt; views = system.supportedFileAttributeViews();</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<blockquote>
-<p>FileSystem</p>
-</blockquote>
-<h2 id="Paths"><a href="#Paths" class="headerlink" title="Paths"></a>Paths</h2><blockquote>
-<p>Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件,但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据,因此在网络环境或在虚拟文件系统中,NIO.2 也完全适用.NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法</p>
-</blockquote>
+        <h2 id="ByteArrayInputStream"><a href="#ByteArrayInputStream" class="headerlink" title="ByteArrayInputStream"></a>ByteArrayInputStream</h2><p>从byte[]数组中读取数据到缓存中.可以将字节数组转化为输入流此类中的方法在关闭此流后仍可被调用，而不会产生任何 <code>IOException</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buff = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">try</span>(ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(buff)) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span>(in.available() != <span class="number">0</span>)</span><br><span class="line">		System.out.println(in.read());</span><br><span class="line"></span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="ByteArrayOutputStream"><a href="#ByteArrayOutputStream" class="headerlink" title="ByteArrayOutputStream"></a>ByteArrayOutputStream</h2><p>输出数据到byte[]数组里，可以捕获内存缓冲区的数据，转换成字节数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray()和 toString()获取数据。    关闭 <code>ByteArrayOutputStream</code>无效。此类中的方法在关闭此流后仍可被调用，而不会产生任何<code>IOException</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] buff = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">try</span>(ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream()) &#123;</span><br><span class="line">	out.write(buff);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">byte</span>[] byteArray = out.toByteArray();</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">byte</span> b : byteArray) &#123;</span><br><span class="line">		System.out.println(<span class="string">"flush before : "</span> + b);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	out.flush();</span><br><span class="line"></span><br><span class="line">	byteArray = out.toByteArray();</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">byte</span> b : byteArray) &#123;</span><br><span class="line">		System.out.println(<span class="string">"flush after : "</span> + b);</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="CharArrayReader"><a href="#CharArrayReader" class="headerlink" title="CharArrayReader"></a>CharArrayReader</h2><p>与ByteArrayInputStream对应。 支持mark和reset读取char[] 数组<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>[] array = &#123;<span class="string">'a'</span>, <span class="string">'z'</span>, <span class="string">'g'</span>&#125;;</span><br><span class="line"><span class="keyword">try</span>(CharArrayReader in = <span class="keyword">new</span> CharArrayReader(array)) &#123;</span><br><span class="line">	<span class="keyword">while</span>(in.ready())</span><br><span class="line">		System.out.println(in.read());</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="CharArrayWriter"><a href="#CharArrayWriter" class="headerlink" title="CharArrayWriter"></a>CharArrayWriter</h2><p>向内部char[] 缓冲区存储数据.  支持rest, 文件追加写操作, 支持string write<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>(CharArrayWriter out = <span class="keyword">new</span> CharArrayWriter()) &#123;</span><br><span class="line">	out.write(<span class="string">"TestChararray"</span>);</span><br><span class="line">	System.out.println(out.toString());</span><br><span class="line">	out.append(<span class="string">"test_"</span>);</span><br><span class="line">	System.out.println(out.toString());</span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="PushbackInputStream"><a href="#PushbackInputStream" class="headerlink" title="PushbackInputStream"></a>PushbackInputStream</h2><p>拥有一个PushBack缓冲区，从PushbackInputStream读出数据后，只要PushBack缓冲区没有满，就可以使用unread()将数据推回流的前端。</p>
+<h2 id="PushbackReader"><a href="#PushbackReader" class="headerlink" title="PushbackReader"></a>PushbackReader</h2><p>允许将字符推回到流的字符流 reader。当程序调用推回输入流的unread()方法时，系统会把指定数组的内容推回到该缓冲区中，而推回输入流每次调用read()方法时，总是先从推回缓冲区读取内容，只有完全读取了推回缓冲区里的内容后，但是还没有装满read()所需要的数组时才会从原输入流中读取<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (</span><br><span class="line"><span class="comment">// 创建一个PushbackReader对象，指定推回缓冲区的长度为64</span></span><br><span class="line">PushbackReader pr = <span class="keyword">new</span> PushbackReader(<span class="keyword">new</span> FileReader(<span class="string">"PushBackTest.java"</span>), <span class="number">64</span>);</span><br><span class="line"><span class="keyword">char</span>[] buf = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">32</span>];</span><br><span class="line"><span class="comment">// 用以保存上次读取字符串的内容</span></span><br><span class="line">String lastContent = <span class="string">""</span>;</span><br><span class="line"><span class="keyword">int</span> hasRead = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 循环读取文件内容</span></span><br><span class="line"><span class="keyword">while</span> ((hasRead = pr.read(buf)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">	<span class="comment">// 将读取的内容转化为字符串</span></span><br><span class="line">	String content = <span class="keyword">new</span> String(buf, <span class="number">0</span>, hasRead);</span><br><span class="line">	<span class="keyword">int</span> targetIndex = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 将上次读取的字符串和本次读取的字符串拼接起来</span></span><br><span class="line">	<span class="comment">// 查看是否包含目标字符串，</span></span><br><span class="line">	<span class="comment">// 如果包含目标字符串</span></span><br><span class="line">	<span class="keyword">if</span> ((targetIndex = (lastContent + content)</span><br><span class="line">			.indexOf(<span class="string">"new PushbackReader"</span>)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">// 将本次的内容和上次的内容一起推回缓冲区</span></span><br><span class="line">		pr.unread((lastContent + content).toCharArray());</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 重现定义一个长度为targetIndex的char类型的数组</span></span><br><span class="line">		<span class="keyword">if</span> (targetIndex &gt; <span class="number">32</span>) &#123;</span><br><span class="line">			buf = <span class="keyword">new</span> <span class="keyword">char</span>[targetIndex];</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 再次读取指定长度的内容，即目标字符串之前的内容</span></span><br><span class="line">		pr.read(buf, <span class="number">0</span>, targetIndex);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 答应读取指定长度的内容</span></span><br><span class="line">		System.out.println(<span class="keyword">new</span> String(buf, <span class="number">0</span>, targetIndex));</span><br><span class="line">		System.exit(<span class="number">0</span>);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 打印上次读取的内容</span></span><br><span class="line">		System.out.println(lastContent);</span><br><span class="line">		<span class="comment">// 将本次读取的内容设置为上次读取的内容</span></span><br><span class="line">		lastContent = content;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="PipedReader"><a href="#PipedReader" class="headerlink" title="PipedReader"></a>PipedReader</h2><p>PipedWriter 是字符管道输出流,可以通过管道进行线程间的通讯。</p>
+<h2 id="PipedWriter"><a href="#PipedWriter" class="headerlink" title="PipedWriter"></a>PipedWriter</h2><p>PipedReader 是字符管道输入流,可以通过管道进行线程间的通讯。</p>
+<h2 id="PipedInputStream"><a href="#PipedInputStream" class="headerlink" title="PipedInputStream"></a>PipedInputStream</h2><p>管道输入流是让多线程可以通过管道进行线程间的通讯</p>
+<h2 id="PipedOutputStream"><a href="#PipedOutputStream" class="headerlink" title="PipedOutputStream"></a>PipedOutputStream</h2><p>管道输出流是让多线程可以通过管道进行线程间的通讯</p>
+<h2 id="SequenceInputStream"><a href="#SequenceInputStream" class="headerlink" title="SequenceInputStream"></a>SequenceInputStream</h2><p>从多个输入流中向程序读入数据。此时，可以使用合并流，将多个输入流合并成一个SequenceInputStream流对象。SequenceInputStream会将与之相连接的流集组合成一个输入流并从第一个输入流开始读取，直到到达文件末尾，接着从第二个输入流读取，依次类推，直到到达包含的最后一个输入流的文件末 尾为止。 合并流的作用是将多个源合并合一个源。</p>
+<h2 id="StreamTokenizer"><a href="#StreamTokenizer" class="headerlink" title="StreamTokenizer"></a>StreamTokenizer</h2><p>获取输入流并将其解析为“标记”，允许一次读取一个标记。解析过程由一个表和许多可以设置为各种状态的标志控制。该流的标记生成器可以识别标识符、数字、引用的字符串和各种注释样式等。</p>
+<h2 id="Console"><a href="#Console" class="headerlink" title="Console"></a>Console</h2><p>专用来访问基于字符的控制台设备。如果你的Java程序要与Windows下的cmd或者Linux下的Terminal交互，就可以用这个Java Console类java.io.Console 只能用在标准输入、输出流未被重定向的原始控制台中使用，在 Eclipse 或者其他 IDE 的控制台是用不了的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Console cons = System.console();</span><br><span class="line"><span class="keyword">if</span> (cons != <span class="keyword">null</span>) &#123;</span><br><span class="line">	<span class="comment">// -------------------------</span></span><br><span class="line">	PrintWriter printWriter = cons.writer();</span><br><span class="line">	printWriter.write(<span class="string">"input:"</span>);</span><br><span class="line">	cons.flush();</span><br><span class="line">	String str1 = cons.readLine();</span><br><span class="line">	cons.format(<span class="string">"%s"</span>, str1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
         
         
@@ -1701,7 +1613,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/11/21/JavaSE/JavaIO 文件操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 文件操作/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/11/21/JavaSE/JavaIO 内存IO/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/21/JavaSE/JavaIO 内存IO/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1721,15 +1633,15 @@
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github Card</p>
+<p class="asidetitle">Github 名片</p>
 <div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -1739,7 +1651,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分类</p>
 		<ul>
 		
 		  
@@ -1869,7 +1781,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">Links</p>
+  <p class="asidetitle">友情链接</p>
     <ul>
         
           <li>
@@ -1884,7 +1796,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
+<p class="asidetitle">豆瓣秀</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -1892,11 +1804,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
+  <p class="asidetitle">新浪微博</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -2070,7 +1982,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

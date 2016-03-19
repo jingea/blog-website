@@ -45,7 +45,7 @@
 				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -59,7 +59,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
 						</form>
 					
 					</li>
@@ -76,6 +76,80 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2014/04/08/groovy/groovy ant/" title="groovy ANT" itemprop="url">groovy ANT</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <blockquote>
+<p>本文是对Groovy部分官方文档进行了翻译</p>
+</blockquote>
+<p>虽然<code>Ant</code>只是一个构建工具, 但其提供了例如能够操作文件(包括zip文件), 拷贝, 资源管理等诸多实用功能. 然而如果你不喜欢使用<code>build.xml</code>文件或者<code>Jelly</code>脚本, 而是想要一种清晰简洁的构建方式, 那么你就可以试试使用Groovy编写构建过程.</p>
+<p>Groovy提供了一个辅助类<code>AntBuilder</code>帮忙编写Ant构建任务. 它看起来很像一个不带尖括号的Ant’s XML的简洁版本. 因此你可以在脚本中混合和匹配标记. Ant本身是一组Jar文件的集合. 将这组jar文件添加到你的classpath上, 你就可以在Groovy中轻轻松松的使用它们.</p>
+<p><code>AntBuilder</code>通过便捷的构造器语法直接暴露了Ant task. 下面是一个简单的示例, 它的功能是在标准输出上输出一条消息.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> ant = <span class="keyword">new</span> AntBuilder()          </span><br><span class="line">ant.echo(<span class="string">'hello from Ant!'</span>)</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>创建一个<code>AntBuilder</code>实例</li>
+<li>执行<code>AntBuilder</code>实例的echo task</li>
+</ol>
+<p>假设,现在你需要创建一个ZIP文件：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> ant = <span class="keyword">new</span> AntBuilder()</span><br><span class="line">ant.zip(<span class="string">destfile:</span> <span class="string">'sources.zip'</span>, <span class="string">basedir:</span> <span class="string">'src'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>在下面的例子中, 我们将展示在Groovy中使用传统的Ant 模式通过<code>AntBuilder</code>拷贝一组文件.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lets just call one task</span></span><br><span class="line">ant.echo(<span class="string">"hello"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// here is an example of a block of Ant inside GroovyMarkup</span></span><br><span class="line">ant.sequential &#123;</span><br><span class="line">    echo(<span class="string">"inside sequential"</span>)</span><br><span class="line">    <span class="keyword">def</span> myDir = <span class="string">"target/AntTest/"</span></span><br><span class="line">    mkdir(<span class="string">dir:</span> myDir)</span><br><span class="line">    copy(<span class="string">todir:</span> myDir) &#123;</span><br><span class="line">        fileset(<span class="string">dir:</span> <span class="string">"src/test"</span>) &#123;</span><br><span class="line">            include(<span class="string">name:</span> <span class="string">"**/*.groovy"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    echo(<span class="string">"done"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// now lets do some normal Groovy again</span></span><br><span class="line"><span class="keyword">def</span> file = <span class="keyword">new</span> File(ant.project.baseDir,<span class="string">"target/AntTest/groovy/util/AntTest.groovy"</span>)</span><br><span class="line"><span class="keyword">assert</span> file.exists()</span><br></pre></td></tr></table></figure></p>
+<p>下面的例子是遍历一组文件, 然后将每个文件根据特殊模式进行匹配.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lets create a scanner of filesets</span></span><br><span class="line"><span class="keyword">def</span> scanner = ant.fileScanner &#123;</span><br><span class="line">    fileset(<span class="string">dir:</span><span class="string">"src/test"</span>) &#123;</span><br><span class="line">        include(<span class="string">name:</span><span class="string">"**/Ant*.groovy"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// now lets iterate over</span></span><br><span class="line"><span class="keyword">def</span> found = <span class="literal">false</span></span><br><span class="line"><span class="keyword">for</span> (f <span class="keyword">in</span> scanner) &#123;</span><br><span class="line">    println(<span class="string">"Found file $f"</span>)</span><br><span class="line">    found = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">assert</span> f <span class="keyword">instanceof</span> File</span><br><span class="line">    <span class="keyword">assert</span> f.name.endsWith(<span class="string">".groovy"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">assert</span> found</span><br></pre></td></tr></table></figure></p>
+<p>Or execute a JUnit test:</p>
+<p>下面我们执行JUnit<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lets create a scanner of filesets</span></span><br><span class="line">ant.junit &#123;</span><br><span class="line">    test(<span class="string">name:</span><span class="string">'groovy.util.SomethingThatDoesNotExist'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在, 让我们的步子迈地更大一点：在Groovy中编译然后执行一个Java文件.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ant.echo(<span class="string">file:</span><span class="string">'Temp.java'</span>, <span class="string">'''</span><br><span class="line">    class Temp &#123;</span><br><span class="line">        public static void main(String[] args) &#123;</span><br><span class="line">            System.out.println("Hello");</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">'''</span>)</span><br><span class="line">ant.javac(<span class="string">srcdir:</span><span class="string">'.'</span>, <span class="string">includes:</span><span class="string">'Temp.java'</span>, <span class="string">fork:</span><span class="string">'true'</span>)</span><br><span class="line">ant.java(<span class="string">classpath:</span><span class="string">'.'</span>, <span class="string">classname:</span><span class="string">'Temp'</span>, <span class="string">fork:</span><span class="string">'true'</span>)</span><br><span class="line">ant.echo(<span class="string">'Done'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>需要提及的是, <code>AntBuilder</code>是内嵌于<code>Gradle</code>中的. 你可以像在Groovy中那样, 在<code>Gradle</code>使用<code>AntBuilder</code></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Groovy/">Groovy</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/04/08/groovy/groovy ant/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/04/08/groovy/groovy ant/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2014/04/08/groovy/groovy集合/" title="groovy集合" itemprop="url">groovy集合</a>
   </h1>
   <p class="article-author">By
@@ -83,7 +157,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> Published 2014-04-08</time>
+    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-04-08</time>
     
   </p>
 </header>
@@ -252,116 +326,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/04/08/groovy/groovy数字/" title="groovy数字" itemprop="url">groovy数字</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> Published 2014-04-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <blockquote>
-<p>本文是对Groovy部分官方文档进行了翻译</p>
-</blockquote>
-<p>Groovy支持多种不同的整数字面量和小数字面量 (通过依靠Java数字类型实现)</p>
-<h3 id="Integral-literals"><a href="#Integral-literals" class="headerlink" title="Integral literals"></a>Integral literals</h3><p>The integral literal types are the same as in Java:</p>
-<p>证书类型变量和Java里的一样</p>
-<ul>
-<li>byte</li>
-<li>char</li>
-<li>short</li>
-<li>int</li>
-<li>long</li>
-<li>java.lang.BigInteger</li>
-</ul>
-<p>You can create integral numbers of those types with the following declarations:</p>
-<p>可以通过以下声明方式创建整数类型变量<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// primitive types</span></span><br><span class="line"><span class="keyword">byte</span>  b = <span class="number">1</span></span><br><span class="line"><span class="keyword">char</span>  c = <span class="number">2</span></span><br><span class="line"><span class="keyword">short</span> s = <span class="number">3</span></span><br><span class="line"><span class="keyword">int</span>   i = <span class="number">4</span></span><br><span class="line"><span class="keyword">long</span>  l = <span class="number">5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// infinite precision</span></span><br><span class="line">BigInteger bi =  <span class="number">6</span></span><br></pre></td></tr></table></figure></p>
-<p>如果使用<code>def</code>关键字, 整型类型会发生改变：它会自动适配成能够存储number类型的类型<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> a = <span class="number">1</span></span><br><span class="line"><span class="keyword">assert</span> a <span class="keyword">instanceof</span> Integer</span><br><span class="line"></span><br><span class="line"><span class="comment">// Integer.MAX_VALUE</span></span><br><span class="line"><span class="keyword">def</span> b = <span class="number">2147483647</span></span><br><span class="line"><span class="keyword">assert</span> b <span class="keyword">instanceof</span> Integer</span><br><span class="line"></span><br><span class="line"><span class="comment">// Integer.MAX_VALUE + 1</span></span><br><span class="line"><span class="keyword">def</span> c = <span class="number">2147483648</span></span><br><span class="line"><span class="keyword">assert</span> c <span class="keyword">instanceof</span> Long</span><br><span class="line"></span><br><span class="line"><span class="comment">// Long.MAX_VALUE</span></span><br><span class="line"><span class="keyword">def</span> d = <span class="number">9223372036854775807</span></span><br><span class="line"><span class="keyword">assert</span> d <span class="keyword">instanceof</span> Long</span><br><span class="line"></span><br><span class="line"><span class="comment">// Long.MAX_VALUE + 1</span></span><br><span class="line"><span class="keyword">def</span> e = <span class="number">9223372036854775808</span></span><br><span class="line"><span class="keyword">assert</span> e <span class="keyword">instanceof</span> BigInteger</span><br></pre></td></tr></table></figure></p>
-<p>As well as for negative numbers:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> na = <span class="number">-1</span></span><br><span class="line"><span class="keyword">assert</span> na <span class="keyword">instanceof</span> Integer</span><br><span class="line"></span><br><span class="line"><span class="comment">// Integer.MIN_VALUE</span></span><br><span class="line"><span class="keyword">def</span> nb = <span class="number">-2147483648</span></span><br><span class="line"><span class="keyword">assert</span> nb <span class="keyword">instanceof</span> Integer</span><br><span class="line"></span><br><span class="line"><span class="comment">// Integer.MIN_VALUE - 1</span></span><br><span class="line"><span class="keyword">def</span> nc = <span class="number">-2147483649</span></span><br><span class="line"><span class="keyword">assert</span> nc <span class="keyword">instanceof</span> Long</span><br><span class="line"></span><br><span class="line"><span class="comment">// Long.MIN_VALUE</span></span><br><span class="line"><span class="keyword">def</span> nd = <span class="number">-9223372036854775808</span></span><br><span class="line"><span class="keyword">assert</span> nd <span class="keyword">instanceof</span> Long</span><br><span class="line"></span><br><span class="line"><span class="comment">// Long.MIN_VALUE - 1</span></span><br><span class="line"><span class="keyword">def</span> ne = <span class="number">-9223372036854775809</span></span><br><span class="line"><span class="keyword">assert</span> ne <span class="keyword">instanceof</span> BigInteger</span><br></pre></td></tr></table></figure></p>
-<h4 id="Alternative-non-base-10-representations"><a href="#Alternative-non-base-10-representations" class="headerlink" title="Alternative non-base 10 representations"></a>Alternative non-base 10 representations</h4><h5 id="Binary-literal"><a href="#Binary-literal" class="headerlink" title="Binary literal"></a>Binary literal</h5><p>在Java6以前和Groovy中,number类型可以是小数, 8进制和16进制. 但是在Java7和Groovy2中,可以使用0b前缀表示二进制数据.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> xInt = <span class="number">0b10101111</span></span><br><span class="line"><span class="keyword">assert</span> xInt == <span class="number">175</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">short</span> xShort = <span class="number">0b11001001</span></span><br><span class="line"><span class="keyword">assert</span> xShort == <span class="number">201</span> <span class="keyword">as</span> <span class="keyword">short</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span> xByte = <span class="number">0b11</span></span><br><span class="line"><span class="keyword">assert</span> xByte == <span class="number">3</span> <span class="keyword">as</span> <span class="keyword">byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">long</span> xLong = <span class="number">0b101101101101</span></span><br><span class="line"><span class="keyword">assert</span> xLong == <span class="number">2925</span>l</span><br><span class="line"></span><br><span class="line">BigInteger xBigInteger = <span class="number">0b111100100001</span></span><br><span class="line"><span class="keyword">assert</span> xBigInteger == <span class="number">3873</span>g</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> xNegativeInt = <span class="number">-0</span>b10101111</span><br><span class="line"><span class="keyword">assert</span> xNegativeInt == <span class="number">-175</span></span><br></pre></td></tr></table></figure></p>
-<h5 id="Octal-literal"><a href="#Octal-literal" class="headerlink" title="Octal literal"></a>Octal literal</h5><p>8进制的电话,只需要开头是0后跟要表示的8进制数即可.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> xInt = <span class="number">077</span></span><br><span class="line"><span class="keyword">assert</span> xInt == <span class="number">63</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">short</span> xShort = <span class="number">011</span></span><br><span class="line"><span class="keyword">assert</span> xShort == <span class="number">9</span> <span class="keyword">as</span> <span class="keyword">short</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span> xByte = <span class="number">032</span></span><br><span class="line"><span class="keyword">assert</span> xByte == <span class="number">26</span> <span class="keyword">as</span> <span class="keyword">byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">long</span> xLong = <span class="number">0246</span></span><br><span class="line"><span class="keyword">assert</span> xLong == <span class="number">166</span>l</span><br><span class="line"></span><br><span class="line">BigInteger xBigInteger = <span class="number">01111</span></span><br><span class="line"><span class="keyword">assert</span> xBigInteger == <span class="number">585</span>g</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> xNegativeInt = <span class="number">-077</span></span><br><span class="line"><span class="keyword">assert</span> xNegativeInt == <span class="number">-63</span></span><br></pre></td></tr></table></figure></p>
-<h5 id="Hexadecimal-literal"><a href="#Hexadecimal-literal" class="headerlink" title="Hexadecimal literal"></a>Hexadecimal literal</h5><p>Hexadecimal numbers are specified in the typical format of 0x followed by hex digits.</p>
-<p>16进制的电话,只需要开头是0x后跟要表示的16进制数即可.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> xInt = <span class="number">0x77</span></span><br><span class="line"><span class="keyword">assert</span> xInt == <span class="number">119</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">short</span> xShort = <span class="number">0xaa</span></span><br><span class="line"><span class="keyword">assert</span> xShort == <span class="number">170</span> <span class="keyword">as</span> <span class="keyword">short</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span> xByte = <span class="number">0x3a</span></span><br><span class="line"><span class="keyword">assert</span> xByte == <span class="number">58</span> <span class="keyword">as</span> <span class="keyword">byte</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">long</span> xLong = <span class="number">0xffff</span></span><br><span class="line"><span class="keyword">assert</span> xLong == <span class="number">65535</span>l</span><br><span class="line"></span><br><span class="line">BigInteger xBigInteger = <span class="number">0xaaaa</span></span><br><span class="line"><span class="keyword">assert</span> xBigInteger == <span class="number">43690</span>g</span><br><span class="line"></span><br><span class="line">Double xDouble = <span class="keyword">new</span> Double(<span class="string">'0x1.0p0'</span>)</span><br><span class="line"><span class="keyword">assert</span> xDouble == <span class="number">1.0</span>d</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> xNegativeInt = <span class="number">-0x77</span></span><br><span class="line"><span class="keyword">assert</span> xNegativeInt == <span class="number">-119</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="Decimal-literals"><a href="#Decimal-literals" class="headerlink" title="Decimal literals"></a>Decimal literals</h3><p>小数字面量和在java 里一样</p>
-<ul>
-<li>float</li>
-<li>double</li>
-<li>java.lang.BigDecimal</li>
-</ul>
-<p>可以通过下面的方式创建小数类型的number<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// primitive types</span></span><br><span class="line"><span class="keyword">float</span>  f = <span class="number">1.234</span></span><br><span class="line"><span class="keyword">double</span> d = <span class="number">2.345</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// infinite precision</span></span><br><span class="line">BigDecimal bd =  <span class="number">3.456</span></span><br></pre></td></tr></table></figure></p>
-<p>Decimals can use exponents, with the e or E exponent letter, followed by an optional sign, and a integral number representing the exponent:</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="number">1e3</span>  ==  <span class="number">1</span>_000<span class="number">.0</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">2E4</span>  == <span class="number">20</span>_000<span class="number">.0</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">3e+1</span> ==     <span class="number">30.0</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">4E-2</span> ==      <span class="number">0.04</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">5e-1</span> ==      <span class="number">0.5</span></span><br></pre></td></tr></table></figure>
-<p>Conveniently for exact decimal number calculations, Groovy choses java.lang.BigDecimal as its decimal number type. In addition, both float and double are supported, but require an explicit type declaration, type coercion or suffix. Even if BigDecimal is the default for decimal numbers, such literals are accepted in methods or closures taking float or double as parameter types.</p>
-<p>Decimal numbers can’t be represented using a binary, octal or hexadecimal representation.</p>
-<h3 id="Underscore-in-literals"><a href="#Underscore-in-literals" class="headerlink" title="Underscore in literals"></a>Underscore in literals</h3><p>When writing long literal numbers, it’s harder on the eye to figure out how some numbers are grouped together, for example with groups of thousands, of words, etc. By allowing you to place underscore in number literals, it’s easier to spot those groups:</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> creditCardNumber = <span class="number">1234</span>_5678_9012_3456L</span><br><span class="line"><span class="keyword">long</span> socialSecurityNumbers = <span class="number">999</span>_99_9999L</span><br><span class="line"><span class="keyword">double</span> monetaryAmount = <span class="number">12</span>_345_132<span class="number">.12</span></span><br><span class="line"><span class="keyword">long</span> hexBytes = <span class="number">0xFF</span>_EC_DE_5E</span><br><span class="line"><span class="keyword">long</span> hexWords = <span class="number">0xFFEC</span>_DE5E</span><br><span class="line"><span class="keyword">long</span> maxLong = <span class="number">0x7fff</span>_ffff_ffff_ffffL</span><br><span class="line"><span class="keyword">long</span> alsoMaxLong = <span class="number">9</span>_223_372_036_854_775_807L</span><br><span class="line"><span class="keyword">long</span> bytes = <span class="number">0b11010010</span>_01101001_10010100_10010010</span><br></pre></td></tr></table></figure>
-<h3 id="Number-type-suffixes"><a href="#Number-type-suffixes" class="headerlink" title="Number type suffixes"></a>Number type suffixes</h3><p>我们可以通过添加后缀的方式强制指定一个数字的类型(包含二进制,八进制和十六进制)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Type			Suffix</span><br><span class="line">BigInteger		G or g</span><br><span class="line">Long			L or l</span><br><span class="line">Integer			I or i</span><br><span class="line">BigDecimal		G or g</span><br><span class="line">Double			D or d</span><br><span class="line">Float			F or f</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">assert</span> <span class="number">42</span>I == <span class="keyword">new</span> Integer(<span class="string">'42'</span>)</span><br><span class="line"><span class="keyword">assert</span> <span class="number">42</span>i == <span class="keyword">new</span> Integer(<span class="string">'42'</span>) <span class="comment">// lowercase i more readable</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">123</span>L == <span class="keyword">new</span> Long(<span class="string">"123"</span>) <span class="comment">// uppercase L more readable</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">2147483648</span> == <span class="keyword">new</span> Long(<span class="string">'2147483648'</span>) <span class="comment">// Long type used, value too large for an Integer</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">456</span>G == <span class="keyword">new</span> BigInteger(<span class="string">'456'</span>)</span><br><span class="line"><span class="keyword">assert</span> <span class="number">456</span>g == <span class="keyword">new</span> BigInteger(<span class="string">'456'</span>)</span><br><span class="line"><span class="keyword">assert</span> <span class="number">123.45</span> == <span class="keyword">new</span> BigDecimal(<span class="string">'123.45'</span>) <span class="comment">// default BigDecimal type used</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">1.200065</span>D == <span class="keyword">new</span> Double(<span class="string">'1.200065'</span>)</span><br><span class="line"><span class="keyword">assert</span> <span class="number">1.234</span>F == <span class="keyword">new</span> Float(<span class="string">'1.234'</span>)</span><br><span class="line"><span class="keyword">assert</span> <span class="number">1.23E23</span>D == <span class="keyword">new</span> Double(<span class="string">'1.23E23'</span>)</span><br><span class="line"><span class="keyword">assert</span> <span class="number">0b1111</span>L.<span class="keyword">class</span> == Long <span class="comment">// binary</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">0xFF</span>i.<span class="keyword">class</span> == Integer <span class="comment">// hexadecimal</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">034</span>G.<span class="keyword">class</span> == BigInteger <span class="comment">// octal</span></span><br></pre></td></tr></table></figure>
-<h3 id="Math-operations"><a href="#Math-operations" class="headerlink" title="Math operations"></a>Math operations</h3><p>尽管接下来我们还要详细讨论操作符, 但是鉴于数学操作符的重要性, 现在我们还是要先讨论其行为和返回类型</p>
-<ul>
-<li>byte, char, short 和 int 之间的二进制计算返回的是int类型</li>
-<li>byte, char, short 和 int 之间的二进制计算中涉及到long的话, 那么返回的就是long类型</li>
-<li>BigInteger 与任何整数类型的二进制计算 返回的结果都是BigInteger类型</li>
-<li>float, double 和 BigDecimal 之间的二进制计算返回的结果都是double类型</li>
-<li>俩个BigDecimal之间的二进制运算返回的都是BigDecimal类型.</li>
-</ul>
-<p>由于Groovy提供了操作符重载功能, BigInteger和BigDecimal之间的算术运算也得以实现, 但是在Java中需要调用一些方法才能计算这些不同类型的数字.</p>
-<h4 id="The-case-of-the-power-operator"><a href="#The-case-of-the-power-operator" class="headerlink" title="The case of the power operator"></a>The case of the power operator</h4><p>Groovy 里有一种强大的操作符<code>**</code>, 这个操作符带有base和exponent俩个参数. 这个操作符的结果依赖于它的操作数和操作结果.Groovy使用下面的规则来决定该操作符的返回类型</p>
-<h5 id="如果exponent为小数类型"><a href="#如果exponent为小数类型" class="headerlink" title="如果exponent为小数类型"></a>如果exponent为小数类型</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. 如果结果能表示为Integer类型,那就返回Integer类型</span><br><span class="line"><span class="number">2</span>. 否则如果结果能表示为Long类型,那就返回Long类型</span><br><span class="line"><span class="number">3</span>. 否则的话就返回Double</span><br></pre></td></tr></table></figure>
-<h5 id="如果exponent为整数类型"><a href="#如果exponent为整数类型" class="headerlink" title="如果exponent为整数类型"></a>如果exponent为整数类型</h5><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 如果exponent负数负数, 那就返回Integer, Long 或者Double,</span><br><span class="line"><span class="number">2.</span> 如果exponent是正数或者<span class="number">0</span>, 那就要根据base来判断了</span><br><span class="line">	A. 如果base是 BigDecimal, 那就返回BigDecimal类型</span><br><span class="line">	B. 如果base是 BigInteger, 那就返回BigInteger类型</span><br><span class="line">	C. 如果base是 Integer, 那就返回Integer类型, 如果返回的值超过Integer范围的话,就返回BigInteger</span><br><span class="line">	D. 如果base是 Long, 那就返回Long类型, 如果返回的值超过Long范围的话,就返回BigInteger</span><br></pre></td></tr></table></figure>
-<h5 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h5><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// base and exponent are ints and the result can be represented by an Integer</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">2</span>    **   <span class="number">3</span>    <span class="keyword">instanceof</span> Integer    <span class="comment">//  8</span></span><br><span class="line"><span class="keyword">assert</span>   <span class="number">10</span>    **   <span class="number">9</span>    <span class="keyword">instanceof</span> Integer    <span class="comment">//  1_000_000_000</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// the base is a long, so fit the result in a Long</span></span><br><span class="line"><span class="comment">// (although it could have fit in an Integer)</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">5</span>L   **   <span class="number">2</span>    <span class="keyword">instanceof</span> Long       <span class="comment">//  25</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// the result can't be represented as an Integer or Long, so return a BigInteger</span></span><br><span class="line"><span class="keyword">assert</span>  <span class="number">100</span>    **  <span class="number">10</span>    <span class="keyword">instanceof</span> BigInteger <span class="comment">//  10e20</span></span><br><span class="line"><span class="keyword">assert</span> <span class="number">1234</span>    ** <span class="number">123</span>    <span class="keyword">instanceof</span> BigInteger <span class="comment">//  170515806212727042875...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// the base is a BigDecimal and the exponent a negative int</span></span><br><span class="line"><span class="comment">// but the result can be represented as an Integer</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">0.5</span>  **  <span class="number">-2</span>    <span class="keyword">instanceof</span> Integer    <span class="comment">//  4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// the base is an int, and the exponent a negative float</span></span><br><span class="line"><span class="comment">// but again, the result can be represented as an Integer</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">1</span>    **  <span class="number">-0.3</span>f <span class="keyword">instanceof</span> Integer    <span class="comment">//  1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// the base is an int, and the exponent a negative int</span></span><br><span class="line"><span class="comment">// but the result will be calculated as a Double</span></span><br><span class="line"><span class="comment">// (both base and exponent are actually converted to doubles)</span></span><br><span class="line"><span class="keyword">assert</span>   <span class="number">10</span>    **  <span class="number">-1</span>    <span class="keyword">instanceof</span> Double     <span class="comment">//  0.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// the base is a BigDecimal, and the exponent is an int, so return a BigDecimal</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">1.2</span>  **  <span class="number">10</span>    <span class="keyword">instanceof</span> BigDecimal <span class="comment">//  6.1917364224</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// the base is a float or double, and the exponent is an int</span></span><br><span class="line"><span class="comment">// but the result can only be represented as a Double value</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">3.4</span>f **   <span class="number">5</span>    <span class="keyword">instanceof</span> Double     <span class="comment">//  454.35430372146965</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">5.6</span>d **   <span class="number">2</span>    <span class="keyword">instanceof</span> Double     <span class="comment">//  31.359999999999996</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// the exponent is a decimal value</span></span><br><span class="line"><span class="comment">// and the result can only be represented as a Double value</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">7.8</span>  **   <span class="number">1.9</span>  <span class="keyword">instanceof</span> Double     <span class="comment">//  49.542708423868476</span></span><br><span class="line"><span class="keyword">assert</span>    <span class="number">2</span>    **   <span class="number">0.1</span>f <span class="keyword">instanceof</span> Double     <span class="comment">//  1.0717734636432956</span></span><br></pre></td></tr></table></figure>
-<h2 id="Booleans"><a href="#Booleans" class="headerlink" title="Booleans"></a>Booleans</h2><p>Boolean是一种特殊的数据类型, 他们的值只有俩种情况：true 和 false.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> myBooleanVariable = <span class="literal">true</span></span><br><span class="line"><span class="keyword">boolean</span> untypedBooleanVar = <span class="literal">false</span></span><br><span class="line">booleanField = <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
-<p>true and false are the only two primitive boolean values. But more complex boolean expressions can be represented using logical operators.</p>
-<p>In addition, Groovy has special rules (often referred to as Groovy Truth) for coercing non-boolean objects to a boolean value.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Groovy/">Groovy</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/04/08/groovy/groovy数字/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/04/08/groovy/groovy数字/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2014/04/08/groovy/groovy/" title="groovy注释和标识符" itemprop="url">groovy注释和标识符</a>
   </h1>
   <p class="article-author">By
@@ -369,7 +333,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> Published 2014-04-08</time>
+    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-04-08</time>
     
   </p>
 </header>
@@ -456,7 +420,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> Published 2014-04-08</time>
+    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-04-08</time>
     
   </p>
 </header>
@@ -573,7 +537,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> Published 2014-04-08</time>
+    <time datetime="2014-04-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2014-04-08</time>
     
   </p>
 </header>
@@ -707,7 +671,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2013-11-19T16:00:00.000Z" itemprop="datePublished"> Published 2013-11-20</time>
+    <time datetime="2013-11-19T16:00:00.000Z" itemprop="datePublished"> 发表于 2013-11-20</time>
     
   </p>
 </header>
@@ -765,7 +729,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2013-09-12T16:00:00.000Z" itemprop="datePublished"> Published 2013-09-13</time>
+    <time datetime="2013-09-12T16:00:00.000Z" itemprop="datePublished"> 发表于 2013-09-13</time>
     
   </p>
 </header>
@@ -844,7 +808,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2013-09-12T16:00:00.000Z" itemprop="datePublished"> Published 2013-09-13</time>
+    <time datetime="2013-09-12T16:00:00.000Z" itemprop="datePublished"> 发表于 2013-09-13</time>
     
   </p>
 </header>
@@ -946,7 +910,7 @@
 		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
 		
   <p class="article-time">
-    <time datetime="2012-08-19T16:00:00.000Z" itemprop="datePublished"> Published 2012-08-20</time>
+    <time datetime="2012-08-19T16:00:00.000Z" itemprop="datePublished"> 发表于 2012-08-20</time>
     
   </p>
 </header>
@@ -1013,15 +977,15 @@
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github Card</p>
+<p class="asidetitle">Github 名片</p>
 <div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -1031,7 +995,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分类</p>
 		<ul>
 		
 		  
@@ -1161,7 +1125,7 @@
   
 
   <div class="linkslist">
-  <p class="asidetitle">Links</p>
+  <p class="asidetitle">友情链接</p>
     <ul>
         
           <li>
@@ -1176,7 +1140,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
+<p class="asidetitle">豆瓣秀</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -1184,11 +1148,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
+  <p class="asidetitle">新浪微博</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -1362,7 +1326,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
