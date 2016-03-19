@@ -99,6 +99,21 @@ pipeline.addLast(group, "handler", new MyBusinessLogicHandler());
 
 我们可以在任何时间在`ChannelPipeline`上添加或者移除`ChannelHandler`, 因为`ChannelPipeline`是线程安全的. 例如我们可以在线上环境中因为业务原因动态的添加或者移除handler.
 
+## 事件处理过程
+在下面的示例中我们分别在pipeline中添加俩个`inbound`handler和俩个`outbound`handler.(以`Inbound`开头的类名表示为一个`inbound`handler, 以`Outbound`开头的类名表示为一个`outbound`handler.)
+```java
+ChannelPipeline p = ...;
+p.addLast("1", new InboundHandlerA());
+p.addLast("2", new InboundHandlerB());
+p.addLast("3", new OutboundHandlerA());
+p.addLast("4", new OutboundHandlerB());
+p.addLast("5", new InboundOutboundHandlerX());
+```
+事件在`inbound`handler中的执行过程是`1, 2, 3, 4, 5`. 事件在`outbound`handler中的执行过程是`5, 4, 3, 2, 1`.
+
+但是在真实的执行过程中, 由于`3, 4`并没有实现`ChannelInboundHandler`, 因此inbound流程中真正执行的handler只有`1, 2, 5`. 而由于`1, 2`并没有实现`ChannelOutboundHandler`因此在outbound流程中真正执行的handler只有`5, 4, 3`.
+如果`5`都实现了`ChannelInboundHandler`和`ChannelOutboundHandler`, 那么事件的执行顺序分别是`125`和`543`.
+
 ## 源码剖析
 下来我们看一下`ChannelPipeline`的默认实现`DefaultChannelPipeline`里的数据结构
 ```java
@@ -107,12 +122,29 @@ final AbstractChannel channel;
 final DefaultChannelHandlerContext head;
 final DefaultChannelHandlerContext tail;
 ```
-`DefaultChannelPipeline`采用链式方式存储`ChannelHandlerContext`(内部存储的的是`ChannelHandler`). 当我们增加一个`ChannelHandler`时
+`DefaultChannelPipeline`采用链式方式存储`ChannelHandlerContext`(内部存储的的是`ChannelHandler`). 在构造器中, 它将头尾相连了起来
+```java
+public DefaultChannelPipeline(AbstractChannel channel) {
+        if (channel == null) {
+            throw new NullPointerException("channel");
+        }
+        this.channel = channel;
+
+        tail = new TailContext(this);
+        head = new HeadContext(this);
+
+        // 将链表首尾相连
+        head.next = tail;
+        tail.prev = head;
+}
+```
+当我们增加一个`ChannelHandler`时
 ```java
 @Override
 public ChannelPipeline addFirst(EventExecutorGroup group, final String name, ChannelHandler handler) {
     synchronized (this) {
         checkDuplicateName(name);
+        // 我们将handler和ChannelPipeline, EventLoop封装到一个Context里
         DefaultChannelHandlerContext newCtx = new DefaultChannelHandlerContext(this, group, name, handler);
         addFirst0(name, newCtx);
     }
@@ -123,6 +155,7 @@ public ChannelPipeline addFirst(EventExecutorGroup group, final String name, Cha
 private void addFirst0(String name, DefaultChannelHandlerContext newCtx) {
     checkMultiplicity(newCtx);
 
+    // 我们将添加的handler放到链表的第一个位置上
     DefaultChannelHandlerContext nextCtx = head.next;
     newCtx.prev = head;
     newCtx.next = nextCtx;
@@ -133,11 +166,11 @@ private void addFirst0(String name, DefaultChannelHandlerContext newCtx) {
 
     callHandlerAdded(newCtx);
 }
-```
-我们看到在`addFirst0()`方法里将`newCtx`放到了首位上,然后内部调用了
-```java
+
 private void callHandlerAdded(final ChannelHandlerContext ctx) {
     if (ctx.channel().isRegistered() && !ctx.executor().inEventLoop()) {
+        // 如果Channel已经注册到eventLoop上, 且当前线程与eventLoop中的线程不是同一个, 也就是说当前操作是多线程进行的,
+        // 则将callHandlerAdded0()逻辑放到任务队列中进行执行
         ctx.executor().execute(new Runnable() {
             @Override
             public void run() {
@@ -157,34 +190,81 @@ private void callHandlerAdded0(final ChannelHandlerContext ctx) {
     }
 }
 ```
-我们看到最终的时候在`ChannelHandler`里添加了`ChannelHandlerContext`.
+我们看到最终的时候在`ChannelHandler`里添加了`ChannelHandlerContext`. 但是经过查看`ByteToMessageDecoder`, `ChannelInboundHandlerAdapter`, `ChannelHandlerAdapter`
+这个都是空实现, 也就是说, 如果用户自己没有重载的话, 那么这里不会有任何的逻辑产生.
 
-## 事件触发
-在下面的示例中我们分别在pipeline中添加俩个`inbound`handler和俩个`outbound`handler.(以`Inbound`开头的类名表示为一个`inbound`handler, 以`Outbound`开头的类名表示为一个`outbound`handler.)
+最终我们看到了, 在`DeaultChannelPipeline`的内部只是维持了一个链表头和链表尾.那么当`Unsafe`里调用`fireXXX()`相关的方法时就会由头或者尾context来触发
 ```java
-ChannelPipeline p = ...;
-p.addLast("1", new InboundHandlerA());
-p.addLast("2", new InboundHandlerB());
-p.addLast("3", new OutboundHandlerA());
-p.addLast("4", new OutboundHandlerB());
-p.addLast("5", new InboundOutboundHandlerX());
+@Override
+    public ChannelPipeline fireChannelActive() {
+        head.fireChannelActive();
+
+        if (channel.config().isAutoRead()) {
+            channel.read();
+        }
+
+        return this;
+    }
+
+    @Override
+    public ChannelPipeline fireChannelRead(Object msg) {
+        head.fireChannelRead(msg);
+        return this;
+    }
 ```
+在上面我们贴出了俩个方法, 下面我们看一下`fireChannelRead()`的处理流程.
 
-事件在`inbound`handler中的执行过程是`1, 2, 3, 4, 5`. 事件在`outbound`handler中的执行过程是`5, 4, 3, 2, 1`.
+在`AbstractChannelHandlerContext#fireChannelRead()`
+```java
+@Override
+    public ChannelHandlerContext fireChannelRead(final Object msg) {
+        final AbstractChannelHandlerContext next = findContextInbound();
+        EventExecutor executor = next.executor();
+        if (executor.inEventLoop()) {
+            next.invokeChannelRead(msg);
+        } else {
+            executor.execute(new OneTimeTask() {
+                @Override
+                public void run() {
+                    next.invokeChannelRead(msg);
+                }
+            });
+        }
+        return this;
+    }
 
-但是在真实的执行过程中, 由于`3, 4`并没有实现`ChannelInboundHandler`, 因此inbound流程中真正执行的handler只有`1, 2, 5`. 而由于`1, 2`并没有实现`ChannelOutboundHandler`因此在outbound流程中真正执行的handler只有`5, 4, 3`.
-如果`5`都实现了`ChannelInboundHandler`和`ChannelOutboundHandler`, 那么事件的执行顺序分别是`125`和`543`.
+    private AbstractChannelHandlerContext findContextInbound() {
+        AbstractChannelHandlerContext ctx = this;
+        do {
+            ctx = ctx.next;
+        } while (!ctx.inbound);
+        return ctx;
+    }
+```
+> 直接fireChannelRead() 会跳过第一个handler???
+
+上面的`fireChannelRead()`逻辑很简单, 我们接下来看一下`invokeChannelRead()`
+```java
+private void invokeChannelRead(Object msg) {
+        try {
+            ((ChannelInboundHandler) handler()).channelRead(this, msg);
+        } catch (Throwable t) {
+            notifyHandlerException(t);
+        }
+    }
+```
+这里就直接找到了handler, 触发了我们最终自己实现的`channelRead()`方法.
 
 也许你已经注意到了, 在handler中不得不调用`ChannelHandlerContext`的事件传播方法, 将事件传递给下一个handler. 下面的是
 能够触发`inbound`事件的方法
-* `ChannelHandlerContext#fireChannelRegistered()` Channel注册事件
-* `ChannelHandlerContext#fireChannelActive()` TCP链路建立成功,Channel激活事件
-* `ChannelHandlerContext#fireChannelRead(Object var1)` 读事件
-* `ChannelHandlerContext#fireChannelReadComplete()` 读操作完成通知事件
-* `ChannelHandlerContext#fireExceptionCaught(Throwable var1)` 异常通知事件
-* `ChannelHandlerContext#fireUserEventTriggered(Object var1)` 用户自定义事件
-* `ChannelHandlerContext#fireChannelWritabilityChanged()` Channel的可写状态变化通知事件
-* `ChannelHandlerContext#fireChannelInactive()` TCP链路关闭, 链路不可用通知事件
+* `ChannelHandlerContext#fireChannelRegistered()` Channel注册事件. (``触发)
+* `ChannelHandlerContext#fireChannelActive()` TCP链路建立成功,Channel激活事件. (``触发)
+* `ChannelHandlerContext#fireChannelRead(Object var1)` 读事件. (``触发)
+* `ChannelHandlerContext#fireChannelReadComplete()` 读操作完成通知事件. (``触发)
+* `ChannelHandlerContext#fireExceptionCaught(Throwable var1)` 异常通知事件. (``触发)
+* `ChannelHandlerContext#fireUserEventTriggered(Object var1)` 用户自定义事件. (``触发)
+* `ChannelHandlerContext#fireChannelWritabilityChanged()` Channel的可写状态变化通知事件. (``触发)
+* `ChannelHandlerContext#fireChannelInactive()` TCP链路关闭, 链路不可用通知事件. (``触发)
 触发`outbound`事件的方法有
 * `ChannelHandlerContext#bind(SocketAddress var1, ChannelPromise var2)` 绑定本地地址事件
 * `ChannelHandlerContext#connect(SocketAddress var1, ChannelPromise var2)` 连接服务端事件

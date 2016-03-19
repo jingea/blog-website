@@ -43,18 +43,16 @@ class InHandler extends ChannelInboundHandlerAdapter {
     }
 }
 ```
-在这个示例中, 我们采用了主从Reactor线程模型, 添加了Netty内置的Protobuf编码器. 同时后端业务线程的处理我们也采用了线程池串行的方式.
+在这个示例中, 我们采用了主从Reactor线程模型, 然后将接受到的数据写回给客户端.
 
-下来我们分析一下`ServerBootstrap`的源码. 我们从`bind()`方法入手. `bind()`最终调用的是父类的`doBind()`方法
+下来我们分析一下`ServerBootstrap`的源码. 我们从`bind()`方法入手.
+
+由于`bind()`最终调用的是父类`AbstractBootstrap`的`doBind()`方法, 因此我们从父类入手
 ```java
 private ChannelFuture doBind(final SocketAddress localAddress) {
-				// 初始化NioServerSocketChannel
+				// 初始化NioServerSocketChannel, 并将其注册主Reactor线程池的IO多路复用器上
         final ChannelFuture regFuture = initAndRegister();
         final Channel channel = regFuture.channel();
-        if (regFuture.cause() != null) {
-            return regFuture;
-        }
-
         if (regFuture.isDone()) {
             ChannelPromise promise = channel.newPromise();
             doBind0(regFuture, channel, localAddress, promise);
@@ -66,13 +64,14 @@ private ChannelFuture doBind(final SocketAddress localAddress) {
     }
 ```
 
-接下来我们看一下`initAndRegister()`方法
+接下来我们看一下`AbstractBootstrap#initAndRegister()`方法
 ```java
 final ChannelFuture initAndRegister() {
 				// 因为我们调用过channel(NioServerSocketChannel.class)方法, 因此下面这个Channel是NioServerSocketChannel类型
         final Channel channel = channelFactory().newChannel();
         try {
-					  // 当channel接受到网络连接的时候, 会生成NioSocketChannel, 将NioSocketChannel与从Reactor进行绑定
+					  // init方法主要是对NioServerSocketChannel添加一个ServerBootstrapAcceptor的Handler(继承自ChannelInboundHandlerAdapter)
+            // 当channel接受到网络连接的时候, 会生成NioSocketChannel, 将NioSocketChannel与从Reactor进行绑定
             init(channel);
         } catch (Throwable t) {
 
@@ -90,7 +89,9 @@ final ChannelFuture initAndRegister() {
         }
     }
 ```
-`init()`的具体实现是由子类`ServerBootstrap`实现的
+
+`init()`的`ServerBootstrap`实现的. 这个方法主要是在`NioServerSocketChannel`的pipeline里增加一个`ServerBootstrapAcceptor`handler.
+这个handler就是用于处理`NioMessageUnsafe#read()`方法调用`NioServerSocketChannel#doReadMessage()`方法后`List<NioSocketChannel>`的消息列表
 ```java
 @Override
 void init(Channel channel) throws Exception {
@@ -116,7 +117,8 @@ void init(Channel channel) throws Exception {
 	 }
 ```
 
-我们看到`ServerBootstrapAcceptor`也是实现自`ChannelInboundHandlerAdapter`
+我们看到`ServerBootstrapAcceptor`也是实现自`ChannelInboundHandlerAdapter`, 因此它也是一个handler. 在`NioMessageUnsafe#read()`方法里会遍历
+`List<NioSocketChannel>`这个消息列表后触发`NioServerSocketChannel`的pipeline的`fireChannelRead()`方法, 接着就会触发`ServerBootstrapAcceptor#channelRead()`,
 ```java
 private static class ServerBootstrapAcceptor extends ChannelInboundHandlerAdapter {
 
@@ -130,6 +132,7 @@ private static class ServerBootstrapAcceptor extends ChannelInboundHandlerAdapte
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
+            // msg实际是NioSocketChannel类型
             final Channel child = (Channel) msg;
             child.pipeline().addLast(childHandler);
             try {

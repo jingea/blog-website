@@ -23,7 +23,7 @@ title: Netty Unsafe
 
 ## AbstractUnsafe
 `AbstractUnsafe`是`AbstractChannel`的内部类, 主要是提供了对`AbstractChannel`的辅助功能, 它内部实现了N个, 这些方法最终都会调用`AbstractChannel`子类实现的`doXXX()`相关方法. 例如:
-* `register()` -> `doRegister()`, `doRegister()`(`AbstractNioChannel`实现)调用完成之后调用pipline的`fireChannelRegistered()`和`fireChannelActive()`.
+* `register()` -> `doRegister()`(`AbstractNioChannel`实现), 调用完成之后调用pipline的`fireChannelRegistered()`和`fireChannelActive()`.
 * `bind()` -> `doBind()`
 * `disconnect()` -> `doDisconnect()`
 * `close()` -> `doClose()`
