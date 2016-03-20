@@ -169,6 +169,7 @@ private ChannelOutboundBuffer outboundBuffer = new ChannelOutboundBuffer(Abstrac
 
                 // 当前所有数据都读取完了, 触发
                 pipeline.fireChannelReadComplete();
+                // 根据当前读到的字节数预测下个消息的字节数大小
                 allocHandle.record(totalReadAmount);
 
                 if (close) {
@@ -194,8 +195,10 @@ private ChannelOutboundBuffer outboundBuffer = new ChannelOutboundBuffer(Abstrac
 
 ## NioMessageUnsafe
 `NioMessageUnsafe`是`AbstractNioMessageChannel`的内部类. 它的`read()`方法与`NioByteMessage`的类似, 只不过这个是用于
-服务`NioServerSocketChannel`的, 它内部的`doReadMessages()`会调用的`NioServerSocketChannel`的实现.
+服务`NioServerSocketChannel`的, 它内部的`doReadMessages()`会调用的`NioServerSocketChannel`的实现. `readBuf`每个`NioMessageUnsafe`对象都会生成一个
 ```java
+private final List<Object> readBuf = new ArrayList<Object>();
+
 @Override
         public void read() {
             assert eventLoop().inEventLoop();
@@ -206,6 +209,7 @@ private ChannelOutboundBuffer outboundBuffer = new ChannelOutboundBuffer(Abstrac
                 return;
             }
 
+            // 从配置中获取每次读取消息的最大字节数
             final int maxMessagesPerRead = config.getMaxMessagesPerRead();
             final ChannelPipeline pipeline = pipeline();
             boolean closed = false;
@@ -213,8 +217,10 @@ private ChannelOutboundBuffer outboundBuffer = new ChannelOutboundBuffer(Abstrac
             try {
                 try {
                     for (;;) {
+                        // 从NioServerSocketChannel中读取NioSocketChannel进readBuf中
                         int localRead = doReadMessages(readBuf);
                         if (localRead == 0) {
+                          // 如果没有新的连接, 则不再读取
                             break;
                         }
                         if (localRead < 0) {
@@ -237,10 +243,14 @@ private ChannelOutboundBuffer outboundBuffer = new ChannelOutboundBuffer(Abstrac
                 setReadPending(false);
                 int size = readBuf.size();
                 for (int i = 0; i < size; i ++) {
+                    // 触发NioServerSocketChannel的pipeline的fireChannelRead()方法
+                    // 从而触发ServerBoostTrap的read方法, 将readBuf里的NioSocketChannel与从Reactor进行注册绑定
                     pipeline.fireChannelRead(readBuf.get(i));
                 }
 
+                // 将所有的NioSocketChannel与从Reactor都完成注册之后, 将readBuf清空
                 readBuf.clear();
+                // 最后调用NioServerSocketChannel的fireChannelReadComplete
                 pipeline.fireChannelReadComplete();
 
                 if (exception != null) {
@@ -271,4 +281,101 @@ private ChannelOutboundBuffer outboundBuffer = new ChannelOutboundBuffer(Abstrac
             }
         }
     }
+```
+
+## AdaptiveRecvByteBufAllocator
+由于`RecvByteBufAllocator`只在Unsafe体系中用到了, 就不再单独拿个章节出来讲它, 在这里我们重点分析一个`AdaptiveRecvByteBufAllocator`
+
+我们首先看一下他的内部成员属性
+```java
+static final int DEFAULT_MINIMUM = 64;
+static final int DEFAULT_INITIAL = 1024;
+static final int DEFAULT_MAXIMUM = 65536;
+
+private static final int INDEX_INCREMENT = 4;
+private static final int INDEX_DECREMENT = 1;
+
+private static final int[] SIZE_TABLE;
+```
+* `DEFAULT_MINIMUM` : 默认的每个ByteBuf的最小值
+* `DEFAULT_INITIAL` : 默认的每个ByteBuf的初始值
+* `DEFAULT_MAXIMUM` : 默认的每个ByteBuf的最大值
+* `INDEX_INCREMENT` : 默认的每个ByteBuf的增大步进大小
+* `INDEX_DECREMENT` : 默认的每个ByteBuf的减小步进大小
+* `SIZE_TABLE` : 所有ByteBuf消息可能会用到的大小值
+
+然后我们看一下他的静态初始化
+```java
+static {
+        List<Integer> sizeTable = new ArrayList<Integer>();
+        // 当消息小于512的时候, 每次步进16字节, 也就是预测下个消息比当前消息仍然大16字节
+        for (int i = 16; i < 512; i += 16) {
+            sizeTable.add(i);
+        }
+
+        // 当消息大小大于512的时候, 则采取倍增的方式
+        for (int i = 512; i > 0; i <<= 1) {
+            sizeTable.add(i);
+        }
+
+        SIZE_TABLE = new int[sizeTable.size()];
+        for (int i = 0; i < SIZE_TABLE.length; i ++) {
+            SIZE_TABLE[i] = sizeTable.get(i);
+        }
+    }
+```
+下面我们看一下`getSizeTableIndex()`这个方法, 这个方法主要是根据入参然后推算出下一个消息的大小, 内部算法采用的是一个二分查找
+```java
+private static int getSizeTableIndex(final int size) {
+        // 遍历所有的SIZE_TABLE
+        for (int low = 0, high = SIZE_TABLE.length - 1;;) {
+            if (high < low) {
+                return low;
+            }
+            if (high == low) {
+                return high;
+            }
+
+            // 找到中间位置索引
+            int mid = low + high >>> 1;
+            int a = SIZE_TABLE[mid];
+            int b = SIZE_TABLE[mid + 1];
+            if (size > b) {
+                // size大于中间值则向前查找
+                low = mid + 1;
+            } else if (size < a) {
+                // size小于中间值则向后查找
+                high = mid - 1;
+            } else if (size == a) {
+                // 取a值
+                return mid;
+            } else {
+                // 取b值
+                return mid + 1;
+            }
+        }
+    }
+```
+但是真正的预测下一个消息的逻辑是放在了`AdaptiveRecvByteBufAllocator`的内部类`HandleImpl`中.
+我们重点看一下他的`record`方法
+```java
+@Override
+       public void record(int actualReadBytes) {
+           if (actualReadBytes <= SIZE_TABLE[Math.max(0, index - INDEX_DECREMENT - 1)]) {
+               // 判断当前可读字节是否小于当前字节数的前一个大小, 如果小于, 则判断是否需要缩小容量
+               if (decreaseNow) {
+                   // 如果需要的话, 则算出前一个索引位置进行缩小下个消息的ByteBuf的大小
+                   index = Math.max(index - INDEX_DECREMENT, minIndex);
+                   nextReceiveBufferSize = SIZE_TABLE[index];
+                   decreaseNow = false;
+               } else {
+                   decreaseNow = true;
+               }
+           } else if (actualReadBytes >= nextReceiveBufferSize) {
+               // 当前可读字节数大于下个可读字节数, 则对其下个ByteBuf进行扩容处理
+               index = Math.min(index + INDEX_INCREMENT, maxIndex);
+               nextReceiveBufferSize = SIZE_TABLE[index];
+               decreaseNow = false;
+           }
+       }
 ```

@@ -1,0 +1,155 @@
+category: JavaSE
+date: 2016-03-20
+title: JAVA 初始化
+---
+最近面试的时候遇到很多人都在问java初始化的东西, 今天就写个测试程序来个JAVA初始化大揭秘.
+```java
+public class TestInit {
+    public static void main(String[] args) {
+        new B();
+        new B();
+    }
+}
+
+class A {
+
+    public A() {
+        System.out.println("A");
+    }
+
+    {
+        System.out.println("A init");
+    }
+
+    static {
+        System.out.println("A static init");
+    }
+}
+
+class B extends A {
+    public B() {
+        System.out.println("B");
+    }
+
+    {
+        System.out.println("B init");
+    }
+
+    static {
+        System.out.println("B static init");
+    }
+}
+```
+这个程序的输出结果为
+```bash
+A static init
+B static init
+A init
+A
+B init
+B
+A init
+A
+B init
+B
+```
+
+下面我用javap命令反编译一下TestInit的class字节码
+```java
+➜  classes  javap -c TestInit
+Compiled from "TestInit.java"
+public class TestInit {
+  public TestInit();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static void main(java.lang.String[]);
+    Code:
+       0: new           #2                  // class B
+       3: dup
+       4: invokespecial #3                  // Method B."<init>":()V
+       7: pop
+       8: new           #2                  // class B
+      11: dup
+      12: invokespecial #3                  // Method B."<init>":()V
+      15: pop
+      16: return
+}
+```
+然后看一下A的class字节码
+```java
+➜  classes  javap -c A
+Compiled from "TestInit.java"
+class A {
+  public A();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       7: ldc           #3                  // String A init
+       9: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      12: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      15: ldc           #5                  // String A
+      17: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      20: return
+
+  static {};
+    Code:
+       0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: ldc           #6                  // String A static init
+       5: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       8: return
+}
+```
+从上面代码的执行结果我们也可以看出, A的代码是先执行的`static`静态初始化的(这段代码只有在类被加载进虚拟机中时才会执行一次). 那么我们就先从它分析入手
+1. `getstatic` 访问`java/lang/System.out`这个实例熟悉
+2. `ldc` 从常量池里加载一个常亮进入操作数栈, 这里加载的是`A static init`字符串
+3. `invokevirtual` 然后调用`java/io/PrintStream.println`方法, 输出`A static init`字符串
+
+构造器的代码开始执行
+1. `aload_0` : 从局部变量表加载一个reference类型值到操作数栈, 这个变量应该是this
+2. `invokespecial` : 用于需要特殊处理的实例方法(实例初始化方法, 私有方法和父类方法). 这里是调用A的实例化方法, 也就是`{}`这中的代码
+3. `getstatic` 实例化方法访问`java/lang/System.out`属性
+4. `ldc` 实例化方法从常量池里加载一个常亮进入操作数栈, 这里加载的是`A init`字符串
+5. `invokevirtual` 实例化方法调用`java/io/PrintStream.println`方法, 输出`A init`字符串
+6. `getstatic` 构造器访问`java/lang/System.out`属性
+7. `ldc`构造器从常量池里加载一个常亮进入操作数栈, 这里加载的是`A`字符串
+8. `invokevirtual` 构造器调用`java/io/PrintStream.println`方法, 输出`A`字符串
+
+
+然后我们看一下B的claa字节码
+```java
+➜  classes  javap -c B
+Compiled from "TestInit.java"
+class B extends A {
+  public B();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method A."<init>":()V
+       4: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       7: ldc           #3                  // String B init
+       9: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      12: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      15: ldc           #5                  // String B
+      17: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      20: return
+
+  static {};
+    Code:
+       0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: ldc           #6                  // String B static init
+       5: invokevirtual #4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+       8: return
+}
+```
+与A类似, B同样是从类的初始化开始代码执行的
+1. `getstatic` 访问`java/lang/System.out`这个实例熟悉
+2. `ldc` 从常量池里加载一个常亮进入操作数栈, 这里加载的是`B static init`字符串
+3. `invokevirtual` 然后调用`java/io/PrintStream.println`方法, 输出`B static init`字符串
+
+然后是构造器方法执行
+1. `aload_0`同样的是加载`this`进虚拟机栈
+2. `invokespecial` 调用父类A的实例初始化方法
+3. 然后就开死像A一样, 调用自己的实例化过程
