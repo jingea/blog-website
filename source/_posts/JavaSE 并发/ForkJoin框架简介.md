@@ -1,6 +1,6 @@
-category: 
-- forkjoin
-title: 简介
+category: JavaSE 并发
+date: 2016-03-28
+title: ForkJoin框架简介
 ---
 # ForkJoin框架
 
