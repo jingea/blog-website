@@ -1,6 +1,6 @@
-category:
-- lock
-title: TicketSpinLock
+category: JavaSE 并发
+date: 2016-03-28
+title: JavaSE 锁实现
 ---
 # TicketSpinLock
 
@@ -13,7 +13,6 @@ Ticket Lock 虽然解决了公平性的问题，但是多处理器系统上，�
 每次读写操作都必须在多个处理器缓存之间进行缓存同步，这会导致繁重的系统总线和内存的流量，大大降低系统整体的性能。
 
 ```java
-
 public class TicketSpinLock {
    private AtomicInteger serviceNum = new AtomicInteger(); // 服务号
    private AtomicInteger ticketNum = new AtomicInteger(); // 排队号
@@ -37,17 +36,11 @@ public class TicketSpinLock {
 }
 ```
 # CLHSpinLock
-
 CLH锁也是一种基于链表的可扩展、高性能、公平的自旋锁，申请线程只在本地变量上自旋，
 它不断轮询前驱的状态，如果发现前驱释放了锁就结束自旋。
- *
+
 差异：
- *
- 从代码实现来看，CLH比MCS要简单得多。
- 从自旋的条件来看，CLH是在本地变量上自旋，MCS是自旋在其他对象的属性。
- 从链表队列来看，CLH的队列是隐式的，CLHNode并不实际持有下一个节点；MCS的队列是物理存在的。
- CLH锁释放时只需要改变自己的属性，MCS锁释放则需要改变后继节点的属性。
- 注意：这里实现的锁都是独占的，且不能重入的。
+从代码实现来看，CLH比MCS要简单得多。从自旋的条件来看，CLH是在本地变量上自旋，MCS是自旋在其他对象的属性。从链表队列来看，CLH的队列是隐式的，CLHNode并不实际持有下一个节点；MCS的队列是物理存在的。CLH锁释放时只需要改变自己的属性，MCS锁释放则需要改变后继节点的属性。注意：这里实现的锁都是独占的，且不能重入的。
 
  ```java
  public class CLHSpinLock {
@@ -78,7 +71,6 @@ CLH锁也是一种基于链表的可扩展、高性能、公平的自旋锁，�
 }
 ```
 # MCSSpinLock
-
 MCS Spinlock 是一种基于链表的可扩展、高性能、公平的自旋锁，申请线程只在本地变量上自旋，直接前驱负责通知其结束自旋，从而极大地减少了不必要的处理器缓存同步的次数，降低了总线和内存的开销。
 
 ```java
