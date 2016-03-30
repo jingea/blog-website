@@ -20,3 +20,6 @@ title: IDEA 设置
 * Intellij IDEA -Preference-Build, Execution, Deployment-Gradle -Gradle JVM, 看一下这个配置里面的配置, 当我将gradle的配置修改之后如果不修改这里就会出现  无效的源发行版: 1.8
 
 另外我们一般在项目里会设置JDK版本(项目右击Open Moudle Setting), 这个只是设置整个idea的项目相关的, 也就是和你写代码相关, 和项目的构建等等没啥关系
+
+## 使用eclipse格式化文件
+IDEA如果要使用eclipse的格式化文件需要安装`Eclipse Code Formatter`插件, 然后在setting里的`Other Seetings`里的`Eclipse Code Formatter`里引用格式化文件就好了
