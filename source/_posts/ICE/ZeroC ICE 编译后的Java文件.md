@@ -1,23 +1,57 @@
 category: ICE
 date: 2016-03-30
-title: ZeroC ICE ±àÒëºóµÄJavaÎÄ¼ş
+title: ZeroC ICE ç¼–è¯‘åçš„javaæ–‡ä»¶
 ---
-È»ºóÎÒÃÇÔÚÕâ¸öÄ¿Â¼ÀïÖ´ĞĞÏÂÃæÕâ¸öÃüÁî, ¶ÔHello.iceÎÄ¼ş½øĞĞ±àÒë
+æˆ‘ä»¬å¯ä»¥å°†hello.iceæ–‡ä»¶
+```java
+#pragma once
+
+// moduleç›¸å½“äºpackage
+module Demo
+{
+
+// å®šä¹‰äº†ä¸€ä¸ªHelloçš„æœåŠ¡
+interface Hello
+{
+    idempotent void sayHello(int delay);
+    void shutdown();
+};
+
+};
+```
+é€šè¿‡ä¸‹é¢çš„å‘½ä»¤å°†å…¶ç¼–è¯‘æˆæˆ‘ä»¬éœ€è¦çš„javaæ–‡ä»¶
 ```java
 slice2java -I. Hello.ice
 ```
-È»ºóÉú³ÉÒ»¸öDemoµÄÎÄ¼ş¼Ğ, ÀïÃæµÄÎÄ¼şÓĞ
-* Callback_Hello_sayHello.java
-* Callback_Hello_shutdown.java
+ç¼–è¯‘åçš„æ–‡ä»¶å¦‚ä¸‹
+
+ä¸‹é¢çš„æ˜¯æœåŠ¡ç«¯è¦ç”¨åˆ°çš„æ–‡ä»¶
 * Hello.java
-* HelloHolder.java
-* HelloPrx.java
-* HelloPrxHelper.java
-* HelloPrxHolder.java
+* _HelloOperations.java
+* _HelloOperationsNC.java
 * _HelloDel.java
 * _HelloDelD.java
 * _HelloDelM.java
 * _HelloDisp.java
-* _HelloOperations.java
-* _HelloOperationsNC.java
+
+ä¸‹é¢æ˜¯å®¢æˆ·ç«¯éœ€è¦ä½¿ç”¨åˆ°çš„æ–‡ä»¶
+* HelloHolder.java
+* HelloPrx.java
+* HelloPrxHelper.java
+* HelloPrxHolder.java
+
+* Callback_Hello_sayHello.java
+* Callback_Hello_shutdown.java
+
+
+
+
+
+
+
+
+
+
+
+
 
