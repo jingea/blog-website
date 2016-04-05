@@ -161,17 +161,21 @@ java.io.PrintStream  44
 ```
 
 ### 重新加载类
-我们使用`redefineClasses()`可以使用提供的字节码重新定义Class. 这个方法会使用新的字节码全部替换原先存在的Class字节码. 而如果想要修改原先存在的Class字节码应该使用`retransformClasses()`方法.
+* `redefineClasses()`使用新的字节码全部替换原先存在的Class字节码. (它并不会触发初始化操作, 也不会抛出初始化时的异常. 因此一些静态属性并不会被重新赋值)
+* `retransformClasses()` 修改原先存在的Class字节码应该.
 
-对于已经在栈帧中的字节码, 他们会继续执行下去, 但是当方法再次调用的时候,则会使用刚刚加载完成的新的字节码.
-
-同时需要注意的是`redefineClasses()`并不会触发初始化操作, 也不会抛出初始化时的异常. 因此一些静态属性并不会被重新赋值
-
-在重新加载类的时候, 该类已经实例化出的对象同时也不会受到影响.
+> 对于已经在栈帧中的字节码, 他们会继续执行下去, 但是当方法再次调用的时候,则会使用刚刚加载完成的新的字节码. 在重新加载类的时候, 该类已经实例化出的对象同时也不会受到影响.
 
 该方法的操作过程是一个基于操作集合的, 也就是说在redefine的时候, 可能有A B俩个类都进行, 而且A依赖于B, 那么在redefine的时候这俩个操作是同时完成的, 类似于原子操作.
 
-还需要指明的是, redefine 操作虽然可以改变方法体, 常量池以及属性, 但是redefine过程肯定不能对属性或者方法进行增加,删除,重命名的操作, 也不能修改方法签名以及修改继承关系.
+redefine 操作可以改变修改如下字节码
+* 方法体
+* 常量池
+* 属性
+但是redefine过程不能产生如下影响
+* 对方法进行增加,删除,重命名的操作
+* 对属性进行增加,删除,重命名的操作
+* 不能修改方法签名以及修改继承关系.
 
 在redefine过程中,一旦抛出异常, 那么此过程执已经redefine成功的class也会被会滚成原来的.
 
@@ -228,11 +232,60 @@ I am a big T ok
 
 首先我们还是需要修改MANIFEST.MF文件, 在其中添加
 ```java
-Agent-Class: wang.ming15.instrument.core.Agentmain
+Manifest-Version: 1.0
+Agent-Class: AgentMain
+Can-Redefine-Classes: true
 ```
 
-## 获取对象大小
-同样我们还是先输出一下对象的大小
-```
+然后我们写一个代理类
+```java
+import javax.xml.transform.Transformer;
+import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
 
+public class AgentMain {
+
+    public static void agentmain(String agentArgs, Instrumentation inst)
+            throws ClassNotFoundException, UnmodifiableClassException,
+            InterruptedException {
+        for (Class clazz : inst.getAllLoadedClasses()) {
+            System.out.println("Loaded Class : " + clazz.getName());
+        }
+        Printer.printTime();
+    }
+}
+
+class Printer {
+
+    public static void printTime() {
+        System.out.println("now is " + new Date());
+    }
+}
+```
+然后写一个启动类
+```java
+import com.sun.tools.attach.VirtualMachine;
+
+import java.lang.management.ManagementFactory;
+import java.util.concurrent.TimeUnit;
+
+public class AgentLoader {
+
+    public static void main(String[] args) throws Exception {
+        String name = ManagementFactory.getRuntimeMXBean().getName();
+        String pid = name.split("@")[0];
+        System.out.println(pid);
+        VirtualMachine vm = VirtualMachine.attach(pid);
+        for (int i = 0; i < 100; i++) {
+//            vm.loadAgent("D:\\ming\\test\\target\\test-1.0-SNAPSHOT.jar");
+            vm.loadAgentPath("D:\\ming\\test\\target\\test-1.0-SNAPSHOT.jar");
+            System.out.println("Load Agent Over!!!");
+            TimeUnit.SECONDS.sleep(10);
+        }
+    }
+}
+```
+打包后, 执行命令
+```java
+java -cp .;./* AgentLoader
 ```

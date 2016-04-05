@@ -46,4 +46,32 @@ deploy                       |maven-deploy-plugin:deploy            |½«ÏîÄ¿Êä³ö¹
 ```
 ÎÒÃÇÔÚ`install`½×¶Î°ó¶¨ÁË`exec-maven-plugin`²å¼şµÄ`java`Ä¿±ê.
 
-## ÒÀÀµ´ò°ü²å¼ş
+## ´øÓĞÒÀÀµ°ü¹¹½¨
+²ÉÓÃÏÂÃæµÄ²å¼ş, µ±¹¹½¨Ê±ËùĞèµÄÒÀÀµ°üÒ²»áÊä³öµ½targetÄ¿Â¼ÏÂ
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>copy</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>
+                            ${project.build.directory}
+                        </outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+    </plugins>
+</build>
+```
+
+## ´ò¿ÉÔËĞĞjar°ü

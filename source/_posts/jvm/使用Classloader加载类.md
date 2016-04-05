@@ -148,7 +148,69 @@ class MyClassLoader extends URLClassLoader {
 > `URLClassLoader`根据`URL`指定的路径从`JAR`文件或者目录里加载`class`文件或者其他资源文件. 如果`URL`以`/`结束,就表示到某个目录里进行加载. 否则就表示到某个`JAR`文件里进行加载. 线程里用于创建`URLClassLoader`实例的`AccessControlContext`会在加载类文件以及资源文件时使用到. `URLClassLoader`实例创建好之后会根据默认的授权权限依据指定的`URL`来进行加载类.
 
 
+从文件中加载class
+```java
+import java.io.*;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.concurrent.TimeUnit;
 
+public class Test {
+
+	public static void main(String[] arg) throws Exception {
+
+		for (int i = 0; i< 5; i++) {
+			MyClassLoader myLoader = new MyClassLoader(new URL[]{});
+			Class<?> obj = myLoader.loadClass("D:\\ming\\test\\target\\classes\\Test.class");
+			for (Method method : obj.getMethods()) {
+				if (method.getName().equals("printTime")) {
+					method.invoke(null);
+					TimeUnit.SECONDS.sleep(10);
+				}
+			}
+		}
+	}
+
+	public static void printTime() {
+		System.out.println(123);
+	}
+}
+
+class MyClassLoader extends URLClassLoader {
+
+	public MyClassLoader(URL[] urls) {
+		super(urls);
+	}
+
+	@Override
+	public Class<?> loadClass(String name) throws ClassNotFoundException {
+		Class<?> loadClass = findLoadedClass(name);
+		if (loadClass != null) {
+			return loadClass;
+		}
+		try {
+			byte[] bytes = loadClassFromFile(name);
+			int idx = name.lastIndexOf("\\");
+			name = name.substring(idx + 1);
+			name = name.split("\\.class")[0];
+			loadClass = defineClass(name, bytes, 0, bytes.length);
+		} catch (Exception e) {
+			loadClass = super.loadClass(name);
+		}
+
+		return loadClass;
+	}
+
+	private byte[] loadClassFromFile(String fileName) throws Exception {
+		InputStream input = new FileInputStream(new File(fileName));
+		byte[] bytes = new byte[input.available()];
+		input.read(bytes);
+		return bytes;
+	}
+}
+
+```
 
 
 
