@@ -177,3 +177,87 @@ grep --directories=recurse "刷新" *
 * cat是一次性显示整个文件的内容，还可以将多个文件连接起来显示，它常与重定向符号配合使用，适用于文件内容少的情况；
 * more比cat强大，提供分页显示的功能
 * less比more更强大，提供翻页，跳转，查找等命令。
+
+##
+用wget抓取完整的网站目录结构，存放到本地目录中：
+```shell
+wget -r --no-parent --reject "index.html*" http://hostname/ -P /home/user/dirs
+```
+
+一次创建多个目录：
+```shell
+mkdir -p /home/user/{test,test1,test2}
+```
+列出包括子进程的进程树：
+```shell
+ps axwef
+```
+测试硬盘写入速度：
+```shell
+dd if=/dev/zero of=/tmp/output.img bs=8k count=256k; rm -rf /tmp/output.img
+```
+测试硬盘读取速度：
+```shell
+hdparm -Tt /dev/sda
+```
+检查xml格式：
+```shell
+xmllint --noout file.xml
+```
+将tar.gz提取到新目录里：
+```shell
+tar zxvf package.tar.gz -C new_dir
+```
+使用curl获取HTTP头信息：
+```shell
+curl -I http://www.example.com
+```
+修改文件或目录的时间戳(YYMMDDhhmm)：
+```shell
+touch -t 0712250000 file
+```
+用wget命令执行ftp下载：
+```shell
+wget -m ftp:
+//username:password@hostname
+```
+快速备份一个文件：
+```shell
+cp some_file_name{,.bkp}
+```
+重复运行文件，显示其输出（缺省是2秒一次）：
+```shell
+watch ps -ef
+```
+递归grep所有目录：
+```shell
+grep -r "some_text" /path/to/dir
+```
+列出前10个最大的文件：
+```shell
+lsof / | awk '{ if($7 > 1048576) print $7/1048576 "MB "$9 }' | sort -n -u | tail
+```
+显示剩余内存(MB)：
+```shell
+free -m | grep cache | awk '/[0-9]/{ print $4" MB" }'
+```
+找出/home/user下所有空子目录：
+```shell
+find /home/user -maxdepth 1 -type d -empty
+```
+获取test.txt文件中第50-60行内容：
+```shell
+< test.txt sed -n '50,60p'
+```
+将所有文件名中含有”txt”的文件移入/home/user目录：
+```shell
+find -iname "*txt*" -exec mv -v {} /home/user \;
+```
+将文件按行并列显示：
+```shell
+paste test.txt test1.txt
+```
+shell里的进度条：
+```shell
+pv data.log
+```

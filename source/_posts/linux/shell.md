@@ -346,3 +346,8 @@ return 569
 f 789
 echo $?
 ```
+
+## 在当前shell里执行一个文件里的命令：
+```shell
+source /home/user/file.name
+```
