@@ -2,6 +2,8 @@ category: JVM
 date: 2014-11-28
 title: JVM 日志输出
 ---
+本文主要列举了JVM中常用的日志输出参数
+
 ## PrintGC
 在jvm选项上添加上这个参数,只要遇上GC就会输出GC日志
 
@@ -13,6 +15,27 @@ title: JVM 日志输出
 
 ## PrintGCTimeStamps
 这个参数会在每次GC的时候,输出GC发生的时间
+
+## PrintFlagsFinal
+`-XX:+PrintFlagsFinal`
+
+## PrintGCDateStamps
+
+
+## PrintGCApplicationConcurrentTime
+
+## PrintGCApplicationStoppedTime
+
+
+## UseGCLogFileRotation
+
+
+## NumberOfGCLogFiles
+
+## GCLogFileSize
+
+## Xloggc
+
 
 ## gc log
 我使用`-Xmx2048m -Xms2048M  -Xmn1048m`的内存分配方式启动一个JVM,下面是其中一段GC 日志

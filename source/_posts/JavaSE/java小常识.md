@@ -18,3 +18,25 @@ Calendar calendar = Calendar.getInstance();
 calendar.setTime(new Date());
 System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));
 ```
+
+## 在Jar包读取文件
+我们使用Maven构建一个工程, 然后在资源目录(resources)下放置一个文件input.file, 然后我们写一个测试类
+```java
+public class Test {
+
+    public static void main(String[] args) throws InterruptedException, IOException {
+        InputStream in = Test.class.getResourceAsStream("input.file");
+        BufferedReader reader = new BufferedReader((new InputStreamReader(in)));
+        System.out.println(reader.readLine());
+    }
+}
+```
+在Idea里运行该程序, 可以成功看到input.file文件里的hi, how are you?的输出. 这是因为idea将resources设置在了cleasspath里, 而类加载器的`getResourceAsStream()`就是从classpath中进行文件查找, 因此可以找到的.
+
+而当我们将测试工程打包, 然后在target下执行命令
+```java
+java -cp .;./* Test
+```
+同样可以看到输出, 这是因为`getResourceAsStream()`会在jar包内部进行文件查找
+
+> 注意: 如果想要在jar内加载文件的话, 只能使用类加载器的`getResourceAsStream()`方法
