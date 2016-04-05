@@ -1,6 +1,6 @@
 category: JVM
 date: 2015-11-24
-title: instrument 初探
+title: Instrumentation Premain
 ---
 使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至能够替换和修改某些类的定义。
 
@@ -98,7 +98,7 @@ Hello world, App
 ```
 
 ### 加载jar包
-我们在Premain类中增加一个加载jar的功能
+我们在Premain类中增加一个动态向系统cp加载jar的功能
 ```java
 public static void appendJarToSystemClassLoader(String path) {
 	JarFile jarFile = null;
@@ -160,9 +160,9 @@ wang.ming15.instrument.print.Print  11
 java.io.PrintStream  44
 ```
 
-### 重新加载类
+### 热加载
 * `redefineClasses()`使用新的字节码全部替换原先存在的Class字节码. (它并不会触发初始化操作, 也不会抛出初始化时的异常. 因此一些静态属性并不会被重新赋值)
-* `retransformClasses()` 修改原先存在的Class字节码应该.
+* `retransformClasses()` 修改原先存在的Class字节码.
 
 > 对于已经在栈帧中的字节码, 他们会继续执行下去, 但是当方法再次调用的时候,则会使用刚刚加载完成的新的字节码. 在重新加载类的时候, 该类已经实例化出的对象同时也不会受到影响.
 
@@ -179,113 +179,84 @@ redefine 操作可以改变修改如下字节码
 
 在redefine过程中,一旦抛出异常, 那么此过程执已经redefine成功的class也会被会滚成原来的.
 
-想使用这个功能我们需要在MANIFEST.MF文件中增加这样一行`Can-Redefine-Classes: true`, 然后我们在Premain中增加一个redefine方法
+想使用这个功能我们需要在MANIFEST.MF文件中增加这样一行`Can-Redefine-Classes: true`, 然后我们在Premain中增加一个load方法, 用于重新加载某个文件夹下所有的文件
 ```java
-public static void redefineClasses(Class clazz, String path) {
-	if (!instrumentation.isRedefineClassesSupported()) {
-		throw new RuntimeException();
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.lang.instrument.ClassDefinition;
+import java.lang.instrument.Instrumentation;
+import java.nio.file.*;
+
+public class Premain {
+	private static Instrumentation instrumentation;
+	public static void premain(String agentArgs, Instrumentation inst) {
+		instrumentation = inst;
 	}
-	try {
-//		InputStream input = Premain.class.getClassLoader().getResourceAsStream(path);
-		InputStream input = new FileInputStream(path);
-		byte[] bytes = new byte[input.available()];
-		input.read(bytes);
-		instrumentation.redefineClasses(new ClassDefinition(clazz, bytes));
-	} catch (ClassNotFoundException e) {
-		e.printStackTrace();
-	} catch (UnmodifiableClassException e) {
-		e.printStackTrace();
-	} catch (IOException e) {
-		e.printStackTrace();
+
+	public static void load(String jarPath) {
+		try {
+			for (File file : new File(jarPath).listFiles()) {
+				try {
+					String fileName = file.getPath();
+					InputStream input = new FileInputStream(file);
+					byte[] bytes = new byte[input.available()];
+					input.read(bytes);
+                    int idx = fileName.lastIndexOf("\\");
+                    fileName = fileName.substring(idx + 1);
+                    fileName = fileName.split("\\.class")[0];
+                    Class<?> clazz = Class.forName(fileName);
+					instrumentation.redefineClasses(new ClassDefinition(clazz, bytes));
+                } catch (final Exception e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
 ```
 然后我们写一个测试类
 ```java
-public class TestClassLoader {
-
-	public static void main(String[] args) throws InterruptedException {
-		for (int i = 0; i < 10; i++) {
-			Test.print();
-			TimeUnit.SECONDS.sleep(5);
-			Premain.redefineClasses(Test.class, "D://Test.class");
-		}
-	}
-}
-```
-最后成功输出
-```java
-I am a big T
-I am a big T
-I am a big T
-I am a big T
-I am a big T
-I am a big T
-I am a big T
-I am a big T ok
-I am a big T ok
-```
-
-## Agentmain
-
-在 Java SE 5 中premain 所作的 Instrumentation 也仅限与 main 函数执行前，这样的方式存在一定的局限性。Java SE 6 针对这种状况做出了改进，开发者可以在 main 函数开始执行以后，再启动自己的 Instrumentation 程序。在 Java SE 6 的 Instrumentation 当中，有一个跟 premain“并驾齐驱”的“agentmain”方法，可以在 main 函数开始运行之后再运行。
-
-首先我们还是需要修改MANIFEST.MF文件, 在其中添加
-```java
-Manifest-Version: 1.0
-Agent-Class: AgentMain
-Can-Redefine-Classes: true
-```
-
-然后我们写一个代理类
-```java
-import javax.xml.transform.Transformer;
-import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
-
-public class AgentMain {
-
-    public static void agentmain(String agentArgs, Instrumentation inst)
-            throws ClassNotFoundException, UnmodifiableClassException,
-            InterruptedException {
-        for (Class clazz : inst.getAllLoadedClasses()) {
-            System.out.println("Loaded Class : " + clazz.getName());
-        }
-        Printer.printTime();
-    }
-}
-
-class Printer {
-
-    public static void printTime() {
-        System.out.println("now is " + new Date());
-    }
-}
-```
-然后写一个启动类
-```java
-import com.sun.tools.attach.VirtualMachine;
-
-import java.lang.management.ManagementFactory;
 import java.util.concurrent.TimeUnit;
 
-public class AgentLoader {
+public class PremainMain {
 
-    public static void main(String[] args) throws Exception {
-        String name = ManagementFactory.getRuntimeMXBean().getName();
-        String pid = name.split("@")[0];
-        System.out.println(pid);
-        VirtualMachine vm = VirtualMachine.attach(pid);
-        for (int i = 0; i < 100; i++) {
-//            vm.loadAgent("D:\\ming\\test\\target\\test-1.0-SNAPSHOT.jar");
-            vm.loadAgentPath("D:\\ming\\test\\target\\test-1.0-SNAPSHOT.jar");
-            System.out.println("Load Agent Over!!!");
-            TimeUnit.SECONDS.sleep(10);
+	public static void main(String[] args) throws InterruptedException {
+        for (int i = 0; i < 300; i++) {
+            Premain.load("D:\\ming\\test\\target\\classes");
+            PremainMain.printTime();
+            new PremainMain().printNewTime();
+            TimeUnit.SECONDS.sleep(5);
         }
     }
+
+    public static void printTime() {
+        System.out.println(2);
+    }
+
+    public void printNewTime() {
+        System.out.println(2);
+        System.out.println(id);
+    }
+
+    public int id = 2;
 }
 ```
-打包后, 执行命令
+我们不断地修改printTime()和printNewTime()以及Id的值, 最后成功输出
 ```java
-java -cp .;./* AgentLoader
+1
+1
+1
+1
+1
+1
+1
+1
+1
+2
+2
+2
 ```
+

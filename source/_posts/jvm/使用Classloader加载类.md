@@ -212,8 +212,36 @@ class MyClassLoader extends URLClassLoader {
 
 ```
 
+同一个类加载器不同加载同一个类俩次, 例如我们利用上面的`MyClassLoader`进行加载
+```java
+public class Test {
 
-
+	public static void main(String[] arg) throws Exception {
+		MyClassLoader myLoader1 = new MyClassLoader(new URL[]{});
+		Class<?> obj1 = myLoader1.loadClass("D:\\ming\\test\\target\\classes\\Test.class");
+		MyClassLoader myLoader2 = new MyClassLoader(new URL[]{});
+		Class<?> obj2 = myLoader2.loadClass("D:\\ming\\test\\target\\classes\\Test.class");
+		System.out.println(obj1.equals(obj2));
+		Class<?> obj3 = myLoader2.loadClass("D:\\ming\\test\\target\\classes\\Test.class");
+		System.out.println(obj2.equals(obj3));
+	}
+}
+```
+会产生异常
+```java
+false
+Exception in thread "main" java.lang.LinkageError: loader (instance of  MyClassLoader): attempted  duplicate class definition for name: "Test"
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)
+	at MyClassLoader.loadClass(Test.java:37)
+	at Test.main(Test.java:15)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
+```
 
 
 
