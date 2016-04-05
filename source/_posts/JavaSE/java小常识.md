@@ -1,6 +1,6 @@
 category: JavaSE
 date: 2015-11-19
-title: JAVA 小常识
+title: Java 常用技能
 ---
 
 ## 控制台乱码
@@ -40,3 +40,19 @@ java -cp .;./* Test
 同样可以看到输出, 这是因为`getResourceAsStream()`会在jar包内部进行文件查找
 
 > 注意: 如果想要在jar内加载文件的话, 只能使用类加载器的`getResourceAsStream()`方法
+
+## 便利jar包中文件
+我们知道我们可以使用`ClassLoader`的`getResourceAsStream()`读取jar包中的文件, 那么如何知道jar包中有哪些文件, 也就是如何便利jar包中的文件呢？
+```java
+public class Test {
+
+	public static void main(String[] arg) throws Exception {
+		JarFile jar = new JarFile("D:\\premain\\target\\agent-1.0-SNAPSHOT.jar");
+		Enumeration<JarEntry> jarEntrys = jar.entries();
+		while (jarEntrys.hasMoreElements()) {
+			JarEntry jarEntry = jarEntrys.nextElement();
+			System.out.println(jarEntry.getName());
+		}
+	}
+}
+```

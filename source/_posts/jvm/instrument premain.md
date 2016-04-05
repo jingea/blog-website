@@ -183,10 +183,14 @@ redefine 操作可以改变修改如下字节码
 ```java
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
-import java.nio.file.*;
+import java.lang.instrument.UnmodifiableClassException;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class Premain {
 	private static Instrumentation instrumentation;
@@ -194,19 +198,16 @@ public class Premain {
 		instrumentation = inst;
 	}
 
-	public static void load(String jarPath) {
+	public static void loadFromDirection(String directionPath) {
 		try {
-			for (File file : new File(jarPath).listFiles()) {
+			for (File file : new File(directionPath).listFiles()) {
 				try {
-					String fileName = file.getPath();
 					InputStream input = new FileInputStream(file);
-					byte[] bytes = new byte[input.available()];
-					input.read(bytes);
-                    int idx = fileName.lastIndexOf("\\");
-                    fileName = fileName.substring(idx + 1);
-                    fileName = fileName.split("\\.class")[0];
-                    Class<?> clazz = Class.forName(fileName);
-					instrumentation.redefineClasses(new ClassDefinition(clazz, bytes));
+					String fileName = file.getPath();
+					if (!fileName.contains("\\.class")) {
+						continue;
+					}
+                    redefineClassesFromBytes(input, fileName);
                 } catch (final Exception e) {
 					e.printStackTrace();
 				}
@@ -215,19 +216,63 @@ public class Premain {
 			e.printStackTrace();
 		}
 	}
+
+	public static void loadFromJarFile(String jarPath) {
+        try {
+            JarFile jar = new JarFile(jarPath);
+            Enumeration<JarEntry> jarEntrys = jar.entries();
+            while (jarEntrys.hasMoreElements()) {
+                JarEntry jarEntry = jarEntrys.nextElement();
+                String fileName = jarEntry.getName();
+                if (!fileName.contains("\\.class")) {
+                    continue;
+                }
+                String totalPath = jarPath + "\\" + fileName;
+                System.out.println(totalPath);
+                InputStream input = Premain.class.getClassLoader().getResourceAsStream(totalPath);
+                redefineClassesFromBytes(input, fileName);
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
+    private static void redefineClassesFromBytes(InputStream input, String fileName) throws IOException, ClassNotFoundException, UnmodifiableClassException {
+        byte[] bytes = new byte[input.available()];
+        input.read(bytes);
+        int idx = fileName.lastIndexOf("\\");
+        fileName = fileName.substring(idx + 1);
+        fileName = fileName.split("\\.class")[0];
+        Class<?> clazz = Class.forName(fileName);
+        instrumentation.redefineClasses(new ClassDefinition(clazz, bytes));
+    }   
 }
+
 ```
 然后我们写一个测试类
 ```java
 import java.util.concurrent.TimeUnit;
 
-public class PremainMain {
+public class TestReload {
 
 	public static void main(String[] args) throws InterruptedException {
+        fromDirection();
+    }
+
+    public static void fromJar() throws InterruptedException{
         for (int i = 0; i < 300; i++) {
-            Premain.load("D:\\ming\\test\\target\\classes");
-            PremainMain.printTime();
-            new PremainMain().printNewTime();
+            Premain.loadFromJarFile("D:\\ming\\test\\target\\test-1.0-SNAPSHOT.jar");
+            TestReload.printTime();
+            new TestReload().printNewTime();
+            TimeUnit.SECONDS.sleep(5);
+        }
+    }
+
+    public static void fromDirection() throws InterruptedException {
+        for (int i = 0; i < 300; i++) {
+            Premain.loadFromDirection("D:\\ming\\test\\target\\classes");
+            TestReload.printTime();
+            new TestReload().printNewTime();
             TimeUnit.SECONDS.sleep(5);
         }
     }
@@ -260,3 +305,4 @@ public class PremainMain {
 2
 ```
 
+> 在上面的实现中我分别实现了从目录和jar包对class文件进行热加载
