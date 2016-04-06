@@ -196,11 +196,21 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+/**
+ * 实现服务器局部代码热加载功能
+ *      目前只支持方法体代码热更以及对属性值的改变
+ *      但是不能修改类的继承结构, 不能修改方法签名, 不能增加删除方法以及属性成员
+ *
+ *  使用方法
+ *      java -javaagent:D:\premain\target\agent-1.0-SNAPSHOT.jar -cp .;./* MainServerStart
+ *      只需要将该项目打包出来然后参照上面的例子进行代理处理就好了, 然后正常启动游戏服就好
+ *
+ */
 public class Premain {
-	private static Instrumentation instrumentation;
-	public static void premain(String agentArgs, Instrumentation inst) {
-		instrumentation = inst;
-	}
+    private static Instrumentation instrumentation;
+    public static void premain(String agentArgs, Instrumentation inst) {
+        instrumentation = inst;
+    }
 
     // 将已经加载过的类缓存起来, 避免没有修改过的类再次被重新加载
     private static final Map<String, String> classes = new ConcurrentHashMap<>();
@@ -209,13 +219,13 @@ public class Premain {
      * 遍历某个目录加载所有的class文件
      * @param directionPath
      */
-	public static void loadFromDirection(String directionPath) {
+    public static void loadFromDirection(String directionPath) {
         loadFromDirection(new File(directionPath), "");
     }
 
-	public static void loadFromDirection(File dir, String parantName) {
-		try {
-			for (File file : dir.listFiles()) {
+    public static void loadFromDirection(File dir, String parantName) {
+        try {
+            for (File file : dir.listFiles()) {
                 if (file.isFile() && !file.getName().endsWith(".class")) {
                     System.out.println("filter : " + file.getName());
                     continue;
@@ -228,21 +238,21 @@ public class Premain {
                     loadFromDirection(file, fileName);
                     continue;
                 }
-				try(InputStream input = new FileInputStream(file);) {
-					String fileName = file.getPath();
+                try(InputStream input = new FileInputStream(file);) {
+                    String fileName = file.getPath();
                     String className = findClassName(fileName);
                     if (parantName != null && !parantName.equals("")) {
                         className = parantName + "." + className;
                     }
                     redefineClassesFromBytes(input, className);
                 } catch (final Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-	}
+                    e.printStackTrace();
+                }
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 从jar包里加载所有的class文件
@@ -279,19 +289,17 @@ public class Premain {
      * @param jarPath
      */
     public static void loadFromZipFile(String jarPath) {
-        try {
-            InputStream in = new BufferedInputStream(new FileInputStream(new File(jarPath)));
-            ZipInputStream zin = new ZipInputStream(in);
+        try(InputStream in = new BufferedInputStream(new FileInputStream(new File(jarPath)));
+            ZipInputStream zin = new ZipInputStream(in);) {
             ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
                 if (ze.isDirectory()) {
-                    System.out.println("Step Over Directory : " + ze.getName());
+                    // TODO 检查是否还有其他操作要做
                 } else {
                     long size = ze.getSize();
                     if (size > 0) {
                         String fileName = ze.getName();
                         if (!fileName.endsWith(".class")) {
-                            System.out.println("filter : " + fileName);
                             continue;
                         }
                         ZipFile zf = new ZipFile(jarPath);
@@ -302,10 +310,10 @@ public class Premain {
                         }
                         redefineClassesFromBytes(input, fileName);
                         input.close();
+                        zf.close();
                     }
                 }
             }
-            zin.closeEntry();
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -370,6 +378,7 @@ public class Premain {
         return stringBuffer.toString();
     }
 }
+
 ```
 然后我们写一个测试类
 ```java
