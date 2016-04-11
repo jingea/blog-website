@@ -1,4 +1,4 @@
-category: http客户端
+category: Java Http服务
 date: 2016-01-20
 title: Retrofit 初探
 ---

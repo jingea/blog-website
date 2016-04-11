@@ -1,4 +1,4 @@
-category: http服务器
+category: Java Http服务
 date: 2015-04-08
 title: SpringBoot 初探
 ---

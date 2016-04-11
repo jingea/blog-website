@@ -1,4 +1,4 @@
-category: http客户端
+category: Java Http服务
 date: 2015-12-23
 title: Feign 初探
 ---
