@@ -1,30 +1,30 @@
-category: ¹¹½¨¹¤¾ß
+category: æ„å»ºå·¥å…·
 date: 2015-06-08
-title: maven²å¼şÄ¿±ê
+title: mavenæ’ä»¶ç›®æ ‡
 ---
 
-²å¼şÀï»á°üº¬¶à¸öÄ¿±ê,Ã¿¸öÄ¿±ê¶¼¶ÔÓ¦×ÅÌØ¶¨µÄ¹¦ÄÜ,Ò²¾ÍÊÇËµ²å¼şÀïµÄ¹¦ÄÜÊÇÍ¨¹ıÄ¿±êÀ´ÊµÏÖÁË.
+æ’ä»¶é‡Œä¼šåŒ…å«å¤šä¸ªç›®æ ‡,æ¯ä¸ªç›®æ ‡éƒ½å¯¹åº”ç€ç‰¹å®šçš„åŠŸèƒ½,ä¹Ÿå°±æ˜¯è¯´æ’ä»¶é‡Œçš„åŠŸèƒ½æ˜¯é€šè¿‡ç›®æ ‡æ¥å®ç°äº†.
 
-ÀıÈç`maven-compiler-plugin`µÄ`compile`Ä¿±êµÄĞ´·¨Îª`compiler:compile`.
+ä¾‹å¦‚`maven-compiler-plugin`çš„`compile`ç›®æ ‡çš„å†™æ³•ä¸º`compiler:compile`.
 
-### ²å¼ş°ó¶¨
-ÎÒÃÇ¿ÉÒÔ½«²å¼şµÄÄ¿±êÓëÉúÃüÖÜÆÚµÄ½×¶ÎÏà°ó¶¨.
+### æ’ä»¶ç»‘å®š
+æˆ‘ä»¬å¯ä»¥å°†æ’ä»¶çš„ç›®æ ‡ä¸ç”Ÿå‘½å‘¨æœŸçš„é˜¶æ®µç›¸ç»‘å®š.
 
-defaultÉúÃüÖÜÆÚÓëÄÚÖÃ²å¼ş°ó¶¨¹ØÏµ¼°¾ßÌåÈÎÎñ:
+defaultç”Ÿå‘½å‘¨æœŸä¸å†…ç½®æ’ä»¶ç»‘å®šå…³ç³»åŠå…·ä½“ä»»åŠ¡:
 
-ÉúÃüÖÜÆÚ½×¶Î                  | ²å¼şÄ¿±ê                              |Ö´ĞĞÈÎÎñ
+ç”Ÿå‘½å‘¨æœŸé˜¶æ®µ                  | æ’ä»¶ç›®æ ‡                              |æ‰§è¡Œä»»åŠ¡
 -----------------------------|--------------------------------------|--------------
-process-resources            |maven-resources-plugin:resources      |¸´ÖÆÖ÷×ÊÔ´ÎÄ¼şÖÁÖ÷Êä³öÄ¿Â¼
-compile                      |maven-compile-plugin:compile	        |±àÒëÖ÷´úÂëÖÁÖ÷Êä³öÄ¿Â¼
-process-test-resources       |maven-resources-plugin:testRresources |¸´ÖÆ²âÊÔ×ÊÔ´ÎÄ¼şÖÁ²âÊÔÊä³öÄ¿Â¼
-test-compile                 |maven-compiler-plugin:testCompile     |±àÒë²âÊÔ´úÂëÖÁ²âÊÔÊä³öÄ¿Â¼
-test	                     |maven-surefire-plugin:test            |Ö´ĞĞ²âÊÔÓÃÀı
-package	                     |maven-jar-plugin:jar                  |´´½¨ÏîÄ¿jar°ü
-install	                     |maven-install-plugin:install          |½«ÏîÄ¿Êä³ö¹¹¼ş°²×°µ½±¾µØ²Ö¿â
-deploy                       |maven-deploy-plugin:deploy            |½«ÏîÄ¿Êä³ö¹¹¼ş²¿Êğµ½Ô¶³Ì²Ö¿â
+process-resources            |maven-resources-plugin:resources      |å¤åˆ¶ä¸»èµ„æºæ–‡ä»¶è‡³ä¸»è¾“å‡ºç›®å½•
+compile                      |maven-compile-plugin:compile	        |ç¼–è¯‘ä¸»ä»£ç è‡³ä¸»è¾“å‡ºç›®å½•
+process-test-resources       |maven-resources-plugin:testRresources |å¤åˆ¶æµ‹è¯•èµ„æºæ–‡ä»¶è‡³æµ‹è¯•è¾“å‡ºç›®å½•
+test-compile                 |maven-compiler-plugin:testCompile     |ç¼–è¯‘æµ‹è¯•ä»£ç è‡³æµ‹è¯•è¾“å‡ºç›®å½•
+test	                     |maven-surefire-plugin:test            |æ‰§è¡Œæµ‹è¯•ç”¨ä¾‹
+package	                     |maven-jar-plugin:jar                  |åˆ›å»ºé¡¹ç›®jaråŒ…
+install	                     |maven-install-plugin:install          |å°†é¡¹ç›®è¾“å‡ºæ„ä»¶å®‰è£…åˆ°æœ¬åœ°ä»“åº“
+deploy                       |maven-deploy-plugin:deploy            |å°†é¡¹ç›®è¾“å‡ºæ„ä»¶éƒ¨ç½²åˆ°è¿œç¨‹ä»“åº“
 
 
-ÎÒÃÇÀ´×Ô¶¨Òå°ó¶¨£º
+æˆ‘ä»¬æ¥è‡ªå®šä¹‰ç»‘å®šï¼š
 ```xml
 <build>
     <plugins>
@@ -44,10 +44,10 @@ deploy                       |maven-deploy-plugin:deploy            |½«ÏîÄ¿Êä³ö¹
     </plugins>
 </build>
 ```
-ÎÒÃÇÔÚ`install`½×¶Î°ó¶¨ÁË`exec-maven-plugin`²å¼şµÄ`java`Ä¿±ê.
+æˆ‘ä»¬åœ¨`install`é˜¶æ®µç»‘å®šäº†`exec-maven-plugin`æ’ä»¶çš„`java`ç›®æ ‡.
 
-## ´øÓĞÒÀÀµ°ü¹¹½¨
-²ÉÓÃÏÂÃæµÄ²å¼ş, µ±¹¹½¨Ê±ËùĞèµÄÒÀÀµ°üÒ²»áÊä³öµ½targetÄ¿Â¼ÏÂ
+## å¸¦æœ‰ä¾èµ–åŒ…æ„å»º
+é‡‡ç”¨ä¸‹é¢çš„æ’ä»¶, å½“æ„å»ºæ—¶æ‰€éœ€çš„ä¾èµ–åŒ…ä¹Ÿä¼šè¾“å‡ºåˆ°targetç›®å½•ä¸‹
 ```xml
 <build>
     <plugins>
@@ -74,4 +74,4 @@ deploy                       |maven-deploy-plugin:deploy            |½«ÏîÄ¿Êä³ö¹
 </build>
 ```
 
-## ´ò¿ÉÔËĞĞjar°ü
+## æ‰“å¯è¿è¡ŒjaråŒ…
