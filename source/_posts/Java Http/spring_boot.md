@@ -2,7 +2,7 @@ category: Java Http服务
 date: 2015-04-08
 title: SpringBoot 初探
 ---
-# 添加依赖
+添加依赖
 ```xml
 <dependency>
 	<groupId>org.springframework.boot</groupId>
@@ -52,7 +52,7 @@ title: SpringBoot 初探
 <!--</dependency>-->
 ```
 
-# 构建应用
+构建应用
 ```java
 @Controller
 // 告诉Spring Boot根据添加的jar依赖猜测如何配置Spring

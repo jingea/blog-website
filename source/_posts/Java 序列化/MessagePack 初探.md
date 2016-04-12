@@ -1,4 +1,4 @@
-category: 序列化工具
+category: Java 序列化
 date: 2016-02-03
 title: MessagePack 初探
 ---

@@ -1,4 +1,4 @@
-category: 序列化工具
+category: Java 序列化
 date: 2015-12-23
 title: fastjson
 ---

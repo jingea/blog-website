@@ -76,7 +76,6 @@ class MySqlManager {
             Names.bindProperties(binder(), createUnpooledProperties());
 
             addMapperClass();
-            bindService();
         }
 
         // 添加映射类
@@ -88,8 +87,8 @@ class MySqlManager {
             Properties myBatisProperties = new Properties();
             myBatisProperties.setProperty("mybatis.environment.id", "test");
             myBatisProperties.setProperty("JDBC.schema", "test");
-//		myBatisProperties.setProperty("JDBC.url", "localhost");
-//		myBatisProperties.setProperty("JDBC.driver", "");
+//			myBatisProperties.setProperty("JDBC.url", "localhost");
+//			myBatisProperties.setProperty("JDBC.driver", "");
             myBatisProperties.setProperty("JDBC.username", "root");
             myBatisProperties.setProperty("JDBC.password", "root");
             myBatisProperties.setProperty("JDBC.loginTimeout", "10");
