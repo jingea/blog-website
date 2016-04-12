@@ -107,6 +107,10 @@ public class GettingStarted {
         UserMapper user = MySqlManager.getInstance(UserMapper.class);
         User user1 = user.getUser("1");
         System.out.println(user1.name);
+		
+		UserMapper userMapper = new UserMapper();
+		injector.injectMembers(userMapper);
+		System.out.println(userMapper.name);
     }
 }
 ```
