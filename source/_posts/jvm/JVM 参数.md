@@ -55,27 +55,6 @@ title: java虚拟机参数
 *`LargePageSizeInBytes`:使用指定大小的内存分页,这项特性需要操作系统的支持
 *`StringCache`:是否使用字符串缓存,开启则使用
 
-## 调试参数
-*`HeapDumpOnOutOfMemoryError`:在发生内存溢出异常时是否生成堆转储快照,关闭则不生成
-*`OnOutOfMemoryError`:当虚拟机抛出内存溢出异常时,执行指令的命令
-*`OnError`:当虚拟机抛出ERROR异常时,执行指令的命令
-*`PrintClassHistogram`:使用[ctrl]-[break]快捷键输出类统计状态,相当于jmap-histo的功能
-*`PrintConcurrentLocks`:打印J.U.C中的状态
-*`PrintCommandLineFlags`:打印启动虚拟机时输入的非稳定参数
-*`PrintGC`:打印GC信息
-*`PrintCompilation`:显示所有可设置的参数及它们的值(***从JDK6update21开始才可以用)
-*`PrintGCDetails`:打印GC的详细信息
-*`PrintGCTimesStamps`:打印GC停顿耗时
-*`PrintTenuingDistribution`:打印GC后新生代各个年龄对象的大小
-*`TraceClassLoading`:打印类加载信息
-*`TraceClassUnloading`:打印类卸载信息
-*`PrintInlining`:打印方法内联信息
-*`PrintCFGToFile`:将CFG图信息输出到文件,只有DEBUG版虚拟机才支持此参数
-*`PrintIdealGraphFile`:将Ideal图信息输出到文件,只有DEBUG版虚拟机才支持此参数
-*`UnlockDiagnosticVMOptions`:让虚拟机进入诊断模式,一些参数(如PrintAssembly)需要在诊断模式中才能使用
-*`PrintAssembly`:打印即时编译后的二进制信息
-
-
 ## 参数组合
 *给远程服务器加debug
 ```
