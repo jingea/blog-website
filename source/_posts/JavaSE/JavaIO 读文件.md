@@ -2,10 +2,8 @@ category: JavaSE
 date: 2015-11-21
 title: JAVA 读文件
 ---
-
 ## BufferedInputStream
 我们使用`FileInputStream`, `BufferedInputStream`来读取文件
-
 ```java
 // 读取二进制文件
 try (BufferedInputStream bf = new BufferedInputStream(
@@ -18,10 +16,7 @@ try (BufferedInputStream bf = new BufferedInputStream(
 	e.printStackTrace();
 }
 ```
-`BufferedInputStream`是一个带有缓冲区域的`InputStream`, 支持`mark()`标记和`reset()`重置方法.输入到byte[]数组里.
-
-`BufferedInputStream`只将数据读取进byte字节数组里, 因此这种方式只能读取二进制字节流
-
+`BufferedInputStream`是一个带有缓冲区域的`InputStream`, 支持`mark()`标记和`reset()`重置方法.输入到byte[]数组里.只将数据读取进byte字节数组里, 因此这种方式只能读取二进制字节流
 > FileInputStream 一个字节一个字节的从文件里读取数据
 
 ## BufferedReader
@@ -72,44 +67,52 @@ try (RandomAccessFile r = new RandomAccessFile(file, "rw")) {
 		r.read();	// r.readLine();
 	}
 }
-
 // 写入数据,第二个参数必须为 "r", "rw", "rws", or "rwd"
 try (RandomAccessFile w = new RandomAccessFile(file, "rw")) {
 	for (int i = 0; i < 1024 * 1024 * 10; i++)
 		w.writeByte(1);
 }
-
-try (FileChannel fc = new RandomAccessFile(new File("temp.tmp"), "rw")
-		.getChannel();) {
-
-	IntBuffer ib = fc.map(FileChannel.MapMode.READ_WRITE, 0, fc.size())
-			.asIntBuffer();
-
+try (FileChannel fc = new RandomAccessFile(new File("temp.tmp"), "rw").getChannel();) {
+	IntBuffer ib = fc.map(FileChannel.MapMode.READ_WRITE, 0, fc.size()).asIntBuffer();
 	for (int i = 1; i < 10000; i++)
 		ib.put(ib.get(i - 1));
 
 }
-
 RandomAccessFile raf = new RandomAccessFile(new File("temp.tmp"), "rw");
 raf.writeInt(1);
-
 for (int i = 0; i < 2000000; i++) {
 	raf.seek(raf.length() - 4);
 	raf.writeInt(raf.readInt());
 }
-
 raf.close();
 ```
 
 ## getResourceAsStream
 我们还可以使用类加载器的`getResourceAsStream()`从指定路径或者jar包中加载文件资源
+1. Class.getResourceAsStream(String path) ： path 不以’/'开头时默认是从此类所在的包下取资源，以’/'开头则是从ClassPath根下获取。其只是通过path构造一个绝对路径，最终还是由ClassLoader获取资源。
+2. Class.getClassLoader.getResourceAsStream(String path) ：默认则是从ClassPath根下获取，path不能以’/'开头，最终是由ClassLoader获取资源。
 ```java
-InputStream input = ReloadClass.class.getClassLoader().getResourceAsStream(path);
-try {
-	byte[] bytes = new byte[input.available()];
-	input.read(bytes);
-	return bytes;
-} catch (IOException e) {
-	e.printStackTrace();
+public class TestReadFile {
+	public static void main(String[] args) throws IOException {
+
+		InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream("./mybatis-config.xml");
+		BufferedReader buffer = new BufferedReader(new InputStreamReader(in));
+		System.out.println(buffer.readLine());
+		in = new TestReadFile().getClass().getResourceAsStream("./mybatis-config.xml");
+		buffer = new BufferedReader(new InputStreamReader(in));
+		System.out.println(buffer.readLine());
+
+		System.out.println(new File(".").getCanonicalPath());
+		System.out.println(new File(".").getAbsolutePath());
+		System.out.println(new File(".").getPath());
+	}
 }
+```
+输出结果为
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
+D:\ming\test
+D:\ming\test\.
+.
 ```

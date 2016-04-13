@@ -23,3 +23,22 @@ title: IDEA 设置
 
 ## 使用eclipse格式化文件
 IDEA如果要使用eclipse的格式化文件需要安装`Eclipse Code Formatter`插件, 然后在setting里的`Other Seetings`里的`Eclipse Code Formatter`里引用格式化文件就好了
+
+## Idea打包与classpath
+当我们使用maven创建一个项目的时候会创建出如下的目录
+![](https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20classpath.png)
+我们会看到如下的几个目录, 这几个目录都是设置在classpath上
+* Sources ：src/main/java
+* Resources : src/main/resources
+如果我们要新添加一个classpath时, 点击add Content Root就好. 
+> 注意我们不要使用`Run/Debug Configurations`里的VM options, 这个路径有时候是让启动我们自己程序的Idea进程使用的.
+我们在程序里可以使用
+```java
+InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream("./mybatis-config.xml");
+```
+这种直接读取classpath也就是resources中的文件. 当使用Maven打包之后, 也可以直接从jar包中读取
+![]()
+我们看到resources目录直接放到了jar包的根目录下,但是我们需要配置一些maven的打包方式
+```xml
+
+```

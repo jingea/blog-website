@@ -1,4 +1,4 @@
-category: 构建工具
+category: Java 项目构建
 date: 2015-11-18
 title: Gradle 初探
 ---

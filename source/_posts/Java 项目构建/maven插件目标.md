@@ -1,4 +1,4 @@
-category: 构建工具
+category: Java 项目构建
 date: 2015-06-08
 title: maven插件目标
 ---
