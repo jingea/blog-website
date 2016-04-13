@@ -1,13 +1,13 @@
 category: Java 项目构建
 date: 2015-06-08
-title: maven插件目标
+title: maven插件
 ---
 
 插件里会包含多个目标,每个目标都对应着特定的功能,也就是说插件里的功能是通过目标来实现了.
 
 例如`maven-compiler-plugin`的`compile`目标的写法为`compiler:compile`.
 
-### 插件绑定
+## 插件绑定
 我们可以将插件的目标与生命周期的阶段相绑定.
 
 default生命周期与内置插件绑定关系及具体任务:
@@ -46,8 +46,32 @@ deploy                       |maven-deploy-plugin:deploy            |将项目�
 ```
 我们在`install`阶段绑定了`exec-maven-plugin`插件的`java`目标.
 
-## 带有依赖包构建
-采用下面的插件, 当构建时所需的依赖包也会输出到target目录下
+## maven-jar-plugin
+自定义Manifest
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <configuration>
+        <archive>
+            <manifestFile>
+                src/main/resources/META-INF/MANIFEST.MF
+            </manifestFile>
+            <manifest>
+                <addClasspath>true</addClasspath>
+                <classpathPrefix>lib/</classpathPrefix>
+                <mainClass>
+                    wang.ming15.instrument.core.App
+                </mainClass>
+            </manifest>
+        </archive>
+    </configuration>
+</plugin>
+```
+
+
+## maven-dependency-plugin
+带有依赖包构建采用maven-dependency-plugin插件, 当构建时所需的依赖包也会输出到target目录下
 ```xml
 <build>
     <plugins>
@@ -74,4 +98,4 @@ deploy                       |maven-deploy-plugin:deploy            |将项目�
 </build>
 ```
 
-## 打可运行jar包
+## 
