@@ -32,6 +32,8 @@ A
 
 > 注意如果单邦定时, BindingA必须为class, 如果为接口的话会产生No implementation for testGuice.BindingA was bound.异常
 
+> 参考@ImplementedBy or @ProvidedBy
+
 ## 链式绑定
 ```java
 public class TestBindings {
