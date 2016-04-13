@@ -1,37 +1,35 @@
 category: guice
 date: 2015-12-08
-title: Guice Provides Methods
+title: Guice Provides绑定方式
 ---
-
+我们可以使用`Provides`注解替代`configure()`实现的绑定.
 ```java
-public class TestLinkedBindings {
+public class TestProvidesMethods {
 	public static void main(String[] args) {
-		Injector injector = Guice.createInjector(new ABCModule());
+		Injector injector = Guice.createInjector(new AbstractModule() {
+			@Override
+			protected void configure() {
+			}
+
+			@Provides
+			public A provideA() {
+				B b = new B();
+				return b;
+			}
+		});
 		A print = injector.getInstance(A.class);
 		print.print();
 	}
 }
-
-interface A {
-	void print();
+class A {
+	public void print() {
+		System.out.println("A");
+	}
 }
-
-class B implements A {
+class B extends A {
 	@Override
 	public void print() {
 		System.out.println("B");
-	}
-}
-
-class ABCModule extends AbstractModule {
-	@Override
-	protected void configure() {
-	}
-
-	@Provides
-	public B provideA() {
-		B b = new B();
-		return b;
 	}
 }
 ```
@@ -41,7 +39,7 @@ class ABCModule extends AbstractModule {
 
 需要注意的是, 返回的类型必须是唯一的, 如果我们添加下面的代码
 ```java
-class C implements A {
+class C implementsA {
 	@Override
 	public void print() {
 		System.out.println("c");

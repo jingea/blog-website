@@ -106,35 +106,3 @@ Injector intjector = Guice.createInjector(new PeopleModule());
 PrintName pn = intjector.getInstance(PrintName.class);
 pn.print();
 ```
-
-## Singleton
-```java
-@Singleton
-public class Apple implements Phone {
-	@Override
-	public void run() {
-		System.out.println("Apple Run");
-	}
-}
-
-public interface Phone {
-	public void run();
-}
-
-public class PhoneModule implements Module {
-
-	@Override
-	public void configure(Binder binder) {
-		binder.bind(Phone.class).to(Apple.class);
-	}
-}
-```
-
-测试代码
-```java
-Injector injector = Guice.createInjector(new PhoneModule());
-Phone apple6 = injector.getInstance(Phone.class);
-apple6.run();
-Phone apple6s = injector.getInstance(Phone.class);
-System.out.println(apple6s.equals(apple6));
-```
