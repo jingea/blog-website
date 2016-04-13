@@ -1,9 +1,9 @@
 # website
-
-1. `hexo init` 建立一个博客
-2. `npm install hexo-cli -g` 下载相关hexo工具
-3. `npm install hexo-deployer-git --save`
-4. `npm install hexo-generator-feed `
+ 
+1. `npm install hexo-cli -g` 下载相关hexo工具
+2. `npm install hexo-deployer-git --save`
+3. `npm install hexo-generator-feed `
+4. `hexo init` 建立一个博客
 5. `hexo generate` 生成html文件
 6. `hexo server` 在线预览
 
