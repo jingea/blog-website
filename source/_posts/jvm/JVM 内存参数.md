@@ -153,6 +153,7 @@ invoke : 1300
 
 ### UseAdaptiveSizePolicy
 `-XX:UseAdaptiveSizePolicy`:动态调整java堆中各个区域的大小及进入老年代的年龄
+> 吞吐量垃圾回收器利用了一种叫做自适应大小的特性，自适应大小是基于对象的分配和存活率来自动改变eden空间和survivor空间大小，目的是优化对象的岁数分布。自适应大小的企图是提供易用性，容易优化JVM，以致于提供可靠的吞吐量
 
 ### HandlePromotionFailure
 `-XX:HandlePromotionFailure`:是否允许分配担保失败,即老年代的剩余空间不足以应付新生代的整个Eden和Survivor区的所有对象都存活的极端情况

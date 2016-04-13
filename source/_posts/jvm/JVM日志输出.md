@@ -275,7 +275,7 @@ Total time for which application threads were stopped: 0.0097940 seconds
 
 ## PrintAdaptiveSizePolicy
 *`-XX:-PrintAdaptiveSizePolicy`:打印JVM自动划分新生代和老生代大小信息.
-
+> 这个选项最好和-XX:+PrintGCDetails以及-XX:+PrintGCDateStamps或者-XX:+PrintGCTimeStamps一起使用.以GCAdaptiveSizePolicy开头的一些额外信息输出来了，survived标签表明“to” survivor空间的对象字节数。在这个例子中，survivor空间占用量是224408984字节，但是移动到old代的字节数却有10904856字节。overflow表明young代是否有对象溢出到old代，换句话说，就是表明了“to” survivor是否有足够的空间来容纳从eden空间和“from”survivor空间移动而来的对象。为了更好的吞吐量，期望在应用处于稳定运行状态下，survivor空间不要溢出。
 
 ## CITime
 *`-XX:-CITime`:打印`JITCompiler`的耗时
