@@ -4,6 +4,7 @@ title: ZooKeeper 服务器
 ---
 演示windows系统下快速使用`Zookeeper3.4.6`版本
 
+## 单机模式
 我们从Zookeeper官网下载下其最新的压缩包之后,然后解压得到下面的目录：
 ```shell
 ├───bin
@@ -31,3 +32,5 @@ call %JAVA% "-Dzookeeper.log.dir=%ZOO_LOG_DIR%" "-Dzookeeper.root.logger=%ZOO_LO
 ```xml
 call %JAVA% "-Dzookeeper.log.dir=%ZOO_LOG_DIR%" "-Dzookeeper.root.logger=%ZOO_LOG4J_PROP%" -cp "%CLASSPATH%" %ZOOMAIN% "%ZOOCFG%"
 ```
+
+## 集群模式

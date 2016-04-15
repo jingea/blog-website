@@ -66,14 +66,65 @@ public class CreateNode {
 ```
 
 ## watch
+```java
+import org.apache.zookeeper.*;
 
-## 统一命名服务
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
-## 配置管理
+public class CreateNode {
+	private static final String ROOT_PATH = "/Servers" + new Random().nextInt(100000);
+	private static ZooKeeper zooKeeper;
 
+	public static void main(String[] args) throws IOException, KeeperException, InterruptedException {
+		// 连接ZooKeeper服务器
+		zooKeeper = new ZooKeeper("localhost:2181", 15000, event -> {
+			System.out.println("事件变化 : " + event.getPath() + " -> " + event.getType());
+		});
 
-## 集群管理
+		// 创建根节点, 子节点依赖于父节点, 我们不能直接创建出/Servers/server1
+		zooKeeper.create(ROOT_PATH, // 节点路径
+				"create".getBytes(), // 节点数据
+				ZooDefs.Ids.OPEN_ACL_UNSAFE, // 权限控制(不使用节点权限控制)
+				CreateMode.PERSISTENT, // 节点类型(临时节点不允许创建子节点,所以我们选择了持久节点)
+				(rc, path, ctx, name) -> { // 节点创建成功之后的回调函数
+					try {
+						System.out.println("Create Node OK!");
+						zooKeeper.getChildren(ROOT_PATH, event -> {
+							System.out.println("Watch : " + event.getPath() + " -> " + event.getType());
+						});
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}, ROOT_PATH);
 
-## 分布式锁
+		// 在创建上个node的时候, 由于注册watch是异步执行的, 因此需要在这里等待一下
+		TimeUnit.SECONDS.sleep(3);
 
-## 队列管理
+		zooKeeper.create(ROOT_PATH + "/server1", // 节点路径
+				"create".getBytes(), // 节点数据
+				ZooDefs.Ids.OPEN_ACL_UNSAFE, // 权限控制(不使用节点权限控制)
+				CreateMode.PERSISTENT, // 节点类型(临时节点不允许创建子节点,所以我们选择了持久节点)
+				(rc, path, ctx, name) -> { // 节点创建成功之后的回调函数
+					try {
+						System.out.println("Create Node OK!");
+						zooKeeper.getChildren(ROOT_PATH, event -> {
+							System.out.println("Watch : " + event.getPath() + " -> " + event.getType());
+						});
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}, ROOT_PATH);
+
+		TimeUnit.SECONDS.sleep(3);
+	}
+}
+```
+输出结果为
+```xml
+事件变化 : null -> None
+Create Node OK!
+Watch : /Servers53734 -> NodeChildrenChanged
+Create Node OK!
+```
