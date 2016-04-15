@@ -28,7 +28,10 @@ v1=123
 将命令执行的结果作为值传送给一个变量可以使用
 ```shell
 dirName=`date +%Y_%m_%d_%H_%M_%S`
+#或者
+dirName=$(date +%Y_%m_%d_%H_%M_%S)
 ```
+
 
 ### declare声明
 TODO

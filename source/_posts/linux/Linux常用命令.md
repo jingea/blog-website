@@ -288,3 +288,20 @@ shell里的进度条：
 ```shell
 pv data.log
 ```
+
+## scp
+文件复制：本机->远程服务器：
+```xml
+scp /home/shaoxiaohu/test1.txt shaoxiaohu@172.16.18.1:/home/test2.txt  
+```
+> 其中，test1为源文件，test2为目标文件，shaoxiaohu@172.16.18.1为远程服务器的用户名和ip地址。
+
+文件复制：远程服务器->本机
+```xml
+scp shaoxiaohu@172.16.18.2:/home/test2.txt /home/shaoxiaohu/test1.txt  
+```
+> 其中，haoxiaohu@172.16.18.2为远程服务器的用户名和ip地址， test2为源文件，test1为目标路径
+
+文件夹复制, 在scp命令后加`-r`参数即可。
+
+端口号, 如果端口号有更改，需在scp 后输入：`-P` 端口号 （注意是大写，ssh的命令中 `-p`是小写）。
