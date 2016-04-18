@@ -162,7 +162,12 @@ Device:
 * `-r`　显示操作系统的发行编号。
 * `-s`　显示操作系统名称。
 * `-v` 　显示操作系统的版本。
+```xml
+[root@test game]# uname -a
+Linux test 2.6.32-431.el6.x86_64 #1 SMP Fri Nov 22 03:15:09 UTC 2013 x86_64 x86_64 x86_64 GNU/Linux
+```
 
+> 查看发行版本 `cat /etc/issue`
 
 ### sar
 系统报告命令
