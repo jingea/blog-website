@@ -2,6 +2,16 @@ category: Java Http服务
 date: 2016-01-20
 title: Retrofit 初探
 ---
+首先添加Maven依赖
+```xml
+<dependency>
+	<groupId>com.squareup.retrofit2</groupId>
+	<artifactId>retrofit</artifactId>
+	<version>2.0.2</version>
+</dependency>
+```
+> 注意我们使用的是retrofit2
+
 ## Get请求
 Retrofit 将HTTP API转换为了接口形式, 如下
 ```java

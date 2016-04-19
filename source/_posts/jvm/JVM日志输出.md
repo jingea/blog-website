@@ -223,7 +223,7 @@ Total time for which application threads were stopped: 0.0097940 seconds
 
 
 ## UseGCLogFileRotation
-开启GC日志文件切分功能,前置选项-Xloggcloggc
+开启GC日志文件切分功能,前置选项-Xloggc
 
 ## NumberOfGCLogFiles
 设置Gc日志文件的数量(必须大于1)
