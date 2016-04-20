@@ -35,6 +35,10 @@ tar可用于建立,还原,查看,管理文件,也可方 便的追加新文件到
 ```shell
 tar zxvf package.tar.gz -C new_dir
 ```
+将small目录压缩到small.tar.gz里
+```shell
+tar -czf small.tar.gz small 
+```
 
 ## sort
 sort将文件的每一行作为一个单位,相互比较,比较原则是从首字符向后,依次按ASCII码值进行比较,最后将他们按升序输出.

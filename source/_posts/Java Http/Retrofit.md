@@ -82,3 +82,63 @@ Call<List<String>> repos = service.listRepos("octocat");
 		}
 	});
 ```
+
+## 测试
+在我的windows的机器上进行测试, 只是测试一下Retrofit的性能消耗
+```java
+	@Test
+	public void testIte1Minite() throws IOException {
+		int count = 0;
+		long start = System.currentTimeMillis();
+		while (true) {
+			long end = System.currentTimeMillis();
+			if ((end - start) > 1000 * 60) {
+				break;
+			}
+			Retrofit retrofit = new Retrofit.Builder()
+					.baseUrl("http://192.168.15.20:9091")
+					.addConverterFactory(GsonConverterFactory.create())
+					.build();
+			ServerListService loginServerPushService = retrofit.create(ServerListService.class);
+			loginServerPushService.serverlist().execute().body();
+			count++;
+		}
+		System.out.println(count);
+	}
+
+	public interface ServerListService {
+		@GET("server/serverlist")
+		Call<MyServer> serverlist();
+	}
+
+	public class MyServer {
+		public List<Map<String, String>> serverlist;
+		public List<Map<String, String>> serverlogin;
+	}
+```
+结果如图
+![]()
+```java
+	@Test
+	public void testIte1Minite() throws IOException {
+		int count = 0;
+		long start = System.currentTimeMillis();
+		Retrofit retrofit = new Retrofit.Builder()
+				.baseUrl("http://192.168.15.20:9091")
+				.addConverterFactory(GsonConverterFactory.create())
+				.build();
+		while (true) {
+			long end = System.currentTimeMillis();
+			if ((end - start) > 1000 * 60) {
+				break;
+			}
+			ServerListService loginServerPushService = retrofit.create(ServerListService.class);
+			loginServerPushService.serverlist().execute().body();
+			count++;
+		}
+		System.out.println(count);
+	}
+```
+结果如图
+![]()
+这俩次的结果都能达到每分钟13000个请求, 吞吐量和性能消耗是差不多.
