@@ -14,3 +14,5 @@ title: JProfiler nowait连接
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/jprofiler/nowait/jprofiler8.png)
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/jprofiler/nowait/jprofiler9.png)
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/jprofiler/nowait/jprofiler10.png)
+
+> 但是需要注意的是, 这种连接方式十分消耗服务器性能, 当我开启了方法消耗统计了之后, 跑了500个机器人之后, 就已经卡的不得了了.
