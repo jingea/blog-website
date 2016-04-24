@@ -1,6 +1,6 @@
 category: Nginx
 date: 2016-03-06
-title: Nginx负载均衡
+title: Nginx负载均衡实战
 ---
 我们测试一次Nginx的负载均衡配置.
 

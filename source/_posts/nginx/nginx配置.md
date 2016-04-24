@@ -1,6 +1,6 @@
 category: Nginx
 date: 2016-03-05
-title: Nginx配置
+title: Nginx配置大全
 ---
 下面我们看一下Nginx官方给出的nginx.config可有的全部配置内容
 ```shell
