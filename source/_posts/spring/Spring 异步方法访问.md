@@ -1,4 +1,4 @@
-category: ZooKeeper
+category: Spring
 date: 2016-04-22
 title: Spring 异步方法访问
 ---
