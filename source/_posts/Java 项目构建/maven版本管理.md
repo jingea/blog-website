@@ -1,6 +1,6 @@
 category: Java 项目构建
 date: 2015-06-08
-title: mavenmaven版本管理
+title: Maven 版本管理
 ---
 自动化版本发布基于正确的版本号. 一般我们的版本号构成为`主要版本号.次要版本号.增量版本号-里程碑版本号`. 下面是pom文件中插件设置：
 ```xml
@@ -70,8 +70,3 @@ mvn release:branch
 ```java
 mvn release:update-versions
 ```
-
-
-
-
-

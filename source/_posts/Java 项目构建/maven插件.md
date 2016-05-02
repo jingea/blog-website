@@ -1,6 +1,6 @@
 category: Java 项目构建
 date: 2015-06-08
-title: maven常用插件
+title: Maven 插件
 ---
 插件里会包含多个目标,每个目标都对应着特定的功能,也就是说插件里的功能是通过目标来实现了. 例如`maven-compiler-plugin`的`compile`目标的写法为`compiler:compile`.
 
@@ -100,4 +100,3 @@ deploy                       |maven-deploy-plugin:deploy            |将项目�
 ## maven-shade-plugin
 
 ## maven-dependency-plugin
-

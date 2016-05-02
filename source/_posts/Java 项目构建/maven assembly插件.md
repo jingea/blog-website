@@ -1,6 +1,6 @@
 category: Java 项目构建
 date: 2016-04-13
-title: maven常用插件
+title: Maven Assembly 插件
 ---
 学习自[assembly插件官方教程](http://maven.apache.org/plugins/maven-assembly-plugin/)
 ## 目标
@@ -207,4 +207,3 @@ target/parent-1.0-src/
                         `-- test
                             `-- AppTest.java
 ```
-
