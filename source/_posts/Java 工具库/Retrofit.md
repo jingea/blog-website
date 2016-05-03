@@ -1,4 +1,4 @@
-category: Java Http服务
+category: Java工具
 date: 2016-01-20
 title: Retrofit 初探
 ---

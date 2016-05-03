@@ -1,6 +1,6 @@
-category: Java Http服务
+category: Spring
 date: 2015-04-08
-title: SpringBoot 初探
+title: SpringBoot HTTP 服务
 ---
 添加依赖
 ```xml
