@@ -1,4 +1,4 @@
-﻿category: MongoDB
+﻿category: NoSql
 date: 2015-03-08
 title: MongoDB Replica
 ---

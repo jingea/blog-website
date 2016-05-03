@@ -1,4 +1,4 @@
-category: Reids
+category: NoSql
 date: 2015-11-16
 title: Redis SortedSet
 ---

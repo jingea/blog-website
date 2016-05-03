@@ -1,4 +1,4 @@
-category: Reids
+category: NoSql
 date: 2016-03-02
 title: Jedis 初探
 ---

@@ -1,4 +1,4 @@
-category: Reids
+category: NoSql
 date: 2015-04-02
 title: Redis 部署
 ---

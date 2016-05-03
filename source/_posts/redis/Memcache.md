@@ -1,4 +1,4 @@
-category: memcached
+category: NoSql
 date: 2015-11-18
 title: memcached
 ---
