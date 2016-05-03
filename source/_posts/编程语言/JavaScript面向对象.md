@@ -1,4 +1,4 @@
-category: JavaScript
+category: 编程语言
 date: 2015-09-08
 title: JavaScript面向对象和原型链
 ---

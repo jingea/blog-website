@@ -1,4 +1,4 @@
-category: JavaScript
+category: 编程语言
 date: 2015-09-08
 title: JavaScript变量和流程控制
 ---
