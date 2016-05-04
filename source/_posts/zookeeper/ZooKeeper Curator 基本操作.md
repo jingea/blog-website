@@ -17,7 +17,7 @@ Shared lock
 Path cache and watcher
 Distributed Queue
 Distributed Priority Queue
-...
+
 
 我们根据下面的例子看一下Curator Framework的增删改查操作
 ```java
