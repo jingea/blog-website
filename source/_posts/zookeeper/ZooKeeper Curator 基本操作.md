@@ -2,21 +2,13 @@ category: ZooKeeper
 date: 2016-04-27
 title: ZooKeeper Curator 基本操作
 ---
-The Curator Framework is a high-level API that greatly simplifies using ZooKeeper. It adds many features that build on ZooKeeper and handles the complexity of managing connections to the ZooKeeper cluster and retrying operations. Some of the features are:
+Curator的Framework API为我们操作Zookeeper提供了非常便捷的操作. 它在ZooKeeper API之上为我们增加里许多新的特性, 例如对ZooKeeper集群连接的管理以及重试操作等等. 下面就列举了一些特性:
 
-Automatic connection management:
-* There are potential error cases that require ZooKeeper clients to recreate a connection and/or retry operations. Curator automatically and transparently (mostly) handles these cases.
-* Watches for NodeDataChanged events and calls updateServerList() as needed.
-* Watches are automatically removed by Curator recipes
-Cleaner API:
-* simplifies the raw ZooKeeper methods, events, etc.
-* provides a modern, fluent interface
-* Recipe implementations (see Recipes):
-Leader election
-Shared lock
-Path cache and watcher
-Distributed Queue
-Distributed Priority Queue
+* 自动连接管理
+* Leader 选举
+* 共享锁
+* 路径缓存以及watch
+* 分布式队列(以及分布式Priority队列)
 
 
 我们根据下面的例子看一下Curator Framework的增删改查操作
