@@ -162,7 +162,7 @@ invoke : 1300
 `-XX:UseTLAB`:优先在本地线程缓冲区中分配对象,避免分配内存时的锁定过程
 
 ### NewRatio
-*`-XX:NewRatio=n`:老年代与新生代比例(默认是2).
+`-XX:NewRatio=n`:老年代与新生代比例(默认是2).
 
 ### MaxHeapFreeRatio
 `-XX:MaxHeapFreeRatio`:当Xmx值比Xms值大时,堆可以动态收缩和扩展,这个参数控制当堆空闲大于指定比率时自动收缩
@@ -176,18 +176,17 @@ invoke : 1300
 ### ms
 `-XX:ms`:初始堆大小
 
-
 ### mn
 `-XX:`:设置年轻代大小.整个JVM内存大小=年轻代大小+年老代大小+持久代大小.(Xms必须大于Xmn)
 
 ### NewSize
-*`-XX:NewSize=2m`:新生代默认大小(单位是字节)
+`-XX:NewSize=2m`:新生代默认大小(单位是字节)
 
 ### MaxNewSize
-*`-XX:MaxNewSize=size`:新生代最大值(单位字节)
+`-XX:MaxNewSize=size`:新生代最大值(单位字节)
 
 ### ThreadStackSize
-*`-XX:ThreadStackSize=512`:线程堆栈大小(单位Kbytes,0使用默认大小)
+`-XX:ThreadStackSize=512`:线程堆栈大小(单位Kbytes,0使用默认大小)
 
 
 ## 垃圾收集器
@@ -222,23 +221,13 @@ invoke : 1300
 `-XX:`:设置CMS收集器在进行若干次垃圾收集后再启动一次内存碎片整理
 
 ### UseParallelOldGC
-*`-XX:-UseParallelOldGC`:所有的集合使用并行垃圾收集器.能够自动化地设置这个选项-XX:+UseParallelGC
+`-XX:-UseParallelOldGC`:所有的集合使用并行垃圾收集器.能够自动化地设置这个选项-XX:+UseParallelGC
 
 ###　ConcGCThreads
-*`-XX:ConcGCThreads=n`:`concurrentgarbagecollectors`使用的线程数.(默认值与JVM所在平台有关).
+`-XX:ConcGCThreads=n`:`concurrentgarbagecollectors`使用的线程数.(默认值与JVM所在平台有关).
 
 ### UseG1GC
-*`-XX:+UseG1GC`:使用`GarbageFirst(G1)`收集器
-
-
-
-
-
-
-
-
-
-
+`-XX:+UseG1GC`:使用`GarbageFirst(G1)`收集器
 
 ## 设置GC
 
@@ -251,7 +240,6 @@ invoke : 1300
 ### MaxGCPauseMillis
 `-XX:`:设置GC最大停顿时间.仅在使用ParallelScavenge收集器时生效
 
-
 ### ScavengeBeforeFullGC
 `-XX:`:在FullGC发生之前触发一次MinorGC
 
@@ -259,11 +247,10 @@ invoke : 1300
 `-XX:`:禁止GC过程无限制的执行,如果过于频繁,就直接发生OutOfMemory
 
 ### InitiatingHeapOccupancyPercent
-*`-XX:InitiatingHeapOccupancyPercent=n`:设置触发标记周期的Java堆占用率阈值.默认占用率是整个Java堆的45%.
+`-XX:InitiatingHeapOccupancyPercent=n`:设置触发标记周期的Java堆占用率阈值.默认占用率是整个Java堆的45%.
 
 ### G1HeapRegionSize
-*`-XX:G1HeapRegionSize=n`:设置的G1区域的大小.值是2的幂,范围是1MB到32MB之间.目标是根据最小的Java堆大小划分出约2048个区域.
+`-XX:G1HeapRegionSize=n`:设置的G1区域的大小.值是2的幂,范围是1MB到32MB之间.目标是根据最小的Java堆大小划分出约2048个区域.
 
 ### G1ReservePercent
-*`-XX:G1ReservePercent=n`:设置作为空闲空间的预留内存百分比,以降低目标空间溢出的风险.默认值是10%.增加或减少百分比时,请确保对总的Java堆调整相同的量.JavaHotSpotVMbuild23中没有此设置.
-
+`-XX:G1ReservePercent=n`:设置作为空闲空间的预留内存百分比,以降低目标空间溢出的风险.默认值是10%.增加或减少百分比时,请确保对总的Java堆调整相同的量.JavaHotSpotVMbuild23中没有此设置.
