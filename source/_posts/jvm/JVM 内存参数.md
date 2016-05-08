@@ -143,7 +143,7 @@ invoke : 1300
 要不然次数是一样的,要不然次数是个倍数的关系
 
 ### SurvivorRatio
-`-XX:SurvivorRatio`:新生代中Eden区和Survivor区的容量比值(默认为8)
+`-XX:SurvivorRatio=6`:新生代中Eden区和Survivor区的容量比值(默认为8)
 
 ### PretenureSizeThreshold
 `-XX:PretenureSizeThreshold`:直接晋升到老年代的对象大小,设置这个参数后,大于这个参数的对象将直接在老年代分配
