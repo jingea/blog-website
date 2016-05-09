@@ -4,7 +4,7 @@ title: nginx web服务器
 ---
 官方文档[](https://www.nginx.com/resources/admin-guide/nginx-web-server/)学习
 
-Each virtual server for HTTP traffic defines special configuration instances called locations that control processing of specific sets of URIs. Each location defines its own scenario of what happens to requests that are mapped to this location. NGINX Plus provides full control over this process. Each location can proxy the request or return a file. In addition, the URI can be modified, so that the request is redirected to another location or virtual server. Also, a specific error code can be returned and you can configure a specific page to correspond to each error code.
+在Nginx中每个用来处理HTTP请求的virtual server都被称为`location`. `location`可以参与请求处理的整个过程. `location`可以代理一个请求或者直接返回一个文件. 不但如此, 在`location`中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的`location`或者其他的virtual server. 
 
 ## Setting Up Virtual Servers
 
