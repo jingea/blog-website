@@ -15,38 +15,35 @@ title: JMeter
 
 下面我们看一下, JMeter官方对Aggregate report(聚合报告)的说明:
 
-聚合报告为每个请求都创建了一个结果记录. 在结果记录中不仅仅统计了相应信息, 还提供了对请求数，最小值，最大值，平均数，错误比，吞吐量以及每秒吞吐产生的字节数。JMeter在统计时以及考虑了生成消息所消耗的时间. 如果其他的采样器以及定时器在同一个线程中, 那么这将会增加总的时间统计, 从而降低吞吐量. 因此俩个名称完全不相同的采样器只有俩个相同名称的采样器的吞吐量的一半. 
-The aggregate report creates a table row for each differently named request in your test. For each request, it totals the response information and provides request count, min, max, average, error rate, approximate throughput (request/second) and Kilobytes per second throughput. Once the test is done, the throughput is the actual through for the duration of the entire test.
-The thoughput is calculated from the point of view of the sampler target (e.g. the remote server in the case of HTTP samples). JMeter takes into account the total time over which the requests have been generated. If other samplers and timers are in the same thread, these will increase the total time, and therefore reduce the throughput value. So two identical samplers with different names will have half the throughput of two samplers with the same name. It is important to choose the sampler names correctly to get the best results from the Aggregate Report.
+聚合报告为每个不同名的Sampler(注意是不同名的哦)都创建了一个结果记录. 在结果记录中不仅仅统计了请求响应信息, 还提供了对请求的数，最小延迟值，最大延迟值，平均延迟，请求产生的错误比，吞吐量以及每秒吞吐产生的字节数的统计。JMeter在统计时已经考虑了生成消息所消耗的时间. 如果其他的采样器以及定时器在同一个线程中, 那么这将会增加总的时间统计, 从而降低吞吐量. 因此俩个名称不相同的采样器产生的吞吐量加在一起才是总的吞吐量. 
 
-Calculation of the Median and 90% Line (90th percentile) values requires additional memory. JMeter now combines samples with the same elapsed time, so far less memory is used. However, for samples that take more than a few seconds, the probability is that fewer samples will have identical times, in which case more memory will be needed. Note you can use this listener afterwards to reload a CSV or XML results file which is the recommended way to avoid performance impacts. See the Summary Report for a similar Listener that does not store individual samples and so needs constant memory.
+在聚合报告中, 计算Median和90% Line值需要消耗额外的内存. JMeter现在将耗时相同的采样都合并到了一起,如此一来可以尽量减少内存占用．然而在某些情况下，　可能还会产生大量消耗内存的情况，因此推荐的方式是使用listener，然后从CSV或者XML文件中重新加载结果进行计算.
 
-* Label - The label of the sample. If "Include group name in label?" is selected, then the name of the thread group is added as a prefix. This allows identical labels from different thread groups to be collated separately if required.
-* # Samples - The number of samples with the same label
-* Average - The average time of a set of results
-* Median - The median is the time in the middle of a set of results. 50% of the samples took no more than this time; the remainder took at least as long.
-* 90% Line - 90% of the samples took no more than this time. The remaining samples took at least as long as this. (90th percentile)
-* 95% Line - 95% of the samples took no more than this time. The remaining samples took at least as long as this. (95th percentile)
-* 99% Line - 99% of the samples took no more than this time. The remaining samples took at least as long as this. (99th percentile)
-* Min - The shortest time for the samples with the same label
-* Max - The longest time for the samples with the same label
-* Error % - Percent of requests with errors
-* Throughput - the Throughput is measured in requests per second/minute/hour. The time unit is chosen so that the displayed rate is at least 1.0. When the throughput is saved to a CSV file, it is expressed in requests/second, i.e. 30.0 requests/minute is saved as 0.5.
+* Label - 统计标签
+* # Samples - 相同名称的标签下采样的次数
+* Average - 统计数据结果的平均耗时时间
+* Median - 统计数据中中间的耗时时间, 50%的采样不会超过这个时间. 剩下的则大于等于这个值.
+* 90% Line - 统计结果中90%的不会超过这个时间.剩下的则大于等于这个值.
+* 95% Line - 统计结果中95%的不会超过这个时间.剩下的则大于等于这个值.
+* 99% Line - 统计结果中99%的不会超过这个时间.剩下的则大于等于这个值.
+* Min - 统计结果中最短的耗时时间. 
+* Max - 统计结果中最长的耗时时间. 
+* Error % - 统计结果中发生错误的百分比. 
+* Throughput - 吞吐量是在可以通过second/minute/hour这三种单位进行测量. 通过选择不同的单位可以让结果值最小的可能也是1.0. 当吞吐量被存在CSV 文件时, 吞吐量是通过requests/second表示的, 例如30.0 requests/minute 就被保存为0.5.
 * Kb/sec - The throughput measured in Kilobytes per second
 
 
 接下来我们看一下Summy Report
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/JMeter7.png)
-The summary report creates a table row for each differently named request in your test. This is similar to the Aggregate Report , except that it uses less memory.
-The thoughput is calculated from the point of view of the sampler target (e.g. the remote server in the case of HTTP samples). JMeter takes into account the total time over which the requests have been generated. If other samplers and timers are in the same thread, these will increase the total time, and therefore reduce the throughput value. So two identical samplers with different names will have half the throughput of two samplers with the same name. It is important to choose the sampler labels correctly to get the best results from the Report.
+summary 报告为每个不同名的请求(注意是不同名的哦)都创建了一个结果记录. 这个和聚合报告非常像, 但不同的是它所使用的内存要比聚合报告少.
 
-* Label - The label of the sample. If "Include group name in label?" is selected, then the name of the thread group is added as a prefix. This allows identical labels from different thread groups to be collated separately if required.
-* # Samples - The number of samples with the same label
-* Average - The average elapsed time of a set of results
-* Min - The lowest elapsed time for the samples with the same label
-* Max - The longest elapsed time for the samples with the same label
-* Std. Dev. - the Standard Deviation of the sample elapsed time
-* Error % - Percent of requests with errors
-* Throughput - the Throughput is measured in requests per second/minute/hour. The time unit is chosen so that the displayed rate is at least 1.0. When the throughput is saved to a CSV file, it is expressed in requests/second, i.e. 30.0 requests/minute is saved as 0.5.
+* Label - 统计标签
+* # Samples - 相同名称的标签下采样的次数
+* Average - 该组统计的平均耗时
+* Min - 该组采样中最短的耗时时间
+* Max - 该组采样中最长的耗时时间
+* Std. Dev. - 采样耗时的标准偏差(Standard Deviation )
+* Error % - 请求发生错误的百分比
+* Throughput -  吞吐量是在可以通过second/minute/hour这三种单位进行测量. 通过选择不同的单位可以让结果值最小的可能也是1.0. 当吞吐量被存在CSV 文件时, 吞吐量是通过requests/second表示的, 例如30.0 requests/minute 就被保存为0.5.
 * Kb/sec - The throughput measured in Kilobytes per second
 * Avg. Bytes - average size of the sample response in bytes. (in JMeter 2.2 it wrongly showed the value in kB)
