@@ -53,7 +53,8 @@ mysql> SELECT JSON_ARRAY('a', 1, NOW());
 | ["a", 1, "2015-07-27 09:43:47.000000"] |
 +----------------------------------------+
 ```
-JSON_OBJECT() takes a (possibly empty) list of key/value pairs and returns a JSON object containing those pairs:
+
+`JSON_OBJECT()`接受一个key/value形式的参数列表, 返回一个包含那些元素的JSON对象:
 ```sql
 mysql> SELECT JSON_OBJECT('key1', 1, 'key2', 'abc');
 +---------------------------------------+
@@ -62,7 +63,8 @@ mysql> SELECT JSON_OBJECT('key1', 1, 'key2', 'abc');
 | {"key1": 1, "key2": "abc"}            |
 +---------------------------------------+
 ```
-JSON_MERGE() takes two or more JSON documents and returns the combined result:
+
+`JSON_MERGE()` 将多个JSON串组合到一起,然后返回一个总的JSON串:
 ```sql
 mysql> SELECT JSON_MERGE('["a", 1]', '{"key": "value"}');
 +--------------------------------------------+
@@ -71,9 +73,9 @@ mysql> SELECT JSON_MERGE('["a", 1]', '{"key": "value"}');
 | ["a", 1, {"key": "value"}]                 |
 +--------------------------------------------+
 ```
-For information about the merging rules, see Normalization, Merging, and Autowrapping of JSON Values.
+> 关于更多的合并规则,参考下面的 Normalization, Merging, and Autowrapping of JSON Values 章节.
 
-JSON values can be assigned to user-defined variables:
+也可以将JSON赋给一个用户自定义的变量
 ```sql
 mysql> SET @j = JSON_OBJECT('key', 'value');
 mysql> SELECT @j;
@@ -83,9 +85,9 @@ mysql> SELECT @j;
 | {"key": "value"} |
 +------------------+
 ```
-However, user-defined variables cannot be of JSON data type, so although @j in the preceding example looks like a JSON value and has the same character set and collation as a JSON value, it does not have the JSON data type. Instead, the result from JSON_OBJECT() is converted to a string when assigned to the variable.
+在上例中, 尽管`JSON_OBJECT()`方法会返回一个JSON类型对象, 但是当将其赋给一个变量(`@j`)时, 它就被自动转换成了一个字符串类型.
 
-Strings produced by converting JSON values have a character set of utf8mb4 and a collation of utf8mb4_bin:
+JSON转换成的字符串, 它的编码是`utf8mb4`, 字符序为`utf8mb4_bin`:
 ```sql
 mysql> SELECT CHARSET(@j), COLLATION(@j);
 +-------------+---------------+
@@ -94,7 +96,7 @@ mysql> SELECT CHARSET(@j), COLLATION(@j);
 | utf8mb4     | utf8mb4_bin   |
 +-------------+---------------+
 ```
-Because utf8mb4_bin is a binary collation, comparison of JSON values is case sensitive.
+因为`utf8mb4_bin`是一种二进制的字符序, 因此在对比俩个JSON值是区分大小写的.
 ```sql
 mysql> SELECT JSON_ARRAY('x') = JSON_ARRAY('X');
 +-----------------------------------+
@@ -103,7 +105,7 @@ mysql> SELECT JSON_ARRAY('x') = JSON_ARRAY('X');
 |                                 0 |
 +-----------------------------------+
 ```
-Case sensitivity also applies to the JSON null, true, and false literals, which always must be written in lowercase:
+区分大小写同样支持JSON的`null`, `true`, `false`等字面量. 因此在引用他们的时候一定要小写.
 ```sql
 mysql> SELECT JSON_VALID('null'), JSON_VALID('Null'), JSON_VALID('NULL');
 +--------------------+--------------------+--------------------+
@@ -122,9 +124,9 @@ mysql> SELECT CAST('null' AS JSON);
 
 mysql> SELECT CAST('NULL' AS JSON);
 ERROR 3141 (22032): Invalid JSON text in argument 1 to function cast_as_json:
-"Invalid value." at position 0 in 'NULL'. 
+"Invalid value." at position 0 in 'NULL'.
 ```
-Case sensitivity of the JSON literals differs from that of the SQL NULL, TRUE, and FALSE literals, which can be written in any lettercase:
+JSON字面量区分大小写与SQL中的不同. 在SQL中`NULL, TRUE, FALSE`等字面量可以写成由任意大小写组成:
 ```sql
 mysql> SELECT ISNULL(null), ISNULL(Null), ISNULL(NULL);
 +--------------+--------------+--------------+
@@ -135,8 +137,7 @@ mysql> SELECT ISNULL(null), ISNULL(Null), ISNULL(NULL);
 ```
 
 ## Normalization, Merging, and Autowrapping of JSON Values
-
-When a string is parsed and found to be a valid JSON document, it is also normalized: Members with keys that duplicate a key found earlier in the document are discarded (even if the values differ). The object value produced by the following JSON_OBJECT() call does not include the second key1 element because that key name occurs earlier in the value:
+当一个字符串可以解析成一个有效的JSON文档, 它同时也会进行归一化处理. 当JSON中出现重复的Key时, 只会保留最开始的那个Key/Value, 接下来重复出现的都会抛弃掉.
 ```sql
 mysql> SELECT JSON_OBJECT('key1', 1, 'key2', 'abc', 'key1', 'def');
 +------------------------------------------------------+
@@ -145,10 +146,11 @@ mysql> SELECT JSON_OBJECT('key1', 1, 'key2', 'abc', 'key1', 'def');
 | {"key1": 1, "key2": "abc"}                           |
 +------------------------------------------------------+
 ```
-The normalization performed by MySQL also sorts the keys of a JSON object (for the purpose of making lookups more efficient). The result of this ordering is subject to change and not guaranteed to be consistent across releases. In addition, extra whitespace between keys, values, or elements in the original document is discarded.
+Mysql的归一化处理还会对JSON对象的key进行排序处理(以便查找时提供更好的性能). The result of this ordering is subject to change and not guaranteed to be consistent across releases. 另外, key或者value之间的空格会自动的被忽略掉.
 
-MySQL functions that produce JSON values (see Section 13.16.2, “Functions That Create JSON Values”) always return normalized values.
+同样的, Mysql中创建JSON的方法同样也都做了归一化处理.
 
+当多个数组合并成一个数组时,
 In contexts that combine multiple arrays, the arrays are merged into a single array by concatenating arrays named later to the end of the first array. In the following example, JSON_MERGE() merges its arguments into a single array:
 ```sql
 mysql> SELECT JSON_MERGE('[1, 2]', '["a", "b"]', '[true, false]');
@@ -158,7 +160,8 @@ mysql> SELECT JSON_MERGE('[1, 2]', '["a", "b"]', '[true, false]');
 | [1, 2, "a", "b", true, false]                       |
 +-----------------------------------------------------+
 ```
-Multiple objects when merged produce a single object. If multiple objects have the same key, the value for that key in the resulting merged object is an array containing the key values:
+
+多个对象合并到一个对象中的时候, 如果多个对象中都出现了相同的key, 那么相同的key对应的value值会被放到该key对应的数组中.
 ```sql
 mysql> SELECT JSON_MERGE('{"a": 1, "b": 2}', '{"c": 3, "a": 4}');
 +----------------------------------------------------+
@@ -167,7 +170,7 @@ mysql> SELECT JSON_MERGE('{"a": 1, "b": 2}', '{"c": 3, "a": 4}');
 | {"a": [1, 4], "b": 2, "c": 3}                      |
 +----------------------------------------------------+
 ```
-Nonarray values used in a context that requires an array value are autowrapped: The value is surrounded by [ and ] characters to convert it to an array. In the following statement, each argument is autowrapped as an array ([1], [2]). These are then merged to produce a single result array:
+当非数组类型的数据出现在要求数组为参数的上下文中时, 非数组类型的数据会自动被包装成数组类型(会自动在数据俩侧添加`[]`将其括起来). 在下面的例子中, 每一个参数都会被自动包装成([1], [2]), 然后产生一个新的数组.
 ```sql
 mysql> SELECT JSON_MERGE('1', '2');
 +----------------------+
@@ -176,7 +179,7 @@ mysql> SELECT JSON_MERGE('1', '2');
 | [1, 2]               |
 +----------------------+
 ```
-Array and object values are merged by autowrapping the object as an array and merging the two arrays:
+当对象和数组进行合并时, 对象会自动的包装成一个数组, 然后将这俩个数组进行合并
 ```sql
 mysql> SELECT JSON_MERGE('[10, 20]', '{"a": "x", "b": "y"}');
 +------------------------------------------------+

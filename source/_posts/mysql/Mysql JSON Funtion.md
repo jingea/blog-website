@@ -4,12 +4,12 @@ title: Mysql JSON Funtion
 ---
 [官方文档](http://dev.mysql.com/doc/refman/5.7/en/json-function-reference.html)
 
-* `JSON_APPEND()` :	Append data to JSON document
-* `JSON_ARRAY()` :	Create JSON array
-* `JSON_ARRAY_APPEND()` :	Append data to JSON document
-* `JSON_ARRAY_INSERT()` :	Insert into JSON array
-* `->	Return value from JSON column after evaluating path; equivalent to JSON_EXTRACT()` :.
-* `JSON_CONTAINS()` :	Whether JSON document contains specific object at path
+* `JSON_APPEND()` :	将JSON串中添加数据
+* `JSON_ARRAY()` :	创建JSON数组
+* `JSON_ARRAY_APPEND()` :	向JSON数组中追加数据
+* `JSON_ARRAY_INSERT()` :	向JSON数组中插入数据
+* `->` :Return value from JSON column after evaluating path; equivalent to JSON_EXTRACT()
+* `JSON_CONTAINS()` : 判断JSON串中指定路径中是否包含特定的对象
 * `JSON_CONTAINS_PATH()` :	Whether JSON document contains any data at path
 * `JSON_DEPTH()` :	Maximum depth of JSON document
 * `JSON_EXTRACT()` :	Return data from JSON document
