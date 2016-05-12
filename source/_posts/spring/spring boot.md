@@ -19,37 +19,6 @@ title: SpringBoot HTTP 服务
 	<artifactId>spring-boot-actuator</artifactId>
 	<version>1.2.3.RELEASE</version>
 </dependency>
-<!--<dependency>-->
-	<!--<groupId>org.springframework.boot</groupId>-->
-	<!--<artifactId>spring-boot-starter-security</artifactId>-->
-	<!--<version>1.2.3.RELEASE</version>-->
-<!--</dependency>-->
-<!--<dependency>-->
-	<!--<groupId>org.springframework.boot</groupId>-->
-	<!--<artifactId>spring-boot-starter-remote-shell</artifactId>-->
-	<!--<version>1.2.3.RELEASE</version>-->
-<!--</dependency>-->
-<!-- -->
-<!--<dependency>-->
-	<!--<groupId>org.springframework.boot</groupId>-->
-	<!--<artifactId>spring-boot-starter-data-mongodb</artifactId>-->
-	<!--<version>1.2.3.RELEASE</version>-->
-<!--</dependency>-->
-<!--<dependency>-->
-	<!--<groupId>org.springframework.boot</groupId>-->
-	<!--<artifactId>spring-boot-starter-jetty</artifactId>-->
-	<!--<version>1.2.3.RELEASE</version>-->
-<!--</dependency>-->
-<!--<dependency>-->
-	<!--<groupId>org.springframework.boot</groupId>-->
-	<!--<artifactId>spring-boot-starter-redis</artifactId>-->
-	<!--<version>1.2.3.RELEASE</version>-->
-<!--</dependency>-->
-<!--<dependency>-->
-	<!--<groupId>org.springframework.boot</groupId>-->
-	<!--<artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
-	<!--<version>1.2.3.RELEASE</version>-->
-<!--</dependency>-->
 ```
 
 构建应用

@@ -327,13 +327,13 @@ mysql> SELECT JSON_REMOVE(@j, '$[2]', '$[1].b[1]', '$[1].b[1]');
 ## Comparison and Ordering of JSON Values
 
 JSON文档里面的value可以通过如下操作符进行比较操作
-* =, 
-* <, 
-* <=, 
-* >, 
-* >=, 
-* <>, 
-* !=, 
+* =
+* < 
+* <= 
+* > 
+* >= 
+* <> 
+* != 
 * <=> 
 
 The following comparison operators and functions are not yet supported with JSON values:
@@ -394,9 +394,11 @@ Two JSON arrays are equal if they have the same length and values in correspondi
 If the arrays are not equal, their order is determined by the elements in the first position where there is a difference. The array with the smaller value in that position is ordered first. If all values of the shorter array are equal to the corresponding values in the longer array, the shorter array is ordered first.
 
 Example:
-
+```json
 [] < ["a"] < ["ab"] < ["ab", "cd", "ef"] < ["ab", "ef"]
-BOOLEAN
+```
+
+###BOOLEAN
 
 The JSON false literal is less than the JSON true literal.
 
@@ -405,8 +407,10 @@ The JSON false literal is less than the JSON true literal.
 Two JSON objects are equal if they have the same set of keys, and each key has the same value in both objects.
 
 Example:
-
+```json
 {"a": 1, "b": 2} = {"b": 2, "a": 1}
+```
+
 The order of two objects that are not equal is unspecified but deterministic.
 
 ### STRING
