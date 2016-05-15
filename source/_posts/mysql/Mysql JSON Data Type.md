@@ -1,13 +1,11 @@
 category: MySQL
-date: 2016-05-10
+date: 2016-05-17
 title: Mysql JSON Data Type
 ---
 [官方文档](http://dev.mysql.com/doc/refman/5.7/en/json.html)
 
 ## Creating JSON Values
-在Mysql中, JSON是通过字符串进行存储的. 
-
-These contexts include inserting a value into a column that has the JSON data type and passing an argument to a function that expects a JSON value, as the following examples demonstrate:
+在Mysql中, JSON是通过字符串进行存储的.
 
 下面的例子演示了创建JSON类型字段的表, 以及插入一个JSON串和插入一个非法的JSON串
 ```sql
@@ -20,8 +18,7 @@ Query OK, 1 row affected (0.01 sec)
 mysql> INSERT INTO t1 VALUES('[1, 2,');
 ERROR 3140 (22032) at line 2: Invalid JSON text: "Invalid value." at position 6 in value (or column) '[1, 2,'.
 ```
-
-Positions for “at position N” in such error messages are 0-based, but should be considered rough indications of where the problem in a value actually occurs.
+> `at position N`是从0 开始计算的
 
 `JSON_TYPE()`方法接受一个JSON串, 然后尝试解析它, 最后返回该JSON的数据类型
 ```sql
@@ -45,10 +42,7 @@ to function json_type; a JSON string or JSON type is required.
 ```
 MySQL 使用`utf8mb4`编码和`utf8mb4_bin`集合处理JSON 字符串内容. 其他的编码会被转换成utf8mb4编码. (ascii 和 utf8 编码并不会进行转换, 因为这俩个字符集是utf8mb4的子集.)
 
-As an alternative to writing JSON values using literal strings, functions exist for composing JSON values from component elements. JSON_ARRAY() takes a (possibly empty) list of values and returns a JSON array containing those values:
-在Mysql中可以将不同的数据类型数据写入到JSON字符串中, 例如可以将字面量写入到JSON字符串的函数. 
-
-`JSON_ARRAY()`函数接受一个参数列表(个数大于等于0), 然后返回一个JSON字符串数组.
+除了使用字面量JSON串之外, Mysql还提供了很多创建JSON串的方法. 例如JSON_ARRAY()`函数接受一个参数列表(个数大于等于0), 然后返回一个JSON字符串数组.
 ```sql
 mysql> SELECT JSON_ARRAY('a', 1, NOW());
 +----------------------------------------+
@@ -154,8 +148,7 @@ Mysql的归一化处理还会对JSON对象的key进行排序处理(以便查找�
 
 同样的, Mysql中创建JSON的方法同样也都做了归一化处理.
 
-当多个数组合并成一个数组时,
-In contexts that combine multiple arrays, the arrays are merged into a single array by concatenating arrays named later to the end of the first array. In the following example, JSON_MERGE() merges its arguments into a single array:
+当多个数组合并成一个数组时, 数组元素会依次存储进新的数组中, 如下面的`JSON_MERGE()`:
 ```sql
 mysql> SELECT JSON_MERGE('[1, 2]', '["a", "b"]', '[true, false]');
 +-----------------------------------------------------+
@@ -197,7 +190,6 @@ mysql> SELECT JSON_MERGE('[10, 20]', '{"a": "x", "b": "y"}');
 我们可以在JSON文档中通过指定path来搜索出一个值.
 
 在相关方法中使用表达式可以提取数据,或者修改JSON文档 以及进行其他的操作. 例如下面的操作就是从JSON文档中提取key为name的值.
-Path expressions are useful with functions that extract parts of or modify a JSON document, to specify where within that document to operate. For example, the following query extracts from a JSON document the value of the member with the name key:
 ```sql
 mysql> SELECT JSON_EXTRACT('{"id": 14, "name": "Aztalan"}', '$.name');
 +---------------------------------------------------------+
@@ -206,14 +198,13 @@ mysql> SELECT JSON_EXTRACT('{"id": 14, "name": "Aztalan"}', '$.name');
 | "Aztalan"                                               |
 +---------------------------------------------------------+
 ```
-Path语法使用`$`符作为开头, 
-Path syntax uses a leading $ character to represent the JSON document under consideration, optionally followed by selectors that indicate successively more specific parts of the document:
-
-* A period followed by a key name names the member in an object with the given key. The key name must be specified within double quotation marks if the name without quotes is not legal within path expressions (for example, if it contains a space).
-* `[N]` appended to a path that selects an array names the value at position `N` within the array. Array positions are integers beginning with zero.
+在Mysql中, 可以使用`$`加后缀的方式表示一个JSON文档. `$`后可以跟一个选择符来索引到JSON文档中任意的位置元素:
+* `$"key"` 表示在JSON文档中, key所对应的值. 注意key必须使用`""`括起来.
+* `[N]` 表示JSON数组文档中第N个位置的值(从0开始).
 * Paths 可以包含 `*`或者`**` 通配符.
-> `.[*]` evaluates to the values of all members in a JSON object. `[*]` evaluates to the values of all elements in a JSON array. `prefix**suffix` evaluates to all paths that begin with the named prefix and end with the named suffix.
-* A path that does not exist in the document (evaluates to nonexistent data) evaluates to NULL.
+* `.[*]` 找到JSON对象中所有的成员值
+* `[*]` 找到JSON数组中所有的成员值
+* `prefix**suffix` 匹配所有的以prefix开头, 以suffix结尾的path.
 
 下面我们创建出三个元素的数组, 然后假设 `$` 指向这个数组:
 ```json
@@ -241,7 +232,6 @@ Path syntax uses a leading $ character to represent the JSON document under cons
 * `$."a bird"` 求值为 to sparrow.
 
 如果在对数组求值时, path中的通配符会求值出多个结果.
-Paths that use wildcards evaluate to an array that can contain multiple values:
 ```sql
 mysql> SELECT JSON_EXTRACT('{"a": 1, "b": 2, "c": [3, 4, 5]}', '$.*');
 +---------------------------------------------------------+
@@ -265,15 +255,13 @@ mysql> SELECT JSON_EXTRACT('{"a": {"b": 1}, "c": {"b": 2}}', '$**.b');
 | [1, 2]                                                  |
 +---------------------------------------------------------+
 ```
-在MySQL 5.7.9 和以后的版本中, 你可以使用`column->path`代替方法`JSON_EXTRACT(column, path)`. 
+在MySQL 5.7.9 和以后的版本中, 你可以使用`column->path`代替方法`JSON_EXTRACT(column, path)`.
 > 更多参考See Section 13.16.3, “Functions That Search JSON Values” 以及 Section 14.1.18.6, “Secondary Indexes and Generated Virtual Columns”.
 
 在一些方法中, 会接受一个JSON文档, 然后对该JSON文档进行一些处理. 例如
 * `JSON_SET()`
-* `JSON_INSERT()` 
+* `JSON_INSERT()`
 * `JSON_REPLACE()`
-这些方法接受一个或者多个KV, 
-Some functions take an existing JSON document, modify it in some way, and return the resulting modified document. Path expressions indicate where in the document to make changes. For example, the JSON_SET(), JSON_INSERT(), and JSON_REPLACE() functions each take a JSON document, plus one or more path/value pairs that describe where to modify the document and the values to use. The functions differ in how they handle existing and nonexisting values within the document.
 
 我们生成一个JSON文档, 然后在下面的操作中使用这个文档:
 ```sql
@@ -308,7 +296,6 @@ mysql> SELECT JSON_REPLACE(@j, '$[1].b[0]', 1, '$[2][2]', 2);
 | ["a", {"b": [1, false]}, [10, 20]]             |
 +------------------------------------------------+
 ```
-The path/value pairs are evaluated left to right. The document produced by evaluating one pair becomes the new value against which the next pair is evaluated.
 
 `JSON_REMOVE()` 接受一个 JSON 文档以及一个或者多个要删除的path.  The return value is the original document minus the values selected by paths that exist within the document:
 ```sql
@@ -328,13 +315,13 @@ mysql> SELECT JSON_REMOVE(@j, '$[2]', '$[1].b[1]', '$[1].b[1]');
 
 JSON文档里面的value可以通过如下操作符进行比较操作
 * =
-* < 
-* <= 
-* > 
-* >= 
-* <> 
-* != 
-* <=> 
+* <
+* <=
+* >
+* >=
+* <>
+* !=
+* <=>
 
 The following comparison operators and functions are not yet supported with JSON values:
 
