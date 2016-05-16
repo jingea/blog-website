@@ -250,6 +250,14 @@ xmllint --noout file.xml
 ```shell
 curl -I http://www.example.com
 ```
+指定header
+```shell
+curl --header "Auth: none" http://www.example.com
+```
+POST请求
+```shell
+curl -d "user=test&time=now" http://www.example.com
+```
 
 ## touch
 修改文件或目录的时间戳(YYMMDDhhmm)：

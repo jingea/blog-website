@@ -42,3 +42,6 @@ InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream("./myba
 ```xml
 
 ```
+
+## 快捷键
+* 块选择 : `ALT Shift Insert`
