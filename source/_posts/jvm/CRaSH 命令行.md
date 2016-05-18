@@ -1,4 +1,4 @@
-category: CRaSH
+category: JVM
 date: 2016-05-15
 title: CRaSH 安装启动
 ---

@@ -39,6 +39,11 @@ tar zxvf package.tar.gz -C new_dir
 ```shell
 tar -czf small.tar.gz small 
 ```
+压缩为zip, 且忽略指定目录
+```shell
+tar -zcvf  web.zip --exclude="restful" web/
+```
+> --exclude="restful"  一定要放在压缩文件和被压缩文件夹之间
 
 ## sort
 sort将文件的每一行作为一个单位,相互比较,比较原则是从首字符向后,依次按ASCII码值进行比较,最后将他们按升序输出.

@@ -142,3 +142,14 @@ Call<List<String>> repos = service.listRepos("octocat");
 结果如图
 ![]()
 这俩次的结果都能达到每分钟13000个请求, 吞吐量和性能消耗是差不多.
+
+## Converter
+Retrofit2为我们提供了多种转换器
+* Gson: com.squareup.retrofit2:converter-gson
+* Jackson: com.squareup.retrofit2:converter-jackson
+* Moshi: com.squareup.retrofit2:converter-moshi
+* Protobuf: com.squareup.retrofit2:converter-protobuf
+* Wire: com.squareup.retrofit2:converter-wire
+* Simple XML: com.squareup.retrofit2:converter-simplexml
+* Scalars (primitives, boxed, and String): com.squareup.retrofit2:converter-scalars
+在使用Retrofit2的时候, 必须指定Converter, 否则程序在运行中会报错. Scalars 只是支持String和基本类型的装包和拆包
