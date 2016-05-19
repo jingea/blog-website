@@ -1,4 +1,4 @@
-category: MySQL
+category: 数据库
 date: 2016-05-08
 title: Mysql 客户端
 ---

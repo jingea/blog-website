@@ -1,6 +1,6 @@
-category: mybatis
+category: Java工具
 date: 2016-04-12
-title: SqlSession
+title: Mybatis SqlSession
 ---
 一直在使用Mybatis, 但是一直对Mybatis中的SqlSession的实际操作过程没有深入了解过, 今天在项目中引用了Mybatis-Guice模块, 很好奇Mybatis-Guice是如何做的SqlSeesion自动资源释放,因此今天就找时间好好研究一下`SqlSession`.
 

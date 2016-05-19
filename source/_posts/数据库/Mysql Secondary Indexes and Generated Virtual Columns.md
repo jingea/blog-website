@@ -1,6 +1,6 @@
-category: MySQL
+category: 数据库
 date: 2016-05-10
-title: Mysql Secondary Indexes and Generated Virtual Columns.md
+title: Mysql Secondary Indexes and Generated Virtual Columns
 ---
 [官方文档](http://dev.mysql.com/doc/refman/5.7/en/create-table-secondary-indexes-virtual-columns.html)
 
