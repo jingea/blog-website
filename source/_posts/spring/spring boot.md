@@ -1,125 +1,35 @@
 category: Spring
 date: 2015-04-08
-title: SpringBoot HTTP 服务
+title: SpringBoot 
 ---
-添加依赖
-```xml
-<dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-starter-web</artifactId>
-	<version>1.2.3.RELEASE</version>
-</dependency>
-<dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot</artifactId>
-	<version>1.2.3.RELEASE</version>
-</dependency>
-<dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-actuator</artifactId>
-	<version>1.2.3.RELEASE</version>
-</dependency>
-```
+SpringBoot提供了一种快速构建应用的方式. 它会根据Classpath和beans上的现有配置来推测你缺少哪些配置, 从而将缺少的配置自动加载.
 
-构建应用
 ```java
-@Controller
-// 告诉Spring Boot根据添加的jar依赖猜测如何配置Spring
-@EnableAutoConfiguration	
-@ComponentScan
-public class App {
+import java.util.Arrays;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+@SpringBootApplication
+public class Application {
 
     public static void main(String[] args) {
-    	SpringApplication.run(App.class, new String[0]);
+        ApplicationContext ctx = SpringApplication.run(Application.class, args);
+
+        System.out.println("Let's inspect the beans provided by Spring Boot:");
+
+        String[] beanNames = ctx.getBeanDefinitionNames();
+        Arrays.sort(beanNames);
+        for (String beanName : beanNames) {
+            System.out.println(beanName);
+        }
     }
+
 }
 ```
-
-```java
-@Component
-@RequestMapping("/")
-// 该注解用来绑定HttpSession中的attribute对象的值,便于在方法中的参数里使用.
-@SessionAttributes("test")
-public class TestAction {
-
-	// http://localhost:8080/h
-	@RequestMapping("/h")
-	@ResponseBody
-	String home() {
-		return "home:Hello World!";
-	}
-
-	@RequestMapping(value = "post", method = RequestMethod.POST)
-	@ResponseBody
-	String post() {
-		return "post:Hello World!";
-	}
-
-	// http://localhost:8080/pathVariable/a
-	@RequestMapping("/pathVariable/{paramV}")
-	@ResponseBody
-	String pathVariable(@PathVariable String paramV) {
-		return paramV;
-	}
-
-	// http://localhost:8080/requestHeader
-	@RequestMapping("/requestHeader")
-	@ResponseBody
-	String requestHeader(@RequestHeader("Accept-Encoding") String encoding) {
-		return "Accept-Encoding : " + encoding;
-	}
-
-	//
-	@RequestMapping("/cookieValue")
-	@ResponseBody
-	String cookieValue(@CookieValue("SESSION_ID") String v) {
-		return v;
-	}
-
-	/**
-	 * A） 常用来处理简单类型的绑定,可以处理get 方式中queryString的值,也可以处理post方式中 body data的值;
-	 * 
-	 * B）用来处理Content-Type: 为application/x-www-form-urlencoded编码的内容,提交方式GET、POST;
-	 * 
-	 * C) 该注解有两个属性： value、required; value用来指定要传入值的id名称,required用来指示参数是否必须绑定;
-	 * 
-	 * @param v
-	 * @return
-	 */
-	// http://localhost:8080/requestParam?v=v&n=n
-	@RequestMapping("/requestParam")
-	@ResponseBody
-	String requestParam(@RequestParam String v) {
-		return v;
-	}
-
-	/**
-	 * 该注解常用来处理Content-Type:
-	 * 不是application/x-www-form-urlencoded编码的内容,例如application/json,
-	 * application/xml等;
-	 * 
-	 * 它是通过使用HandlerAdapter 配置的HttpMessageConverters来解析post data
-	 * body,然后绑定到相应的bean上的.
-	 * 
-	 * 因为配置有FormHttpMessageConverter,所以也可以用来处理application/x-www-form-urlencoded的内容,
-	 * 处理完的结果放在一个MultiValueMap<String, String>里,这种情况在某些特殊需求下使用,详情查看FormHttpMessageConverter api;
-	 * 
-	 * @param v
-	 * @return
-	 */
-	//
-	@RequestMapping("/requestBody")
-	@ResponseBody
-	String requestBody(@RequestBody String v) {
-		return v;
-	}
-
-	//
-	@RequestMapping("/modelAttribute")
-	@ResponseBody
-	String modelAttribute(@ModelAttribute String v) {
-		return v;
-	}
-}
-
-```
+`@SpringBootApplication`聚合了以下注解
+* `@Configuration` tags the class as a source of bean definitions for the application context.
+* `@EnableAutoConfiguration` tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings.
+* Normally you would add `@EnableWebMvc` for a Spring MVC app, but Spring Boot adds it automatically when it sees spring-webmvc on the classpath. This flags the application as a web application and activates key behaviors such as setting up a DispatcherServlet.
+* `@ComponentScan` tells Spring to look for other components, configurations, and services in the the hello package, allowing it to find the HelloController.
