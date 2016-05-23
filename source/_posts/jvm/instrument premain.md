@@ -181,17 +181,16 @@ redefine 操作可以改变修改如下字节码
 
 想使用这个功能我们需要在MANIFEST.MF文件中增加这样一行`Can-Redefine-Classes: true`, 然后我们在Premain中增加一个load方法, 用于重新加载某个文件夹下所有的文件
 ```java
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -207,13 +206,14 @@ import java.util.zip.ZipInputStream;
  *
  */
 public class Premain {
+    private static final Logger logger = Logger.getLogger(Premain.class);
+
     private static Instrumentation instrumentation;
     public static void premain(String agentArgs, Instrumentation inst) {
         instrumentation = inst;
     }
 
-    // 将已经加载过的类缓存起来, 避免没有修改过的类再次被重新加载
-    private static final Map<String, String> classes = new ConcurrentHashMap<>();
+	private static int classSize = 0;
 
     /**
      * 遍历某个目录加载所有的class文件
@@ -223,11 +223,10 @@ public class Premain {
         loadFromDirection(new File(directionPath), "");
     }
 
-    public static void loadFromDirection(File dir, String parantName) {
+    private static void loadFromDirection(File dir, String parantName) {
         try {
             for (File file : dir.listFiles()) {
                 if (file.isFile() && !file.getName().endsWith(".class")) {
-                    System.out.println("filter : " + file.getName());
                     continue;
                 }
                 if (file.isDirectory()) {
@@ -244,39 +243,9 @@ public class Premain {
                     if (parantName != null && !parantName.equals("")) {
                         className = parantName + "." + className;
                     }
-                    redefineClassesFromBytes(input, className);
+                    redefineClassesFromBytes(input, className, null);
                 } catch (final Exception e) {
                     e.printStackTrace();
-                }
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 从jar包里加载所有的class文件
-     * @param jarPath
-     */
-    @Deprecated
-    public static void loadFromJarFile(String jarPath) {
-        try {
-            JarFile jar = new JarFile(jarPath);
-            Enumeration<JarEntry> jarEntrys = jar.entries();
-            while (jarEntrys.hasMoreElements()) {
-                JarEntry jarEntry = jarEntrys.nextElement();
-
-                String fileName = jarEntry.getName();
-                if (!fileName.endsWith(".class")) {
-//                    System.out.println("filter : " + fileName);
-                    continue;
-                }
-                try(InputStream input = Premain.class.getClassLoader().getResourceAsStream(fileName);) {
-                    if (input == null) {
-                        System.out.println("cant find file : " + fileName);
-                        continue;
-                    }
-                    redefineClassesFromBytes(input, fileName);
                 }
             }
         } catch (final Exception e) {
@@ -288,8 +257,18 @@ public class Premain {
      * 从jar包或者ZIP里加载所有的class文件
      * @param jarPath
      */
-    public static void loadFromZipFile(String jarPath) {
-        try(InputStream in = new BufferedInputStream(new FileInputStream(new File(jarPath)));
+    public static void loadFromZipFile(String jarPath, String prfixName) {
+		Class[] allLoadClasses = instrumentation.getAllLoadedClasses();
+		Map<String, Class> allLoadClassesMap = new HashMap<>(classSize);
+		for (Class loadedClass : allLoadClasses) {
+			if (loadedClass.getName().startsWith(prfixName)) {
+				allLoadClassesMap.put(loadedClass.getName(), loadedClass);
+			}
+		}
+		// 加载的类我们不会主动去卸载它, 因此, 我们记录下来上次更新时的类的数量, 下次就根据这个数量直接分配, 避免动态扩容
+		classSize = allLoadClassesMap.size();
+
+		try(InputStream in = new BufferedInputStream(new FileInputStream(new File(jarPath)));
             ZipInputStream zin = new ZipInputStream(in);) {
             ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
@@ -305,10 +284,10 @@ public class Premain {
                         ZipFile zf = new ZipFile(jarPath);
                         InputStream input = zf.getInputStream(ze);
                         if (input == null) {
-                            System.out.println("cant find file : " + fileName);
+                            logger.error("Code Reload cant find file : " + fileName);
                             continue;
                         }
-                        redefineClassesFromBytes(input, fileName);
+                        redefineClassesFromBytes(input, fileName, allLoadClassesMap);
                         input.close();
                         zf.close();
                     }
@@ -328,23 +307,21 @@ public class Premain {
 
     /* 使用instrumentation将读取的class byte数组加载进虚拟机
      */
-    private static void redefineClassesFromBytes(InputStream input, String fileName)
-            throws IOException, ClassNotFoundException, UnmodifiableClassException, NoSuchAlgorithmException {
-        byte[] bytes = new byte[input.available()];
-        input.read(bytes);
-        if (!canLoad(bytes, fileName)) {
-            System.out.println("File Not Modify : " + fileName);
-            return;
-        }
-        String className = getClassName(fileName);
-        // 从虚拟机中查找已经加载过的类
-        Class<?> clazz = Class.forName(className);
-        if (clazz == null) {
-            System.out.println("cant find class " + className);
-            return;
-        }
-        instrumentation.redefineClasses(new ClassDefinition(clazz, bytes));
-        System.out.println("Reload : " + fileName);
+    private static void redefineClassesFromBytes(InputStream input, String fileName, Map<String, Class> allLoadClassesMap) {
+        try {
+        	String className = getClassName(fileName);
+            logger.info("Start Hot Reload Class : " + fileName + "  (" + className + ")");
+	        byte[] bytes = new byte[input.available()];
+    	    input.read(bytes);
+			Class loadedClass = allLoadClassesMap.get(className);
+			if (loadedClass != null) {
+				instrumentation.redefineClasses(new ClassDefinition(loadedClass, bytes));
+			}
+        } catch (final Exception e) {
+            logger.error("Code Reload Failed : " + fileName, e);
+        } catch (Error error) {
+			logger.error("Code Reload Failed : " + fileName, error);
+		}
     }
 
     private static String getClassName(String fileName) {
@@ -353,32 +330,6 @@ public class Premain {
         fileName = fileName.replace("/", ".");
         return fileName;
     }
-
-    private static boolean canLoad(byte[] bytes, String fileName) throws NoSuchAlgorithmException {
-        String md5 = md5(bytes);
-        String oldMD5 = classes.get(fileName);
-        if (oldMD5 == null) {
-            classes.put(fileName, md5);
-            return true;
-        } else if (oldMD5.equals(md5)) {
-            return false;
-        } else {
-            classes.put(fileName, md5);
-            return true;
-        }
-    }
-
-    private static String md5(byte[] byte1) throws NoSuchAlgorithmException {
-        StringBuffer stringBuffer = new StringBuffer();
-        MessageDigest md5 = MessageDigest.getInstance("md5");
-        byte[] a = md5.digest(byte1);
-        for (byte b : a) {
-            stringBuffer.append(b);
-        }
-        return stringBuffer.toString();
-    }
-}
-
 ```
 然后我们写一个测试类
 ```java
