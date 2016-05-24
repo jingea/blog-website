@@ -5,6 +5,8 @@ title: SpringBoot
 SpringBoot提供了一种快速构建应用的方式. 它会根据Classpath和beans上的现有配置来推测你缺少哪些配置, 从而将缺少的配置自动加载.
 
 ```java
+package hello;
+
 import java.util.Arrays;
 
 import org.springframework.boot.SpringApplication;
@@ -29,7 +31,8 @@ public class Application {
 }
 ```
 `@SpringBootApplication`聚合了以下注解
-* `@Configuration` tags the class as a source of bean definitions for the application context.
-* `@EnableAutoConfiguration` tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings.
-* Normally you would add `@EnableWebMvc` for a Spring MVC app, but Spring Boot adds it automatically when it sees spring-webmvc on the classpath. This flags the application as a web application and activates key behaviors such as setting up a DispatcherServlet.
-* `@ComponentScan` tells Spring to look for other components, configurations, and services in the the hello package, allowing it to find the HelloController.
+* `@Configuration` 标记该class为应用上下文的bean资源.
+* `@EnableAutoConfiguration` 该注解是让Spring自动从classpath, 其他beans以及配置文件中加载bean. 
+* `@EnableWebMvc` 开启Spring的MVN功能, 但是当Spring Boot 在classpath中发现SpringMVN依赖后会自动开启该模块(依赖了`@EnableAutoConfiguration`). 这注解会将当前应用作为一个web应用启动.
+* `@ComponentScan` Spring 会在指定包下搜索components, configurations, 和services. 在本例中, 它会在hello包中所搜, 以及找到一个`HelloController`.
+
