@@ -36,3 +36,4 @@ public class Application {
 * `@EnableWebMvc` 开启Spring的MVN功能, 但是当Spring Boot 在classpath中发现SpringMVN依赖后会自动开启该模块(依赖了`@EnableAutoConfiguration`). 这注解会将当前应用作为一个web应用启动.
 * `@ComponentScan` Spring 会在指定包下搜索components, configurations, 和services. 在本例中, 它会在hello包中所搜, 以及找到一个`HelloController`.
 
+* `@Configuration` 注解类等价与XML中配置beans. (用@Bean标注方法等价于XML中配置bean)
