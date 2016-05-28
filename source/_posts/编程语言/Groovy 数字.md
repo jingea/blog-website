@@ -1,6 +1,6 @@
-category: Groovy
-date: 2014-04-08
-title: groovy数字
+category: 编程语言
+date: 2014-04-15
+title: Groovy 数字
 ---
 > 本文是对Groovy部分官方文档进行了翻译
 

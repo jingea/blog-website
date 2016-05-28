@@ -1,6 +1,6 @@
-category: Groovy
-date: 2014-04-08
-title: groovy JSON
+category: 编程语言
+date: 2014-04-18
+title: Groovy JSON
 ---
 > 本文是对Groovy部分官方文档进行了翻译
 

@@ -1,6 +1,6 @@
-﻿category: Groovy
+﻿category: 编程语言
 date: 2014-04-08
-title: groovy注释和标识符
+title: Groovy 注释和标识符
 ---
 > 本文是对Groovy部分官方文档进行了翻译
 

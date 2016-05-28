@@ -1,6 +1,6 @@
-category: Groovy
-date: 2014-04-08
-title: groovy IO
+category: 编程语言
+date: 2014-04-09
+title: Groovy IO
 ---
 > 本文是对Groovy部分官方文档进行了翻译
 

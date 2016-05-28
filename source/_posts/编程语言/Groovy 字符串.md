@@ -1,6 +1,6 @@
-category: Groovy
-date: 2014-04-08
-title: groovy字符串
+category: 编程语言
+date: 2014-04-16
+title: Groovy 字符串
 ---
 > 本文是对Groovy部分官方文档进行了翻译
 

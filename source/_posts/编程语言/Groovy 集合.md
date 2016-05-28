@@ -1,6 +1,6 @@
-category: Groovy
-date: 2014-04-08
-title: groovy集合
+category: 编程语言
+date: 2014-04-11
+title: Groovy 集合
 ---
 > 本文是对Groovy部分官方文档进行了翻译
 
