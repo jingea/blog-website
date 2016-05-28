@@ -6,7 +6,11 @@ title: Mysql Secondary Indexes and Generated Virtual Columns
 
 As of MySQL 5.7.8, InnoDB supports secondary indexes on generated virtual columns. Other index types are not supported.
 
+从MySQL5.7.8开始, InnoDB引擎基于生成的虚拟列支持辅助索引索引(并不支持其他索引, 例如簇索引等). 
+
 A secondary index may be created on one or more virtual columns or on a combination of virtual columns and non-generated virtual columns. Secondary indexes on virtual columns may be defined as UNIQUE.
+
+辅助索引可以基于多个虚拟列(最少一个), 虚拟列组合。 基于虚拟列的辅助索引可以被定义为`UNIQUE`
 
 When a secondary index is created on a generated virtual column, generated column values are materialized in the records of the index. If the index is a covering index (one that includes all the columns retrieved by a query), generated column values are retrieved from materialized values in the index structure instead of computed “on the fly”.
 

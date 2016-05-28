@@ -323,19 +323,17 @@ JSON文档里面的value可以通过如下操作符进行比较操作
 * !=
 * <=>
 
-The following comparison operators and functions are not yet supported with JSON values:
-
+下面的比较操作符和方法并不支持JSON值
 * BETWEEN
 * IN()
 * GREATEST()
 * LEAST()
 
-A workaround for the comparison operators and functions just listed is to cast JSON values to a native MySQL numeric or string data type so they have a consistent non-JSON scalar type.
+刚才列出的比较操作符和方法会将JSON值转换成MySQL原生的numeric或者string类型, 因此他们有一个consistent non-JSON扩展类型.
 
-Comparison of JSON values takes place at two levels. The first level of comparison is based on the JSON types of the compared values. If the types differ, the comparison result is determined solely by which type has higher precedence. If the two values have the same JSON type, a second level of comparison occurs using type-specific rules.
+JSON值进行比较时会先根据JSON类型进行比较, 如果类型不同的话, 比较结果就决定于更高优先级的类型. 如果类型一样的话, 则会根据指定类型原则进行比较.
 
-The following list shows the precedences of JSON types, from highest precedence to the lowest. (The type names are those returned by the JSON_TYPE() function.) Types shown together on a line have the same precedence. Any value having a JSON type listed earlier in the list compares greater than any value having a JSON type listed later in the list.
-
+下面列出了JSON类型的优先级, 从高到低进行排序. 我们可以通过`JSON_TYPE()`来获取某个值得类型.
 * BLOB
 * BIT
 * OPAQUE
@@ -348,7 +346,7 @@ The following list shows the precedences of JSON types, from highest precedence 
 * STRING
 * INTEGER, DOUBLE
 * NULL
-For JSON values of the same precedence, the comparison rules are type specific:
+如果JSON值拥有相同的优先级的话, 那么不同的类型或根据下面介绍的规则进行比较:
 
 ### BLOB
 
