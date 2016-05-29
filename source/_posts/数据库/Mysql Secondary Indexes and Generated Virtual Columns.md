@@ -4,29 +4,54 @@ title: Mysql Secondary Indexes and Generated Virtual Columns
 ---
 [官方文档](http://dev.mysql.com/doc/refman/5.7/en/create-table-secondary-indexes-virtual-columns.html)
 
-As of MySQL 5.7.8, InnoDB supports secondary indexes on generated virtual columns. Other index types are not supported.
+## Generated Columns
+generated column是由普通column生成的列.
+```sql
+CREATE TABLE sum (
+  num1 int,
+  num2 int,
+  sum int AS (num1 + num2)
+);
+INSERT INTO sum (num1, num2) VALUES(1,1),(3,4);
+mysql> SELECT * FROM triangle;
++-------+-------+--------------------+
+| num1  | num2  | sum                |
++-------+-------+--------------------+
+|     1 |     1 |                  2 |
+|     3 |     4 |                  7 |
++-------+-------+--------------------+
+```
+语法为
+```sql
+col_name data_type [GENERATED ALWAYS] AS (expression)
+  [VIRTUAL | STORED] [UNIQUE [KEY]] [COMMENT comment]
+  [[NOT] NULL] [[PRIMARY] KEY]
+```
+* VIRTUAL: 不存储值到磁盘上
+* STORED : 将值存储到磁盘上
 
-从MySQL5.7.8开始, InnoDB引擎基于生成的虚拟列支持辅助索引索引(并不支持其他索引, 例如簇索引等). 
+## Secondary Indexes
+从MySQL5.7.8开始, InnoDB引擎基于自生成(generated virtual columns)的虚拟列支持辅助索引索引(secondary indexes, 并不支持其他索引, 例如簇索引等).
 
-A secondary index may be created on one or more virtual columns or on a combination of virtual columns and non-generated virtual columns. Secondary indexes on virtual columns may be defined as UNIQUE.
+secondary indexe可以基于一个, 多个, 组合virtual columns或者非generated virtual columns生成。当基于virtual column的secondary index可以由`UNIQUE`进行定义.
 
-辅助索引可以基于多个虚拟列(最少一个), 虚拟列组合。 基于虚拟列的辅助索引可以被定义为`UNIQUE`
+当基于generated virtual column创建的secondary index, generated column的值就体现在了这个secondary index的记录上. 如果这个索引是一个covering index, generated column值是从索引中已经生成的值进行索引, 而不是再自己计算一遍.
+> covering index 查询时检索所有的column.
 
-When a secondary index is created on a generated virtual column, generated column values are materialized in the records of the index. If the index is a covering index (one that includes all the columns retrieved by a query), generated column values are retrieved from materialized values in the index structure instead of computed “on the fly”.
+在执行`INSERT`和`UPDATE`这样的写操作时, 如果用到了基于virtual column的辅助索引时, 那么生成virtual column时会产生额外的性能消耗. 甚至当使用STORED generated columns时, 写操作会带来更多的性能消耗, 还有更多的内存和磁盘消耗. 如果secondary index不是基于virtual column, 当产生读操作时会带来更多的性能消耗, 这是因为virtual column的值每当该column的列被检查时都会计算一次.
 
-There are additional write costs to consider when using a secondary index on a virtual column due to computation performed when materializing virtual column values in secondary index records during INSERT and UPDATE operations. Even with additional write costs, secondary indexes on virtual columns may be preferable to STORED generated columns, which are materialized in the clustered index, resulting in larger tables that require more disk space and memory. If a secondary index is not defined on a virtual column, there are additional costs for reads, as virtual column values must be computed each time the column's row is examined.
+当发生回滚或者清除操作时, 被索引过的virtual column已经经过里MVCC-logged, 如此一来就可以以避免再计算一次. logged值的长度是由索引长度限制的, `COMPACT`和`REDUNDANT`是767字节, `DYNAMIC`和`COMPRESSED`是3072个字节.
 
-Values of an indexed virtual column are MVCC-logged to avoid unnecessary recomputation of generated column values during rollback or during a purge operation. The data length of logged values is limited by the index key limit of 767 bytes for COMPACT and REDUNDANT row formats, and 3072 bytes for DYNAMIC and COMPRESSED row formats.
+在virtual column 上增加或者删除secondary index是一个内置的操作.
 
-Adding or dropping a secondary index on a virtual column is an in-place operation.
+virtual column 上的secondary index不能成为外键的索引. 同样secondary index的virtual column也不能指向外键, 而且也不能使用如下的语句定义
+* ON DELETE CASCADE
+* ON DELETE SET NULL
+* ON UPDATE CASCADE
+* ON UPDATE SET NULL.
 
-A secondary index on a virtual column cannot be used as the index for a foreign key.
-
-Secondary indexes are not supported on virtual columns that have a base column that is referenced in a foreign key constraint and uses ON DELETE CASCADE, ON DELETE SET NULL, ON UPDATE CASCADE, or ON UPDATE SET NULL.
-
-Using a Generated Virtual Column Index to Indirectly Index a JSON Column
-
-As noted elsewhere, JSON columns cannot be indexed directly. To create an index that references such a column indirectly, you can define a generated column that extracts the information that should be indexed, then create an index on the generated column, as shown in this example:
+## Generated Virtual Column索引JSON Column上
+JSON columns是不能被直接索引的. 但是我们可以通过创建一个generated column来间接为JSON columns生成一个索引, 如下例:
 ```sql
 mysql> CREATE TABLE jemp (
     ->     c JSON,
@@ -35,8 +60,8 @@ mysql> CREATE TABLE jemp (
     -> );
 Query OK, 0 rows affected (0.28 sec)
 
-mysql> INSERT INTO jemp (c) VALUES 
-     >   ('{"id": "1", "name": "Fred"}'), ('{"id": "2", "name": "Wilma"}'), 
+mysql> INSERT INTO jemp (c) VALUES
+     >   ('{"id": "1", "name": "Fred"}'), ('{"id": "2", "name": "Wilma"}'),
      >   ('{"id": "3", "name": "Barney"}'), ('{"id": "4", "name": "Betty"}');
 Query OK, 4 rows affected (0.04 sec)
 Records: 4  Duplicates: 0  Warnings: 0
@@ -72,17 +97,17 @@ mysql> SHOW WARNINGS\G
 *************************** 1. row ***************************
   Level: Note
    Code: 1003
-Message: /* select#1 */ select json_unquote(json_extract(`test`.`jemp`.`c`,'$.name')) 
+Message: /* select#1 */ select json_unquote(json_extract(`test`.`jemp`.`c`,'$.name'))
 AS `name` from `test`.`jemp` where (`test`.`jemp`.`g` > 2)
 1 row in set (0.00 sec)
 ```
-(We have wrapped the output from the last statement in this example to fit the viewing area. See Section 9.3.9, “Optimizer Use of Generated Column Indexes”, for the statements used to create and populate the table just shown.)
+> 关于上例中创建表的更多信息参考 [Section 9.3.9, “Optimizer Use of Generated Column Indexes”]()
 
-In MySQL 5.7.9 and later, you can use -> as shorthand for JSON_EXTRACT() to access a value by path from a JSON column value. See Searching and Modifying JSON Values, for information about the JSON path syntax supported by MySQL.
+在Mysql 5.7.9以后, 你可以使用`->`替代`JSON_EXTRACT()`作为path访问JSON列.
 
-When you use EXPLAIN on a statement containing one or more expressions that use the -> operator, they are translated into the equivalent expressions using JSON_EXTRACT() instead, as shown here in the output from SHOW WARNINGS immediately following this EXPLAIN statement:
+当你使用`EXPLAIN`的语句中包含了一个或者多个`->`操作符时, 它们会被`JSON_EXTRACT()`进行替换.
 ```sql
-mysql> EXPLAIN SELECT c->"$.name" 
+mysql> EXPLAIN SELECT c->"$.name"
      > FROM jemp WHERE g > 2\G ORDER BY c->"$.name"
 *************************** 1. row ***************************
            id: 1
@@ -108,6 +133,3 @@ Message: /* select#1 */ select json_extract(`test`.`jemp`.`c`,'$.name') AS
 json_extract(`test`.`jemp`.`c`,'$.name')  
 1 row in set (0.00 sec)
 ```
-See the descriptions for the -> operator and JSON_EXTRACT() function (Section 13.16.3, “Functions That Search JSON Values”) for additional information and examples.
-
-This technique also can be used to provide indexes that indirectly reference columns of other types that cannot be indexed directly, such as GEOMETRY columns.
