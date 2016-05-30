@@ -1,4 +1,4 @@
-category: Java 项目构建
+category: Java工具
 date: 2015-09-08
 title: Archiva 初探
 ---
@@ -52,10 +52,10 @@ title: Archiva 初探
 ```
 11. 修改本地仓库中的`setting.xml`文件(我的目录`C:\Users\Administrator\.m2`),我们添加私有仓库的用户名和密码!
 ```xml
-<settings xmlns="http://maven.apache.org/settings/1.0.0" 
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<settings xmlns="http://maven.apache.org/settings/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-   
+
 	<servers>
         <server>
             <id>ID2015_09_17</id>
@@ -63,8 +63,6 @@ title: Archiva 初探
             <password>admin1</password>
         </server>
     </servers>
-  
+
  </settings>
  ```
-
-

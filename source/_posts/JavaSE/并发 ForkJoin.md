@@ -1,5 +1,5 @@
-category: JavaSE 并发
-date: 2016-03-28
+category: JavaSE
+date: 2015-03-09
 title: ForkJoin框架简介
 ---
 # ForkJoin框架
@@ -36,3 +36,15 @@ Fork/Join框架 与 执行器框架 的区别在于invokeAll()方法.(线程F)�
 ForkJoinPool可以接受Runnable对象或者ForkJoinTask对象.
 但是当接受Runnable对象的时候,ForkJoinPool不再采用工作窃取算法.
 同样地当调用ForkJoinPool#invokeALL(),invokeAny()时传进Callable对象也是允许的,但是如此ForkJoinPool也就不再采用工作窃取算法.
+
+## 创建Fork/Join线程池
+## 取消任务
+ForkJoinTask 提供的cancel()方法允许取消一个仍没有被执行的任务.如果任务已经执行,那么调用cancel()方法也无法取消.ForkJoin框架的局限性在于,ForkJoinPool线程池里的任务不允许被取消.为了克服这种局限性,我们将ForkJoinTask任务存储在TaskManager里.
+## 合并任务的结果
+## 在任务中抛出异常
+## 异步运行任务
+一旦主任务处理完指定文件夹里的所有内容,它将调用join()方法等待发送到线程池里的所以子任务执行完成
+
+* join()方法在主任务中被调用,然后等待任务执行结束,并通过compute()方法返回值.
+* 主任务将所以的子任务结果进行合并,这些子任务发送到线程池中时带有自己的结果列表,
+* 通过调用compute()方法返回这个列表并作为主任务的返回值.

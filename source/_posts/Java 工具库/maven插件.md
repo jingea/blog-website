@@ -1,4 +1,4 @@
-category: Java 项目构建
+category: Java工具
 date: 2015-06-08
 title: Maven 插件
 ---

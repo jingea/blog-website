@@ -1,4 +1,4 @@
-category: Java 项目构建
+category: Java工具
 date: 2016-04-13
 title: Maven Assembly 插件
 ---
