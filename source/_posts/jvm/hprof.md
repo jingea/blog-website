@@ -32,9 +32,9 @@ Obsolete Options
 ----------------
 gc_okay=y|n
 
-Examples
+示例
 --------
-  - Get sample cpu information every 20 millisec, with a stack depth of 3:
+  - 每20毫秒统计一次CPU信息(栈深度为3):
       java -agentlib:hprof=cpu=samples,interval=20,depth=3 classname
   - Get heap usage information based on the allocation sites:
       java -agentlib:hprof=heap=sites classname

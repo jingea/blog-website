@@ -1,5 +1,5 @@
 category: JVM
-date: 2014-10-08
+date: 2014-09-01
 title: JVM内存参数
 ---
 ## 内存分配
