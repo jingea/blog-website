@@ -31,33 +31,24 @@ verbose=y|n            print messages about dumps     y
 Obsolete Options
 ----------------
 gc_okay=y|n
-
-示例
---------
-  - 每20毫秒统计一次CPU信息(栈深度为3):
-      java -agentlib:hprof=cpu=samples,interval=20,depth=3 classname
-  - Get heap usage information based on the allocation sites:
-      java -agentlib:hprof=heap=sites classname
-
-Notes
------
-  - The option format=b cannot be used with monitor=y.
-  - The option format=b cannot be used with cpu=old|times.
-  - Use of the -Xrunhprof interface can still be used, e.g.
-       java -Xrunhprof:[help]|[<option>=<value>, ...]
-    will behave exactly the same as:
-       java -agentlib:hprof=[help]|[<option>=<value>, ...]
-
-Warnings
---------
-  - This is demonstration code for the JVMTI interface and use of BCI,
-    it is not an official product or formal part of the JDK.
-  - The -Xrunhprof interface will be removed in a future release.
-  - The option format=b is considered experimental, this format may change
-    in a future release.
-➜  test
 ```
+示例:
+
+每20毫秒统计一次CPU信息(栈深度为3):
+```bash
+java -agentlib:hprof=cpu=samples,interval=20,depth=3 classname
+```
+Get heap usage information based on the allocation sites:
+```bash
+java -agentlib:hprof=heap=sites classname
+```
+
+注意:
+* `format=b`不能和`monitor=y`一起使用
+* `format=b`不能和`cpu=old|times`一起使用
+* `-Xrunhprof`接口可以继续使用, 例如`java -Xrunhprof:[help]|[<option>=<value>, ...]`.这个等同于`java -agentlib:hprof=[help]|[<option>=<value>, ...]`
+
 我们看一个很简单的统计函数运行时间的示例
-```
+```bash
 java -agentlib:hprof=cpu=times,interval=10 Test
 ```
