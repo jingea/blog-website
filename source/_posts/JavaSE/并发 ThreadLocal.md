@@ -72,9 +72,9 @@ private Entry getEntry(ThreadLocal<?> key) {
                 return getEntryAfterMiss(key, i, e);
         }
 ```
-通过上面
+通过上面的源码我们可以看出, 每个和线程相关的数据最终都是保存到了各自的线程对象里, 然后使用`ThreadLocal`作为key存储. 
 
-使用`-Xmx10M -Xms10M -XX:+PrintGC`运行程序的结果为
+原理我们就简单地说道这里, 在网上有人说, `ThreadLocal`可能会引起内存泄漏, 于是我使用`-Xmx10M -Xms10M -XX:+PrintGC`这几个JVM参数运行上面程序, 结果为
 ```bash
 [GC (Allocation Failure)  2048K->905K(9728K), 0.0061875 secs]
 [GC (Allocation Failure)  7854K->7113K(9728K), 0.0011924 secs]
@@ -186,3 +186,4 @@ Active Thread Count : 2
 Active Thread Count : 2
 set count ; 250
 ```
+由于篇幅的原因, 我并没有将全部的日志输出, 但是通过上面的日志我们还是可以看出, 随着线程运行的结束, 分配到线程里的对象也被GC掉了, 因此对`ThreadLocal`的一个简单应用, 只要我们写的线程代码没有问题, 我们并不需要对内存泄漏担心太多.
