@@ -1,10 +1,10 @@
 category: asm
-date: 2016-01-11
-title: ASM Core(2) 操作
+date: 2016-01-12
+title: ASM Core(2) Class的增删改查
 ---
 [asm4-guide](http://download.forge.objectweb.org/asm/asm4-guide.pdf)学习心得
 
-## 解析class
+## 获取class信息
 下来的示例中我们通过重写`ClassVisitor`相关函数然后依次打印出类型信息, 字段信息和函数信息.
 ```java
 class ClassPrinter extends ClassVisitor {
@@ -62,7 +62,7 @@ Test extends java/lang/Object {
 在测试代码中我们首先创建了一个`ClassReader`实例用于读取`Test`字节码. 然后由`accept()`方法依次调用`ClassPrinter`的方法
 
 
-## 生成class
+## 动态生成Class
 我们仅仅使用`ClassWriter`就可以生成一个类, 例如我们要生成一个如下的接口
 ```java
 package pkg;
@@ -141,7 +141,7 @@ class StubClassLoader extends ClassLoader {
 }
 ```
 
-## 修改
+## 修改已存在的Class
 在上篇文章中我们只是单独的使用了`ClassReader`和`ClassWriter`,但是更多的应用其实应该是将其组合到一起使用
 ```java
 byte[] b1 = ...;
