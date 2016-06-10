@@ -1,5 +1,5 @@
 category: Java工具
-date: 2015
+date: 2016-05-11
 title: Oracle® Solaris Studio 
 ---
 在Centos上安装Oracle® Solaris Studio.  [中文教程](http://docs.oracle.com/cd/E27071_01/html/E26451/gemyt.html#scrolltoc)
