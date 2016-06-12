@@ -4,6 +4,8 @@ title: IntelliJ IDEA
 ---
 ## 快捷键
 
+* 块选择 : `ALT Shift Insert`
+
 查询快捷键
 * Ctrl+N   查找类 
 * Ctrl+SHIFT+N  查找文件 
@@ -99,5 +101,3 @@ InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream("./myba
 
 ```
 
-## 快捷键
-* 块选择 : `ALT Shift Insert`
