@@ -1,5 +1,5 @@
 category: Java工具
-date: 
+date: 2016-05-12
 title: Log4J2 初探
 ---
 

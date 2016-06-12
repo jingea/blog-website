@@ -1,5 +1,5 @@
 category: Java工具
-date: 
+date: 2016-05-12
 title: Log4J2 Appender
 ---
 Log4j2为我们提供了非常多的Appender, 我们就是通过Appender最终将日志输出的.
