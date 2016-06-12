@@ -1,4 +1,4 @@
-category: 操作系统
+category: mgits
 date: 2015-10-26
 title: NUMA和RDMA
 ---
