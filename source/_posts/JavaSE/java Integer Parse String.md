@@ -143,3 +143,30 @@ false
 false
 ```
 好了，这下世界安静了
+
+-------------------------------------------------------------------------
+后来在项目中发现有使用Gson转换中也会发生这种情况, 写个代码测试一下
+```java
+public class TestIntegerValueOf {
+	public static void main(String[] args) {
+		Obj obj = new Obj();
+		obj.integer = 200;
+		Gson gson = new Gson();
+		String str = gson.toJson(obj);
+		System.out.println(str);
+		Obj newObj1 = gson.fromJson(str, Obj.class);
+		Obj newObj2 = gson.fromJson(str, Obj.class);
+		System.out.println(newObj1.integer == newObj2.integer);
+	}
+
+	private static class Obj {
+		public Integer integer;
+	}
+}
+```
+输出结果为
+```bash
+{"integer":200}
+false
+```
+看来在Gson中不是使用强转就是使用的`valueOf()`
