@@ -85,3 +85,4 @@ public class NameGenerateService {
 ```
 最后就输出了Lily.
 
+> 注意, SpringBoot不能放在启动程序的根目录下, 例如`src/main/java`这样的目录下, 必须再封装一层, 例如`src/main/java/testSpringBoot`下
