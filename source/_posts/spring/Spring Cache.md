@@ -1,5 +1,5 @@
 category: Spring
-date: 2016-
+date: 2016-06-15
 title: Spring Cache
 ---
 [官方文档](https://spring.io/guides/)学习
