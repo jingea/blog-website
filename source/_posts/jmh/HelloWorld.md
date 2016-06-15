@@ -1,7 +1,17 @@
 category: JMH
 date: 2015-12-28
-title: 01_HelloWorld
+title: HelloWorld
 ---
+JMH通过如下流程工作: 用户通过@Benchmark注解基准函数,然后JMH在执行基准测试时会自动生成一些代码.
+     
+`@Benchmark`注解的详细信息可以参考其Javadoc,但是我们可以简单地将其想象成有效负载测试.
+     
+我们可以在同一个类中定义多个benchmark函数, 函数名都无所谓,但是我们应该尽可能的起一个有意义的名字.
+    
+需要注意的是, 如果函数没有执行完的话, JMH也不会停止运行. 如果函数中抛出异常, 那JMH同样的会停止运行, 执行下一个benchmark
+
+尽管我们实例中并没有测试任何功能, 但是这个例子却能展示出当你进行基准测试时, 基础设施的基准线.
+
 ```java
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.runner.Runner;
@@ -11,20 +21,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 public class JMHSample_01_HelloWorld {
 
-    /*
-     * 这是我们的第一个基准函数
-     *
-     * JMH通过如下流程工作: 用户通过@Benchmark注解基准函数, 然后JMH在执行基准测试时会自动生成一些代码.
-     * @Benchmark注解的详细信息可以参考其Javadoc,但是我们可以简单地将其想象成有效负载测试.
-     *
-     * 我们可以在同一个类中定义多个benchmark函数, 函数名都无所谓, 但是我们应该尽可能的起一个有意义的名字.
-     *
-     * 需要注意的是, 如果函数没有执行完的话, JMH也不会停止运行. 如果函数中抛出异常, 那JMH同样的会停止运行, 执行下一个benchmark
-     *
-     * 尽管我们实例中并没有测试任何功能, 但是这个例子却能展示出当你进行基准测试时, 基础设施的基准线.
-     */
-
-	@Benchmark
+    @Benchmark
 	public void wellHelloThere() {
 		// 我们故意将该函数留空
 	}

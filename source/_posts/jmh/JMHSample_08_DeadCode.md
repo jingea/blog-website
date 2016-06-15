@@ -1,6 +1,6 @@
 category: JMH
 date: 2016-01-05
-title: 08_DeadCode  
+title: 消除死代码  
 ---
 下面的benchmark中有许多Dead-Code Elimination, 编译器能够发现那些冗余计算并且消除他们. 但是如果被消除的部分是我们的基准测试部分, 则会引发问题.幸运的的是, JMH提供了一些基础服务来解决这些问题:带有返回结果的基准测试会强制JMH不进行Dead-Code Elimination
 ```java

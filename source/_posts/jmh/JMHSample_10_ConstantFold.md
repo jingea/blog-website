@@ -1,7 +1,13 @@
 category: JMH
 date: 2016-01-05
-title: 10_ConstantFold
+title: 常亮展开
 ---
+dead-code elimination另一种方式是常量展开.
+
+如果JVM意识到基准测试的结果总是相同的, 那么JVM就会对其进行优化.
+
+避免常量展开的一种方式是在@State对象中使用非final成员, 在进行基准测试计算中,使用这些非final成员进行计算
+
 ```java
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -15,15 +21,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class JMHSample_10_ConstantFold {
-
-    /*
-     * dead-code elimination另一种方式是常量展开.
-     *
-     * 如果JVM意识到基准测试的结果总是相同的, 那么JVM就会对其进行优化.
-     *
-     * 避免常量展开的一种方式是在@State对象中使用非final成员, 在进行基准测试计算中,使用这些非final成员进行计算
-     */
-
 	private double x = Math.PI;
 
 	private final double wrongX = Math.PI;

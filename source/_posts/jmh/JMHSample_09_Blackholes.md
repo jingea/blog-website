@@ -1,6 +1,6 @@
 category: JMH
 date: 2016-01-05
-title: 09_Blackholes
+title: Blackholes
 ---
 
 ```java

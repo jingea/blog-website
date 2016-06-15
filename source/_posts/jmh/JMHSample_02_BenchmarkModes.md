@@ -1,6 +1,6 @@
 category: JMH
 date: 2015-12-28
-title: 02_BenchmarkModes
+title: 测试模式-吞吐量,平均执行时间,采样
 ---
 当benchmark编译过程中, JMH会为此生成大量的额外代码. JMH可以在多种不同的模式下进行基准测试.
 
@@ -53,6 +53,7 @@ Result "measureThroughput":
 Benchmark                                           Mode  Cnt  Score   Error  Units
 JMH.JMHSample_02_BenchmarkModes.measureThroughput  thrpt    4  9.999 ± 0.051  ops/s
 ```
+
 从上面的结果中我们可以看到
 * Benchmark：执行的基准测试为`JMH.JMHSample_02_BenchmarkModes.measureThroughput`
 * Mode：执行模式为thrpt, 即Throughput
