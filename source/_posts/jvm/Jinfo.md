@@ -2,6 +2,7 @@ category: JVM
 date: 2014-10-04
 title: Jinfo
 ---
+## 用法
 jinfo的作用是实时查看和调整虚拟机的各项参数.
 ```java
 jinfo [ option ] pid
@@ -79,3 +80,170 @@ sun.cpu.isalist =
 VM Flags:
 Non-default VM flags: -XX:InitialHeapSize=100663296 -XX:MaxHeapSize=1610612736 -XX:MaxNewSize=536870912 -XX:MinHeapDeltaBytes=524288 -XX:NewSize=1572864 -XX:OldSize=99090432 -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC
 ```
+
+## 源码分析
+```java
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+
+import sun.tools.attach.HotSpotVirtualMachine;
+import com.sun.tools.attach.VirtualMachine;
+
+public class JInfo {
+
+	public static void main(String[] args) throws Exception {
+		if (args.length == 0) {
+			usage(); // no arguments
+		}
+
+		boolean useSA = true;
+		String arg1 = args[0];
+		if (arg1.startsWith("-")) {
+			if (arg1.equals("-flags") || arg1.equals("-sysprops")) {
+				// SA JInfo 需要 <pid> 或者 <server> 或者(<executable> and <code file>).
+				// 因此 包含选项在内的所有参数应该是 2个 或者 3个.
+				if (args.length != 2 && args.length != 3) {
+					usage();
+				}
+			} else if (arg1.equals("-flag")) {
+				useSA = false;
+			} else {
+				usage();
+			}
+		}
+
+		if (useSA) {
+			runTool(args);
+		} else {
+			if (args.length == 3) {
+				String pid = args[2];
+				String option = args[1];
+				flag(pid, option);
+			} else {
+				usage();
+			}
+		}
+	}
+
+	private static void runTool(String args[]) throws Exception {
+		String tool = "sun.jvm.hotspot.tools.JInfo";
+		Class<?> c = loadClass(tool);
+		Class[] argTypes = { String[].class };
+		Method m = c.getDeclaredMethod("main", argTypes);
+
+		Object[] invokeArgs = { args };
+		m.invoke(null, invokeArgs);
+	}
+
+	private static Class loadClass(String name) {
+		// 我们指定system class loader是为了在开发环境中 这个类可能在boot class path中，但是sa-jdi.jar却在system class path。
+		// 一旦JDK被部署之后tools.jar 和 sa-jdi.jar 都会在system class path中。
+		try {
+			return Class.forName(name, true, ClassLoader.getSystemClassLoader());
+		} catch (Exception x) {
+		}
+		return null;
+	}
+
+	private static void flag(String pid, String option) throws IOException {
+		VirtualMachine vm = attach(pid);
+		String flag;
+		InputStream in;
+		int index = option.indexOf('=');
+		if (index != -1) {
+			flag = option.substring(0, index);
+			String value = option.substring(index + 1);
+			in = ((HotSpotVirtualMachine) vm).setFlag(flag, value);
+		} else {
+			char c = option.charAt(0);
+			switch (c) {
+			case '+':
+				flag = option.substring(1);
+				in = ((HotSpotVirtualMachine) vm).setFlag(flag, "1");
+				break;
+			case '-':
+				flag = option.substring(1);
+				in = ((HotSpotVirtualMachine) vm).setFlag(flag, "0");
+				break;
+			default:
+				flag = option;
+				in = ((HotSpotVirtualMachine) vm).printFlag(flag);
+				break;
+			}
+		}
+
+		drain(vm, in);
+	}
+
+	// Attach to <pid>, exiting if we fail to attach
+	private static VirtualMachine attach(String pid) {
+		try {
+			return VirtualMachine.attach(pid);
+		} catch (Exception x) {
+			String msg = x.getMessage();
+			if (msg != null) {
+				System.err.println(pid + ": " + msg);
+			} else {
+				x.printStackTrace();
+			}
+			System.exit(1);
+			return null; // keep compiler happy
+		}
+	}
+
+	// Read the stream from the target VM until EOF, then detach
+	private static void drain(VirtualMachine vm, InputStream in) throws IOException {
+		// read to EOF and just print output
+		byte b[] = new byte[256];
+		int n;
+		do {
+			n = in.read(b);
+			if (n > 0) {
+				String s = new String(b, 0, n, "UTF-8");
+				System.out.print(s);
+			}
+		} while (n > 0);
+		in.close();
+		vm.detach();
+	}
+
+	// print usage message
+	private static void usage() {
+
+		Class c = loadClass("sun.jvm.hotspot.tools.JInfo");
+		boolean usageSA = (c != null);
+
+		System.out.println("Usage:");
+		if (usageSA) {
+			System.out.println("    jinfo [option] <pid>");
+			System.out.println("        (to connect to running process)");
+			System.out.println("    jinfo [option] <executable <core>");
+			System.out.println("        (to connect to a core file)");
+			System.out.println("    jinfo [option] [server_id@]<remote server IP or hostname>");
+			System.out.println("        (to connect to remote debug server)");
+			System.out.println("");
+			System.out.println("where <option> is one of:");
+			System.out.println("    -flag <name>         to print the value of the named VM flag");
+			System.out.println("    -flag [+|-]<name>    to enable or disable the named VM flag");
+			System.out.println("    -flag <name>=<value> to set the named VM flag to the given value");
+			System.out.println("    -flags               to print VM flags");
+			System.out.println("    -sysprops            to print Java system properties");
+			System.out.println("    <no option>          to print both of the above");
+			System.out.println("    -h | -help           to print this help message");
+		} else {
+			System.out.println("    jinfo <option> <pid>");
+			System.out.println("       (to connect to a running process)");
+			System.out.println("");
+			System.out.println("where <option> is one of:");
+			System.out.println("    -flag <name>         to print the value of the named VM flag");
+			System.out.println("    -flag [+|-]<name>    to enable or disable the named VM flag");
+			System.out.println("    -flag <name>=<value> to set the named VM flag to the given value");
+			System.out.println("    -h | -help           to print this help message");
+		}
+
+		System.exit(1);
+	}
+}
+```
+JInfo 只有在使用-flag选项的时候才会使用VM attach mechanism,其他的选项都是使用SA tools

@@ -197,13 +197,8 @@ public class JStack {
 	}
 
 	private static Class loadSAClass() {
-		//
-		// Attempt to load JStack class - we specify the system class
-		// loader so as to cater for development environments where
-		// this class is on the boot class path but sa-jdi.jar is on
-		// the system class path. Once the JDK is deployed then both
-		// tools.jar and sa-jdi.jar are on the system class path.
-		//
+		// 我们指定system class loader是为了在开发环境中 这个类可能在boot class path中，但是sa-jdi.jar却在system class path。
+		// 一旦JDK被部署之后tools.jar 和 sa-jdi.jar 都会在system class path中。
 		try {
 			return Class.forName("sun.jvm.hotspot.tools.JStack", true,
 					ClassLoader.getSystemClassLoader());
