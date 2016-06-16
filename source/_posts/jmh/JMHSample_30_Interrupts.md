@@ -3,6 +3,26 @@ date: 2016-06-
 title:
 ---
 
+JMH can also detect when threads are stuck in the benchmarks, and try
+to forcefully interrupt the benchmark thread. JMH tries to do that
+when it is arguably sure it would not affect the measurement.
+
+
+
+In this example, we want to measure the simple performance characteristics
+of the ArrayBlockingQueue. Unfortunately, doing that without a harness
+support will deadlock one of the threads, because the executions of
+take/put are not paired perfectly. Fortunately for us, both methods react
+to interrupts well, and therefore we can rely on JMH to terminate the
+measurement for us. JMH will notify users about the interrupt actions
+nevertheless, so users can see if those interrupts affected the measurement.
+JMH will start issuing interrupts after the default or user-specified timeout
+had been reached.
+
+This is a variant of org.openjdk.jmh.samples.JMHSample_18_Control, but without
+the explicit control objects. This example is suitable for the methods which
+react to interrupts gracefully.
+
 ```java
 package testJMH;
 
@@ -28,28 +48,6 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Group)
 public class JMHSample_30_Interrupts {
-
-    /*
-     * JMH can also detect when threads are stuck in the benchmarks, and try
-     * to forcefully interrupt the benchmark thread. JMH tries to do that
-     * when it is arguably sure it would not affect the measurement.
-     */
-
-    /*
-     * In this example, we want to measure the simple performance characteristics
-     * of the ArrayBlockingQueue. Unfortunately, doing that without a harness
-     * support will deadlock one of the threads, because the executions of
-     * take/put are not paired perfectly. Fortunately for us, both methods react
-     * to interrupts well, and therefore we can rely on JMH to terminate the
-     * measurement for us. JMH will notify users about the interrupt actions
-     * nevertheless, so users can see if those interrupts affected the measurement.
-     * JMH will start issuing interrupts after the default or user-specified timeout
-     * had been reached.
-     *
-     * This is a variant of org.openjdk.jmh.samples.JMHSample_18_Control, but without
-     * the explicit control objects. This example is suitable for the methods which
-     * react to interrupts gracefully.
-     */
 
     private BlockingQueue<Integer> q;
 
@@ -84,8 +82,6 @@ public class JMHSample_30_Interrupts {
     }
 
 }
-
-
 ```
 执行结果
 ```java

@@ -3,6 +3,18 @@ date: 2016-06-
 title:
 ---
 
+There is a way to query JMH about the current running mode. This is
+possible with three infrastructure objects we can request to be injected:
+  - BenchmarkParams: covers the benchmark-global configuration
+  - IterationParams: covers the current iteration configuration
+  - ThreadParams: covers the specifics about threading
+
+Suppose we want to check how the ConcurrentHashMap scales under different
+parallelism levels. We can put concurrencyLevel in @Param, but it sometimes
+inconvenient if, say, we want it to follow the @Threads count. Here is
+how we can query JMH about how many threads was requested for the current run,
+and put that into concurrencyLevel argument for CHM constructor.
+
 ```java
 package testJMH;
 
@@ -30,19 +42,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class JMHSample_31_InfraParams {
 
-    /*
-     * There is a way to query JMH about the current running mode. This is
-     * possible with three infrastructure objects we can request to be injected:
-     *   - BenchmarkParams: covers the benchmark-global configuration
-     *   - IterationParams: covers the current iteration configuration
-     *   - ThreadParams: covers the specifics about threading
-     *
-     * Suppose we want to check how the ConcurrentHashMap scales under different
-     * parallelism levels. We can put concurrencyLevel in @Param, but it sometimes
-     * inconvenient if, say, we want it to follow the @Threads count. Here is
-     * how we can query JMH about how many threads was requested for the current run,
-     * and put that into concurrencyLevel argument for CHM constructor.
-     */
+
 
     static final int THREAD_SLICE = 1000;
 

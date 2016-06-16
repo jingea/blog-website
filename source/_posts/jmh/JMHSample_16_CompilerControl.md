@@ -3,6 +3,20 @@ date: 2016-06-
 title:
 ---
 
+We can use HotSpot-specific functionality to tell the compiler what
+do we want to do with particular methods. To demonstrate the effects,
+we end up with 3 methods in this sample.
+
+
+
+These are our targets:
+  - first method is prohibited from inlining
+  - second method is forced to inline
+  - third method is prohibited from compiling
+
+We might even place the annotations directly to the benchmarked
+methods, but this expresses the intent more clearly.
+
 ```java
 package testJMH;
 
@@ -24,22 +38,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class JMHSample_16_CompilerControl {
-
-    /*
-     * We can use HotSpot-specific functionality to tell the compiler what
-     * do we want to do with particular methods. To demonstrate the effects,
-     * we end up with 3 methods in this sample.
-     */
-
-    /**
-     * These are our targets:
-     *   - first method is prohibited from inlining
-     *   - second method is forced to inline
-     *   - third method is prohibited from compiling
-     *
-     * We might even place the annotations directly to the benchmarked
-     * methods, but this expresses the intent more clearly.
-     */
 
     public void target_blank() {
         // this method was intentionally left blank

@@ -3,6 +3,22 @@ date: 2016-06-
 title:
 ---
 
+WARNING:
+THIS IS AN EXPERIMENTAL FEATURE, BE READY FOR IT BECOME REMOVED WITHOUT NOTICE!
+
+
+
+There are weird cases when the benchmark state is more cleanly described
+by the set of @States, and those @States reference each other. JMH allows
+linking @States in directed acyclic graphs (DAGs) by referencing @States
+in helper method signatures. (Note that {@link org.openjdk.jmh.samples.JMHSample_28_BlackholeHelpers}
+is just a special case of that.
+
+Following the interface for @Benchmark calls, all @Setups for
+referenced @State-s are fired before it becomes accessible to current @State.
+Similarly, no @TearDown methods are fired for referenced @State before
+current @State is done with it.
+
 ```java
 package testJMH;
 
@@ -36,23 +52,6 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 public class JMHSample_29_StatesDAG {
 
-    /**
-     * WARNING:
-     * THIS IS AN EXPERIMENTAL FEATURE, BE READY FOR IT BECOME REMOVED WITHOUT NOTICE!
-     */
-
-    /**
-     * There are weird cases when the benchmark state is more cleanly described
-     * by the set of @States, and those @States reference each other. JMH allows
-     * linking @States in directed acyclic graphs (DAGs) by referencing @States
-     * in helper method signatures. (Note that {@link org.openjdk.jmh.samples.JMHSample_28_BlackholeHelpers}
-     * is just a special case of that.
-     *
-     * Following the interface for @Benchmark calls, all @Setups for
-     * referenced @State-s are fired before it becomes accessible to current @State.
-     * Similarly, no @TearDown methods are fired for referenced @State before
-     * current @State is done with it.
-     */
 
     /*
      * This is a model case, and it might not be a good benchmark.
@@ -131,7 +130,6 @@ public class JMHSample_29_StatesDAG {
 
 
 }
-
 ```
 执行结果
 ```java

@@ -3,6 +3,17 @@ date: 2016-06-
 title:
 ---
 
+JMHSample_11_Loops warns about the dangers of using loops in @Benchmark methods.
+Sometimes, however, one needs to traverse through several elements in a dataset.
+This is hard to do without loops, and therefore we need to devise a scheme for
+safe looping.
+
+
+
+Suppose we want to measure how much it takes to execute work() with different
+arguments. This mimics a frequent use case when multiple instances with the same
+implementation, but different data, is measured.
+
 ```java
 package testJMH;
 
@@ -33,19 +44,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class JMHSample_34_SafeLooping {
-
-    /*
-     * JMHSample_11_Loops warns about the dangers of using loops in @Benchmark methods.
-     * Sometimes, however, one needs to traverse through several elements in a dataset.
-     * This is hard to do without loops, and therefore we need to devise a scheme for
-     * safe looping.
-     */
-
-    /*
-     * Suppose we want to measure how much it takes to execute work() with different
-     * arguments. This mimics a frequent use case when multiple instances with the same
-     * implementation, but different data, is measured.
-     */
 
     static final int BASE = 42;
 

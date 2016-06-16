@@ -3,6 +3,18 @@ date: 2016-06-
 title:
 ---
 
+Sometimes you need the tap into the harness mind to get the info
+on the transition change. For this, we have the experimental state object,
+Control, which is updated by JMH as we go.
+
+
+
+In this example, we want to estimate the ping-pong speed for the simple
+AtomicBoolean. Unfortunately, doing that in naive manner will livelock
+one of the threads, because the executions of ping/pong are not paired
+perfectly. We need the escape hatch to terminate the loop if threads
+are about to leave the measurement.
+
 ```java
 package testJMH;
 
@@ -20,20 +32,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @State(Scope.Group)
 public class JMHSample_18_Control {
-
-    /*
-     * Sometimes you need the tap into the harness mind to get the info
-     * on the transition change. For this, we have the experimental state object,
-     * Control, which is updated by JMH as we go.
-     */
-
-    /*
-     * In this example, we want to estimate the ping-pong speed for the simple
-     * AtomicBoolean. Unfortunately, doing that in naive manner will livelock
-     * one of the threads, because the executions of ping/pong are not paired
-     * perfectly. We need the escape hatch to terminate the loop if threads
-     * are about to leave the measurement.
-     */
 
     public final AtomicBoolean flag = new AtomicBoolean();
 
@@ -64,10 +62,7 @@ public class JMHSample_18_Control {
 
         new Runner(opt).run();
     }
-
 }
-
-
 ```
 执行结果
 ```java

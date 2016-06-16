@@ -3,6 +3,10 @@ date: 2016-06-
 title:
 ---
 
+
+In some weird cases you need to get the separate throughput/time metrics for the benchmarked code depending on the outcome of the current code. Trying to accommodate the cases like this, JMH optionally provides the special annotation which treats @State objects
+as the object bearing user counters. See @AuxCounters javadoc for the limitations.
+
 ```java
 package testJMH;
 
@@ -28,15 +32,6 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5, time = 100, timeUnit = TimeUnit.MILLISECONDS)
 @Fork(1)
 public class JMHSample_23_AuxCounters {
-
-    /*
-     * In some weird cases you need to get the separate throughput/time
-     * metrics for the benchmarked code depending on the outcome of the
-     * current code. Trying to accommodate the cases like this, JMH optionally
-     * provides the special annotation which treats @State objects
-     * as the object bearing user counters. See @AuxCounters javadoc for
-     * the limitations.
-     */
 
     @AuxCounters
     @State(Scope.Thread)

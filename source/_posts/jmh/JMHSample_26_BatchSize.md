@@ -3,6 +3,12 @@ date: 2016-06-
 title:
 ---
 
+Sometimes you need to evaluate operation which doesn't have  the steady state. The cost of a benchmarked operation may significantly vary from invocation to invocation.
+
+In this case, using the timed measurements is not a good idea, and the only acceptable benchmark mode is a single shot. On the other hand, the operation may be too small for reliable single shot measurement.
+
+We can use "batch size" parameter to describe the number of benchmark calls to do per one invocation without looping the method manually and protect from problems described in JMHSample_11_Loops.
+
 ```java
 package testJMH;
 
@@ -25,22 +31,6 @@ import java.util.List;
 
 @State(Scope.Thread)
 public class JMHSample_26_BatchSize {
-
-    /*
-     * Sometimes you need to evaluate operation which doesn't have
-     * the steady state. The cost of a benchmarked operation may
-     * significantly vary from invocation to invocation.
-     *
-     * In this case, using the timed measurements is not a good idea,
-     * and the only acceptable benchmark mode is a single shot. On the
-     * other hand, the operation may be too small for reliable single
-     * shot measurement.
-     *
-     * We can use "batch size" parameter to describe the number of
-     * benchmark calls to do per one invocation without looping the method
-     * manually and protect from problems described in JMHSample_11_Loops.
-     */
-
     /*
      * Suppose we want to measure insertion in the middle of the list.
      */
@@ -82,7 +72,6 @@ public class JMHSample_26_BatchSize {
         list.clear();
     }
 
-
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(JMHSample_26_BatchSize.class.getSimpleName())
@@ -91,9 +80,7 @@ public class JMHSample_26_BatchSize {
 
         new Runner(opt).run();
     }
-
 }
-
 ```
 执行结果
 ```java

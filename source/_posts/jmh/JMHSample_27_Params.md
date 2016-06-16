@@ -3,6 +3,10 @@ date: 2016-06-
 title:
 ---
 
+In many cases, the experiments require walking the configuration space
+for a benchmark. This is needed for additional control, or investigating
+how the workload performance changes with different settings.
+
 ```java
 package testJMH;
 
@@ -32,12 +36,6 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class JMHSample_27_Params {
 
-    /**
-     * In many cases, the experiments require walking the configuration space
-     * for a benchmark. This is needed for additional control, or investigating
-     * how the workload performance changes with different settings.
-     */
-
     @Param({"1", "31", "65", "101", "103"})
     public int arg;
 
@@ -57,9 +55,7 @@ public class JMHSample_27_Params {
 
         new Runner(opt).run();
     }
-
 }
-
 ```
 执行结果
 ```java

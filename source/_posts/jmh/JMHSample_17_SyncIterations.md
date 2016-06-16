@@ -3,6 +3,10 @@ date: 2016-06-
 title:
 ---
 
+This is the another thing that is enabled in JMH by default.
+
+Suppose we have this simple benchmark.
+
 ```java
 package testJMH;
 
@@ -20,12 +24,6 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class JMHSample_17_SyncIterations {
-
-    /*
-     * This is the another thing that is enabled in JMH by default.
-     *
-     * Suppose we have this simple benchmark.
-     */
 
     private double src;
 

@@ -3,6 +3,16 @@ date: 2016-06-
 title:
 ---
 
+Sometimes you need the black hole not in @Benchmark method, but in
+helper methods, because you want to pass it through to the concrete
+implementation which is instantiated in helper methods. In this case,
+you can request the black hole straight in the helper method signature.
+This applies to both @Setup and @TearDown methods, and also to other
+JMH infrastructure objects, like Control.
+
+Below is the variant of {@link org.openjdk.jmh.samples.JMHSample_08_DeadCode}
+test, but wrapped in the anonymous classes.
+
 ```java
 package testJMH;
 
@@ -31,18 +41,6 @@ import java.util.concurrent.TimeUnit;
 @Fork(1)
 @State(Scope.Thread)
 public class JMHSample_28_BlackholeHelpers {
-
-    /**
-     * Sometimes you need the black hole not in @Benchmark method, but in
-     * helper methods, because you want to pass it through to the concrete
-     * implementation which is instantiated in helper methods. In this case,
-     * you can request the black hole straight in the helper method signature.
-     * This applies to both @Setup and @TearDown methods, and also to other
-     * JMH infrastructure objects, like Control.
-     *
-     * Below is the variant of {@link org.openjdk.jmh.samples.JMHSample_08_DeadCode}
-     * test, but wrapped in the anonymous classes.
-     */
 
     public interface Worker {
         void work();

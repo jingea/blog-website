@@ -3,6 +3,18 @@ date: 2016-06-
 title:
 ---
 
+This is an addendum to JMHSample_12_Forking test.
+
+Sometimes you want an opposite configuration: instead of separating the profiles
+for different benchmarks, you want to mix them together to test the worst-case
+scenario.
+
+JMH has a bulk warmup feature for that: it does the warmups for all the tests
+first, and then measures them. JMH still forks the JVM for each test, but once the
+new JVM has started, all the warmups are being run there, before running the
+measurement. This helps to dodge the type profile skews, as each test is still
+executed in a different JVM, and we only "mix" the warmup code we want.
+
 ```java
 package testJMH;
 
@@ -25,20 +37,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class JMHSample_32_BulkWarmup {
-
-    /*
-     * This is an addendum to JMHSample_12_Forking test.
-     *
-     * Sometimes you want an opposite configuration: instead of separating the profiles
-     * for different benchmarks, you want to mix them together to test the worst-case
-     * scenario.
-     *
-     * JMH has a bulk warmup feature for that: it does the warmups for all the tests
-     * first, and then measures them. JMH still forks the JVM for each test, but once the
-     * new JVM has started, all the warmups are being run there, before running the
-     * measurement. This helps to dodge the type profile skews, as each test is still
-     * executed in a different JVM, and we only "mix" the warmup code we want.
-     */
 
     /*
      * These test classes are borrowed verbatim from JMHSample_12_Forking.
@@ -108,8 +106,6 @@ public class JMHSample_32_BulkWarmup {
     }
 
 }
-
-
 ```
 执行结果
 ```java

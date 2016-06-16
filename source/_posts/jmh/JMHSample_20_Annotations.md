@@ -3,6 +3,18 @@ date: 2016-06-
 title:
 ---
 
+In addition to all the command line options usable at run time,
+we have the annotations which can provide the reasonable defaults
+for the some of the benchmarks. This is very useful when you are
+dealing with lots of benchmarks, and some of them require
+special treatment.
+
+Annotation can also be placed on class, to have the effect over
+all the benchmark methods in the same class. The rule is, the
+annotation in the closest scope takes the precedence: i.e.
+the method-based annotation overrides class-based annotation,
+etc.
+
 ```java
 package testJMH;
 
@@ -27,20 +39,6 @@ public class JMHSample_20_Annotations {
 
     double x1 = Math.PI;
 
-    /*
-     * In addition to all the command line options usable at run time,
-     * we have the annotations which can provide the reasonable defaults
-     * for the some of the benchmarks. This is very useful when you are
-     * dealing with lots of benchmarks, and some of them require
-     * special treatment.
-     *
-     * Annotation can also be placed on class, to have the effect over
-     * all the benchmark methods in the same class. The rule is, the
-     * annotation in the closest scope takes the precedence: i.e.
-     * the method-based annotation overrides class-based annotation,
-     * etc.
-     */
-
     @Benchmark
     @Warmup(iterations = 5, time = 100, timeUnit = TimeUnit.MILLISECONDS)
     @Measurement(iterations = 5, time = 100, timeUnit = TimeUnit.MILLISECONDS)
@@ -57,8 +55,6 @@ public class JMHSample_20_Annotations {
     }
 
 }
-
-
 ```
 执行结果
 ```java

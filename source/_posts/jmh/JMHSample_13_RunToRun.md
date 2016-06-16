@@ -3,6 +3,20 @@ date: 2016-06-
 title:
 ---
 
+Forking also allows to estimate run-to-run variance.
+
+JVMs are complex systems, and the non-determinism is inherent for them.
+This requires us to always account the run-to-run variance as the one
+of the effects in our experiments.
+
+Luckily, forking aggregates the results across several JVM launches.
+
+
+
+In order to introduce readily measurable run-to-run variance, we build
+the workload which performance differs from run to run. Note that many workloads
+will have the similar behavior, but we do that artificially to make a point.
+
 ```java
 package testJMH;
 
@@ -25,22 +39,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class JMHSample_13_RunToRun {
-
-    /*
-     * Forking also allows to estimate run-to-run variance.
-     *
-     * JVMs are complex systems, and the non-determinism is inherent for them.
-     * This requires us to always account the run-to-run variance as the one
-     * of the effects in our experiments.
-     *
-     * Luckily, forking aggregates the results across several JVM launches.
-     */
-
-    /*
-     * In order to introduce readily measurable run-to-run variance, we build
-     * the workload which performance differs from run to run. Note that many workloads
-     * will have the similar behavior, but we do that artificially to make a point.
-     */
 
     @State(Scope.Thread)
     public static class SleepyState {

@@ -3,6 +3,18 @@ date: 2016-06-
 title:
 ---
 
+
+One of the unusual thing that can bite you back is false sharing.
+If two threads access (and possibly modify) the adjacent values
+in memory, chances are, they are modifying the values on the same
+cache line. This can yield significant (artificial) slowdowns.
+
+JMH helps you to alleviate this: @States are automatically padded.
+This padding does not extend to the State internals though,
+as we will see in this example. You have to take care of this on
+your own.
+
+	 
 ```java
 package testJMH;
 
@@ -29,19 +41,6 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(5)
 public class JMHSample_22_FalseSharing {
-
-    /*
-     * One of the unusual thing that can bite you back is false sharing.
-     * If two threads access (and possibly modify) the adjacent values
-     * in memory, chances are, they are modifying the values on the same
-     * cache line. This can yield significant (artificial) slowdowns.
-     *
-     * JMH helps you to alleviate this: @States are automatically padded.
-     * This padding does not extend to the State internals though,
-     * as we will see in this example. You have to take care of this on
-     * your own.
-     */
-
     /*
      * Suppose we have two threads:
      *   a) innocuous reader which blindly reads its own field

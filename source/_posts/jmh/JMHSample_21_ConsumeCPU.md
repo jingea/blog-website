@@ -3,6 +3,16 @@ date: 2016-06-
 title:
 ---
 
+At times you require the test to burn some of the cycles doing nothing.
+In many cases, you *do* want to burn the cycles instead of waiting.
+
+For these occasions, we have the infrastructure support. Blackholes
+can not only consume the values, but also the time! Run this test
+to get familiar with this part of JMH.
+
+(Note we use static method because most of the use cases are deep
+within the testing code, and propagating blackholes is tedious).
+
 ```java
 package testJMH;
 
@@ -21,18 +31,6 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class JMHSample_21_ConsumeCPU {
-
-    /*
-     * At times you require the test to burn some of the cycles doing nothing.
-     * In many cases, you *do* want to burn the cycles instead of waiting.
-     *
-     * For these occasions, we have the infrastructure support. Blackholes
-     * can not only consume the values, but also the time! Run this test
-     * to get familiar with this part of JMH.
-     *
-     * (Note we use static method because most of the use cases are deep
-     * within the testing code, and propagating blackholes is tedious).
-     */
 
     @Benchmark
     public void consume_0000() {
