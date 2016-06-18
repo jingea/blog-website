@@ -15,7 +15,7 @@ jstack [ option ] vmid
 * `jstack -F [-m] [-l] <pid>` 连接已经宕掉的进程
 * `jstack [-m] [-l] <executable> <core>` 连接一个core文件
 * `jstack [-m] [-l] [server_id@]<remote server IP or hostname>` 连接一个远程的debug Server
-	
+
 option值：
 * `-F`: 当正常输出的请求不被响应时,强制说出线程堆栈
 * `-l`: 除堆栈外,显示关于锁的附加信息
@@ -260,8 +260,4 @@ VM attach mechanism 很简单, 我们可以很愉快地写一段测试代码, �
 
 
 参考文章
-* [如何dump出一个Java进程里的类对应的Class文件？](http://rednaxelafx.iteye.com/blog/727938)
-* [如何jstack -F影响正在运行的Java进程吗？ ](http://qa.helplib.com/918740)
 * [The HotSpot™ Serviceability Agent: An out-of-process high level debugger for a Java™ virtual machine](http://static.usenix.org/event/jvm01/full_papers/russell/russell_html/)
-* [Java命令学习系列（2）：Jstack](http://www.importnew.com/18176.html)
-* [HotSpot SA #1：JStack](http://blog.csdn.net/kisimple/article/details/43274035)

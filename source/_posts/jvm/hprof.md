@@ -2,7 +2,7 @@ category: JVM
 date: 2014-10-06
 title: hprof
 ---
-这个是java agent工具, 用它可以监控应用程序在运行时的CPU信息和堆信息. 我们来看一下它的官网文档是怎么说的
+这个是java agent工具, 用它可以监控应用程序在运行时的CPU信息和堆信息. 我们来看一下它的help文档
 ```bash
 ➜  test java -agentlib:hprof=help
 

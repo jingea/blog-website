@@ -143,8 +143,4 @@ Benchmark                              Mode  Cnt   Score    Error  Units
 testJMH.JMHSample_15_Asymmetric.g      avgt    5  64.857 ± 21.111  ns/op
 testJMH.JMHSample_15_Asymmetric.g:get  avgt    5  39.954 ± 15.102  ns/op
 testJMH.JMHSample_15_Asymmetric.g:inc  avgt    5  73.158 ± 23.871  ns/op
-
-Process finished with exit code 0
-
-
 ```

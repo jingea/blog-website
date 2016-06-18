@@ -1,6 +1,6 @@
 category: JMH
 date: 2016-01-05
-title: 常亮展开
+title: 常量展开
 ---
 dead-code elimination另一种方式是常量展开.
 

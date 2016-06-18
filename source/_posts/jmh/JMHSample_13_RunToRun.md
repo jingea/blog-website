@@ -1,22 +1,12 @@
 category: JMH
-date: 2016-06-
-title:
+date: 2016-06-17
+title: 
 ---
+使用Forking可以预估到每次运行可能导致结果都不一样的情况.
 
-Forking also allows to estimate run-to-run variance.
+JVM是一个非常复杂的系统, 因此我们可能一次又一次的运行程序以便得到一个相对普通的结果.幸运的是JMH给我们提供了fork(可以将多个JVM实例中测试的结果统计到一起).
 
-JVMs are complex systems, and the non-determinism is inherent for them.
-This requires us to always account the run-to-run variance as the one
-of the effects in our experiments.
-
-Luckily, forking aggregates the results across several JVM launches.
-
-
-
-In order to introduce readily measurable run-to-run variance, we build
-the workload which performance differs from run to run. Note that many workloads
-will have the similar behavior, but we do that artificially to make a point.
-
+为了更加清晰地看出fork带来的影响, 在下面的测试中我们特意地加大了每次结果的不同
 ```java
 package testJMH;
 
@@ -50,10 +40,6 @@ public class JMHSample_13_RunToRun {
         }
     }
 
-    /*
-     * Now, we will run this different number of times.
-     */
-
     @Benchmark
     @Fork(1)
     public void baseline(SleepyState s) throws InterruptedException {
@@ -61,14 +47,8 @@ public class JMHSample_13_RunToRun {
     }
 
     @Benchmark
-    @Fork(5)
+    @Fork(3)
     public void fork_1(SleepyState s) throws InterruptedException {
-        TimeUnit.MILLISECONDS.sleep(s.sleepTime);
-    }
-
-    @Benchmark
-    @Fork(20)
-    public void fork_2(SleepyState s) throws InterruptedException {
         TimeUnit.MILLISECONDS.sleep(s.sleepTime);
     }
 
@@ -81,11 +61,72 @@ public class JMHSample_13_RunToRun {
 
         new Runner(opt).run();
     }
-
 }
 ```
 执行结果
 ```java
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: testJMH.JMHSample_13_RunToRun.baseline
+
+# Run progress: 0.00% complete, ETA 00:00:20
+# Fork: 1 of 1
+Iteration   1: 419.858 ms/op
+Iteration   2: 420.190 ms/op
+Iteration   3: 420.376 ms/op
+Iteration   4: 420.728 ms/op
+Iteration   5: 421.622 ms/op
 
 
+Result "baseline":
+  420.555 ±(99.9%) 2.597 ms/op [Average]
+  (min, avg, max) = (419.858, 420.555, 421.622), stdev = 0.675
+  CI (99.9%): [417.958, 423.152] (assumes normal distribution)
+
+
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: testJMH.JMHSample_13_RunToRun.fork_1
+
+# Run progress: 25.00% complete, ETA 00:00:20
+# Fork: 1 of 3
+Iteration   1: 817.066 ms/op
+Iteration   2: 820.061 ms/op
+Iteration   3: 818.648 ms/op
+Iteration   4: 818.029 ms/op
+Iteration   5: 819.518 ms/op
+
+# Run progress: 50.00% complete, ETA 00:00:16
+# Fork: 2 of 3
+Iteration   1: 406.259 ms/op
+Iteration   2: 406.128 ms/op
+Iteration   3: 405.895 ms/op
+Iteration   4: 406.083 ms/op
+Iteration   5: 405.879 ms/op
+
+# Run progress: 75.00% complete, ETA 00:00:07
+# Fork: 3 of 3
+Iteration   1: 149.923 ms/op
+Iteration   2: 150.784 ms/op
+Iteration   3: 150.753 ms/op
+Iteration   4: 150.717 ms/op
+Iteration   5: 150.718 ms/op
+
+
+Result "fork_1":
+  458.431 ±(99.9%) 304.586 ms/op [Average]
+  (min, avg, max) = (149.923, 458.431, 820.061), stdev = 284.910
+  CI (99.9%): [153.845, 763.016] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:00:28
+
+Benchmark                               Mode  Cnt    Score     Error  Units
+testJMH.JMHSample_13_RunToRun.baseline  avgt    5  420.555 ±   2.597  ms/op
+testJMH.JMHSample_13_RunToRun.fork_1    avgt   15  458.431 ± 304.586  ms/op
 ```
+从上面的结果中我们可以看到, 在fork_1中, 运行了三次, 每次随机出的sleep时间都不一样, 而最后统计的时候, 却统计的是三次结果的合

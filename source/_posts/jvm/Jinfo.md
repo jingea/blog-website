@@ -8,12 +8,12 @@ jinfo的作用是实时查看和调整虚拟机的各项参数.
 jinfo [ option ] pid
 ```
 option可以为如下值
-* `-flag <name>`         to print the value of the named VM flag
-* `-flag [+|-]<name>`    to enable or disable the named VM flag
-* `-flag <name>=<value>` to set the named VM flag to the given value
-* `-flags`               to print VM flags
-* `-sysprops`            to print Java system properties
-* `<no option>`          to print both of the above
+* `-flag <name>`         打印指定name的vm flag的值
+* `-flag [+|-]<name>`    将指定名称的 VM flag打开或者关闭
+* `-flag <name>=<value>` 将指定名称的 VM flag重新设置值
+* `-flags`               打印所有的 VM flags
+* `-sysprops`            打印 Java system properties
+* `<no option>`          如果没有选项的话就是执行上面的所有选项
 ```bash
 test jinfo 2028
 Attaching to process ID 2028, please wait...

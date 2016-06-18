@@ -1,19 +1,8 @@
 category: JMH
 date: 2016-06-14
-title: 循环测试
+title: 在基准测试时不要自己循环测试
 ---
-
-It would be tempting for users to do loops within the benchmarked method.
-(This is the bad thing Caliper taught everyone). These tests explain why
-this is a bad idea.
-
-Looping is done in the hope of minimizing the overhead of calling the
-test method, by doing the operations inside the loop instead of inside
-the method call. Don't buy this argument; you will see there is more
-magic happening when we allow optimizers to merge the loop iterations.
-
-
-Suppose we want to measure how much it takes to sum two integers:
+在benchmarked自己实现循环是一个非常糟糕的主意. 具体看下面的例子
 ```java
 package testJMH;
 
@@ -38,10 +27,6 @@ public class TestLoops {
         return (x + y);
     }
 
-    /*
-     * The following tests emulate the naive looping.
-     * This is the Caliper-style benchmark.
-     */
     private int reps(int reps) {
         int s = 0;
         for (int i = 0; i < reps; i++) {
@@ -51,8 +36,9 @@ public class TestLoops {
     }
 
     /*
-     * We would like to measure this with different repetitions count.
-     * Special annotation is used to get the individual operation cost.
+     * 我们会测试多种不同循环次数下的(x + y)测试.
+     * 我们使用OperationsPerInvocation来增加相应的每次调用时的执行次数
+     * 例如, 循环100次的话, 则这个值为100, 这么着可以算出, 每个计算所耗时间
      */
 
     @Benchmark
@@ -132,10 +118,6 @@ Result "measureRight":
   CI (99.9%): [1.235, 6.429] (assumes normal distribution)
 
 
-# JMH 1.11.2 (released 230 days ago, please consider updating!)
-# VM version: JDK 1.8.0_05, VM 25.5-b02
-# VM invoker: /Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home/jre/bin/java
-# VM options: -Didea.launcher.port=7532 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration
@@ -163,10 +145,6 @@ Result "measureWrong_1":
   CI (99.9%): [2.893, 3.725] (assumes normal distribution)
 
 
-# JMH 1.11.2 (released 230 days ago, please consider updating!)
-# VM version: JDK 1.8.0_05, VM 25.5-b02
-# VM invoker: /Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home/jre/bin/java
-# VM options: -Didea.launcher.port=7532 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration
@@ -194,10 +172,6 @@ Result "measureWrong_10":
   CI (99.9%): [0.377, 0.410] (assumes normal distribution)
 
 
-# JMH 1.11.2 (released 230 days ago, please consider updating!)
-# VM version: JDK 1.8.0_05, VM 25.5-b02
-# VM invoker: /Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home/jre/bin/java
-# VM options: -Didea.launcher.port=7532 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration
@@ -225,10 +199,6 @@ Result "measureWrong_100":
   CI (99.9%): [0.044, 0.047] (assumes normal distribution)
 
 
-# JMH 1.11.2 (released 230 days ago, please consider updating!)
-# VM version: JDK 1.8.0_05, VM 25.5-b02
-# VM invoker: /Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home/jre/bin/java
-# VM options: -Didea.launcher.port=7532 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration
@@ -256,11 +226,6 @@ Result "measureWrong_1000":
   CI (99.9%): [0.055, 0.059] (assumes normal distribution)
 
 
-# JMH 1.11.2 (released 230 days ago, please consider updating!)
-# VM version: JDK 1.8.0_05, VM 25.5-b02
-# VM invoker: /Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home/jre/bin/java
-# VM options: -Didea.launcher.port=7532 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8
-# Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration
 # Threads: 1 thread, will synchronize iterations
@@ -287,10 +252,6 @@ Result "measureWrong_10000":
   CI (99.9%): [0.029, 0.038] (assumes normal distribution)
 
 
-# JMH 1.11.2 (released 230 days ago, please consider updating!)
-# VM version: JDK 1.8.0_05, VM 25.5-b02
-# VM invoker: /Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home/jre/bin/java
-# VM options: -Didea.launcher.port=7532 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA CE.app/Contents/bin -Dfile.encoding=UTF-8
 # Warmup: 5 iterations, 1 s each
 # Measurement: 5 iterations, 1 s each
 # Timeout: 10 min per iteration
@@ -328,7 +289,5 @@ testJMH.TestLoops.measureWrong_100     avgt    5  0.046 ± 0.002  ns/op
 testJMH.TestLoops.measureWrong_1000    avgt    5  0.057 ± 0.002  ns/op
 testJMH.TestLoops.measureWrong_10000   avgt    5  0.034 ± 0.005  ns/op
 testJMH.TestLoops.measureWrong_100000  avgt    5  0.027 ± 0.002  ns/op
-
-Process finished with exit code 0
-
 ```
+从上面的结果我们可以看出, 随着循环次数的增加, 每个基本运算的时间也越来越少. 因此在基准测试的时候, 是不建议使用循环的, 我们应该依赖JMH提供的机制来实现多次运算
