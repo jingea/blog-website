@@ -132,20 +132,11 @@ testJMH.JMHSample_15_Asymmetric.g:get  avgt    5  39.954 ± 15.102  ns/op
 testJMH.JMHSample_15_Asymmetric.g:inc  avgt    5  73.158 ± 23.871  ns/op
 ```
 
-## 
+## 稳定性能
 事实上，当你使用多个线程运行基准测试时, 每个线程的创建和销毁都会带来性能消耗.
 
-
-The natural way would be to park all the threads on some sort of barrier, and the let them go "at once". 
-However, that does not work: there are no guarantees the worker threads will start at the same time, 
-meaning other worker threads are working in better conditions, skewing the result.
-
-The better solution would be to introduce bogus iterations,
-ramp up the threads executing the iterations, and then atomically
-shift the system to measuring stuff. The same thing can be done
-during the rampdown. This sounds complicated, but JMH already
-handles that for you.
-
+一般比较理想的情况是暂停所有的线程, 然后让其全部一起启动.但是, 我们很难实现这一点. 相比那个方案,更好的解决方案是随着iterations的执行逐渐增加线程, 然后让系统自动地开始测量工作.
+> 除了逐渐加大线程外,还可以逐渐降低线程
 
 ```java
 package testJMH;
@@ -236,7 +227,8 @@ Benchmark                                  Mode  Cnt    Score   Error   Units
 testJMH.JMHSample_17_SyncIterations.test  thrpt   20  178.921 ± 6.623  ops/ms
 ```
 
-## 
+## 状态监控
+
 Sometimes you need the tap into the harness mind to get the info on the transition change. For this, we have the experimental state object,
 Control, which is updated by JMH as we go.
 
@@ -295,6 +287,58 @@ public class JMHSample_18_Control {
 ```
 执行结果
 ```java
+# Warmup: 1 iterations, 1 s each
+# Measurement: 5 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 2 threads, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: testJMH.JMHSample_18_Control.pingpong
+
+# Run progress: 0.00% complete, ETA 00:00:06
+# Fork: 1 of 1
+# Warmup Iteration   1: 42280310.914 ops/s
+Iteration   1: 42949704.998 ops/s
+                 ping: 21473046.746 ops/s
+                 pong: 21476658.252 ops/s
+
+Iteration   2: 48915249.149 ops/s
+                 ping: 24457648.469 ops/s
+                 pong: 24457600.680 ops/s
+
+Iteration   3: 52501793.545 ops/s
+                 ping: 26250454.343 ops/s
+                 pong: 26251339.202 ops/s
+
+Iteration   4: 48114008.316 ops/s
+                 ping: 24054823.143 ops/s
+                 pong: 24059185.172 ops/s
+
+Iteration   5: 46195152.007 ops/s
+                 ping: 23088596.608 ops/s
+                 pong: 23106555.399 ops/s
 
 
+
+Result "ping":
+  47735181.603 ±(99.9%) 13549826.720 ops/s [Average]
+  (min, avg, max) = (42949704.998, 47735181.603, 52501793.545), stdev = 3518846.970
+  CI (99.9%): [34185354.883, 61285008.323] (assumes normal distribution)
+
+Secondary result "ping":
+  23864913.862 ±(99.9%) 6780277.646 ops/s [Average]
+  (min, avg, max) = (21473046.746, 23864913.862, 26250454.343), stdev = 1760816.573
+  CI (99.9%): [17084636.216, 30645191.508] (assumes normal distribution)
+
+Secondary result "pong":
+  23870267.741 ±(99.9%) 6769573.852 ops/s [Average]
+  (min, avg, max) = (21476658.252, 23870267.741, 26251339.202), stdev = 1758036.832
+  CI (99.9%): [17100693.889, 30639841.593] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:00:06
+
+Benchmark                                    Mode  Cnt         Score          Error  Units
+testJMH.JMHSample_18_Control.pingpong       thrpt    5  47735181.603 ± 13549826.720  ops/s
+testJMH.JMHSample_18_Control.pingpong:ping  thrpt    5  23864913.862 ±  6780277.646  ops/s
+testJMH.JMHSample_18_Control.pingpong:pong  thrpt    5  23870267.741 ±  6769573.852  ops/s
 ```

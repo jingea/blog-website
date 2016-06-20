@@ -1,6 +1,6 @@
 category: JMH
-date: 2016-06-
-title:
+date: 2016-06-20
+title: 空循环
 ---
 在有的基准测试中, 你只需要运行一些空循环。 也就是说我们想要线程一直在运行着CPU, 而不是让出CPU进入等待模式. JMH为我们提供了`Blackholes`来完成这件事.
 ```java
