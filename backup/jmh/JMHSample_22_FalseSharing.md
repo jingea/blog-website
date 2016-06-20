@@ -4,15 +4,11 @@ title:
 ---
 
 
-One of the unusual thing that can bite you back is false sharing.
-If two threads access (and possibly modify) the adjacent values
-in memory, chances are, they are modifying the values on the same
-cache line. This can yield significant (artificial) slowdowns.
+One of the unusual thing that can bite you back is false sharing. If two threads access (and possibly modify) the adjacent values
+in memory, chances are, they are modifying the values on the same cache line. This can yield significant (artificial) slowdowns.
 
-JMH helps you to alleviate this: @States are automatically padded.
-This padding does not extend to the State internals though,
-as we will see in this example. You have to take care of this on
-your own.
+JMH helps you to alleviate this: @States are automatically padded. This padding does not extend to the State internals though,
+as we will see in this example. You have to take care of this on your own.
 
 	 
 ```java

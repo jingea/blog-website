@@ -3,18 +3,13 @@ date: 2016-06-
 title:
 ---
 
-In very special circumstances, you might want to provide the benchmark
-body in the (abstract) superclass, and specialize it with the concrete
-pieces in the subclasses.
+In very special circumstances, you might want to provide the benchmark body in the (abstract) superclass, and specialize it with the concrete pieces in the subclasses.
 
-The rule of thumb is: if some class has @Benchmark method, then all the subclasses
-are also having the "synthetic" @Benchmark method. The caveat is, because we only
-know the type hierarchy during the compilation, it is only possible during
-the same compilation session. That is, mixing in the subclass extending your
+The rule of thumb is: if some class has @Benchmark method, then all the subclasses are also having the "synthetic" @Benchmark method. The caveat is, because we only
+know the type hierarchy during the compilation, it is only possible during the same compilation session. That is, mixing in the subclass extending your
 benchmark class *after* the JMH compilation would have no effect.
 
-Note how annotations now have two possible places. The closest annotation
-in the hierarchy wins.
+Note how annotations now have two possible places. The closest annotation in the hierarchy wins.
 
 ```java
 package testJMH;

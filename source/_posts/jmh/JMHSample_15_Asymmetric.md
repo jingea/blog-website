@@ -1,30 +1,17 @@
 category: JMH
-date: 2016-06-
-title:
+date: 2016-06-20
+title: 基准测试分组
 ---
+## 基本用法
+到目前为止, 我们的每个基准测试会在所有的线程中执行. 但是有时候你也许不想这样. JMH提供了`@Group`注解, 这个注解可以帮我们将一组基准测试放到同一个Group下, 每个Group下的基准测试被不同数量的线程执行
 
-So far all the tests were symmetric: the same code was executed in all the threads.
-At times, you need the asymmetric test. JMH provides this with the notion of @Group,
-which can bind several methods together, and all the threads are distributed among
-the test methods.
+我们可以指定Group中运行线程的数量. Group中的每一个线程都会执行被`@Group-annotated @Benchmark`标注的方法。
 
-Each execution group contains of one or more threads. Each thread within a particular
-execution group executes one of @Group-annotated @Benchmark methods. Multiple execution
-groups may participate in the run. The total thread count in the run is rounded to the
-execution group size, which will only allow the full execution groups.
+注意在`Scope.Benchmark`和`Scope.Thread`这俩种作用域中, 你要不然将所有的都在state中共享出来，要不然就什么都不共享，也就是说你不能选择，我能否只在某些state中共享一些东西？答案是不。但幸运的是JMH为我们提供了`Scope.Group`这种中间态. Group可以让你只在一个Group内部进行share, Group之间看不到你share的东西.
 
-Note that two state scopes: Scope.Benchmark and Scope.Thread are not covering all
-the use cases here -- you either share everything in the state, or share nothing.
-To break this, we have the middle ground Scope.Group, which marks the state to be
-shared within the execution group, but not among the execution groups.
-
-Putting this all together, the example below means:
- a) define the execution group "g", with 3 threads executing inc(), and 1 thread
-    executing get(), 4 threads per group in total;
- b) if we run this test case with 4 threads, then we will have a single execution
-    group. Generally, running with 4*N threads will create N execution groups, etc.;
- c) each execution group has one @State instance to share: that is, execution groups
-    share the counter within the group, but not across the groups.
+我们来看一下下面的例子：
+1. 我们定义了一个Group--`g`, 在该Group中, 有三个线程执行`inc()`方法, 有一个线程执行`get()`方法, 因此在每个Group中总共有4个线程.
+2. 每一个Group内部都会有一个`@State`实例(该实例只在Group内部共享, 在Group间是不共享的)
 
 ```java
 package testJMH;
@@ -143,4 +130,171 @@ Benchmark                              Mode  Cnt   Score    Error  Units
 testJMH.JMHSample_15_Asymmetric.g      avgt    5  64.857 ± 21.111  ns/op
 testJMH.JMHSample_15_Asymmetric.g:get  avgt    5  39.954 ± 15.102  ns/op
 testJMH.JMHSample_15_Asymmetric.g:inc  avgt    5  73.158 ± 23.871  ns/op
+```
+
+## 
+事实上，当你使用多个线程运行基准测试时, 每个线程的创建和销毁都会带来性能消耗.
+
+
+The natural way would be to park all the threads on some sort of barrier, and the let them go "at once". 
+However, that does not work: there are no guarantees the worker threads will start at the same time, 
+meaning other worker threads are working in better conditions, skewing the result.
+
+The better solution would be to introduce bogus iterations,
+ramp up the threads executing the iterations, and then atomically
+shift the system to measuring stuff. The same thing can be done
+during the rampdown. This sounds complicated, but JMH already
+handles that for you.
+
+
+```java
+package testJMH;
+
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+
+import java.util.concurrent.TimeUnit;
+
+@State(Scope.Thread)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+public class JMHSample_17_SyncIterations {
+
+    private double src;
+
+    @Benchmark
+    public double test() {
+        double s = src;
+        for (int i = 0; i < 1000; i++) {
+            s = Math.sin(s);
+        }
+        return s;
+    }
+
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(JMHSample_17_SyncIterations.class.getSimpleName())
+                .warmupIterations(1)
+                .measurementIterations(20)
+                .threads(Runtime.getRuntime().availableProcessors()*16)
+                .forks(1)
+                .syncIterations(true) // try to switch to "false"
+                .build();
+
+        new Runner(opt).run();
+    }
+}
+```
+执行结果
+```java
+# Warmup: 1 iterations, 1 s each
+# Measurement: 20 iterations, 1 s each
+# Timeout: 10 min per iteration
+# Threads: 64 threads, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: testJMH.JMHSample_17_SyncIterations.test
+
+# Run progress: 0.00% complete, ETA 00:00:21
+# Fork: 1 of 1
+# Warmup Iteration   1: 181.766 ops/ms
+Iteration   1: 180.826 ops/ms
+Iteration   2: 181.056 ops/ms
+Iteration   3: 185.726 ops/ms
+Iteration   4: 182.754 ops/ms
+Iteration   5: 184.015 ops/ms
+Iteration   6: 181.900 ops/ms
+Iteration   7: 183.166 ops/ms
+Iteration   8: 181.252 ops/ms
+Iteration   9: 180.657 ops/ms
+Iteration  10: 177.032 ops/ms
+Iteration  11: 183.079 ops/ms
+Iteration  12: 180.797 ops/ms
+Iteration  13: 181.203 ops/ms
+Iteration  14: 183.192 ops/ms
+Iteration  15: 179.436 ops/ms
+Iteration  16: 178.482 ops/ms
+Iteration  17: 167.333 ops/ms
+Iteration  18: 171.103 ops/ms
+Iteration  19: 152.220 ops/ms
+Iteration  20: 183.191 ops/ms
+
+
+Result "test":
+  178.921 ±(99.9%) 6.623 ops/ms [Average]
+  (min, avg, max) = (152.220, 178.921, 185.726), stdev = 7.627
+  CI (99.9%): [172.298, 185.544] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:01:22
+
+Benchmark                                  Mode  Cnt    Score   Error   Units
+testJMH.JMHSample_17_SyncIterations.test  thrpt   20  178.921 ± 6.623  ops/ms
+```
+
+## 
+Sometimes you need the tap into the harness mind to get the info on the transition change. For this, we have the experimental state object,
+Control, which is updated by JMH as we go.
+
+
+In this example, we want to estimate the ping-pong speed for the simple AtomicBoolean. Unfortunately, doing that in naive manner will livelock
+one of the threads, because the executions of ping/pong are not paired perfectly. We need the escape hatch to terminate the loop if threads are about to leave the measurement.
+
+```java
+package testJMH;
+
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Group;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Control;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+@State(Scope.Group)
+public class JMHSample_18_Control {
+
+    public final AtomicBoolean flag = new AtomicBoolean();
+
+    @Benchmark
+    @Group("pingpong")
+    public void ping(Control cnt) {
+        while (!cnt.stopMeasurement && !flag.compareAndSet(false, true)) {
+            // this body is intentionally left blank
+        }
+    }
+
+    @Benchmark
+    @Group("pingpong")
+    public void pong(Control cnt) {
+        while (!cnt.stopMeasurement && !flag.compareAndSet(true, false)) {
+            // this body is intentionally left blank
+        }
+    }
+
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(JMHSample_18_Control.class.getSimpleName())
+                .warmupIterations(1)
+                .measurementIterations(5)
+                .threads(2)
+                .forks(1)
+                .build();
+
+        new Runner(opt).run();
+    }
+}
+```
+执行结果
+```java
+
+
 ```
