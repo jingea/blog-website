@@ -153,3 +153,5 @@ class B extends A {
 1. `aload_0`同样的是加载`this`进虚拟机栈
 2. `invokespecial` 调用父类A的实例初始化方法
 3. 然后就开死像A一样, 调用自己的实例化过程
+
+更多内容参考[类加载机制](http://www.ming15.wang/2014/09/09/jvm/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/)
