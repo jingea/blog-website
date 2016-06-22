@@ -11,7 +11,12 @@ title: JVM 堆内存
 * 如果在堆内中没有内存完成实例分配,而且堆无法再拓展时,会抛出OutOfMemoryError
 * 随着JIT编译器的发展和逃逸分析技术的逐渐成熟,栈上分配,标量替换优化技术将会导致一些变化,所有的对象在堆上分配也不是那么绝对了
 
-然后我们看一下堆内存内部分配: 由于现在GC收集器基本都是采用的分代收集算法,所以java堆还可以细分为:新生代和老年代.分的再细一点还有Eden空间,From Survivor空间,To Sruvivor空间. 
+然后我们看一下堆内存内部分配: 由于现在GC收集器基本都是采用的分代收集算法,所以java堆还可以细分为:新生代和老年代.分的再细一点还有Eden空间,From Survivor空间,To Sruvivor空间.
+
+## 内存分配
+1. 新生代GC(`Minor GC`)：新生代GC, Java对象大多都朝生夕灭,所以`Minor GC`非常频繁,回收速度也比较快.
+2. 老年代GC(`Major GC/Full GC`)：老年代GC,出现了Major GC,经常会伴随至少一次的Minor GC. MajorGC的速度一般会比Minor GC慢10倍以上.
+
 
 ## 引用计数算法
 引用计数算法很难解决对象之间相互循环引用的问题
@@ -36,8 +41,8 @@ public class ReferenceCountingGC {
 ```
 我们运行`-XX:+PrintGCDetails -Xmx10M -Xms10M`得到结果为
 ```bash
-[GC (System.gc()) [PSYoungGen: 1650K->504K(2560K)] 7794K->7001K(9728K), 0.0029060 secs] [Times: user=0.05 sys=0.00, real=0.00 secs] 
-[Full GC (System.gc()) [PSYoungGen: 504K->0K(2560K)] [ParOldGen: 6497K->6952K(7168K)] 7001K->6952K(9728K), [Metaspace: 3051K->3051K(1056768K)], 0.0104574 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
+[GC (System.gc()) [PSYoungGen: 1650K->504K(2560K)] 7794K->7001K(9728K), 0.0029060 secs] [Times: user=0.05 sys=0.00, real=0.00 secs]
+[Full GC (System.gc()) [PSYoungGen: 504K->0K(2560K)] [ParOldGen: 6497K->6952K(7168K)] 7001K->6952K(9728K), [Metaspace: 3051K->3051K(1056768K)], 0.0104574 secs] [Times: user=0.00 sys=0.00, real=0.01 secs]
 Heap
  PSYoungGen      total 2560K, used 41K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)
   eden space 2048K, 2% used [0x00000000ffd00000,0x00000000ffd0a560,0x00000000fff00000)
@@ -53,18 +58,14 @@ Heap
 ## 根搜索算法
 这个算法的基本思想是:通过一系列的名为"GC Roots"的对象作为起始点, 从这些起始点开始向下搜索,搜索所走过的路径称为引用链,当一个对象到GC Roots没有任何引用链时,则证明这个对象是不可到达的.
 
-在java语言里, 可作为GC Roots的对象包括以下几种:
+在java中可作为GC Roots的对象包括以下几种:
 1. 虚拟机栈(栈帧中的本地变量表)中的引用对象.
 2. 方法区中的类静态属性引用的对象.
 3. 方法区中的常量引用对象
 4. 本地方法栈中JNI的引用的对象
 
-## 内存分配
-1. 新生代GC(`Minor GC`)：新生代GC, Java对象大多都朝生夕灭,所以`Minor GC`非常频繁,回收速度也比较快.
-2. 老年代GC(`Major GC/Full GC`)：老年代GC,出现了Major GC,经常会伴随至少一次的Minor GC. MajorGC的速度一般会比Minor GC慢10倍以上.
-
 ### 新生代
-新生代分为Eden区和Survivor区(Eden有一个, Survivor有俩个, 参考复制算法). 大多数情况下,对象在新生代`Eden`区中分配.当`Eden`区没有足够的空间进行分配时,虚拟机将发起一次`Minor GC`, 将存活下来的对象移动到一个Survivor区中
+新生代分为Eden区和Survivor区(Eden有一个, Survivor有俩个). 大多数情况下,对象在新生代`Eden`区中分配.当`Eden`区没有足够的空间进行分配时,虚拟机将发起一次`Minor GC`, 将存活下来的对象移动到一个Survivor区中
 
 ```java
 private static final int _1MB = 1024 * 1024;
