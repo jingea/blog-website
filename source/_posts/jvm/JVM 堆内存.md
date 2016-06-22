@@ -18,25 +18,39 @@ title: JVM 堆内存
 ```java
 public class ReferenceCountingGC {
 
-    public Object instance = null;
+	public Object instance = null;
+	private static final int _1MB = 3 * 1024 * 1024;
+	private byte[] bigSize = new byte[_1MB];
 
-    private static final int _1MB = 1024 * 1024;
+	public static void main(String[] args) {
+		{
+			ReferenceCountingGC obj1 = new ReferenceCountingGC();
+			ReferenceCountingGC obj2 = new ReferenceCountingGC();
 
-    private byte[] bigSize = new byte[_1MB];
-
-    public static void main(String[] args) {
-        ReferenceCountingGC obj1 = new ReferenceCountingGC();
-        ReferenceCountingGC obj2 = new ReferenceCountingGC();
-
-        obj1.instance = obj2;
-        obj2.instance = obj1;
-
-        System.gc();
-    }
+			obj1.instance = obj2;
+			obj2.instance = obj1;
+		}
+		System.gc();
+	}
 }
 ```
+我们运行`-XX:+PrintGCDetails -Xmx10M -Xms10M`得到结果为
+```bash
+[GC (System.gc()) [PSYoungGen: 1650K->504K(2560K)] 7794K->7001K(9728K), 0.0029060 secs] [Times: user=0.05 sys=0.00, real=0.00 secs] 
+[Full GC (System.gc()) [PSYoungGen: 504K->0K(2560K)] [ParOldGen: 6497K->6952K(7168K)] 7001K->6952K(9728K), [Metaspace: 3051K->3051K(1056768K)], 0.0104574 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
+Heap
+ PSYoungGen      total 2560K, used 41K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)
+  eden space 2048K, 2% used [0x00000000ffd00000,0x00000000ffd0a560,0x00000000fff00000)
+  from space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)
+  to   space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)
+ ParOldGen       total 7168K, used 6952K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)
+  object space 7168K, 96% used [0x00000000ff600000,0x00000000ffcca158,0x00000000ffd00000)
+ Metaspace       used 3058K, capacity 4494K, committed 4864K, reserved 1056768K
+  class space    used 331K, capacity 386K, committed 512K, reserved 1048576K
+```
+我们看到GC之后这块内存并没有回收掉
 
-### 根搜索算法
+## 根搜索算法
 这个算法的基本思想是:通过一系列的名为"GC Roots"的对象作为起始点, 从这些起始点开始向下搜索,搜索所走过的路径称为引用链,当一个对象到GC Roots没有任何引用链时,则证明这个对象是不可到达的.
 
 在java语言里, 可作为GC Roots的对象包括以下几种:
@@ -45,26 +59,13 @@ public class ReferenceCountingGC {
 3. 方法区中的常量引用对象
 4. 本地方法栈中JNI的引用的对象
 
-### 再谈引用
-
-JDK1.2之后,java对引用的概念进行了拓充,将引用分为强引用,软引用,弱引用,虚引用
-1. 强引用: 指的是在代码之中普遍存在的,类似`Object obj = new Object()` 这类的引用,只要强引用还存在,垃圾收集器永远不会回收掉被引用的对象
-2. 软引用: 用来描述一些还有用,但是并非重要的对象.对于软引用关联着的对象,在系统将要发生内存溢出之前,将会把这些对象列进回收范围之中并进行第二次回收.如果这次回收还是没有足够的内存,才会抛出内存溢出异常.
-3. 弱饮用: 当垃圾收集器工作时,无论是否内存足够,都将回收掉只被若饮用关联的对象
-4. 虚引用: 一个对象是否是有虚引用的存在,完全不会对其生成时间构成影响,也无法通过虚引用来取得一个对象实例.为一个对象设置虚引用关联的唯一目的是希望在其被收集器回收时收到一个系统通知.
-
 ## 内存分配
 1. 新生代GC(`Minor GC`)：新生代GC, Java对象大多都朝生夕灭,所以`Minor GC`非常频繁,回收速度也比较快.
 2. 老年代GC(`Major GC/Full GC`)：老年代GC,出现了Major GC,经常会伴随至少一次的Minor GC. MajorGC的速度一般会比Minor GC慢10倍以上.
 
 ### 新生代
-新生代分为Eden区和Survivor区(Eden有一个, Survivor有俩个, 参考复制算法).
+新生代分为Eden区和Survivor区(Eden有一个, Survivor有俩个, 参考复制算法). 大多数情况下,对象在新生代`Eden`区中分配.当`Eden`区没有足够的空间进行分配时,虚拟机将发起一次`Minor GC`, 将存活下来的对象移动到一个Survivor区中
 
-大多数情况下,对象在新生代`Eden`区中分配.当`Eden`区没有足够的空间进行分配时,虚拟机将发起一次`Minor GC`, 将存活下来的对象移动到一个Survivor区中
-
-> 虚拟机提供了`-XX:+PrintGCDetails`这个收集器日志参数,告诉虚拟机在发生垃圾收集行为时打印内存回收日志,并且在进程退出的时候输出当前内存各区域的分配情况.
-
-示例代码
 ```java
 private static final int _1MB = 1024 * 1024;
 
@@ -88,14 +89,10 @@ public static void testAllocation() {
 5. 这次GC结束后,4MB的allocation4对象被顺利分配在Eden中.因此程序执行完的结果是Eden占用4MB(被allocation4占用),Survivor空闲,老年代被占用6MB(被allocation1、2、3占用)
 
 ### 老年代
-大对象和长期存活的对象会进入老年代
-
-所谓大对象就是指,需要大量连续内存空间的Java对象,最典型的大对象就是那种很长的字符串及数组. 如果连续出现多个大对象, 会导致老年代频繁发生`Full GC`, 因此在写程序时应该避免频繁出现大对象.
+大对象和长期存活的对象会进入老年代。所谓大对象就是指,需要大量连续内存空间的Java对象,最典型的大对象就是那种很长的字符串及数组. 如果连续出现多个大对象, 会导致老年代频繁发生`Full GC`, 因此在写程序时应该避免频繁出现大对象.
 
 我们可以使用`-XX:PretenureSizeThreshold`参数令大于这个值的对象直接在老年代中分配. 这样做的目的是避免在Eden区及两个Survivor区之间发生大量的内存拷贝(新生代采用复制算法收集内存).
 
-
-示例代码
 ```java
 private static final int _1MB = 1024 * 1024;
 
