@@ -103,3 +103,7 @@ InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream("./myba
 ## Javadoc 报错
 在新的项目中Javadoc写的并不规范, 因此Idea在检查中, 会产生报错标红信息，采用下面的方法就可以将其取消
 !{}(https://raw.githubusercontent.com/ming15/blog-website/images/other/Idea%20Inspections.jpg)
+
+## 方法断点、
+在Idea中千万不要加方法断点, 这个会严重的降低服务器性能. 下面那个就是方法断点
+![](https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20method%20breakpoints.bmp)
