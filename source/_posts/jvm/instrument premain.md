@@ -435,3 +435,5 @@ java.lang.UnsupportedOperationException: class redefinition failed: attempted to
 	at TestReload.main(TestReload.java:6)
 2
 ```
+
+完整项目[JVM-reload](https://github.com/ming15/JVM-reload)
