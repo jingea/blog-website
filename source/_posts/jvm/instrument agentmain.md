@@ -10,6 +10,7 @@ title: Instrumentation Agentmain
 Manifest-Version: 1.0
 Agent-Class: AgentMain
 Can-Redefine-Classes: true
+
 ```
 
 然后我们写一个代理类
