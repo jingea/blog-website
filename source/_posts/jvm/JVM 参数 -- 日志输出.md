@@ -1,14 +1,14 @@
 category: JVM
 date: 2014-11-28
-title: JVM 日志输出
+title: JVM 参数 -- 日志输出
 ---
 本文主要列举了JVM中常用的日志输出参数
 
 ## GC 输出
-###  PrintGC
+### PrintGC
 在jvm选项上添加上这个参数,只要遇上GC就会输出GC日志. 我们写一个测试程序
 ```java
-public class TestPrintGCDetails {
+public class TestJVMLogArguments {
     public static void main(String[] args) {
         for (int i = 0; i < 3; i++) {
             byte[] bytes = new byte[1024 * 924 * 7];
@@ -31,7 +31,7 @@ Allocate 2
 2. GC前, 堆使用内存为7116K, GC后堆内存使用为624K, 当前堆可用的堆内存为9728K, 本次GC耗时0.0063270秒
 3. GC前, 堆使用内存为7191K, GC后堆内存使用为592K, 当前堆可用的堆内存为9728K, 本次GC耗时0.0068230秒
 
-###  PrintGCDetails
+### PrintGCDetails
 这个参数相比于PrintGC,会输出更加详细的信息. 同样使用上面的测试程序, 然后使用虚拟机参数`-XX:+PrintGCDetails -Xmx10M -Xms10M`, 然后看一下输出
 ```xml
 Allocate 0
@@ -61,10 +61,10 @@ GC过程为
 4. 新生代survivor区(to部分)为512k, 没有使用
 5. 老年代(ParOld垃圾回收器) 总共内存为7168K, 使用里7060K.
 
-###  PrintHeapAtGC
+### PrintHeapAtGC
 这个参数会在GC前后打印出堆内信息
 ```java
-public class TestPrintGCDetails {
+public class TestJVMLogArguments {
     public static void main(String[] args) {
         for (int i = 0; i < 2; i++) {
             byte[] bytes = new byte[1024 * 924 * 7];
@@ -104,8 +104,8 @@ Allocate 1
 * invocations=1 : 代表这是第一次GC
 * (full 0) : 表示虚拟机进行的Full GC的次数
 
-###  PrintGCTimeStamps
-这个参数会在每次GC的时候,输出GC发生的时间. 们还是使用上面的测试程序, 指定虚拟机参数`-XX:+PrintGC -XX:+PrintGCTimeStamps -Xmx10M -Xms10M`看一下输出结果
+### PrintGCTimeStamps
+这个参数会在每次GC的时候,输出GC发生的时间. 我们还是使用上面的测试程序, 指定虚拟机参数`-XX:+PrintGC -XX:+PrintGCTimeStamps -Xmx10M -Xms10M`看一下输出结果
 ```xml
 Allocate 0
 0.285: [GC (Allocation Failure)  8003K->7124K(9728K), 0.0015210 secs]
@@ -115,29 +115,27 @@ Allocate 1
 1. 第一次GC发生在JVM启动0.285秒时进行的
 2. 第二次GC发生在JVM启动0.286秒时进行的
 
-###  PrintGCApplicationConcurrentTime
-打印应用程序的执行时间. 我们使用`-XX:+PrintGC -XX:+PrintGCApplicationConcurrentTime -Xmx10M -Xms10M`虚拟机参数运行一下上面的程序, 看一下输出结果为
+### PrintGCApplicationConcurrentTime
+打印应用程序的执行时间. 我们运行一下上面的程序, 看一下输出结果为
 ```xml
+ζ java -XX:+PrintGCApplicationConcurrentTime -Xmx10M -Xms10M TestJVMLogArguments
 Allocate 0
-Application time: 0.1094100 seconds
-[GC (Allocation Failure)  8003K->7136K(9728K), 0.0018960 secs]
-[Full GC (Ergonomics)  7136K->623K(9728K), 0.0080650 secs]
+Application time: 0.0120062 seconds
 Allocate 1
-Application time: 0.0026340 seconds
+Application time: 0.0016650 seconds
 ```
 
-###  PrintGCApplicationStoppedTime
-打印程序因为GC停顿的时间. 同样使用虚拟机参数`-XX:+PrintGC -XX:+PrintGCApplicationStoppedTime -Xmx10M -Xms10M`, 运行一下上面的程序
+### PrintGCApplicationStoppedTime
+打印程序因为GC停顿的时间. 运行一下上面的程序
 ```xml
+ζ java -XX:+PrintGCApplicationStoppedTime -Xmx10M -Xms10M TestJVMLogArguments
 Allocate 0
-[GC (Allocation Failure)  8003K->7120K(9728K), 0.0014070 secs]
-[Full GC (Ergonomics)  7120K->623K(9728K), 0.0073180 secs]
-Total time for which application threads were stopped: 0.0089770 seconds
+Total time for which application threads were stopped: 0.0076620 seconds, Stopping threads took: 0.0000163 seconds
 Allocate 1
 ```
 我们看到整个应用在Full GC时, 停顿了 0.0089770 秒.
 
-###  PrintGCDateStamps
+### PrintGCDateStamps
 仍然使用上面的测试程序, 然后使用JVM参数`-XX:+PrintGC -Xmx10M -Xms10M -XX:+PrintGCDateStamps`. 结果为
 ```bash
 2016-05-18T17:28:34.689+0800: [GC (Allocation Failure)  2028K->1006K(9728K), 0.0076949 secs]
@@ -150,26 +148,14 @@ Allocate 1
 ```
 这个时间输出比PrintGCTimeStamps可读性更好, 因为它输出的是系统时间
 
-###  PrintTenuringDistribution
-打印GC后新生代各个年龄对象的大小。 我们使用最开始的测试程序, 然后指定JVM参数`-XX:+PrintGC -Xmx10M -Xms10M -XX:+PrintTenuringDistribution`, 看一下结果
+### PrintTenuringDistribution
+打印GC后新生代各个年龄对象的大小。 我们使用最开始的测试程序看一下结果
 ```bash
-[GC (Allocation Failure)
+ζ java -XX:+PrintTenuringDistribution -Xmx10M -Xms10M TestJVMLogArguments
+Allocate 0
+
 Desired survivor size 524288 bytes, new threshold 7 (max 15)
- 2028K->1025K(9728K), 0.0150981 secs]
-[GC (Allocation Failure)
-Desired survivor size 524288 bytes, new threshold 7 (max 15)
- 3071K->1579K(9728K), 0.0141280 secs]
-[GC (Allocation Failure)
-Desired survivor size 524288 bytes, new threshold 7 (max 15)
- 1743K->1635K(9728K), 0.0125040 secs]
-[GC (Allocation Failure)
-Desired survivor size 524288 bytes, new threshold 7 (max 15)
- 1635K->1619K(9728K), 0.0136705 secs]
-[Full GC (Allocation Failure)  1619K->1401K(9728K), 0.0138036 secs]
-[GC (Allocation Failure)
-Desired survivor size 1048576 bytes, new threshold 6 (max 15)
- 1401K->1401K(9728K), 0.0018372 secs]
-[Full GC (Allocation Failure)  1401K->1374K(9728K), 0.0294141 secs]
+Allocate 1
 ```
 
 ### GC日志文件
@@ -190,25 +176,25 @@ Desired survivor size 1048576 bytes, new threshold 6 (max 15)
 
 ## 异常输出
 
-###  HeapDumpOnOutOfMemoryError
+### HeapDumpOnOutOfMemoryError
 在发生内存溢出异常时是否生成堆转储快照,关闭则不生成`-XX:+HeapDumpOnOutOfMemoryError`
 
 > `-XX:HeapDumpPath=./java_pid<pid>.hprof`:堆内存溢出存放日志目录.
 
-###  OnOutOfMemoryError
+### OnOutOfMemoryError
 当虚拟机抛出内存溢出异常时,执行指令的命令`-XX:+OnOutOfMemoryError`
 
-###  OnError
+### OnError
 当虚拟机抛出ERROR异常时,执行指令的命令`-XX:+OnError`
 
 > `-XX:ErrorFile=./hs_err_pid<pid>.log`:如果有Error发生,则将Error输入到该日志.
 
 ## 运行时状态
 
-###  PrintReferenceGC
+### PrintReferenceGC
 追踪系统内的软引用,弱引用,虚引用和Finallize队列的话可以使用`PrintReferenceGC`.
 
-###  verbose:class
+### verbose:class
 * `-verbose:class` : 跟踪类的加载和卸载
 * `-XX:+TraceClassLoading` : 追踪类的加载
 * `-XX:+TraceClassUnloading` : 追踪类的卸载
@@ -219,41 +205,41 @@ Desired survivor size 1048576 bytes, new threshold 6 (max 15)
 ```
 这个特性用在使用ASM动态生成类的应用中特别有用, 因为这些类是由逻辑代码控制的, 加载这些类的行为具有一定的隐蔽性, 因此我们可以在虚拟机启动时, 加上这个参数做日志分析用.
 
-###  CITime
+### CITime
 `-XX:+CITime`:打印`JITCompiler`的耗时
 
-###  PrintConcurrentLocks
+### PrintConcurrentLocks
 打印J.U.C中的状态`-XX:+PrintConcurrentLocks`
 
-###  PrintCompilation
+### PrintCompilation
 显示所有可设置的参数及它们的值(从JDK6update21开始才可以用)`-XX:+`
 
-###  PrintInlining
+### PrintInlining
 打印方法内联信息`-XX:+PrintInlining`
 
-###  PrintAssembly
+### PrintAssembly
 打印即时编译后的二进制信息
 
-###  PrintAdaptiveSizePolicy
+### PrintAdaptiveSizePolicy
 `-XX:-PrintAdaptiveSizePolicy` :打印JVM自动划分新生代和老生代大小信息.
 > 这个选项最好和-XX:+PrintGCDetails以及-XX:+PrintGCDateStamps或者-XX:+PrintGCTimeStamps一起使用.以GCAdaptiveSizePolicy开头的一些额外信息输出来了，survived标签表明“to” survivor空间的对象字节数。在这个例子中，survivor空间占用量是224408984字节，但是移动到old代的字节数却有10904856字节。overflow表明young代是否有对象溢出到old代，换句话说，就是表明了“to” survivor是否有足够的空间来容纳从eden空间和“from”survivor空间移动而来的对象。为了更好的吞吐量，期望在应用处于稳定运行状态下，survivor空间不要溢出。
 
 ## 系统相关
 
-###  PrintVMOptions
+### PrintVMOptions
 输出程序启动时, 虚拟机接收到命令行指定的参数. 我们指定虚拟机参数`-XX:+PrintVMOptions -Xmx10M -Xms10M`, 输出结果为
 ```bash
 VM option '+PrintVMOptions'
 ```
 > TODO 为什么输出只有PrintVMOptions, 而没有-Xmx10M -Xms10M呢?
 
-###  PrintCommandLineFlags
+### PrintCommandLineFlags
 打印启动虚拟机时输入的非稳定参数`-XX:+PrintCommandLineFlags`
 ```xml
 -XX:InitialHeapSize=10485760 -XX:MaxHeapSize=10485760 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC
 ```
 
-###  PrintFlagsFinal
+### PrintFlagsFinal
 输出所有的系统的参数的值, 我们使用-XX:+PrintFlagsFinal`, 看一下结果
 ```bash
 [Global flags]
