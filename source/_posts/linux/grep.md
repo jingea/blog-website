@@ -91,3 +91,7 @@ grep -v "22" ./as.txt
 ```bash
 grep -E "22222|11111" ./as.txt
 ```
+输出匹配行的前后俩行
+```bash
+grep -C 2 'linux'
+```
