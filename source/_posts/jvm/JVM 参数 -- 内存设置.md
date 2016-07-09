@@ -143,6 +143,24 @@ invoke : 1300
 ```
 要不然次数是一样的,要不然次数是个倍数的关系
 
+### MaxPermSize
+`-XX:MaxPermSize`:永久代的最大值
+
+### ms
+`-XX:ms`:初始堆大小
+
+### mn
+`-XX:`:设置年轻代大小.整个JVM内存大小=年轻代大小+年老代大小+持久代大小.(Xms必须大于Xmn)
+
+### NewSize
+`-XX:NewSize=2m`:新生代默认大小(单位是字节)
+
+### MaxNewSize
+`-XX:MaxNewSize=size`:新生代最大值(单位字节)
+
+### ThreadStackSize
+`-XX:ThreadStackSize=512`:线程堆栈大小(单位Kbytes,0使用默认大小)
+
 ### SurvivorRatio
 `-XX:SurvivorRatio=6`:新生代中Eden区和Survivor区的容量比值(默认为8)
 
@@ -171,23 +189,7 @@ invoke : 1300
 ### MinHeapFreeRatio
 `-XX:MinHeapFreeRatio`:当Xmx值比Xms值大时,堆可以动态收缩和扩展,这个参数控制当堆空闲小于指定比率时自动收缩
 
-### MaxPermSize
-`-XX:MaxPermSize`:永久代的最大值
 
-### ms
-`-XX:ms`:初始堆大小
-
-### mn
-`-XX:`:设置年轻代大小.整个JVM内存大小=年轻代大小+年老代大小+持久代大小.(Xms必须大于Xmn)
-
-### NewSize
-`-XX:NewSize=2m`:新生代默认大小(单位是字节)
-
-### MaxNewSize
-`-XX:MaxNewSize=size`:新生代最大值(单位字节)
-
-### ThreadStackSize
-`-XX:ThreadStackSize=512`:线程堆栈大小(单位Kbytes,0使用默认大小)
 
 
 ## 垃圾收集器
