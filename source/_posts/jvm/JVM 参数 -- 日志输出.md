@@ -5,6 +5,7 @@ title: JVM 参数 -- 日志输出
 本文主要列举了JVM中常用的日志输出参数
 
 ## GC 输出
+
 ### PrintGC
 在jvm选项上添加上这个参数,只要遇上GC就会输出GC日志. 我们写一个测试程序
 ```java
@@ -104,8 +105,8 @@ Allocate 1
 * invocations=1 : 代表这是第一次GC
 * (full 0) : 表示虚拟机进行的Full GC的次数
 
-### PrintGCTimeStamps
-这个参数会在每次GC的时候,输出GC发生的时间. 我们还是使用上面的测试程序, 指定虚拟机参数`-XX:+PrintGC -XX:+PrintGCTimeStamps -Xmx10M -Xms10M`看一下输出结果
+### GC开始时间
+`PrintGCTimeStamps`参数会在每次GC的时候,输出GC发生的时间. 我们还是使用上面的测试程序, 指定虚拟机参数`-XX:+PrintGC -XX:+PrintGCTimeStamps -Xmx10M -Xms10M`看一下输出结果
 ```xml
 Allocate 0
 0.285: [GC (Allocation Failure)  8003K->7124K(9728K), 0.0015210 secs]
@@ -115,28 +116,7 @@ Allocate 1
 1. 第一次GC发生在JVM启动0.285秒时进行的
 2. 第二次GC发生在JVM启动0.286秒时进行的
 
-### PrintGCApplicationConcurrentTime
-打印应用程序的执行时间. 我们运行一下上面的程序, 看一下输出结果为
-```xml
-ζ java -XX:+PrintGCApplicationConcurrentTime -Xmx10M -Xms10M TestJVMLogArguments
-Allocate 0
-Application time: 0.0120062 seconds
-Allocate 1
-Application time: 0.0016650 seconds
-```
-
-### PrintGCApplicationStoppedTime
-打印程序因为GC停顿的时间. 运行一下上面的程序
-```xml
-ζ java -XX:+PrintGCApplicationStoppedTime -Xmx10M -Xms10M TestJVMLogArguments
-Allocate 0
-Total time for which application threads were stopped: 0.0076620 seconds, Stopping threads took: 0.0000163 seconds
-Allocate 1
-```
-我们看到整个应用在Full GC时, 停顿了 0.0089770 秒.
-
-### PrintGCDateStamps
-仍然使用上面的测试程序, 然后使用JVM参数`-XX:+PrintGC -Xmx10M -Xms10M -XX:+PrintGCDateStamps`. 结果为
+`PrintGCDateStamps`输出比PrintGCTimeStamps可读性更好, 因为它输出的是系统时间. 仍然使用上面的测试程序, 然后使用JVM参数`-XX:+PrintGC -Xmx10M -Xms10M -XX:+PrintGCDateStamps`. 结果为
 ```bash
 2016-05-18T17:28:34.689+0800: [GC (Allocation Failure)  2028K->1006K(9728K), 0.0076949 secs]
 2016-05-18T17:28:34.741+0800: [GC (Allocation Failure)  3052K->1565K(9728K), 0.0191430 secs]
@@ -146,10 +126,30 @@ Allocate 1
 2016-05-18T17:28:34.826+0800: [GC (Allocation Failure)  1068K->1068K(9728K), 0.0185343 secs]
 2016-05-18T17:28:34.844+0800: [Full GC (Allocation Failure)  1068K->1041K(9728K), 0.0176116 secs]
 ```
-这个时间输出比PrintGCTimeStamps可读性更好, 因为它输出的是系统时间
+> 这个参数必须和`-XX:+PrintGC`, `-XX:+PrintGCDetails`一起使用,但是和`-XX:+PrintHeapAtGC`一起使用就无效了
 
-### PrintTenuringDistribution
-打印GC后新生代各个年龄对象的大小。 我们使用最开始的测试程序看一下结果
+### PrintGCApplicationConcurrentTime
+输出应用程序从上次GC到这次GC的程序执行时间. 我们运行一下上面的程序, 看一下输出结果为
+```xml
+ζ java -XX:+PrintGCApplicationConcurrentTime -Xmx10M -Xms10M TestJVMLogArguments
+Allocate 0
+Application time: 0.0120062 seconds
+Allocate 1
+Application time: 0.0016650 seconds
+```
+
+### GC停顿时间
+`PrintGCApplicationStoppedTime`打印程序因为GC停顿的时间. 运行一下上面的程序
+```xml
+ζ java -XX:+PrintGCApplicationStoppedTime -Xmx10M -Xms10M TestJVMLogArguments
+Allocate 0
+Total time for which application threads were stopped: 0.0076620 seconds, Stopping threads took: 0.0000163 seconds
+Allocate 1
+```
+我们看到整个应用在Full GC时, 停顿了 0.0089770 秒.
+
+### 各个年龄对象大小
+`PrintTenuringDistribution`打印GC后新生代各个年龄对象的大小。 我们使用最开始的测试程序看一下结果
 ```bash
 ζ java -XX:+PrintTenuringDistribution -Xmx10M -Xms10M TestJVMLogArguments
 Allocate 0
@@ -180,12 +180,20 @@ Allocate 1
 在发生内存溢出异常时是否生成堆转储快照,关闭则不生成`-XX:+HeapDumpOnOutOfMemoryError`
 
 > `-XX:HeapDumpPath=./java_pid<pid>.hprof`:堆内存溢出存放日志目录.
+更多参考[JVM内存溢出之 Heap OOM]()
 
 ### OnOutOfMemoryError
-当虚拟机抛出内存溢出异常时,执行指令的命令`-XX:+OnOutOfMemoryError`
+当虚拟机抛出内存溢出异常时,执行指令的命令`-XX:+OnOutOfMemoryError=...`例如
+```bash
+java -Xmx10M -Xms10M -Xmn6M -XX:OnOutOfMemoryError="jstack %p" TestJVMLogArguments 
+```
+当虚拟机内存溢出时执行jstack命令
 
 ### OnError
-当虚拟机抛出ERROR异常时,执行指令的命令`-XX:+OnError`
+当虚拟机抛出ERROR异常时,执行指令的命令`-XX:+OnError=<cmd args>;<cmd args>`例如
+```bash
+java -Xmx10M -Xms10M -Xmn6M -XX:OnError="jstack %p > jstack;jmap %p > jmap" TestJVMLogArguments
+```
 
 > `-XX:ErrorFile=./hs_err_pid<pid>.log`:如果有Error发生,则将Error输入到该日志.
 
@@ -211,9 +219,6 @@ Allocate 1
 ### PrintConcurrentLocks
 打印J.U.C中的状态`-XX:+PrintConcurrentLocks`
 
-### PrintCompilation
-显示所有可设置的参数及它们的值(从JDK6update21开始才可以用)`-XX:+`
-
 ### PrintInlining
 打印方法内联信息`-XX:+PrintInlining`
 
@@ -222,7 +227,7 @@ Allocate 1
 
 ### PrintAdaptiveSizePolicy
 `-XX:-PrintAdaptiveSizePolicy` :打印JVM自动划分新生代和老生代大小信息.
-> 这个选项最好和-XX:+PrintGCDetails以及-XX:+PrintGCDateStamps或者-XX:+PrintGCTimeStamps一起使用.以GCAdaptiveSizePolicy开头的一些额外信息输出来了，survived标签表明“to” survivor空间的对象字节数。在这个例子中，survivor空间占用量是224408984字节，但是移动到old代的字节数却有10904856字节。overflow表明young代是否有对象溢出到old代，换句话说，就是表明了“to” survivor是否有足够的空间来容纳从eden空间和“from”survivor空间移动而来的对象。为了更好的吞吐量，期望在应用处于稳定运行状态下，survivor空间不要溢出。
+这个选项最好和-XX:+PrintGCDetails以及-XX:+PrintGCDateStamps或者-XX:+PrintGCTimeStamps一起使用.以GCAdaptiveSizePolicy开头的一些额外信息输出来了，survived标签表明“to” survivor空间的对象字节数。在这个例子中，survivor空间占用量是224408984字节，但是移动到old代的字节数却有10904856字节。overflow表明young代是否有对象溢出到old代，换句话说，就是表明了“to” survivor是否有足够的空间来容纳从eden空间和“from”survivor空间移动而来的对象。为了更好的吞吐量，期望在应用处于稳定运行状态下，survivor空间不要溢出。
 
 ## 系统相关
 
