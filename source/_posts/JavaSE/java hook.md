@@ -134,7 +134,7 @@ public class HookTest {
 }
 ```
 运行后的输出结果为
-```
+```bash
 ζ java HookTest
 2016-07-09T16:12:12.479
     freeMemory : 155922512
