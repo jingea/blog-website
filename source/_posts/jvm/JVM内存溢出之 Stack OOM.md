@@ -1,8 +1,8 @@
 category: JVM
 date: 2014-09-06
-title: JVMÄÚ´æÒç³öÖ® Heap OOM
+title: JVMå†…å­˜æº¢å‡ºä¹‹ Heap OOM
 ---
-Òç³ö´úÂë
+æº¢å‡ºä»£ç 
 ```java
 public class TestStackSOF {
 
@@ -21,15 +21,15 @@ public class TestStackSOF {
 	}
 }
 ```
-ÔËÐÐÉÏÃæµÄ³ÌÐò
+è¿è¡Œä¸Šé¢çš„ç¨‹åº
 ```bash
 D:\testOOM>java -XX:+HeapDumpOnOutOfMemoryError -Xss1M TestStackSOF
 stack length:22427. null
 ```
-1MµÄÕ»¿Õ¼ä´ó¸ÅÄÜÖ´ÐÐÒÔÉÏÄÇ¸ö¼òµ¥·½·¨µÄ22427´Î. Õâ¸ö´ÎÊý²¢²»ÊÇÔÚ±àÒëÆÚ¾Í¾ö¶¨µÄ,¶øÊÇÔÚÔËÐÐÊ±¸ù¾Ý¾ßÌåµÄÄÚ´æÊ¹ÓÃÇé¿ö¶ø±ä»¯µÄ. 
-ÎÒÃÇ»¹×¢Òâµ½Ê¹ÓÃ`-XX:+HeapDumpOnOutOfMemoryError`²¢²»ÄÜ²úÉú¶ÑÄÚ´æÒç³ö´íÎó, Ò²Ã»ÓÐ²úÉúÀàËÆÓÚjava_pid19212.hprofÎÄ¼þµÄÎÄ¼þ.
+1Mçš„æ ˆç©ºé—´å¤§æ¦‚èƒ½æ‰§è¡Œä»¥ä¸Šé‚£ä¸ªç®€å•æ–¹æ³•çš„22427æ¬¡. è¿™ä¸ªæ¬¡æ•°å¹¶ä¸æ˜¯åœ¨ç¼–è¯‘æœŸå°±å†³å®šçš„,è€Œæ˜¯åœ¨è¿è¡Œæ—¶æ ¹æ®å…·ä½“çš„å†…å­˜ä½¿ç”¨æƒ…å†µè€Œå˜åŒ–çš„. 
+æˆ‘ä»¬è¿˜æ³¨æ„åˆ°ä½¿ç”¨`-XX:+HeapDumpOnOutOfMemoryError`å¹¶ä¸èƒ½äº§ç”Ÿå †å†…å­˜æº¢å‡ºé”™è¯¯, ä¹Ÿæ²¡æœ‰äº§ç”Ÿç±»ä¼¼äºŽjava_pid19212.hprofæ–‡ä»¶çš„æ–‡ä»¶.
 
-ÉÏÃæµÄ²¢Ã»ÓÐ²úÉú
+ä¸Šé¢çš„å¹¶æ²¡æœ‰äº§ç”Ÿ
 ```java
 public class JavaVMStackOOM {
 	private void dontStop() {
@@ -55,6 +55,6 @@ public class JavaVMStackOOM {
 	}
 }
 ```
-ÒÔÉÏÁ©¸öÊµÏÖ¶¼¶¼ÎÞ·¨ÈÃÐéÄâ»ú²úÉúOutOfMemoryErrorÒì³£,Ö»ÄÜ²úÉúStackOverflowError.ÊµÑé½á¹û±íÃ÷: µ¥¸öÏß³ÌÏÂ,ÎÞÂÛÓÉÓÚÕ»Ö¡Ì«´ó»¹ÊÇÐéÄâ»úÈÝÁ¿Ì«Ð¡,µ±ÄÚ´æÎÞ·¨·ÖÅäÊ±,ÐéÄâ»úÅ×³öµÄ¶¼ÊÇStackOverflowError.Èç¹û²âÊÔÊ±²»ÊÇÏÞÓÚµ¥Ïß³Ì,Í¨¹ý²»¶Ï½¨Á¢ÐÂÏß³ÌµÄ·½Ê½µ¹ÊÇ¿ÉÒÔ²úÉúÄÚ´æÒç³öÒì³£. µ«ÊÇÕâÑù²úÉúµÄÄÚ´æÒç³öÒì³£ÓëÕ»¿Õ¼äÊÇ·ñ×ã¹»´ó²¢²»´æÔÚÈÎºÎÁªÏµ,»òÕß×¼È·Ëµ,ÔÚÕâÖÖÇé¿öÏÂ,¸øÃ¿¸öÏß³ÌµÄÕ»·ÖÅäµÄÄÚ´æÔ½´ó,·´¶øÔ½ÈÝÒ×²úÉúÄÚ´æÒç³öÒì³£.
+ä»¥ä¸Šä¿©ä¸ªå®žçŽ°éƒ½éƒ½æ— æ³•è®©è™šæ‹Ÿæœºäº§ç”ŸOutOfMemoryErrorå¼‚å¸¸,åªèƒ½äº§ç”ŸStackOverflowError.å®žéªŒç»“æžœè¡¨æ˜Ž: å•ä¸ªçº¿ç¨‹ä¸‹,æ— è®ºç”±äºŽæ ˆå¸§å¤ªå¤§è¿˜æ˜¯è™šæ‹Ÿæœºå®¹é‡å¤ªå°,å½“å†…å­˜æ— æ³•åˆ†é…æ—¶,è™šæ‹ŸæœºæŠ›å‡ºçš„éƒ½æ˜¯StackOverflowError.å¦‚æžœæµ‹è¯•æ—¶ä¸æ˜¯é™äºŽå•çº¿ç¨‹,é€šè¿‡ä¸æ–­å»ºç«‹æ–°çº¿ç¨‹çš„æ–¹å¼å€’æ˜¯å¯ä»¥äº§ç”Ÿå†…å­˜æº¢å‡ºå¼‚å¸¸. ä½†æ˜¯è¿™æ ·äº§ç”Ÿçš„å†…å­˜æº¢å‡ºå¼‚å¸¸ä¸Žæ ˆç©ºé—´æ˜¯å¦è¶³å¤Ÿå¤§å¹¶ä¸å­˜åœ¨ä»»ä½•è”ç³»,æˆ–è€…å‡†ç¡®è¯´,åœ¨è¿™ç§æƒ…å†µä¸‹,ç»™æ¯ä¸ªçº¿ç¨‹çš„æ ˆåˆ†é…çš„å†…å­˜è¶Šå¤§,åè€Œè¶Šå®¹æ˜“äº§ç”Ÿå†…å­˜æº¢å‡ºå¼‚å¸¸.
 
-µ±¿ª·¢¶àÏß³ÌÓ¦ÓÃÊ±Ó¦¸ÃÌØ±ð×¢ÒâµÄÊÇ,³öÏÖStackOverflowErrorÒì³£Ê±ÓÐ´íÎó¶ÑÕ»¿ÉÒÔÔÄ¶Á,Ïà¶ÔÀ´Ëµ±È½ÏÈÝÒ×ÕÒµ½ÎÊÌâ.Èç¹ûÊ¹ÓÃÐéÄâ»úÄ¬ÈÏ²ÎÊý,Õ»Éî¶ÈÔÚ´ó¶àÊýÇé¿öÏÂ´ïµ½1000-2000ÍêÈ«Ã»ÓÐÎÊÌâ,¶ÔÓÚÕý³£µÄ·½·¨µ÷ÓÃ(°üÀ¨µÝ¹é),Õâ¸öÉî¶ÈÓ¦¸Ã¹»ÓÃÁË,µ«ÊÇÈç¹û½¨Á¢¹ý¶àµÄÏß³Ìµ¼ÖÂµÄÄÚ´æÒç³ö,ÔÚ²»ÄÜ¼õÉÙÏß³ÌÊý»òÕß¸ü»»64Î»ÐéÄâ»úµÄÇé¿öÏÂ,¾ÍÖ»ÄÜÍ¨¹ý¼õÉÙ×î´ó¶ÑºÍ¼õÉÙÕ»ÈÝÁ¿À´»»È¡¸ü¶àµÄÏß³Ì.
+å½“å¼€å‘å¤šçº¿ç¨‹åº”ç”¨æ—¶åº”è¯¥ç‰¹åˆ«æ³¨æ„çš„æ˜¯,å‡ºçŽ°StackOverflowErrorå¼‚å¸¸æ—¶æœ‰é”™è¯¯å †æ ˆå¯ä»¥é˜…è¯»,ç›¸å¯¹æ¥è¯´æ¯”è¾ƒå®¹æ˜“æ‰¾åˆ°é—®é¢˜.å¦‚æžœä½¿ç”¨è™šæ‹Ÿæœºé»˜è®¤å‚æ•°,æ ˆæ·±åº¦åœ¨å¤§å¤šæ•°æƒ…å†µä¸‹è¾¾åˆ°1000-2000å®Œå…¨æ²¡æœ‰é—®é¢˜,å¯¹äºŽæ­£å¸¸çš„æ–¹æ³•è°ƒç”¨(åŒ…æ‹¬é€’å½’),è¿™ä¸ªæ·±åº¦åº”è¯¥å¤Ÿç”¨äº†,ä½†æ˜¯å¦‚æžœå»ºç«‹è¿‡å¤šçš„çº¿ç¨‹å¯¼è‡´çš„å†…å­˜æº¢å‡º,åœ¨ä¸èƒ½å‡å°‘çº¿ç¨‹æ•°æˆ–è€…æ›´æ¢64ä½è™šæ‹Ÿæœºçš„æƒ…å†µä¸‹,å°±åªèƒ½é€šè¿‡å‡å°‘æœ€å¤§å †å’Œå‡å°‘æ ˆå®¹é‡æ¥æ¢å–æ›´å¤šçš„çº¿ç¨‹.

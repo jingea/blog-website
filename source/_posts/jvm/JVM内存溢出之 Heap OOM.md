@@ -1,8 +1,8 @@
 category: JVM
 date: 2014-09-06
-title: JVM�ڴ����֮ Heap OOM
+title: JVM内存溢出之 Heap OOM
 ---
-�������ȿ�һ���ڴ�����Ĵ���
+我们首先看一段内存溢出的代码
 ```java
 public class TestHeapOOM {
 
@@ -15,7 +15,7 @@ public class TestHeapOOM {
 }
 ```
 
-��������������һ��������Ǹ�����
+接下来我们运行一下上面的那个程序
 ```java
 D:\testOOM>java -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintHeapAtGC -Xms10M -Xmx10M -Xmn4M TestHeapOOM
 Allocate : 1
@@ -124,25 +124,25 @@ Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
 
 D:\testOOM>
 ```
-����������һ��, ���ǹ̶����ڴ��СΪ10M, ������Ϊ4M. ���ǿ���PSYoungGen�ܹ�Ϊ3584K, �ֱ�Ϊeden��3072K, from survivor��Ϊ512K, Ȼ�����to survivor ����512K, �ܹ�Ϊ4096K. ������ܹ�Ϊ6114K
+我们来分析一下, 我们固定堆内存大小为10M, 新生代为4M. 我们看到PSYoungGen总共为3584K, 分别为eden区3072K, from survivor区为512K, 然后加上to survivor 区的512K, 总共为4096K. 老年代总共为6114K
 
-��������һ�µ�һ��GC֮ǰ���ڴ�ֲ����: ��ʱ�����Ѿ������������ڴ����, �ڵ����ε�(����6M 6114K��byte����)ʱ�򴥷���GC. ��ʱ ������Ϊ3002K, �����Ϊ4096K, ���ǿ����ƶϳ�����һ��2M��byte����Ӧ���Ƿ�������������, ���ڶ��ε�4M byte����ֱ�ӷ������������.
+我们来看一下第一次GC之前的内存分布情况: 此时程序已经进行了俩次内存分配, 在第三次的(分配6M 6114K的byte数组)时候触发了GC. 此时 新生代为3002K, 老年代为4096K, 我们可以推断出，第一次2M的byte数组应该是分配在了新生代, 而第二次的4M byte数组直接分配在了老年代.
 
-������һ��GC֮��, ������ʹ����488K, �������������4312K. ����һ��GC֮��������������`3002 - 488 -(4312 - 4096) = 2298`, ���ǿ����ƶϳ���һ�η������2M��byte���鱻���յ���.
+而经过一次GC之后, 新生代使用了488K, 而老年代增长到4312K. 经过一次GC之后新生代消耗了`3002 - 488 -(4312 - 4096) = 2298`, 我们可以推断出第一次分配的那2M的byte数组被回收掉了.
 
-�������ֽ�����һ��yong GC�����ڴ沢û�з���ʲô�仯,���Ǿͷ�����һ��full GC.
+接下来又进行了一次yong GC但是内存并没有发生什么变化,于是就发生了一次full GC.
 
-��һ��full GC(Ҳ����invocations=3��ʱ��)֮��, ���ǿ����������������, �����Ҳֻʣ����642K���ڴ汻ʹ����, �����ƶ�Ӧ�����Ǹ�4M��byte���鱻���յ���. ���Ǵ�ʱҪ����һ��6M��byte����,��Ȼ������ǲ�����. ���������Full GC��ʱ���ֽ�����һ��GC����, �����ڴ���Ȼ����, �����ֲ�����һ��Full GC, Ҳ����full=2���Ǵ�. ���Ǻܱ���, �ڴ���Ȼ�ǲ����õ�, ���ǾͿ�����java.lang.OutOfMemoryError: Java heap space, ͬʱ������һ��java_pid17676.hprof ���ļ�.
+第一次full GC(也就是invocations=3的时候)之后, 我们看到新生代被清空了, 老年代也只剩下了642K的内存被使用着, 我们推断应该是那个4M的byte数组被回收掉了. 但是此时要分配一个6M的byte数组,显然老年代是不够的. 于是在这次Full GC的时候又进行了一次GC操作, 但是内存仍然不够, 于是又产生了一次Full GC, 也就是full=2的那次. 但是很悲催, 内存仍然是不够用的, 于是就看到了java.lang.OutOfMemoryError: Java heap space, 同时生成了一个java_pid17676.hprof 的文件.
 
-����*.hprof�ļ������ǿ���ͨ�����й��߷�����
+对于*.hprof文件。我们可以通过下列工具分析它
 * Eclipse Memory Analyzer
 * JProfiler
 * jvisualvm
 * jhat
 
-�������Ǵ������GC��־�з������������ڴ������ԭ��, Ҳ�Ͳ���ʹ�����еĹ��߷���*.hprof�ļ���,���Ƕ��ڸ��ӵ�Ӧ�ó�����˵,��������˶��ڴ�����Ļ�, ʹ�����й��߷����Ļ�,���Ƿǳ��б�Ҫ��.
+由于我们从上面的GC日志中分析出了引发内存溢出的原因, 也就不再使用上列的工具分析*.hprof文件了,但是对于复杂的应用程序来说,如果发生了堆内存溢出的话, 使用上列工具分析的话,还是非常有必要的.
 
-�ڷ�������ļ���ʱ��,�����ص�ȷ���ڴ��еĶ����Ƿ��Ǳ�Ҫ��,Ҳ����Ū������������ڴ�й©�����ڴ����.
-1. ������ڴ�й©��ͨ�����߲鿴й©����GC Roots��������.���Ǿ����ҵ�й©������ͨ��������·����GC Toots�����,�����������ռ����޷��Զ��������ǵ�. ������й©�����������Ϣ,�Լ�GC Roots��������Ϣ,�Ϳ��ԱȽ�׼ȷ�ض�λ��й©�����λ��.
-2. ���������й©, ���仰˵�����ڴ��еĶ���ȷʵ������������, �Ǿ�Ӧ�����������ĶѲ���,���������ڴ�ԱȲ鿴�Ƿ񻹿��Ե���,�Ӵ����ϼ���Ƿ����ĳЩ�������ڹ���,����״̬ʱ����������,���Լ��ٳ����������ڵ��ڴ�����.
+在分析这个文件的时候,我们重点确认内存中的对象是否是必要的,也就是弄清楚是引发了内存泄漏还是内存溢出.
+1. 如果是内存泄漏可通过工具查看泄漏对象到GC Roots的引用链.于是就能找到泄漏对象是通过怎样的路径与GC Toots相关联,并导致垃圾收集器无法自动回收它们的. 掌握了泄漏对象的类型信息,以及GC Roots引用链信息,就可以比较准确地定位出泄漏代码的位置.
+2. 如果不存在泄漏, 换句话说就是内存中的对象确实还都必须存货着, 那就应当检查虚拟机的堆参数,与物理机内存对比查看是否还可以调大,从代码上检查是否存在某些生命周期过长,持有状态时间过长的情况,尝试减少程序运行周期的内存消耗.
 
