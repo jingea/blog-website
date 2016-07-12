@@ -143,3 +143,27 @@ public class TestSort {
 通关上面的现象我们可以得出, 放在后面的`reversed()`会将前面的都执行倒序操作.
 
 那么如果只想对某个键进行倒序, 其他都正序要如何操作呢？
+```java
+public class TestClassForName {
+    public static void main(String[] args) throws InterruptedException, ClassNotFoundException {
+        List<CompareObject> list = CompareObject.getList();
+        list.stream().sorted(Comparator.comparing(CompareObject::getTall)
+                .thenComparing(CompareObject::getAge, Comparator.reverseOrder())
+                .thenComparing(CompareObject::getName))
+                .forEach(co -> System.out.println(co.getTall() + " " + co.getAge() + " " + co.getName()));
+
+    }
+}
+```
+输出结果为
+```bash
+160 19 徐来
+160 16 张德建
+160 15 张华
+170 18 李子栋
+170 18 玛丽凯乐
+180 19 刘丽
+180 19 赵同利
+180 18 王义海
+```
+我们看到年龄已经降序排序了
