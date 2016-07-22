@@ -116,3 +116,42 @@ D:\ming\test
 D:\ming\test\.
 .
 ```
+
+## 读取压缩包文件
+```java
+public static Map<String, byte[]> getLoadedClass(String jarPath) {
+	Map<String, byte[]> loadClass = new HashMap<>();
+	try(InputStream in = new BufferedInputStream(new FileInputStream(new File(jarPath)));
+		ZipInputStream zin = new ZipInputStream(in)) {
+        ZipEntry ze;
+        while ((ze = zin.getNextEntry()) != null) {
+            if (ze.isDirectory()) {
+                // TODO 检查是否还有其他操作要做
+            } else {
+                if (ze.getSize() > 0) {
+                    String fileName = ze.getName();
+                    if (!fileName.endsWith(".class")) {
+                        continue;
+                    }
+					try(ZipFile zf = new ZipFile(jarPath); InputStream input = zf.getInputStream(ze);
+						ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+						if (input == null) {
+							logger.error("Code Reload cant find file : " + fileName);
+							continue;
+						}
+						int b = 0;
+						while ((b = input.read()) != -1) {
+							byteArrayOutputStream.write(b);
+						}
+						byte[] bytes = byteArrayOutputStream.toByteArray();
+						// TODO 
+					}
+                }
+            }
+        }
+    } catch (final Exception e) {
+        e.printStackTrace();
+    }
+	return loadClass;
+}
+```
