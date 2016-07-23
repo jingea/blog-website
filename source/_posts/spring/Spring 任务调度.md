@@ -1,4 +1,4 @@
-category: Spring
+category: Spring Guice
 date: 2016-04-26
 title: Spring 任务调度
 ---

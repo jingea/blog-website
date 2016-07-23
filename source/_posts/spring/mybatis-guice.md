@@ -1,6 +1,6 @@
-category: guice
+category: Spring Guice
 date: 2015-12-09
-title: Mybatis Guice 初探
+title: Guice Mybatis 初探
 ---
 参考文档[mybatis-guice](http://mybatis.org/guice/index.html)
 

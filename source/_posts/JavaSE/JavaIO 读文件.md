@@ -155,3 +155,12 @@ public static Map<String, byte[]> getLoadedClass(String jarPath) {
 	return loadClass;
 }
 ```
+在写这个东西的时候遇到个小坑, 刚开始使用的是`input.available()`读取的文件内容, 但是大概要读取100多个文件, 总有6个文件读取的不完整,查看JDK的文档,上面说
+```bash
+Returns an estimate of the number of bytes that can be read (or skipped over) from this input stream without blocking by the next invocation of a method for this input stream. The next invocation might be the same thread or another thread.  A single read or skip of this many bytes will not block, but may read or skip fewer bytes.
+
+Note that while some implementations of InputStream will return the total number of bytes in the stream, many will not.  It is never correct to use the return value of this method to allocate a buffer intended to hold all data in this stream.
+```
+这个方法返回的是在非阻塞情况下对该流进行下一次某个方法(读或者skip操作)调用时的预估字节数.下一个方法调用可以在同一个线程或者在不同的线程中。下一次读取或者skip掉available预估字节数不会产生阻塞的情况，但是实际读取出来的字节数可能小于预估数。
+
+因此在ZipFileInputStream中，它依赖于native方法实现，我们也不知道它返回的究竟是流里剩下的全部的字节数还是部分的。最后文档也说了，永远不要使用这个方法返回的预估字节数分配buffer大小的buffer.

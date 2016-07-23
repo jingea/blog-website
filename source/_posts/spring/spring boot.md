@@ -1,4 +1,4 @@
-category: Spring
+category: Spring Guice
 date: 2015-04-08
 title: SpringBoot 构建应用程序
 ---

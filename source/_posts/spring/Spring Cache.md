@@ -1,4 +1,4 @@
-category: Spring
+category: Spring Guice
 date: 2016-06-15
 title: Spring Cache
 ---

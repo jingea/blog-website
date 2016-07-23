@@ -1,4 +1,4 @@
-category: Spring
+category: Spring Guice
 date: 2015-04-09
 title: SpringBoot Web 服务
 ---

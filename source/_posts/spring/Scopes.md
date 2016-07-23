@@ -1,4 +1,4 @@
-category: guice
+category: Spring Guice
 date: 2015-12-08
 title: Guice Scopes
 ---
