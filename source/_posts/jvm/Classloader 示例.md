@@ -242,8 +242,3 @@ Exception in thread "main" java.lang.LinkageError: loader (instance of  MyClassL
 	at java.lang.reflect.Method.invoke(Method.java:498)
 	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)
 ```
-
-
-
-
-
