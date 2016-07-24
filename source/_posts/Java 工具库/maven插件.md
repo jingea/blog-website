@@ -275,3 +275,41 @@ maven-dependency-plugin是处理与依赖相关的插件. 我们一般使用它�
 上面的例子中只拷贝了jar后缀的文件.
 
 > 因为每个execution只能指定一个输出目录, 因此我们要差异化拷贝的话, 可以多写几个execution来实现
+
+## maven-compiler-plugin
+[maven-compiler-plugin](http://maven.apache.org/components/plugins/maven-compiler-plugin/compile-mojo.html)
+```xml
+<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <!-- Compiling Sources Using A Different JDK -->
+                    <verbose>true</verbose>
+                    <fork>true</fork>
+                    <executable><${JAVA_1_4_HOME}/bin/javac</executable>
+                    <!-- 指定maven-compiler-plugin插件使用的javac的版本,使用这个参数的时必须将fork设置为true-->
+                    <compilerVersion>1.8</compilerVersion>
+
+                    <!-- 指定javac的-source 和 -target 参数。胆识-target参数要小心使用,有坑-->
+                    <source>1.8</source>
+                    <target>1。8</target>
+
+                    <!-- 设置编译时使用的内存大小 -->
+                    <fork>true</fork>
+                    <meminitial>128m</meminitial>
+                    <maxmem>512m</maxmem>
+
+                    <!-- 在编译时传递jvm参数-->
+                    <compilerArgs>
+                        <arg>-verbose</arg>
+                        <arg>-Xlint:all,-options,-path</arg>
+                    </compilerArgs>
+                </configuration>
+
+            </plugin>
+        </plugins>
+</build>
+```
