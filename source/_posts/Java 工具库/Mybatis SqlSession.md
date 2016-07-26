@@ -5,13 +5,12 @@ title: Mybatis SqlSession
 一直在使用Mybatis, 但是一直对Mybatis中的SqlSession的实际操作过程没有深入了解过, 今天在项目中引用了Mybatis-Guice模块, 很好奇Mybatis-Guice是如何做的SqlSeesion自动资源释放,因此今天就找时间好好研究一下`SqlSession`.
 
 首先看一下[Mybatis3官方文档](http://www.mybatis.org/mybatis-3/zh/getting-started.html)中对`SqlSessionFactoryBuilder`, `SqlSessionFactory`和`SqlSession`的描述：
-* `SqlSessionFactoryBuilder` : 一旦`SqlSessionFactoryBuilder`创建出`SqlSessionFactory`, 那么在接下来的应用程序中我们就不应该再使用它(除非我们要使用多个数据源)
-* `SqlSessionFactory` : 用来创建`SqlSession`, 该实例的生命周期应该是整个应用程序, 我们要避免创建多个相同的数据源.
-* `SqlSession` : SqlSession 的实例不是线程安全的. 我们应当在每次收到请求时打开一个 SqlSession,返回一个响应,然后关闭它.这个关闭操作是很重要的,你应该把这个关闭操作放到 finally 块中以确保每次都能执行关闭.SqlSession 完全包含了面向数据库执行 SQL 命令所需的所有方法
+* `SqlSessionFactoryBuilder` : 用于构建`SqlSessionFactory`. 我们可以使用它来构建一个单数据源或者多数据源的应用程序.
+* `SqlSessionFactory` : 创建`SqlSession`, 该实例的生命周期应该是整个应用程序.
+* `SqlSession` : 包含了面向数据库执行 SQL 命令所需的所有方法, 但它不是线程安全的. 每当向数据库发起一个请求时都应该打开一个`SqlSession`,然后操作完之后再`finally`中关闭它.
 
-`SqlSessionFactoryBuilder`是通过xml配置文件或者`Configuration`建构出`SqlSessionFactory`, 然后`SqlSessionFactory`通过`openSession()`来获得一个`SqlSession`.
-
-`SqlSession`接口实现自`Closeable`接口. 按照官网所说, 我们应该这样使用`SqlSession`
+## 使用示例
+`SqlSessionFactoryBuilder`是通过xml配置文件或者`Configuration`建构出`SqlSessionFactory`, 然后`SqlSessionFactory`通过`openSession()`来获得一个`SqlSession`. `SqlSession`接口实现自`Closeable`接口. 按照官网所说, 我们应该这样使用`SqlSession`
 ```java
 SqlSession session = sqlSessionFactory.openSession();
 try {
@@ -28,6 +27,7 @@ try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
 ```
 这样代码就精简了很多.
 
+## SqlSession 源码
 `SqlSession`接口中定义了大量的我们操作SQL提供的接口
 * <T> T selectOne(String statement);
 * <E> List<E> selectList(String statement);
@@ -40,7 +40,6 @@ private boolean dirty;
 ```
 * `Configuration` 是我们通过`SqlSessionFactoryBuilder`构建出`SqlSessionFactory`时使用的配置
 * `Executor` 是真正的sql执行的部分
-* `dirty`
 
 我们在`DefaultSqlSessionFactory`看一下`SqlSession`的真实创建过程
 ```java
@@ -80,7 +79,7 @@ private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionI
     }
   }
 ```
-> MappedStatement类在Mybatis框架中用于表示XML文件中一个sql语句节点,即一个<select />、<update />或者<insert />标签.Mybatis框架在初始化阶段会对XML配置文件进行读取,将其中的sql语句节点对象化为一个个MappedStatement对象.
+> MappedStatement类在Mybatis框架中用于表示XML文件中一个sql语句节点,即一个`<select />、<update />`或者`<insert />`标签.Mybatis框架在初始化阶段会对XML配置文件进行读取,将其中的sql语句节点对象化为一个个`MappedStatement`对象.
 从配置中拿到一个`MappedStatement`然后交给executor去真正的执行, 真正的有query逻辑的只有`BaseExecutor`和`CachingExecutor`, 为了简单起见,我们看一下`BaseExecutor`. 由于中间的过程还涉及到了Mybatis的本地存储, 我们也跳过这部分.
 > `BaseExecutor#query()` -> `BaseExecutor#queryFromDatabase()`-> `SimpleExecutor#doQuery()`
 ```java
@@ -154,9 +153,8 @@ public void close(boolean forceRollback) {
   }
 ```
 * `Transaction` : 包装了一个数据库连接. 处理整个网络连接过程中的所有操作, 例如creation, preparation, commit/rollback and close. 
-* `JdbcTransaction` : 
 
-
+## 异常测试
 如果我们不关闭SqlSession会有什么情况发生呢?
 ```java
 import java.io.IOException;

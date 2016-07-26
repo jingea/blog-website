@@ -1,6 +1,6 @@
 category: Java工具
 date: 2015-06-08
-title: java读取csv文件
+title: 读取csv文件
 ---
 利用Apache Commons CSV读取csv文件, 首先我们添加如下依赖
 ```xml
