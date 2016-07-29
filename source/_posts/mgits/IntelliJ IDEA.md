@@ -107,3 +107,6 @@ InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream("./myba
 ## 方法断点、
 在Idea中千万不要加方法断点, 这个会严重的降低服务器性能. 下面那个就是方法断点
 ![](https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20method%20breakpoints.bmp)
+
+## 生成类图
+![](https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20lei%20tu.png)
