@@ -2,6 +2,7 @@ category: linux
 date: 2016-05-30
 title: 终端生成GIF文件
 ---
+## ttystudio
 [ttystudio](https://github.com/chjj/ttystudio)可以将命令行操作制作成gif文件.
 
 安装

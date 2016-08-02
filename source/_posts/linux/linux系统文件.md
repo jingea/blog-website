@@ -1,8 +1,45 @@
 category: linux
 date: 2015-10-15
-title: Linux /proc/cpuinfo
+title: Linux CPU信息
 ---
 
+### pidstat
+监控锁竞争
+```shell
+[root@cvs /]# pidstat
+Linux 2.6.32-279.el6.x86_64 (cvs)       2015年10月15日  _x86_64_        (8 CPU)
+
+PID    %usr %system  %guest    %CPU   CPU  Command
+```
+显式参数
+* PID : 被监控的任务的进程号
+* %usr :  当在用户层执行(应用程序)时这个任务的cpu使用率，和 nice 优先级无关。注意这个字段计算的cpu时间不包括在虚拟处理器中花去的时间。
+* %system :  这个任务在系统层使用时的cpu使用率。
+* %guest ：  任务花费在虚拟机上的cpu使用率（运行在虚拟处理器）。
+* %CPU ：  任务总的cpu使用率。在SMP环境(多处理器)中，如果在命令行中输入-I参数的话，cpu使用率会除以你的cpu数量。
+* CPU ： 正在运行这个任务的处理器编号。
+* Command ： 这个任务的命令名称。
+
+参数
+* -u: pidstat将显示各活动进程的cpu使用统计
+* -p: 我们可以查看特定进程的系统资源使用情况：
+* -r: pidstat将显示各活动进程的内存使用统计：
+* -d: 我们可以查看进程IO的统计信息
+
+-d:
+* kB_rd/s: 每秒进程从磁盘读取的数据量(以kB为单位)
+* kB_wr/s: 每秒进程向磁盘写的数据量(以kB为单位)
+* Command: 拉起进程对应的命令
+
+-r:
+* minflt/s: 每秒次缺页错误次数(minor page faults)，次缺页错误次数意即虚拟内存地址映射成物理内存地址产生的page fault次数
+* majflt/s: 每秒主缺页错误次数(major page faults)，当虚拟内存地址映射成物理内存地址时，相应的page在swap中，这样的page fault为major page fault，一般在内存使用紧张时产生
+* VSZ:      该进程使用的虚拟内存(以kB为单位)
+* RSS:      该进程使用的物理内存(以kB为单位)
+* %MEM:     该进程使用内存的百分比
+* Command:  拉起进程对应的命令
+
+## /proc/cpuinfo
 ```shell
 [root@cvs /]# cat /proc/cpuinfo
 processor       : 0

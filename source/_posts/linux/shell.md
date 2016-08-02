@@ -1,6 +1,6 @@
 category: linux
 date: 2015-10-08
-title: Shell
+title: Shell 编程
 ---
 每个shell脚本文件第一行都要指定使用哪个shell,我们默认使用`#!/bin/bash`
 
