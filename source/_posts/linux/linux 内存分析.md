@@ -1,8 +1,38 @@
+category: linux
+date: 2016-08-02
+title: linux 内存分析
+---
+和[linux 网络监控一探]()一样, 今天的目的是要找出要查看进程的所占用的物理内存, 虚拟内存和缓存等
+
 ## ps
-如下例所示：
-$ ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid'  其中rsz是是实际内存
-$ ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' | grep oracle |  sort -nrk5
-其中rsz为实际内存，上例实现按内存排序，由大到小
+ps命令是Process Status的缩写。ps命令用来列出系统中当前运行的那些进程. 我们看一下它的帮助手册
+```bash
+ERROR: Unsupported SysV option.
+********* simple selection *********  ********* selection by list *********
+-A all processes                      -C by command name
+-N negate selection                   -G by real group ID (supports names)
+-a all w/ tty except session leaders  -U by real user ID (supports names)
+-d all except session leaders         -g by session OR by effective group name
+-e all processes                      -p by process ID
+T  all processes on this terminal     -s processes in the sessions given
+a  all w/ tty, including other users  -t by tty
+g  OBSOLETE -- DO NOT USE             -u by effective user ID (supports names)
+r  only running processes             U  processes for specified users
+x  processes w/o controlling ttys     t  by tty
+*********** output format **********  *********** long options ***********
+-o,o user-defined  -f full            --Group --User --pid --cols --ppid
+-j,j job control   s  signal          --group --user --sid --rows --info
+-O,O preloaded -o  v  virtual memory  --cumulative --format --deselect
+-l,l long          u  user-oriented   --sort --tty --forest --version
+-F   extra full    X  registers       --heading --no-heading --context
+                    ********* misc options *********
+-V,V  show version      L  list format codes  f  ASCII art forest
+-m,m,-L,-T,H  threads   S  children in sum    -y change -l format
+-M,Z  security data     c  true command name  -c scheduling class
+-w,w  wide output       n  numeric WCHAN,UID  -H process hierarchy
+```
+
+
 
 ## free
 free命令可以显示Linux系统中空闲的、已用的物理内存及swap内存,及被内核使用的buffer
@@ -183,3 +213,13 @@ DirectMap1G:    14680064 kB
 * `DirectMap4k`:
 * `DirectMap2M`:
 * `DirectMap1G`:
+
+
+
+本文参考自
+* [你值得拥有：25个Linux性能监控工具](http://os.51cto.com/art/201412/460698_all.htm)
+* [10个重要的Linux ps命令实战](https://linux.cn/article-4743-1.html)
+* []()
+* []()
+* []()
+* []()

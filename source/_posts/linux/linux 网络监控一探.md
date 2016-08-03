@@ -1,3 +1,7 @@
+category: linux
+date: 2016-08-02
+title: linux 网络监控一探
+---
 最近服务器在跑机器人, 看过内存和cpu之后, 想要看一下2500个机器人的流量情况, 打开zabix一看, 我擦嘞 Outgoing network traffic on eth0 的流量居然是从 20M~60M之间浮动, 这不科学啊. 但是后来一想这可能是整个机器的网络带宽, 于是便想找到一款可以以进程或者以端口为单元的监控工具. 
 
 在百度上搜索了一下, 居然有这么多的网络监控工具 (参考[一些你可能不知道的Linux网络工具](http://www.linuxdiyf.com/linux/12131.html))
@@ -108,9 +112,6 @@ PID USER     PROGRAM                                                            
 TOTAL                                                                                                 423.571     138.639 KB/sec 
 ```
 完美, nethogs完美解决了我们的问题
-
-## netstat
-
 
 ## vnStat
 vnStat是一个基于控制台的网络流量监控工具，是为Linux和BSD设计的。它可以保留某个或多个所选择的网络接口的网络流量日志。为了生成日志，vnStat使用内核提供的信息。换句话说，它不会嗅探网络流量，确保尽量少用系统资源。
