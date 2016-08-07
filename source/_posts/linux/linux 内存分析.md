@@ -49,16 +49,7 @@ Swap:        12079       2514       9565
 
 上面涉及了shared，buffers，cached，Swep等四个概念。我们依次看一下
 
-
-为了提高磁盘存取效率, Linux做了一些精心的设计, 除了对dentry进行缓存(用于VFS,加速文件路径名到inode的转换), 还采取了两种主要Cache方式：Buffer Cache和Page Cache。前者针对磁盘块的读写，后者针对文件inode的读写。这些Cache有效缩短了 I/O系统调用(比如read,write,getdents)的时间。
-磁盘的操作有逻辑级（文件系统）和物理级（磁盘块），这两种Cache就是分别缓存逻辑和物理级数据的。
-Page cache实际上是针对文件系统的，是文件的缓存，在文件层面上的数据会缓存到page cache。文件的逻辑层需要映射到实际的物理磁盘，这种映射关系由文件系统来完成。当page cache的数据需要刷新时，page cache中的数据交给buffer cache，因为Buffer Cache就是缓存磁盘块的。但是这种处理在2.6版本的内核之后就变的很简单了，没有真正意义上的cache操作。
-Buffer cache是针对磁盘块的缓存，也就是在没有文件系统的情况下，直接对磁盘进行操作的数据会缓存到buffer cache中，例如，文件系统的元数据都会缓存到buffer cache中。
-简单说来，page cache用来缓存文件数据，buffer cache用来缓存磁盘数据。在有文件系统的情况下，对文件操作，那么数据会缓存到page cache，如果直接采用dd等工具对磁盘进行读写，那么数据会缓存到buffer cache。
-所以我们看linux,只要不用swap的交换空间,就不用担心自己的内存太少.如果常常swap用很多,可能你就要考虑加物理内存了.这也是linux看内存是否够用的标准.
-
-Linux内存管理Swap和Buffer Cache机制
-一个完整的Linux系统主要有存储管理，内存管理，文件系统和进程管理等几方面组成，贴出一些以前学习过的一个很好的文章。与大家共享！以下主要说明Swap和Buffer Cache机制。 
+### Swap Space
 Linux支持虚拟内存（virtual memory），虚拟内存是指使用磁盘当作RAM的扩展，这样可用的内存的大小就相应地增大了。内核会将暂时不用的内存块的内容写到硬盘上，这样一来，这块内存就可用于其它目的。当需要用到原始的内容时，它们被重新读入内存。这些操作对用户来说是完全透明的；Linux下运行的程序只是看到有大量的内存可供使用而并没有注意到时不时它们的一部分是驻留在硬盘上的。当然，读写硬盘要比直接使用真实内存慢得多（要慢数千倍），所以程序就不会象一直在内存中运行的那样快。用作虚拟内存的硬盘部分被称为交换空间（Swap Space）。
 一般，在交换空间中的页面首先被换入内存；如果此时没有足够的物理内存来容纳它们又将被交换出来（到其他的交换空间中）。如果没有足够的虚拟内存来容纳所有这些页面，Linux就会波动而不正常；但经过一段较长的时间Linux会恢复，但此时系统已不可用了。
 有时，尽管有许多的空闲内存，仍然会有许多的交换空间正被使用。这种情况是有可能发生的，例如如果在某一时刻有进行交换的必要，但后来一个占用很多物理内存的大进程结束并释放内存时。被交换出的数据并不会自动地交换进内存，除非有这个需要时。此时物理内存会在一段时间内保持空闲状态。对此并没有什么可担心的，但是知道了是怎么一回事，也就无所谓了。
@@ -82,6 +73,33 @@ Linux系统常常动不动就使用交换空间，以保持尽可能多的空闲
 
 
 ## top
+```bash
+Processes: 242 total, 2 running, 5 stuck, 235 sleeping, 1138 threads   02:35:51
+Load Avg: 2.38, 2.40, 2.38  CPU usage: 6.9% user, 5.36% sys, 88.53% idle
+SharedLibs: 155M resident, 20M data, 19M linkedit.
+MemRegions: 39333 total, 1602M resident, 82M private, 525M shared.
+PhysMem: 4868M used (1159M wired), 1274M unused.
+VM: 653G vsize, 535M framework vsize, 5083(0) swapins, 6580(0) swapouts.
+Networks: packets: 10717311/13G in, 7678812/1169M out.
+Disks: 353264/11G read, 895849/24G written.
+
+PID   COMMAND      %CPU TIME     #TH   #WQ  #PORT MEM    PURG   CMPRS  PGRP PPID
+6652  top          2.1  00:00.33 1/1   0    21    2164K  0B     0B     6652 4942
+6651  Preview      0.0  00:00.84 4     1    220   20M    192K   0B     6651 1
+6471  ShipIt       0.0  00:00.02 2     1    43    1276K  0B     0B     6471 1
+6436  crashpad_han 0.0  00:00.01 3     0    25    824K   0B     0B     6435 1
+6434  Atom Helper  0.0  00:00.29 4     0    71    10M    0B     0B     6432 6432
+6432  Atom         0.0  00:11.99 26    0    326   50M    0B     0B     6432 1
+6333  com.apple.We 0.0  00:00.67 9     0    221   19M    0B     0B     6333 1
+6332  com.apple.We 0.0  00:10.10 12    0    197   150M   22M    0B     6332 1
+5142  mdworker     0.0  00:00.07 3     0    49    3116K  0B     0B     5142 1
+5090  mdworker     0.0  00:00.09 3     0    49    3104K  0B     0B     5090 1
+5089  mdworker     0.0  00:00.11 3     0    49    3128K  0B     0B     5089 1
+5088  mdworker     0.0  00:00.08 3     0    49    3116K  0B     0B     5088 1
+5087  mdworker     0.0  00:00.11 3     0    49    3052K  0B     0B     5087 1
+5086  mdworker     0.0  00:00.12 3     0    49    3116K  0B     0B     5086 1
+5085  mdworker     0.0  00:00.11 3     0    49    3076K  0B     0B     5085 1
+```
 
 ## pmap
 
@@ -154,7 +172,7 @@ procs  -----------memory----------     ---swap--  -----io----  --system--   ----
 
 
 ## /proc/meminfo
-
+上面的ps, top等工具都是从`/proc/meminfo`这个文件里获取的数据, 因此看一下这个文件
 ```shell
 [root@cvs /]# cat /proc/meminfo
 MemTotal:       16282756 kB
@@ -250,7 +268,3 @@ DirectMap1G:    14680064 kB
 本文参考自
 * [你值得拥有：25个Linux性能监控工具](http://os.51cto.com/art/201412/460698_all.htm)
 * [10个重要的Linux ps命令实战](https://linux.cn/article-4743-1.html)
-* []()
-* []()
-* []()
-* []()

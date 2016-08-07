@@ -1,10 +1,10 @@
 category: linux
 date: 2016-08-02
-title: linux ÍøÂç¼à¿ØÒ»Ì½
+title: linux ç½‘ç»œç›‘æŽ§ä¸€æŽ¢
 ---
-×î½ü·þÎñÆ÷ÔÚÅÜ»úÆ÷ÈË, ¿´¹ýÄÚ´æºÍcpuÖ®ºó, ÏëÒª¿´Ò»ÏÂ2500¸ö»úÆ÷ÈËµÄÁ÷Á¿Çé¿ö, ´ò¿ªzabixÒ»¿´, ÎÒ²ÁàÏ Outgoing network traffic on eth0 µÄÁ÷Á¿¾ÓÈ»ÊÇ´Ó 20M~60MÖ®¼ä¸¡¶¯, Õâ²»¿ÆÑ§°¡. µ«ÊÇºóÀ´Ò»ÏëÕâ¿ÉÄÜÊÇÕû¸ö»úÆ÷µÄÍøÂç´ø¿í, ÓÚÊÇ±ãÏëÕÒµ½Ò»¿î¿ÉÒÔÒÔ½ø³Ì»òÕßÒÔ¶Ë¿ÚÎªµ¥ÔªµÄ¼à¿Ø¹¤¾ß. 
+æœ€è¿‘æœåŠ¡å™¨åœ¨è·‘æœºå™¨äºº, çœ‹è¿‡å†…å­˜å’Œcpuä¹‹åŽ, æƒ³è¦çœ‹ä¸€ä¸‹2500ä¸ªæœºå™¨äººçš„æµé‡æƒ…å†µ, æ‰“å¼€zabixä¸€çœ‹, æˆ‘æ“¦å˜ž Outgoing network traffic on eth0 çš„æµé‡å±…ç„¶æ˜¯ä»Ž 20M~60Mä¹‹é—´æµ®åŠ¨, è¿™ä¸ç§‘å­¦å•Š. ä½†æ˜¯åŽæ¥ä¸€æƒ³è¿™å¯èƒ½æ˜¯æ•´ä¸ªæœºå™¨çš„ç½‘ç»œå¸¦å®½, äºŽæ˜¯ä¾¿æƒ³æ‰¾åˆ°ä¸€æ¬¾å¯ä»¥ä»¥è¿›ç¨‹æˆ–è€…ä»¥ç«¯å£ä¸ºå•å…ƒçš„ç›‘æŽ§å·¥å…·. 
 
-ÔÚ°Ù¶ÈÉÏËÑË÷ÁËÒ»ÏÂ, ¾ÓÈ»ÓÐÕâÃ´¶àµÄÍøÂç¼à¿Ø¹¤¾ß (²Î¿¼[Ò»Ð©Äã¿ÉÄÜ²»ÖªµÀµÄLinuxÍøÂç¹¤¾ß](http://www.linuxdiyf.com/linux/12131.html))
+åœ¨ç™¾åº¦ä¸Šæœç´¢äº†ä¸€ä¸‹, å±…ç„¶æœ‰è¿™ä¹ˆå¤šçš„ç½‘ç»œç›‘æŽ§å·¥å…· (å‚è€ƒ[ä¸€äº›ä½ å¯èƒ½ä¸çŸ¥é“çš„Linuxç½‘ç»œå·¥å…·](http://www.linuxdiyf.com/linux/12131.html))
 * nethogs
 * ntopng
 * nload
@@ -23,16 +23,16 @@ title: linux ÍøÂç¼à¿ØÒ»Ì½
 * jnettop
 * netspeed 
 * speedometer
-ÏÂÃæ¾Í¿ªÊ¼ÁËÎÒµÄÌ½Ë÷Ö®ÂÃ
+ä¸‹é¢å°±å¼€å§‹äº†æˆ‘çš„æŽ¢ç´¢ä¹‹æ—…
 
 ## iftop
-Ê×ÏÈÕÒµ½µÄÊÇÕâ¸öÈí¼þ, ÌýËµËü¿ÉÒÔÊµÏÖÎÒµÄÒªÇó, ÓÚÊÇ¿ªÊ¼°²×°
+é¦–å…ˆæ‰¾åˆ°çš„æ˜¯è¿™ä¸ªè½¯ä»¶, å¬è¯´å®ƒå¯ä»¥å®žçŽ°æˆ‘çš„è¦æ±‚, äºŽæ˜¯å¼€å§‹å®‰è£…
 
-Ê×ÏÈÖ´ÐÐÏÂÁÐÃüÁî½øÐÐ°²×°
+é¦–å…ˆæ‰§è¡Œä¸‹åˆ—å‘½ä»¤è¿›è¡Œå®‰è£…
 ```
 yum install flex byacc  libpcap ncurses ncurses-devel libpcap-devel 
 ```
-ok, ÒÀÀµ°²×°Íê³É,µ«ÊÇÔÚ`yum install iftop`Ê±ÌáÊ¾
+ok, ä¾èµ–å®‰è£…å®Œæˆ,ä½†æ˜¯åœ¨`yum install iftop`æ—¶æç¤º
 ```
 [root@~]# yum install iftop
 Loaded plugins: fastestmirror, refresh-packagekit, security
@@ -52,47 +52,47 @@ Error: Package: iftop-1.0-0.7.pre4.el5.x86_64 (epel)
  You could try using --skip-broken to work around the problem
  You could try running: rpm -Va --nofiles --nodigest
 ```
-¶ÔlibpcapµÄÒÀÀµºÍÎÒÃÇ°²×°µÄ°æ±¾²»Ò»ÖÂ, ÓÚÊÇÎÒ³¢ÊÔÏÂÔØ°²×°°üÊÖ¶¯°²×°ÊÔÊÔ
+å¯¹libpcapçš„ä¾èµ–å’Œæˆ‘ä»¬å®‰è£…çš„ç‰ˆæœ¬ä¸ä¸€è‡´, äºŽæ˜¯æˆ‘å°è¯•ä¸‹è½½å®‰è£…åŒ…æ‰‹åŠ¨å®‰è£…è¯•è¯•
 ```
 wget http://www.ex-parrot.com/~pdw/iftop/download/iftop-0.17.tar.gz
 cd iftop-0.17
 ./configure
 make && make install
 ```
-°²×°Íê³É, ÊÔÊÔÓÐÃ»ÓÐ°²×°³É¹¦
+å®‰è£…å®Œæˆ, è¯•è¯•æœ‰æ²¡æœ‰å®‰è£…æˆåŠŸ
 ```
 iftop
 ```
-ok³É¹¦½øÈë.
+okæˆåŠŸè¿›å…¥.
 
 
-½çÃæÉÏÃæÏÔÊ¾µÄÊÇÀàËÆ¿Ì¶È³ßµÄ¿Ì¶È·¶Î§£¬ÎªÏÔÊ¾Á÷Á¿Í¼ÐÎµÄ³¤Ìõ×÷±ê³ßÓÃµÄ¡£ÖÐ¼äµÄ<= =>ÕâÁ½¸ö×óÓÒ¼ýÍ·£¬±íÊ¾µÄÊÇÁ÷Á¿µÄ·½Ïò¡£
+ç•Œé¢ä¸Šé¢æ˜¾ç¤ºçš„æ˜¯ç±»ä¼¼åˆ»åº¦å°ºçš„åˆ»åº¦èŒƒå›´ï¼Œä¸ºæ˜¾ç¤ºæµé‡å›¾å½¢çš„é•¿æ¡ä½œæ ‡å°ºç”¨çš„ã€‚ä¸­é—´çš„<= =>è¿™ä¸¤ä¸ªå·¦å³ç®­å¤´ï¼Œè¡¨ç¤ºçš„æ˜¯æµé‡çš„æ–¹å‘ã€‚
 
-* TX£º·¢ËÍÁ÷Á¿
-* RX£º½ÓÊÕÁ÷Á¿
-* TOTAL£º×ÜÁ÷Á¿
-* Cumm£ºÔËÐÐiftopµ½Ä¿Ç°Ê±¼äµÄ×ÜÁ÷Á¿
-* peak£ºÁ÷Á¿·åÖµ
-* rates£º·Ö±ð±íÊ¾¹ýÈ¥ 2s 10s 40s µÄÆ½¾ùÁ÷Á¿
+* TXï¼šå‘é€æµé‡
+* RXï¼šæŽ¥æ”¶æµé‡
+* TOTALï¼šæ€»æµé‡
+* Cummï¼šè¿è¡Œiftopåˆ°ç›®å‰æ—¶é—´çš„æ€»æµé‡
+* peakï¼šæµé‡å³°å€¼
+* ratesï¼šåˆ†åˆ«è¡¨ç¤ºè¿‡åŽ» 2s 10s 40s çš„å¹³å‡æµé‡
 
-Õâ¸ö½çÃæÊÇÒÔÃ¿¸ö¿Í»§¶ËÁ¬½Óµ½·þÎñÆ÷µÄÁ¬½ÓÎªµ¥Î»½øÐÐÏÔÊ¾µÄ. ËäÈ»´ï²»µ½ÒªÒÔ±¾»úÎªµ¥Î»ÏÔÊ¾¶Ë¿ÚºÍ½ø³ÌµÄ´ø¿íºÍÁ÷Á¿, µ«ÊÇÒ²Âù²»´íµÄÁË.
+è¿™ä¸ªç•Œé¢æ˜¯ä»¥æ¯ä¸ªå®¢æˆ·ç«¯è¿žæŽ¥åˆ°æœåŠ¡å™¨çš„è¿žæŽ¥ä¸ºå•ä½è¿›è¡Œæ˜¾ç¤ºçš„. è™½ç„¶è¾¾ä¸åˆ°è¦ä»¥æœ¬æœºä¸ºå•ä½æ˜¾ç¤ºç«¯å£å’Œè¿›ç¨‹çš„å¸¦å®½å’Œæµé‡, ä½†æ˜¯ä¹Ÿè›®ä¸é”™çš„äº†.
 
-> ¾ßÌåÕâ¸öÈí¼þµÄÆäËû²ÎÊý,´ó¼Ò¿ÉÒÔ°Ù¶ÈÒ»ÏÂ
+> å…·ä½“è¿™ä¸ªè½¯ä»¶çš„å…¶ä»–å‚æ•°,å¤§å®¶å¯ä»¥ç™¾åº¦ä¸€ä¸‹
 
 ## iptraf
-ºóÀ´ÓÖÕÒµ½ÁËiptrafÕâ¸öÈí¼þ, ÊÇÒ»¸ö»ùÓÚncursesµÄIP¾ÖÓòÍø¼à¿ØÆ÷£¬ÓÃÀ´Éú³É°üÀ¨TCPÐÅÏ¢¡¢UDP¼ÆÊý¡¢ICMPºÍOSPFÐÅÏ¢¡¢ÒÔÌ«Íø¸ºÔØÐÅÏ¢¡¢½Úµã×´Ì¬ÐÅÏ¢¡¢IPÐ£ÑéºÍ´íÎóµÈµÈÍ³¼ÆÊý¾Ý¡£
+åŽæ¥åˆæ‰¾åˆ°äº†iptrafè¿™ä¸ªè½¯ä»¶, æ˜¯ä¸€ä¸ªåŸºäºŽncursesçš„IPå±€åŸŸç½‘ç›‘æŽ§å™¨ï¼Œç”¨æ¥ç”ŸæˆåŒ…æ‹¬TCPä¿¡æ¯ã€UDPè®¡æ•°ã€ICMPå’ŒOSPFä¿¡æ¯ã€ä»¥å¤ªç½‘è´Ÿè½½ä¿¡æ¯ã€èŠ‚ç‚¹çŠ¶æ€ä¿¡æ¯ã€IPæ ¡éªŒå’Œé”™è¯¯ç­‰ç­‰ç»Ÿè®¡æ•°æ®ã€‚
 
 
-Õâ¸öÈí¼þ°²×°ºÜ¼òµ¥, ²»ÐèÒª°²×°Ê²Ã´ÒÀÀµ
+è¿™ä¸ªè½¯ä»¶å®‰è£…å¾ˆç®€å•, ä¸éœ€è¦å®‰è£…ä»€ä¹ˆä¾èµ–
 ```
 yum install iptraf
 ```
-´ò¿ª¿´ÁËÒ»ÏÂ, Õâ¸öÈí¼þ¸ü¶àµÄÊÇ»ùÓÚÍø¿¨, ºÍIP½øÐÐ¼àÌý. ËäÈ»ÔÚStaticstics breakdownsÉÏ¿ÉÒÔ¿´µ½¶Ë¿ÚÐÅÏ¢, µ«ÊÇ²»ÖªµÀÎªÊ²Ã´Ã»ÓÐ¿´µ½Ó¦ÓÃ³ÌÐòµÄ¶Ë¿Ú. Ã»°ì·¨½Ó×Å°Ù¶È, ÓÚÊÇÔÚÕâÆªÎÄÕÂÀïÕÒµ½ÁË´ð°¸[LinuxÖÐiptrafÃüÁîÏê½â](http://blog.csdn.net/quiet_girl/article/details/50777210)Ô­À´ÔÚConfigureÀïµÄAdditional portsÀïÉèÖÃÐèÒª¼àÌýµÄ¶Ë¿Ú, Ä¬ÈÏÖ»¼àÌý1000ÒÔÏÂµÄ. 
+æ‰“å¼€çœ‹äº†ä¸€ä¸‹, è¿™ä¸ªè½¯ä»¶æ›´å¤šçš„æ˜¯åŸºäºŽç½‘å¡, å’ŒIPè¿›è¡Œç›‘å¬. è™½ç„¶åœ¨Staticstics breakdownsä¸Šå¯ä»¥çœ‹åˆ°ç«¯å£ä¿¡æ¯, ä½†æ˜¯ä¸çŸ¥é“ä¸ºä»€ä¹ˆæ²¡æœ‰çœ‹åˆ°åº”ç”¨ç¨‹åºçš„ç«¯å£. æ²¡åŠžæ³•æŽ¥ç€ç™¾åº¦, äºŽæ˜¯åœ¨è¿™ç¯‡æ–‡ç« é‡Œæ‰¾åˆ°äº†ç­”æ¡ˆ[Linuxä¸­iptrafå‘½ä»¤è¯¦è§£](http://blog.csdn.net/quiet_girl/article/details/50777210)åŽŸæ¥åœ¨Configureé‡Œçš„Additional portsé‡Œè®¾ç½®éœ€è¦ç›‘å¬çš„ç«¯å£, é»˜è®¤åªç›‘å¬1000ä»¥ä¸‹çš„. 
 
-ÉèÖÃÍêÒÔºó, ÔÙ´Î½øÈëStaticstics breakdowns¿ÉÒÔ¿´µ½ÎÒÃÇÒª¼à¿ØµÄ¶Ë¿ÚÁË, µ«ÊÇ¼à²âµÄ³öÀ´µÄ»¹ÓÐÆäËûÃ»ÓÐÔÚÎÒÉè¶¨ÄÇ¸ö·¶Î§ÀïµÄ¶Ë¿Ú¡£ àÅ£¬ÓÖÑÐ¾¿ÁËÒ»ÏÂ,·¢ÏÖÔÚ¶Ë¿ÚÅäÖÃÀïÊÇ¿ÉÒÔÑ¡Ôñ¶à¸ö¶Ë¿ÚµÄ. Ö»ÒªÅäÖÃ¶à¸ö¶Ë¿Ú¾Í¿ÉÒÔÁË. µ«ÊÇ»¹ÓÐ¸öÎÊÌâ, ¾ÍÊÇÍ³¼ÆµÄÁ÷Á¿¶¼ÊÇ×Ü¼ÆµÄ,Ã»ÓÐÊµÊ±»òÕßÆ½¾ùÖµ.
+è®¾ç½®å®Œä»¥åŽ, å†æ¬¡è¿›å…¥Staticstics breakdownså¯ä»¥çœ‹åˆ°æˆ‘ä»¬è¦ç›‘æŽ§çš„ç«¯å£äº†, ä½†æ˜¯ç›‘æµ‹çš„å‡ºæ¥çš„è¿˜æœ‰å…¶ä»–æ²¡æœ‰åœ¨æˆ‘è®¾å®šé‚£ä¸ªèŒƒå›´é‡Œçš„ç«¯å£ã€‚ å—¯ï¼Œåˆç ”ç©¶äº†ä¸€ä¸‹,å‘çŽ°åœ¨ç«¯å£é…ç½®é‡Œæ˜¯å¯ä»¥é€‰æ‹©å¤šä¸ªç«¯å£çš„. åªè¦é…ç½®å¤šä¸ªç«¯å£å°±å¯ä»¥äº†. ä½†æ˜¯è¿˜æœ‰ä¸ªé—®é¢˜, å°±æ˜¯ç»Ÿè®¡çš„æµé‡éƒ½æ˜¯æ€»è®¡çš„,æ²¡æœ‰å®žæ—¶æˆ–è€…å¹³å‡å€¼.
 
 ## nethogs
-nethogs »á¸ù¾Ý½ø³ÌÀ´½øÐÐ·Ö×é(ok,µÚÒ»¸öÒªÇó´ïµ½ÁË), ¶øÇÒ´ò¿ªÖ®ºóÒ²»áÏÔÊ¾¸Ã½ø³ÌµÄÊµÊ±Á÷Á¿.
+nethogs ä¼šæ ¹æ®è¿›ç¨‹æ¥è¿›è¡Œåˆ†ç»„(ok,ç¬¬ä¸€ä¸ªè¦æ±‚è¾¾åˆ°äº†), è€Œä¸”æ‰“å¼€ä¹‹åŽä¹Ÿä¼šæ˜¾ç¤ºè¯¥è¿›ç¨‹çš„å®žæ—¶æµé‡.
 ```bash
 [root@~]# nethogs -p eth0
 
@@ -101,7 +101,7 @@ NetHogs version 0.8.0
 PID USER     PROGRAM                                                                        DEV       SEN         RECEIVED       
 23095 root   java                                                                           eth0      421.746     138.566 KB/sec
 10867 root     sshd: root@pts/1                                                             eth0      1.825       0.059 KB/sec
-?     root     192.168.15.25:10050-192.168.15.12:48691                                      		  0.000       0.014 KB/sec
+?     root     192.168.15.25:10050-192.168.15.12:48691                                            0.000       0.014 KB/sec
 ?     root     192.168.15.25:19001-192.168.10.220:26680                                               0.000       0.000 KB/sec
 ?     root     192.168.15.25:10050-192.168.15.12:48608                                                0.000       0.000 KB/sec
 ?     root     192.168.15.25:10050-192.168.15.12:48096                                                0.000       0.000 KB/sec
@@ -111,10 +111,10 @@ PID USER     PROGRAM                                                            
 
 TOTAL                                                                                                 423.571     138.639 KB/sec 
 ```
-ÍêÃÀ, nethogsÍêÃÀ½â¾öÁËÎÒÃÇµÄÎÊÌâ
+å®Œç¾Ž, nethogså®Œç¾Žè§£å†³äº†æˆ‘ä»¬çš„é—®é¢˜
 
 ## vnStat
-vnStatÊÇÒ»¸ö»ùÓÚ¿ØÖÆÌ¨µÄÍøÂçÁ÷Á¿¼à¿Ø¹¤¾ß£¬ÊÇÎªLinuxºÍBSDÉè¼ÆµÄ¡£Ëü¿ÉÒÔ±£ÁôÄ³¸ö»ò¶à¸öËùÑ¡ÔñµÄÍøÂç½Ó¿ÚµÄÍøÂçÁ÷Á¿ÈÕÖ¾¡£ÎªÁËÉú³ÉÈÕÖ¾£¬vnStatÊ¹ÓÃÄÚºËÌá¹©µÄÐÅÏ¢¡£»»¾ä»°Ëµ£¬Ëü²»»áÐáÌ½ÍøÂçÁ÷Á¿£¬È·±£¾¡Á¿ÉÙÓÃÏµÍ³×ÊÔ´¡£
+vnStatæ˜¯ä¸€ä¸ªåŸºäºŽæŽ§åˆ¶å°çš„ç½‘ç»œæµé‡ç›‘æŽ§å·¥å…·ï¼Œæ˜¯ä¸ºLinuxå’ŒBSDè®¾è®¡çš„ã€‚å®ƒå¯ä»¥ä¿ç•™æŸä¸ªæˆ–å¤šä¸ªæ‰€é€‰æ‹©çš„ç½‘ç»œæŽ¥å£çš„ç½‘ç»œæµé‡æ—¥å¿—ã€‚ä¸ºäº†ç”Ÿæˆæ—¥å¿—ï¼ŒvnStatä½¿ç”¨å†…æ ¸æä¾›çš„ä¿¡æ¯ã€‚æ¢å¥è¯è¯´ï¼Œå®ƒä¸ä¼šå—…æŽ¢ç½‘ç»œæµé‡ï¼Œç¡®ä¿å°½é‡å°‘ç”¨ç³»ç»Ÿèµ„æºã€‚
 ```bash
 [root@ ~]# vnstat --help
  vnStat 1.6 by Teemu Toivola <tst at iki dot fi>
@@ -131,11 +131,11 @@ vnStatÊÇÒ»¸ö»ùÓÚ¿ØÖÆÌ¨µÄÍøÂçÁ÷Á¿¼à¿Ø¹¤¾ß£¬ÊÇÎªLinuxºÍBSDÉè¼ÆµÄ¡£Ëü¿ÉÒÔ±£ÁôÄ³¸ö»ò
          -?,  --help           short help
          -v,  --version        show version
          -tr, --traffic        calculate traffic
-         -l,  --live           ÊµÊ±ÏÔÊ¾Á÷Á¿Êý¾Ý
+         -l,  --live           å®žæ—¶æ˜¾ç¤ºæµé‡æ•°æ®
 
 See also "--longhelp" for complete options list and "man vnstat".
 ```
-²âÊÔ
+æµ‹è¯•
 ```bash
 [root@ ~]# vnstat 
 Database updated: Tue Aug  2 14:08:15 2016
@@ -191,9 +191,9 @@ Database updated: Tue Aug  2 14:08:56 2016
         estimated      1.18 GB |    4.03 GB |    5.21 GB
 [root@ ~]#  
 ```
-ÎÒÃÇ¿´µ½Ö»ÓÐÊ¹ÓÃÁË`-u`²ÎÊý½«Êý¾Ý¸üÐÂµ½Êý¾Ý¿âÖ®ºó, ²ÅÄÜÔÙ´ÎÊ¹ÓÃvnstatÊ±½«Êý¾ÝÏÔÊ¾³öÀ´. Òò´Ëcnstat¸üÏñÊÇÒ»¸öÀúÊ·¼ÇÂ¼¹¤¾ß
+æˆ‘ä»¬çœ‹åˆ°åªæœ‰ä½¿ç”¨äº†`-u`å‚æ•°å°†æ•°æ®æ›´æ–°åˆ°æ•°æ®åº“ä¹‹åŽ, æ‰èƒ½å†æ¬¡ä½¿ç”¨vnstatæ—¶å°†æ•°æ®æ˜¾ç¤ºå‡ºæ¥. å› æ­¤cnstatæ›´åƒæ˜¯ä¸€ä¸ªåŽ†å²è®°å½•å·¥å…·
 
 ## tcpdump
-¶ÔÍøÂçÉÏµÄÊý¾Ý°ü½øÐÐ½Ø»ñµÄ°ü·ÖÎö¹¤¾ß. ËäÈ»Õâ¸ö¹¤¾ß, ²»ÊÇ½â¾ö½ñÌìÕâ¸öÎÊÌâ, µ«ÊÇ»¹ÊÇÔÚÕâÀï¼ÇÂ¼Ò»ÏÂ, ÍòÒ»ÓÃµÃµ½ÄØ
+å¯¹ç½‘ç»œä¸Šçš„æ•°æ®åŒ…è¿›è¡ŒæˆªèŽ·çš„åŒ…åˆ†æžå·¥å…·. è™½ç„¶è¿™ä¸ªå·¥å…·, ä¸æ˜¯è§£å†³ä»Šå¤©è¿™ä¸ªé—®é¢˜, ä½†æ˜¯è¿˜æ˜¯åœ¨è¿™é‡Œè®°å½•ä¸€ä¸‹, ä¸‡ä¸€ç”¨å¾—åˆ°å‘¢
 
-> ÁíÍâ»¹ÓÐtcpflow¹¤¾ß, Óëtcpdump²»Í¬µÄÊÇËüÊÇÒÔÁ÷Îªµ¥Î»ÏÔÊ¾Êý¾ÝÄÚÈÝ£¬¶øcpdumpÒÔ°üÎªµ¥Î»ÏÔÊ¾Êý¾Ý¡£
+> å¦å¤–è¿˜æœ‰tcpflowå·¥å…·, ä¸Žtcpdumpä¸åŒçš„æ˜¯å®ƒæ˜¯ä»¥æµä¸ºå•ä½æ˜¾ç¤ºæ•°æ®å†…å®¹ï¼Œè€Œcpdumpä»¥åŒ…ä¸ºå•ä½æ˜¾ç¤ºæ•°æ®ã€‚
