@@ -29,11 +29,11 @@ title: linux 网络监控一探
 首先找到的是这个软件, 听说它可以实现我的要求, 于是开始安装
 
 首先执行下列命令进行安装
-```
+```bash
 yum install flex byacc  libpcap ncurses ncurses-devel libpcap-devel 
 ```
 ok, 依赖安装完成,但是在`yum install iftop`时提示
-```
+```bash
 [root@~]# yum install iftop
 Loaded plugins: fastestmirror, refresh-packagekit, security
 Loading mirror speeds from cached hostfile
@@ -53,14 +53,14 @@ Error: Package: iftop-1.0-0.7.pre4.el5.x86_64 (epel)
  You could try running: rpm -Va --nofiles --nodigest
 ```
 对libpcap的依赖和我们安装的版本不一致, 于是我尝试下载安装包手动安装试试
-```
+```bash
 wget http://www.ex-parrot.com/~pdw/iftop/download/iftop-0.17.tar.gz
 cd iftop-0.17
 ./configure
 make && make install
 ```
 安装完成, 试试有没有安装成功
-```
+```bash
 iftop
 ```
 ok成功进入.
@@ -84,7 +84,7 @@ ok成功进入.
 
 
 这个软件安装很简单, 不需要安装什么依赖
-```
+```bash
 yum install iptraf
 ```
 打开看了一下, 这个软件更多的是基于网卡, 和IP进行监听. 虽然在Staticstics breakdowns上可以看到端口信息, 但是不知道为什么没有看到应用程序的端口. 没办法接着百度, 于是在这篇文章里找到了答案[Linux中iptraf命令详解](http://blog.csdn.net/quiet_girl/article/details/50777210)原来在Configure里的Additional ports里设置需要监听的端口, 默认只监听1000以下的. 
