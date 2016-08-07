@@ -1,6 +1,6 @@
 category: linux
 date: 2015-10-15
-title: Linux系统命令
+title: Linux io相关
 ---
 
 ### iostat
@@ -74,9 +74,6 @@ Linux test 2.6.32-431.el6.x86_64 #1 SMP Fri Nov 22 03:15:09 UTC 2013 x86_64 x86_
 ```
 
 > 查看发行版本 `cat /etc/issue`
-
-
-
 
 ### df
 检查文件系统的磁盘空间占用情况
