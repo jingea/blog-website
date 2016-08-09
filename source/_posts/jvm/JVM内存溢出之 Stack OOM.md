@@ -1,6 +1,6 @@
 category: JVM
 date: 2014-09-06
-title: JVM内存溢出之 Heap OOM
+title: JVM内存溢出之 栈 OOM
 ---
 溢出代码
 ```java
@@ -27,8 +27,21 @@ D:\testOOM>java -XX:+HeapDumpOnOutOfMemoryError -Xss1M TestStackSOF
 stack length:22427. null
 ```
 1M的栈空间大概能执行以上那个简单方法的22427次. 这个次数并不是在编译期就决定的,而是在运行时根据具体的内存使用情况而变化的. 
-我们还注意到使用`-XX:+HeapDumpOnOutOfMemoryError`并不能产生堆内存溢出错误, 也没有产生类似于java_pid19212.hprof文件的文件.
 
+下面的代码
+```java
+public class Test {
+
+        public static void stackLeak() {
+                stackLeak();
+        }
+        public static void main(String[] args) {
+                stackLeak();
+        }
+}
+```
+使用`-XX:+HeapDumpOnOutOfMemoryError`并不能产生堆内存溢出错误, 也没有产生类似于java_pid19212.hprof文件的文件.
+使用`java -XX:ErrorFile=./error.log -Xss1M Test` 也没有产生错误文件
 上面的并没有产生
 ```java
 public class JavaVMStackOOM {
