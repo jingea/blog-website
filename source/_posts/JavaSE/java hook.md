@@ -10,7 +10,7 @@ title: JAVA钩子程序
 对于addShutdownHook中的钩子代码，也是有一些要注意的地方，下面列举几点：
 1. 关闭钩子可以注册多个，在关闭JVM时就会起多个线程来运行钩子。通常来说，一个钩子就足够了，但如果需要启用多个钩子，就需要注意并发带来的问题。
 2. 钩子里也要注意对异常的处理，如果不幸抛出了异常，那么钩子的执行序列就会被终止。
-3. 在钩子运行期间，工作线程也在运行，需要考虑到工作线程是否会对钩子的执行带来影响，我最近发现的一个bug就是这种情况
+3. 在钩子运行期间，工作线程也在运行，需要考虑到工作线程是否会对钩子的执行带来影响
 4. 钩子里的代码尽可能简洁，否则当像系统关闭等情景可能钩子来不及运行完JVM就被退出了。
 
 
@@ -256,7 +256,18 @@ D:\testOOM>
 ```
 
 ## 不被触发
+再google上找到了一篇这样的文章[Know the JVM Series: Shutdown Hooks](https://dzone.com/articles/know-jvm-series-2-shutdown)里面介绍了钩子程序在什么情况下不会执行
 尽管上面列举出了N多触发钩子程序的示例, 但是并不保证这个钩子程序总是能被触发执行的, 例如
 * JVM内部发生错误, 可能还没有来得及触发钩子程序, JVM就挂掉了(JVM 发生内部错误, 有没有日志呢?)
 * 还有上面我们给出的那个信号表, 如果操作系统发送出上面的信号的话, 同样的, JVM没有执行钩子程序就退出了
 * 还有调用`Runime.halt()`函数也不会执行钩子程序
+
+还有一种情况是, 当操作系统向进程发送一个`SIGTERM`信号之后, 如果进程没有在指定的时间之内关闭, 那么操作系统会强制将该进程杀掉, 如此一来钩子程序也不会得到完整的执行(因为钩子程序可能执行到一半就被操作系统杀死了). 因此不管是这篇文章还是JDK API都推荐不要在钩子程序里写复杂的业务逻辑, 避免产生死锁或者产生长时间的IO操作, 尽可能快地让钩子程序执行完毕.
+
+在oracle上的[Design of the Shutdown Hooks API](http://docs.oracle.com/javase/1.5.0/docs/guide/lang/hook-design.html)同样见到这样一句话,
+```bash
+Will shutdown hooks be run if the VM crashes?
+	If the VM crashes due to an error in native code then no guarantee can be made about whether or not the hooks will be run.
+```
+哎,, 怎么着才能监控JVM挂掉的信息呢？
+
