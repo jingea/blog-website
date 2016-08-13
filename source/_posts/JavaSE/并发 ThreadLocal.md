@@ -2,6 +2,7 @@ category: JavaSE
 date: 2016-06-07
 title: ThreadLocal
 ---
+## 应用
 项目中使用了`java.text.SimpleDateFormat`, 但是却将其声明为`static`. 在Oracle的Java API文档中是这样说明的
 ```bash
 Synchronization
@@ -43,6 +44,7 @@ public class Test {
 ```
 我们看到了ThreadLocal的使用很简单, 首先是分配一个ThreadLocal对象, 然后接下来就通关get, set进行操作就ok了
 
+## 原理
 下来看一下ThreadLocal的实现(我们不详细剖析源码, 只是大概看一下流程)
 ```java
 public T get() {
@@ -74,7 +76,9 @@ private Entry getEntry(ThreadLocal<?> key) {
 ```
 通过上面的源码我们可以看出, 每个和线程相关的数据最终都是保存到了各自的线程对象里, 然后使用`ThreadLocal`作为key存储. 
 
-原理我们就简单地说道这里, 在网上有人说, `ThreadLocal`可能会引起内存泄漏, 于是我使用`-Xmx10M -Xms10M -XX:+PrintGC`这几个JVM参数运行上面程序, 结果为
+
+## 内存溢出
+原理我们就简单地说道这里, [网上有人说](http://www.codeceo.com/article/about-threadlocal-memory-leak.html), `ThreadLocal`可能会引起内存泄漏, 于是我使用`-Xmx10M -Xms10M -XX:+PrintGC`这几个JVM参数运行上面程序, 结果为
 ```bash
 [GC (Allocation Failure)  2048K->905K(9728K), 0.0061875 secs]
 [GC (Allocation Failure)  7854K->7113K(9728K), 0.0011924 secs]
@@ -93,81 +97,10 @@ private Entry getEntry(ThreadLocal<?> key) {
 [Full GC (Ergonomics)  7048K->872K(9216K), 0.0508169 secs]
 [GC (Allocation Failure)  7057K->7080K(9216K), 0.0088642 secs]
 [Full GC (Ergonomics)  7080K->872K(9216K), 0.0328227 secs]
-[GC (Allocation Failure)  7057K->7080K(9216K), 0.0008523 secs]
-[Full GC (Ergonomics)  7080K->872K(9216K), 0.0093823 secs]
-[GC (Allocation Failure)  7057K->7080K(9216K), 0.0024455 secs]
-[Full GC (Ergonomics)  7080K->872K(9216K), 0.0128421 secs]
-[GC (Allocation Failure)  7057K->7048K(9216K), 0.0021433 secs]
-[Full GC (Ergonomics)  7048K->872K(9216K), 0.0258585 secs]
-[GC (Allocation Failure)  7057K->7080K(9216K), 0.0103034 secs]
-[Full GC (Ergonomics)  7080K->872K(9216K), 0.0180950 secs]
-[GC (Allocation Failure)  7057K->7080K(9216K), 0.0039267 secs]
-[Full GC (Ergonomics)  7080K->872K(9216K), 0.0271081 secs]
-[GC (Allocation Failure)  7057K->7048K(9216K), 0.0034688 secs]
-[Full GC (Ergonomics)  7048K->872K(9216K), 0.0447428 secs]
-[GC (Allocation Failure)  7057K->7080K(9216K), 0.0305456 secs]
-[Full GC (Ergonomics)  7080K->872K(9216K), 0.0096426 secs]
-[GC (Allocation Failure)  7057K->7048K(9216K), 0.0235708 secs]
-[Full GC (Ergonomics)  7048K->872K(9216K), 0.0158089 secs]
-[GC (Allocation Failure)  7057K->7048K(9216K), 0.0047044 secs]
-[Full GC (Ergonomics)  7048K->872K(9216K), 0.0751059 secs]
-[GC (Allocation Failure)  7057K->7048K(9216K), 0.0263666 secs]
-[Full GC (Ergonomics)  7048K->872K(9216K), 0.0258460 secs]
-[GC (Allocation Failure)  7057K->7080K(9216K), 0.0007790 secs]
-[Full GC (Ergonomics)  7080K->872K(9216K), 0.0045719 secs]
-[GC (Allocation Failure)  7057K->7048K(9728K), 0.0104715 secs]
-[Full GC (Ergonomics)  7048K->872K(9728K), 0.0954287 secs]
-[GC (Allocation Failure)  7077K->7048K(9216K), 0.0019624 secs]
-[Full GC (Ergonomics)  7048K->872K(9216K), 0.0063389 secs]
-[GC (Allocation Failure)  7077K->7048K(9728K), 0.0005325 secs]
-[Full GC (Ergonomics)  7048K->872K(9728K), 0.0049442 secs]
-[GC (Allocation Failure)  7098K->7048K(9728K), 0.0689382 secs]
-[Full GC (Ergonomics)  7048K->872K(9728K), 0.1766215 secs]
-[GC (Allocation Failure)  7098K->7048K(9728K), 0.0874764 secs]
-[Full GC (Ergonomics)  7048K->872K(9728K), 0.1878922 secs]
-[GC (Allocation Failure)  7098K->7080K(9728K), 0.0003881 secs]
-[Full GC (Ergonomics)  7080K->872K(9728K), 0.0051255 secs]
-[GC (Allocation Failure)  7098K->7080K(9728K), 0.0024052 secs]
-[Full GC (Ergonomics)  7080K->872K(9728K), 0.0169504 secs]
 Active Thread Count : 2
 
 ......
 
-[GC (Allocation Failure)  7099K->7082K(9728K), 0.0032137 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0046686 secs]
-[GC (Allocation Failure)  7100K->7082K(9728K), 0.0002209 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0041828 secs]
-[GC (Allocation Failure)  7100K->7050K(9728K), 0.0082536 secs]
-[Full GC (Ergonomics)  7050K->874K(9728K), 0.0078358 secs]
-[GC (Allocation Failure)  7100K->7082K(9728K), 0.0002834 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0041227 secs]
-[GC (Allocation Failure)  7100K->7082K(9728K), 0.0014373 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0061177 secs]
-[GC (Allocation Failure)  7100K->7114K(9728K), 0.0002350 secs]
-[Full GC (Ergonomics)  7114K->874K(9728K), 0.0037189 secs]
-[GC (Allocation Failure)  7100K->7082K(9728K), 0.0001963 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0053307 secs]
-[GC (Allocation Failure)  7100K->7050K(9728K), 0.0101613 secs]
-[Full GC (Ergonomics)  7050K->874K(9728K), 0.0134271 secs]
-[GC (Allocation Failure)  7100K->7050K(9728K), 0.0004623 secs]
-[Full GC (Ergonomics)  7050K->874K(9728K), 0.0164586 secs]
-[GC (Allocation Failure)  7100K->7082K(9728K), 0.0002421 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0131758 secs]
-[GC (Allocation Failure)  7100K->7050K(9728K), 0.0002529 secs]
-[Full GC (Ergonomics)  7050K->874K(9728K), 0.0060754 secs]
-[GC (Allocation Failure)  7100K->7050K(9728K), 0.0077007 secs]
-[Full GC (Ergonomics)  7050K->874K(9728K), 0.0065586 secs]
-[GC (Allocation Failure)  7100K->7082K(9728K), 0.0026729 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0041649 secs]
-[GC (Allocation Failure)  7100K->7114K(9728K), 0.0004726 secs]
-[Full GC (Ergonomics)  7114K->874K(9728K), 0.0085271 secs]
-[GC (Allocation Failure)  7100K->7082K(9728K), 0.0010665 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0058990 secs]
-[GC (Allocation Failure)  7100K->7050K(9728K), 0.0022381 secs]
-[Full GC (Ergonomics)  7050K->874K(9728K), 0.0074711 secs]
-[GC (Allocation Failure)  7100K->7082K(9728K), 0.0006106 secs]
-[Full GC (Ergonomics)  7082K->874K(9728K), 0.0066310 secs]
-[GC (Allocation Failure)  7100K->7050K(9728K), 0.0005725 secs]
 [Full GC (Ergonomics)  7050K->874K(9728K), 0.0055843 secs]
 [GC (Allocation Failure)  7100K->7050K(9728K), 0.0002894 secs]
 [Full GC (Ergonomics)  7050K->874K(9728K), 0.0209747 secs]
