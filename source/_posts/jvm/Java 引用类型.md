@@ -90,6 +90,7 @@ public class TestSoft {
         ReferenceQueue<User> referenceQueue = new ReferenceQueue<>();
         User user = new User();
         WeakReference<User> softReference = new WeakReference<>(user, referenceQueue);
+		// 确定没有强引用
         user = null;
 
         Thread t = new Thread(() -> {
@@ -133,6 +134,113 @@ After GC : null
 [Full GC (Allocation Failure)  748K->690K(9728K), 0.0082600 secs]
 Alocate : null
 ```
+
+如果``是保存在一个对象实例里面是什么情况呢？
+```java
+import java.lang.ref.WeakReference;
+
+public class TestSoft {
+	public static void main(String[] args) throws InterruptedException {
+		WeakReferenceCache weakReferenceCache = new WeakReferenceCache();
+		weakReferenceCache.cache = new WeakReference<>(new User());
+		System.out.println("Before GC : " + weakReferenceCache.cache.get());
+		System.gc();
+		System.out.println("After GC : " + weakReferenceCache.cache.get());
+		byte[] array = new byte[1024 * 920 * 7];
+		System.out.println("Alocate GC : " + weakReferenceCache.cache.get());
+	}
+}
+
+class WeakReferenceCache {
+	public WeakReference<User> cache;
+
+}
+class User {
+}
+```
+同样我们运行一下看一下结果
+```bash
+Before GC : User@41629346
+After GC : null
+Alocate GC : null
+```
+确实是, 每次GC都将其回收掉了
+
+我们再实验一下, 如果将其存进一个列表里
+```java
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestSoft {
+	public static void main(String[] args) throws InterruptedException {
+		WeakReferenceCache weakReferenceCache = new WeakReferenceCache();
+		for (int i = 0; i < 10; i++) {
+			WeakReference<User> softReference = new WeakReference<>(new User());
+			weakReferenceCache.cache.add(softReference);
+		}
+
+		System.out.println("Before GC : ");
+		weakReferenceCache.cache.forEach(cache -> {
+			System.out.println(cache.get());
+		});
+		System.gc();
+		System.out.println("After GC : ");
+		weakReferenceCache.cache.forEach(cache -> {
+			System.out.println(cache.get());
+		});
+		byte[] array = new byte[1024 * 920 * 7];
+		System.out.println("Alocate GC : ");
+		weakReferenceCache.cache.forEach(cache -> {
+			System.out.println(cache.get());
+		});
+	}
+}
+
+class WeakReferenceCache {
+	public List<WeakReference<User>> cache = new ArrayList<>();
+
+}
+class User {
+}
+```
+结果为
+```bash
+Before GC : 
+User@6433a2
+User@5910e440
+User@6267c3bb
+User@533ddba
+User@246b179d
+User@7a07c5b4
+User@26a1ab54
+User@3d646c37
+User@41cf53f9
+User@5a10411
+After GC : 
+null
+null
+null
+null
+null
+null
+null
+null
+null
+null
+Alocate GC : 
+null
+null
+null
+null
+null
+null
+null
+null
+null
+null
+```
+即使是存储在数组里也一样被回收掉了
 
 ## 虚引用
 
