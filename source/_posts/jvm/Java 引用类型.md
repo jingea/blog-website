@@ -135,7 +135,7 @@ After GC : null
 Alocate : null
 ```
 
-如果``是保存在一个对象实例里面是什么情况呢？
+如果`WeakReference`是保存在一个对象实例里面是什么情况呢？
 ```java
 import java.lang.ref.WeakReference;
 
