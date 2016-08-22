@@ -189,49 +189,6 @@ invoke : 1300
 ### MinHeapFreeRatio
 `-XX:MinHeapFreeRatio`:当Xmx值比Xms值大时,堆可以动态收缩和扩展,这个参数控制当堆空闲小于指定比率时自动收缩
 
-
-
-
-## 垃圾收集器
-### ExplicitGCInvokesConcurrent
-`-XX:`:当收到System.gc()方法提交的垃圾收集申请时,使用CMS收集器收集
-
-### UseSerialGC
-`-XX:`:打开此开关后使用Serial+SerialOld的收集器组合进行内存回收.
-
-### UseParNewGC
-`-XX:`:虚拟机运行在Client模式下的默认值,打开此开关后,使用ParNew+SeialOld的收集器组合进行垃圾收集
-
-### UseConcMarkSweepGc
-`-XX:`:打开次开关后使用`ParNew+CMS+SerialOld`收集器组合进行垃圾收集.如果CMS收集器出现`ConcurrentModeFailure`,则`SeialOld`收集器将作为后备收集器.
-
-### UseParallelGC
-`-XX:`:虚拟机运行在Server模式下的默认值,打开此开关后,使用ParallelScavenge+SerialOld的收集器组合进行内存回收
-
-### UseParaelOldGC
-`-XX:`:打开此开关后,使用ParallelScavenge+ParallelOld的收集器组合进行内存回收
-
-### ParallelGCThreads
-`-XX:`:设置并行GC时进行内存回收的线程数(少于或等于8个CPU时默认值为CPU数量值,多于8个CPU时比CPU数量值小)
-
-### CMSInitiatingOccupancyFraction
-`-XX:`:设置CMS收集器在老年代空间被使用多少后触发垃圾收集
-
-### UseCMSCompactAtFullCollection
-`-XX:`:设置CMS收集器在完成垃圾收集后是否要进行一次内存碎片整理
-
-### CMSFullGCBeforeCompaction
-`-XX:`:设置CMS收集器在进行若干次垃圾收集后再启动一次内存碎片整理
-
-### UseParallelOldGC
-`-XX:-UseParallelOldGC`:所有的集合使用并行垃圾收集器.能够自动化地设置这个选项-XX:+UseParallelGC
-
-###　ConcGCThreads
-`-XX:ConcGCThreads=n`:`concurrentgarbagecollectors`使用的线程数.(默认值与JVM所在平台有关).
-
-### UseG1GC
-`-XX:+UseG1GC`:使用`GarbageFirst(G1)`收集器
-
 ## 设置GC
 
 ### DisableExplicitGC

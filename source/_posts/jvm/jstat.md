@@ -2,10 +2,11 @@ category: JVM
 date: 2014-10-03
 title: jstat
 ---
-虚拟机统计信息监视工具
+[虚拟机统计信息监视工具](http://docs.oracle.com/javase/7/docs/technotes/tools/share/jstat.html)
 
 用于监视虚拟机各种运行状态信息的命令行工具.它可以显示本地或远程虚拟机进程中的类装载,内存,垃圾收集,JIT编译等运行数据.
 
+## 命令
 jstat命令格式
 ```java
 jstat -<option> [-t] [-h<lines>] <vmid> [<interval> [<count>]]
@@ -86,3 +87,4 @@ Timestamp        S0C    S1C    S0U    S1U      EC       EU        OC         OU 
 * `FGC` FullGC次数
 * `FGCT` FullGC耗时
 * `GCT` GC总耗时
+

@@ -19,7 +19,7 @@ title: 垃圾收集算法及垃圾回收器
 ![复制算法a](https://raw.githubusercontent.com/ming15/blog-website/images/jvm/%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95a.jpg)
 ![复制算法b](https://raw.githubusercontent.com/ming15/blog-website/images/jvm/%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95b.jpg)
 
-> 商业虚拟机都采用这种算法来收集新生代. 由于大多数的新生代对象都是朝生夕死, 因此按照1:1 的比例分配新生代内存代价就有点高了. 因此现在的做法一般是将新生代分为一块
+商业虚拟机都采用这种算法来收集新生代. 由于大多数的新生代对象都是朝生夕死, 因此按照1:1 的比例分配新生代内存代价就有点高了. 因此现在的做法一般是将新生代分为一块
 较大的Eden区和俩块较小的Survivor区. 每次都使用Eden和一块Survivor区,当回收时, 将Eden还活着的对象一次性拷贝到另一块Survivor区,最后清理掉Eden区和刚才使用过的Survivor区.
 HotSpot默认Eden和Survivor的大小比例是8:1, 也就是每次新生代可用内存空间为90%(8 + 1), 如果发现剩余的存活对象多余10%,另一块Survivor不够的话,需要依赖其他内存(老年代)进行分配担保.
 
@@ -35,13 +35,16 @@ HotSpot默认Eden和Survivor的大小比例是8:1, 也就是每次新生代可�
 
 在新生代,每次垃圾收集时发现有大批对象死去,只有少量对象存活,那就采用复制算法,只要付出少量存活对象的复制成本就可以完成收集. 而老年代对象存活效率高,没有额外的空间对它进行分配担保,就必须采用"标记清除"或者"标记整理"来进行回收
 
+
 ## 垃圾收集器
 ![https://blogs.oracle.com/jonthecollector/resource/Collectors.jpg](https://blogs.oracle.com/jonthecollector/resource/Collectors.jpg)
 
-### Serial收集器
+### 新生代收集器
+
+#### Serial收集器
 Serial收集器是最基本、历史最悠久的收集器,曾经（在JDK 1.3.1之前）是虚拟机`新生代`收集的唯一选择.作为单线程收集器, 它不仅仅只会使用一个CPU或一条收集线程完成GC,更重要的是在它进行GC时, 其他的工作线程(业务线程)也必须暂停工作, 也就是发生著名的Stop The World, 直到它收集结束. 这种收集器更多的是在桌面应用程序和单核的机器上能取得更好的效果,因为它比多线程收集器减少了线程交互等额外开销.
 
-### ParNew收集器
+#### ParNew收集器
 
 `ParNew`收集器是`Serial`收集器的多线程版本,除了使用多线程进行垃圾收集之外,其余行为包括Serial收集器可用的所有控制参数（例如：`-XX:SurvivorRatio`、 `-XX:PretenureSizeThreshold`、`-XX:HandlePromotionFailure`等）、收集算法、Stop The World、对象分配规则、回收策略等都与Serial收集器完全一样.
 
@@ -53,7 +56,7 @@ JVM现在的多线程垃圾收集器分为并发和并行俩种:
 * 并行（Parallel）：指多条垃圾收集线程并行工作,但此时用户线程仍然处于等待状态.
 * 并发（Concurrent）：指用户线程与垃圾收集线程同时执行（但不一定是并行的,可能会交替执行）,用户程序继续运行,而垃圾收集程序运行于另一个CPU上.
 
-### Parallel Scavege收集器
+#### Parallel Scavege收集器
 Parallel Scavenge收集器也是一个新生代收集器,它也是使用复制算法的收集器,又是并行的多线程收集器……看上去和ParNew都一样,那它有什么特别之处呢？
 
 它的关注点与其他收集器不同,CMS等收集器的关注点尽可能地缩短垃圾收集时用户线程的停顿时间,而Parallel Scavenge收集器的目标则是达到一个可控制的吞吐量（Throughput）.
@@ -73,15 +76,17 @@ Parallel Scavenge收集器提供了两个参数用于精确控制吞吐量,分�
 
 > 注意ParallelScavenge收集器的收集策略里就有直接进行Major GC的策略选择过程,而不必先进行Minor GC
 
-### Serial Old收集器
-Serial Old是Serial收集器的老年代版本,它同样是一个单线程收集器,使用“标记-整理”算法.这个收集器的主要意义也是被Client模式下的虚拟机使用.如果在Server模式下,它主要还有两大用途：一个是在JDK 1.5及之前的版本中与Parallel Scavenge收集器搭配使用,另外一个就是作为CMS收集器的后备预案,在并发收集发生Concurrent Mode Failure的时候使用.
+### 老年代收集器
 
-### Parallel old收集器
+#### Serial Old收集器
+Serial Old是Serial收集器的老年代版本,它同样是一个单线程收集器,使用`标记-整理`算法.这个收集器的主要意义也是被Client模式下的虚拟机使用.如果在Server模式下,它主要还有两大用途：一个是在JDK 1.5及之前的版本中与Parallel Scavenge收集器搭配使用,另外一个就是作为CMS收集器的后备预案,在并发收集发生Concurrent Mode Failure的时候使用.
+
+#### Parallel old收集器
 Parallel Old是Parallel Scavenge收集器的老年代版本,使用多线程和“标记－整理”算法.这个收集器是在JDK 1.6中才开始提供的,在此之前,新生代的Parallel Scavenge收集器一直处于比较尴尬的状态.原因是,如果新生代选择了Parallel Scavenge收集器,老年代除了Serial Old（PS MarkSweep）收集器外别无选择（还记得上面说过Parallel Scavenge收集器无法与CMS收集器配合工作吗？）.由于单线程的老年代Serial Old收集器在服务端应用性能上的“拖累”,即便使用了Parallel Scavenge收集器也未必能在整体应用上获得吞吐量最大化的效果,又因为老年代收集中无法充分利用服务器多CPU的处理能力,在老年代很大而且硬件比较高级的环境中,这种组合的吞吐量甚至还不一定有ParNew加CMS的组合“给力”.
 
 直到Parallel Old收集器出现后,“吞吐量优先”收集器终于有了比较名副其实的应用组合,在注重吞吐量及CPU资源敏感的场合,都可以优先考虑Parallel Scavenge加Parallel Old收集器.
 
-### CMS收集器
+#### CMS收集器
 在JDK 1.5时期,HotSpot推出了一款在强交互应用中几乎可称为有划时代意义的垃圾收集器—CMS收集器Concurrent Mark Sweep）,这款收集器是HotSpot虚拟机中第一款真正意义上的并发（Concurrent）收集器,它第一次实现了让垃圾收集线程与用户线程（基本上）同时工作.
 
 不幸的是,CMS收集器作为老年代的收集器,却无法与JDK 1.4.0中已经存在的新生代收集器Parallel Scavenge配合工作,所以在JDK1.5中使用CMS来收集老年代的时候,新生代只能选择ParNew或Serial收集器中的一个.ParNew收集器也是使用`-XX: +UseConcMarkSweepGC`选项后的默认新生代收集器,也可以使用 `-XX:+UseParNewGC`选项来强制指定它.
@@ -106,7 +111,7 @@ CMS收集器无法处理浮动垃圾（Floating Garbage）,可能出现“Concur
 
 还有最后一个缺点,在本节在开头说过,CMS是一款基于“标记-清除”算法实现的收集器,如果读者对前面这种算法介绍还有印象的话,就可能想到这意味着收集结束时会产生大量空间碎片.空间碎片过多时,将会给大对象分配带来很大的麻烦,往往会出现老年代还有很大的空间剩余,但是无法找到足够大的连续空间来分配当前对象,不得不提前触发一次Full GC.为了解决这个问题,CMS收集器提供了一个`-XX:+UseCMSCompactAtFullCollection`开关参数,用于在“享受”完Full GC服务之后额外免费附送一个碎片整理过程,内存整理的过程是无法并发的.空间碎片问题没有了,但停顿时间不得不变长了.虚拟机设计者们还提供了另外一个参数`-XX: CMSFullGCsBeforeCompaction`,这个参数用于设置在执行多少次不压缩的Full GC后,跟着来一次带压缩的.
 
-### G1收集器
+#### G1收集器
 
 G1（Garbage First）收集器是当前收集器技术发展的最前沿成果,在JDK 1.6_Update14中提供了EarlyAccess版本的G1收集器以供试用.在将来JDK 1.7正式发布的时候,G1收集器很可能会有一个成熟的商用版本随之发布.这里只对G1收集器进行简单介绍.
 
@@ -114,3 +119,45 @@ G1收集器是垃圾收集器理论进一步发展的产物,它与前面的CMS�
 既能让使用者明确指定在一个长度为M毫秒的时间片段内,消耗在垃圾收集上的时间不得超过N毫秒,这几乎已经是实时Java（RTSJ）的垃圾收集器的特征了.
 
 G1收集器可以实现在基本不牺牲吞吐量的前提下完成低停顿的内存回收,这是由于它能够极力地避免全区域的垃圾收集,之前的收集器进行收集的范围都是整个新生代或老年代,而G1将整个Java堆（包括新生代、老年代）划分为多个大小固定的独立区域（Region）,并且跟踪这些区域里面的垃圾堆积程度,在后台维护一个优先列表,每次根据允许的收集时间,优先回收垃圾最多的区域（这就是Garbage First名称的来由）.区域划分及有优先级的区域回收,保证了G1收集器在有限的时间内可以获得最高的收集效率.
+
+
+## 参数设置
+
+### ExplicitGCInvokesConcurrent
+`-XX:`:当收到System.gc()方法提交的垃圾收集申请时,使用CMS收集器收集
+
+### UseSerialGC
+`-XX:`:打开此开关后使用Serial+SerialOld的收集器组合进行内存回收.
+
+### UseParNewGC
+`-XX:`:虚拟机运行在Client模式下的默认值,打开此开关后,使用ParNew+SeialOld的收集器组合进行垃圾收集
+
+### UseConcMarkSweepGc
+`-XX:`:打开次开关后使用`ParNew+CMS+SerialOld`收集器组合进行垃圾收集.如果CMS收集器出现`ConcurrentModeFailure`,则`SeialOld`收集器将作为后备收集器.
+
+### UseParallelGC
+`-XX:`:虚拟机运行在Server模式下的默认值,打开此开关后,使用ParallelScavenge+SerialOld的收集器组合进行内存回收
+
+### UseParaelOldGC
+`-XX:`:打开此开关后,使用ParallelScavenge+ParallelOld的收集器组合进行内存回收
+
+### ParallelGCThreads
+`-XX:`:设置并行GC时进行内存回收的线程数(少于或等于8个CPU时默认值为CPU数量值,多于8个CPU时比CPU数量值小)
+
+### CMSInitiatingOccupancyFraction
+`-XX:`:设置CMS收集器在老年代空间被使用多少后触发垃圾收集
+
+### UseCMSCompactAtFullCollection
+`-XX:`:设置CMS收集器在完成垃圾收集后是否要进行一次内存碎片整理
+
+### CMSFullGCBeforeCompaction
+`-XX:`:设置CMS收集器在进行若干次垃圾收集后再启动一次内存碎片整理
+
+### UseParallelOldGC
+`-XX:-UseParallelOldGC`:所有的集合使用并行垃圾收集器.能够自动化地设置这个选项-XX:+UseParallelGC
+
+###　ConcGCThreads
+`-XX:ConcGCThreads=n`:`concurrentgarbagecollectors`使用的线程数.(默认值与JVM所在平台有关).
+
+### UseG1GC
+`-XX:+UseG1GC`:使用`GarbageFirst(G1)`收集器
