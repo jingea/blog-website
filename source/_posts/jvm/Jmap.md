@@ -43,9 +43,39 @@ Total  207899  14900384
 ```
 
 ## 源码分析
+我们先看一下jmap的help帮助手册
+```bash
+D:\>jmap -help
+Usage:
+    jmap [option] <pid>
+        (to connect to running process)
+    jmap [option] <executable <core>
+        (to connect to a core file)
+    jmap [option] [server_id@]<remote server IP or hostname>
+        (to connect to remote debug server)
 
-JMap类是jmap命令的主要实现类. 这个类同样是由参数决定来调用VM attach mechanism还是SA tool.
-现在只有-dump选项下才会使用VM attach mechanism,其他的情况都是使用SA tools.
+where <option> is one of:
+    <none>               to print same info as Solaris pmap
+    -heap                打印Java堆概览
+    -histo[:live]        打印Java堆得对象柱状分布图; 如果指定"live" 的话, 那么就只统计存活的对象
+    -clstats             打印class 加载的统计信息
+    -finalizerinfo       to print information on objects awaiting finalization
+    -dump:<dump-options> 以二进制格式dump JVM 堆内存信息 (示例: jmap -dump:live,format=b,file=heap.bin <pid>)
+                         dump-options:
+                           live         只dump 存活的对象; 如果不指定的话, 堆内存内的所有对象都会被dump出来.
+                           format=b     二进制格式
+                           file=<file>  dump 堆内存到哪个文件
+                         
+    -F                   force. Use with -dump:<dump-options> <pid> or -histo to force a heap dump or histogram when <pid> does not respond. The "live" suboption is not supported in this mode.
+    -h | -help           to print this help message
+    -J<flag>             to pass <flag> directly to the runtime system
+
+```
+jmap 命令支持三种模式, 分别是本地进程, core文件和远程进程模式.
+
+JMap类是jmap命令的封装实现类. 这个类同样是由参数决定来调用[VM attach mechanism]()还是[SA tool]().
+
+> 现在只有`-heap`,`-finalizerinfo`和`-F`选项下会使用[VM attach mechanism](),其他的情况都是使用[SA tools]().
 ```java
 import java.lang.reflect.Method;
 import java.io.File;

@@ -82,6 +82,28 @@ Non-default VM flags: -XX:InitialHeapSize=100663296 -XX:MaxHeapSize=1610612736 -
 ```
 
 ## 源码分析
+我们首先看一下jinfo的help帮助文档
+```bash
+D:\>jinfo -help
+Usage:
+    jinfo [option] <pid>
+        (to connect to running process)
+    jinfo [option] <executable <core>
+        (to connect to a core file)
+    jinfo [option] [server_id@]<remote server IP or hostname>
+        (to connect to remote debug server)
+
+where <option> is one of:
+    -flag <name>         打印指定name的vm flag的值
+    -flag [+|-]<name>    将指定名称的 VM flag打开或者关闭
+    -flag <name>=<value> 将指定名称的 VM flag重新设置值
+    -flags               打印所有的 VM flags
+    -sysprops            打印 Java system properties
+    <no option>          如果没有选项的话就是执行上面的所有选项
+    -h | -help           to print this help message
+```
+我们看到jinfo其实支持的是三种模式, 分别是本地进程, core文件和远程进程模式.
+
 ```java
 import java.io.IOException;
 import java.io.InputStream;
@@ -126,6 +148,7 @@ public class JInfo {
 		}
 	}
 
+	// 调用sa tool内部实现的jinfo
 	private static void runTool(String args[]) throws Exception {
 		String tool = "sun.jvm.hotspot.tools.JInfo";
 		Class<?> c = loadClass(tool);
@@ -146,6 +169,7 @@ public class JInfo {
 		return null;
 	}
 
+	// 调用Attach API 实现的JInfo
 	private static void flag(String pid, String option) throws IOException {
 		VirtualMachine vm = attach(pid);
 		String flag;
@@ -246,4 +270,4 @@ public class JInfo {
 	}
 }
 ```
-JInfo 只有在使用-flag选项的时候才会使用VM attach mechanism,其他的选项都是使用SA tools
+JInfo 只有在使用`-flag`选项的时候才会使用[VM Attach API](),其他的选项都是使用[SA tools]()实现的

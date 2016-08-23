@@ -81,6 +81,25 @@ java.lang.Thread.State 线程状态
 	2. `java.lang.Thread.State: WAITING (on object monitor)`;
 
 ## 源码
+我们首先看一下jstack help文档
+```bash
+D:\work\test\target\classes>jstack -help
+Usage:
+    jstack [-l] <pid>
+        (to connect to running process)
+    jstack -F [-m] [-l] <pid>
+        (to connect to a hung process)
+    jstack [-m] [-l] <executable> <core>
+        (to connect to a core file)
+    jstack [-m] [-l] [server_id@]<remote server IP or hostname>
+        (to connect to a remote debug server)
+
+Options:
+    -F  to force a thread dump. Use when jstack <pid> does not respond (process is hung)
+    -m  to print both java and native frames (mixed mode)
+    -l  long listing. Prints additional information about locks
+    -h or -help to print this help message
+```
 直接上[JStack]()源码
 ```java
 import java.lang.reflect.Method;
@@ -250,14 +269,10 @@ public class JStack {
 	}
 }
 ```
-从上面的源码我们可以看到, JStack会根据选项参数来判断是使用SA JStack tool 还是 VM attach mechanism 输出线程的堆栈信息. 在下面的情况下会使用SA JStack tool
+从上面的源码我们可以看到, JStack会根据选项参数来判断是使用[SA JStack tool]() 还是 [VM attach mechanism]() 输出线程的堆栈信息. 在下面的情况下会使用SA JStack tool
 * 有-F选项
 * 有-m选项
 * 有<executable> <core> 参数
 * 有[server_id@]<remote server IP or hostname>参数
-VM attach mechanism 很简单, 我们可以很愉快地写一段测试代码, 来使用一下这个功能, 但是[SA JStack tool](http://hg.openjdk.java.net/jdk7u/jdk7u/hotspot/file/2cd3690f644c/agent/src/share/classes/sun/jvm/hotspot/tools/JStack.java)是什么玩意嘞？
 
 
-
-参考文章
-* [The HotSpot™ Serviceability Agent: An out-of-process high level debugger for a Java™ virtual machine](http://static.usenix.org/event/jvm01/full_papers/russell/russell_html/)
