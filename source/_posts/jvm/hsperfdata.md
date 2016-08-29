@@ -26,3 +26,6 @@ jstat读取`/tmp/hsperfdata_username/`目录下的文件查看虚拟机老年代
    MC       MU      CCSC     CCSU       OC          OU       YGC    FGC    FGCT     GCT   
  26112.0  25379.2   3840.0   3719.1    164864.0     18007.6    495     1    0.102    2.377
 ```
+
+
+[HotSpot Jvmstat Performance Counters](http://openjdk.java.net/groups/hotspot/docs/Serviceability.html#bjvmstat)
