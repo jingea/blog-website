@@ -93,3 +93,37 @@ RandomAccessFileAppender与标准的`FileAppender`非常像, 只不过RandomAcce
 * append:新的日志事件是否追加在日志文件末尾（如果不是原先的内容会被刷新掉）
 * immediateFlush: 设置为true的话(默认为true)，每一次写入都会强制执行一次flush, 这种情况下回保证数据肯定被写到磁盘上,但是对性能有消耗. 只有当使用同步logger的时候，每一次写入日志都flush才有意义。这是因为当使用异步logger或者Appender的时候，当events达到固定数量的时候回自动执行flush操作（即使immediateFlush为false,也会执行刷新），使用异步的方式同样保证数据会写入到磁盘而且更高效。
 * bufferSize：缓冲大小，默认是 262,144 bytes (256 * 1024).
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="MyApp" packages="">
+  <Appenders>
+    <RandomAccessFile name="MyFile" fileName="logs/app.log">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+      </PatternLayout>
+    </RandomAccessFile>
+  </Appenders>
+  <Loggers>
+    <Root level="error">
+      <AppenderRef ref="MyFile"/>
+    </Root>
+  </Loggers>
+</Configuration>
+```
+
+## 异步日志
+采用异步的方式记录日志首先是AsyncLogger
+1. 异步日志通过在单独的线程中记录日志，能快速地返回日志调用。通常来说如果所有的logger都采用异步的方式的话，能获得最好的性能
+2. 异步日志内部采用了Disruptor取代了java内部队列。这个特性能获得更高的吞吐量和更低的延迟。
+3. 异步日志通过缓存方式，批量将日志输出
+尽管异步日志有诸多特性，但是有时候仍然是需要采用同步地方式记录日志。我们下来首先看一下异步日志的优点：
+1. 更高的吞吐量。异步日志与同步方式相比，它能提供6~68倍的日志输出量。当突然遇到日志洪峰时,采用异步方式能获得更快地日志响应
+2. 更低的延迟. 异步日志比同步方式记录日志和采用基于队列实现的异步日志方式都获得了更低的延迟。
+下面我们再看看异步记录方式的缺点
+1. 当在写日志的时候，如果发生了问题或者抛出了异常，使用异步记录方式很难定位问题究竟是出现在哪里。因此在异步日志里推荐配置一个`ExceptionHandler`，但是哪怕配置了一个handler，仍然有可能出现日志丢失等问题。因为对于日志依赖严重的地方，推荐使用同步方式记录日志
+2. 在单核的情况下，异步日志并不能获得更好地性能。当然现在的服务器动辄就是16核，32核，这个情况一般就不考虑了。
+最后我们看一下如果所有的日志都采用异步方式的配置方式
+```bash
+-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+```
+当我们在java进程的启动脚本里进行了这样的配置后(我们也可以在程序启动后再系统属性里进行设置)，log4j会采用`AsyncLoggerContextSelector`进行异步日志输出。但是在配置文件里要使用`<root>`和`<logger>`,不能使用`<asyncRoot>`和`<asyncLogger>`, 因为这种异步的logger是为了在同步异步混合logger的时候使用的。
