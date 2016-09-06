@@ -27,24 +27,32 @@ ByteBuf提供了 `readerIndex` 和 `writerIndex` 进行缓冲区的顺序读写�
 
 ### ByteBuf write
 接下来我们看一下向ByteBuf缓冲区写入数据的API
+
+####  writeInt
+
 ```java
-@Test
 public void testWriteInt() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeInt(1);
 	// 写入一个Int数值, writerIndex向后移动4个字节
 	Assert.assertEquals(4, buf.writerIndex());
 }
+```
 
-@Test
+#### writeChar
+
+```java
 public void testWriteChar() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeChar('a');
 	// 写入一个Char字符, writerIndex向后移动2个字节
 	Assert.assertEquals(2, buf.writerIndex());
 }
+```
 
-@Test
+#### writeBytes
+ 
+```java
 public void testWriteBytes() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	byte[] bytes = new byte[]{100};
@@ -53,7 +61,11 @@ public void testWriteBytes() {
 	Assert.assertEquals(1, buf.writerIndex());
 }
 
-@Test
+```
+
+#### writeBytes
+
+```java
 public void testWriteBytesWithStartEndIndex() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	byte[] bytes = new byte[]{100, 1, 3};
@@ -63,7 +75,11 @@ public void testWriteBytesWithStartEndIndex() {
 	Assert.assertEquals(1, buf.writerIndex());
 }
 
-@Test
+```
+
+#### writeBytes
+
+```java
 public void testWriteBytes3() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	ByteBuf buf1 = ByteBufAllocator.DEFAULT.buffer(1024);
@@ -72,9 +88,11 @@ public void testWriteBytes3() {
 	// 我们向ByteBuf中写入另一个ByteBuf, 它的索引仍然是增长4. ByteBuf不仅仅可以写入BuyeBuf,还可以写入InputStream和ByteBuffer
 	Assert.assertEquals(4, buf.writerIndex());
 }
+```
 
+#### writeFloat
 
-@Test
+```java
 public void testWriteFloat() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeFloat(0.1f);
@@ -82,7 +100,11 @@ public void testWriteFloat() {
 	Assert.assertEquals(4, buf.writerIndex());
 }
 
-@Test
+```
+
+#### writeByte
+
+```java
 public void testWriteByte() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeByte(1);
@@ -91,32 +113,44 @@ public void testWriteByte() {
 	// 写入一个byte, writerIndex向后移动1个字节,至于写进去的数字大于128,会发生什么,我们在read的时候看一下结果
 	Assert.assertEquals(2, buf.writerIndex());
 }
+```
 
-@Test
+#### writeShort
+
+```java
 public void testWriteShort() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeShort(1000);
 	// 写入一个short, writerIndex向后移动2个字节
 	Assert.assertEquals(2, buf.writerIndex());
 }
+```
 
-@Test
+#### writeDouble
+
+```java
 public void testWriteDouble() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeDouble(1000.0d);
 	// 写入一个double, writerIndex向后移动8个字节
 	Assert.assertEquals(8, buf.writerIndex());
 }
+```
 
-@Test
+#### writeBoolean
+
+```java
 public void testWriteBoolean() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBoolean(false);
 	// 写入一个boolean, writerIndex向后移动1个字节
 	Assert.assertEquals(1, buf.writerIndex());
 }
+```
 
-@Test
+#### writeLong
+
+```java
 public void testWriteLong() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeLong(100l);
@@ -124,7 +158,11 @@ public void testWriteLong() {
 	Assert.assertEquals(8, buf.writerIndex());
 }
 
-@Test
+```
+
+#### writeBytes
+
+```java
 public void testWriteOverLoadMaxCapacity() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(5);
 	buf.writeBytes("123456".getBytes());
@@ -136,8 +174,10 @@ public void testWriteOverLoadMaxCapacity() {
 
 ### ByteBuf read
 刚才我们看了向ByteBuf缓冲区写入数据的API,接下来我们看一下从ByteBuf缓冲区读取数据的API
+
+#### readInt
+
 ```java
-@Test
 public void testReadInt() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeInt(1);
@@ -146,8 +186,11 @@ public void testReadInt() {
 	Assert.assertEquals(4, buf.readerIndex());
 	Assert.assertEquals(1, read);
 }
+```
 
-@Test
+#### readChar
+
+```java
 public void testReadChar() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeChar('1');
@@ -157,7 +200,11 @@ public void testReadChar() {
 	Assert.assertEquals('1', read);
 }
 
-@Test
+```
+
+#### readBytes
+
+```java
 public void testReadBytes() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
@@ -167,8 +214,9 @@ public void testReadBytes() {
 	Assert.assertEquals(10, buf.readerIndex());
 	Assert.assertEquals(0, read[9]);
 }
+```
 
-@Test
+```java
 public void testReadBytesWithStartEndIndex() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
@@ -178,8 +226,9 @@ public void testReadBytesWithStartEndIndex() {
 	Assert.assertEquals(3, buf.readerIndex());
 	Assert.assertEquals(3, read[0]);
 }
+```
 
-@Test
+```java
 public void testRead3Bytes() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
@@ -187,8 +236,11 @@ public void testRead3Bytes() {
 	// 读取3个字节, readerIndex向后移动3字节
 	Assert.assertEquals(3, buf.readerIndex());
 }
+```
 
-@Test
+#### readFloat
+
+```java
 public void testReadFloat() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeFloat(10.0f);
@@ -198,7 +250,11 @@ public void testReadFloat() {
 	Assert.assertEquals(10.f, read);
 }
 
-@Test
+```
+
+#### readLong
+
+```java
 public void testReadLong() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeLong(10l);
@@ -207,8 +263,11 @@ public void testReadLong() {
 	Assert.assertEquals(8, buf.readerIndex());
 
 }
+```
 
-@Test
+#### readByte
+
+```java
 public void testReadByte() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
@@ -216,8 +275,11 @@ public void testReadByte() {
 	// 读取byte, readerIndex向后移动1字节
 	Assert.assertEquals(1, buf.readerIndex());
 }
+```
 
-@Test
+#### readShort
+
+```java
 public void testReadShort() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeShort(10);
@@ -225,8 +287,11 @@ public void testReadShort() {
 	// 读取short, readerIndex向后移动2字节
 	Assert.assertEquals(2, buf.readerIndex());
 }
+```
 
-@Test
+#### readBoolean
+
+```java
 public void testReadBoolean() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBoolean(true);
@@ -234,8 +299,11 @@ public void testReadBoolean() {
 	// 读取boolean, readerIndex向后移动1字节
 	Assert.assertEquals(1, buf.readerIndex());
 }
+```
 
-@Test
+#### readDouble
+
+```java
 public void testReadDouble() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeDouble(10.0d);
@@ -243,8 +311,11 @@ public void testReadDouble() {
 	// 读取double, readerIndex向后移动8字节
 	Assert.assertEquals(8, buf.readerIndex());
 }
+```
 
-@Test
+#### readUnsignedByte
+
+```java
 public void testReadUnsignedByte() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeByte(-10);
@@ -254,7 +325,11 @@ public void testReadUnsignedByte() {
 	Assert.assertEquals(246, read);
 }
 
-@Test
+```
+
+#### readUnsignedShort
+
+```java
 public void testReadUnsignedShort() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeShort(-1024);
@@ -265,14 +340,22 @@ public void testReadUnsignedShort() {
 	Assert.assertEquals(64512, read);
 }
 
-@Test
+```
+
+#### readerIndex
+
+```java
 public void testReaderIndex() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
 	Assert.assertEquals(0, buf.readerIndex());
 }
 
-@Test
+```
+
+#### readByte
+
+```java
 public void testReadableBytes() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
@@ -282,7 +365,11 @@ public void testReadableBytes() {
 	Assert.assertEquals(9, buf.readableBytes());
 }
 
-@Test
+```
+
+#### readUnsignedInt
+
+```java
 public void testReadUnsignedInt() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeInt(10);
@@ -291,7 +378,11 @@ public void testReadUnsignedInt() {
 	Assert.assertEquals(10, read);
 }
 
-@Test
+```
+
+#### readSlice
+
+```java
 public void testReadSlice() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
@@ -303,7 +394,11 @@ public void testReadSlice() {
 
 }
 
-@Test
+```
+
+#### readInt
+
+```java
 public void testWriteBytesReadInt() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);
 	buf.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 0});
@@ -366,7 +461,6 @@ mark reset相关的四个方法也是对指针位置的操作
 * `resetWriterIndex()`  将记录的writerIndex重置到当前的writerIndex值
 
 ```java
-@Test
 public void testReaderIndex() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(50);
 	buf.writeBytes("123456789".getBytes());
@@ -378,7 +472,8 @@ public void testReaderIndex() {
 	Assert.assertEquals(3, buf.readerIndex());
 }
 
-@Test
+
+```java
 public void testWriterIndex() {
 	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(50);
 	buf.writeBytes("123456789".getBytes());
