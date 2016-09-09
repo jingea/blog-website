@@ -72,6 +72,6 @@ Test.java:9: error: cannot find symbol
 
 
 classpath适用于下列工具
-(JDK Tools and Utilities)[http://docs.oracle.com/javase/7/docs/technotes/tools/index.html]
+[JDK Tools and Utilities](http://docs.oracle.com/javase/7/docs/technotes/tools/index.html)
 
-(How Classes are Found)[http://docs.oracle.com/javase/7/docs/technotes/tools/findingclasses.html]
+[How Classes are Found](http://docs.oracle.com/javase/7/docs/technotes/tools/findingclasses.html)

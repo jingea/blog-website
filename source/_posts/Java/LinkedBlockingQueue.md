@@ -113,7 +113,7 @@ title: LinkedBlockingQueue
 2. 是如何保证`LinkedBlockingQueue`的内部计数器`count`(`AtomicInteger`)的线程安全的?
 
 对于第一个问题, 我画了一张入列和出列的流程图:
-!()[https://raw.githubusercontent.com/ming15/blog-website/images/concurrency/LinkedBlockingQueue.jpg]
+![](https://raw.githubusercontent.com/ming15/blog-website/images/concurrency/LinkedBlockingQueue.jpg)
 从图中我们可以看到, 在初始化`LinkedBlockingQueue`实例的时候,其内部就有了一个Node, first和last都指向这个Node. 当入列一个元素的时候,last指针后移, 而first指针位置不变(参考`enqueue(Node<E> node)`和`dequeue()`方法)。其实这个时候实际的第一个Node为A, 而在逻辑上来讲第一个Node为B(因为第一个数据是存储在了B里), 出列的时候, 是删除队列的第一个实际位置(A)的Node,取出的是第二个实际位置(B)的数据,此时第三个实际位置就变成了第一个逻辑位置.
 
 对于第二个问题,在`put()`方法中是这么描述的

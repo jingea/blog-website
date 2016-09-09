@@ -20,7 +20,7 @@ f = open(name, [mode], [size])
 
 > 注意:如果我们使用非二进制模式输出时`\n(0A)`会被自动替换为`\r\n(0D 0A)`,因此在文件输出时,我们要注意这个问题.
 
-### f对象常用方法
+### 对象常用方法
 * `read([size])` : 读取文件(size有值则读取size个字节),如果不填写size则读取全部
 * `readline([size])` : 每次读取一行(size值为当前行的长度,但是如果每次读取不完的话,下次再调用readline时会继续在当前行读取)
 * `readlines([size])` : 读取多行,返回每一行组成的列表. 如果不填写size则读取全部内容(不推荐使用这种方式读取所有行)
@@ -50,6 +50,31 @@ filename和mode我们通过上面的描述都知道了,现在我们看一下flag
 fd = os.open("test.txt", os.O_CREAT | os.O_RDWR)
 os.write(fd, "helloworld")
 ```
+
+### 遍历目录文件
+```python
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+import os.path
+rootdir = "C:\\Users\\wangming\\Documents"
+
+for parent, dirnames, filenames in os.walk(rootdir):
+
+    for filename in filenames:
+        fullname = os.path.join(parent, filename)
+        # print "the full name of the file is:" + fullname #输出文件路径信息
+
+        file = open(fullname)
+        for line in file:
+            if line.find(")[") > 0:
+                print(str(fullname) + " -> " + str(line))
+
+```
+
 
 ### 中文乱码
 写入文件时,如果输出中文,我们经常会遇到乱码的问题.只需要在python文件顶部加上以下内容就可以了

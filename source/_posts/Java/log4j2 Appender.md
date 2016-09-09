@@ -29,7 +29,7 @@ Log4j2为我们提供了非常多的Appender, 我们就是通过Appender最终�
 
 ## AsyncAppender
 首先我们看一下AsyncAppender。 AsyncAppender通过一个单独的线程将LogEvent发送给它内部代理的其他的Appender，业务逻辑线程可以快速返回调用。AsyncAppender内部封装了一个`java.util.concurrent.ArrayBlockingQueue`用于接收日志事件。在多线程的情况下并不推荐使用这个Appender，因为BlockingQueue对于锁争夺是非常敏感的，在多线程并发写日志的时候，性能会下降。
-官方推荐使用(lock-free Async Loggers )[http://logging.apache.org/log4j/2.x/manual/async.html]
+官方推荐使用[lock-free Async Loggers](http://logging.apache.org/log4j/2.x/manual/async.html)
 
 下来我们看一下这个Appender的几个重点参数
 * blocking：如果设置为tue的话(默认值), 当BlockingQueue满的时候，新的日志文件会一直阻塞, 直到可以入列为止. 如果为false的话, 不能入列的日志会被写到 error appender 里。
