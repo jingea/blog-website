@@ -1,5 +1,5 @@
 category: JVM
-date: 2016-28-29
+date: 2016-08-29
 title: HotSpot Dynamic Attach Mechanism 简析
 ---
 
