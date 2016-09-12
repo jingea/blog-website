@@ -1,4 +1,4 @@
-category: 网络
+category: Java
 date: 2016-04-06
 title: IP地址在网卡上的表现
 ---
