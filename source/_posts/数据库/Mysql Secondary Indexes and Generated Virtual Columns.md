@@ -1,6 +1,6 @@
 category: 数据库
 date: 2016-05-10
-title: Mysql Secondary Indexes and Generated Virtual Columns
+title: Mysql 第二索引和虚拟列
 ---
 [官方文档](http://dev.mysql.com/doc/refman/5.7/en/create-table-secondary-indexes-virtual-columns.html)
 
@@ -12,8 +12,9 @@ CREATE TABLE sum (
   num2 int,
   sum int AS (num1 + num2)
 );
+
 INSERT INTO sum (num1, num2) VALUES(1,1),(3,4);
-mysql> SELECT * FROM triangle;
+mysql> SELECT * FROM sum;
 +-------+-------+--------------------+
 | num1  | num2  | sum                |
 +-------+-------+--------------------+
@@ -21,7 +22,9 @@ mysql> SELECT * FROM triangle;
 |     3 |     4 |                  7 |
 +-------+-------+--------------------+
 ```
-语法为
+在上面的实例中我们首先创建了一个sum表，然后插入俩条数据数据 我们发现sum这一列上自动生成一个值
+
+这种自动生成列的语法为为
 ```sql
 col_name data_type [GENERATED ALWAYS] AS (expression)
   [VIRTUAL | STORED] [UNIQUE [KEY]] [COMMENT comment]
