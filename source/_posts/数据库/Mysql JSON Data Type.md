@@ -314,6 +314,7 @@ mysql> SELECT CAST('null' AS JSON);
 ```
 
 ### 转换
+```sql
 mysql> SELECT CAST('NULL' AS JSON);
 ERROR 3141 (22032): Invalid JSON text in argument 1 to function cast_as_json:
 "Invalid value." at position 0 in 'NULL'.
