@@ -2,7 +2,6 @@ category: Java
 date: 2014-11-08
 title: Java加密 -- 概述
 ---
-# Java加密
 
 ## Java安全领域组成部分
 
@@ -27,7 +26,7 @@ JDK 1.4版本及其后续版本中包含了上述扩展包,无须进行配置.�
 
 Java安全体系结构通过扩展的方式,加入了更多的算法实现及相应的安全机制.我们把这些提供者称为安全提供者(以下简称“提供者”).
 
-### 以下内容是JDK 1.7所提供的安全提供者的配置信息.
+以下内容是JDK 1.7所提供的安全提供者的配置信息.
 * security.provider.1=sun.security.provider.Sun
 * security.provider.2=sun.security.rsa.SunRsaSign
 * security.provider.3=sun.security.ec.SunEC
@@ -39,40 +38,37 @@ Java安全体系结构通过扩展的方式,加入了更多的算法实现及相
 * security.provider.9=sun.security.smartcardio.SunPCSC
 * security.provider.10=sun.security.mscapi.SunMSCAPI
 
-> 上述这些提供者均是`Provider`类(`java.security.Provider`)的子类.其中`sun.security.provider.Sun`是基本安全提供者,`sun.security.rsa.SunRsaSign`是实现RSA算法的提供者.
->
-> 与上一版本对比,Java 7新增了EC算法安全提供者—`sun.security.ec.SunEC`,暗示在该版本中可能支持相应的算法实现.
->
-> Java安全体系不仅支持来自Sun官方提供的安全提供者,同时也可配置第三方安全提供者以扩展相应的算法实现等.
+上述这些提供者均是`Provider`类(`java.security.Provider`)的子类.其中`sun.security.provider.Sun`是基本安全提供者,`sun.security.rsa.SunRsaSign`是实现RSA算法的提供者.
 
-### 安全提供者实现了两个概念的抽象:
+与上一版本对比,Java 7新增了EC算法安全提供者—`sun.security.ec.SunEC`,暗示在该版本中可能支持相应的算法实现.Java安全体系不仅支持来自Sun官方提供的安全提供者,同时也可配置第三方安全提供者以扩展相应的算法实现等.
+
+安全提供者实现了两个概念的抽象:
 * 引擎:	可以理解为操作,如加密、解密等.
 * 算法: 定义了操作如何执行,如一个算法可以理解为一个引擎的具体实现.当然,一个算法可以有多种实现方式,这就意味着同一个算法可能与多个引擎的具体实现相对应.
 
-> 安全提供者接口的目的就是提供一个简单的机制,从而可以很方便地改变或替换算法及其实现.在实际开发中,程序员只需要用引擎类实现特定的操作,而不需要关心实际进行运算的类是哪一个.
->
-> `Provider`类和`Security`类(`java.security.Security`)共同构成了安全提供者的概念.
+安全提供者接口的目的就是提供一个简单的机制,从而可以很方便地改变或替换算法及其实现.在实际开发中,程序员只需要用引擎类实现特定的操作,而不需要关心实际进行运算的类是哪一个.
 
-### 本文全貌
+`Provider`类和`Security`类(`java.security.Security`)共同构成了安全提供者的概念.
 
+本文全貌
 * 主要详解了`java.security`包与`javax.crypto包`,这两个包中包含了Java加密与解密的核心部分.
 * 在`java.security.interfaces`包和`javax.crypto.interfaces`包中包含了密钥相关的接口.
 * 在`java.security.spec`包和`javax.crypto.spec`包中包含了密钥规范和算法参数规范的类和接口.
 
-#java7支持的算法
-## 消息摘要算法
+## java7支持的算法
+### 消息摘要算法
 
-## MD系列
+MD系列
 * MD2             128位
 * MD5             128位
 
-## SHA系列
+SHA系列
 * SHA-1           160位
 * SHA-256         256位
 * SHA-384         384位
 * SHA-512         512位
 
-## Hmac系列
+Hmac系列
 * HmacMD5        128位
 * HmacSHA1       160位
 * HmacSHA256     256位
@@ -80,7 +76,7 @@ Java安全体系结构通过扩展的方式,加入了更多的算法实现及相
 * HmacSHA512     512位
 
 
-##  对称加密算法
+###  对称加密算法
 
 * DES
 ```java
@@ -118,7 +114,7 @@ NoPadding
 ECB
 NoPadding
 ```
-## 对称加密算法-PBE
+### 对称加密算法-PBE
 * PBEWithMD5AndDES
 ```java
 56

@@ -20,6 +20,22 @@ title: Java加密 -- 辅助工具
 
 JCE工具将其拓展包：仅包括`org.bouncycastle.jce`包. 这是对JCE框架的支持
 
+也可以通过MAVEN引用依赖的方式
+```xml
+<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-jdk15on</artifactId>
+    <version>1.55</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-ext-jdk15on -->
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-ext-jdk15on</artifactId>
+    <version>1.55</version>
+</dependency>
+```
 
 ## Base64
 
@@ -27,8 +43,7 @@ Base64是一种基于64个字符的编码算法,根据RFC 2045的定义：Base64
 
 Base64算法有编码和解码操作可充当加密和解密操作,还有一张字符映射表充当了秘钥.由于字符映射表公开且Base64加密强度并不高,因此不能将其看作现代加密算法.但是如果将字符映射表调整,保密,改造后的Base64就具备了加密算法的意义而且Base64常作为密钥, 密文 和证书的一种通用存储编码格式
 
-###实现原理
-
+实现原理
 1. 将给定的字符串以字符为单位转换为对应的字符编码(如ASCII码)
 2. 将获得的字符编码转换为二进制码
 3. 对获得的二进制码做分组转换操作,每3个8位二进制码为1组,转换为每4个6位二进制码为1组(不足6位时低位补0)这是一个分组变化的过程, 3个8位二进制码和4个6位二进制码的长度都是24位
@@ -70,8 +85,7 @@ V E			  V E			V E			  V E
 ```
 
 
-### 代码举例
-
+代码举例
 ```java
 public class TestBase64 {
 
@@ -143,7 +157,7 @@ public class TestBase64 {
 }
 
 ```
-> URL使用的字符必须来自ASCII的子集(大写字母`A-Z`,小写字母`a-z`,数字`0-9`, 标点字符 `- _ . ! ~ * ' ,`) 需要注意的是`/ & ? @ # ; $ + = %` 也可以使用,但是必须转换为字节(每个字节为%后跟俩个16进制数字)(空格编码为+) 所以URL组成的内容是ASCII的子集 + 经过转换后的字节 但是URL不会自动地进行编码和解码因此我们需要URLEncoder来进行编码
+URL使用的字符必须来自ASCII的子集(大写字母`A-Z`,小写字母`a-z`,数字`0-9`, 标点字符 `- _ . ! ~ * ' ,`) 需要注意的是`/ & ? @ # ; $ + = %` 也可以使用,但是必须转换为字节(每个字节为%后跟俩个16进制数字)(空格编码为+) 所以URL组成的内容是ASCII的子集 + 经过转换后的字节 但是URL不会自动地进行编码和解码因此我们需要URLEncoder来进行编码
 ```java
 // 需要注意额是= 和 & URLEncoder会进行盲目地编码 因此在使用URLEncoder编码时避免将整个url字串都编码
 print("  : " + URLEncoder.encode(" ", "UTF-8"));
