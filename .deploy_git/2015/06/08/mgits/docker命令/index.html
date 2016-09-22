@@ -1,0 +1,627 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>docker命令 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="Docker命令service docker start安装之后启动 Docker 服务.
+docker pull命令来从仓库获取所需要的镜像1docker pull ubuntu12.04
+docker push把自己创建的镜像上传到仓库中来共享1docker push ouruser/sinatra
+docker images显示本地已有的镜像.
+docker commit使用 docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker命令">
+<meta property="og:url" content="http://www.ming15.wang/2015/06/08/mgits/docker命令/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="Docker命令service docker start安装之后启动 Docker 服务.
+docker pull命令来从仓库获取所需要的镜像1docker pull ubuntu12.04
+docker push把自己创建的镜像上传到仓库中来共享1docker push ouruser/sinatra
+docker images显示本地已有的镜像.
+docker commit使用 docker">
+<meta property="og:updated_time" content="2016-08-07T09:15:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="docker命令">
+<meta name="twitter:description" content="Docker命令service docker start安装之后启动 Docker 服务.
+docker pull命令来从仓库获取所需要的镜像1docker pull ubuntu12.04
+docker push把自己创建的镜像上传到仓库中来共享1docker push ouruser/sinatra
+docker images显示本地已有的镜像.
+docker commit使用 docker">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/mgits/docker命令/" title="docker命令" itemprop="url">docker命令</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker命令"><span class="toc-number">1.</span> <span class="toc-text">Docker命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#service-docker-start"><span class="toc-number">1.1.</span> <span class="toc-text">service docker start</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-pull"><span class="toc-number">1.2.</span> <span class="toc-text">docker pull</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-push"><span class="toc-number">1.3.</span> <span class="toc-text">docker push</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-images"><span class="toc-number">1.4.</span> <span class="toc-text">docker images</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-commit"><span class="toc-number">1.5.</span> <span class="toc-text">docker commit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-build"><span class="toc-number">1.6.</span> <span class="toc-text">docker build</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-tag"><span class="toc-number">1.7.</span> <span class="toc-text">docker tag</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-import"><span class="toc-number">1.8.</span> <span class="toc-text">docker import</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-save"><span class="toc-number">1.9.</span> <span class="toc-text">docker save</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-load"><span class="toc-number">1.10.</span> <span class="toc-text">docker load</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-rmi"><span class="toc-number">1.11.</span> <span class="toc-text">docker rmi</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-run"><span class="toc-number">1.12.</span> <span class="toc-text">docker run</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-start"><span class="toc-number">1.13.</span> <span class="toc-text">docker start</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-stop"><span class="toc-number">1.14.</span> <span class="toc-text">docker stop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-restart"><span class="toc-number">1.15.</span> <span class="toc-text">docker restart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-attach"><span class="toc-number">1.16.</span> <span class="toc-text">docker attach</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-export"><span class="toc-number">1.17.</span> <span class="toc-text">docker export</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-import-1"><span class="toc-number">1.18.</span> <span class="toc-text">docker import</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-rm"><span class="toc-number">1.19.</span> <span class="toc-text">docker rm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-search"><span class="toc-number">1.20.</span> <span class="toc-text">docker search</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-ps"><span class="toc-number">1.21.</span> <span class="toc-text">docker ps</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-logs"><span class="toc-number">1.22.</span> <span class="toc-text">docker logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-port"><span class="toc-number">1.23.</span> <span class="toc-text">docker port</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dockerfile"><span class="toc-number">2.</span> <span class="toc-text">Dockerfile</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="Docker命令"><a href="#Docker命令" class="headerlink" title="Docker命令"></a>Docker命令</h2><h3 id="service-docker-start"><a href="#service-docker-start" class="headerlink" title="service docker start"></a><code>service docker start</code></h3><p>安装之后启动 Docker 服务.</p>
+<h3 id="docker-pull"><a href="#docker-pull" class="headerlink" title="docker pull"></a><code>docker pull</code></h3><p>命令来从仓库获取所需要的镜像<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull ubuntu12.04</div></pre></td></tr></table></figure></p>
+<h3 id="docker-push"><a href="#docker-push" class="headerlink" title="docker push"></a><code>docker push</code></h3><p>把自己创建的镜像上传到仓库中来共享<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker push ouruser/sinatra</div></pre></td></tr></table></figure></p>
+<h3 id="docker-images"><a href="#docker-images" class="headerlink" title="docker images"></a><code>docker images</code></h3><p>显示本地已有的镜像.</p>
+<h3 id="docker-commit"><a href="#docker-commit" class="headerlink" title="docker commit"></a><code>docker commit</code></h3><p>使用 docker commit 命令来提交更新后的副本. 这个命令是用来将容器的改变提交到镜像身上.如果目标镜像不存在就创建一个.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo docker commit -m <span class="string">"Added json gem"</span> -a <span class="string">"Docker Newbee"</span> <span class="number">0</span>b2616b0e5a8 ouruser/sinatrav2</div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>-m</code> : 来指定提交的说明信息，跟我们使用的版本控制工具一样；</li>
+<li><code>-a</code> : 可以指定更新的用户信息；</li>
+<li><code>0b2616b0e5a8</code> : 用来创建镜像的容器的 ID；</li>
+<li><code>ouruser/sinatrav2</code> : 指定目标镜像的仓库名和 tag 信息。</li>
+</ul>
+<h3 id="docker-build"><a href="#docker-build" class="headerlink" title="docker build"></a><code>docker build</code></h3><p>使用 docker build 来创建一个新的镜像.为此,首先需要创建一个 Dockerfile,包含一些如何创建镜像的指令.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build -t=<span class="string">"ouruser/sinatrav2"</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li>-t 标记来添加 tag,指定新的镜像的用户信息</li>
+</ul>
+<h3 id="docker-tag"><a href="#docker-tag" class="headerlink" title="docker tag"></a><code>docker tag</code></h3><p>命令来修改镜像的标签.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker tag <span class="number">5</span>db5f8471261 ouruser/sinatradevel</div></pre></td></tr></table></figure></p>
+<h3 id="docker-import"><a href="#docker-import" class="headerlink" title="docker import"></a><code>docker import</code></h3><p>从本地文件系统导入一个镜像,可以使用 openvz(容器虚拟化的先锋技术)的模板来创建 openvz 的模板下载地址为 templates .比如,先下载了一个 ubuntu-14.04 的镜像,之后使用以下命令导入<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat ubuntu-<span class="number">14.04</span>-x86_64-minimal.tar.gz  |docker <span class="keyword">import</span> - ubuntu14.04</div></pre></td></tr></table></figure></p>
+<h3 id="docker-save"><a href="#docker-save" class="headerlink" title="docker save"></a><code>docker save</code></h3><p>导出镜像到本地文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker save -o ubuntu_14.04.tar ubuntu14.04</div></pre></td></tr></table></figure></p>
+<h3 id="docker-load"><a href="#docker-load" class="headerlink" title="docker load"></a><code>docker load</code></h3><p>从导出的本地文件中再导入到本地镜像库<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker load --input ubuntu_14.04.tar</div><div class="line">docker load &lt; ubuntu_14.04.tar</div></pre></td></tr></table></figure></p>
+<h3 id="docker-rmi"><a href="#docker-rmi" class="headerlink" title="docker rmi"></a><code>docker rmi</code></h3><p>移除本地的镜像. 注意在删除镜像之前要先用 docker rm 删掉依赖于这个镜像的所有容器.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo docker rmi training/sinatra</div></pre></td></tr></table></figure></p>
+<h3 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a><code>docker run</code></h3><p>基于镜像新建一个容器并启动<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker run ubuntu14.04</div><div class="line"></div><div class="line">docker run -t -i ubuntu14.04 /bin/bash</div></pre></td></tr></table></figure></p>
+<ul>
+<li>-t 选项让Docker分配一个伪终端(pseudo-tty)并绑定到容器的标准输入上</li>
+<li>-i 则让容器的标准输入保持打开.</li>
+<li>-d 让 Docker 容器在后台以守护态(Daemonized)形式运行</li>
+<li>-P 端口映射.当使用 -P 标记时，Docker 会随机映射一个 49000~49900 的端口到内部容器开放的网络端口。</li>
+</ul>
+<blockquote>
+<p>-p（小写的）则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有 <code>ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort</code>   在<code>--net=host</code>模式下，可以时容器内的端口自动映射到宿主主机上</p>
+</blockquote>
+<p>映射所有接口地址： 使用 <code>hostPort:containerPort</code> 格式本地的 <code>5000</code> 端口映射到容器的 <code>5000</code> 端口，可以执行<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -d -p <span class="number">5000</span>:<span class="number">5000</span> training/webapp python app.py</div></pre></td></tr></table></figure></p>
+<p>此时默认会绑定本地所有接口上的所有地址。 映射到指定地址的指定端口</p>
+<p>可以使用 <code>ip:hostPort:containerPort</code> 格式指定映射使用一个特定地址，比如 <code>localhost</code> 地址 <code>127.0.0.1</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -d -p <span class="number">127.0</span>.0.1:<span class="number">5000</span>:<span class="number">5000</span> training/webapp python app.py</div></pre></td></tr></table></figure></p>
+<p>映射到指定地址的任意端口。 使用 <code>ip::containerPort</code> 绑定 <code>localhost</code> 的任意端口到容器的 <code>5000</code> 端口，本地主机会自动分配一个端口。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -d -p <span class="number">127.0</span>.0.1::<span class="number">5000</span> training/webapp python app.py</div></pre></td></tr></table></figure></p>
+<h3 id="docker-start"><a href="#docker-start" class="headerlink" title="docker start"></a><code>docker start</code></h3><p>直接将一个已经终止的容器启动运行</p>
+<h3 id="docker-stop"><a href="#docker-stop" class="headerlink" title="docker stop"></a><code>docker stop</code></h3><p>终止一个运行中的容器.</p>
+<h3 id="docker-restart"><a href="#docker-restart" class="headerlink" title="docker restart"></a><code>docker restart</code></h3><p>将一个运行态的容器终止,然后再重新启动它.</p>
+<h3 id="docker-attach"><a href="#docker-attach" class="headerlink" title="docker attach"></a><code>docker attach</code></h3><p>进入容器</p>
+<h3 id="docker-export"><a href="#docker-export" class="headerlink" title="docker export"></a><code>docker export</code></h3><p>导出本地某个容器<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker export <span class="number">7691</span>a814370e &gt; ubuntu.tar</div></pre></td></tr></table></figure></p>
+<h3 id="docker-import-1"><a href="#docker-import-1" class="headerlink" title="docker import"></a><code>docker import</code></h3><p>从容器快照文件中再导入为镜像<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat ubuntu.tar | sudo docker <span class="keyword">import</span> - test/buntuv1.0</div><div class="line"></div><div class="line">docker <span class="keyword">import</span> http<span class="comment">//example.com/exampleimage.tgz example/imagerepo</span></div></pre></td></tr></table></figure></p>
+<h3 id="docker-rm"><a href="#docker-rm" class="headerlink" title="docker rm"></a><code>docker rm</code></h3><p>移除容器.删除一个处于终止状态的容器<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker rm  trusting_newton</div></pre></td></tr></table></figure></p>
+<h3 id="docker-search"><a href="#docker-search" class="headerlink" title="docker search"></a><code>docker search</code></h3><p>查找官方仓库中的镜像</p>
+<h3 id="docker-ps"><a href="#docker-ps" class="headerlink" title="docker ps"></a><code>docker ps</code></h3><h3 id="docker-logs"><a href="#docker-logs" class="headerlink" title="docker logs"></a><code>docker logs</code></h3><p>获取容器的输出信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker logs insane_babbage</div></pre></td></tr></table></figure></p>
+<h3 id="docker-port"><a href="#docker-port" class="headerlink" title="docker port"></a><code>docker port</code></h3><p>查看当前映射的端口配置，也可以查看到绑定的地址<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker port nostalgic_morse <span class="number">5000</span></div></pre></td></tr></table></figure></p>
+<h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><p>Dockerfile中每一条指令都创建镜像的一层,例如<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># This is a comment</div><div class="line">FROM ubuntu14.04</div><div class="line">MAINTAINER Docker Newbee &lt;newbee@docker.com&gt;</div><div class="line">RUN apt-get -qq update</div><div class="line">RUN apt-get -qqy install ruby ruby-dev</div><div class="line">RUN gem install sinatra</div><div class="line">Dockerfile 基本的语法是</div></pre></td></tr></table></figure></p>
+<ol>
+<li>使用<code>#</code>来注释</li>
+<li><code>FROM</code> 指令告诉 <code>Docker</code> 使用哪个镜像作为基础</li>
+<li>接着是维护者的信息</li>
+<li><code>RUN</code>开头的指令会在创建中运行,比如安装一个软件包,在这里使用 <code>apt-get</code> 来安装了一些软件</li>
+<li><code>ADD</code> 命令复制本地文件到镜像;</li>
+<li><code>EXPOSE</code> 命令来向外部开放端口;</li>
+<li><code>CMD</code> 命令来描述容器启动后运行的程序等</li>
+</ol>
+<p>当利用 <code>docker run</code> 来创建容器时,<code>Docker</code> 在后台运行的标准操作包括</p>
+<ol>
+<li>检查本地是否存在指定的镜像,不存在就从公有仓库下载</li>
+<li>利用镜像创建并启动一个容器</li>
+<li>分配一个文件系统,并在只读的镜像层外面挂载一层可读写层</li>
+<li>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去</li>
+<li>从地址池配置一个 ip 地址给容器</li>
+<li>执行用户指定的应用程序</li>
+<li>执行完毕后容器被终止</li>
+</ol>
+<p><code>docker load</code> vs <code>docker import</code> 用户既可以使用 <code>docker load</code> 来导入镜像存储文件到本地镜像库,也可以使用 <code>docker import</code>来导入一个容器快照到本地镜像库.这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息(即仅保存容器当时的快照状态),而镜像存储文件将保存完整记录,体积也要大.此外,从容器快照文件导入时可以重新指定标签等元数据信息.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2015/06/08/mgits/docker命令/" data-title="docker命令 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/06/08/mgits/windows rust/" title="在windows上搭建rust开发环境">
+  <strong>上一篇：</strong><br/>
+  <span>
+  在windows上搭建rust开发环境</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/06/08/Java/读取csv文件/"  title="读取csv文件">
+ <strong>下一篇：</strong><br/> 
+ <span>读取csv文件
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/08/mgits/docker命令/" data-title="docker命令" data-url="http://www.ming15.wang/2015/06/08/mgits/docker命令/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker命令"><span class="toc-number">1.</span> <span class="toc-text">Docker命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#service-docker-start"><span class="toc-number">1.1.</span> <span class="toc-text">service docker start</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-pull"><span class="toc-number">1.2.</span> <span class="toc-text">docker pull</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-push"><span class="toc-number">1.3.</span> <span class="toc-text">docker push</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-images"><span class="toc-number">1.4.</span> <span class="toc-text">docker images</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-commit"><span class="toc-number">1.5.</span> <span class="toc-text">docker commit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-build"><span class="toc-number">1.6.</span> <span class="toc-text">docker build</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-tag"><span class="toc-number">1.7.</span> <span class="toc-text">docker tag</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-import"><span class="toc-number">1.8.</span> <span class="toc-text">docker import</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-save"><span class="toc-number">1.9.</span> <span class="toc-text">docker save</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-load"><span class="toc-number">1.10.</span> <span class="toc-text">docker load</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-rmi"><span class="toc-number">1.11.</span> <span class="toc-text">docker rmi</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-run"><span class="toc-number">1.12.</span> <span class="toc-text">docker run</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-start"><span class="toc-number">1.13.</span> <span class="toc-text">docker start</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-stop"><span class="toc-number">1.14.</span> <span class="toc-text">docker stop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-restart"><span class="toc-number">1.15.</span> <span class="toc-text">docker restart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-attach"><span class="toc-number">1.16.</span> <span class="toc-text">docker attach</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-export"><span class="toc-number">1.17.</span> <span class="toc-text">docker export</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-import-1"><span class="toc-number">1.18.</span> <span class="toc-text">docker import</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-rm"><span class="toc-number">1.19.</span> <span class="toc-text">docker rm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-search"><span class="toc-number">1.20.</span> <span class="toc-text">docker search</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-ps"><span class="toc-number">1.21.</span> <span class="toc-text">docker ps</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-logs"><span class="toc-number">1.22.</span> <span class="toc-text">docker logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-port"><span class="toc-number">1.23.</span> <span class="toc-text">docker port</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dockerfile"><span class="toc-number">2.</span> <span class="toc-text">Dockerfile</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

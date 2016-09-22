@@ -1,0 +1,599 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>JVM栈 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="概述JVM栈和常用的数据结构很相似,都是一种先进后出的数据结构. JVM栈是每个线程私有的内存空间.线程的基本行为就是方法调用, 而方法调用就是通过JVM栈传递的.每当我们创建一个线程对象的的时候, 都会创建一个JVM栈. 它的生命周期与线程相同.
+JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入JVM栈,也称入栈, 当方法执行完(不管是return还是异常),栈帧都会被弹出J">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM栈">
+<meta property="og:url" content="http://www.ming15.wang/2014/09/03/jvm/JVM 栈/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="概述JVM栈和常用的数据结构很相似,都是一种先进后出的数据结构. JVM栈是每个线程私有的内存空间.线程的基本行为就是方法调用, 而方法调用就是通过JVM栈传递的.每当我们创建一个线程对象的的时候, 都会创建一个JVM栈. 它的生命周期与线程相同.
+JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入JVM栈,也称入栈, 当方法执行完(不管是return还是异常),栈帧都会被弹出J">
+<meta property="og:updated_time" content="2016-09-09T06:03:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM栈">
+<meta name="twitter:description" content="概述JVM栈和常用的数据结构很相似,都是一种先进后出的数据结构. JVM栈是每个线程私有的内存空间.线程的基本行为就是方法调用, 而方法调用就是通过JVM栈传递的.每当我们创建一个线程对象的的时候, 都会创建一个JVM栈. 它的生命周期与线程相同.
+JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入JVM栈,也称入栈, 当方法执行完(不管是return还是异常),栈帧都会被弹出J">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/09/03/jvm/JVM 栈/" title="JVM栈" itemprop="url">JVM栈</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2014-09-03T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-03</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PC寄存器"><span class="toc-number">2.</span> <span class="toc-text">PC寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地方法栈"><span class="toc-number">3.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作数栈"><span class="toc-number">4.</span> <span class="toc-text">操作数栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部变量表"><span class="toc-number">5.</span> <span class="toc-text">局部变量表</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>JVM栈和常用的数据结构很相似,都是一种先进后出的数据结构. JVM栈是每个线程私有的内存空间.线程的基本行为就是方法调用, 而方法调用就是通过JVM栈传递的.每当我们创建一个线程对象的的时候, 都会创建一个JVM栈. 它的生命周期与线程相同.</p>
+<p>JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入JVM栈,也称入栈, 当方法执行完(不管是return还是异常),栈帧都会被弹出JVM栈,也称出栈. 栈帧包含如下结构:</p>
+<ul>
+<li>PC寄存器</li>
+<li>本地方法栈</li>
+<li>局部变量表</li>
+<li>操作数栈</li>
+<li>动态连接</li>
+<li>方法出口</li>
+</ul>
+<p>在java虚拟机中.对这个区域规定了俩种异常情况:</p>
+<ol>
+<li>如果请求的栈深度大于虚拟机所允许的深度,抛出<code>StackOverflowError</code></li>
+<li>如果虚拟机可以动态扩展,当拓展时无法申请到足够的内存时会抛出<code>OutOfMemoryError</code>异常</li>
+</ol>
+<h2 id="PC寄存器"><a href="#PC寄存器" class="headerlink" title="PC寄存器"></a>PC寄存器</h2><p>每当我们创建一个线程的时候, 都会JVM都会附带着创建一个本线程私有的PC寄存器和虚拟机栈. PC寄存器用于存放当前线程执行的字节码指令(线程当前方法)地址. 字节码解释器通过修改寄存器里的值使线程完成下一个指令的执行. 分支,循环,跳转,异常处理,线程恢复等基础功能都需要依赖这个寄存器完成. 在一个单CPU的环境中, 一个多线程的程序通过轮流切换线程完成多线程运行. 那么在切换线程的时候, 被切换的线程对应的寄存器里的值被保存了下来, 当线程再切换回来的时候,线程得以继续运行.</p>
+<blockquote>
+<p>PC寄存器是唯一一个在java虚拟机规范中没有规定任何<code>OutOfMemoryError</code>情况的区域.</p>
+</blockquote>
+<h2 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h2><ul>
+<li>用来支持native方法</li>
+</ul>
+<h2 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h2><p>每个栈帧内部都包含一个称为操作数栈的先进后出栈. 同局部变量表一样,操作数栈的最大深度也是在编译的时候被写入到Code属性的max_stacks数据项之中的.操作数栈的每一个元素都可以是任意的java数据类型,包括long和double(一个long或者double类型的数据会占用俩个单位的栈深度, 其他类型占用一个单位的栈深度). 32位的数据类型所占的栈容量为1,64位数据类型所占的栈容量为2.在方法执行的时候,操作数栈的深度都不会超过在max_stacks数据项中设定的最大值. </p>
+<p>栈帧在刚创建的时候, 操作数栈是空的, JVM提供了一系列指令从局部变量表或者对象实例的字段中复制常量或变量值到操作数栈中.也提供了一些列指令从操作数栈取走, 操作数据, 以及把结果重新入栈. 也就是入栈和出栈操作.例如:在做算术运算的时候是通过操作数栈来进行的,又或者在调用其他方法的时候是通过操作数栈来进行参数传递的.参考<a href="http://www.ming15.wang/2014/09/08/jvm/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/">字节码指令</a></p>
+<p>例如,整数加法的字节码指令iadd在运行的时候要求操作数栈中最接近栈顶的俩个元素已经存入了俩个int型的数值,当执行这个指令时,会将这俩个int值出栈并相加,然后将相加的结果入栈.</p>
+<p>另外,在概念模型中,俩个栈帧为虚拟机栈的元素,相互之间是完全独立的.但是大多数虚拟机的实现里都会做一些优化处理,令俩个栈帧出现一部分重叠.让下面栈帧的部分操作数栈与上面栈帧的部分局部变量表重叠在一起,这样在进行方法调用时就可以共有一部分数据,而无需进行额外的参数复制传递:</p>
+<h2 id="局部变量表"><a href="#局部变量表" class="headerlink" title="局部变量表"></a>局部变量表</h2><p>局部变量表存放基本类型的数据和对象的引用,但对象本身不存放在栈中,而是存放在堆中.</p>
+<ul>
+<li>其长度在编译器决定</li>
+<li>一个局部变量称为一个Slot.每个Slot只可以保存一个<code>boolean, byte, char, short, int, float, reference,returnAddress</code>类型的数据.<code>long</code>或者<code>double</code>需要俩个Slot保存.</li>
+<li>局部变量表来完成方法调用时的参数传递. (如果是实例方法, 第0个局部变量是用来存储调用实例方法的对象的引用)</li>
+</ul>
+<p>局部变量表中的Slot是可重用的, 我们看下面的例子:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CollectSlot</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">byte</span>[] byes3m = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">3</span> * <span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line">		System.gc();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行一下上面的程序, 我们得到下面的结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">ζ java -XX:+PrintGCDetails -XX:MaxNewSize=1m -Xmx10M -Xms10M CollectSlot</div><div class="line">[GC (Allocation Failure) [PSYoungGen: 509K-&gt;488K(1024K)] 509K-&gt;504K(9728K), 0.0004559 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">[GC (System.gc()) [PSYoungGen: 745K-&gt;488K(1024K)] 3833K-&gt;3656K(9728K), 0.0005722 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">[Full GC (System.gc()) [PSYoungGen: 488K-&gt;0K(1024K)] [ParOldGen: 3168K-&gt;3614K(8704K)] 3656K-&gt;3614K(9728K), [Metaspace: 2572K-&gt;2572K(1056768K)], 0.0045062 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">Heap</div><div class="line"> PSYoungGen      total 1024K, used 10K [0x00000000ffe80000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 512K, 2% used [0x00000000ffe80000,0x00000000ffe82a68,0x00000000fff00000)</div><div class="line">  from space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 8704K, used 3614K [0x00000000ff600000, 0x00000000ffe80000, 0x00000000ffe80000)</div><div class="line">  object space 8704K, 41% used [0x00000000ff600000,0x00000000ff987840,0x00000000ffe80000)</div><div class="line"> Metaspace       used 2578K, capacity 4486K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 287K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">Java HotSpot(TM) 64-Bit Server VM warning: NewSize (1536k) is greater than the MaxNewSize (1024k). A new max generation size of 1536k will be used.</div></pre></td></tr></table></figure></p>
+<p>在启动程序的时候, 我们将JVM堆内存设置为10M, 新生代为1M, 当我们在应用程序中分配3M内存的时候, byes3m这个对象就直接分配在了老年代中. 从GC日志的第一条中我们也可以看出, <code>[PSYoungGen: 509K-&gt;488K(1024K)]</code> 新生代已经使用了509k, 回收后488K, 总共1024k. 当调用<code>System.gc()</code>我们发现永久代的内存并没有回收掉，这也正是我们的预期</p>
+<p>然后我们修改一下那个程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CollectSlot</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">byte</span>[] byes3m = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">3</span> * <span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line">		byes3m = <span class="keyword">null</span>;</div><div class="line">		<span class="keyword">byte</span>[] byes3m_ = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">3</span> * <span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line">		System.gc();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们将byes3m置为null, 看看其占用的内存会不会回收掉<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">ζ java -XX:+PrintGCDetails -XX:MaxNewSize=1m -Xmx10M -Xms10M CollectSlot</div><div class="line">[GC (Allocation Failure) [PSYoungGen: 509K-&gt;496K(1024K)] 509K-&gt;528K(9728K), 0.0005626 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">[GC (System.gc()) [PSYoungGen: 753K-&gt;488K(1024K)] 6929K-&gt;6744K(9728K), 0.0006016 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">[Full GC (System.gc()) [PSYoungGen: 488K-&gt;0K(1024K)] [ParOldGen: 6256K-&gt;3614K(8704K)] 6744K-&gt;3614K(9728K), [Metaspace: 2572K-&gt;2572K(1056768K)], 0.0045914 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">Heap</div><div class="line"> PSYoungGen      total 1024K, used 10K [0x00000000ffe80000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 512K, 2% used [0x00000000ffe80000,0x00000000ffe82a68,0x00000000fff00000)</div><div class="line">  from space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 8704K, used 3614K [0x00000000ff600000, 0x00000000ffe80000, 0x00000000ffe80000)</div><div class="line">  object space 8704K, 41% used [0x00000000ff600000,0x00000000ff987840,0x00000000ffe80000)</div><div class="line"> Metaspace       used 2578K, capacity 4486K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 287K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">Java HotSpot(TM) 64-Bit Server VM warning: NewSize (1536k) is greater than the MaxNewSize (1024k). A new max generation size of 1536k will be used.</div></pre></td></tr></table></figure></p>
+<p>好，我们看到了<code>ParOldGen: 6256K-&gt;3614K(8704K)</code> 这句话, 说明已经有3M的内存被回收掉了。 </p>
+<blockquote>
+<p>赋null值的操作在经过虚拟机JIT编译器优化之后会被消除掉,这时候将变量设置为null实际上是没有意义的.因为我们的方法调用还没有达到JIT编译的次数, 因此在上面的例子中, 赋null值还是管用的, 但是在平时编码时,我们还是尽量不要依赖这种null赋值的操作</p>
+</blockquote>
+<p>下面我们再修改一下程序, 将其放在代码块中，这样placeholder1的slot就会被placeholder2复用,<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CollectSlot</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">byte</span>[] byes3m = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">3</span> * <span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">byte</span>[] byes3m1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">3</span> * <span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line">		System.gc();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">ζ java -XX:+PrintGCDetails -XX:MaxNewSize=1m -Xmx10M -Xms10M CollectSlot</div><div class="line">[GC (Allocation Failure) [PSYoungGen: 509K-&gt;472K(1024K)] 509K-&gt;472K(9728K), 0.0006416 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">[GC (System.gc()) [PSYoungGen: 729K-&gt;488K(1024K)] 6873K-&gt;6752K(9728K), 0.0038950 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">[Full GC (System.gc()) [PSYoungGen: 488K-&gt;0K(1024K)] [ParOldGen: 6264K-&gt;3614K(8704K)] 6752K-&gt;3614K(9728K), [Metaspace: 2572K-&gt;2572K(1056768K)], 0.0045731 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div><div class="line">Heap</div><div class="line"> PSYoungGen      total 1024K, used 10K [0x00000000ffe80000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 512K, 2% used [0x00000000ffe80000,0x00000000ffe82a68,0x00000000fff00000)</div><div class="line">  from space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 8704K, used 3614K [0x00000000ff600000, 0x00000000ffe80000, 0x00000000ffe80000)</div><div class="line">  object space 8704K, 41% used [0x00000000ff600000,0x00000000ff987840,0x00000000ffe80000)</div><div class="line"> Metaspace       used 2578K, capacity 4486K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 287K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">Java HotSpot(TM) 64-Bit Server VM warning: NewSize (1536k) is greater than the MaxNewSize (1024k). A new max generation size of 1536k will be used.</div></pre></td></tr></table></figure></p>
+<p>在上面的GC日志中,我们同样看到<code>ParOldGen: 6264K-&gt;3614K(8704K)</code>说明在代码块里面的那3M内存也已经被回收掉了. 这段内存能被回收的关键就是byes3m1复用了byes3m局部变量表中的Slot.因此byes3m原来指向的堆内存就不存在引用了,在GC时,这段内存就被回收掉了.但是如果没有byes3m1这个对象创建的话,byes3m的虽然离开了其作用域,但是由于GCRoots还关联着对其的引用,因此也是不会被回收的.</p>
+<p>这种代码在绝大部分情况下影响都非常小, 但是如果一个方法中有一些很耗时的操作, 同时又分配了很大的内存, 将这些不再使用的占大内存的变量放到代码块中就是一个比较好的操作了，所以我们应该以恰当的作用域来控制变量回收时间。</p>
+<p>关于局部变量表,还有一点可能会对实际开发产生影响,就是局部变量表不像前面介绍的类变量那样存在”准备阶段”.类变量有俩次赋初始值的过程,一次在准备阶段,赋予系统初始值.另外一次在初始化阶段,赋予程序员定义的初始化. 因此即使在初始化阶段程序员没有为类变量赋值也没关系,类变量仍然具有一个确定的初始值. 但是局部变量就不一样了,如果一个局部变量定义了但没有赋初始值是不能使用的.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2014/09/03/jvm/JVM 栈/" data-title="JVM栈 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/09/04/jvm/JVM 方法调用/" title="JVM方法调用">
+  <strong>上一篇：</strong><br/>
+  <span>
+  JVM方法调用</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/09/02/jvm/JVM 堆内存/"  title="JVM 堆内存">
+ <strong>下一篇：</strong><br/> 
+ <span>JVM 堆内存
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2014/09/03/jvm/JVM 栈/" data-title="JVM栈" data-url="http://www.ming15.wang/2014/09/03/jvm/JVM 栈/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PC寄存器"><span class="toc-number">2.</span> <span class="toc-text">PC寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地方法栈"><span class="toc-number">3.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作数栈"><span class="toc-number">4.</span> <span class="toc-text">操作数栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部变量表"><span class="toc-number">5.</span> <span class="toc-text">局部变量表</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

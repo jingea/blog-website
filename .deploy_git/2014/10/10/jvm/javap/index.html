@@ -1,0 +1,561 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>javap | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="用法javap是JDK自带的反汇编器，可以查看java编译器为我们生成的字节码1234567891011121314151617D:\&amp;gt;javap用法: javap &amp;lt;options&amp;gt; &amp;lt;classes&amp;gt;其中, 可能的选项包括:  -version                 版本信息  -v  -verbose             输出附加信息  -l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javap">
+<meta property="og:url" content="http://www.ming15.wang/2014/10/10/jvm/javap/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="用法javap是JDK自带的反汇编器，可以查看java编译器为我们生成的字节码1234567891011121314151617D:\&amp;gt;javap用法: javap &amp;lt;options&amp;gt; &amp;lt;classes&amp;gt;其中, 可能的选项包括:  -version                 版本信息  -v  -verbose             输出附加信息  -l">
+<meta property="og:updated_time" content="2016-09-09T06:03:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javap">
+<meta name="twitter:description" content="用法javap是JDK自带的反汇编器，可以查看java编译器为我们生成的字节码1234567891011121314151617D:\&amp;gt;javap用法: javap &amp;lt;options&amp;gt; &amp;lt;classes&amp;gt;其中, 可能的选项包括:  -version                 版本信息  -v  -verbose             输出附加信息  -l">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/10/10/jvm/javap/" title="javap" itemprop="url">javap</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2014-10-10T07:00:00.000Z" itemprop="datePublished"> Published 2014-10-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">1.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v"><span class="toc-number">2.</span> <span class="toc-text">-v</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#l"><span class="toc-number">3.</span> <span class="toc-text">-l</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#public"><span class="toc-number">4.</span> <span class="toc-text">-public</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#p"><span class="toc-number">5.</span> <span class="toc-text">-p</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#c"><span class="toc-number">6.</span> <span class="toc-text">-c</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#s"><span class="toc-number">7.</span> <span class="toc-text">-s</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sysinfo"><span class="toc-number">8.</span> <span class="toc-text">-sysinfo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#constants"><span class="toc-number">9.</span> <span class="toc-text">-constants</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><p>javap是JDK自带的反汇编器，可以查看java编译器为我们生成的字节码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">D:\&gt;javap</div><div class="line">用法: javap &lt;options&gt; &lt;classes&gt;</div><div class="line">其中, 可能的选项包括:</div><div class="line">  -version                 版本信息</div><div class="line">  -v  -verbose             输出附加信息</div><div class="line">  <span class="_">-l</span>                       输出行号和本地变量表</div><div class="line">  -public                  仅显示公共类和成员</div><div class="line">  -protected               显示受保护的/公共类和成员</div><div class="line">  -package                 显示程序包/受保护的/公共类和成员 (默认)</div><div class="line">  -p  -private             显示所有类和成员</div><div class="line">  -c                       对代码进行反汇编</div><div class="line">  <span class="_">-s</span>                       输出内部类型签名</div><div class="line">  -sysinfo                 显示正在处理的类的系统信息 (路径, 大小, 日期, MD5 散列)</div><div class="line">  -constants               显示最终常量</div><div class="line">  -classpath &lt;path&gt;        指定查找用户类文件的位置</div><div class="line">  -cp &lt;path&gt;               指定查找用户类文件的位置</div><div class="line">  -bootclasspath &lt;path&gt;    覆盖引导类文件的位置</div></pre></td></tr></table></figure></p>
+<p>我们看一段源码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Hello Javap"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们不使用任何的参数, javap一下这个class文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ javap Test.class</div><div class="line">Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test &#123;</div><div class="line">  public Test();</div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="v"><a href="#v" class="headerlink" title="-v"></a>-v</h2><p>输出附加信息<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">$ javap -v Test.class</div><div class="line">Classfile /Users/wangming/idea/untitled/target/classes/Test.class</div><div class="line">  Last modified 2016-6-18; size 515 bytes</div><div class="line">  MD5 checksum 475614e4cb4c152a5cf2be8929786a01</div><div class="line">  Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test</div><div class="line">  SourceFile: <span class="string">"Test.java"</span></div><div class="line">  minor version: 0</div><div class="line">  major version: 52</div><div class="line">  flags: ACC_PUBLIC, ACC_SUPER</div><div class="line">Constant pool:</div><div class="line">   <span class="comment">#1 = Methodref          #6.#20         //  java/lang/Object."&lt;init&gt;":()V</span></div><div class="line">   <span class="comment">#2 = Fieldref           #21.#22        //  java/lang/System.out:Ljava/io/PrintStream;</span></div><div class="line">   <span class="comment">#3 = String             #23            //  Hello Javap</span></div><div class="line">   <span class="comment">#4 = Methodref          #24.#25        //  java/io/PrintStream.println:(Ljava/lang/String;)V</span></div><div class="line">   <span class="comment">#5 = Class              #26            //  Test</span></div><div class="line">   <span class="comment">#6 = Class              #27            //  java/lang/Object</span></div><div class="line">   <span class="comment">#7 = Utf8               &lt;init&gt;</span></div><div class="line">   <span class="comment">#8 = Utf8               ()V</span></div><div class="line">   <span class="comment">#9 = Utf8               Code</span></div><div class="line">  <span class="comment">#10 = Utf8               LineNumberTable</span></div><div class="line">  <span class="comment">#11 = Utf8               LocalVariableTable</span></div><div class="line">  <span class="comment">#12 = Utf8               this</span></div><div class="line">  <span class="comment">#13 = Utf8               LTest;</span></div><div class="line">  <span class="comment">#14 = Utf8               main</span></div><div class="line">  <span class="comment">#15 = Utf8               ([Ljava/lang/String;)V</span></div><div class="line">  <span class="comment">#16 = Utf8               args</span></div><div class="line">  <span class="comment">#17 = Utf8               [Ljava/lang/String;</span></div><div class="line">  <span class="comment">#18 = Utf8               SourceFile</span></div><div class="line">  <span class="comment">#19 = Utf8               Test.java</span></div><div class="line">  <span class="comment">#20 = NameAndType        #7:#8          //  "&lt;init&gt;":()V</span></div><div class="line">  <span class="comment">#21 = Class              #28            //  java/lang/System</span></div><div class="line">  <span class="comment">#22 = NameAndType        #29:#30        //  out:Ljava/io/PrintStream;</span></div><div class="line">  <span class="comment">#23 = Utf8               Hello Javap</span></div><div class="line">  <span class="comment">#24 = Class              #31            //  java/io/PrintStream</span></div><div class="line">  <span class="comment">#25 = NameAndType        #32:#33        //  println:(Ljava/lang/String;)V</span></div><div class="line">  <span class="comment">#26 = Utf8               Test</span></div><div class="line">  <span class="comment">#27 = Utf8               java/lang/Object</span></div><div class="line">  <span class="comment">#28 = Utf8               java/lang/System</span></div><div class="line">  <span class="comment">#29 = Utf8               out</span></div><div class="line">  <span class="comment">#30 = Utf8               Ljava/io/PrintStream;</span></div><div class="line">  <span class="comment">#31 = Utf8               java/io/PrintStream</span></div><div class="line">  <span class="comment">#32 = Utf8               println</span></div><div class="line">  <span class="comment">#33 = Utf8               (Ljava/lang/String;)V</span></div><div class="line">&#123;</div><div class="line">  public Test();</div><div class="line">    descriptor: ()V</div><div class="line">    flags: ACC_PUBLIC</div><div class="line">    Code:</div><div class="line">      stack=1, locals=1, args_size=1</div><div class="line">         0: aload_0</div><div class="line">         1: invokespecial <span class="comment">#1                  // Method java/lang/Object."&lt;init&gt;":()V</span></div><div class="line">         4: <span class="built_in">return</span></div><div class="line">      LineNumberTable:</div><div class="line">        line 4: 0</div><div class="line">      LocalVariableTable:</div><div class="line">        Start  Length  Slot  Name   Signature</div><div class="line">            0       5     0  this   LTest;</div><div class="line"></div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">    descriptor: ([Ljava/lang/String;)V</div><div class="line">    flags: ACC_PUBLIC, ACC_STATIC</div><div class="line">    Code:</div><div class="line">      stack=2, locals=1, args_size=1</div><div class="line">         0: getstatic     <span class="comment">#2                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></div><div class="line">         3: ldc           <span class="comment">#3                  // String Hello Javap</span></div><div class="line">         5: invokevirtual <span class="comment">#4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V</span></div><div class="line">         8: <span class="built_in">return</span></div><div class="line">      LineNumberTable:</div><div class="line">        line 6: 0</div><div class="line">        line 7: 8</div><div class="line">      LocalVariableTable:</div><div class="line">        Start  Length  Slot  Name   Signature</div><div class="line">            0       9     0  args   [Ljava/lang/String;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="l"><a href="#l" class="headerlink" title="-l"></a>-l</h2><p>输出行号和本地变量表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ javap <span class="_">-l</span> Test.class</div><div class="line">Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test &#123;</div><div class="line">  public Test();</div><div class="line">    LineNumberTable:</div><div class="line">      line 4: 0</div><div class="line">    LocalVariableTable:</div><div class="line">      Start  Length  Slot  Name   Signature</div><div class="line">          0       5     0  this   LTest;</div><div class="line"></div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">    LineNumberTable:</div><div class="line">      line 6: 0</div><div class="line">      line 7: 8</div><div class="line">    LocalVariableTable:</div><div class="line">      Start  Length  Slot  Name   Signature</div><div class="line">          0       9     0  args   [Ljava/lang/String;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="public"><a href="#public" class="headerlink" title="-public"></a>-public</h2><p>仅显示公共类和成员<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ javap -public Test.class</div><div class="line">Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test &#123;</div><div class="line">  public Test();</div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="p"><a href="#p" class="headerlink" title="-p"></a>-p</h2><p>显示所有类和成员<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ javap -p Test.class</div><div class="line">Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test &#123;</div><div class="line">  public Test();</div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h2><p>对代码进行反汇编<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ javap -c Test.class</div><div class="line">Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test &#123;</div><div class="line">  public Test();</div><div class="line">    Code:</div><div class="line">       0: aload_0</div><div class="line">       1: invokespecial <span class="comment">#1                  // Method java/lang/Object."&lt;init&gt;":()V</span></div><div class="line">       4: <span class="built_in">return</span></div><div class="line"></div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">    Code:</div><div class="line">       0: getstatic     <span class="comment">#2                  // Field java/lang/System.out:Ljava/io/PrintStream;</span></div><div class="line">       3: ldc           <span class="comment">#3                  // String Hello Javap</span></div><div class="line">       5: invokevirtual <span class="comment">#4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V</span></div><div class="line">       8: <span class="built_in">return</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="s"><a href="#s" class="headerlink" title="-s"></a>-s</h2><p>输出内部类型签名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ javap <span class="_">-s</span> Test.class</div><div class="line">Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test &#123;</div><div class="line">  public Test();</div><div class="line">    descriptor: ()V</div><div class="line"></div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">    descriptor: ([Ljava/lang/String;)V</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="sysinfo"><a href="#sysinfo" class="headerlink" title="-sysinfo"></a>-sysinfo</h2><p>显示正在处理的类的系统信息 (路径, 大小, 日期, MD5 散列)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ javap -sysinfo Test.class</div><div class="line">Classfile /Users/wangming/idea/untitled/target/classes/Test.class</div><div class="line">  Last modified 2016-6-18; size 515 bytes</div><div class="line">  MD5 checksum 475614e4cb4c152a5cf2be8929786a01</div><div class="line">  Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test &#123;</div><div class="line">  public Test();</div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="constants"><a href="#constants" class="headerlink" title="-constants"></a>-constants</h2><p>显示最终常量<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ javap -constants Test.class</div><div class="line">Compiled from <span class="string">"Test.java"</span></div><div class="line">public class Test &#123;</div><div class="line">  public Test();</div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2014/10/10/jvm/javap/" data-title="javap | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/11/08/Java/Java加密 概述/" title="Java加密 -- 概述">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Java加密 -- 概述</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/10/06/jvm/jhat/"  title="jhat">
+ <strong>下一篇：</strong><br/> 
+ <span>jhat
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2014/10/10/jvm/javap/" data-title="javap" data-url="http://www.ming15.wang/2014/10/10/jvm/javap/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">1.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v"><span class="toc-number">2.</span> <span class="toc-text">-v</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#l"><span class="toc-number">3.</span> <span class="toc-text">-l</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#public"><span class="toc-number">4.</span> <span class="toc-text">-public</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#p"><span class="toc-number">5.</span> <span class="toc-text">-p</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#c"><span class="toc-number">6.</span> <span class="toc-text">-c</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#s"><span class="toc-number">7.</span> <span class="toc-text">-s</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sysinfo"><span class="toc-number">8.</span> <span class="toc-text">-sysinfo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#constants"><span class="toc-number">9.</span> <span class="toc-text">-constants</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

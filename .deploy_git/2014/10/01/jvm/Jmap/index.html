@@ -1,0 +1,588 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Jmap | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="用法java内存映射工具,用于生成堆转储快照.
+如果不使用jmap命令,想要获取java堆转储快照还有一些比较暴力的手段:
+
+-XX:+HeapDumpOnOutOfMemoryError: 可以让虚拟机在OOM异常自动生成dump文件,通过
+-XX:+HeapDumpOnCtrlBreak参数则可以使用[CTRL] + [Break]: 键让虚拟机生成dump文件,又或者在Linux系统下通过k">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jmap">
+<meta property="og:url" content="http://www.ming15.wang/2014/10/01/jvm/Jmap/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="用法java内存映射工具,用于生成堆转储快照.
+如果不使用jmap命令,想要获取java堆转储快照还有一些比较暴力的手段:
+
+-XX:+HeapDumpOnOutOfMemoryError: 可以让虚拟机在OOM异常自动生成dump文件,通过
+-XX:+HeapDumpOnCtrlBreak参数则可以使用[CTRL] + [Break]: 键让虚拟机生成dump文件,又或者在Linux系统下通过k">
+<meta property="og:updated_time" content="2016-09-09T06:03:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jmap">
+<meta name="twitter:description" content="用法java内存映射工具,用于生成堆转储快照.
+如果不使用jmap命令,想要获取java堆转储快照还有一些比较暴力的手段:
+
+-XX:+HeapDumpOnOutOfMemoryError: 可以让虚拟机在OOM异常自动生成dump文件,通过
+-XX:+HeapDumpOnCtrlBreak参数则可以使用[CTRL] + [Break]: 键让虚拟机生成dump文件,又或者在Linux系统下通过k">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/10/01/jvm/Jmap/" title="Jmap" itemprop="url">Jmap</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2014-10-01T07:00:00.000Z" itemprop="datePublished"> Published 2014-10-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">1.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析"><span class="toc-number">2.</span> <span class="toc-text">源码分析</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><p>java内存映射工具,用于生成堆转储快照.</p>
+<p>如果不使用jmap命令,想要获取java堆转储快照还有一些比较暴力的手段:</p>
+<ul>
+<li><code>-XX:+HeapDumpOnOutOfMemoryError</code>: 可以让虚拟机在OOM异常自动生成dump文件,通过</li>
+<li><code>-XX:+HeapDumpOnCtrlBreak</code>参数则可以使用<code>[CTRL] + [Break]</code>: 键让虚拟机生成dump文件,又或者在Linux系统<br>下通过<code>kill -3</code>命令发送进程退出信号,也能拿到dump文件.</li>
+</ul>
+<p>jmap的作用并不仅仅是为了获取dump文件,它还可以查询<code>finalize</code>执行队列,java堆和永久代的详细信息,如空间使用率,当前使用的是哪种收集器.</p>
+<p>和jinfo命令一样,jmap有不少功能是在windows平台下受限的,除了生成dump文件<code>-dump</code>选项和用于查看每个类的实例,空间占用统计的<code>-histo</code>选项所有系统操作系统都提供之外,其余选项只能在Linux/Solaris下使用.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jmap [ option ] vmid</div></pre></td></tr></table></figure>
+<p>jmap工具主要选项</p>
+<ul>
+<li><code>-dump</code>: 生成java堆转储快照.格式为:<code>-dump:[live,]format=b,file=&lt;filename&gt;</code>.live表示只dump存活对象</li>
+<li><code>-finalizerinfo</code>: 显示在<code>F-Queue</code>中等待<code>Finalizer</code>线程执行<code>finalize</code>方法的对象.</li>
+<li><code>-heap</code>: 显示java堆的详细信息,使用哪种回收器,参数配置,分代状况.</li>
+<li><code>-histo</code>: 显示堆中对象统计信息,包括类,实例数量和合计容量</li>
+<li><code>-permstat</code>: 以<code>ClassLoader</code>为统计口径显示永久代内存状态.</li>
+<li><code>-F</code>: 当虚拟机进程对<code>-dump</code>选项没有响应时,可使用这个选项强制生成dump快照</li>
+</ul>
+<p>获取当前进程的堆快照<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">➜ <span class="built_in">test</span> jmap -dump:live,format=b,file=2028dump 2028</div><div class="line">Dumping heap to /Users/wangming/Desktop/<span class="built_in">test</span>/2028dump ...</div><div class="line">Heap dump file created</div></pre></td></tr></table></figure></p>
+<p>获取当前进程的对象统计信息, 下面统计出了数量大于10000个对象的类<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">➜ <span class="built_in">test</span> jmap -histo 2028 | awk <span class="string">'&#123;if($2&gt; 10000) print $1 "  " $2 "  "  $3 "  " $4 &#125;'</span></div><div class="line">1:  36397  6363208  [C</div><div class="line">3:  35324  847776  java.lang.String</div><div class="line">7:  10522  336704  java.util.concurrent.ConcurrentHashMap<span class="variable">$Node</span></div><div class="line">Total  207899  14900384</div></pre></td></tr></table></figure></p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>我们先看一下jmap的help帮助手册<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">D:\&gt;jmap -help</div><div class="line">Usage:</div><div class="line">    jmap [option] &lt;pid&gt;</div><div class="line">        (to connect to running process)</div><div class="line">    jmap [option] &lt;executable &lt;core&gt;</div><div class="line">        (to connect to a core file)</div><div class="line">    jmap [option] [server_id@]&lt;remote server IP or hostname&gt;</div><div class="line">        (to connect to remote debug server)</div><div class="line"></div><div class="line"><span class="built_in">where</span> &lt;option&gt; is one of:</div><div class="line">    &lt;none&gt;               to <span class="built_in">print</span> same info as Solaris pmap</div><div class="line">    -heap                打印Java堆概览</div><div class="line">    -histo[:live]        打印Java堆得对象柱状分布图; 如果指定<span class="string">"live"</span> 的话, 那么就只统计存活的对象</div><div class="line">    -clstats             打印class 加载的统计信息</div><div class="line">    -finalizerinfo       to <span class="built_in">print</span> information on objects awaiting finalization</div><div class="line">    -dump:&lt;dump-options&gt; 以二进制格式dump JVM 堆内存信息 (示例: jmap -dump:live,format=b,file=heap.bin &lt;pid&gt;)</div><div class="line">                         dump-options:</div><div class="line">                           live         只dump 存活的对象; 如果不指定的话, 堆内存内的所有对象都会被dump出来.</div><div class="line">                           format=b     二进制格式</div><div class="line">                           file=&lt;file&gt;  dump 堆内存到哪个文件</div><div class="line">                         </div><div class="line">    -F                   force. Use with -dump:&lt;dump-options&gt; &lt;pid&gt; or -histo to force a heap dump or histogram when &lt;pid&gt; does not respond. The <span class="string">"live"</span> suboption is not supported <span class="keyword">in</span> this mode.</div><div class="line">    -h | -help           to <span class="built_in">print</span> this <span class="built_in">help</span> message</div><div class="line">    -J&lt;flag&gt;             to pass &lt;flag&gt; directly to the runtime system</div></pre></td></tr></table></figure></p>
+<p>jmap 命令支持三种模式, 分别是本地进程, core文件和远程进程模式.</p>
+<p>JMap类是jmap命令的封装实现类. 这个类同样是由参数决定来调用<a href="">VM attach mechanism</a>还是<a href="">SA tool</a>.</p>
+<blockquote>
+<p>现在只有<code>-heap</code>,<code>-finalizerinfo</code>和<code>-F</code>选项下会使用<a href="">VM attach mechanism</a>,其他的情况都是使用<a href="">SA tools</a>.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.io.File;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.sun.tools.attach.VirtualMachine;</div><div class="line"><span class="keyword">import</span> com.sun.tools.attach.AttachNotSupportedException;</div><div class="line"><span class="keyword">import</span> sun.tools.attach.HotSpotVirtualMachine;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMap</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="comment">// 使用 attach mechanism 的选项</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String HISTO_OPTION = <span class="string">"-histo"</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String LIVE_HISTO_OPTION = <span class="string">"-histo:live"</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String DUMP_OPTION_PREFIX = <span class="string">"-dump:"</span>;</div><div class="line"></div><div class="line">	<span class="comment">// 使用 SA tool 的选项</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String SA_TOOL_OPTIONS = <span class="string">"-heap|-heap:format=b|-permstat|-finalizerinfo"</span>;</div><div class="line"></div><div class="line">	<span class="comment">// The -F (force) option is currently not passed through to SA</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String FORCE_SA_OPTION = <span class="string">"-F"</span>;</div><div class="line"></div><div class="line">	<span class="comment">// Default option (if nothing provided)</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String DEFAULT_OPTION = <span class="string">"-pmap"</span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="keyword">if</span> (args.length == <span class="number">0</span>) &#123;</div><div class="line">			usage(); <span class="comment">// no arguments</span></div><div class="line">		&#125;</div><div class="line">		<span class="keyword">boolean</span> useSA = <span class="keyword">false</span>;</div><div class="line">		<span class="comment">// 例如选中的选项 (-heap, -dump:*, ... )</span></div><div class="line">		String option = <span class="keyword">null</span>;</div><div class="line">		<span class="comment">// 开始遍历所有的选项(选项以-开始). 如果选项中不包含-F, 则应该只有一个选项</span></div><div class="line">		<span class="keyword">int</span> optionCount = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span> (optionCount &lt; args.length) &#123;</div><div class="line">			String arg = args[optionCount];</div><div class="line">			<span class="keyword">if</span> (!arg.startsWith(<span class="string">"-"</span>)) &#123;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="comment">// 判断是否是-F选项, 如果是则使用SA</span></div><div class="line">			<span class="keyword">if</span> (arg.equals(FORCE_SA_OPTION)) &#123;</div><div class="line">				useSA = <span class="keyword">true</span>;</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				<span class="keyword">if</span> (option != <span class="keyword">null</span>) &#123;</div><div class="line">					usage();  <span class="comment">// option already specified</span></div><div class="line">				&#125;</div><div class="line">				option = arg;</div><div class="line">			&#125;</div><div class="line">			optionCount++;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// if no option provided then use default.</span></div><div class="line">		<span class="keyword">if</span> (option == <span class="keyword">null</span>) &#123;</div><div class="line">			option = DEFAULT_OPTION;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (option.matches(SA_TOOL_OPTIONS)) &#123;</div><div class="line">			useSA = <span class="keyword">true</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 下面开始检查参数个数. SA Tool只会使用1或者2个参数. 在使用-dump参数时只会使用一个参数</span></div><div class="line">		<span class="keyword">int</span> paramCount = args.length - optionCount;</div><div class="line">		<span class="keyword">if</span> (paramCount == <span class="number">0</span> || paramCount &gt; <span class="number">2</span>) &#123;</div><div class="line">			usage();</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (optionCount == <span class="number">0</span> || paramCount != <span class="number">1</span>) &#123;</div><div class="line">			useSA = <span class="keyword">true</span>;</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="comment">// 如果只有一个参数且没办法解析成pid的话, 那么肯定是要连接一个debug server, 也要使用SA Tool</span></div><div class="line">			<span class="keyword">if</span> (!args[optionCount].matches(<span class="string">"[0-9]+"</span>)) &#123;</div><div class="line">				useSA = <span class="keyword">true</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (useSA) &#123;</div><div class="line">			<span class="comment">// parameters (&lt;pid&gt; or &lt;exe&gt; &lt;core&gt;)</span></div><div class="line">			String params[] = <span class="keyword">new</span> String[paramCount];</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i=optionCount; i&lt;args.length; i++ )&#123;</div><div class="line">				params[i-optionCount] = args[i];</div><div class="line">			&#125;</div><div class="line">			runTool(option, params);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="comment">// 开始调用VirtualMachine相关的接口方法</span></div><div class="line">			String pid = args[<span class="number">1</span>];</div><div class="line">			<span class="keyword">if</span> (option.equals(HISTO_OPTION)) &#123;</div><div class="line">				histo(pid, <span class="keyword">false</span>);</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (option.equals(LIVE_HISTO_OPTION)) &#123;</div><div class="line">				histo(pid, <span class="keyword">true</span>);</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (option.startsWith(DUMP_OPTION_PREFIX)) &#123;</div><div class="line">				dump(pid, option);</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				usage();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 调用 SA tool</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runTool</span><span class="params">(String option, String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		String[][] tools = &#123;</div><div class="line">				&#123; <span class="string">"-pmap"</span>,           <span class="string">"sun.jvm.hotspot.tools.PMap"</span>     &#125;,</div><div class="line">				&#123; <span class="string">"-heap"</span>,           <span class="string">"sun.jvm.hotspot.tools.HeapSummary"</span>     &#125;,</div><div class="line">				&#123; <span class="string">"-heap:format=b"</span>,  <span class="string">"sun.jvm.hotspot.tools.HeapDumper"</span>      &#125;,</div><div class="line">				&#123; <span class="string">"-histo"</span>,          <span class="string">"sun.jvm.hotspot.tools.ObjectHistogram"</span> &#125;,</div><div class="line">				&#123; <span class="string">"-permstat"</span>,       <span class="string">"sun.jvm.hotspot.tools.PermStat"</span>        &#125;,</div><div class="line">				&#123; <span class="string">"-finalizerinfo"</span>,  <span class="string">"sun.jvm.hotspot.tools.FinalizerInfo"</span>   &#125;,</div><div class="line">		&#125;;</div><div class="line"></div><div class="line">		String tool = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">		<span class="comment">// -dump option needs to be handled in a special way</span></div><div class="line">		<span class="keyword">if</span> (option.startsWith(DUMP_OPTION_PREFIX)) &#123;</div><div class="line">			<span class="comment">// first check that the option can be parsed</span></div><div class="line">			String fn = parseDumpOptions(option);</div><div class="line">			<span class="keyword">if</span> (fn == <span class="keyword">null</span>) usage();</div><div class="line">			<span class="comment">// tool for heap dumping</span></div><div class="line">			tool = <span class="string">"sun.jvm.hotspot.tools.HeapDumper"</span>;</div><div class="line"></div><div class="line">			<span class="comment">// HeapDumper -f &lt;file&gt;</span></div><div class="line">			args = prepend(fn, args);</div><div class="line">			args = prepend(<span class="string">"-f"</span>, args);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">int</span> i=<span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (i &lt; tools.length) &#123;</div><div class="line">				<span class="keyword">if</span> (option.equals(tools[i][<span class="number">0</span>])) &#123;</div><div class="line">					tool = tools[i][<span class="number">1</span>];</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				i++;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (tool == <span class="keyword">null</span>) &#123;</div><div class="line">			usage();   <span class="comment">// no mapping to tool</span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 加载相关的工具类, PMap, HeapSummary, HeapDumper, ObjectHistogram, PermStat, FinalizerInfo</span></div><div class="line">		Class&lt;?&gt; c = loadClass(tool);</div><div class="line">		<span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">			usage();</div><div class="line">		&#125;</div><div class="line">		Class[] argTypes = &#123; String[].class &#125; ;</div><div class="line">		Method m = c.getDeclaredMethod(<span class="string">"main"</span>, argTypes);</div><div class="line">		Object[] invokeArgs = &#123; args &#125;;</div><div class="line">		m.invoke(<span class="keyword">null</span>, invokeArgs);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Class <span class="title">loadClass</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			<span class="keyword">return</span> Class.forName(name, <span class="keyword">true</span>, ClassLoader.getSystemClassLoader());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception x)  &#123; &#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LIVE_OBJECTS_OPTION = <span class="string">"-live"</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ALL_OBJECTS_OPTION = <span class="string">"-all"</span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">histo</span><span class="params">(String pid, <span class="keyword">boolean</span> live)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		VirtualMachine vm = attach(pid);</div><div class="line">		InputStream in = ((HotSpotVirtualMachine)vm).</div><div class="line">				heapHisto(live ? LIVE_OBJECTS_OPTION : ALL_OBJECTS_OPTION);</div><div class="line">		drain(vm, in);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dump</span><span class="params">(String pid, String options)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		<span class="comment">// 从options中将dump filename解析出来</span></div><div class="line">		String filename = parseDumpOptions(options);</div><div class="line">		<span class="keyword">if</span> (filename == <span class="keyword">null</span>) &#123;</div><div class="line">			usage();  <span class="comment">// invalid options or no filename</span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// get the canonical path - important to avoid just passing</span></div><div class="line">		<span class="comment">// a "heap.bin" and having the dump created in the target VM</span></div><div class="line">		<span class="comment">// working directory rather than the directory where jmap</span></div><div class="line">		<span class="comment">// is executed.</span></div><div class="line">		filename = <span class="keyword">new</span> File(filename).getCanonicalPath();</div><div class="line"></div><div class="line">		<span class="comment">// 是否只dump 存活的对象</span></div><div class="line">		<span class="keyword">boolean</span> live = isDumpLiveObjects(options);</div><div class="line"></div><div class="line">		VirtualMachine vm = attach(pid);</div><div class="line">		System.out.println(<span class="string">"Dumping heap to "</span> + filename + <span class="string">" ..."</span>);</div><div class="line">		InputStream in = ((HotSpotVirtualMachine)vm).</div><div class="line">				dumpHeap((Object)filename,</div><div class="line">						(live ? LIVE_OBJECTS_OPTION : ALL_OBJECTS_OPTION));</div><div class="line">		drain(vm, in);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 解析-dump选项. 合法的选项为format=b和file=&lt;file&gt;.</span></div><div class="line">	<span class="comment">// 如果文件存在的话, 就返回文件名。 如果文件不存在或者是非法选项的话则返回null</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">parseDumpOptions</span><span class="params">(String arg)</span> </span>&#123;</div><div class="line">		<span class="keyword">assert</span> arg.startsWith(DUMP_OPTION_PREFIX);</div><div class="line"></div><div class="line">		String filename = <span class="keyword">null</span>;</div><div class="line">		<span class="comment">// 将-dump:后面的参数以, 分割</span></div><div class="line">		String options[] = arg.substring(DUMP_OPTION_PREFIX.length()).split(<span class="string">","</span>);</div><div class="line"></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;options.length; i++) &#123;</div><div class="line">			String option = options[i];</div><div class="line"></div><div class="line">			<span class="keyword">if</span> (option.equals(<span class="string">"format=b"</span>)) &#123;</div><div class="line">				<span class="comment">// ignore format (not needed at this time)</span></div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (option.equals(<span class="string">"live"</span>)) &#123;</div><div class="line">				<span class="comment">// a valid suboption</span></div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				<span class="comment">// file=&lt;file&gt; - check that &lt;file&gt; is specified</span></div><div class="line">				<span class="keyword">if</span> (option.startsWith(<span class="string">"file="</span>)) &#123;</div><div class="line">					filename = option.substring(<span class="number">5</span>);</div><div class="line">					<span class="keyword">if</span> (filename.length() == <span class="number">0</span>) &#123;</div><div class="line">						<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">					&#125;</div><div class="line">				&#125; <span class="keyword">else</span> &#123;</div><div class="line">					<span class="keyword">return</span> <span class="keyword">null</span>;  <span class="comment">// option not recognized</span></div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> filename;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isDumpLiveObjects</span><span class="params">(String arg)</span> </span>&#123;</div><div class="line">		String options[] = arg.substring(DUMP_OPTION_PREFIX.length()).split(<span class="string">","</span>);</div><div class="line">		<span class="keyword">for</span> (String suboption : options) &#123;</div><div class="line">			<span class="keyword">if</span> (suboption.equals(<span class="string">"live"</span>)) &#123;</div><div class="line">				<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// Attach to &lt;pid&gt;, existing if we fail to attach</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> VirtualMachine <span class="title">attach</span><span class="params">(String pid)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			<span class="keyword">return</span> VirtualMachine.attach(pid);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception x) &#123;</div><div class="line">			String msg = x.getMessage();</div><div class="line">			<span class="keyword">if</span> (msg != <span class="keyword">null</span>) &#123;</div><div class="line">				System.err.println(pid + <span class="string">": "</span> + msg);</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				x.printStackTrace();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> ((x <span class="keyword">instanceof</span> AttachNotSupportedException) &amp;&amp; haveSA()) &#123;</div><div class="line">				System.err.println(<span class="string">"The -F option can be used when the "</span> +</div><div class="line">						<span class="string">"target process is not responding"</span>);</div><div class="line">			&#125;</div><div class="line">			System.exit(<span class="number">1</span>);</div><div class="line">			<span class="keyword">return</span> <span class="keyword">null</span>; <span class="comment">// keep compiler happy</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// Read the stream from the target VM until EOF, then detach</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">drain</span><span class="params">(VirtualMachine vm, InputStream in)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		<span class="comment">// read to EOF and just print output</span></div><div class="line">		<span class="keyword">byte</span> b[] = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">256</span>];</div><div class="line">		<span class="keyword">int</span> n;</div><div class="line">		do &#123;</div><div class="line">			n = in.read(b);</div><div class="line">			<span class="keyword">if</span> (n &gt; <span class="number">0</span>) &#123;</div><div class="line">				String s = <span class="keyword">new</span> String(b, <span class="number">0</span>, n, <span class="string">"UTF-8"</span>);</div><div class="line">				System.out.print(s);</div><div class="line">			&#125;</div><div class="line">		&#125; <span class="keyword">while</span> (n &gt; <span class="number">0</span>);</div><div class="line">		in.close();</div><div class="line">		vm.detach();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 将arg加入到args中</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String[] prepend(String arg, String args[]) &#123;</div><div class="line">		String[] newargs = <span class="keyword">new</span> String[args.length+<span class="number">1</span>];</div><div class="line">		newargs[<span class="number">0</span>] = arg;</div><div class="line">		System.arraycopy(args, <span class="number">0</span>, newargs, <span class="number">1</span>, args.length);</div><div class="line">		<span class="keyword">return</span> newargs;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">haveSA</span><span class="params">()</span> </span>&#123;</div><div class="line">		Class c = loadClass(<span class="string">"sun.jvm.hotspot.tools.HeapSummary"</span>);</div><div class="line">		<span class="keyword">return</span> (c != <span class="keyword">null</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// print usage message</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">usage</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Usage:"</span>);</div><div class="line">		<span class="keyword">if</span> (haveSA()) &#123;</div><div class="line">			System.out.println(<span class="string">"    jmap [option] &lt;pid&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"        (to connect to running process)"</span>);</div><div class="line">			System.out.println(<span class="string">"    jmap [option] &lt;executable &lt;core&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"        (to connect to a core file)"</span>);</div><div class="line">			System.out.println(<span class="string">"    jmap [option] [server_id@]&lt;remote server IP or hostname&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"        (to connect to remote debug server)"</span>);</div><div class="line">			System.out.println(<span class="string">""</span>);</div><div class="line">			System.out.println(<span class="string">"where &lt;option&gt; is one of:"</span>);</div><div class="line">			System.out.println(<span class="string">"    &lt;none&gt;               to print same info as Solaris pmap"</span>);</div><div class="line">			System.out.println(<span class="string">"    -heap                to print java heap summary"</span>);</div><div class="line">			System.out.println(<span class="string">"    -histo[:live]        to print histogram of java object heap; if the \"live\""</span>);</div><div class="line">			System.out.println(<span class="string">"                         suboption is specified, only count live objects"</span>);</div><div class="line">			System.out.println(<span class="string">"    -permstat            to print permanent generation statistics"</span>);</div><div class="line">			System.out.println(<span class="string">"    -finalizerinfo       to print information on objects awaiting finalization"</span>);</div><div class="line">			System.out.println(<span class="string">"    -dump:&lt;dump-options&gt; to dump java heap in hprof binary format"</span>);</div><div class="line">			System.out.println(<span class="string">"                         dump-options:"</span>);</div><div class="line">			System.out.println(<span class="string">"                           live         dump only live objects; if not specified,"</span>);</div><div class="line">			System.out.println(<span class="string">"                                        all objects in the heap are dumped."</span>);</div><div class="line">			System.out.println(<span class="string">"                           format=b     binary format"</span>);</div><div class="line">			System.out.println(<span class="string">"                           file=&lt;file&gt;  dump heap to &lt;file&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"                         Example: jmap -dump:live,format=b,file=heap.bin &lt;pid&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"    -F                   force. Use with -dump:&lt;dump-options&gt; &lt;pid&gt; or -histo"</span>);</div><div class="line">			System.out.println(<span class="string">"                         to force a heap dump or histogram when &lt;pid&gt; does not"</span>);</div><div class="line">			System.out.println(<span class="string">"                         respond. The \"live\" suboption is not supported"</span>);</div><div class="line">			System.out.println(<span class="string">"                         in this mode."</span>);</div><div class="line">			System.out.println(<span class="string">"    -h | -help           to print this help message"</span>);</div><div class="line">			System.out.println(<span class="string">"    -J&lt;flag&gt;             to pass &lt;flag&gt; directly to the runtime system"</span>);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			System.out.println(<span class="string">"    jmap -histo &lt;pid&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"      (to connect to running process and print histogram of java object heap"</span>);</div><div class="line">			System.out.println(<span class="string">"    jmap -dump:&lt;dump-options&gt; &lt;pid&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"      (to connect to running process and dump java heap)"</span>);</div><div class="line">			System.out.println(<span class="string">""</span>);</div><div class="line">			System.out.println(<span class="string">"    dump-options:"</span>);</div><div class="line">			System.out.println(<span class="string">"      format=b     binary default"</span>);</div><div class="line">			System.out.println(<span class="string">"      file=&lt;file&gt;  dump heap to &lt;file&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">""</span>);</div><div class="line">			System.out.println(<span class="string">"    Example:       jmap -dump:format=b,file=heap.bin &lt;pid&gt;"</span>);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		System.exit(<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2014/10/01/jvm/Jmap/" data-title="Jmap | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/10/02/jvm/JPS/" title="jps">
+  <strong>上一篇：</strong><br/>
+  <span>
+  jps</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/09/26/Java/Java网络 BIO server/"  title="java BIO服务器">
+ <strong>下一篇：</strong><br/> 
+ <span>java BIO服务器
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2014/10/01/jvm/Jmap/" data-title="Jmap" data-url="http://www.ming15.wang/2014/10/01/jvm/Jmap/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">1.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析"><span class="toc-number">2.</span> <span class="toc-text">源码分析</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -1,0 +1,619 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Groovy IO | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="本文是对Groovy部分官方文档进行了翻译
+
+读文件作为第一个例子,让我们看一下,如何输出一个文本文件里的所有行123new File(baseDir, &apos;haiku.txt&apos;).eachLine &amp;#123; line -&amp;gt;    println line&amp;#125;
+eachLine方法是Groovy自动添加到File Class的,同时呢,Groovy还添加了很多变量,例如,你如果想">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Groovy IO">
+<meta property="og:url" content="http://www.ming15.wang/2014/04/09/编程语言/Groovy IO/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="本文是对Groovy部分官方文档进行了翻译
+
+读文件作为第一个例子,让我们看一下,如何输出一个文本文件里的所有行123new File(baseDir, &apos;haiku.txt&apos;).eachLine &amp;#123; line -&amp;gt;    println line&amp;#125;
+eachLine方法是Groovy自动添加到File Class的,同时呢,Groovy还添加了很多变量,例如,你如果想">
+<meta property="og:updated_time" content="2016-08-07T09:15:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Groovy IO">
+<meta name="twitter:description" content="本文是对Groovy部分官方文档进行了翻译
+
+读文件作为第一个例子,让我们看一下,如何输出一个文本文件里的所有行123new File(baseDir, &apos;haiku.txt&apos;).eachLine &amp;#123; line -&amp;gt;    println line&amp;#125;
+eachLine方法是Groovy自动添加到File Class的,同时呢,Groovy还添加了很多变量,例如,你如果想">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/04/09/编程语言/Groovy IO/" title="Groovy IO" itemprop="url">Groovy IO</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2014-04-09T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-09</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#读文件"><span class="toc-number">1.</span> <span class="toc-text">读文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写文件"><span class="toc-number">2.</span> <span class="toc-text">写文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遍历文件"><span class="toc-number">3.</span> <span class="toc-text">遍历文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#序列化"><span class="toc-number">4.</span> <span class="toc-text">序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行命令"><span class="toc-number">5.</span> <span class="toc-text">执行命令</span></a></li></ol>
+		
+		</div>
+		
+		<blockquote>
+<p>本文是对Groovy部分官方文档进行了翻译</p>
+</blockquote>
+<h3 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h3><p>作为第一个例子,让我们看一下,如何输出一个文本文件里的所有行<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> File(baseDir, <span class="string">'haiku.txt'</span>).eachLine &#123; line -&gt;</div><div class="line">    println line</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>eachLine</code>方法是Groovy自动添加到File Class的,同时呢,Groovy还添加了很多变量,例如,你如果想要知道每一行的行号,你可以使用这个变量:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> File(baseDir, <span class="string">'haiku.txt'</span>).eachLine &#123; line, nb -&gt;</div><div class="line">    println <span class="string">"Line $nb: $line"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>无论由于什么原因, 当<code>eachLine</code>中抛出了异常,这个方法都会确保,资源已经被正确的关闭掉了. 这对所有Groovy自动添加的关于I/O资源的方法都有效.</p>
+<p>例如, 某种情况你使用了<code>Reader</code>, 但是你还想让Groovy自己管理资源. 下面这个例子, 即使抛出了exception, reader仍然会被自动关闭.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> count = <span class="number">0</span>, MAXSIZE = <span class="number">3</span></div><div class="line"><span class="keyword">new</span> File(baseDir,<span class="string">"haiku.txt"</span>).withReader &#123; reader -&gt;</div><div class="line">    <span class="keyword">while</span> (reader.readLine()) &#123;</div><div class="line">        <span class="keyword">if</span> (++count &gt; MAXSIZE) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">'Haiku should only have 3 verses'</span>)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果你想要把文本文件中每一行都放进一个list中, 你可以这么做:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> list = <span class="keyword">new</span> File(baseDir, <span class="string">'haiku.txt'</span>).collect &#123;it&#125;</div></pre></td></tr></table></figure></p>
+<p>或者你想利用操作符将文件中每一行都添加到一个数组中:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> array = <span class="keyword">new</span> File(baseDir, <span class="string">'haiku.txt'</span>) <span class="keyword">as</span> String[]</div></pre></td></tr></table></figure></p>
+<p>下面这个示例,非常简单的实现了,将一个文件存进一个字节数组里:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] contents = file.bytes</div></pre></td></tr></table></figure></p>
+<p>如下例,我们轻松地获得了一个输入流.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> is = <span class="keyword">new</span> File(baseDir,<span class="string">'haiku.txt'</span>).newInputStream()</div><div class="line"><span class="comment">// do something ...</span></div><div class="line">is.close()</div></pre></td></tr></table></figure></p>
+<p>上个例子中我们获得了一个输入流,但是最后我们不得不手动关闭它, Groovy提供另一个方法<code>withInputStream</code>, 这个方法可以帮我们自动的关闭输入流.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> File(baseDir,<span class="string">'haiku.txt'</span>).withInputStream &#123; stream -&gt;</div><div class="line">    <span class="comment">// do something ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h3><p>有时候,你需要的也许只是写文件,下面展示了,如何在Groovy中写文件<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> File(baseDir,<span class="string">'haiku.txt'</span>).withWriter(<span class="string">'utf-8'</span>) &#123; writer -&gt;</div><div class="line">    writer.writeLine <span class="string">'Into the ancient pond'</span></div><div class="line">    writer.writeLine <span class="string">'A frog jumps'</span></div><div class="line">    writer.writeLine <span class="string">'Water’s sound!'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但对于一个要求很简单的需求来说,我们可以使用<code>&lt;&lt;</code>向文件中写<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> File(baseDir,<span class="string">'haiku.txt'</span>) &lt;&lt; <span class="string">'''Into the ancient pond</span></div><div class="line">A frog jumps</div><div class="line">Water’s sound!'''</div></pre></td></tr></table></figure></p>
+<p>当然不是每一次我们都是向文件中输出文本,下面的例子演示了,我们如何向一个文件中写入字节:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file.bytes = [<span class="number">66</span>,<span class="number">22</span>,<span class="number">11</span>]</div></pre></td></tr></table></figure></p>
+<p>当然,你也可以直接打开一个输出流,下面的例子演示了如何开启一个输出流.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> os = <span class="keyword">new</span> File(baseDir,<span class="string">'data.bin'</span>).newOutputStream()</div><div class="line"><span class="comment">// do something ...</span></div><div class="line">os.close()</div></pre></td></tr></table></figure></p>
+<p>同<code>newInputStream</code>一样,<code>newOutputStream</code>同样需要手动关闭, ok,你大概想到了<code>withOutputStream</code>:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> File(baseDir,<span class="string">'data.bin'</span>).withOutputStream &#123; stream -&gt;</div><div class="line">    <span class="comment">// do something ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="遍历文件"><a href="#遍历文件" class="headerlink" title="遍历文件"></a>遍历文件</h3><p>在脚本中, 有个很常用的需求就是,遍历一个目录,然后找到一个文件,进行某些操作. Groovy提供了很多方法,来达到这个效果. 下面的例子演示了将一个目录下的所有文件都执行某个操作:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">dir.eachFile &#123; file -&gt;                      (<span class="number">1</span>)</div><div class="line">    println file.name</div><div class="line">&#125;</div><div class="line">dir.eachFileMatch(<span class="regexp">~/.*\.txt/</span>) &#123; file -&gt;     (<span class="number">2</span>)</div><div class="line">    println file.name</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>在目录下的每个文件上执行闭包操作.</li>
+<li>根据正则表达式在目录下找到符合条件的文件,然后执行闭包操作.</li>
+</ol>
+<p>也许你想要遍历某个目录和目录里的所有子目录, 那么你可以使用<code>eachFileRecurse</code><br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dir.eachFileRecurse &#123; file -&gt;                      (<span class="number">1</span>)</div><div class="line">    println file.name</div><div class="line">&#125;</div><div class="line"></div><div class="line">dir.eachFileRecurse(FileType.FILES) &#123; file -&gt;      (<span class="number">2</span>)</div><div class="line">    println file.name</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>对目录里的所有子目录进行递归, 然后对找到的文件和目录进行闭包操作</li>
+<li>对目录里进行递归查找,但是只查找文件.</li>
+</ol>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">dir.traverse &#123; file -&gt;</div><div class="line">    <span class="keyword">if</span> (file.directory &amp;&amp; file.name==<span class="string">'bin'</span>) &#123;</div><div class="line">        FileVisitResult.TERMINATE                   (<span class="number">1</span>)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        println file.name</div><div class="line">        FileVisitResult.CONTINUE                    (<span class="number">2</span>)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>如果找到的文件是目录,且它的名字是”dir”, 则停止遍历</li>
+<li>打印出文件的名字,接着遍历</li>
+</ol>
+<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>在java中会使用<code>java.io.DataOutputStream</code> 序列化数据也不罕见. Groovy对这个需求也做了非常简单的实现, 下面的例子演示了如何序列化和反序列化:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">boolean</span> b = <span class="literal">true</span></div><div class="line">String message = <span class="string">'Hello from Groovy'</span></div><div class="line"><span class="comment">// Serialize data into a file</span></div><div class="line">file.withDataOutputStream &#123; out -&gt;</div><div class="line">    out.writeBoolean(b)</div><div class="line">    out.writeUTF(message)</div><div class="line">&#125;</div><div class="line"><span class="comment">// ...</span></div><div class="line"><span class="comment">// Then read it back</span></div><div class="line">file.withDataInputStream &#123; input -&gt;</div><div class="line">    <span class="keyword">assert</span> input.readBoolean() == b</div><div class="line">    <span class="keyword">assert</span> input.readUTF() == message</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>同样,如果这个数据实例了序列化接口<code>Serializable</code>, 你可以使用 object output stream将整个数据序列化到文件:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Person p = <span class="keyword">new</span> Person(<span class="string">name:</span><span class="string">'Bob'</span>, <span class="string">age:</span><span class="number">76</span>)</div><div class="line"><span class="comment">// Serialize data into a file</span></div><div class="line">file.withObjectOutputStream &#123; out -&gt;</div><div class="line">    out.writeObject(p)</div><div class="line">&#125;</div><div class="line"><span class="comment">// ...</span></div><div class="line"><span class="comment">// Then read it back</span></div><div class="line">file.withObjectInputStream &#123; input -&gt;</div><div class="line">    <span class="keyword">def</span> p2 = input.readObject()</div><div class="line">    <span class="keyword">assert</span> p2.name == p.name</div><div class="line">    <span class="keyword">assert</span> p2.age == p.age</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h3><p>前面的章节介绍了在Groovy中操作files, readers or streams非常简单. 然而, 像系统管理员或者开发者,可能更多的是执行一个系统命令.</p>
+<p>Groovy同样提供了非常简单的方式执行命令行命令. 只需要定义一个命令的字符串,然后执行这个字符串的<code>execute()</code>. 在类Unix系统中(如果在windows中也安装了类Unix命令行工具也算),你可以这样执行命令.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> process = <span class="string">"ls -l"</span>.execute()             (<span class="number">1</span>)</div><div class="line">println <span class="string">"Found text $&#123;process.text&#125;"</span>        (<span class="number">2</span>)</div></pre></td></tr></table></figure></p>
+<ol>
+<li>在外部过程(external process)执行ls命令</li>
+<li>获得命令的输出,并输出</li>
+</ol>
+<p><code>execute()</code>方法返回一个<code>java.lang.Process</code>实例, 随后选择一种输出流<code>in/out/err</code>, 同时检查<code>exit</code>值,查看是否命令执行完毕.</p>
+<p>下面的例子使用了和刚才那个例子一样的命令,但是现在我们每次都会对获得的结果进行行输出.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">            <span class="keyword">def</span> process = <span class="string">"ls -l"</span>.execute()             (<span class="number">1</span>)</div><div class="line">            process.<span class="keyword">in</span>.eachLine &#123; line -&gt;               (<span class="number">2</span>)</div><div class="line">                println line                            (<span class="number">3</span>)</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">assert</span> process <span class="keyword">instanceof</span> Process</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">void</span> testProcessConsumeOutput() &#123;</div><div class="line">        <span class="keyword">if</span> (unixlike) &#123;</div><div class="line">            doInTmpDir &#123; b -&gt;</div><div class="line">                File file = <span class="literal">null</span></div><div class="line">                <span class="keyword">def</span> tmpDir = b.tmp &#123;</div><div class="line">                    file = <span class="string">'foo.tmp'</span>(<span class="string">'foo'</span>)</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">assert</span> file.exists()</div><div class="line">                <span class="keyword">def</span> p = <span class="string">"rm -f foo.tmp"</span>.execute([], tmpDir)</div><div class="line">                p.consumeProcessOutput()</div><div class="line">                p.waitFor()</div><div class="line">                <span class="keyword">assert</span> !file.exists()</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">void</span> testProcessPipe() &#123;</div><div class="line">        <span class="keyword">if</span> (unixlike) &#123;</div><div class="line">            doInTmpDir &#123; b -&gt;</div><div class="line">                <span class="keyword">def</span> proc1, proc2, proc3, proc4</div><div class="line">                proc1 = <span class="string">'ls'</span>.execute()</div><div class="line">                proc2 = <span class="string">'tr -d o'</span>.execute()</div><div class="line">                proc3 = <span class="string">'tr -d e'</span>.execute()</div><div class="line">                proc4 = <span class="string">'tr -d i'</span>.execute()</div><div class="line">                proc1 | proc2 | proc3 | proc4</div><div class="line">                proc4.waitFor()</div><div class="line">                <span class="keyword">if</span> (proc4.exitValue()) &#123;</div><div class="line">                    println proc4.err.text</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    println proc4.text</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">def</span> sout = <span class="keyword">new</span> StringBuilder()</div><div class="line">                <span class="keyword">def</span> serr = <span class="keyword">new</span> StringBuilder()</div><div class="line">                proc2 = <span class="string">'tr -d o'</span>.execute()</div><div class="line">                proc3 = <span class="string">'tr -d e'</span>.execute()</div><div class="line">                proc4 = <span class="string">'tr -d i'</span>.execute()</div><div class="line">                proc4.consumeProcessOutput(sout, serr)</div><div class="line">                proc2 | proc3 | proc4</div><div class="line">                [proc2, proc3].each &#123; it.consumeProcessErrorStream(serr) &#125;</div><div class="line">                proc2.withWriter &#123; writer -&gt;</div><div class="line">                    writer &lt;&lt; <span class="string">'testfile.groovy'</span></div><div class="line">                &#125;</div><div class="line">                proc4.waitForOrKill(<span class="number">1000</span>)</div><div class="line">                println <span class="string">"Standard output: $sout"</span></div><div class="line">                println <span class="string">"Standard error: $serr"</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> &#123;</span></div><div class="line">        String name</div><div class="line">        <span class="keyword">int</span> age</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>1    executes the ls command in an external process<br>2    for each line of the input stream of the process<br>3    print the line</p>
+<ol>
+<li>在外部进程中执行ls命令<br>2.</li>
+</ol>
+<p>It is worth noting that in corresponds to an input stream to the standard output of the command. out will refer to a stream where you can send data to the process (its standard input).</p>
+<p>Remember that many commands are shell built-ins and need special handling. So if you want a listing of files in a directory on a Windows machine and write:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> process = <span class="string">"dir"</span>.execute()</div><div class="line">println <span class="string">"$&#123;process.text&#125;"</span></div></pre></td></tr></table></figure>
+<p>接着你会收到一个异常<code>IOException</code>,异常信息为<code>Cannot run program &quot;dir&quot;: CreateProcess error=2</code>,系统找不到指定的文件.</p>
+<p>这是因为<code>dir</code>是内建于<code>windows shell(cmd.ext)</code>, 想要使用那个命令,你要像下面这个样操作:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> process = <span class="string">"cmd /c dir"</span>.execute()</div><div class="line">println <span class="string">"$&#123;process.text&#125;"</span></div></pre></td></tr></table></figure></p>
+<p>还有,因为上述的功能是在内部使用的<code>java.lang.Process</code>, 这个类的一些不足的地方,我们也要充分考虑. 在javadoc中,是这样描述这个类的:</p>
+<blockquote>
+<p>Because some native platforms only provide limited buffer size for standard input and output streams, failure to promptly write the input stream or read the output stream of the subprocess may cause the subprocess to block, and even deadlock<br>Because of this, Groovy provides some additional helper methods which make stream handling for processes easier.</p>
+</blockquote>
+<p>现在演示一下,如何输出进程里所有的输出(包括error stream).<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> p = <span class="string">"rm -f foo.tmp"</span>.execute([], tmpDir)</div><div class="line">p.consumeProcessOutput()</div><div class="line">p.waitFor()</div></pre></td></tr></table></figure></p>
+<p><code>consumeProcessOutput</code>仍然有很多对<code>StringBuffer</code>, <code>InputStream</code>, <code>OutputStream</code>等封装的变量, 如果想要获取一个完整的封装列表的,那可以参考 <a href="http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Process.html" target="_blank" rel="external">GDK API for java.lang.Process</a></p>
+<p>另外, <code>pipeTo</code>命令 可以让一个进程的输出流连接到一个进程的输入流里. 如下例:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">proc1 = <span class="string">'ls'</span>.execute()</div><div class="line">proc2 = <span class="string">'tr -d o'</span>.execute()</div><div class="line">proc3 = <span class="string">'tr -d e'</span>.execute()</div><div class="line">proc4 = <span class="string">'tr -d i'</span>.execute()</div><div class="line">proc1 | proc2 | proc3 | proc4</div><div class="line">proc4.waitFor()</div><div class="line"><span class="keyword">if</span> (proc4.exitValue()) &#123;</div><div class="line">    println proc4.err.text</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    println proc4.text</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Consuming errors<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> sout = <span class="keyword">new</span> StringBuilder()</div><div class="line"><span class="keyword">def</span> serr = <span class="keyword">new</span> StringBuilder()</div><div class="line">proc2 = <span class="string">'tr -d o'</span>.execute()</div><div class="line">proc3 = <span class="string">'tr -d e'</span>.execute()</div><div class="line">proc4 = <span class="string">'tr -d i'</span>.execute()</div><div class="line">proc4.consumeProcessOutput(sout, serr)</div><div class="line">proc2 | proc3 | proc4</div><div class="line">[proc2, proc3].each &#123; it.consumeProcessErrorStream(serr) &#125;</div><div class="line">proc2.withWriter &#123; writer -&gt;</div><div class="line">    writer &lt;&lt; <span class="string">'testfile.groovy'</span></div><div class="line">&#125;</div><div class="line">proc4.waitForOrKill(<span class="number">1000</span>)</div><div class="line">println <span class="string">"Standard output: $sout"</span></div><div class="line">println <span class="string">"Standard error: $serr"</span></div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2014/04/09/编程语言/Groovy IO/" data-title="Groovy IO | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/04/11/编程语言/Groovy 集合/" title="Groovy 集合">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Groovy 集合</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/04/08/编程语言/Groovy/"  title="Groovy 注释和标识符">
+ <strong>下一篇：</strong><br/> 
+ <span>Groovy 注释和标识符
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2014/04/09/编程语言/Groovy IO/" data-title="Groovy IO" data-url="http://www.ming15.wang/2014/04/09/编程语言/Groovy IO/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#读文件"><span class="toc-number">1.</span> <span class="toc-text">读文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写文件"><span class="toc-number">2.</span> <span class="toc-text">写文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遍历文件"><span class="toc-number">3.</span> <span class="toc-text">遍历文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#序列化"><span class="toc-number">4.</span> <span class="toc-text">序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行命令"><span class="toc-number">5.</span> <span class="toc-text">执行命令</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

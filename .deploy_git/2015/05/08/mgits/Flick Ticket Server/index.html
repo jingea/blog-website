@@ -1,0 +1,576 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Flick Ticket Server | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="为什么采用Ticket Server？
+Flickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外Flicker Mysql是基于主-主复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.
+考虑GUIDGUID是非常大的,但是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flick Ticket Server">
+<meta property="og:url" content="http://www.ming15.wang/2015/05/08/mgits/Flick Ticket Server/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="为什么采用Ticket Server？
+Flickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外Flicker Mysql是基于主-主复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.
+考虑GUIDGUID是非常大的,但是">
+<meta property="og:updated_time" content="2016-09-09T06:03:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flick Ticket Server">
+<meta name="twitter:description" content="为什么采用Ticket Server？
+Flickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外Flicker Mysql是基于主-主复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.
+考虑GUIDGUID是非常大的,但是">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/05/08/mgits/Flick Ticket Server/" title="Flick Ticket Server" itemprop="url">Flick Ticket Server</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-05-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-05-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#考虑GUID"><span class="toc-number">1.</span> <span class="toc-text">考虑GUID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一致性哈希"><span class="toc-number">2.</span> <span class="toc-text">一致性哈希</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集中自动增量"><span class="toc-number">3.</span> <span class="toc-text">集中自动增量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#替换-重新插入"><span class="toc-number">4.</span> <span class="toc-text">替换(重新插入)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组装"><span class="toc-number">5.</span> <span class="toc-text">组装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SPOF-单点故障"><span class="toc-number">5.0.1.</span> <span class="toc-text">SPOF(单点故障)</span></a></li></ol></li></ol></li></ol>
+		
+		</div>
+		
+		<p>为什么采用Ticket Server？</p>
+<p>Flickr采用分库分表的方式来拓展数据库. 有时候需要合并不同数据库之间的数据,那么就需要保证全局唯一的key.另外Flicker Mysql是基于<code>主-主</code>复制的。 这就意味着我们在分库分表时必须确保唯一性,以避免主键的重复.虽然使用MYSQL的自增长主键是极好的,但是它却不能确保无论是在物理主机还是逻辑主机上的唯一性.</p>
+<h2 id="考虑GUID"><a href="#考虑GUID" class="headerlink" title="考虑GUID"></a>考虑GUID</h2><p>GUID是非常大的,但是他们在MYSQL索引时性能比较差.我们使用MYSQL查询非常快的一个原因就是,我们对想要查询的东西都会建立索引,那么在查询的时候,我们只需要查询这些索引就好了. 所以索引的大小是一个关键性的选择.另外TickerServer内含了序列性,这对于报告或者debug是很有好处的.</p>
+<h2 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h2><p>像Amazon Dynamo等项目提出了在数据存储顶部采用<code>一致性哈希环</code>,来解决<code>GUID/sharding</code>问题.这种解决方案更适合write-cheap(大量写操作)这种场景,然而MYSQL针对快速随机读进行了优化</p>
+<h2 id="集中自动增量"><a href="#集中自动增量" class="headerlink" title="集中自动增量"></a>集中自动增量</h2><p>如果不能让mysql在多个数据库中实现自动增长的话,那么为什么不仅仅只是更新一个数据库呢？如果我们每次只是在一个数据库中插入一行数据, 那么某人在上传一张照片时 我们可以只使用从那个表中生成的主键ID.</p>
+<p>当然如果每秒钟上传60张照片的话,这个表会变得非常大. 那我们可以将这张照片的图像数据去掉, 在中心数据库中只保留ID. 可即便那样, 这个表有可能仍然会变得非常大. 而且还会产生评论,分组,标记等等其他信息, 这些数据都需要ID</p>
+<h2 id="替换-重新插入"><a href="#替换-重新插入" class="headerlink" title="替换(重新插入)"></a>替换(重新插入)</h2><p>大概十多年前,mysql对<code>ANSI SQL</code>实现了一个非标准化的拓展-<code>REPLACE INTO</code>. 随后<code>INSERT ON DUPLICATE KEY UPDATE</code>做为一个新的语法出现了, 它的出现更好的解决了那个初始问题. 但是<code>REPLACE INTO</code> 仍然被支持着.</p>
+<p>REPLACE 的操作极像 INSERT, 如果新插入的一行和原有行中的<code>PRIMARY KEY</code>或者 <code>UNIQUE index</code>重复的话,那么会先将原来的整行删掉,然后再插入新的一行.</p>
+<h2 id="组装"><a href="#组装" class="headerlink" title="组装"></a>组装</h2><p>Flicker ticket server 专用于database服务器, 该服务器上有且仅有一个数据库. 在该数据库内有一些表,像表示32位ID的Tickets32, 或者表示64位ID的 Tickets64.</p>
+<p>下面展示了一下Ticket64 schema<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Tickets64 (</div><div class="line"><span class="keyword">id</span> <span class="built_in">bigint</span>(<span class="number">20</span>) <span class="keyword">unsigned</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> auto_increment,</div><div class="line">stub <span class="built_in">char</span>(<span class="number">1</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">default</span> <span class="string">' '</span> ,</div><div class="line">PRIMARY <span class="keyword">KEY</span> ( <span class="keyword">id</span> ) ,</div><div class="line"><span class="keyword">UNIQUE</span> <span class="keyword">KEY</span>  stub ( stub )</div><div class="line">) <span class="keyword">ENGINE</span>=MyISAM</div></pre></td></tr></table></figure></p>
+<ul>
+<li>当我们执行sql:<code>SELECT * from Tickets64</code> 返回下面一个结果</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+-------------------+------+</div><div class="line">| id 				|stub  |</div><div class="line">+-------------------+------+</div><div class="line">| <span class="number">72157623227190423</span> | a    |</div><div class="line">+-------------------+------+</div></pre></td></tr></table></figure>
+<p>当我需要一个新的64位ID时,我执行面貌这个sql</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">REPLACE</span> <span class="keyword">INTO</span> Tickets64 (stub) <span class="keyword">VALUES</span> (<span class="string">' a'</span> ) ;</div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">LAST_INSERT_ID</span>() ;</div></pre></td></tr></table></figure>
+<h4 id="SPOF-单点故障"><a href="#SPOF-单点故障" class="headerlink" title="SPOF(单点故障)"></a>SPOF(单点故障)</h4><p>你无法预料到准备好给你的ID会产生单点故障. 故我们同事运行俩台ticket server来达到高可用. 同时在不同的数据库中大量的发生写/更新操作也会产生问题, 如果加锁的话就会使服务器白白丧失掉大量的性能.<br>我们的解决办法是通过拆分ID空间 在不同的数据库间进行责任拆分, 如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">TicketServer1:</div><div class="line">auto-increment-increment = <span class="number">2</span></div><div class="line">auto-increment-offset = <span class="number">1</span></div><div class="line"></div><div class="line">TicketServer2:</div><div class="line">auto-increment-increment = <span class="number">2</span></div><div class="line">auto-increment-offset = <span class="number">2</span></div></pre></td></tr></table></figure>
+<p>我们通过在不同的服务器间循环操作来达到负载均衡以及减少运行时间.</p>
+<p>在Ticket server我们不单单只有Tickets32 and Tickets64 这俩张表,我们还有更多的表. 例如针对照片, 账号, 离线任务等等 其他的表.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2015/05/08/mgits/Flick Ticket Server/" data-title="Flick Ticket Server | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/06/07/Java/Maven 命令/" title="Maven 命令">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Maven 命令</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/04/09/spring/spring boot web/"  title="SpringBoot Web 服务">
+ <strong>下一篇：</strong><br/> 
+ <span>SpringBoot Web 服务
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/05/08/mgits/Flick Ticket Server/" data-title="Flick Ticket Server" data-url="http://www.ming15.wang/2015/05/08/mgits/Flick Ticket Server/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#考虑GUID"><span class="toc-number">1.</span> <span class="toc-text">考虑GUID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一致性哈希"><span class="toc-number">2.</span> <span class="toc-text">一致性哈希</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集中自动增量"><span class="toc-number">3.</span> <span class="toc-text">集中自动增量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#替换-重新插入"><span class="toc-number">4.</span> <span class="toc-text">替换(重新插入)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组装"><span class="toc-number">5.</span> <span class="toc-text">组装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SPOF-单点故障"><span class="toc-number">5.0.1.</span> <span class="toc-text">SPOF(单点故障)</span></a></li></ol></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

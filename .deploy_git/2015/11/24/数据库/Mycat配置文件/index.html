@@ -1,0 +1,691 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Mycat配置文件 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="Mycat权威指南V1学习总结
+
+需要注意的一点是Mycat是支持分库,但是不支持分表的.
+
+
+启动Mycat mycat.bat start
+连接Mycat mysql -hlocalhost -P8066 -utest -ptest
+
+schema.xml下面的例子实现一个分库,db1和db2各有一张idTable表12345678910111213&amp;lt;?xml version=&quot;1.0&quot;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mycat配置文件">
+<meta property="og:url" content="http://www.ming15.wang/2015/11/24/数据库/Mycat配置文件/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="Mycat权威指南V1学习总结
+
+需要注意的一点是Mycat是支持分库,但是不支持分表的.
+
+
+启动Mycat mycat.bat start
+连接Mycat mysql -hlocalhost -P8066 -utest -ptest
+
+schema.xml下面的例子实现一个分库,db1和db2各有一张idTable表12345678910111213&amp;lt;?xml version=&quot;1.0&quot;">
+<meta property="og:updated_time" content="2016-08-07T09:15:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mycat配置文件">
+<meta name="twitter:description" content="Mycat权威指南V1学习总结
+
+需要注意的一点是Mycat是支持分库,但是不支持分表的.
+
+
+启动Mycat mycat.bat start
+连接Mycat mysql -hlocalhost -P8066 -utest -ptest
+
+schema.xml下面的例子实现一个分库,db1和db2各有一张idTable表12345678910111213&amp;lt;?xml version=&quot;1.0&quot;">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/24/数据库/Mycat配置文件/" title="Mycat配置文件" itemprop="url">Mycat配置文件</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-24T08:00:00.000Z" itemprop="datePublished"> Published 2015-11-24</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#schema-xml"><span class="toc-number">1.</span> <span class="toc-text">schema.xml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#schema标签"><span class="toc-number">1.1.</span> <span class="toc-text">schema标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#table标签"><span class="toc-number">1.1.1.</span> <span class="toc-text">table标签</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#childTable标签"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">childTable标签</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dataNode标签"><span class="toc-number">1.2.</span> <span class="toc-text">dataNode标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dataHost标签"><span class="toc-number">1.3.</span> <span class="toc-text">dataHost标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#heartbeat标签"><span class="toc-number">1.3.1.</span> <span class="toc-text">heartbeat标签</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeHost-readHost"><span class="toc-number">1.3.2.</span> <span class="toc-text">writeHost, readHost</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#server-xml"><span class="toc-number">2.</span> <span class="toc-text">server.xml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#user标签"><span class="toc-number">2.1.</span> <span class="toc-text">user标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#system标签"><span class="toc-number">2.2.</span> <span class="toc-text">system标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP连接相关属性"><span class="toc-number">2.2.1.</span> <span class="toc-text">TCP连接相关属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mysql连接相关属性"><span class="toc-number">2.2.2.</span> <span class="toc-text">Mysql连接相关属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#周期间隔相关属性"><span class="toc-number">2.2.3.</span> <span class="toc-text">周期间隔相关属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务相关属性"><span class="toc-number">2.2.4.</span> <span class="toc-text">服务相关属性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rule-xml"><span class="toc-number">3.</span> <span class="toc-text">rule.xml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#tableRule标签"><span class="toc-number">3.1.</span> <span class="toc-text">tableRule标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#rule标签"><span class="toc-number">3.1.1.</span> <span class="toc-text">rule标签</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#columns标签"><span class="toc-number">3.1.1.1.</span> <span class="toc-text">columns标签</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#algorithm标签"><span class="toc-number">3.1.1.2.</span> <span class="toc-text">algorithm标签</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#function标签"><span class="toc-number">3.2.</span> <span class="toc-text">function标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#property标签"><span class="toc-number">3.2.1.</span> <span class="toc-text">property标签</span></a></li></ol></li></ol></li></ol>
+		
+		</div>
+		
+		<p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
+<blockquote>
+<p>需要注意的一点是Mycat是支持分库,但是不支持分表的.</p>
+</blockquote>
+<ul>
+<li>启动Mycat <code>mycat.bat start</code></li>
+<li>连接Mycat <code>mysql -hlocalhost -P8066 -utest -ptest</code></li>
+</ul>
+<h2 id="schema-xml"><a href="#schema-xml" class="headerlink" title="schema.xml"></a>schema.xml</h2><p>下面的例子实现一个分库,db1和db2各有一张idTable表<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE mycat:schema SYSTEM "schema.dtd"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">mycat:schema</span> <span class="attr">xmlns:mycat</span>=<span class="string">"http://org.opencloudb/"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">schema</span> <span class="attr">name</span>=<span class="string">"idDB"</span> <span class="attr">checkSQLschema</span>=<span class="string">"false"</span> <span class="attr">sqlMaxLimit</span>=<span class="string">"100"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">table</span> <span class="attr">name</span>=<span class="string">"idTable"</span> <span class="attr">primaryKey</span>=<span class="string">"ID"</span> <span class="attr">dataNode</span>=<span class="string">"dn1,dn2"</span> <span class="attr">rule</span>=<span class="string">"mod-long"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">schema</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dataNode</span> <span class="attr">name</span>=<span class="string">"dn1"</span> <span class="attr">dataHost</span>=<span class="string">"localhost1"</span> <span class="attr">database</span>=<span class="string">"db1"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dataNode</span> <span class="attr">name</span>=<span class="string">"dn2"</span> <span class="attr">dataHost</span>=<span class="string">"localhost1"</span> <span class="attr">database</span>=<span class="string">"db2"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dataHost</span> <span class="attr">name</span>=<span class="string">"localhost1"</span> <span class="attr">maxCon</span>=<span class="string">"1000"</span> <span class="attr">minCon</span>=<span class="string">"10"</span> <span class="attr">balance</span>=<span class="string">"0"</span> <span class="attr">writeType</span>=<span class="string">"0"</span> <span class="attr">dbType</span>=<span class="string">"mysql"</span> <span class="attr">dbDriver</span>=<span class="string">"native"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">heartbeat</span>&gt;</span>select user()<span class="tag">&lt;/<span class="name">heartbeat</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">writeHost</span> <span class="attr">host</span>=<span class="string">"hostM1"</span> <span class="attr">url</span>=<span class="string">"localhost:3306"</span> <span class="attr">user</span>=<span class="string">"root"</span> <span class="attr">password</span>=<span class="string">"root"</span> /&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dataHost</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">mycat:schema</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>如果我们要实现分库的功能需要在<code>rule.xml</code>中指定分库逻辑</p>
+<h3 id="schema标签"><a href="#schema标签" class="headerlink" title="schema标签"></a>schema标签</h3><p>定义MyCat实例中的逻辑库,对于客户端来说,实际的数据库是不可见的,在sql中要使用逻辑库名称而不是实际的物理库的名称</p>
+<ul>
+<li><code>dataNode</code> : 对应实际的物理库(如果设置了这个属性,该逻辑库就不能实现分库功能了,但是该逻辑库就可以用作读写分离和主从切换). 它的值对应下面的dataNode标签.</li>
+<li><code>checkSQLschema</code> : 把schema字符去掉(在sql中将库名去掉)</li>
+<li><code>sqlMaxLimit</code> : 在分库中执行sql时,为sql添加<code>limit</code>字段</li>
+<li><code>name</code> : 逻辑库名称</li>
+</ul>
+<h4 id="table标签"><a href="#table标签" class="headerlink" title="table标签"></a>table标签</h4><p>定义MyCat中的逻辑表</p>
+<ul>
+<li><code>name</code> : 逻辑表表名</li>
+<li><code>dataNode</code> : 定义逻辑表所属的dataNode, 该属性值与schema标签dataNode属性值相对应</li>
+<li><code>rule</code> : 指定逻辑表要使用定义在rule.xml中的规则名字</li>
+<li><code>ruleRequired</code> : 指定表是否绑定分片规则(如果指定绑定但是在rule.xml中找不到则会报错)</li>
+<li><code>primaryKey</code> : 逻辑表对应真实表的主键</li>
+<li><code>type</code> : 逻辑表类型(可选值为global表示全局表,不设置的话为非全局表). 全局表就是每个分片内都保存一份全完相同的数据.</li>
+<li><code>autoIncrement</code> : 自增长主键,但是需要在Mysql中设置auto_increment属性</li>
+<li><code>needAddLimit</code> : 如果为false, 会屏蔽sqlMaxLimit功能</li>
+</ul>
+<h5 id="childTable标签"><a href="#childTable标签" class="headerlink" title="childTable标签"></a>childTable标签</h5><p>用于定义E-R分片的子表</p>
+<ul>
+<li><code>name</code> : 子表名</li>
+<li><code>joinKey</code> : 插入子表的时候会使用这个列的值查找父表存储的数据节点</li>
+<li><code>parentKey</code> : </li>
+<li><code>primaryKey</code> : 逻辑表对应真实表的主键</li>
+<li><code>needAddLimit</code> : 如果为false, 会屏蔽sqlMaxLimit功能</li>
+</ul>
+<h3 id="dataNode标签"><a href="#dataNode标签" class="headerlink" title="dataNode标签"></a>dataNode标签</h3><p>定义MyCat中的数据节点(也就是数据分片). </p>
+<ul>
+<li><code>name</code> : 数据节点名字</li>
+<li><code>dataHost</code> : 定义该分片属于哪个数据库实例</li>
+<li><code>database</code> : 分片属性哪个具体数据库实例上的具体库</li>
+</ul>
+<h3 id="dataHost标签"><a href="#dataHost标签" class="headerlink" title="dataHost标签"></a>dataHost标签</h3><p>定义了具体的数据库实例、读写分离配置和心跳语句。</p>
+<ul>
+<li><code>name</code> : dataHost标签名</li>
+<li><code>maxCon</code> : 每个读写实例连接池的最大连接</li>
+<li><code>minCon</code> : 每个读写实例连接池的最小连接，初始化连接池的大小。</li>
+<li><code>balance</code> : 负载均衡类型(<code>0</code>:所有读操作都发送到当前可用的writeHost上。’1<code>:所有读操作都随机的发送到readHost。</code>2`:所有读操作都随机的在writeHost、readhost上分发。)</li>
+<li><code>writeType</code> : 同balance属性</li>
+<li><code>dbType</code> : 后端连接的数据库类型(mysql,oracle等等)</li>
+<li><code>dbDriver</code> : 连接后端数据库使用的Driver，目前可选的值有native和JDBC</li>
+</ul>
+<h4 id="heartbeat标签"><a href="#heartbeat标签" class="headerlink" title="heartbeat标签"></a>heartbeat标签</h4><p>用于和后端数据库进行心跳检查的语句 </p>
+<h4 id="writeHost-readHost"><a href="#writeHost-readHost" class="headerlink" title="writeHost, readHost"></a>writeHost, readHost</h4><p>用于实例化后端连接池.在一个dataHost内可以定义多个writeHost和readHost。但是，如果writeHost指定的后端数据库宕机，那么这个writeHost绑定的所有readHost都将不可用。另一方面，由于这个writeHost宕机系统会自动的检测到，并切换到备用的writeHost上去。</p>
+<ul>
+<li><code>host</code> : 标识不同实例</li>
+<li><code>url</code> : 后端实例连接地址</li>
+<li><code>password</code> : </li>
+<li><code>user</code> : 后端存储实例需要的用户名字</li>
+<li><code>password</code> :  后端存储实例需要的密码</li>
+</ul>
+<h2 id="server-xml"><a href="#server-xml" class="headerlink" title="server.xml"></a>server.xml</h2><p>保存mycat需要的系统配置信息.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">mycat:server</span> <span class="attr">xmlns:mycat</span>=<span class="string">"http://org.opencloudb/"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">system</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultSqlParser"</span>&gt;</span>druidparser<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">system</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">user</span> <span class="attr">name</span>=<span class="string">"test"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span>&gt;</span>test<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"schemas"</span>&gt;</span>idDB<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">user</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">mycat:server</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="user标签"><a href="#user标签" class="headerlink" title="user标签"></a>user标签</h3><p>定义登录mycat的用户和权限,它可以定义<code>property</code>子标签.<code>property</code>子标签的name值可以是：</p>
+<ul>
+<li><code>password</code> : 该用户的密码</li>
+<li><code>schemas</code> : 该用户可访问的schema(在schema.xml中定义的schema)</li>
+<li><code>readOnly</code> : 该用户的读写权限</li>
+</ul>
+<h3 id="system标签"><a href="#system标签" class="headerlink" title="system标签"></a>system标签</h3><p>与系统配置有关.它同样使用<code>property</code>子标签.<code>property</code>子标签的name值可以是：</p>
+<ul>
+<li><code>defaultSqlParser</code> : 指定默认的解析器</li>
+<li><code>processors</code> : 指定系统可用的线程数.(主要影响processorBufferPool、processorBufferLocalPercent、processorExecutor属性)</li>
+<li><code>processorBufferChunk</code> : 这个属性指定每次分配Socket Direct Buffer的大小，默认是4096个字节。这个属性也影响buffer pool的长度。</li>
+<li><code>processorBufferPool</code> : 这个属性指定bufferPool计算 比例值.</li>
+<li><code>processorBufferLocalPercent</code> : 控制分配ThreadLocalPool的大小用的，但其也并不是一个准确的值，也是一个比例值。这个属性默认值为100。</li>
+<li><code>processorExecutor</code> : 指定NIOProcessor上共享的businessExecutor固定线程池大小</li>
+<li><code>sequnceHandlerType</code> : 指定使用Mycat全局序列的类型。0为本地文件方式，1为数据库方式。</li>
+</ul>
+<h4 id="TCP连接相关属性"><a href="#TCP连接相关属性" class="headerlink" title="TCP连接相关属性"></a>TCP连接相关属性</h4><ul>
+<li><code>frontSocketSoRcvbuf</code> : </li>
+<li><code>frontSocketSoSndbuf</code> : </li>
+<li><code>frontSocketNoDelay</code> : </li>
+</ul>
+<h4 id="Mysql连接相关属性"><a href="#Mysql连接相关属性" class="headerlink" title="Mysql连接相关属性"></a>Mysql连接相关属性</h4><ul>
+<li><code>packetHeaderSize</code> : 指定Mysql协议中的报文头长度</li>
+<li><code>maxPacketSize</code> : 指定Mysql协议可以携带的数据最大长度</li>
+<li><code>idleTimeout</code> :  指定连接的空闲超时时间。某连接在发起空闲检查下，发现距离上次使用超过了空闲时间，那么这个连接会被回收，就是被直接的关闭掉。默认30分钟。</li>
+<li><code>charset</code> : 连接的初始化字符集。默认为utf8。</li>
+<li><code>txIsolation</code> : 前端连接的初始化事务隔离级别，只在初始化的时候使用，后续会根据客户端传递过来的属性对后端数据库连接进行同步。默认为REPEATED_READ。</li>
+<li><code>sqlExecuteTimeout</code> : SQL执行超时的时间，Mycat会检查连接上最后一次执行SQL的时间，若超过这个时间则会直接关闭这连接。默认时间为300秒。</li>
+</ul>
+<h4 id="周期间隔相关属性"><a href="#周期间隔相关属性" class="headerlink" title="周期间隔相关属性"></a>周期间隔相关属性</h4><ul>
+<li><code>processorCheckPeriod</code> : </li>
+<li><code>dataNodeIdleCheckPeriod</code> : </li>
+<li><code>dataNodeHeartbeatPeriod</code> :</li>
+</ul>
+<h4 id="服务相关属性"><a href="#服务相关属性" class="headerlink" title="服务相关属性"></a>服务相关属性</h4><ul>
+<li><code>bindIp</code> :  mycat服务监听的IP地址，默认值为0.0.0.0。</li>
+<li><code>serverPort</code> : mycat的使用端口，默认值为8066。</li>
+<li><code>managerPort</code> : mycat的管理端口，默认值为9066。</li>
+</ul>
+<h2 id="rule-xml"><a href="#rule-xml" class="headerlink" title="rule.xml"></a>rule.xml</h2><p>对表进行拆分所涉及到的规则定义<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">tableRule</span> <span class="attr">name</span>=<span class="string">"rule2"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">rule</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">columns</span>&gt;</span>user_id<span class="tag">&lt;/<span class="name">columns</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">algorithm</span>&gt;</span>func1<span class="tag">&lt;/<span class="name">algorithm</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">rule</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tableRule</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="tableRule标签"><a href="#tableRule标签" class="headerlink" title="tableRule标签"></a>tableRule标签</h3><p>定义表规则</p>
+<ul>
+<li><code>name</code> : 表规则名称</li>
+</ul>
+<h4 id="rule标签"><a href="#rule标签" class="headerlink" title="rule标签"></a>rule标签</h4><p>指定对物理表中的哪一列进行拆分和使用什么路由算法。</p>
+<h5 id="columns标签"><a href="#columns标签" class="headerlink" title="columns标签"></a>columns标签</h5><p>指定要拆分的列名字。</p>
+<h5 id="algorithm标签"><a href="#algorithm标签" class="headerlink" title="algorithm标签"></a>algorithm标签</h5><p>使用function标签中的name属性。</p>
+<h3 id="function标签"><a href="#function标签" class="headerlink" title="function标签"></a>function标签</h3><ul>
+<li><code>name</code> : 算法的名字</li>
+<li><code>class</code> : 制定路由算法具体的类名字</li>
+</ul>
+<h4 id="property标签"><a href="#property标签" class="headerlink" title="property标签"></a>property标签</h4><p>具体算法需要用到的一些属性</p>
+<ul>
+<li><code>name</code> : </li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2015/11/24/数据库/Mycat配置文件/" data-title="Mycat配置文件 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/24/jvm/instrument premain/" title="Instrumentation Premain">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Instrumentation Premain</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/23/netty/Channel/"  title="Netty Channel">
+ <strong>下一篇：</strong><br/> 
+ <span>Netty Channel
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/11/24/数据库/Mycat配置文件/" data-title="Mycat配置文件" data-url="http://www.ming15.wang/2015/11/24/数据库/Mycat配置文件/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#schema-xml"><span class="toc-number">1.</span> <span class="toc-text">schema.xml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#schema标签"><span class="toc-number">1.1.</span> <span class="toc-text">schema标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#table标签"><span class="toc-number">1.1.1.</span> <span class="toc-text">table标签</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#childTable标签"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">childTable标签</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dataNode标签"><span class="toc-number">1.2.</span> <span class="toc-text">dataNode标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dataHost标签"><span class="toc-number">1.3.</span> <span class="toc-text">dataHost标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#heartbeat标签"><span class="toc-number">1.3.1.</span> <span class="toc-text">heartbeat标签</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeHost-readHost"><span class="toc-number">1.3.2.</span> <span class="toc-text">writeHost, readHost</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#server-xml"><span class="toc-number">2.</span> <span class="toc-text">server.xml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#user标签"><span class="toc-number">2.1.</span> <span class="toc-text">user标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#system标签"><span class="toc-number">2.2.</span> <span class="toc-text">system标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#TCP连接相关属性"><span class="toc-number">2.2.1.</span> <span class="toc-text">TCP连接相关属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mysql连接相关属性"><span class="toc-number">2.2.2.</span> <span class="toc-text">Mysql连接相关属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#周期间隔相关属性"><span class="toc-number">2.2.3.</span> <span class="toc-text">周期间隔相关属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务相关属性"><span class="toc-number">2.2.4.</span> <span class="toc-text">服务相关属性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rule-xml"><span class="toc-number">3.</span> <span class="toc-text">rule.xml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#tableRule标签"><span class="toc-number">3.1.</span> <span class="toc-text">tableRule标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#rule标签"><span class="toc-number">3.1.1.</span> <span class="toc-text">rule标签</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#columns标签"><span class="toc-number">3.1.1.1.</span> <span class="toc-text">columns标签</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#algorithm标签"><span class="toc-number">3.1.1.2.</span> <span class="toc-text">algorithm标签</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#function标签"><span class="toc-number">3.2.</span> <span class="toc-text">function标签</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#property标签"><span class="toc-number">3.2.1.</span> <span class="toc-text">property标签</span></a></li></ol></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
