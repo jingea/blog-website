@@ -1,0 +1,608 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>jstack | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="用法java堆栈跟踪工具. jstack命令用于生成虚拟机当前时刻的线程快照.线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合,生成线程快照的主要目的是定位线程出现长时间停顿的原因,如线程间死锁,死循环,请求外部资源导致长时间等待.
+jstack命令格式1jstack [ option ] vmid
+示例
+
+jstack [-l] &amp;lt;pid&amp;gt; 连接正在运行的进程
+jstack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jstack">
+<meta property="og:url" content="http://www.ming15.wang/2014/10/05/jvm/jstack/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="用法java堆栈跟踪工具. jstack命令用于生成虚拟机当前时刻的线程快照.线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合,生成线程快照的主要目的是定位线程出现长时间停顿的原因,如线程间死锁,死循环,请求外部资源导致长时间等待.
+jstack命令格式1jstack [ option ] vmid
+示例
+
+jstack [-l] &amp;lt;pid&amp;gt; 连接正在运行的进程
+jstack">
+<meta property="og:updated_time" content="2016-09-22T05:19:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jstack">
+<meta name="twitter:description" content="用法java堆栈跟踪工具. jstack命令用于生成虚拟机当前时刻的线程快照.线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合,生成线程快照的主要目的是定位线程出现长时间停顿的原因,如线程间死锁,死循环,请求外部资源导致长时间等待.
+jstack命令格式1jstack [ option ] vmid
+示例
+
+jstack [-l] &amp;lt;pid&amp;gt; 连接正在运行的进程
+jstack">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/10/05/jvm/jstack/" title="jstack" itemprop="url">jstack</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2014-10-05T07:00:00.000Z" itemprop="datePublished"> Published 2014-10-05</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">1.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jstack日志"><span class="toc-number">2.</span> <span class="toc-text">jstack日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码"><span class="toc-number">3.</span> <span class="toc-text">源码</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><p>java堆栈跟踪工具. <code>jstack</code>命令用于生成虚拟机当前时刻的线程快照.线程快照就是当前虚拟机内每一条线程正在执行的方法堆栈的集合,生成线程快照的主要目的是定位线程出现长时间停顿的原因,如<a href="">线程间死锁</a>,<a href="">死循环</a>,请求外部资源<br>导致长时间等待.</p>
+<p>jstack命令格式<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jstack [ option ] vmid</div></pre></td></tr></table></figure></p>
+<p>示例</p>
+<ul>
+<li><code>jstack [-l] &lt;pid&gt;</code> 连接正在运行的进程</li>
+<li><code>jstack -F [-m] [-l] &lt;pid&gt;</code> 连接已经宕掉的进程</li>
+<li><code>jstack [-m] [-l] &lt;executable&gt; &lt;core&gt;</code> 连接一个core文件</li>
+<li><code>jstack [-m] [-l] [server_id@]&lt;remote server IP or hostname&gt;</code> 连接一个远程的debug Server</li>
+</ul>
+<p>option值：</p>
+<ul>
+<li><code>-F</code>: 当正常输出的请求不被响应时,强制说出线程堆栈</li>
+<li><code>-l</code>: 除堆栈外,显示关于锁的附加信息</li>
+<li><code>-m</code>: 如果调用本地方法的话,可以显示c/c++的堆栈</li>
+</ul>
+<blockquote>
+<p>当对线程堆栈分析时，首先查找<code>BLOCKED</code>, 找到锁住的线程。</p>
+</blockquote>
+<h2 id="jstack日志"><a href="#jstack日志" class="headerlink" title="jstack日志"></a>jstack日志</h2><p>下面摘抄的是NETTY中空epoll的一段记录<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">"nioEventLoopGroup-2461-1" #4955 prio=10 os_prio=0 tid=0x00007fd857e9a000 nid=0x5e19 runnable [0x00007fd7374bc000]</div><div class="line">   java.lang.Thread.State: RUNNABLE</div><div class="line">	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)</div><div class="line">	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)</div><div class="line">	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:79)</div><div class="line">	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)</div><div class="line">	- locked &lt;0x00000000e673cf38&gt; (a io.netty.channel.nio.SelectedSelectionKeySet)</div><div class="line">	- locked &lt;0x00000000e673cd30&gt; (a java.util.Collections$UnmodifiableSet)</div><div class="line">	- locked &lt;0x00000000e673cc58&gt; (a sun.nio.ch.EPollSelectorImpl)</div><div class="line">	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)</div><div class="line">	at io.netty.channel.nio.NioEventLoop.select(NioEventLoop.java:622)</div><div class="line">	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:310)</div><div class="line">	at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:116)</div><div class="line">	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:137)</div><div class="line">	at java.lang.Thread.run(Thread.java:745)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">	- None</div></pre></td></tr></table></figure></p>
+<p>第一行数据分析<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">nioEventLoopGroup-2461-1 表示的是进程名字</div><div class="line">#4955</div><div class="line">prio=10</div><div class="line">os_prio=0</div><div class="line">nid: 线程ID的16进制表示(可以通过`top -H`查看pid)</div><div class="line">tid:</div><div class="line">runnable</div><div class="line">[0x00007fd7374bc000]`</div></pre></td></tr></table></figure></p>
+<p>线程堆栈信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">java.lang.Thread.State 线程状态</div><div class="line">locked` 锁住的资源,分别锁住了  &lt;<span class="number">0x00000000e673cf38</span>&gt;, &lt;<span class="number">0x00000000e673cd30</span>&gt;, &lt;<span class="number">0x00000000e673cc58</span>&gt;</div></pre></td></tr></table></figure></p>
+<p>java.lang.Thread.State 线程状态</p>
+<ul>
+<li><code>Runnable</code> : 线程具备所有运行条件，在运行队列中准备操作系统的调度，或者正在运行</li>
+<li><p><code>waiting for monitor entry</code> :  在等待进入一个临界区,所以它在<code>Entry Set</code>队列中等待.</p>
+<blockquote>
+<p>此时线程状态一般都是 <code>Blocked</code>:如果大量线程在<code>waiting for monitor entry</code>, 可能是一个全局锁阻塞住了大量线程.如果短时间内打印的 <code>thread dump</code> 文件反映,随着时间流逝,<code>waiting for monitor entry</code>的线程越来越多,没有减少的趋势,可能意味着某些线程在临界区里呆的时间太长了,以至于越来越多新线程迟迟无法进入临界区.</p>
+</blockquote>
+</li>
+<li><p><code>waiting on condition</code> : 说明它在等待另一个条件的发生,来把自己唤醒,或者干脆它是调用了 <code>sleep(N)</code>.</p>
+<blockquote>
+<p>如果大量线程在<code>waiting on condition</code>：可能是它们又跑去获取第三方资源,尤其是第三方网络资源,迟迟获取不到<code>Response</code>,导致大量线程进入等待状态.所以如果你发现有大量的线程都处在 <code>Wait on condition</code>,从线程堆栈看,正等待网络读写,这可能是一个网络瓶颈的征兆,因为网络阻塞导致线程无法执行.  此时线程状态大致为以下几种：</p>
+<ol>
+<li><code>java.lang.Thread.State: WAITING (parking)</code>：一直等那个条件发生；</li>
+<li><code>java.lang.Thread.State: TIMED_WAITING</code> (<code>parking</code>或<code>sleeping</code>)：定时的,那个条件不到来,也将定时唤醒自己.</li>
+</ol>
+</blockquote>
+</li>
+<li><p><code>in Object.wait()</code> : 说明它获得了监视器之后,又调用了 <code>java.lang.Object.wait()</code> 方法.</p>
+<blockquote>
+<p>每个 Monitor在某个时刻,只能被一个线程拥有,该线程就是 <code>Active Thread</code>,而其它线程都是 <code>Waiting Thread</code>,分别在两个队列 <code>Entry Set</code>和 <code>Wait Set</code>里面等候.在 <code>Entry Set</code>中等待的线程状态是 <code>Waiting for monitor entry</code>,而在 <code>Wait Set</code>中等待的线程状态是 <code>in Object.wait()</code>.当线程获得了 <code>Monitor</code>,如果发现线程继续运行的条件没有满足,它则调用对象(一般就是被 <code>synchronized</code> 的对象)的 <code>wait()</code> 方法,放弃了 <code>Monitor</code>,进入 <code>Wait Set</code>队列. 此时线程状态大致为以下几种：</p>
+<ol>
+<li><code>java.lang.Thread.State: TIMED_WAITING (on object monitor)</code>;</li>
+<li><code>java.lang.Thread.State: WAITING (on object monitor)</code>;</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>我们首先看一下jstack help文档<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">D:\work\<span class="built_in">test</span>\target\classes&gt;jstack -help</div><div class="line">Usage:</div><div class="line">    jstack [<span class="_">-l</span>] &lt;pid&gt;</div><div class="line">        (to connect to running process)</div><div class="line">    jstack -F [-m] [<span class="_">-l</span>] &lt;pid&gt;</div><div class="line">        (to connect to a hung process)</div><div class="line">    jstack [-m] [<span class="_">-l</span>] &lt;executable&gt; &lt;core&gt;</div><div class="line">        (to connect to a core file)</div><div class="line">    jstack [-m] [<span class="_">-l</span>] [server_id@]&lt;remote server IP or hostname&gt;</div><div class="line">        (to connect to a remote debug server)</div><div class="line"></div><div class="line">Options:</div><div class="line">    -F  to force a thread dump. Use when jstack &lt;pid&gt; does not respond (process is hung)</div><div class="line">    -m  to <span class="built_in">print</span> both java and native frames (mixed mode)</div><div class="line">    <span class="_">-l</span>  long listing. Prints additional information about locks</div><div class="line">    -h or -help to <span class="built_in">print</span> this <span class="built_in">help</span> message</div></pre></td></tr></table></figure></p>
+<p>直接上<a href="">JStack</a>源码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.sun.tools.attach.VirtualMachine;</div><div class="line"><span class="keyword">import</span> com.sun.tools.attach.AttachNotSupportedException;</div><div class="line"><span class="keyword">import</span> sun.tools.attach.HotSpotVirtualMachine;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * JStack是我们平时使用的jstack命令的实现类.</div><div class="line"> *</div><div class="line"> * 该类会根据命令来选择是使用SA JStack tool 还是 VM attach mechanism 输出 进程的堆栈信息</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JStack</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="keyword">if</span> (args.length == <span class="number">0</span>) &#123;</div><div class="line">			<span class="keyword">return</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 是否使用 SA JStack tool</span></div><div class="line">		<span class="keyword">boolean</span> useSA = <span class="keyword">false</span>;</div><div class="line">		<span class="comment">// 如果调用本地方法的话,显示c/c++的堆栈</span></div><div class="line">		<span class="keyword">boolean</span> mixed = <span class="keyword">false</span>;</div><div class="line">		<span class="comment">// 除堆栈外,显示关于锁的附加信息</span></div><div class="line">		<span class="keyword">boolean</span> locks = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">		<span class="comment">// 解析命令行选项(option), 必须以"-"开头</span></div><div class="line">		<span class="keyword">int</span> optionCount = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span> (optionCount &lt; args.length) &#123;</div><div class="line">			String arg = args[optionCount];</div><div class="line">			<span class="keyword">if</span> (!arg.startsWith(<span class="string">"-"</span>)) &#123;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> (arg.equals(<span class="string">"-F"</span>)) &#123;</div><div class="line">				useSA = <span class="keyword">true</span>;</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				<span class="keyword">if</span> (arg.equals(<span class="string">"-m"</span>)) &#123;</div><div class="line">					mixed = <span class="keyword">true</span>;</div><div class="line">				&#125; <span class="keyword">else</span> &#123;</div><div class="line">					<span class="keyword">if</span> (arg.equals(<span class="string">"-l"</span>)) &#123;</div><div class="line">						locks = <span class="keyword">true</span>;</div><div class="line">					&#125; <span class="keyword">else</span> &#123;</div><div class="line">						<span class="comment">// 只能有-F, -m, -l这三个参数, 出现其他参数则是输出错误</span></div><div class="line">						<span class="keyword">return</span>;</div><div class="line">					&#125;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">			optionCount++;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 如果要显示本地方法的堆栈信息，则必须要使用ＳＡ</span></div><div class="line">		<span class="keyword">if</span> (mixed) &#123;</div><div class="line">			useSA = <span class="keyword">true</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 除了上面的选项外，后面的参数最多也就是俩个(可能是 &lt;pid&gt;, &lt;executable&gt; &lt;core&gt; 或者[server_id@]&lt;remote server IP or hostname&gt;)</span></div><div class="line">		<span class="comment">// 如果是俩个参数即&lt;executable&gt; &lt;core&gt; 或者是 [server_id@]&lt;remote server IP or hostname&gt;的话, 那就要使用SA</span></div><div class="line">		<span class="keyword">int</span> paramCount = args.length - optionCount;</div><div class="line">		<span class="keyword">if</span> (paramCount == <span class="number">0</span> || paramCount &gt; <span class="number">2</span>) &#123;</div><div class="line">			<span class="keyword">return</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (paramCount == <span class="number">2</span>) &#123;</div><div class="line">			useSA = <span class="keyword">true</span>;</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">if</span> (!args[optionCount].matches(<span class="string">"[0-9]+"</span>)) &#123;</div><div class="line">				useSA = <span class="keyword">true</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (useSA) &#123;</div><div class="line">			<span class="comment">// 将(&lt;pid&gt; 或者 &lt;exe&gt; &lt;core&gt;参数再重新构造一遍</span></div><div class="line">			String params[] = <span class="keyword">new</span> String[paramCount];</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i=optionCount; i&lt;args.length; i++ )&#123;</div><div class="line">				params[i-optionCount] = args[i];</div><div class="line">			&#125;</div><div class="line">			<span class="comment">// 使用sun.jvm.hotspot.tools.JStack 执行命令</span></div><div class="line">			runJStackTool(mixed, locks, params);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="comment">// pass -l to thread dump operation to get extra lock info</span></div><div class="line">			String pid = args[optionCount];</div><div class="line">			String params[];</div><div class="line">			<span class="keyword">if</span> (locks) &#123;</div><div class="line">				params = <span class="keyword">new</span> String[] &#123; <span class="string">"-l"</span> &#125;;</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				params = <span class="keyword">new</span> String[<span class="number">0</span>];</div><div class="line">			&#125;</div><div class="line">			<span class="comment">// 通关VirtualMachine或者线程的堆栈信息</span></div><div class="line">			runThreadDump(pid, params);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	<span class="comment">// SA JStack tool</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runJStackTool</span><span class="params">(<span class="keyword">boolean</span> mixed, <span class="keyword">boolean</span> locks, String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Class&lt;?&gt; cl = loadSAClass();</div><div class="line">		<span class="keyword">if</span> (cl == <span class="keyword">null</span>) &#123;</div><div class="line">			<span class="keyword">return</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// JStack tool also takes -m and -l arguments</span></div><div class="line">		<span class="keyword">if</span> (mixed) &#123;</div><div class="line">			args = prepend(<span class="string">"-m"</span>, args);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (locks) &#123;</div><div class="line">			args = prepend(<span class="string">"-l"</span>, args);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		Class[] argTypes = &#123; String[].class &#125;;</div><div class="line">		Method m = cl.getDeclaredMethod(<span class="string">"main"</span>, argTypes);</div><div class="line"></div><div class="line">		Object[] invokeArgs = &#123; args &#125;;</div><div class="line">		m.invoke(<span class="keyword">null</span>, invokeArgs);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Class <span class="title">loadSAClass</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="comment">// 我们指定system class loader是为了在开发环境中 这个类可能在boot class path中，但是sa-jdi.jar却在system class path。</span></div><div class="line">		<span class="comment">// 一旦JDK被部署之后tools.jar 和 sa-jdi.jar 都会在system class path中。</span></div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			<span class="keyword">return</span> Class.forName(<span class="string">"sun.jvm.hotspot.tools.JStack"</span>, <span class="keyword">true</span>,</div><div class="line">					ClassLoader.getSystemClassLoader());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception x)  &#123; &#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runThreadDump</span><span class="params">(String pid, String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		VirtualMachine vm = <span class="keyword">null</span>;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			vm = VirtualMachine.attach(pid);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception x) &#123;</div><div class="line">			String msg = x.getMessage();</div><div class="line">			<span class="keyword">if</span> (msg != <span class="keyword">null</span>) &#123;</div><div class="line">				System.err.println(pid + <span class="string">": "</span> + msg);</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				x.printStackTrace();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> ((x <span class="keyword">instanceof</span> AttachNotSupportedException) &amp;&amp;</div><div class="line">					(loadSAClass() != <span class="keyword">null</span>)) &#123;</div><div class="line">				System.err.println(<span class="string">"The -F option can be used when the target "</span> +</div><div class="line">						<span class="string">"process is not responding"</span>);</div><div class="line">			&#125;</div><div class="line">			System.exit(<span class="number">1</span>);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		InputStream in = ((HotSpotVirtualMachine)vm).remoteDataDump((Object[])args);</div><div class="line"></div><div class="line">		<span class="comment">// read to EOF and just print output</span></div><div class="line">		<span class="keyword">byte</span> b[] = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">256</span>];</div><div class="line">		<span class="keyword">int</span> n;</div><div class="line">		do &#123;</div><div class="line">			n = in.read(b);</div><div class="line">			<span class="keyword">if</span> (n &gt; <span class="number">0</span>) &#123;</div><div class="line">				String s = <span class="keyword">new</span> String(b, <span class="number">0</span>, n, <span class="string">"UTF-8"</span>);</div><div class="line">				System.out.print(s);</div><div class="line">			&#125;</div><div class="line">		&#125; <span class="keyword">while</span> (n &gt; <span class="number">0</span>);</div><div class="line">		in.close();</div><div class="line">		vm.detach();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// return a new string array with arg as the first element</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String[] prepend(String arg, String args[]) &#123;</div><div class="line">		String[] newargs = <span class="keyword">new</span> String[args.length+<span class="number">1</span>];</div><div class="line">		newargs[<span class="number">0</span>] = arg;</div><div class="line">		System.arraycopy(args, <span class="number">0</span>, newargs, <span class="number">1</span>, args.length);</div><div class="line">		<span class="keyword">return</span> newargs;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>从上面的源码我们可以看到, JStack会根据选项参数来判断是使用<a href="">SA JStack tool</a> 还是 <a href="">VM attach mechanism</a> 输出线程的堆栈信息. 在下面的情况下会使用SA JStack tool</p>
+<ul>
+<li>有-F选项</li>
+<li>有-m选项</li>
+<li>有<executable> <core> 参数</core></executable></li>
+<li>有[server_id@]<remote server="" ip="" or="" hostname="">参数</remote></li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2014/10/05/jvm/jstack/" data-title="jstack | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/10/06/jvm/hprof/" title="hprof">
+  <strong>上一篇：</strong><br/>
+  <span>
+  hprof</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/10/04/jvm/jcmd/"  title="jcmd">
+ <strong>下一篇：</strong><br/> 
+ <span>jcmd
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2014/10/05/jvm/jstack/" data-title="jstack" data-url="http://www.ming15.wang/2014/10/05/jvm/jstack/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#用法"><span class="toc-number">1.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jstack日志"><span class="toc-number">2.</span> <span class="toc-text">jstack日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码"><span class="toc-number">3.</span> <span class="toc-text">源码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

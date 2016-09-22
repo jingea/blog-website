@@ -1,0 +1,541 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ffserver 配置文件 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="当我们开启一个ffserver时, 我们需要指定其配置文件1➜  ~ ./ffserver -f ffmpeg-3.1.1/doc/ffserver.conf
+我们看一下官方给出的一个示例文件12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ffserver 配置文件">
+<meta property="og:url" content="http://www.ming15.wang/2016/07/31/mgits/ffmserver/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="当我们开启一个ffserver时, 我们需要指定其配置文件1➜  ~ ./ffserver -f ffmpeg-3.1.1/doc/ffserver.conf
+我们看一下官方给出的一个示例文件12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565">
+<meta property="og:updated_time" content="2016-09-22T05:19:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ffserver 配置文件">
+<meta name="twitter:description" content="当我们开启一个ffserver时, 我们需要指定其配置文件1➜  ~ ./ffserver -f ffmpeg-3.1.1/doc/ffserver.conf
+我们看一下官方给出的一个示例文件12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/07/31/mgits/ffmserver/" title="ffserver 配置文件" itemprop="url">ffserver 配置文件</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-07-31T07:00:00.000Z" itemprop="datePublished"> Published 2016-07-31</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			
+		
+		</div>
+		
+		<p>当我们开启一个ffserver时, 我们需要指定其配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">➜  ~ ./ffserver <span class="_">-f</span> ffmpeg-3.1.1/doc/ffserver.conf</div></pre></td></tr></table></figure></p>
+<p>我们看一下官方给出的一个示例文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div><div class="line">369</div><div class="line">370</div><div class="line">371</div><div class="line">372</div><div class="line">373</div></pre></td><td class="code"><pre><div class="line"><span class="comment">##################################################################</span></div><div class="line"><span class="comment"># HTTP 服务器配置</span></div><div class="line"></div><div class="line"><span class="comment"># HTTP服务监听的端口号</span></div><div class="line">HTTPPort 8090</div><div class="line"></div><div class="line"><span class="comment"># HTTP服务绑定的IP地址, 如果没有多个网卡的话，使用这个默认的就可以了</span></div><div class="line">HTTPBindAddress 0.0.0.0</div><div class="line"></div><div class="line"><span class="comment"># HTTP最大连接数。注意这个值会限定 MaxClients的大小.</span></div><div class="line">MaxHTTPConnections 2000</div><div class="line"></div><div class="line"><span class="comment"># 能处理的最大HTTP请求数. 由于FFServer运行的非常快， 因此</span></div><div class="line"><span class="comment"># is very fast, it is more likely that you will want to leave this high</span></div><div class="line"><span class="comment"># and use MaxBandwidth, below.</span></div><div class="line">MaxClients 1000</div><div class="line"></div><div class="line"><span class="comment"># 与客户端交互时的最大吞吐量（ kbit/sec）.</span></div><div class="line">MaxBandwidth 1000</div><div class="line"></div><div class="line"><span class="comment"># Access log file (uses standard Apache log file format)</span></div><div class="line"><span class="comment"># '-' is the standard output.</span></div><div class="line">CustomLog -</div><div class="line"></div><div class="line"><span class="comment">##################################################################</span></div><div class="line"><span class="comment"># 下面展示了如何使用&lt;Feed&gt; 标签配置。</span></div><div class="line"><span class="comment"># 每一个live feed最少包含了一个来自ffmpeg编码器或者另一个ffserver视频或者音频流.</span></div><div class="line"><span class="comment"># 我们可以使用多个解码器对这些流数据进行解码。</span></div><div class="line"></div><div class="line">&lt;Feed feed1.ffm&gt;</div><div class="line"></div><div class="line"><span class="comment"># 客户端必须使用'ffmpeg' 将live feed发送给ffserver. 如下例：</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># ffmpeg http://localhost:8090/feed1.ffm</span></div><div class="line"></div><div class="line"><span class="comment"># ffserver 还可以进行time shifting. 我们将流数据存储在磁盘上, 然后等接到客户端请求的时候，</span></div><div class="line"><span class="comment"># 可以将这些存储的流数据再播出放出。例如发送一个下面请求：</span></div><div class="line"><span class="comment"># "http://xxxx?date=[YYYY-MM-DDT][[HH:]MM:]SS[.m...]".</span></div><div class="line"><span class="comment"># 可以指定存储该视频流的最大值(不指定大小的话,默认无限的).</span></div><div class="line"><span class="comment"># 默认存储是这样的 : File=/tmp/feed_name.ffm FileMaxSize=5M</span></div><div class="line">File /tmp/feed1.ffm</div><div class="line">FileMaxSize 200K</div><div class="line"></div><div class="line"><span class="comment"># 还可以指定某个视频流文件只可读, 不可删除和不可修改, 如下</span></div><div class="line"><span class="comment"># ReadOnlyFile /saved/specialvideo.ffm</span></div><div class="line"></div><div class="line"><span class="comment"># Specify launch in order to start ffmpeg automatically.</span></div><div class="line"><span class="comment"># First ffmpeg must be defined with an appropriate path if needed,</span></div><div class="line"><span class="comment"># after that options can follow, but avoid adding the http:// field</span></div><div class="line"><span class="comment">#Launch ffmpeg</span></div><div class="line"></div><div class="line"><span class="comment"># 我们还可以做IP白名单, 在下面的例子中我们只允许接收来自 localhost 的链接.</span></div><div class="line">ACL allow 127.0.0.1</div><div class="line"></div><div class="line">&lt;/Feed&gt;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">##################################################################</span></div><div class="line"><span class="comment"># Now you can define each stream which will be generated from the</span></div><div class="line"><span class="comment"># original audio and video stream. Each format has a filename (here</span></div><div class="line"><span class="comment"># 'test1.mpg'). FFServer will send this stream when answering a</span></div><div class="line"><span class="comment"># request containing this filename.</span></div><div class="line"><span class="comment"># 下面讲解如何使用&lt;Stream&gt;标签</span></div><div class="line"><span class="comment"># 经过上面的配置, 接下来就是将原生的视频/音频流重新定义成一个新的格式的流出来.</span></div><div class="line"><span class="comment"># 每个format都必须有一个文件名, 这样当请求中有这个文件名时, FFServer就会将这个流</span></div><div class="line"><span class="comment"># 最为客户端的应答</span></div><div class="line"></div><div class="line">&lt;Stream <span class="built_in">test</span>1.mpg&gt;</div><div class="line"></div><div class="line"><span class="comment"># coming from live feed 'feed1'</span></div><div class="line"><span class="comment"># 视频源, 例如下面的视频源来自feed1</span></div><div class="line">Feed feed1.ffm</div><div class="line"></div><div class="line"><span class="comment"># 视频流要format成的格式, 你可以从下面选择</span></div><div class="line"><span class="comment"># mpeg       : MPEG-1 multiplexed video and audio</span></div><div class="line"><span class="comment"># mpegvideo  : only MPEG-1 video</span></div><div class="line"><span class="comment"># mp2        : MPEG-2 audio (use AudioCodec to select layer 2 and 3 codec)</span></div><div class="line"><span class="comment"># ogg        : Ogg format (Vorbis audio codec)</span></div><div class="line"><span class="comment"># rm         : RealNetworks-compatible stream. Multiplexed audio and video.</span></div><div class="line"><span class="comment"># ra         : RealNetworks-compatible stream. Audio only.</span></div><div class="line"><span class="comment"># mpjpeg     : Multipart JPEG (works with Netscape without any plugin)</span></div><div class="line"><span class="comment"># jpeg       : Generate a single JPEG image.</span></div><div class="line"><span class="comment"># mjpeg      : Generate a M-JPEG stream.</span></div><div class="line"><span class="comment"># asf        : ASF compatible streaming (Windows Media Player format).</span></div><div class="line"><span class="comment"># swf        : Macromedia Flash compatible stream</span></div><div class="line"><span class="comment"># avi        : AVI format (MPEG-4 video, MPEG audio sound)</span></div><div class="line">Format mpeg</div><div class="line"></div><div class="line"><span class="comment"># 下面设定的是音频流的比特率. 一般编码器通常只支持少量种类的比特率</span></div><div class="line">AudioBitRate 32</div><div class="line"></div><div class="line"><span class="comment"># 音频通道的数量: 1 = mono, 2 = stereo</span></div><div class="line">AudioChannels 1</div><div class="line"></div><div class="line"><span class="comment"># 下面设定的是音频采样频率. 当使用比较低的比特率的时候, 应该将频率设定到22050 或者 11025.</span></div><div class="line"><span class="comment"># 支持的频率取决于采用的音频编码器.</span></div><div class="line">AudioSampleRate 44100</div><div class="line"></div><div class="line"><span class="comment"># 下面的设定是视频比特率</span></div><div class="line">VideoBitRate 64</div><div class="line"></div><div class="line"><span class="comment"># 码率控制的缓冲区大小 (Ratecontrol buffer size)</span></div><div class="line">VideoBufferSize 40</div><div class="line"></div><div class="line"><span class="comment"># 每秒的帧数 (Number of frames per second)</span></div><div class="line">VideoFrameRate 3</div><div class="line"></div><div class="line"><span class="comment"># 视频帧的大小: WxH (default: 160x128)</span></div><div class="line"><span class="comment"># 一般我们可以采用给我们提供好的帧大小, 例如下面这些:</span></div><div class="line"><span class="comment"># sqcif, qcif, cif, 4cif, qqvga, qvga, vga, svga, xga, uxga, qxga, sxga,</span></div><div class="line"><span class="comment"># qsxga, hsxga, wvga, wxga, wsxga, wuxga, woxga, wqsxga, wquxga, whsxga,</span></div><div class="line"><span class="comment">#  whuxga, cga, ega, hd480, hd720, hd1080</span></div><div class="line">VideoSize 160x128</div><div class="line"></div><div class="line"><span class="comment"># Transmit only intra frames (useful for low bitrates, but kills frame rate).</span></div><div class="line"><span class="comment">#VideoIntraOnly</span></div><div class="line"></div><div class="line"><span class="comment"># If non-intra only, an intra frame is transmitted every VideoGopSize</span></div><div class="line"><span class="comment"># frames. Video synchronization can only begin at an intra frame.</span></div><div class="line">VideoGopSize 12</div><div class="line"></div><div class="line"><span class="comment"># More MPEG-4 parameters</span></div><div class="line"><span class="comment"># VideoHighQuality</span></div><div class="line"><span class="comment"># Video4MotionVector</span></div><div class="line"></div><div class="line"><span class="comment"># 下面设定的编码器:</span></div><div class="line"><span class="comment">#AudioCodec mp2</span></div><div class="line"><span class="comment">#VideoCodec mpeg1video</span></div><div class="line"></div><div class="line"><span class="comment"># 关闭音频</span></div><div class="line"><span class="comment">#NoAudio</span></div><div class="line"></div><div class="line"><span class="comment"># 关闭视频</span></div><div class="line"><span class="comment">#NoVideo</span></div><div class="line"></div><div class="line"><span class="comment">#VideoQMin 3</span></div><div class="line"><span class="comment">#VideoQMax 31</span></div><div class="line"></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># Set this to the number of seconds backwards in time to start. Note that</span></div><div class="line"><span class="comment"># most players will buffer 5-10 seconds of video, and also you need to allow</span></div><div class="line"><span class="comment"># for a keyframe to appear in the data stream.</span></div><div class="line"><span class="comment">#Preroll 15</span></div><div class="line"></div><div class="line"><span class="comment"># ACL:</span></div><div class="line"></div><div class="line"><span class="comment"># 通过上面的例子中我们看到了可以通过ACL来控制请求方的IP地址， 例如白名单功能</span></div><div class="line"><span class="comment"># 我们可以设定一个地址, 也可以设定一个地址区间   TODO？？？</span></div><div class="line"><span class="comment">#ACL ALLOW &lt;first address&gt; &lt;last address&gt;</span></div><div class="line"></div><div class="line"><span class="comment"># 当然我们也可以设定一个黑名单</span></div><div class="line"><span class="comment">#ACL DENY &lt;first address&gt; &lt;last address&gt;</span></div><div class="line"></div><div class="line"><span class="comment"># 你可以重复的声明 ACL allow/deny. 当第一个匹配之后,就可以执行定义的操作就不再继续匹配了</span></div><div class="line"><span class="comment"># 如果找不到匹配的</span></div><div class="line"><span class="comment"># You can repeat the ACL allow/deny as often as you like. It is on a per</span></div><div class="line"><span class="comment"># stream basis. The first match defines the action. If there are no matches,</span></div><div class="line"><span class="comment"># then the default is the inverse of the last ACL statement.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># 因此'ACL allow localhost' 只允许接收 localhost 的 request.</span></div><div class="line"><span class="comment"># 'ACL deny 1.0.0.0 1.255.255.255' 将会拒绝1开头的IPV4地址的所有请求，但是会接收其他的所有请求</span></div><div class="line"></div><div class="line">&lt;/Stream&gt;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">##################################################################</span></div><div class="line"><span class="comment"># 下面是一些streams示例</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Multipart JPEG</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test.mjpg&gt;</span></div><div class="line"><span class="comment">#Feed feed1.ffm</span></div><div class="line"><span class="comment">#Format mpjpeg</span></div><div class="line"><span class="comment">#VideoFrameRate 2</span></div><div class="line"><span class="comment">#VideoIntraOnly</span></div><div class="line"><span class="comment">#NoAudio</span></div><div class="line"><span class="comment">#Strict -1</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Single JPEG</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test.jpg&gt;</span></div><div class="line"><span class="comment">#Feed feed1.ffm</span></div><div class="line"><span class="comment">#Format jpeg</span></div><div class="line"><span class="comment">#VideoFrameRate 2</span></div><div class="line"><span class="comment">#VideoIntraOnly</span></div><div class="line"><span class="comment">##VideoSize 352x240</span></div><div class="line"><span class="comment">#NoAudio</span></div><div class="line"><span class="comment">#Strict -1</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Flash</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test.swf&gt;</span></div><div class="line"><span class="comment">#Feed feed1.ffm</span></div><div class="line"><span class="comment">#Format swf</span></div><div class="line"><span class="comment">#VideoFrameRate 2</span></div><div class="line"><span class="comment">#VideoIntraOnly</span></div><div class="line"><span class="comment">#NoAudio</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># ASF compatible</span></div><div class="line"></div><div class="line">&lt;Stream test.asf&gt;</div><div class="line">Feed feed1.ffm</div><div class="line">Format asf</div><div class="line">VideoFrameRate 15</div><div class="line">VideoSize 352x240</div><div class="line">VideoBitRate 256</div><div class="line">VideoBufferSize 40</div><div class="line">VideoGopSize 30</div><div class="line">AudioBitRate 64</div><div class="line">StartSendOnKey</div><div class="line">&lt;/Stream&gt;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># MP3 audio</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test.mp3&gt;</span></div><div class="line"><span class="comment">#Feed feed1.ffm</span></div><div class="line"><span class="comment">#Format mp2</span></div><div class="line"><span class="comment">#AudioCodec mp3</span></div><div class="line"><span class="comment">#AudioBitRate 64</span></div><div class="line"><span class="comment">#AudioChannels 1</span></div><div class="line"><span class="comment">#AudioSampleRate 44100</span></div><div class="line"><span class="comment">#NoVideo</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Ogg Vorbis audio</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test.ogg&gt;</span></div><div class="line"><span class="comment">#Feed feed1.ffm</span></div><div class="line"><span class="comment">#Metadata title "Stream title"</span></div><div class="line"><span class="comment">#AudioBitRate 64</span></div><div class="line"><span class="comment">#AudioChannels 2</span></div><div class="line"><span class="comment">#AudioSampleRate 44100</span></div><div class="line"><span class="comment">#NoVideo</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Real with audio only at 32 kbits</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test.ra&gt;</span></div><div class="line"><span class="comment">#Feed feed1.ffm</span></div><div class="line"><span class="comment">#Format rm</span></div><div class="line"><span class="comment">#AudioBitRate 32</span></div><div class="line"><span class="comment">#NoVideo</span></div><div class="line"><span class="comment">#NoAudio</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Real with audio and video at 64 kbits</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test.rm&gt;</span></div><div class="line"><span class="comment">#Feed feed1.ffm</span></div><div class="line"><span class="comment">#Format rm</span></div><div class="line"><span class="comment">#AudioBitRate 32</span></div><div class="line"><span class="comment">#VideoBitRate 128</span></div><div class="line"><span class="comment">#VideoFrameRate 25</span></div><div class="line"><span class="comment">#VideoGopSize 25</span></div><div class="line"><span class="comment">#NoAudio</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">##################################################################</span></div><div class="line"><span class="comment"># 在上面的例子中，我们看到视频来源是来自feed，现在我们看一下如何从文件系统里读取文件的码流，</span></div><div class="line"><span class="comment"># 然后进行格式转换等</span></div><div class="line"><span class="comment"># A stream coming from a file: you only need to set the input</span></div><div class="line"><span class="comment"># filename and optionally a new format. Supported conversions:</span></div><div class="line"><span class="comment">#    AVI -&gt; ASF</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream file.rm&gt;</span></div><div class="line"><span class="comment">#File "/usr/local/httpd/htdocs/tlive.rm"</span></div><div class="line"><span class="comment">#NoAudio</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream file.asf&gt;</span></div><div class="line"><span class="comment">#File "/usr/local/httpd/htdocs/test.asf"</span></div><div class="line"><span class="comment">#NoAudio</span></div><div class="line"><span class="comment">#Metadata author "Me"</span></div><div class="line"><span class="comment">#Metadata copyright "Super MegaCorp"</span></div><div class="line"><span class="comment">#Metadata title "Test stream from disk"</span></div><div class="line"><span class="comment">#Metadata comment "Test comment"</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line">&lt;Stream file.rm&gt;</div><div class="line">File <span class="string">"/Users/mingwang/ffm/古城荆棘王.rmvb"</span></div><div class="line">&lt;/Stream&gt;</div><div class="line"></div><div class="line"><span class="comment">##################################################################</span></div><div class="line"><span class="comment"># RTSP examples</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># 下面我们演示一些通过 RTSP URL来访问流数据:</span></div><div class="line"><span class="comment">#   rtsp://localhost:5454/test1-rtsp.mpg</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># 还可以通过HTTP协议来访问RTSP资源</span></div><div class="line"><span class="comment">#   http://localhost:8090/test1-rtsp.rtsp</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test1-rtsp.mpg&gt;</span></div><div class="line"><span class="comment">#Format rtp</span></div><div class="line"><span class="comment">#File "/usr/local/httpd/htdocs/test1.mpg"</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 下面的例子使用libx264将一个入站的 live feed 转换成另一个 live feed,</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream live.h264&gt;</span></div><div class="line"><span class="comment">#Format rtp</span></div><div class="line"><span class="comment">#Feed feed1.ffm</span></div><div class="line"><span class="comment">#VideoCodec libx264</span></div><div class="line"><span class="comment">#VideoFrameRate 24</span></div><div class="line"><span class="comment">#VideoBitRate 100</span></div><div class="line"><span class="comment">#VideoSize 480x272</span></div><div class="line"><span class="comment">#AVPresetVideo default</span></div><div class="line"><span class="comment">#AVPresetVideo baseline</span></div><div class="line"><span class="comment">#AVOptionVideo flags +global_header</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment">#AudioCodec libfaac</span></div><div class="line"><span class="comment">#AudioBitRate 32</span></div><div class="line"><span class="comment">#AudioChannels 2</span></div><div class="line"><span class="comment">#AudioSampleRate 22050</span></div><div class="line"><span class="comment">#AVOptionAudio flags +global_header</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"><span class="comment">##################################################################</span></div><div class="line"><span class="comment"># SDP/multicast examples</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># 如果想要将stream广播出去，则必须使用MulticastAddress配置广播地址</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># An SDP file is automatically generated by ffserver by adding the</span></div><div class="line"><span class="comment"># 'sdp' extension to the stream name (here</span></div><div class="line"><span class="comment"># http://localhost:8090/test1-sdp.sdp). You should usually give this</span></div><div class="line"><span class="comment"># file to your player to play the stream.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># The 'NoLoop' option can be used to avoid looping when the stream is</span></div><div class="line"><span class="comment"># terminated.</span></div><div class="line"></div><div class="line"><span class="comment">#&lt;Stream test1-sdp.mpg&gt;</span></div><div class="line"><span class="comment">#Format rtp</span></div><div class="line"><span class="comment">#File "/usr/local/httpd/htdocs/test1.mpg"</span></div><div class="line"><span class="comment">#MulticastAddress 224.124.0.1</span></div><div class="line"><span class="comment">#MulticastPort 5000</span></div><div class="line"><span class="comment">#MulticastTTL 16</span></div><div class="line"><span class="comment">#NoLoop</span></div><div class="line"><span class="comment">#&lt;/Stream&gt;</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">##################################################################</span></div><div class="line"><span class="comment"># Special streams</span></div><div class="line"></div><div class="line"><span class="comment"># Server status</span></div><div class="line"></div><div class="line">&lt;Stream stat.html&gt;</div><div class="line">Format status</div><div class="line"></div><div class="line"><span class="comment"># Only allow local people to get the status</span></div><div class="line">ACL allow localhost</div><div class="line">ACL allow 192.168.0.0 192.168.255.255</div><div class="line"></div><div class="line"><span class="comment">#FaviconURL http://pond1.gladstonefamily.net:8080/favicon.ico</span></div><div class="line">&lt;/Stream&gt;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Redirect index.html to the appropriate site</span></div><div class="line"></div><div class="line">&lt;Redirect index.html&gt;</div><div class="line">URL http://www.ffmpeg.org/</div><div class="line">&lt;/Redirect&gt;</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2016/07/31/mgits/ffmserver/" data-title="ffserver 配置文件 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/02/linux/linux 网络监控一探/" title="linux 网络监控一探">
+  <strong>上一篇：</strong><br/>
+  <span>
+  linux 网络监控一探</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/07/29/nosql/jedis lambda/"  title="当Jedis 遇上 Lambda">
+ <strong>下一篇：</strong><br/> 
+ <span>当Jedis 遇上 Lambda
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/07/31/mgits/ffmserver/" data-title="ffserver 配置文件" data-url="http://www.ming15.wang/2016/07/31/mgits/ffmserver/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

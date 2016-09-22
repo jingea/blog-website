@@ -1,0 +1,547 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ThreadLocal 实战 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="应用项目中使用了java.text.SimpleDateFormat, 但是却将其声明为static. 在Oracle的Java API文档中是这样说明的123SynchronizationDate formats are not synchronized. It is recommended to create separate format instances for each thread.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadLocal 实战">
+<meta property="og:url" content="http://www.ming15.wang/2016/06/07/Java/Java  ThreadLocal/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="应用项目中使用了java.text.SimpleDateFormat, 但是却将其声明为static. 在Oracle的Java API文档中是这样说明的123SynchronizationDate formats are not synchronized. It is recommended to create separate format instances for each thread.">
+<meta property="og:updated_time" content="2016-09-22T05:19:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ThreadLocal 实战">
+<meta name="twitter:description" content="应用项目中使用了java.text.SimpleDateFormat, 但是却将其声明为static. 在Oracle的Java API文档中是这样说明的123SynchronizationDate formats are not synchronized. It is recommended to create separate format instances for each thread.">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/06/07/Java/Java  ThreadLocal/" title="ThreadLocal 实战" itemprop="url">ThreadLocal 实战</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-06-07T07:00:00.000Z" itemprop="datePublished"> Published 2016-06-07</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#应用"><span class="toc-number">1.</span> <span class="toc-text">应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存溢出"><span class="toc-number">3.</span> <span class="toc-text">内存溢出</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>项目中使用了<code>java.text.SimpleDateFormat</code>, 但是却将其声明为<code>static</code>. 在Oracle的Java API文档中是这样说明的<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Synchronization</div><div class="line"></div><div class="line">Date formats are not synchronized. It is recommended to create separate format instances <span class="keyword">for</span> each thread. If multiple threads access a format concurrently, it must be synchronized externally.</div></pre></td></tr></table></figure></p>
+<p><code>Date</code>对象的format操作并不是同步进行的. 我们应该为每个线程都创建一个<code>SimpleDateFormat</code>对象, 或者为format操作进行加锁处理.</p>
+<p>那么<code>ThreadLocal</code>就可以成为这种场景下的替代方案. 我们看一下替换后的代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;<span class="keyword">byte</span>[]&gt; simpleDateFormatThreadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> AtomicInteger count = <span class="keyword">new</span> AtomicInteger();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">5</span>; j++) &#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">50</span>; i++) &#123;</div><div class="line">				Thread thread = <span class="keyword">new</span> Thread(() -&gt; &#123;</div><div class="line">					<span class="keyword">byte</span>[] bytes = simpleDateFormatThreadLocal.get();</div><div class="line">					<span class="keyword">if</span> (bytes == <span class="keyword">null</span>) &#123;</div><div class="line">						bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span> * <span class="number">3</span>];</div><div class="line">						simpleDateFormatThreadLocal.set(bytes);</div><div class="line">						count.incrementAndGet();</div><div class="line">					&#125;</div><div class="line">				&#125;);</div><div class="line">				thread.start();</div><div class="line">				thread.join();</div><div class="line">			&#125;</div><div class="line">			System.out.println(<span class="string">"Active Thread Count : "</span> + Thread.activeCount());</div><div class="line">	        TimeUnit.MILLISECONDS.sleep(<span class="number">50</span>);</div><div class="line">		&#125;</div><div class="line">		System.out.println(<span class="string">"set count ; "</span> + count);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们看到了ThreadLocal的使用很简单, 首先是分配一个ThreadLocal对象, 然后接下来就通关get, set进行操作就ok了</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><code>ThreadLocal</code>的实现是这样子的, 每个<code>Thread</code>对象内部有一个<code>ThreadLocal.ThreadLocalMap</code>实例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">	ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而<code>ThreadLocal.ThreadLocalMap</code>里有一个Entry数组用于实际存储数据, 也就是说<code>ThreadLocal</code>本身是不存储数据的<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</div><div class="line">        Object value;</div><div class="line"></div><div class="line">        Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</div><div class="line">            <span class="keyword">super</span>(k);</div><div class="line">            value = v;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Entry[] table;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通过下面<code>ThreadLocal</code>方法实现我们可以看到每个和线程相关的数据最终都是保存到了各自的线程对象<code>ThreadLocal.ThreadLocalMap</code>实例里, 然后使用<code>ThreadLocal</code>作为key存储.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocal</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</div><div class="line">		Thread t = Thread.currentThread();</div><div class="line">		ThreadLocalMap map = getMap(t);</div><div class="line">		<span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</div><div class="line">			ThreadLocalMap.Entry e = map.getEntry(<span class="keyword">this</span>);</div><div class="line">			<span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</div><div class="line">				<span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">				T result = (T)e.value;</div><div class="line">				<span class="keyword">return</span> result;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> setInitialValue();</div><div class="line">	&#125;</div><div class="line">		</div><div class="line">	<span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</div><div class="line">			<span class="keyword">return</span> t.threadLocals;</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">	<span class="function"><span class="keyword">private</span> Entry <span class="title">getEntry</span><span class="params">(ThreadLocal&lt;?&gt; key)</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> i = key.threadLocalHashCode &amp; (table.length - <span class="number">1</span>);</div><div class="line">		Entry e = table[i];</div><div class="line">		<span class="keyword">if</span> (e != <span class="keyword">null</span> &amp;&amp; e.get() == key)</div><div class="line">			<span class="keyword">return</span> e;</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="keyword">return</span> getEntryAfterMiss(key, i, e);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="内存溢出"><a href="#内存溢出" class="headerlink" title="内存溢出"></a>内存溢出</h2><p>上面我们说了一下应用和原理, 但是见<a href="http://www.codeceo.com/article/about-threadlocal-memory-leak.html" target="_blank" rel="external">网上有人说内存泄漏的问题</a>, 关键在于<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</div><div class="line">    Object value;</div><div class="line"></div><div class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</div><div class="line">        <span class="keyword">super</span>(k);</div><div class="line">        value = v;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>Entry</code>是一个弱引用类型(<a href="http://www.ming15.wang/2016/05/05/jvm/Java%20%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/">Java 引用类型</a>). 当GC的时候, 如果weakReference的引用没有被强依赖的话, 则势必会被回收掉, 但是在ThreadLocal的时候则不然, 因为我们会一直保留ThreadLocal作为强引用依赖, 那么ThreadLocal则会一直被引用着, GC也不会回收它, Entry里面的value也就一直是可用的. 并不会发生ThreadLocal实例被回收, 而Entry里面value一直保存下来, 发生内存泄漏的情况.</p>
+<p>第一个应用中就是我实际代码中使用的示例, 下面我使用<code>-Xmx10M -Xms10M -XX:+PrintGC</code>这几个JVM参数测试一下上面程序的内存泄漏问题, 结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">[GC (Allocation Failure)  2048K-&gt;905K(9728K), 0.0061875 secs]</div><div class="line">[GC (Allocation Failure)  7854K-&gt;7113K(9728K), 0.0011924 secs]</div><div class="line">[GC (Allocation Failure)  7113K-&gt;7129K(9728K), 0.0031599 secs]</div><div class="line">[Full GC (Allocation Failure)  7129K-&gt;873K(9728K), 0.0409086 secs]</div><div class="line">[GC (Allocation Failure)  7140K-&gt;7081K(9728K), 0.0311850 secs]</div><div class="line">[Full GC (Ergonomics)  7081K-&gt;1024K(9728K), 0.0355878 secs]</div><div class="line">[GC (Allocation Failure)  4150K-&gt;4128K(9728K), 0.0130218 secs]</div><div class="line">[GC (Allocation Failure)  4128K-&gt;4128K(8704K), 0.0009429 secs]</div><div class="line">[Full GC (Allocation Failure)  4128K-&gt;872K(8704K), 0.0158858 secs]</div><div class="line">[GC (Allocation Failure)  7057K-&gt;7112K(9216K), 0.0064885 secs]</div><div class="line">[Full GC (Ergonomics)  7112K-&gt;872K(9216K), 0.0088626 secs]</div><div class="line">[GC (Allocation Failure)  7057K-&gt;7112K(9216K), 0.0037829 secs]</div><div class="line">[Full GC (Ergonomics)  7112K-&gt;872K(9216K), 0.0174345 secs]</div><div class="line">[GC (Allocation Failure)  7057K-&gt;7048K(9216K), 0.0180387 secs]</div><div class="line">[Full GC (Ergonomics)  7048K-&gt;872K(9216K), 0.0508169 secs]</div><div class="line">[GC (Allocation Failure)  7057K-&gt;7080K(9216K), 0.0088642 secs]</div><div class="line">[Full GC (Ergonomics)  7080K-&gt;872K(9216K), 0.0328227 secs]</div><div class="line">Active Thread Count : 2</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line">[Full GC (Ergonomics)  7050K-&gt;874K(9728K), 0.0055843 secs]</div><div class="line">[GC (Allocation Failure)  7100K-&gt;7050K(9728K), 0.0002894 secs]</div><div class="line">[Full GC (Ergonomics)  7050K-&gt;874K(9728K), 0.0209747 secs]</div><div class="line">[GC (Allocation Failure)  7100K-&gt;7114K(9728K), 0.0002878 secs]</div><div class="line">[Full GC (Ergonomics)  7114K-&gt;874K(9728K), 0.0034925 secs]</div><div class="line">[GC (Allocation Failure)  7100K-&gt;7082K(9728K), 0.0003256 secs]</div><div class="line">[Full GC (Ergonomics)  7082K-&gt;874K(9728K), 0.0057511 secs]</div><div class="line">[GC (Allocation Failure)  7100K-&gt;7082K(9728K), 0.0003378 secs]</div><div class="line">[Full GC (Ergonomics)  7082K-&gt;874K(9728K), 0.0037080 secs]</div><div class="line">[GC (Allocation Failure)  7100K-&gt;7050K(9728K), 0.0001761 secs]</div><div class="line">[Full GC (Ergonomics)  7050K-&gt;874K(9728K), 0.0040176 secs]</div><div class="line">[GC (Allocation Failure)  7120K-&gt;7050K(9728K), 0.0005024 secs]</div><div class="line">[Full GC (Ergonomics)  7050K-&gt;874K(9728K), 0.0051379 secs]</div><div class="line">[GC (Allocation Failure)  7100K-&gt;7082K(9728K), 0.0021276 secs]</div><div class="line">[Full GC (Ergonomics)  7082K-&gt;874K(9728K), 0.0060047 secs]</div><div class="line">Active Thread Count : 2</div><div class="line"><span class="built_in">set</span> count ; 250</div></pre></td></tr></table></figure></p>
+<p>由于篇幅的原因, 我并没有将全部的日志输出, 但是通过上面的日志我们还是可以看出, 程序一共分配了250次内存, 每次分配给ThreadLocal里面的数据都被回收掉了, 因此对<code>ThreadLocal</code>的一个简单应用, 只要我们写的线程代码没有问题, 我们并不需要对内存泄漏担心太多.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2016/06/07/Java/Java  ThreadLocal/" data-title="ThreadLocal 实战 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/06/09/算法/插入排序/" title="插入排序">
+  <strong>上一篇：</strong><br/>
+  <span>
+  插入排序</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/05/30/linux/ttystudio/"  title="终端生成GIF文件">
+ <strong>下一篇：</strong><br/> 
+ <span>终端生成GIF文件
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/06/07/Java/Java  ThreadLocal/" data-title="ThreadLocal 实战" data-url="http://www.ming15.wang/2016/06/07/Java/Java  ThreadLocal/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#应用"><span class="toc-number">1.</span> <span class="toc-text">应用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">2.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存溢出"><span class="toc-number">3.</span> <span class="toc-text">内存溢出</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

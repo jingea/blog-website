@@ -1,0 +1,649 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Log4J2 高性能的Appender | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="Log4j2为我们提供了非常多的Appender, 我们就是通过Appender最终将日志输出到磁盘的.
+
+Async
+Console
+Failover
+File
+Flume
+JDBC
+JMS Queue
+JMS Topic
+JPA
+Kafka
+Memory Mapped File
+NoSQL
+Output Stream
+Random Access File
+Rewrite
+Rolling Fil">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Log4J2 高性能的Appender">
+<meta property="og:url" content="http://www.ming15.wang/2016/09/02/Java/log4j2 Appender/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="Log4j2为我们提供了非常多的Appender, 我们就是通过Appender最终将日志输出到磁盘的.
+
+Async
+Console
+Failover
+File
+Flume
+JDBC
+JMS Queue
+JMS Topic
+JPA
+Kafka
+Memory Mapped File
+NoSQL
+Output Stream
+Random Access File
+Rewrite
+Rolling Fil">
+<meta property="og:updated_time" content="2016-09-22T05:19:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Log4J2 高性能的Appender">
+<meta name="twitter:description" content="Log4j2为我们提供了非常多的Appender, 我们就是通过Appender最终将日志输出到磁盘的.
+
+Async
+Console
+Failover
+File
+Flume
+JDBC
+JMS Queue
+JMS Topic
+JPA
+Kafka
+Memory Mapped File
+NoSQL
+Output Stream
+Random Access File
+Rewrite
+Rolling Fil">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/02/Java/log4j2 Appender/" title="Log4J2 高性能的Appender" itemprop="url">Log4J2 高性能的Appender</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-02T07:00:00.000Z" itemprop="datePublished"> Published 2016-09-02</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AsyncAppender"><span class="toc-number">1.</span> <span class="toc-text">AsyncAppender</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MemoryMappedFileAppender"><span class="toc-number">2.</span> <span class="toc-text">MemoryMappedFileAppender</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RandomAccessFileAppender"><span class="toc-number">3.</span> <span class="toc-text">RandomAccessFileAppender</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异步日志"><span class="toc-number">4.</span> <span class="toc-text">异步日志</span></a></li></ol>
+		
+		</div>
+		
+		<p>Log4j2为我们提供了非常多的Appender, 我们就是通过Appender最终将日志输出到磁盘的.</p>
+<ul>
+<li>Async</li>
+<li>Console</li>
+<li>Failover</li>
+<li>File</li>
+<li>Flume</li>
+<li>JDBC</li>
+<li>JMS Queue</li>
+<li>JMS Topic</li>
+<li>JPA</li>
+<li>Kafka</li>
+<li>Memory Mapped File</li>
+<li>NoSQL</li>
+<li>Output Stream</li>
+<li>Random Access File</li>
+<li>Rewrite</li>
+<li>Rolling File</li>
+<li>Rolling Random Access File</li>
+<li>Routing</li>
+<li>SMTP</li>
+<li>Socket</li>
+<li>Syslog</li>
+<li>ZeroMQ/JeroMQ</li>
+</ul>
+<h2 id="AsyncAppender"><a href="#AsyncAppender" class="headerlink" title="AsyncAppender"></a>AsyncAppender</h2><p>首先我们看一下AsyncAppender。 AsyncAppender通过一个单独的线程将LogEvent发送给它内部代理的其他的Appender，业务逻辑线程可以快速返回调用。AsyncAppender内部封装了一个<code>java.util.concurrent.ArrayBlockingQueue</code>用于接收日志事件。在多线程的情况下并不推荐使用这个Appender，因为BlockingQueue对于锁争夺是非常敏感的，在多线程并发写日志的时候，性能会下降。<br>官方推荐使用<a href="http://logging.apache.org/log4j/2.x/manual/async.html" target="_blank" rel="external">lock-free Async Loggers</a></p>
+<p>下来我们看一下这个Appender的几个重点参数</p>
+<ul>
+<li>blocking：如果设置为tue的话(默认值), 当BlockingQueue满的时候，新的日志文件会一直阻塞, 直到可以入列为止. 如果为false的话, 不能入列的日志会被写到 error appender 里。</li>
+<li>bufferSize：队列里的最大日志事件数量(默认是128)</li>
+<li>errorRef：当没有Appender可用或者写日志发生错误或者队列满的时候，新的日志事件会被写到这个errorRef里。如果不设置的话，那些日志都会丢失<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">Configuration</span> <span class="attr">status</span>=<span class="string">"warn"</span> <span class="attr">name</span>=<span class="string">"MyApp"</span> <span class="attr">packages</span>=<span class="string">""</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Appenders</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">File</span> <span class="attr">name</span>=<span class="string">"MyFile"</span> <span class="attr">fileName</span>=<span class="string">"logs/app.log"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">PatternLayout</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">Pattern</span>&gt;</span>%d %p %c&#123;1.&#125; [%t] %m%n<span class="tag">&lt;/<span class="name">Pattern</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">PatternLayout</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">File</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Async</span> <span class="attr">name</span>=<span class="string">"Async"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">"MyFile"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">Async</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Appenders</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Loggers</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Root</span> <span class="attr">level</span>=<span class="string">"error"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">"Async"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">Root</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Loggers</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="MemoryMappedFileAppender"><a href="#MemoryMappedFileAppender" class="headerlink" title="MemoryMappedFileAppender"></a>MemoryMappedFileAppender</h2><p>MemoryMappedFileAppender是在2.1的版本是行新增加的。 其通过将指定的文件映射到内存，然后将日志直接写到映射内存里。这个Appender主要依赖于操作系统的虚拟内存将映射内存里的数据同步到磁盘上。相比与传统的通过系统调用方式将数据写到磁盘上，这里只是将数据同步到内存里。速度提升了很多倍。在大多数的操作系统里，memory region实际上映射的是内核区的page cache，这意味着，在用户空间之内就不需要再创建一份数据拷贝了。</p>
+<p>但是将一个文件映射到内存里还是有一些消耗的，特别是映射一些特别大的文件(500M以上)，默认的region大小是32M。</p>
+<p>和FileAppender和RandomAccessFileAppender很像，MemoryMappedFileAppender使用MemoryMappedFileManager来执行IO操作。</p>
+<p>同样的来看几个比较重要的属相</p>
+<ul>
+<li>append：新的日志事件是否追加在日志文件末尾（如果不是原先的内容会被刷新掉）</li>
+<li>regionLength：映射的region的大小，默认是32M。这个值必须在<code>256</code>和<code>1,073,741,824</code>字节之间。</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line">&lt;Configuration status="warn" name="MyApp" packages=""&gt;</div><div class="line">  &lt;Appenders&gt;</div><div class="line">    &lt;MemoryMappedFile name="MyFile" fileName="logs/app.log"&gt;</div><div class="line">      &lt;PatternLayout&gt;</div><div class="line">        &lt;Pattern&gt;%d %p %c&#123;1.&#125; [%t] %m%n&lt;/Pattern&gt;</div><div class="line">      &lt;/PatternLayout&gt;</div><div class="line">    &lt;/MemoryMappedFile&gt;</div><div class="line">  &lt;/Appenders&gt;</div><div class="line">  &lt;Loggers&gt;</div><div class="line">    &lt;Root level="error"&gt;</div><div class="line">      &lt;AppenderRef ref="MyFile"/&gt;</div><div class="line">    &lt;/Root&gt;</div><div class="line">  &lt;/Loggers&gt;</div><div class="line">&lt;/Configuration&gt;</div></pre></td></tr></table></figure>
+<h2 id="RandomAccessFileAppender"><a href="#RandomAccessFileAppender" class="headerlink" title="RandomAccessFileAppender"></a>RandomAccessFileAppender</h2><p>RandomAccessFileAppender与标准的<code>FileAppender</code>非常像, 只不过RandomAccessFileAppender不能像FileAppender关闭缓冲功能。RandomAccessFileAppender内部使用<code>ByteBuffer</code> 和 <code>RandomAccessFile</code>实现(FileAppender基于BufferedOutputStream)</p>
+<p>在官方的测试中RandomAccessFileAppender比开启了缓冲功能的FileAppender的性能提升了<code>20 ~ 200</code>倍.</p>
+<ul>
+<li>append:新的日志事件是否追加在日志文件末尾（如果不是原先的内容会被刷新掉）</li>
+<li>immediateFlush: 设置为true的话(默认为true)，每一次写入都会强制执行一次flush, 这种情况下回保证数据肯定被写到磁盘上,但是对性能有消耗. 只有当使用同步logger的时候，每一次写入日志都flush才有意义。这是因为当使用异步logger或者Appender的时候，当events达到固定数量的时候回自动执行flush操作（即使immediateFlush为false,也会执行刷新），使用异步的方式同样保证数据会写入到磁盘而且更高效。</li>
+<li>bufferSize：缓冲大小，默认是 262,144 bytes (256 * 1024).<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">Configuration</span> <span class="attr">status</span>=<span class="string">"warn"</span> <span class="attr">name</span>=<span class="string">"MyApp"</span> <span class="attr">packages</span>=<span class="string">""</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Appenders</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">RandomAccessFile</span> <span class="attr">name</span>=<span class="string">"MyFile"</span> <span class="attr">fileName</span>=<span class="string">"logs/app.log"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">PatternLayout</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">Pattern</span>&gt;</span>%d %p %c&#123;1.&#125; [%t] %m%n<span class="tag">&lt;/<span class="name">Pattern</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">PatternLayout</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">RandomAccessFile</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Appenders</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Loggers</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Root</span> <span class="attr">level</span>=<span class="string">"error"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">AppenderRef</span> <span class="attr">ref</span>=<span class="string">"MyFile"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">Root</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Loggers</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="异步日志"><a href="#异步日志" class="headerlink" title="异步日志"></a>异步日志</h2><p>采用异步的方式记录日志首先是AsyncLogger</p>
+<ol>
+<li>异步日志通过在单独的线程中记录日志，能快速地返回日志调用。通常来说如果所有的logger都采用异步的方式的话，能获得最好的性能</li>
+<li>异步日志内部采用了Disruptor取代了java内部队列。这个特性能获得更高的吞吐量和更低的延迟。</li>
+<li>异步日志通过缓存方式，批量将日志输出<br>尽管异步日志有诸多特性，但是有时候仍然是需要采用同步地方式记录日志。我们下来首先看一下异步日志的优点：</li>
+<li>更高的吞吐量。异步日志与同步方式相比，它能提供6~68倍的日志输出量。当突然遇到日志洪峰时,采用异步方式能获得更快地日志响应</li>
+<li>更低的延迟. 异步日志比同步方式记录日志和采用基于队列实现的异步日志方式都获得了更低的延迟。<br>下面我们再看看异步记录方式的缺点</li>
+<li>当在写日志的时候，如果发生了问题或者抛出了异常，使用异步记录方式很难定位问题究竟是出现在哪里。因此在异步日志里推荐配置一个<code>ExceptionHandler</code>，但是哪怕配置了一个handler，仍然有可能出现日志丢失等问题。因为对于日志依赖严重的地方，推荐使用同步方式记录日志</li>
+<li>在单核的情况下，异步日志并不能获得更好地性能。当然现在的服务器动辄就是16核，32核，这个情况一般就不考虑了。<br>最后我们看一下如果所有的日志都采用异步方式的配置方式<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>当我们在java进程的启动脚本里进行了这样的配置后(我们也可以在程序启动后再系统属性里进行设置)，log4j会采用<code>AsyncLoggerContextSelector</code>进行异步日志输出。但是在配置文件里要使用<code>&lt;root&gt;</code>和<code>&lt;logger&gt;</code>,不能使用<code>&lt;asyncRoot&gt;</code>和<code>&lt;asyncLogger&gt;</code>, 因为这种异步的logger是为了在同步异步混合logger的时候使用的。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2016/09/02/Java/log4j2 Appender/" data-title="Log4J2 高性能的Appender | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/09/08/Java/LinkedBlockingQueue/" title="LinkedBlockingQueue">
+  <strong>上一篇：</strong><br/>
+  <span>
+  LinkedBlockingQueue</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/08/29/jvm/Attatch API/"  title="HotSpot Dynamic Attach Mechanism 简析">
+ <strong>下一篇：</strong><br/> 
+ <span>HotSpot Dynamic Attach Mechanism 简析
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/02/Java/log4j2 Appender/" data-title="Log4J2 高性能的Appender" data-url="http://www.ming15.wang/2016/09/02/Java/log4j2 Appender/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AsyncAppender"><span class="toc-number">1.</span> <span class="toc-text">AsyncAppender</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MemoryMappedFileAppender"><span class="toc-number">2.</span> <span class="toc-text">MemoryMappedFileAppender</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RandomAccessFileAppender"><span class="toc-number">3.</span> <span class="toc-text">RandomAccessFileAppender</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异步日志"><span class="toc-number">4.</span> <span class="toc-text">异步日志</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

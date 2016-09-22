@@ -1,0 +1,629 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Netty ByteBuf | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="首先我们来看一下netty buffer包的继承结构接下来我会对几个类进行代码测试.
+首先我们来看一下如何使用Netty提供的工具类构建一个ByteBuf12ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);Assert.assertEquals(1024, buf.capacity());
+我们使用ByteBufAllocator这个工具类构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty ByteBuf">
+<meta property="og:url" content="http://www.ming15.wang/2015/11/20/netty/ByteBuf/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="首先我们来看一下netty buffer包的继承结构接下来我会对几个类进行代码测试.
+首先我们来看一下如何使用Netty提供的工具类构建一个ByteBuf12ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);Assert.assertEquals(1024, buf.capacity());
+我们使用ByteBufAllocator这个工具类构">
+<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/netty/bytebuf.jpg">
+<meta property="og:updated_time" content="2016-09-22T05:19:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty ByteBuf">
+<meta name="twitter:description" content="首先我们来看一下netty buffer包的继承结构接下来我会对几个类进行代码测试.
+首先我们来看一下如何使用Netty提供的工具类构建一个ByteBuf12ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(1024);Assert.assertEquals(1024, buf.capacity());
+我们使用ByteBufAllocator这个工具类构">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/netty/bytebuf.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/20/netty/ByteBuf/" title="Netty ByteBuf" itemprop="url">Netty ByteBuf</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-20T08:00:00.000Z" itemprop="datePublished"> Published 2015-11-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ByteBuf-API"><span class="toc-number">1.</span> <span class="toc-text">ByteBuf API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteBuf-write"><span class="toc-number">1.1.</span> <span class="toc-text">ByteBuf write</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#writeInt"><span class="toc-number">1.1.1.</span> <span class="toc-text">writeInt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeChar"><span class="toc-number">1.1.2.</span> <span class="toc-text">writeChar</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBytes"><span class="toc-number">1.1.3.</span> <span class="toc-text">writeBytes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBytes-1"><span class="toc-number">1.1.4.</span> <span class="toc-text">writeBytes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBytes-2"><span class="toc-number">1.1.5.</span> <span class="toc-text">writeBytes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeFloat"><span class="toc-number">1.1.6.</span> <span class="toc-text">writeFloat</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeByte"><span class="toc-number">1.1.7.</span> <span class="toc-text">writeByte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeShort"><span class="toc-number">1.1.8.</span> <span class="toc-text">writeShort</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeDouble"><span class="toc-number">1.1.9.</span> <span class="toc-text">writeDouble</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBoolean"><span class="toc-number">1.1.10.</span> <span class="toc-text">writeBoolean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeLong"><span class="toc-number">1.1.11.</span> <span class="toc-text">writeLong</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBytes-3"><span class="toc-number">1.1.12.</span> <span class="toc-text">writeBytes</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteBuf-read"><span class="toc-number">1.2.</span> <span class="toc-text">ByteBuf read</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#readInt"><span class="toc-number">1.2.1.</span> <span class="toc-text">readInt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readChar"><span class="toc-number">1.2.2.</span> <span class="toc-text">readChar</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readBytes"><span class="toc-number">1.2.3.</span> <span class="toc-text">readBytes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readFloat"><span class="toc-number">1.2.4.</span> <span class="toc-text">readFloat</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readLong"><span class="toc-number">1.2.5.</span> <span class="toc-text">readLong</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readByte"><span class="toc-number">1.2.6.</span> <span class="toc-text">readByte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readShort"><span class="toc-number">1.2.7.</span> <span class="toc-text">readShort</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readBoolean"><span class="toc-number">1.2.8.</span> <span class="toc-text">readBoolean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readDouble"><span class="toc-number">1.2.9.</span> <span class="toc-text">readDouble</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readUnsignedByte"><span class="toc-number">1.2.10.</span> <span class="toc-text">readUnsignedByte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readUnsignedShort"><span class="toc-number">1.2.11.</span> <span class="toc-text">readUnsignedShort</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readerIndex"><span class="toc-number">1.2.12.</span> <span class="toc-text">readerIndex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readByte-1"><span class="toc-number">1.2.13.</span> <span class="toc-text">readByte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readUnsignedInt"><span class="toc-number">1.2.14.</span> <span class="toc-text">readUnsignedInt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readSlice"><span class="toc-number">1.2.15.</span> <span class="toc-text">readSlice</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readInt-1"><span class="toc-number">1.2.16.</span> <span class="toc-text">readInt</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#discard-bytes"><span class="toc-number">1.3.</span> <span class="toc-text">discard bytes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clear"><span class="toc-number">1.4.</span> <span class="toc-text">clear</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mark-reset"><span class="toc-number">1.5.</span> <span class="toc-text">mark reset</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找"><span class="toc-number">1.6.</span> <span class="toc-text">查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#derived-buffers"><span class="toc-number">1.7.</span> <span class="toc-text">derived buffers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#get-set"><span class="toc-number">1.8.</span> <span class="toc-text">get set</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存池"><span class="toc-number">2.</span> <span class="toc-text">内存池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ButeBuf-类型"><span class="toc-number">3.</span> <span class="toc-text">ButeBuf 类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractByteBuf"><span class="toc-number">4.</span> <span class="toc-text">AbstractByteBuf</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ResourceLeakDetector"><span class="toc-number">4.1.</span> <span class="toc-text">ResourceLeakDetector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SwappedByteBuf"><span class="toc-number">4.2.</span> <span class="toc-text">SwappedByteBuf</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractReferenceCountedByteBuf"><span class="toc-number">5.</span> <span class="toc-text">AbstractReferenceCountedByteBuf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UnPooledHeapByteBuf"><span class="toc-number">6.</span> <span class="toc-text">UnPooledHeapByteBuf</span></a></li></ol>
+		
+		</div>
+		
+		<p>首先我们来看一下netty buffer包的继承结构<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/netty/bytebuf.jpg" alt=""><br>接下来我会对几个类进行代码测试.</p>
+<p>首先我们来看一下如何使用Netty提供的工具类构建一个ByteBuf<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">Assert.assertEquals(<span class="number">1024</span>, buf.capacity());</div></pre></td></tr></table></figure></p>
+<p>我们使用<code>ByteBufAllocator</code>这个工具类构建了一个<code>1024</code>大小的<code>ByteBuf</code>出来.</p>
+<p>ByteBuf提供了 <code>readerIndex</code> 和 <code>writerIndex</code> 进行缓冲区的顺序读写操作.</p>
+<ul>
+<li><code>readerIndex</code>标志读取索引</li>
+<li><code>writerIndex</code>标志写入索引</li>
+<li>[0, readerIndex] 已经读取多的缓冲区区间</li>
+<li>[readerIndex, writerIndex] 可读的缓冲区区间</li>
+<li>[writerIndex, capacity]  可写的缓冲区区间</li>
+</ul>
+<blockquote>
+<p>每个索引移动的单位是<code>bytes</code>, 在下例中我们向ByteBuf写入一个int数值, <code>writerIdex</code>会移动4个<code>bytes</code></p>
+</blockquote>
+<h2 id="ByteBuf-API"><a href="#ByteBuf-API" class="headerlink" title="ByteBuf API"></a>ByteBuf API</h2><p>我们首先看一下ByteBuf提供的API</p>
+<h3 id="ByteBuf-write"><a href="#ByteBuf-write" class="headerlink" title="ByteBuf write"></a>ByteBuf write</h3><p>接下来我们看一下向ByteBuf缓冲区写入数据的API</p>
+<h4 id="writeInt"><a href="#writeInt" class="headerlink" title="writeInt"></a>writeInt</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteInt</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeInt(<span class="number">1</span>);</div><div class="line">	<span class="comment">// 写入一个Int数值, writerIndex向后移动4个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">4</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeChar"><a href="#writeChar" class="headerlink" title="writeChar"></a>writeChar</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteChar</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeChar(<span class="string">'a'</span>);</div><div class="line">	<span class="comment">// 写入一个Char字符, writerIndex向后移动2个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">2</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeBytes"><a href="#writeBytes" class="headerlink" title="writeBytes"></a>writeBytes</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteBytes</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">100</span>&#125;;</div><div class="line">	buf.writeBytes(bytes);</div><div class="line">	<span class="comment">// 写入一个byte数组, 由于byte数组只有一个元素, writerIndex向后移动1个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">1</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeBytes-1"><a href="#writeBytes-1" class="headerlink" title="writeBytes"></a>writeBytes</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteBytesWithStartEndIndex</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">100</span>, <span class="number">1</span>, <span class="number">3</span>&#125;;</div><div class="line">	buf.writeBytes(bytes, <span class="number">1</span>, <span class="number">1</span>);</div><div class="line">	<span class="comment">// 我们将三个元素的byte数组写入ByteBuf中,但是在写入的时候我们指定了开始索引和结束索引,</span></div><div class="line">	<span class="comment">// 由于我们的开始索引和结束索引相等, 因此ByteBuf中只写入了1这个元素</span></div><div class="line">	Assert.assertEquals(<span class="number">1</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeBytes-2"><a href="#writeBytes-2" class="headerlink" title="writeBytes"></a>writeBytes</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteBytes3</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	ByteBuf buf1 = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf1.writeInt(<span class="number">1</span>);</div><div class="line">	buf.writeBytes(buf1);</div><div class="line">	<span class="comment">// 我们向ByteBuf中写入另一个ByteBuf, 它的索引仍然是增长4. ByteBuf不仅仅可以写入BuyeBuf,还可以写入InputStream和ByteBuffer</span></div><div class="line">	Assert.assertEquals(<span class="number">4</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeFloat"><a href="#writeFloat" class="headerlink" title="writeFloat"></a>writeFloat</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteFloat</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeFloat(<span class="number">0.1f</span>);</div><div class="line">	<span class="comment">// 写入一个float, 由于float也是占用4个字节, 因此writerIndex向后移动4个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">4</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeByte"><a href="#writeByte" class="headerlink" title="writeByte"></a>writeByte</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteByte</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeByte(<span class="number">1</span>);</div><div class="line">	Assert.assertEquals(<span class="number">1</span>, buf.writerIndex());</div><div class="line">	buf.writeByte(<span class="number">1000</span>);</div><div class="line">	<span class="comment">// 写入一个byte, writerIndex向后移动1个字节,至于写进去的数字大于128,会发生什么,我们在read的时候看一下结果</span></div><div class="line">	Assert.assertEquals(<span class="number">2</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeShort"><a href="#writeShort" class="headerlink" title="writeShort"></a>writeShort</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteShort</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeShort(<span class="number">1000</span>);</div><div class="line">	<span class="comment">// 写入一个short, writerIndex向后移动2个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">2</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeDouble"><a href="#writeDouble" class="headerlink" title="writeDouble"></a>writeDouble</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteDouble</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeDouble(<span class="number">1000.0</span>d);</div><div class="line">	<span class="comment">// 写入一个double, writerIndex向后移动8个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">8</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeBoolean"><a href="#writeBoolean" class="headerlink" title="writeBoolean"></a>writeBoolean</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteBoolean</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBoolean(<span class="keyword">false</span>);</div><div class="line">	<span class="comment">// 写入一个boolean, writerIndex向后移动1个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">1</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeLong"><a href="#writeLong" class="headerlink" title="writeLong"></a>writeLong</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteLong</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeLong(<span class="number">100l</span>);</div><div class="line">	<span class="comment">// 写入一个long, writerIndex向后移动8个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">8</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="writeBytes-3"><a href="#writeBytes-3" class="headerlink" title="writeBytes"></a>writeBytes</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteOverLoadMaxCapacity</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">5</span>);</div><div class="line">	buf.writeBytes(<span class="string">"123456"</span>.getBytes());</div><div class="line">	<span class="comment">// 虽然在分配的时候我们只分配了5个字节大小的缓冲区,但是我们写入6个字节它也并不报错,</span></div><div class="line">	<span class="comment">// 而且我们观察到writerIndex确实增长到了6,说明ByteBuf会进行自动拓容.</span></div><div class="line">	Assert.assertEquals(<span class="number">6</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ByteBuf-read"><a href="#ByteBuf-read" class="headerlink" title="ByteBuf read"></a>ByteBuf read</h3><p>刚才我们看了向ByteBuf缓冲区写入数据的API,接下来我们看一下从ByteBuf缓冲区读取数据的API</p>
+<h4 id="readInt"><a href="#readInt" class="headerlink" title="readInt"></a>readInt</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadInt</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeInt(<span class="number">1</span>);</div><div class="line">	<span class="keyword">int</span> read = buf.readInt();</div><div class="line">	<span class="comment">// 读取Int, readerIndex向后移动4字节</span></div><div class="line">	Assert.assertEquals(<span class="number">4</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="number">1</span>, read);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readChar"><a href="#readChar" class="headerlink" title="readChar"></a>readChar</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadChar</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeChar(<span class="string">'1'</span>);</div><div class="line">	<span class="keyword">char</span> read = buf.readChar();</div><div class="line">	<span class="comment">// 读取Char, readerIndex向后移动2字节</span></div><div class="line">	Assert.assertEquals(<span class="number">2</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="string">'1'</span>, read);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readBytes"><a href="#readBytes" class="headerlink" title="readBytes"></a>readBytes</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadBytes</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;);</div><div class="line">	<span class="keyword">byte</span>[] read = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>];</div><div class="line">	buf.readBytes(read);</div><div class="line">	<span class="comment">// 读取byte数组, 这里需要注意的是, read字节数组的长度不能大于ByteBuf的readerIndex的值,否则会产生数组越界</span></div><div class="line">	Assert.assertEquals(<span class="number">10</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="number">0</span>, read[<span class="number">9</span>]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadBytesWithStartEndIndex</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;);</div><div class="line">	<span class="keyword">byte</span>[] read = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10</span>];</div><div class="line">	buf.readBytes(read, <span class="number">2</span>, <span class="number">3</span>);</div><div class="line">	<span class="comment">// 从第三个索引开始读取到第4个索引的位置, 读取2个字节, readerIndex移动到第4个索引位置上</span></div><div class="line">	Assert.assertEquals(<span class="number">3</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="number">3</span>, read[<span class="number">0</span>]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRead3Bytes</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;);</div><div class="line">	buf.readBytes(<span class="number">3</span>);</div><div class="line">	<span class="comment">// 读取3个字节, readerIndex向后移动3字节</span></div><div class="line">	Assert.assertEquals(<span class="number">3</span>, buf.readerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readFloat"><a href="#readFloat" class="headerlink" title="readFloat"></a>readFloat</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadFloat</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeFloat(<span class="number">10.0f</span>);</div><div class="line">	<span class="keyword">float</span> read = buf.readFloat();</div><div class="line">	<span class="comment">// 读取Float, readerIndex向后移动4字节</span></div><div class="line">	Assert.assertEquals(<span class="number">4</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="number">10</span>.f, read);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readLong"><a href="#readLong" class="headerlink" title="readLong"></a>readLong</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadLong</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeLong(<span class="number">10l</span>);</div><div class="line">	buf.readLong();</div><div class="line">	<span class="comment">// 读取long, readerIndex向后移动8字节</span></div><div class="line">	Assert.assertEquals(<span class="number">8</span>, buf.readerIndex());</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readByte"><a href="#readByte" class="headerlink" title="readByte"></a>readByte</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadByte</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;);</div><div class="line">	buf.readByte();</div><div class="line">	<span class="comment">// 读取byte, readerIndex向后移动1字节</span></div><div class="line">	Assert.assertEquals(<span class="number">1</span>, buf.readerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readShort"><a href="#readShort" class="headerlink" title="readShort"></a>readShort</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadShort</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeShort(<span class="number">10</span>);</div><div class="line">	buf.readShort();</div><div class="line">	<span class="comment">// 读取short, readerIndex向后移动2字节</span></div><div class="line">	Assert.assertEquals(<span class="number">2</span>, buf.readerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readBoolean"><a href="#readBoolean" class="headerlink" title="readBoolean"></a>readBoolean</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadBoolean</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBoolean(<span class="keyword">true</span>);</div><div class="line">	buf.readBoolean();</div><div class="line">	<span class="comment">// 读取boolean, readerIndex向后移动1字节</span></div><div class="line">	Assert.assertEquals(<span class="number">1</span>, buf.readerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readDouble"><a href="#readDouble" class="headerlink" title="readDouble"></a>readDouble</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadDouble</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeDouble(<span class="number">10.0</span>d);</div><div class="line">	buf.readDouble();</div><div class="line">	<span class="comment">// 读取double, readerIndex向后移动8字节</span></div><div class="line">	Assert.assertEquals(<span class="number">8</span>, buf.readerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readUnsignedByte"><a href="#readUnsignedByte" class="headerlink" title="readUnsignedByte"></a>readUnsignedByte</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadUnsignedByte</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeByte(-<span class="number">10</span>);</div><div class="line">	<span class="keyword">short</span> read = buf.readUnsignedByte();</div><div class="line">	<span class="comment">// 读取无符号byte, readerIndex向后移动1字节</span></div><div class="line">	Assert.assertEquals(<span class="number">1</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="number">246</span>, read);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readUnsignedShort"><a href="#readUnsignedShort" class="headerlink" title="readUnsignedShort"></a>readUnsignedShort</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadUnsignedShort</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeShort(-<span class="number">1024</span>);</div><div class="line">	<span class="comment">// 我们首先读取出-1024,这个负数,然后转化成无符号数字64512</span></div><div class="line">	<span class="keyword">int</span> read = buf.readUnsignedShort();</div><div class="line">	<span class="comment">// 读取无符号Short, readerIndex向后移动2字节</span></div><div class="line">	Assert.assertEquals(<span class="number">2</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="number">64512</span>, read);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readerIndex"><a href="#readerIndex" class="headerlink" title="readerIndex"></a>readerIndex</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReaderIndex</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;);</div><div class="line">	Assert.assertEquals(<span class="number">0</span>, buf.readerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readByte-1"><a href="#readByte-1" class="headerlink" title="readByte"></a>readByte</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadableBytes</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;);</div><div class="line">	Assert.assertEquals(<span class="number">10</span>, buf.readableBytes());</div><div class="line">	buf.readByte();</div><div class="line">	<span class="comment">// 我们读取一个byte之后, 可读取字节变成了9个字节</span></div><div class="line">	Assert.assertEquals(<span class="number">9</span>, buf.readableBytes());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readUnsignedInt"><a href="#readUnsignedInt" class="headerlink" title="readUnsignedInt"></a>readUnsignedInt</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadUnsignedInt</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeInt(<span class="number">10</span>);</div><div class="line">	<span class="keyword">long</span> read = buf.readUnsignedInt();</div><div class="line">	Assert.assertEquals(<span class="number">4</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="number">10</span>, read);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readSlice"><a href="#readSlice" class="headerlink" title="readSlice"></a>readSlice</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReadSlice</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;);</div><div class="line">	ByteBuf read = buf.readSlice(<span class="number">5</span>);</div><div class="line">	<span class="comment">// slice出来的ByteBuf与原ByteBuf共享缓冲区</span></div><div class="line">	Assert.assertEquals(<span class="number">5</span>, buf.readerIndex());</div><div class="line">	Assert.assertEquals(<span class="number">1</span>, read.readByte());</div><div class="line">	Assert.assertEquals(<span class="number">6</span>, buf.readByte());</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="readInt-1"><a href="#readInt-1" class="headerlink" title="readInt"></a>readInt</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriteBytesReadInt</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">1024</span>);</div><div class="line">	buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">0</span>&#125;);</div><div class="line">	<span class="keyword">int</span> read = buf.readInt();</div><div class="line">	<span class="comment">// 从一个byte数组中读取一个int, 会读取出1, 2, 3, 4这四个byte转换成int为16909060</span></div><div class="line">	Assert.assertEquals(<span class="number">16909060</span>, read);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="discard-bytes"><a href="#discard-bytes" class="headerlink" title="discard bytes"></a>discard bytes</h3><p>在前面的测试中我们看到了,当向ByteBuf写入数据时,当超出分配内存大小时,ByteBuf会进行自动拓容(重新生成一个数组缓冲区,然后将原先的缓冲区内容拷贝到新的缓冲区中),这样一来ByteBuf占用的内从会越来越大. 我们可以是<code>discardReadBytes()</code>这个方法重用以前的缓冲区, 它会将[0, readerIndex]区间的内存舍弃掉(内部也是数组复制), 这么着就节间的重用了以前的缓冲区,但是这种方式有一点就是如果频繁的调用这个方法会带来性能问题.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">50</span>);</div><div class="line">buf.writeBytes(<span class="string">"123456789"</span>.getBytes());</div><div class="line">buf.readBytes(<span class="number">3</span>);	<span class="comment">// 读取三个字节</span></div><div class="line">System.out.println(buf.readerIndex());		<span class="comment">// readerIndex位置 : 3</span></div><div class="line">System.out.println(buf.writerIndex());		<span class="comment">// writerIndex位置: 9</span></div><div class="line">System.out.println(buf.readableBytes());	<span class="comment">// 可读字节 9 - 3 = 6</span></div><div class="line">System.out.println(buf.writableBytes());	<span class="comment">// 可写字节 50 - 9 = 41</span></div><div class="line"></div><div class="line"><span class="comment">// 舍弃已读字节, readerIndex重置为0</span></div><div class="line">buf.discardReadBytes();</div><div class="line">System.out.println(buf.readerIndex());		<span class="comment">// readerIndex位置 : 0</span></div><div class="line">System.out.println(buf.writerIndex());		<span class="comment">// writerIndex位置: 6</span></div><div class="line">System.out.println(buf.readableBytes());	<span class="comment">// 可读字节 6</span></div><div class="line">System.out.println(buf.writableBytes());	<span class="comment">// 可写字节 50 - 6 = 44</span></div></pre></td></tr></table></figure></p>
+<h3 id="clear"><a href="#clear" class="headerlink" title="clear"></a>clear</h3><p>这个操作并不会情况缓冲区的内容只是用来将readerIndex和writerIndex重置为0. 但是缓冲区的内容我们是仍然可以读到的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">50</span>);</div><div class="line">buf.writeBytes(<span class="string">"123456789"</span>.getBytes());</div><div class="line">buf.readBytes(<span class="number">3</span>);	<span class="comment">// 读取三个字节</span></div><div class="line">System.out.println(buf.readerIndex());		<span class="comment">// readerIndex位置 : 3</span></div><div class="line">System.out.println(buf.writerIndex());		<span class="comment">// writerIndex位置: 9</span></div><div class="line">System.out.println(buf.readableBytes());	<span class="comment">// 可读字节 9 - 3 = 6</span></div><div class="line">System.out.println(buf.writableBytes());	<span class="comment">// 可写字节 50 - 9 = 41</span></div><div class="line"></div><div class="line"><span class="comment">// 重置readerIndex和writerIndex</span></div><div class="line">buf.clear();</div><div class="line">System.out.println(buf.readerIndex());		<span class="comment">// readerIndex位置 : 0</span></div><div class="line">System.out.println(buf.writerIndex());		<span class="comment">// writerIndex位置: 0</span></div><div class="line">System.out.println(buf.readableBytes());	<span class="comment">// 可读字节 readerIndex = 0</span></div><div class="line">System.out.println(buf.writableBytes());	<span class="comment">// 可写字节 capacity - writerIndex = 50</span></div><div class="line"><span class="comment">// 设置writerIndex</span></div><div class="line">buf.writerIndex(<span class="number">6</span>);</div><div class="line">System.out.println(buf.readerIndex());		<span class="comment">// readerIndex位置 : 0</span></div><div class="line">System.out.println(buf.writerIndex());		<span class="comment">// writerIndex位置: 6</span></div><div class="line">System.out.println(buf.readableBytes());	<span class="comment">// 可读字节 writerIndex - readerIndex = 6</span></div><div class="line">System.out.println(buf.writableBytes());	<span class="comment">// 可写字节 44</span></div><div class="line">System.out.println(buf.readByte());</div></pre></td></tr></table></figure></p>
+<h3 id="mark-reset"><a href="#mark-reset" class="headerlink" title="mark reset"></a>mark reset</h3><p>mark reset相关的四个方法也是对指针位置的操作</p>
+<ul>
+<li><code>markReaderIndex()</code> 记录readerIndex</li>
+<li><code>markWriterIndex()</code> 记录writerIndex</li>
+<li><code>resetReaderIndex()</code>  将记录的readerIndex重置到当前的readerIndex值</li>
+<li><code>resetWriterIndex()</code>  将记录的writerIndex重置到当前的writerIndex值</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testReaderIndex</span><span class="params">()</span> </span>&#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">50</span>);</div><div class="line">	buf.writeBytes(<span class="string">"123456789"</span>.getBytes());</div><div class="line">	buf.readBytes(<span class="number">3</span>);</div><div class="line">	buf.markReaderIndex();</div><div class="line">	buf.readBytes(<span class="number">1</span>);</div><div class="line">	Assert.assertEquals(<span class="number">4</span>, buf.readerIndex());</div><div class="line">	buf.resetReaderIndex();</div><div class="line">	Assert.assertEquals(<span class="number">3</span>, buf.readerIndex());</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">```<span class="function">java</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testWriterIndex</span><span class="params">()</span> &#123;</div><div class="line">	ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">50</span>);</div><div class="line">	buf.writeBytes(<span class="string">"123456789"</span>.getBytes());</div><div class="line">	buf.markWriterIndex();</div><div class="line">	buf.writeByte(<span class="number">1</span>);</div><div class="line">	Assert.assertEquals(<span class="number">10</span>, buf.writerIndex());</div><div class="line">	buf.resetWriterIndex();</div><div class="line">	Assert.assertEquals(<span class="number">9</span>, buf.writerIndex());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><p>ByteBuf提供丰富的API让我查找某个Byte<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">50</span>);</div><div class="line">buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span> ,<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 在指定的范围内查找某个byte</span></div><div class="line"><span class="keyword">int</span> idx = buf.indexOf(<span class="number">0</span>, buf.writerIndex(), (<span class="keyword">byte</span>)<span class="number">2</span>);</div><div class="line">System.out.println(idx);	<span class="comment">// 1</span></div><div class="line"></div><div class="line">idx = buf.indexOf(<span class="number">3</span>, buf.writerIndex(), (<span class="keyword">byte</span>)<span class="number">2</span>);</div><div class="line">System.out.println(idx);	<span class="comment">// -1</span></div><div class="line"></div><div class="line"><span class="comment">// 在[readerIndex, writerIndex]之间查找值</span></div><div class="line">idx = buf.bytesBefore((<span class="keyword">byte</span>)<span class="number">2</span>);</div><div class="line">System.out.println(idx);  <span class="comment">// 4</span></div><div class="line"></div><div class="line">buf.readBytes(<span class="number">3</span>);</div><div class="line">idx = buf.bytesBefore((<span class="keyword">byte</span>)<span class="number">2</span>);</div><div class="line">System.out.println(idx); <span class="comment">// -1</span></div><div class="line"></div><div class="line"><span class="comment">// 在[readerIndex, writerIndex]之间遍历查找值</span></div><div class="line">idx = buf.forEachByte(b -&gt; b == (<span class="keyword">byte</span>) <span class="number">6</span>);</div><div class="line">System.out.println(idx); <span class="comment">// 3</span></div></pre></td></tr></table></figure></p>
+<h3 id="derived-buffers"><a href="#derived-buffers" class="headerlink" title="derived buffers"></a>derived buffers</h3><p>ByteBuf提供多种API用于创建某个ByteBuf的视图或者复制版本</p>
+<ul>
+<li><code>duplicate()</code> 复制ByteBuf对象, 俩个对象共享同一个缓冲区,但是各自维护自己的索引(readerIndex, writerIndex)</li>
+<li><code>copy()</code> 复制ByteBuf对象, 俩个对象共享有自己的缓冲区, 缓冲区和索引都不共享</li>
+<li><code>slice()</code>  复制Bytebuf对象,但是只复制[readerIndex, writerIndex]区间的缓冲区, 俩个对象的缓冲区是共享的,但是维护各自的索引</li>
+</ul>
+<h3 id="get-set"><a href="#get-set" class="headerlink" title="get set"></a>get set</h3><p>ByteBuf不仅仅支持read, write的顺序读写还支持get,set的随机读取。 但是get/set不会进行自动拓容.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(<span class="number">50</span>);</div><div class="line">buf.writeBytes(<span class="keyword">new</span> <span class="keyword">byte</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span> ,<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>&#125;);</div><div class="line"></div><div class="line"><span class="keyword">byte</span> b = buf.getByte(<span class="number">2</span>);</div><div class="line">System.out.println(buf.readableBytes());	<span class="comment">// 9</span></div><div class="line">System.out.println(buf.readerIndex());		<span class="comment">// 0</span></div><div class="line">System.out.println(b);		<span class="comment">// 3</span></div></pre></td></tr></table></figure></p>
+<h2 id="内存池"><a href="#内存池" class="headerlink" title="内存池"></a>内存池</h2><p>Netty的内存池由<code>PoolArea</code>. <code>PoolArea</code>由多个<code>PoolChunk</code>组成. </p>
+<h2 id="ButeBuf-类型"><a href="#ButeBuf-类型" class="headerlink" title="ButeBuf 类型"></a>ButeBuf 类型</h2><p>看完ByteBuf的API操作我们来看一下ByteBuf的分类,在内存使用种类上ByteBuf分为以下俩类</p>
+<ul>
+<li>DirectByteBuf : 使用JVM堆外内存分配. 虽然分配和回收速度慢一些,但是从SocketChannel中写入或者读取数据由于少了一次内存复制,因此速度较快.(SocketIO通信时适合使用)</li>
+<li>HeapByteBuf: 使用JVM堆内内存分配. 内存分配和回收速度较快,但是读写Socket IO的时候由于会额外进行一次内存复制,堆内存对应的缓冲区复制到内核Channel中,性能会有下降.(后端业务在编解码时适合使用)</li>
+</ul>
+<p>在内存使用种类上由分为以下俩类</p>
+<ul>
+<li>PooledByteBuf: 基于内存对象池的ByteBuf, </li>
+<li>UnpooledByteBuf: </li>
+</ul>
+<blockquote>
+<p>UnpooledDirectByteBuf, UnpooledHeapByteBuf, UnpooledUnsafeDirectByteBuf ,PooledDirectByteBuf, PooledHeapByteBuf</p>
+</blockquote>
+<h2 id="AbstractByteBuf"><a href="#AbstractByteBuf" class="headerlink" title="AbstractByteBuf"></a>AbstractByteBuf</h2><p><code>AbstractByteBuf</code>继承自<code>ByteBuf</code>, 它内部并没有定义ByteBuf的缓冲区实现,只是通过定义<code>readerIndex</code>, <code>writerIndex</code>, <code>capacity</code>等实现ByteBuf接口中的各种API, 具体的缓冲区实现则由子类实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> ResourceLeakDetector&lt;ByteBuf&gt; leakDetector = <span class="keyword">new</span> ResourceLeakDetector&lt;ByteBuf&gt;(ByteBuf.class);</div><div class="line"></div><div class="line"><span class="keyword">int</span> readerIndex;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span> writerIndex;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span> markedReaderIndex;</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span> markedWriterIndex;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span> maxCapacity;</div><div class="line"></div><div class="line"><span class="keyword">private</span> SwappedByteBuf swappedBuf;</div></pre></td></tr></table></figure></p>
+<p>除了操作具体缓冲区API没有实现之外 <code>AbstractByteBuf</code>为我们实现了大量的API,首先我们看一下读数据的API<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> ByteBuf <span class="title">readBytes</span><span class="params">(<span class="keyword">byte</span>[] dst, <span class="keyword">int</span> dstIndex, <span class="keyword">int</span> length)</span> </span>&#123;</div><div class="line">	<span class="comment">// 检查当前缓冲区中的可读数据是否满足length长度</span></div><div class="line">    checkReadableBytes(length);</div><div class="line">    <span class="comment">// 将当前缓冲区的数据从readerIndex开始读取length个长度到目标dst缓冲区中. </span></div><div class="line">    <span class="comment">// 这个方法也就是拷贝一部分数据到新的缓冲区中,但是并不会改变当前缓冲区的readerIndex和writerIndex</span></div><div class="line">    getBytes(readerIndex, dst, dstIndex, length);</div><div class="line">    readerIndex += length;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面我们看一下写数据的API实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> ByteBuf <span class="title">writeBytes</span><span class="params">(<span class="keyword">byte</span>[] src, <span class="keyword">int</span> srcIndex, <span class="keyword">int</span> length)</span> </span>&#123;</div><div class="line">    ensureWritable(length);</div><div class="line">    setBytes(writerIndex, src, srcIndex, length);</div><div class="line">    writerIndex += length;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>同样的<code>setBytes();</code>是由子类具体实现, 我们着重看一下<code>ensureWritable()</code>方法实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> ByteBuf <span class="title">ensureWritable</span><span class="params">(<span class="keyword">int</span> minWritableBytes)</span> </span>&#123;</div><div class="line">	<span class="comment">// 如果要写入数据的字节小于0的话, 则直接抛出异常</span></div><div class="line">    <span class="keyword">if</span> (minWritableBytes &lt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(String.format(</div><div class="line">                <span class="string">"minWritableBytes: %d (expected: &gt;= 0)"</span>, minWritableBytes));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	<span class="comment">// minWritableBytes &lt;= capacity() - writerIndex, 要写入的字节数小于可写的字节数则直接返回</span></div><div class="line">    <span class="keyword">if</span> (minWritableBytes &lt;= writableBytes()) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (minWritableBytes &gt; maxCapacity - writerIndex) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(String.format(</div><div class="line">                <span class="string">"writerIndex(%d) + minWritableBytes(%d) exceeds maxCapacity(%d): %s"</span>,</div><div class="line">                writerIndex, minWritableBytes, maxCapacity, <span class="keyword">this</span>));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Normalize the current capacity to the power of 2.</span></div><div class="line">    <span class="keyword">int</span> newCapacity = calculateNewCapacity(writerIndex + minWritableBytes);</div><div class="line"></div><div class="line">    <span class="comment">// Adjust to the new capacity.</span></div><div class="line">    capacity(newCapacity);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="ResourceLeakDetector"><a href="#ResourceLeakDetector" class="headerlink" title="ResourceLeakDetector"></a>ResourceLeakDetector</h3><p><code>ResourceLeakDetector</code>用于检测内存泄漏. 它被所有ByteBuf实例共享.</p>
+<h3 id="SwappedByteBuf"><a href="#SwappedByteBuf" class="headerlink" title="SwappedByteBuf"></a>SwappedByteBuf</h3><h2 id="AbstractReferenceCountedByteBuf"><a href="#AbstractReferenceCountedByteBuf" class="headerlink" title="AbstractReferenceCountedByteBuf"></a>AbstractReferenceCountedByteBuf</h2><h2 id="UnPooledHeapByteBuf"><a href="#UnPooledHeapByteBuf" class="headerlink" title="UnPooledHeapByteBuf"></a>UnPooledHeapByteBuf</h2><p>不使用对象池的基于堆内存分配的字节缓冲区. 每次IO读写的时候都会创建一个新的UnPooledHeapByteBuf.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Netty/">Netty</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2015/11/20/netty/ByteBuf/" data-title="Netty ByteBuf | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/21/Java/JavaIO 文件操作/" title="JAVA 文件操作">
+  <strong>上一篇：</strong><br/>
+  <span>
+  JAVA 文件操作</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/19/Java/Java小常识/"  title="Java 常用技能">
+ <strong>下一篇：</strong><br/> 
+ <span>Java 常用技能
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/11/20/netty/ByteBuf/" data-title="Netty ByteBuf" data-url="http://www.ming15.wang/2015/11/20/netty/ByteBuf/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ByteBuf-API"><span class="toc-number">1.</span> <span class="toc-text">ByteBuf API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteBuf-write"><span class="toc-number">1.1.</span> <span class="toc-text">ByteBuf write</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#writeInt"><span class="toc-number">1.1.1.</span> <span class="toc-text">writeInt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeChar"><span class="toc-number">1.1.2.</span> <span class="toc-text">writeChar</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBytes"><span class="toc-number">1.1.3.</span> <span class="toc-text">writeBytes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBytes-1"><span class="toc-number">1.1.4.</span> <span class="toc-text">writeBytes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBytes-2"><span class="toc-number">1.1.5.</span> <span class="toc-text">writeBytes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeFloat"><span class="toc-number">1.1.6.</span> <span class="toc-text">writeFloat</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeByte"><span class="toc-number">1.1.7.</span> <span class="toc-text">writeByte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeShort"><span class="toc-number">1.1.8.</span> <span class="toc-text">writeShort</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeDouble"><span class="toc-number">1.1.9.</span> <span class="toc-text">writeDouble</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBoolean"><span class="toc-number">1.1.10.</span> <span class="toc-text">writeBoolean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeLong"><span class="toc-number">1.1.11.</span> <span class="toc-text">writeLong</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#writeBytes-3"><span class="toc-number">1.1.12.</span> <span class="toc-text">writeBytes</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteBuf-read"><span class="toc-number">1.2.</span> <span class="toc-text">ByteBuf read</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#readInt"><span class="toc-number">1.2.1.</span> <span class="toc-text">readInt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readChar"><span class="toc-number">1.2.2.</span> <span class="toc-text">readChar</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readBytes"><span class="toc-number">1.2.3.</span> <span class="toc-text">readBytes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readFloat"><span class="toc-number">1.2.4.</span> <span class="toc-text">readFloat</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readLong"><span class="toc-number">1.2.5.</span> <span class="toc-text">readLong</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readByte"><span class="toc-number">1.2.6.</span> <span class="toc-text">readByte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readShort"><span class="toc-number">1.2.7.</span> <span class="toc-text">readShort</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readBoolean"><span class="toc-number">1.2.8.</span> <span class="toc-text">readBoolean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readDouble"><span class="toc-number">1.2.9.</span> <span class="toc-text">readDouble</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readUnsignedByte"><span class="toc-number">1.2.10.</span> <span class="toc-text">readUnsignedByte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readUnsignedShort"><span class="toc-number">1.2.11.</span> <span class="toc-text">readUnsignedShort</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readerIndex"><span class="toc-number">1.2.12.</span> <span class="toc-text">readerIndex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readByte-1"><span class="toc-number">1.2.13.</span> <span class="toc-text">readByte</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readUnsignedInt"><span class="toc-number">1.2.14.</span> <span class="toc-text">readUnsignedInt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readSlice"><span class="toc-number">1.2.15.</span> <span class="toc-text">readSlice</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#readInt-1"><span class="toc-number">1.2.16.</span> <span class="toc-text">readInt</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#discard-bytes"><span class="toc-number">1.3.</span> <span class="toc-text">discard bytes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clear"><span class="toc-number">1.4.</span> <span class="toc-text">clear</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mark-reset"><span class="toc-number">1.5.</span> <span class="toc-text">mark reset</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查找"><span class="toc-number">1.6.</span> <span class="toc-text">查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#derived-buffers"><span class="toc-number">1.7.</span> <span class="toc-text">derived buffers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#get-set"><span class="toc-number">1.8.</span> <span class="toc-text">get set</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存池"><span class="toc-number">2.</span> <span class="toc-text">内存池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ButeBuf-类型"><span class="toc-number">3.</span> <span class="toc-text">ButeBuf 类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractByteBuf"><span class="toc-number">4.</span> <span class="toc-text">AbstractByteBuf</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ResourceLeakDetector"><span class="toc-number">4.1.</span> <span class="toc-text">ResourceLeakDetector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SwappedByteBuf"><span class="toc-number">4.2.</span> <span class="toc-text">SwappedByteBuf</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractReferenceCountedByteBuf"><span class="toc-number">5.</span> <span class="toc-text">AbstractReferenceCountedByteBuf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UnPooledHeapByteBuf"><span class="toc-number">6.</span> <span class="toc-text">UnPooledHeapByteBuf</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

@@ -1,0 +1,593 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>linux 网络监控一探 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="最近服务器在跑机器人, 看过内存和cpu之后, 想要看一下2500个机器人的流量情况, 打开zabix一看, 我擦嘞 Outgoing network traffic on eth0 的流量居然是从 20M~60M之间浮动, 这不科学啊. 但是后来一想这可能是整个机器的网络带宽, 于是便想找到一款可以以进程或者以端口为单元的监控工具. 
+在百度上搜索了一下, 居然有这么多的网络监控工具 (参考一些">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux 网络监控一探">
+<meta property="og:url" content="http://www.ming15.wang/2016/08/02/linux/linux 网络监控一探/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="最近服务器在跑机器人, 看过内存和cpu之后, 想要看一下2500个机器人的流量情况, 打开zabix一看, 我擦嘞 Outgoing network traffic on eth0 的流量居然是从 20M~60M之间浮动, 这不科学啊. 但是后来一想这可能是整个机器的网络带宽, 于是便想找到一款可以以进程或者以端口为单元的监控工具. 
+在百度上搜索了一下, 居然有这么多的网络监控工具 (参考一些">
+<meta property="og:updated_time" content="2016-09-22T05:19:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux 网络监控一探">
+<meta name="twitter:description" content="最近服务器在跑机器人, 看过内存和cpu之后, 想要看一下2500个机器人的流量情况, 打开zabix一看, 我擦嘞 Outgoing network traffic on eth0 的流量居然是从 20M~60M之间浮动, 这不科学啊. 但是后来一想这可能是整个机器的网络带宽, 于是便想找到一款可以以进程或者以端口为单元的监控工具. 
+在百度上搜索了一下, 居然有这么多的网络监控工具 (参考一些">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/08/02/linux/linux 网络监控一探/" title="linux 网络监控一探" itemprop="url">linux 网络监控一探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-02T07:00:00.000Z" itemprop="datePublished"> Published 2016-08-02</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#iftop"><span class="toc-number">1.</span> <span class="toc-text">iftop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iptraf"><span class="toc-number">2.</span> <span class="toc-text">iptraf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nethogs"><span class="toc-number">3.</span> <span class="toc-text">nethogs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vnStat"><span class="toc-number">4.</span> <span class="toc-text">vnStat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tcpdump"><span class="toc-number">5.</span> <span class="toc-text">tcpdump</span></a></li></ol>
+		
+		</div>
+		
+		<p>最近服务器在跑机器人, 看过内存和cpu之后, 想要看一下2500个机器人的流量情况, 打开zabix一看, 我擦嘞 Outgoing network traffic on eth0 的流量居然是从 20M~60M之间浮动, 这不科学啊. 但是后来一想这可能是整个机器的网络带宽, 于是便想找到一款可以以进程或者以端口为单元的监控工具. </p>
+<p>在百度上搜索了一下, 居然有这么多的网络监控工具 (参考<a href="http://www.linuxdiyf.com/linux/12131.html" target="_blank" rel="external">一些你可能不知道的Linux网络工具</a>)</p>
+<ul>
+<li>nethogs</li>
+<li>ntopng</li>
+<li>nload</li>
+<li>iftop</li>
+<li>iptraf</li>
+<li>bmon</li>
+<li>slurm</li>
+<li>tcptrack</li>
+<li>cbm</li>
+<li>netwatch</li>
+<li>collectl</li>
+<li>trafshow</li>
+<li>cacti</li>
+<li>etherape</li>
+<li>ipband</li>
+<li>jnettop</li>
+<li>netspeed </li>
+<li>speedometer<br>下面就开始了我的探索之旅</li>
+</ul>
+<h2 id="iftop"><a href="#iftop" class="headerlink" title="iftop"></a>iftop</h2><p>首先找到的是这个软件, 听说它可以实现我的要求, 于是开始安装</p>
+<p>首先执行下列命令进行安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install flex byacc  libpcap ncurses ncurses-devel libpcap-devel</div></pre></td></tr></table></figure></p>
+<p>ok, 依赖安装完成,但是在<code>yum install iftop</code>时提示<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">[root@~]<span class="comment"># yum install iftop</span></div><div class="line">Loaded plugins: fastestmirror, refresh-packagekit, security</div><div class="line">Loading mirror speeds from cached hostfile</div><div class="line"> * base: mirrors.tuna.tsinghua.edu.cn</div><div class="line"> * epel: mirrors.neusoft.edu.cn</div><div class="line"> * extras: mirrors.tuna.tsinghua.edu.cn</div><div class="line"> * updates: mirrors.tuna.tsinghua.edu.cn</div><div class="line">Setting up Install Process</div><div class="line">Resolving Dependencies</div><div class="line">--&gt; Running transaction check</div><div class="line">---&gt; Package iftop.x86_64 0:1.0-0.7.pre4.el5 will be installed</div><div class="line">--&gt; Processing Dependency: libpcap.so.0.9.4()(64bit) <span class="keyword">for</span> package: iftop-1.0-0.7.pre4.el5.x86_64</div><div class="line">--&gt; Finished Dependency Resolution</div><div class="line">Error: Package: iftop-1.0-0.7.pre4.el5.x86_64 (epel)</div><div class="line">           Requires: libpcap.so.0.9.4()(64bit)</div><div class="line"> You could try using --skip-broken to work around the problem</div><div class="line"> You could try running: rpm -Va --nofiles --nodigest</div></pre></td></tr></table></figure></p>
+<p>对libpcap的依赖和我们安装的版本不一致, 于是我尝试下载安装包手动安装试试<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">wget http://www.ex-parrot.com/~pdw/iftop/download/iftop-0.17.tar.gz</div><div class="line"><span class="built_in">cd</span> iftop-0.17</div><div class="line">./configure</div><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure></p>
+<p>安装完成, 试试有没有安装成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iftop</div></pre></td></tr></table></figure></p>
+<p>ok成功进入.</p>
+<p>界面上面显示的是类似刻度尺的刻度范围，为显示流量图形的长条作标尺用的。中间的&lt;= =&gt;这两个左右箭头，表示的是流量的方向。</p>
+<ul>
+<li>TX：发送流量</li>
+<li>RX：接收流量</li>
+<li>TOTAL：总流量</li>
+<li>Cumm：运行iftop到目前时间的总流量</li>
+<li>peak：流量峰值</li>
+<li>rates：分别表示过去 2s 10s 40s 的平均流量</li>
+</ul>
+<p>这个界面是以每个客户端连接到服务器的连接为单位进行显示的. 虽然达不到要以本机为单位显示端口和进程的带宽和流量, 但是也蛮不错的了.</p>
+<blockquote>
+<p>具体这个软件的其他参数,大家可以百度一下</p>
+</blockquote>
+<h2 id="iptraf"><a href="#iptraf" class="headerlink" title="iptraf"></a>iptraf</h2><p>后来又找到了iptraf这个软件, 是一个基于ncurses的IP局域网监控器，用来生成包括TCP信息、UDP计数、ICMP和OSPF信息、以太网负载信息、节点状态信息、IP校验和错误等等统计数据。</p>
+<p>这个软件安装很简单, 不需要安装什么依赖<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install iptraf</div></pre></td></tr></table></figure></p>
+<p>打开看了一下, 这个软件更多的是基于网卡, 和IP进行监听. 虽然在Staticstics breakdowns上可以看到端口信息, 但是不知道为什么没有看到应用程序的端口. 没办法接着百度, 于是在这篇文章里找到了答案<a href="http://blog.csdn.net/quiet_girl/article/details/50777210" target="_blank" rel="external">Linux中iptraf命令详解</a>原来在Configure里的Additional ports里设置需要监听的端口, 默认只监听1000以下的. </p>
+<p>设置完以后, 再次进入Staticstics breakdowns可以看到我们要监控的端口了, 但是监测的出来的还有其他没有在我设定那个范围里的端口。 嗯，又研究了一下,发现在端口配置里是可以选择多个端口的. 只要配置多个端口就可以了. 但是还有个问题, 就是统计的流量都是总计的,没有实时或者平均值.</p>
+<h2 id="nethogs"><a href="#nethogs" class="headerlink" title="nethogs"></a>nethogs</h2><p>nethogs 会根据进程来进行分组(ok,第一个要求达到了), 而且打开之后也会显示该进程的实时流量.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">[root@~]<span class="comment"># nethogs -p eth0</span></div><div class="line"></div><div class="line">NetHogs version 0.8.0</div><div class="line"></div><div class="line">PID USER     PROGRAM                                                                        DEV       SEN         RECEIVED       </div><div class="line">23095 root   java                                                                           eth0      421.746     138.566 KB/sec</div><div class="line">10867 root     sshd: root@pts/1                                                             eth0      1.825       0.059 KB/sec</div><div class="line">?     root     192.168.15.25:10050-192.168.15.12:48691                                            0.000       0.014 KB/sec</div><div class="line">?     root     192.168.15.25:19001-192.168.10.220:26680                                               0.000       0.000 KB/sec</div><div class="line">?     root     192.168.15.25:10050-192.168.15.12:48608                                                0.000       0.000 KB/sec</div><div class="line">?     root     192.168.15.25:10050-192.168.15.12:48096                                                0.000       0.000 KB/sec</div><div class="line">?     root     192.168.15.25:10050-192.168.15.12:48082                                                0.000       0.000 KB/sec</div><div class="line">23182 root     java                                                                        eth0       0.000       0.000 KB/sec</div><div class="line">?     root     unknown TCP                                                                            0.000       0.000 KB/sec</div><div class="line"></div><div class="line">TOTAL                                                                                                 423.571     138.639 KB/sec</div></pre></td></tr></table></figure></p>
+<p>完美, nethogs完美解决了我们的问题</p>
+<h2 id="vnStat"><a href="#vnStat" class="headerlink" title="vnStat"></a>vnStat</h2><p>vnStat是一个基于控制台的网络流量监控工具，是为Linux和BSD设计的。它可以保留某个或多个所选择的网络接口的网络流量日志。为了生成日志，vnStat使用内核提供的信息。换句话说，它不会嗅探网络流量，确保尽量少用系统资源。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[root@ ~]<span class="comment"># vnstat --help</span></div><div class="line"> vnStat 1.6 by Teemu Toivola &lt;tst at iki dot <span class="keyword">fi</span>&gt;</div><div class="line"></div><div class="line">         -q,  --query          query database</div><div class="line">         -h,  --hours          show hours</div><div class="line">         <span class="_">-d</span>,  --days           show days</div><div class="line">         -m,  --months         show months</div><div class="line">         -w,  --weeks          show weeks</div><div class="line">         -t,  --top10          show top10</div><div class="line">         <span class="_">-s</span>,  --short          use short output</div><div class="line">         -u,  --update         update database</div><div class="line">         -i,  --iface          select interface (default: eth0)</div><div class="line">         -?,  --help           short <span class="built_in">help</span></div><div class="line">         -v,  --version        show version</div><div class="line">         -tr, --traffic        calculate traffic</div><div class="line">         <span class="_">-l</span>,  --live           实时显示流量数据</div><div class="line"></div><div class="line">See also <span class="string">"--longhelp"</span> <span class="keyword">for</span> complete options list and <span class="string">"man vnstat"</span>.</div></pre></td></tr></table></figure></p>
+<p>测试<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">[root@ ~]<span class="comment"># vnstat </span></div><div class="line">Database updated: Tue Aug  2 14:08:15 2016</div><div class="line"></div><div class="line">        eth0</div><div class="line"></div><div class="line">           received:     686.90 MB (22.6%)</div><div class="line">        transmitted:       2.30 GB (77.4%)</div><div class="line">              total:       2.97 GB</div><div class="line"></div><div class="line">                        rx     |     tx     |  total</div><div class="line">        -----------------------+------------+-----------</div><div class="line">            today    686.90 MB |    2.30 GB |    2.97 GB</div><div class="line">        -----------------------+------------+-----------</div><div class="line">        estimated      1.14 GB |    3.91 GB |    5.04 GB</div><div class="line">[root@ ~]<span class="comment"># vnstat -l -u</span></div><div class="line">Monitoring eth0...    (press CTRL-C to stop)</div><div class="line"></div><div class="line">   rx:     791.08 kB/s 11969 p/s            tx:    2482.06 kB/s 21979 p/s^C</div><div class="line"></div><div class="line"></div><div class="line"> eth0  /  traffic statistics</div><div class="line"></div><div class="line">                             rx       |       tx</div><div class="line">--------------------------------------+----------------------------------------</div><div class="line">  bytes                      7.27 MB  |      22.35 MB</div><div class="line">--------------------------------------+----------------------------------------</div><div class="line">          max            894.73 kB/s  |     2.60 MB/s</div><div class="line">      average            620.59 kB/s  |     1.86 MB/s</div><div class="line">          min            599.12 kB/s  |     1.82 MB/s</div><div class="line">--------------------------------------+----------------------------------------</div><div class="line">  packets                     111771  |        200661</div><div class="line">--------------------------------------+----------------------------------------</div><div class="line">          max              13430 p/s  |     22767 p/s</div><div class="line">      average               9314 p/s  |     16721 p/s</div><div class="line">          min               9019 p/s  |     16711 p/s</div><div class="line">--------------------------------------+----------------------------------------</div><div class="line">  time                    12 seconds</div><div class="line"></div><div class="line">[root@ ~]<span class="comment"># vnstat </span></div><div class="line">Database updated: Tue Aug  2 14:08:56 2016</div><div class="line"></div><div class="line">        eth0</div><div class="line"></div><div class="line">           received:     712.66 MB (22.6%)</div><div class="line">        transmitted:       2.38 GB (77.4%)</div><div class="line">              total:       3.07 GB</div><div class="line"></div><div class="line">                        rx     |     tx     |  total</div><div class="line">        -----------------------+------------+-----------</div><div class="line">            today    712.66 MB |    2.38 GB |    3.07 GB</div><div class="line">        -----------------------+------------+-----------</div><div class="line">        estimated      1.18 GB |    4.03 GB |    5.21 GB</div><div class="line">[root@ ~]<span class="comment">#</span></div></pre></td></tr></table></figure></p>
+<p>我们看到只有使用了<code>-u</code>参数将数据更新到数据库之后, 才能再次使用vnstat时将数据显示出来. 因此cnstat更像是一个历史记录工具</p>
+<h2 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h2><p>对网络上的数据包进行截获的包分析工具. 虽然这个工具, 不是解决今天这个问题, 但是还是在这里记录一下, 万一用得到呢</p>
+<blockquote>
+<p>另外还有tcpflow工具, 与tcpdump不同的是它是以流为单位显示数据内容，而cpdump以包为单位显示数据。</p>
+</blockquote>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/linux/">linux</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2016/08/02/linux/linux 网络监控一探/" data-title="linux 网络监控一探 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/08/22/jvm/hsperfdata/" title="hsperfdata">
+  <strong>上一篇：</strong><br/>
+  <span>
+  hsperfdata</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/07/31/mgits/ffmserver/"  title="ffserver 配置文件">
+ <strong>下一篇：</strong><br/> 
+ <span>ffserver 配置文件
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/08/02/linux/linux 网络监控一探/" data-title="linux 网络监控一探" data-url="http://www.ming15.wang/2016/08/02/linux/linux 网络监控一探/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#iftop"><span class="toc-number">1.</span> <span class="toc-text">iftop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#iptraf"><span class="toc-number">2.</span> <span class="toc-text">iptraf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nethogs"><span class="toc-number">3.</span> <span class="toc-text">nethogs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vnStat"><span class="toc-number">4.</span> <span class="toc-text">vnStat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tcpdump"><span class="toc-number">5.</span> <span class="toc-text">tcpdump</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

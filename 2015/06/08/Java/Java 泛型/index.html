@@ -1,0 +1,571 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>java泛型 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="泛型（Generic type 或者 generics）是对 Java 语言的类型系统的一种扩展，以支持创建可以按类型进行参数化的类.
+泛型类我们定义一个简单的泛型类, T称为泛型参数, G被称为泛型化了123class G&amp;lt;T&amp;gt; &amp;#123;&amp;#125;
+接着我们在内部定义一个泛型变量123class G&amp;lt;T&amp;gt; &amp;#123;	T t;&amp;#125;
+然后我们再添加一个泛型方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java泛型">
+<meta property="og:url" content="http://www.ming15.wang/2015/06/08/Java/Java 泛型/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="泛型（Generic type 或者 generics）是对 Java 语言的类型系统的一种扩展，以支持创建可以按类型进行参数化的类.
+泛型类我们定义一个简单的泛型类, T称为泛型参数, G被称为泛型化了123class G&amp;lt;T&amp;gt; &amp;#123;&amp;#125;
+接着我们在内部定义一个泛型变量123class G&amp;lt;T&amp;gt; &amp;#123;	T t;&amp;#125;
+然后我们再添加一个泛型方">
+<meta property="og:updated_time" content="2016-09-22T05:19:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java泛型">
+<meta name="twitter:description" content="泛型（Generic type 或者 generics）是对 Java 语言的类型系统的一种扩展，以支持创建可以按类型进行参数化的类.
+泛型类我们定义一个简单的泛型类, T称为泛型参数, G被称为泛型化了123class G&amp;lt;T&amp;gt; &amp;#123;&amp;#125;
+接着我们在内部定义一个泛型变量123class G&amp;lt;T&amp;gt; &amp;#123;	T t;&amp;#125;
+然后我们再添加一个泛型方">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/Java/Java 泛型/" title="java泛型" itemprop="url">java泛型</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型类"><span class="toc-number">1.</span> <span class="toc-text">泛型类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型方法"><span class="toc-number">2.</span> <span class="toc-text">泛型方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型擦除"><span class="toc-number">3.</span> <span class="toc-text">类型擦除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型类的继承关系"><span class="toc-number">4.</span> <span class="toc-text">泛型类的继承关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型参数的继承关系"><span class="toc-number">5.</span> <span class="toc-text">泛型参数的继承关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛化在方法中的应用"><span class="toc-number">6.</span> <span class="toc-text">泛化在方法中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通配符"><span class="toc-number">7.</span> <span class="toc-text">通配符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#extends"><span class="toc-number">8.</span> <span class="toc-text">extends</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#super"><span class="toc-number">9.</span> <span class="toc-text">super</span></a></li></ol>
+		
+		</div>
+		
+		<p>泛型（Generic type 或者 generics）是对 Java 语言的类型系统的一种扩展，以支持创建可以按类型进行参数化的类.</p>
+<h3 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h3><p>我们定义一个简单的泛型类, <code>T</code>称为泛型参数, <code>G</code>被称为泛型化了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接着我们在内部定义一个泛型变量<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;T&gt; &#123;</span></div><div class="line">	T t;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后我们再添加一个泛型方法泛型方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下来我们来使用一下这个泛型类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">G&lt;String&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">g.setValue(<span class="string">"value"</span>);</div></pre></td></tr></table></figure></p>
+<h3 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h3><p>在一个非泛化的类中我们也可以直接定义泛化的方法</p>
+<h3 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h3><p>说到java中的泛型就不得不提泛型参数的类型擦除. 当java源码文件被编译成class文件的时候,编译器会将泛型中的类型参数擦除掉(其实class文件中还是会保留部分的泛型信息, 具体参考java虚拟机规范).</p>
+<p>类定义的泛型参数<code>T</code>会被替换成具体类型, 一般为Object. 而<code>&lt;T&gt;</code>信息则会被擦除掉, 例如G就会替换成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span> </span>&#123;</div><div class="line">	Object t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(Object t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而在引用该类型的时候则会擦除成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">G g = <span class="keyword">new</span> G();</div><div class="line">g.setValue(<span class="string">"value"</span>);</div></pre></td></tr></table></figure></p>
+<p>因此，java里的泛型类型安全是由编译器保证的, 在运行期是无法保证类型的安全的.</p>
+<h3 id="泛型类的继承关系"><a href="#泛型类的继承关系" class="headerlink" title="泛型类的继承关系"></a>泛型类的继承关系</h3><p>如果类被泛型化之后, 会对类本身的继承关系造成影响<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);</div><div class="line"></div><div class="line">		SubG1 subG1 = <span class="keyword">new</span> SubG1();</div><div class="line">		subG1.setValue(<span class="number">1</span>);</div><div class="line">		subG1.printValue(<span class="string">"SubG1 printValue"</span>);</div><div class="line">		subG1.print();</div><div class="line"></div><div class="line">		SubG2 subG2 = <span class="keyword">new</span> SubG2();</div><div class="line">		subG2.setValue(<span class="string">"SubG2 setValue"</span>);</div><div class="line">		subG2.printValue(<span class="string">"SubG2 printValue"</span>);</div><div class="line">		subG2.print();</div><div class="line"></div><div class="line">		SubG3&lt;Integer&gt; subG3 = <span class="keyword">new</span> SubG3&lt;&gt;();</div><div class="line">		subG3.setValue(<span class="string">"SubG3 setValue"</span>);</div><div class="line">		subG3.printValue(<span class="string">"SubG3 printValue"</span>);</div><div class="line">		subG3.print(<span class="number">3</span>);</div><div class="line"></div><div class="line">		SubG4&lt;Integer&gt; subG4 = <span class="keyword">new</span> SubG4();</div><div class="line">		subG4.setValue(<span class="string">"SubG4 setValue"</span>);</div><div class="line">		subG4.printValue(<span class="string">"SubG4 printValue"</span>);</div><div class="line">		subG4.print(<span class="number">4</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// SubG1继承了G的泛型参数. 但是SubG1本身是没有泛化的</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG1</span> <span class="keyword">extends</span> <span class="title">G</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 强制指定继承过来的T的类型为String</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG2</span> <span class="keyword">extends</span> <span class="title">G</span>&lt;<span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// G的类型由继承过来的方法指定, SubG3则再次由本类自己指定类型</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG3</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">G</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(T t1)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t + <span class="string">". this:"</span> + t1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 指定G的类型为String, SubG4则仍然由本类进行泛型化</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG4</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">G</span>&lt;<span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(T t1)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t + <span class="string">". this:"</span> + t1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"SuperParam"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SubG1 printValue</div><div class="line"><span class="number">1</span></div><div class="line">SubG2 printValue</div><div class="line">Super:SubG2 setValue</div><div class="line">SubG3 printValue</div><div class="line">Super:SubG3 setValue. <span class="keyword">this</span>:<span class="number">3</span></div><div class="line">SubG4 printValue</div><div class="line">Super:SubG4 setValue. <span class="keyword">this</span>:<span class="number">4</span></div></pre></td></tr></table></figure></p>
+<p>需要特别指出的是, 在<code>SubG1</code>对象分别调用<code>setValue()</code>和<code>printValue()</code>方法时分别使用了<code>Integer</code>和<code>String</code>俩个类型, 但是却没有产生任何异常信息.</p>
+<h3 id="泛型参数的继承关系"><a href="#泛型参数的继承关系" class="headerlink" title="泛型参数的继承关系"></a>泛型参数的继承关系</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line">		Param param = <span class="keyword">new</span> Param();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; gSuperParam = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		gSuperParam.setValue(superParam);</div><div class="line">		gSuperParam.setValue(param);</div><div class="line">		SuperParam t = gSuperParam.getT();</div><div class="line"></div><div class="line">		G&lt;Param&gt; gParam = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		gParam.setValue(param);</div><div class="line">		gParam.setValue(superParam);	<span class="comment">// compile error</span></div><div class="line"></div><div class="line">		SubParam subParam = <span class="keyword">new</span> SubParam();</div><div class="line">		gParam.setValue(subParam);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubParam</span> <span class="keyword">extends</span> <span class="title">Param</span> </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<p>从这一行<code>gParam.setValue(subParam);</code>我们可以看到类型参数的继承结构和普通类型的继承结构的规则是一样的.</p>
+<h3 id="泛化在方法中的应用"><a href="#泛化在方法中的应用" class="headerlink" title="泛化在方法中的应用"></a>泛化在方法中的应用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());</div><div class="line">		print(<span class="keyword">new</span> G&lt;SuperParam&gt;());		<span class="comment">// compile Error</span></div><div class="line">		print(<span class="keyword">new</span> SubG1());</div><div class="line">		print(<span class="keyword">new</span> SubG2());</div><div class="line">		print(<span class="keyword">new</span> SubG3());</div><div class="line">		print(<span class="keyword">new</span> SubG3&lt;SuperParam&gt;());</div><div class="line">		print(<span class="keyword">new</span> SubG4());</div><div class="line">		print(<span class="keyword">new</span> SubG4&lt;SuperParam&gt;());</div><div class="line"></div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;&gt;());</div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;SuperParam&gt;());</div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;Param&gt;());		<span class="comment">// compile Error</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;String&gt; gs)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printSuperParam</span><span class="params">(G&lt;SuperParam&gt; gs)</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从上面的例子中我们可以看出, 泛化的类的泛型参数并没有对其类型判断造成影响, 子类化的参数仍然是编译通过的. 但是类型参数的继承再传递到方法时, 却被认为不是相同的类型.</p>
+<h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><p><code>?</code>在泛型参数中作为通配符存在, 它一般和<code>extends</code>和<code>super</code>关键字一起使用. 它表示不确定的一组类型, 例如和<code>extends</code>关键字一起使用就是表示继承自某个类的所有类型</p>
+<h3 id="extends"><a href="#extends" class="headerlink" title="extends"></a>extends</h3><p><code>extends</code>关键字是用来定义泛型参数的继承关系. 它表示我们的泛型参数继承自某个类型, 也被我们称为上界符.</p>
+<p>我们修改一下G的类型定义,我们引入<code>extends</code>关键字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);</div><div class="line"></div><div class="line">		SubG1 subG1 = <span class="keyword">new</span> SubG1();</div><div class="line">		subG1.setValue(<span class="number">1</span>);</div><div class="line">		subG1.printValue(<span class="string">"SubG1 printValue"</span>);</div><div class="line">		subG1.print();</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">SuperParam</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当使用<code>extends</code>关键字之后, 我们就将这个类的泛化信息固定了下来, 在实例化的时候, 其类型参数必须是继承自某类的子类型</p>
+<p>如果我们在实例化的时候指定<code>extends</code>会发生什么呢?<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;? extends SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);		<span class="comment">// compile error</span></div><div class="line">		g.setValue(<span class="keyword">new</span> Param());		<span class="comment">// compile error</span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param1</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>不推荐这种用法, 因为这种情况下如果我们可以对其使用<code>Param</code>或者<code>Param1</code>的类型, 那么这就和不使用泛型是一样的, 会引起类型转化异常.</p>
+<p>但是我们却可以在另外一种情况下使用这个关键字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());	<span class="comment">// 默认的是SuperParam类型</span></div><div class="line">		print(<span class="keyword">new</span> G&lt;Param&gt;());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;? extends SuperParam&gt; g)</span> </span>&#123;</div><div class="line">		SuperParam t = g.getT();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="super"><a href="#super" class="headerlink" title="super"></a>super</h3><p><code>super</code>作为一种下界符存在. 也就在具体使用时的参数都必须是泛型参数的父类才行.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">G&lt;? <span class="keyword">super</span> SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">g.setValue(<span class="keyword">new</span> SuperParam());</div><div class="line">g.setValue(<span class="keyword">new</span> Param());</div></pre></td></tr></table></figure></p>
+<p>同样我们可以在方法中如此使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		print(<span class="keyword">new</span> G&lt;SuperParam&gt;());</div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());	<span class="comment">// 默认是Param</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;? <span class="keyword">super</span> Param&gt; g)</span> </span>&#123;</div><div class="line">		Object t = g.getT();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2015/06/08/Java/Java 泛型/" data-title="java泛型 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/06/08/Java/Java equals hashcode/" title="Java equals和hashcode">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Java equals和hashcode</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/06/08/Java/读取csv文件/"  title="读取csv文件">
+ <strong>下一篇：</strong><br/> 
+ <span>读取csv文件
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/06/08/Java/Java 泛型/" data-title="java泛型" data-url="http://www.ming15.wang/2015/06/08/Java/Java 泛型/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型类"><span class="toc-number">1.</span> <span class="toc-text">泛型类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型方法"><span class="toc-number">2.</span> <span class="toc-text">泛型方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型擦除"><span class="toc-number">3.</span> <span class="toc-text">类型擦除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型类的继承关系"><span class="toc-number">4.</span> <span class="toc-text">泛型类的继承关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型参数的继承关系"><span class="toc-number">5.</span> <span class="toc-text">泛型参数的继承关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛化在方法中的应用"><span class="toc-number">6.</span> <span class="toc-text">泛化在方法中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通配符"><span class="toc-number">7.</span> <span class="toc-text">通配符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#extends"><span class="toc-number">8.</span> <span class="toc-text">extends</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#super"><span class="toc-number">9.</span> <span class="toc-text">super</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
