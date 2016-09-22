@@ -3,10 +3,11 @@ date: 2016-09-19
 title: Java ThreadPoolExecutor
 ---
 
-## 资源管理
 一直受困于`ThreadPoolExecutor`的内部实现, 今天就拿出点时间解决几点自己的疑问
 1. `ThreadPoolExecutor`是如何重复利用线程资源的
 2. `ThreadPoolExecutor` reject 策略
+
+## 线程资源管理
 
 首先拿出一段运行代码
 ```java
@@ -216,6 +217,39 @@ final void runWorker(Worker w) {
     }
 ```
 看到这里我们可以看出, `ThreadPoolExecutor`其内部也是通过`while`来不断轮训任务队列, 执行任务的`task.run();`方法, 不开启新线程的方式, 来达到线程资源管理的目的.
+
+那么任务执行完之后, 线程就被干掉了吗? 我们重点看`processWorkerExit(w, completedAbruptly);`这个方法
+```java
+private void processWorkerExit(Worker w, boolean completedAbruptly) {
+        if (completedAbruptly) // If abrupt, then workerCount wasn't adjusted
+            decrementWorkerCount();
+
+        final ReentrantLock mainLock = this.mainLock;
+        mainLock.lock();
+        try {
+            completedTaskCount += w.completedTasks;
+			// 将刚刚干完活的线程从worker队列中干掉
+            workers.remove(w);
+        } finally {
+            mainLock.unlock();
+        }
+
+        tryTerminate();
+
+        int c = ctl.get();
+        if (runStateLessThan(c, STOP)) {
+			// 如果线程池还能执行任务队列里的任务(Runnable, SHUTDOWN状态),就继续执行任务
+            if (!completedAbruptly) {
+                int min = allowCoreThreadTimeOut ? 0 : corePoolSize;
+                if (min == 0 && ! workQueue.isEmpty())
+                    min = 1;
+                if (workerCountOf(c) >= min)
+                    return; // replacement not needed
+            }
+            addWorker(null, false);
+        }
+    }
+```
 
 ## 线程池状态
 从上面的分析, 我们看到了很多这种代码
