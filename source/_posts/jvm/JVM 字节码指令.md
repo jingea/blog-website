@@ -40,29 +40,29 @@ title: 字节码指令
 ### 加载和存储指令
 加载和存储指令用于将数据从栈帧的本地变量表和操作数栈之间来回传递,将一个本地变量加载到操作数栈的指令有:
 
-* `iload`
+* `iload` : load  `boolean, byte, char, short, int` from local varaiable into oprand stack
 * `iload_<n>`
-* `lload`
+* `lload` : load `Long` (load two solts) from local varaiable into oprand stack
 * `lload_<n>`
-* `fload`
+* `fload`	load `Float` from local varaiable into oprand stack
 * `fload_<n>`
-* `dload`
+* `dload`	load `Double` (load two solts) from local varaiable into oprand stack
 * `dload_<n>`
-* `aload`       从局部变量表加载一个reference类型值到操作数栈
-* `aload_<n>`  从局部变量表加载一个reference类型值到操作数栈
+* `aload`       load non primiitive `object, array` reference from local varaiable into oprand stack
+* `aload_<n>`  
 * `caload`    从数组中加载一个char类型数据到操作数栈
 
 将一个数值从操作数栈存储到局部变量表的指令有:
-* `istore`
+* `istore`		: pop a `boolean, byte, char, short, int` value from oprand stack , and store it in a local varaiable
 * `istore_<n>`
-* `lstore`
+* `lstore`		: pop a `long` value from oprand stack , and store it in a local varaiable
 * `lstore_<n>`
-* `fstore`
+* `fstore`		: pop a `float` value from oprand stack , and store it in a local varaiable
 * `fstore_<n>`
-* `dstore`
+* `dstore`		: pop a `double` value from oprand stack , and store it in a local varaiable
 * `dstore_<n>`
-* `astore`       将一个reference类型数据保存到本地变量表
-* `astore_<n>`  将一个reference类型数据保存到本地变量表
+* `astore`       : pop a `object, array` reference value from oprand stack , and store it in a local varaiable
+* `astore_<n>`  
 
 将一个常量加载到操作数栈的指令有:
 
