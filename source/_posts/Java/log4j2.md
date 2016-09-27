@@ -177,3 +177,25 @@ log4j2的配置文件为
 ```bash
 2016-05-12 18:31:43,894 ERROR t.TestLookups [main] ${ctx:loginId} test
 ```
+
+如果出现重复日志输出, 多半原因因为, root收集到了子logger反馈的日志, 只需要将子logger设置为`additivity="false"`就可以了,例如
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>%d %p %c{1.} [%t] $${ctx:loginId} %m%n</pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+		<Logger name="stdout" level="info" additivity="false">
+			<appender-ref ref="Console"/>
+		</Logger>
+        <Root level="trace">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
+```
