@@ -73,6 +73,158 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/19/nosql/Redis事务/" title="Redis事务" itemprop="url">Redis事务</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-19T08:00:00.000Z" itemprop="datePublished"> Published 2015-11-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="普通事务"><a href="#普通事务" class="headerlink" title="普通事务"></a>普通事务</h2><p>首先介绍普通事务<code>MULTI</code>，<code>EXEC</code>，<code>DISCARD</code>:</p>
+<ul>
+<li><code>MULTI</code>告诉 redis 服务器开启一个事务</li>
+<li><code>EXEC</code>告诉 redis 开始执行事务</li>
+<li><code>DISCARD</code>告诉 redis 取消事务</li>
+</ul>
+<p><code>MULTI</code>命令执行后, redis进入事务状态,redis会持续缓存某个客户端的命令(其他客户端处于饥饿状态).<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-multi.png" alt=""><br>当redis接受到客户端的<code>EXEC</code>命令后会开始执行刚才缓存在事务队列里的任务. <code>DISCARD</code> 会将事务队列清空.<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-tranactions.png" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET a &quot;&quot;redis 127.0.0.1:7006&gt; SET a &quot;&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; SET a &quot;a&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt;  EXEC</div><div class="line">1) OK</div><div class="line">2) OK</div><div class="line">redis 127.0.0.1:7006&gt; SET b &quot;b&quot;</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; EXEC</div><div class="line">(error) ERR EXEC without MULTI</div><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET n &quot;n&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; EXEC</div><div class="line">1) OK</div><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET c &quot;c&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; DISCARD</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; GET a</div><div class="line">&quot;a&quot;</div><div class="line">redis 127.0.0.1:7006&gt; GET b</div><div class="line">&quot;b&quot;</div><div class="line">redis 127.0.0.1:7006&gt; Get c</div><div class="line">(error) ERR Operation against a key holding the wrong kind of value</div><div class="line">redis 127.0.0.1:7006&gt; GET n</div><div class="line">&quot;n&quot;</div><div class="line">redis 127.0.0.1:7006&gt;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>使用<code>MULTI</code>命令开启事务</li>
+<li>输入一个错误的命令,点击回车,redis并没有报错,说明这个命令确实是被缓存起来了没有执行</li>
+<li>使用<code>SET</code>命令将a设置为”a”</li>
+<li>然后执行事务,我们看到俩条事务都执行完了,但是第一条命令并没有报错</li>
+<li>然后再次使用<code>SET</code>命令将b设置为”b”</li>
+<li>再次执行事务, 并不成功,提示我们要开启事务,说明事务一旦执行完就自动退出了</li>
+<li>再次开启事务,然后使用<code>SET</code>命令将n设置为”n”</li>
+<li>退出事务</li>
+<li>接下来我们依次使用<code>GET</code>命令获取值,但是n取不到,说明退出事务确实没有执行事务队列里的命令<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis_transaction.png" alt=""></li>
+</ol>
+<h2 id="watch机制"><a href="#watch机制" class="headerlink" title="watch机制"></a>watch机制</h2><p>下来我们来看一下redis的watch机制<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch1.png" alt=""><br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch2.png" alt=""><br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch3.png" alt=""><br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch4.png" alt=""><br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis_watched_keys.png" alt=""></p>
+<h2 id="pipline机制"><a href="#pipline机制" class="headerlink" title="pipline机制"></a>pipline机制</h2><p>参考文章</p>
+<ul>
+<li><a href="http://redisbook.readthedocs.org/en/latest/feature/transaction.html" target="_blank" rel="external"></a></li>
+<li><a href="http://ju.outofmemory.cn/entry/81786" target="_blank" rel="external"></a></li>
+<li><a href="http://redisdoc.com/topic/transaction.html#id2" target="_blank" rel="external"></a></li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/19/nosql/Redis事务/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/19/nosql/Redis事务/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/19/Java/Java小常识/" title="Java 常用技能" itemprop="url">Java 常用技能</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-19T08:00:00.000Z" itemprop="datePublished"> Published 2015-11-19</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="控制台乱码"><a href="#控制台乱码" class="headerlink" title="控制台乱码"></a>控制台乱码</h2><p>在windows系统里,我的cmd控制台的代码页是<code>65001(UTF)</code>,但是当我在指向java命令时却会发生乱码现象,只需要指向<code>chcp 936</code>这个命令,改变一下代码页就好了</p>
+<h2 id="java命令"><a href="#java命令" class="headerlink" title="java命令"></a>java命令</h2><p><code>java  -jar ./tools-1.0-SNAPSHOT.jar</code> 从某个jar运行, mainfest文件必须指定MainClass属性,如果不指定的话,在运行<code>java</code>命令的时候就会产生 xxx.jar中没有主清单属性</p>
+<p><code>java  -jar ./ App</code> 从指定的classpath下所有的jar中,寻找App主类运行</p>
+<h2 id="获取周数"><a href="#获取周数" class="headerlink" title="获取周数"></a>获取周数</h2><p>通过<code>Calendar</code>我们可以知道某个日期处于一年中第几周<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Calendar calendar = Calendar.getInstance();</div><div class="line">calendar.setTime(<span class="keyword">new</span> Date());</div><div class="line">System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));</div></pre></td></tr></table></figure></p>
+<h2 id="在Jar包读取文件"><a href="#在Jar包读取文件" class="headerlink" title="在Jar包读取文件"></a>在Jar包读取文件</h2><p>我们使用Maven构建一个工程, 然后在资源目录(resources)下放置一个文件input.file, 然后我们写一个测试类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException, IOException </span>&#123;</div><div class="line">        InputStream in = Test.class.getResourceAsStream(<span class="string">"input.file"</span>);</div><div class="line">        BufferedReader reader = <span class="keyword">new</span> BufferedReader((<span class="keyword">new</span> InputStreamReader(in)));</div><div class="line">        System.out.println(reader.readLine());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在Idea里运行该程序, 可以成功看到input.file文件里的hi, how are you?的输出. 这是因为idea将resources设置在了cleasspath里, 而类加载器的<code>getResourceAsStream()</code>就是从classpath中进行文件查找, 因此可以找到的.</p>
+<p>而当我们将测试工程打包, 然后在target下执行命令<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -cp .;.<span class="comment">/* Test</span></div></pre></td></tr></table></figure></p>
+<p>同样可以看到输出, 这是因为<code>getResourceAsStream()</code>会在jar包内部进行文件查找</p>
+<blockquote>
+<p>注意: 如果想要在jar内加载文件的话, 只能使用类加载器的<code>getResourceAsStream()</code>方法</p>
+</blockquote>
+<h2 id="便利jar包中文件"><a href="#便利jar包中文件" class="headerlink" title="便利jar包中文件"></a>便利jar包中文件</h2><p>我们知道我们可以使用<code>ClassLoader</code>的<code>getResourceAsStream()</code>读取jar包中的文件, 那么如何知道jar包中有哪些文件, 也就是如何便利jar包中的文件呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		JarFile jar = <span class="keyword">new</span> JarFile(<span class="string">"D:\\premain\\target\\agent-1.0-SNAPSHOT.jar"</span>);</div><div class="line">		Enumeration&lt;JarEntry&gt; jarEntrys = jar.entries();</div><div class="line">		<span class="keyword">while</span> (jarEntrys.hasMoreElements()) &#123;</div><div class="line">			JarEntry jarEntry = jarEntrys.nextElement();</div><div class="line">			System.out.println(jarEntry.getName());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="goto"><a href="#goto" class="headerlink" title="goto"></a>goto</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestBreak</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		step1:</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</div><div class="line">			System.out.println(<span class="string">"I is "</span> + i);</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++) &#123;</div><div class="line">				<span class="keyword">if</span> (j == i) &#123;</div><div class="line">					System.out.println(<span class="string">"	J is "</span> + j);</div><div class="line">					<span class="keyword">continue</span> step1;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/11/19/Java/Java小常识/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/11/19/Java/Java小常识/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/11/18/Java/gradle/" title="Gradle 初探" itemprop="url">Gradle 初探</a>
   </h1>
   <p class="article-author">By
@@ -684,187 +836,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/15/linux/Linux常用命令/" title="Linux常用命令" itemprop="url">Linux常用命令</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-15T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-15</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="gzip"><a href="#gzip" class="headerlink" title="gzip"></a>gzip</h2><p>将文件或者文件夹压缩成后缀为<code>.gz</code>的文件</p>
-<ul>
-<li><code>-a</code> 　使用ASCII文字模式.</li>
-<li><code>-c</code> 　把压缩后的文件输出到标准输出设备,不去更动原始文件.</li>
-<li><code>-d</code> 　解开压缩文件.</li>
-<li><code>-f</code> 　强行压缩文件.不理会文件名称或硬连接是否存在以及该文件是否为符号连接.</li>
-<li><code>-l</code> 　列出压缩文件的相关信息.</li>
-<li><code>-L</code> 　显示版本与版权信息.</li>
-<li><code>-n</code> 　压缩文件时,不保存原来的文件名称及时间戳记.</li>
-<li><code>-N</code> 　压缩文件时,保存原来的文件名称及时间戳记.</li>
-<li><code>-q</code> 　不显示警告信息.</li>
-<li><code>-r</code> 　递归处理,将指定目录下的所有文件及子目录一并处理.</li>
-<li><code>-S</code> 　更改压缩字尾字符串.</li>
-<li><code>-t</code> 　测试压缩文件是否正确无误.</li>
-<li><code>-v</code> 　显示指令执行过程.</li>
-<li><code>-num</code> 用指定的数字num调整压缩的速度,-1或–fast表示最快压缩方法（低压缩比）,-9或–best表示最慢压缩方法（高压缩比）.系统缺省值为6.</li>
-</ul>
-<p>常用命令</p>
-<ul>
-<li><code>gzip *</code>  把test6目录下的每个文件压缩成.gz文件</li>
-<li><code>gzip -dv *</code> 把例1中每个压缩的文件解压,并列出详细的信息</li>
-<li><code>gzip -l *</code> 详细显示例1中每个压缩的文件的信息,并不解压</li>
-<li><code>gzip -r log.tar</code> 压缩一个tar备份文件,此时压缩文件的扩展名为.tar.gz</li>
-<li><code>gzip -rv test6</code> 递归的压缩目录</li>
-<li><code>gzip -dr test6</code> 递归地解压目录</li>
-</ul>
-<h2 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h2><p>tar可用于建立,还原,查看,管理文件,也可方 便的追加新文件到备份文件中,或仅更新部分的备份文件,以及解压,删除指定的文件</p>
-<p>将tar.gz提取到新目录里：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar zxvf package.tar.gz -C new_dir</div></pre></td></tr></table></figure></p>
-<p>将small目录压缩到small.tar.gz里<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar -czf small.tar.gz small</div></pre></td></tr></table></figure></p>
-<p>压缩为zip, 且忽略指定目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar -zcvf  web.zip --exclude=&quot;restful&quot; web/</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>–exclude=”restful”  一定要放在压缩文件和被压缩文件夹之间</p>
-</blockquote>
-<h2 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h2><p>sort将文件的每一行作为一个单位,相互比较,比较原则是从首字符向后,依次按ASCII码值进行比较,最后将他们按升序输出.</p>
-<p>命令参数</p>
-<ul>
-<li><code>-u</code> 在输出行中去除重复行.</li>
-<li><code>-r</code> sort默认的排序方式是升序,加-r改成降序</li>
-<li><code>-o</code> 将排序结果输出到原文件,而使用重定向是不可以的.</li>
-<li><code>-n</code> sort命令默认是按照字符排序的,如果遇到数字的字符, 可能会出现1大于10的情况, 所以我们可以设定<code>-n</code>选项, 将其按照数字排序</li>
-<li><code>-t</code> 设定间隔符. 设置间隔符,就会将每一行分割成一个数组,我们可以使用-k参数指定按照某列排序</li>
-<li><code>-k</code> -t指定了间隔符之后,可以用-k指定基于某列排序.</li>
-<li><code>-f</code> 会将小写字母都转换为大写字母来进行比较,亦即忽略大小写</li>
-<li><code>-c</code> 会检查文件是否已排好序,如果乱序,则输出第一个乱序的行的相关信息,最后返回1</li>
-<li><code>-C</code> 会检查文件是否已排好序,如果乱序,不输出内容,仅返回1</li>
-<li><code>-M</code> 会以月份来排序,比如JAN小于FEB等等</li>
-<li><code>-b</code> 会忽略每一行前面的所有空白部分,从第一个可见字符开始比较.</li>
-</ul>
-<h2 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h2><p>统计指定文件中的字节数,字数,行数,并将统计结果显示输出.该命令统计指定文件中的字节数,字数,行数.如果没有给出文件名,则从标准输入读取.wc同时也给出所指定文件的总统计数.</p>
-<ul>
-<li><code>-c</code> 统计字节数.</li>
-<li><code>-l</code> 统计行数.</li>
-<li><code>-m</code> 统计字符数.这个标志不能与 -c 标志一起使用.</li>
-<li><code>-w</code> 统计字数.一个字被定义为由空白,跳格或换行字符分隔的字符串.</li>
-<li><code>-L</code> 打印最长行的长度.</li>
-</ul>
-<h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><p><code>find pathname -options [-print -exec -ok ...]</code></p>
-<p>命令参数；<br><code>pathname</code>: 要查找的路径.<br><code>-print</code>： find命令将匹配的文件输出到标准输出.<br><code>-exec</code>： 匹配到合适文件后执行的shell命令.相应命令的形式为<code>&#39;command&#39; { } ;</code>(注意{ }和；之间的空格).<br><code>-ok</code>： 和-exec的作用相同,但是在执行命令之前,都会给出提示确认是否真的执行.</p>
-<p>options选项</p>
-<ul>
-<li><code>-name</code> 要查找的文件名(可以使用正则).</li>
-<li><code>-perm</code> 按照文件权限查找文件.</li>
-<li><code>-prune</code> 使用这一选项可以使find命令不在当前指定的目录中查找,如果同时使用-depth选项,那么-prune将被find命令忽略.</li>
-<li><code>-user</code> 按照文件属主来查找文件.</li>
-<li><code>-group</code> 按照文件所属的组来查找文件.</li>
-<li><code>-mtime -n +n</code> 按照文件的更改时间来查找文件, - n表示文件更改时间距现在n天以内,+ n表示文件更改时间距现在n天以前.</li>
-<li><code>-nogroup</code> 查找无有效所属组的文件,即该文件所属的组在/etc/groups中不存在.</li>
-<li><code>-nouser</code> 查找无有效属主的文件,即该文件的属主在/etc/passwd中不存在.</li>
-<li><code>-newer file1 ! file2</code> 查找更改时间比文件file1新但比文件file2旧的文件.</li>
-<li><code>-type</code> 查找某一类型的文件(例如: <code>-b</code>块设备文件. <code>-d</code>目录. <code>-c</code>字符设备文件. <code>-p</code>管道文件. <code>-l</code>符号链接文件. <code>-f</code>普通文件.)</li>
-<li><code>-size n [c]</code>：查找文件长度为n块的文件,带有c时表示文件长度以字节计.</li>
-<li><code>-depth</code>：在查找文件时,首先查找当前目录中的文件,然后再在其子目录中查找.</li>
-<li><code>-mount</code>：在查找文件时不跨越文件系统mount点.</li>
-<li><code>-follow</code>：如果find命令遇到符号链接文件,就跟踪至链接所指向的文件.</li>
-</ul>
-<p>另外,下面三个的区别:</p>
-<ul>
-<li><code>-amin n</code>  查找系统中最后N分钟访问的文件</li>
-<li><code>-atime n</code> 查找系统中最后n*24小时访问的文件</li>
-<li><code>-cmin n</code>  查找系统中最后N分钟被改变文件状态的文件</li>
-<li><code>-ctime n</code> 查找系统中最后n*24小时被改变文件状态的文件</li>
-<li><code>-mmin n</code>  查找系统中最后N分钟被改变文件数据的文件</li>
-<li><code>-mtime n</code> 查找系统中最后n*24小时被改变文件数据的文件<br>找出/home/user下所有空子目录：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find /home/user -maxdepth 1 -type d -empty</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>获取test.txt文件中第50-60行内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt; test.txt sed -n &apos;50,60p&apos;</div></pre></td></tr></table></figure></p>
-<p>将所有文件名中含有”txt”的文件移入/home/user目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find -iname &quot;*txt*&quot; -exec mv -v &#123;&#125; /home/user \;</div></pre></td></tr></table></figure></p>
-<h2 id="cat-more-less"><a href="#cat-more-less" class="headerlink" title="cat,more,less"></a>cat,more,less</h2><ul>
-<li>cat是一次性显示整个文件的内容,还可以将多个文件连接起来显示,它常与重定向符号配合使用,适用于文件内容少的情况；</li>
-<li>more比cat强大,提供分页显示的功能</li>
-<li>less比more更强大,提供翻页,跳转,查找等命令.</li>
-</ul>
-<h2 id="source"><a href="#source" class="headerlink" title="source"></a>source</h2><ol>
-<li>当shell脚本具有可执行权限时,用sh filename与./filename执行脚本是没有区别得../filename是因为当前目录没有在PATH中,所有”.”是用来表示当前目录的.</li>
-<li>sh filename 重新建立一个子shell,在子shell中执行脚本里面的语句,该子shell继承父shell的环境变量,但子shell新建的,改变的变量不会被带回父shell,除非使用export.</li>
-<li>source filename：这个命令其实只是简单地读取脚本里面的语句依次在当前shell里面执行,没有建立新的子shell.那么脚本里面所有新建,改变变量的语句都会保存在当前shell里面.</li>
-</ol>
-<h2 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h2><p>用wget抓取完整的网站目录结构,存放到本地目录中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget -r --no-parent --reject &quot;index.html*&quot; http://hostname/ -P /home/user/dirs</div></pre></td></tr></table></figure></p>
-<p>用wget命令执行ftp下载：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget -m ftp:</div><div class="line">//username:password@hostname</div></pre></td></tr></table></figure></p>
-<h2 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h2><p>一次创建多个目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir -p /home/user/&#123;test,test1,test2&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>列出包括子进程的进程树：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ps axwef</div></pre></td></tr></table></figure></p>
-<h2 id="dd"><a href="#dd" class="headerlink" title="dd"></a>dd</h2><p>测试硬盘写入速度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dd if=/dev/zero of=/tmp/output.img bs=8k count=256k; rm -rf /tmp/output.img</div></pre></td></tr></table></figure></p>
-<p>测试硬盘读取速度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hdparm -Tt /dev/sda</div></pre></td></tr></table></figure></p>
-<h2 id="xmllint"><a href="#xmllint" class="headerlink" title="xmllint"></a>xmllint</h2><p>检查xml格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xmllint --noout file.xml</div></pre></td></tr></table></figure></p>
-<h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>使用curl获取HTTP头信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -I http://www.example.com</div></pre></td></tr></table></figure></p>
-<p>指定header<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl --header &quot;Auth: none&quot; http://www.example.com</div></pre></td></tr></table></figure></p>
-<p>POST请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -d &quot;user=test&amp;time=now&quot; http://www.example.com</div></pre></td></tr></table></figure></p>
-<h2 id="touch"><a href="#touch" class="headerlink" title="touch"></a>touch</h2><p>修改文件或目录的时间戳(YYMMDDhhmm)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">touch -t 0712250000 file</div></pre></td></tr></table></figure></p>
-<h2 id="cp"><a href="#cp" class="headerlink" title="cp"></a>cp</h2><p>快速备份一个文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp some_file_name&#123;,.bkp&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="watch"><a href="#watch" class="headerlink" title="watch"></a>watch</h2><p>重复运行文件,显示其输出（缺省是2秒一次）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">watch ps -ef</div></pre></td></tr></table></figure></p>
-<h2 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h2><p>列出前10个最大的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lsof / | awk &apos;&#123; if($7 &gt; 1048576) print $7/1048576 &quot;MB &quot;$9 &#125;&apos; | sort -n -u | tail</div></pre></td></tr></table></figure></p>
-<h2 id="free"><a href="#free" class="headerlink" title="free"></a>free</h2><p>显示剩余内存(MB)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">free -m | grep cache | awk &apos;/[0-9]/&#123; print $4&quot; MB&quot; &#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="paste"><a href="#paste" class="headerlink" title="paste"></a>paste</h2><p>将文件按行并列显示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">paste test.txt test1.txt</div></pre></td></tr></table></figure></p>
-<h2 id="pv"><a href="#pv" class="headerlink" title="pv"></a>pv</h2><p>shell里的进度条：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pv data.log</div></pre></td></tr></table></figure></p>
-<h2 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h2><p>文件复制：本机-&gt;远程服务器：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scp /home/shaoxiaohu/test1.txt shaoxiaohu@172.16.18.1:/home/test2.txt</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>其中，test1为源文件，test2为目标文件，shaoxiaohu@172.16.18.1为远程服务器的用户名和ip地址。</p>
-</blockquote>
-<p>文件复制：远程服务器-&gt;本机<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scp shaoxiaohu@172.16.18.2:/home/test2.txt /home/shaoxiaohu/test1.txt</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>其中，haoxiaohu@172.16.18.2为远程服务器的用户名和ip地址， test2为源文件，test1为目标路径</p>
-</blockquote>
-<p>文件夹复制, 在scp命令后加<code>-r</code>参数即可。</p>
-<p>端口号, 如果端口号有更改，需在scp 后输入：<code>-P</code> 端口号 （注意是大写，ssh的命令中 <code>-p</code>是小写）。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/linux/">linux</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/15/linux/Linux常用命令/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/linux/Linux常用命令/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/10/15/linux/Linux cpu信息/" title="Linux io相关" itemprop="url">Linux io相关</a>
   </h1>
   <p class="article-author">By
@@ -1049,7 +1020,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/15/mgits/CheckList/" title="CheckList" itemprop="url">CheckList</a>
+      <a href="/2015/10/15/linux/Linux常用命令/" title="Linux常用命令" itemprop="url">Linux常用命令</a>
   </h1>
   <p class="article-author">By
        
@@ -1062,27 +1033,130 @@
 </header>
     <div class="article-content">
         
-        <h2 id="FastJSON"><a href="#FastJSON" class="headerlink" title="FastJSON"></a>FastJSON</h2><h3 id="序列化bug"><a href="#序列化bug" class="headerlink" title="序列化bug"></a>序列化bug</h3><p>在项目中运营团队给出了下面这样的一个公告<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">================================================</div><div class="line">官方QQ群： <span class="number">467027422</span></div><div class="line">官方微信号：gm-xyxmp</div><div class="line">微信订阅号：xyxmpsy</div><div class="line"></div><div class="line">亲爱的小伙伴：</div><div class="line"></div><div class="line">大家好，老猪给各位请安了！</div><div class="line"></div><div class="line">首款能交易的<span class="number">3</span>D卡牌游戏，星爷独家正版授权《西游降魔篇<span class="number">3</span>D》</div><div class="line">自<span class="number">2015</span>年<span class="number">7</span>月<span class="number">21</span>日正式登陆iOS平台后，大量玩家热情涌入游戏</div><div class="line">，老猪我面对此景喜极而泣，为了让更多小伙伴加入到咱们的</div><div class="line">大团队中，老猪我决定[FFFF00]<span class="number">10</span>月<span class="number">16</span>日<span class="number">11</span>：<span class="number">00</span>开启新服N23-物华天宝 [-]，</div><div class="line">诚邀各位新老玩家的加入！</div><div class="line"></div><div class="line"></div><div class="line">新服开启，精彩纷呈的活动期待各位的参与，丰厚的大礼拿到手</div><div class="line">抽筋，在《西游降魔篇<span class="number">3</span>D》西行的途中，让我们一同感受友情，</div><div class="line">感受激情，感受无限快乐！</div><div class="line"></div><div class="line">服务器名称：[FFFF00]N23-物华天宝 [-]</div><div class="line">开服时间：[FFFF00]<span class="number">2015</span>年<span class="number">10</span>月<span class="number">16</span>日<span class="number">11</span>：<span class="number">00</span>（周五）[-]</div><div class="line"></div><div class="line"></div><div class="line">伴随开服的同时，多个活动前来助阵！</div><div class="line">[FFFF00]活动一：连续登陆送豪礼[-]</div><div class="line">[FFFF00]活动二：冲级领元宝[-]</div><div class="line">[FFFF00]活动三：战力大比拼[-]</div><div class="line">[FFFF00]活动四：五星神将双倍抽[-]</div><div class="line">[FFFF00]活动五：天天有礼送段小姐[-]</div><div class="line">[FFFF00]活动六：累积充值送玉帝[-]</div><div class="line">[FFFF00]活动七：每日礼包大回馈[-]</div><div class="line">[FFFF00]活动八：首充翻倍送豪礼[-]</div><div class="line">[FFFF00]活动九：签到送好礼[-]</div><div class="line"></div><div class="line"></div><div class="line">活动详情请查看游戏内公告！</div><div class="line">================================================</div><div class="line">                                                            《西游降魔篇<span class="number">3</span>D》运营团队</div></pre></td></tr></table></figure></p>
-<p>当我将其赋值到一个对象<code>obj#value</code>时,然后使用<code>JSON.toJSONString(obj)</code>的时候遇到了下面的异常:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Exception in thread <span class="string">"main"</span> java.lang.ArrayIndexOutOfBoundsException: <span class="number">160</span></div><div class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:<span class="number">868</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:<span class="number">602</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeString(SerializeWriter.java:<span class="number">1366</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.StringCodec.write(StringCodec.java:<span class="number">49</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.StringCodec.write(StringCodec.java:<span class="number">34</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.JSONSerializer.write(JSONSerializer.java:<span class="number">369</span>)</div><div class="line">	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:<span class="number">430</span>)</div><div class="line">	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:<span class="number">418</span>)</div><div class="line">	at Print1.main(Print1.java:<span class="number">52</span>)</div></pre></td></tr></table></figure></p>
-<p>出现的原因是:<code>服务器名称：[FFFF00]N23-物华天宝 [-]</code>物华天宝后面跟的空格，不是我们常用的ascii码为32的空格，而是一个ascii码为160特殊的空格符,导致JSON序列化时失败.</p>
-<h2 id="用户名字符集"><a href="#用户名字符集" class="headerlink" title="用户名字符集"></a>用户名字符集</h2><p>用户可能输入emoji表情符号,这种符号普遍存在iOS与android系统中,这种表情不处理直接存储到MySQL5.5以下的版本会报错</p>
-<blockquote>
-<p>这种符号采用Unicode 6标准4个bytes作为存储单元,MySQL存储这种字符需要修改数据库字符集为utf8mb4,但数据回传给网页或者移动客户端时则需要做兼容处理</p>
-</blockquote>
-<h2 id="日志问题"><a href="#日志问题" class="headerlink" title="日志问题"></a>日志问题</h2><p>在项目的开发过程中不允许使用debug模式, 一定要使用日志分析问题, 因为在线上时候, 没办法使用debug的方式, 因此在记录的日志的时候, 一定要记录的全(每个数据变化都要记录下来), 简(剩下来的就是钱)</p>
-<h2 id="数据接口都尽量做成数组形式"><a href="#数据接口都尽量做成数组形式" class="headerlink" title="数据接口都尽量做成数组形式"></a>数据接口都尽量做成数组形式</h2><p>这是为了提高拓展性,以防策划将模块提出批处理</p>
-<h2 id="代码中不要出现中文"><a href="#代码中不要出现中文" class="headerlink" title="代码中不要出现中文"></a>代码中不要出现中文</h2><p>当要出现中文的时候,可以根据个英文索引到表里查国际化文字.</p>
-<p>服务器向客户端提示的时候发送错误号,由客户端进行国际化</p>
-<h2 id="客户端打包"><a href="#客户端打包" class="headerlink" title="客户端打包"></a>客户端打包</h2><p>在打包的时候，加上时间和svn版本号，方便渠道确定客户端的版本是一致的</p>
-<h2 id="交易类模块"><a href="#交易类模块" class="headerlink" title="交易类模块"></a>交易类模块</h2><p>交易类模块要慎重考虑,玩家可能刷元宝</p>
-<h2 id="玩家使用模拟器登录"><a href="#玩家使用模拟器登录" class="headerlink" title="玩家使用模拟器登录"></a>玩家使用模拟器登录</h2><p>这个要做技术处理</p>
-<h2 id="id"><a href="#id" class="headerlink" title="id"></a>id</h2><p>项目里边每个模块的ID要是全区唯一的,保证合服顺利</p>
-<h2 id="GWF的问题"><a href="#GWF的问题" class="headerlink" title="GWF的问题"></a>GWF的问题</h2><p>参考<a href="http://blog.zhukunqian.com/?p=1377" target="_blank" rel="external">记今天域名和GWF的问题</a></p>
-<h2 id="模块次数"><a href="#模块次数" class="headerlink" title="模块次数"></a>模块次数</h2><p>每个模块活动都加一个每日次数限制。例如扫荡类的功能，加一个每日最大扫荡次数，避免出现角色刷货币的情况.</p>
-<h2 id="道具"><a href="#道具" class="headerlink" title="道具"></a>道具</h2><ul>
-<li>道具信息里添加上获得来源途径信息. 将途径分类, 以区别特殊道具 </li>
+        <h2 id="gzip"><a href="#gzip" class="headerlink" title="gzip"></a>gzip</h2><p>将文件或者文件夹压缩成后缀为<code>.gz</code>的文件</p>
+<ul>
+<li><code>-a</code> 　使用ASCII文字模式.</li>
+<li><code>-c</code> 　把压缩后的文件输出到标准输出设备,不去更动原始文件.</li>
+<li><code>-d</code> 　解开压缩文件.</li>
+<li><code>-f</code> 　强行压缩文件.不理会文件名称或硬连接是否存在以及该文件是否为符号连接.</li>
+<li><code>-l</code> 　列出压缩文件的相关信息.</li>
+<li><code>-L</code> 　显示版本与版权信息.</li>
+<li><code>-n</code> 　压缩文件时,不保存原来的文件名称及时间戳记.</li>
+<li><code>-N</code> 　压缩文件时,保存原来的文件名称及时间戳记.</li>
+<li><code>-q</code> 　不显示警告信息.</li>
+<li><code>-r</code> 　递归处理,将指定目录下的所有文件及子目录一并处理.</li>
+<li><code>-S</code> 　更改压缩字尾字符串.</li>
+<li><code>-t</code> 　测试压缩文件是否正确无误.</li>
+<li><code>-v</code> 　显示指令执行过程.</li>
+<li><code>-num</code> 用指定的数字num调整压缩的速度,-1或–fast表示最快压缩方法（低压缩比）,-9或–best表示最慢压缩方法（高压缩比）.系统缺省值为6.</li>
 </ul>
-<h2 id="数据备份"><a href="#数据备份" class="headerlink" title="数据备份"></a>数据备份</h2><p>每天备份玩家数据, 以便后期查bug和回档使用</p>
+<p>常用命令</p>
+<ul>
+<li><code>gzip *</code>  把test6目录下的每个文件压缩成.gz文件</li>
+<li><code>gzip -dv *</code> 把例1中每个压缩的文件解压,并列出详细的信息</li>
+<li><code>gzip -l *</code> 详细显示例1中每个压缩的文件的信息,并不解压</li>
+<li><code>gzip -r log.tar</code> 压缩一个tar备份文件,此时压缩文件的扩展名为.tar.gz</li>
+<li><code>gzip -rv test6</code> 递归的压缩目录</li>
+<li><code>gzip -dr test6</code> 递归地解压目录</li>
+</ul>
+<h2 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h2><p>tar可用于建立,还原,查看,管理文件,也可方 便的追加新文件到备份文件中,或仅更新部分的备份文件,以及解压,删除指定的文件</p>
+<p>将tar.gz提取到新目录里：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar zxvf package.tar.gz -C new_dir</div></pre></td></tr></table></figure></p>
+<p>将small目录压缩到small.tar.gz里<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar -czf small.tar.gz small</div></pre></td></tr></table></figure></p>
+<p>压缩为zip, 且忽略指定目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar -zcvf  web.zip --exclude=&quot;restful&quot; web/</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>–exclude=”restful”  一定要放在压缩文件和被压缩文件夹之间</p>
+</blockquote>
+<h2 id="sort"><a href="#sort" class="headerlink" title="sort"></a>sort</h2><p>sort将文件的每一行作为一个单位,相互比较,比较原则是从首字符向后,依次按ASCII码值进行比较,最后将他们按升序输出.</p>
+<p>命令参数</p>
+<ul>
+<li><code>-u</code> 在输出行中去除重复行.</li>
+<li><code>-r</code> sort默认的排序方式是升序,加-r改成降序</li>
+<li><code>-o</code> 将排序结果输出到原文件,而使用重定向是不可以的.</li>
+<li><code>-n</code> sort命令默认是按照字符排序的,如果遇到数字的字符, 可能会出现1大于10的情况, 所以我们可以设定<code>-n</code>选项, 将其按照数字排序</li>
+<li><code>-t</code> 设定间隔符. 设置间隔符,就会将每一行分割成一个数组,我们可以使用-k参数指定按照某列排序</li>
+<li><code>-k</code> -t指定了间隔符之后,可以用-k指定基于某列排序.</li>
+<li><code>-f</code> 会将小写字母都转换为大写字母来进行比较,亦即忽略大小写</li>
+<li><code>-c</code> 会检查文件是否已排好序,如果乱序,则输出第一个乱序的行的相关信息,最后返回1</li>
+<li><code>-C</code> 会检查文件是否已排好序,如果乱序,不输出内容,仅返回1</li>
+<li><code>-M</code> 会以月份来排序,比如JAN小于FEB等等</li>
+<li><code>-b</code> 会忽略每一行前面的所有空白部分,从第一个可见字符开始比较.</li>
+</ul>
+<h2 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h2><p>统计指定文件中的字节数,字数,行数,并将统计结果显示输出.该命令统计指定文件中的字节数,字数,行数.如果没有给出文件名,则从标准输入读取.wc同时也给出所指定文件的总统计数.</p>
+<ul>
+<li><code>-c</code> 统计字节数.</li>
+<li><code>-l</code> 统计行数.</li>
+<li><code>-m</code> 统计字符数.这个标志不能与 -c 标志一起使用.</li>
+<li><code>-w</code> 统计字数.一个字被定义为由空白,跳格或换行字符分隔的字符串.</li>
+<li><code>-L</code> 打印最长行的长度.</li>
+</ul>
+<h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><p><code>find pathname -options [-print -exec -ok ...]</code></p>
+<p>命令参数；<br><code>pathname</code>: 要查找的路径.<br><code>-print</code>： find命令将匹配的文件输出到标准输出.<br><code>-exec</code>： 匹配到合适文件后执行的shell命令.相应命令的形式为<code>&#39;command&#39; { } ;</code>(注意{ }和；之间的空格).<br><code>-ok</code>： 和-exec的作用相同,但是在执行命令之前,都会给出提示确认是否真的执行.</p>
+<p>options选项</p>
+<ul>
+<li><code>-name</code> 要查找的文件名(可以使用正则).</li>
+<li><code>-perm</code> 按照文件权限查找文件.</li>
+<li><code>-prune</code> 使用这一选项可以使find命令不在当前指定的目录中查找,如果同时使用-depth选项,那么-prune将被find命令忽略.</li>
+<li><code>-user</code> 按照文件属主来查找文件.</li>
+<li><code>-group</code> 按照文件所属的组来查找文件.</li>
+<li><code>-mtime -n +n</code> 按照文件的更改时间来查找文件, - n表示文件更改时间距现在n天以内,+ n表示文件更改时间距现在n天以前.</li>
+<li><code>-nogroup</code> 查找无有效所属组的文件,即该文件所属的组在/etc/groups中不存在.</li>
+<li><code>-nouser</code> 查找无有效属主的文件,即该文件的属主在/etc/passwd中不存在.</li>
+<li><code>-newer file1 ! file2</code> 查找更改时间比文件file1新但比文件file2旧的文件.</li>
+<li><code>-type</code> 查找某一类型的文件(例如: <code>-b</code>块设备文件. <code>-d</code>目录. <code>-c</code>字符设备文件. <code>-p</code>管道文件. <code>-l</code>符号链接文件. <code>-f</code>普通文件.)</li>
+<li><code>-size n [c]</code>：查找文件长度为n块的文件,带有c时表示文件长度以字节计.</li>
+<li><code>-depth</code>：在查找文件时,首先查找当前目录中的文件,然后再在其子目录中查找.</li>
+<li><code>-mount</code>：在查找文件时不跨越文件系统mount点.</li>
+<li><code>-follow</code>：如果find命令遇到符号链接文件,就跟踪至链接所指向的文件.</li>
+</ul>
+<p>另外,下面三个的区别:</p>
+<ul>
+<li><code>-amin n</code>  查找系统中最后N分钟访问的文件</li>
+<li><code>-atime n</code> 查找系统中最后n*24小时访问的文件</li>
+<li><code>-cmin n</code>  查找系统中最后N分钟被改变文件状态的文件</li>
+<li><code>-ctime n</code> 查找系统中最后n*24小时被改变文件状态的文件</li>
+<li><code>-mmin n</code>  查找系统中最后N分钟被改变文件数据的文件</li>
+<li><code>-mtime n</code> 查找系统中最后n*24小时被改变文件数据的文件<br>找出/home/user下所有空子目录：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find /home/user -maxdepth 1 -type d -empty</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>获取test.txt文件中第50-60行内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt; test.txt sed -n &apos;50,60p&apos;</div></pre></td></tr></table></figure></p>
+<p>将所有文件名中含有”txt”的文件移入/home/user目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">find -iname &quot;*txt*&quot; -exec mv -v &#123;&#125; /home/user \;</div></pre></td></tr></table></figure></p>
+<h2 id="cat-more-less"><a href="#cat-more-less" class="headerlink" title="cat,more,less"></a>cat,more,less</h2><ul>
+<li>cat是一次性显示整个文件的内容,还可以将多个文件连接起来显示,它常与重定向符号配合使用,适用于文件内容少的情况；</li>
+<li>more比cat强大,提供分页显示的功能</li>
+<li>less比more更强大,提供翻页,跳转,查找等命令.</li>
+</ul>
+<h2 id="source"><a href="#source" class="headerlink" title="source"></a>source</h2><ol>
+<li>当shell脚本具有可执行权限时,用sh filename与./filename执行脚本是没有区别得../filename是因为当前目录没有在PATH中,所有”.”是用来表示当前目录的.</li>
+<li>sh filename 重新建立一个子shell,在子shell中执行脚本里面的语句,该子shell继承父shell的环境变量,但子shell新建的,改变的变量不会被带回父shell,除非使用export.</li>
+<li>source filename：这个命令其实只是简单地读取脚本里面的语句依次在当前shell里面执行,没有建立新的子shell.那么脚本里面所有新建,改变变量的语句都会保存在当前shell里面.</li>
+</ol>
+<h2 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h2><p>用wget抓取完整的网站目录结构,存放到本地目录中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget -r --no-parent --reject &quot;index.html*&quot; http://hostname/ -P /home/user/dirs</div></pre></td></tr></table></figure></p>
+<p>用wget命令执行ftp下载：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget -m ftp:</div><div class="line">//username:password@hostname</div></pre></td></tr></table></figure></p>
+<h2 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h2><p>一次创建多个目录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir -p /home/user/&#123;test,test1,test2&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>列出包括子进程的进程树：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ps axwef</div></pre></td></tr></table></figure></p>
+<h2 id="dd"><a href="#dd" class="headerlink" title="dd"></a>dd</h2><p>测试硬盘写入速度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dd if=/dev/zero of=/tmp/output.img bs=8k count=256k; rm -rf /tmp/output.img</div></pre></td></tr></table></figure></p>
+<p>测试硬盘读取速度：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hdparm -Tt /dev/sda</div></pre></td></tr></table></figure></p>
+<h2 id="xmllint"><a href="#xmllint" class="headerlink" title="xmllint"></a>xmllint</h2><p>检查xml格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xmllint --noout file.xml</div></pre></td></tr></table></figure></p>
+<h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>使用curl获取HTTP头信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -I http://www.example.com</div></pre></td></tr></table></figure></p>
+<p>指定header<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl --header &quot;Auth: none&quot; http://www.example.com</div></pre></td></tr></table></figure></p>
+<p>POST请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -d &quot;user=test&amp;time=now&quot; http://www.example.com</div></pre></td></tr></table></figure></p>
+<h2 id="touch"><a href="#touch" class="headerlink" title="touch"></a>touch</h2><p>修改文件或目录的时间戳(YYMMDDhhmm)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">touch -t 0712250000 file</div></pre></td></tr></table></figure></p>
+<h2 id="cp"><a href="#cp" class="headerlink" title="cp"></a>cp</h2><p>快速备份一个文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp some_file_name&#123;,.bkp&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="watch"><a href="#watch" class="headerlink" title="watch"></a>watch</h2><p>重复运行文件,显示其输出（缺省是2秒一次）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">watch ps -ef</div></pre></td></tr></table></figure></p>
+<h2 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h2><p>列出前10个最大的文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lsof / | awk &apos;&#123; if($7 &gt; 1048576) print $7/1048576 &quot;MB &quot;$9 &#125;&apos; | sort -n -u | tail</div></pre></td></tr></table></figure></p>
+<h2 id="free"><a href="#free" class="headerlink" title="free"></a>free</h2><p>显示剩余内存(MB)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">free -m | grep cache | awk &apos;/[0-9]/&#123; print $4&quot; MB&quot; &#125;&apos;</div></pre></td></tr></table></figure></p>
+<h2 id="paste"><a href="#paste" class="headerlink" title="paste"></a>paste</h2><p>将文件按行并列显示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">paste test.txt test1.txt</div></pre></td></tr></table></figure></p>
+<h2 id="pv"><a href="#pv" class="headerlink" title="pv"></a>pv</h2><p>shell里的进度条：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pv data.log</div></pre></td></tr></table></figure></p>
+<h2 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h2><p>文件复制：本机-&gt;远程服务器：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scp /home/shaoxiaohu/test1.txt shaoxiaohu@172.16.18.1:/home/test2.txt</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>其中，test1为源文件，test2为目标文件，shaoxiaohu@172.16.18.1为远程服务器的用户名和ip地址。</p>
+</blockquote>
+<p>文件复制：远程服务器-&gt;本机<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scp shaoxiaohu@172.16.18.2:/home/test2.txt /home/shaoxiaohu/test1.txt</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>其中，haoxiaohu@172.16.18.2为远程服务器的用户名和ip地址， test2为源文件，test1为目标路径</p>
+</blockquote>
+<p>文件夹复制, 在scp命令后加<code>-r</code>参数即可。</p>
+<p>端口号, 如果端口号有更改，需在scp 后输入：<code>-P</code> 端口号 （注意是大写，ssh的命令中 <code>-p</code>是小写）。</p>
 
         
         
@@ -1095,7 +1169,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+  <a class="article-category-link" href="/categories/linux/">linux</a>
 </div>
 
 
@@ -1107,7 +1181,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/10/15/mgits/CheckList/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/mgits/CheckList/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/10/15/linux/Linux常用命令/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/linux/Linux常用命令/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1239,6 +1313,84 @@
 	
 	  	<span></span>
 		<a href="/2015/10/15/linux/grep/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/linux/grep/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/15/mgits/CheckList/" title="CheckList" itemprop="url">CheckList</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-15T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-15</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="FastJSON"><a href="#FastJSON" class="headerlink" title="FastJSON"></a>FastJSON</h2><h3 id="序列化bug"><a href="#序列化bug" class="headerlink" title="序列化bug"></a>序列化bug</h3><p>在项目中运营团队给出了下面这样的一个公告<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">================================================</div><div class="line">官方QQ群： <span class="number">467027422</span></div><div class="line">官方微信号：gm-xyxmp</div><div class="line">微信订阅号：xyxmpsy</div><div class="line"></div><div class="line">亲爱的小伙伴：</div><div class="line"></div><div class="line">大家好，老猪给各位请安了！</div><div class="line"></div><div class="line">首款能交易的<span class="number">3</span>D卡牌游戏，星爷独家正版授权《西游降魔篇<span class="number">3</span>D》</div><div class="line">自<span class="number">2015</span>年<span class="number">7</span>月<span class="number">21</span>日正式登陆iOS平台后，大量玩家热情涌入游戏</div><div class="line">，老猪我面对此景喜极而泣，为了让更多小伙伴加入到咱们的</div><div class="line">大团队中，老猪我决定[FFFF00]<span class="number">10</span>月<span class="number">16</span>日<span class="number">11</span>：<span class="number">00</span>开启新服N23-物华天宝 [-]，</div><div class="line">诚邀各位新老玩家的加入！</div><div class="line"></div><div class="line"></div><div class="line">新服开启，精彩纷呈的活动期待各位的参与，丰厚的大礼拿到手</div><div class="line">抽筋，在《西游降魔篇<span class="number">3</span>D》西行的途中，让我们一同感受友情，</div><div class="line">感受激情，感受无限快乐！</div><div class="line"></div><div class="line">服务器名称：[FFFF00]N23-物华天宝 [-]</div><div class="line">开服时间：[FFFF00]<span class="number">2015</span>年<span class="number">10</span>月<span class="number">16</span>日<span class="number">11</span>：<span class="number">00</span>（周五）[-]</div><div class="line"></div><div class="line"></div><div class="line">伴随开服的同时，多个活动前来助阵！</div><div class="line">[FFFF00]活动一：连续登陆送豪礼[-]</div><div class="line">[FFFF00]活动二：冲级领元宝[-]</div><div class="line">[FFFF00]活动三：战力大比拼[-]</div><div class="line">[FFFF00]活动四：五星神将双倍抽[-]</div><div class="line">[FFFF00]活动五：天天有礼送段小姐[-]</div><div class="line">[FFFF00]活动六：累积充值送玉帝[-]</div><div class="line">[FFFF00]活动七：每日礼包大回馈[-]</div><div class="line">[FFFF00]活动八：首充翻倍送豪礼[-]</div><div class="line">[FFFF00]活动九：签到送好礼[-]</div><div class="line"></div><div class="line"></div><div class="line">活动详情请查看游戏内公告！</div><div class="line">================================================</div><div class="line">                                                            《西游降魔篇<span class="number">3</span>D》运营团队</div></pre></td></tr></table></figure></p>
+<p>当我将其赋值到一个对象<code>obj#value</code>时,然后使用<code>JSON.toJSONString(obj)</code>的时候遇到了下面的异常:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Exception in thread <span class="string">"main"</span> java.lang.ArrayIndexOutOfBoundsException: <span class="number">160</span></div><div class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:<span class="number">868</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeStringWithDoubleQuote(SerializeWriter.java:<span class="number">602</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.SerializeWriter.writeString(SerializeWriter.java:<span class="number">1366</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.StringCodec.write(StringCodec.java:<span class="number">49</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.StringCodec.write(StringCodec.java:<span class="number">34</span>)</div><div class="line">	at com.alibaba.fastjson.serializer.JSONSerializer.write(JSONSerializer.java:<span class="number">369</span>)</div><div class="line">	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:<span class="number">430</span>)</div><div class="line">	at com.alibaba.fastjson.JSON.toJSONString(JSON.java:<span class="number">418</span>)</div><div class="line">	at Print1.main(Print1.java:<span class="number">52</span>)</div></pre></td></tr></table></figure></p>
+<p>出现的原因是:<code>服务器名称：[FFFF00]N23-物华天宝 [-]</code>物华天宝后面跟的空格，不是我们常用的ascii码为32的空格，而是一个ascii码为160特殊的空格符,导致JSON序列化时失败.</p>
+<h2 id="用户名字符集"><a href="#用户名字符集" class="headerlink" title="用户名字符集"></a>用户名字符集</h2><p>用户可能输入emoji表情符号,这种符号普遍存在iOS与android系统中,这种表情不处理直接存储到MySQL5.5以下的版本会报错</p>
+<blockquote>
+<p>这种符号采用Unicode 6标准4个bytes作为存储单元,MySQL存储这种字符需要修改数据库字符集为utf8mb4,但数据回传给网页或者移动客户端时则需要做兼容处理</p>
+</blockquote>
+<h2 id="日志问题"><a href="#日志问题" class="headerlink" title="日志问题"></a>日志问题</h2><p>在项目的开发过程中不允许使用debug模式, 一定要使用日志分析问题, 因为在线上时候, 没办法使用debug的方式, 因此在记录的日志的时候, 一定要记录的全(每个数据变化都要记录下来), 简(剩下来的就是钱)</p>
+<h2 id="数据接口都尽量做成数组形式"><a href="#数据接口都尽量做成数组形式" class="headerlink" title="数据接口都尽量做成数组形式"></a>数据接口都尽量做成数组形式</h2><p>这是为了提高拓展性,以防策划将模块提出批处理</p>
+<h2 id="代码中不要出现中文"><a href="#代码中不要出现中文" class="headerlink" title="代码中不要出现中文"></a>代码中不要出现中文</h2><p>当要出现中文的时候,可以根据个英文索引到表里查国际化文字.</p>
+<p>服务器向客户端提示的时候发送错误号,由客户端进行国际化</p>
+<h2 id="客户端打包"><a href="#客户端打包" class="headerlink" title="客户端打包"></a>客户端打包</h2><p>在打包的时候，加上时间和svn版本号，方便渠道确定客户端的版本是一致的</p>
+<h2 id="交易类模块"><a href="#交易类模块" class="headerlink" title="交易类模块"></a>交易类模块</h2><p>交易类模块要慎重考虑,玩家可能刷元宝</p>
+<h2 id="玩家使用模拟器登录"><a href="#玩家使用模拟器登录" class="headerlink" title="玩家使用模拟器登录"></a>玩家使用模拟器登录</h2><p>这个要做技术处理</p>
+<h2 id="id"><a href="#id" class="headerlink" title="id"></a>id</h2><p>项目里边每个模块的ID要是全区唯一的,保证合服顺利</p>
+<h2 id="GWF的问题"><a href="#GWF的问题" class="headerlink" title="GWF的问题"></a>GWF的问题</h2><p>参考<a href="http://blog.zhukunqian.com/?p=1377" target="_blank" rel="external">记今天域名和GWF的问题</a></p>
+<h2 id="模块次数"><a href="#模块次数" class="headerlink" title="模块次数"></a>模块次数</h2><p>每个模块活动都加一个每日次数限制。例如扫荡类的功能，加一个每日最大扫荡次数，避免出现角色刷货币的情况.</p>
+<h2 id="道具"><a href="#道具" class="headerlink" title="道具"></a>道具</h2><ul>
+<li>道具信息里添加上获得来源途径信息. 将途径分类, 以区别特殊道具 </li>
+</ul>
+<h2 id="数据备份"><a href="#数据备份" class="headerlink" title="数据备份"></a>数据备份</h2><p>每天备份玩家数据, 以便后期查bug和回档使用</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/15/mgits/CheckList/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/15/mgits/CheckList/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1502,7 +1654,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/08/数据库/Mysql 数据类型/" title="Mysql 数据类型" itemprop="url">Mysql 数据类型</a>
+      <a href="/2015/10/08/数据库/数据库事务/" title="MySQL事务" itemprop="url">MySQL事务</a>
   </h1>
   <p class="article-author">By
        
@@ -1515,14 +1667,56 @@
 </header>
     <div class="article-content">
         
-        <h2 id="varchar"><a href="#varchar" class="headerlink" title="varchar"></a>varchar</h2><p>varchar 字段是将实际内容单独存储在聚簇索引之外，内容开头用1到2个字节表示实际长度（长度超过255时需要2个字节），因此最大长度不能超过65535(2^16)。</p>
+        <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>事务（Transaction）是一个操作序列，它构成了并发执行的基本单元。事务的提出主要是为了解决并发情况下保持数据一致性。</p>
+<p>数据库事务具有ACID特性,即</p>
 <ul>
-<li>字符类型若为gbk，每个字符最多占2个字节，最大长度不能超过32766; </li>
-<li>字符类型若为utf8，每个字符最多占3个字节，最大长度不能超过21845。 </li>
-<li>对于英文比较多的论坛 ，使用GBK则每个字符占用2个字节，而使用UTF－8英文却只占一个字节。 </li>
-<li>若定义的时候超过上述限制，则varchar字段会被强行转为text类型，并产生warning。 </li>
+<li>原子性： 原子性体现在对事务的修改,要么全部执行要么都不执行</li>
+<li>一致性： 保持数据的一致性,例如整数类型的数据大小不能溢出,字符型数据长度不能超过规定范围，保证数据的完整性.</li>
+<li>隔离性： 如果数据库并发执行A,B俩个事务,那么在A事务执行完之前对B事务是不可见的,也就是说,B事务是看不见A事务的中间状态的.</li>
+<li>持久性： 事务完成后,它对数据库的影响是永久的,即使数据库出现异常也是如此.</li>
 </ul>
-
+<p>隔离级别</p>
+<ul>
+<li><code>Read Uncommitted</code>: 读取未提交的数据,即其他事务已经提交修改但还未提交的数据(这是最低的隔离级别)</li>
+<li><code>Read Committed</code>: 读取已经提交的数据,但是在一个事务中,对同一个项,前后俩次读取的结果可能不同.</li>
+<li><code>Repetable Read</code>: 可重复读取,在一个事务中,对同一个项,确保前后俩次读取的结果一样</li>
+<li><code>Serializable</code>: 可序列话,即数据库的事务是可串行执行的,就像一个事务执行的时候没有别的事务同时在执行<br>我们使用下面的语句来改变数据库的隔离级别<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SET</span> [<span class="keyword">SESSION</span>|<span class="keyword">GLOBAL</span>] <span class="keyword">TRANSACTION</span> <span class="keyword">ISOLATION</span> <span class="keyword">LEVEL</span> <span class="keyword">READ</span> UNCOMMITTED | <span class="keyword">READ</span> COMMITTED | REPEATABLE <span class="keyword">READ</span> | <span class="keyword">SERIALIZABLE</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol>
+<li>不带<code>SESSION、GLOBAL</code>的SET命令,只对下一个事务有效</li>
+<li><code>SET SESSION</code> 为当前会话设置隔离模式</li>
+<li><code>SET GLOBAL</code>为以后新建的所有MYSQL连接设置隔离模式（当前连接不包括在内）</li>
+</ol>
+<p>读写异常</p>
+<ul>
+<li><code>Lost Update</code>: 俩个事务并发修改同一个数据,A事务提交成功,B事务提交失败回滚后,A事务的修改都可能会丢失</li>
+<li><code>Dirty Reads</code>: A事务读取了B事务更新却没有提交的数据</li>
+<li><code>Non-Repeatable Reads</code>: 一个事务对同一个数据项的多次读取可能得到不同的结果</li>
+<li><code>Second Lost Updates</code>:俩个事务并发修改同一个数据, B事务可能会覆盖掉A事务的修改</li>
+<li><code>Phantom Reads</code>: A事务进行前后俩次查询,但是在查询过程中出现了B事务向其中插入数据,那么A事务可能读取到未出现的数据</li>
+</ul>
+<p>隔离级别与读写异常的关系<br><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">    LU  DR  NRR  SLU  PR</div><div class="line">RU  <span class="built_in">N</span>   Y   Y    Y    Y</div><div class="line">RC  <span class="built_in">N</span>   <span class="built_in">N</span>   Y    Y    Y</div><div class="line">RR  <span class="built_in">N</span>   <span class="built_in">N</span>   <span class="built_in">N</span>   <span class="built_in">N</span>     Y</div><div class="line">S   <span class="built_in">N</span>   <span class="built_in">N</span>   <span class="built_in">N</span>   <span class="built_in">N</span>     <span class="built_in">N</span></div></pre></td></tr></table></figure></p>
+<h3 id="事务语句"><a href="#事务语句" class="headerlink" title="事务语句"></a>事务语句</h3><ul>
+<li>开始事物：<code>BEGIN TRANSACTION</code></li>
+<li>提交事物：<code>COMMIT TRANSACTION</code></li>
+<li>回滚事务：<code>ROLLBACK TRANSACTION</code></li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># 开启一个事务</div><div class="line">START TRANSACTION;</div><div class="line">INSERT INTO db1.`t1`(id) VALUES(1);</div><div class="line"># 提交事务</div><div class="line">COMMIT;</div><div class="line"></div><div class="line"># 开启事务</div><div class="line">START TRANSACTION;</div><div class="line">INSERT INTO db1.`t1`(id) VALUES(2);</div><div class="line"># 回滚刚才的事务</div><div class="line">ROLLBACK;</div></pre></td></tr></table></figure>
+<h3 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h3><h4 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h4><h4 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h4><h4 id="多版本并发控制"><a href="#多版本并发控制" class="headerlink" title="多版本并发控制"></a>多版本并发控制</h4><p>Mysql InnoDB存储引擎,InnoDB对每一行维护了俩个隐含的列,一列用于存储行被修改的时间,另一列存储每一行被删除的时间.</p>
+<blockquote>
+<p>这里的时间并不是绝对时间,而是与时间对应的数据库系统的版本号,每当一个事务开始时,InnoDB都会给这个事务分配一个递增的版本号,所以版本号也可以被任务是事务好.对于每一行的查询语句,InnoDB都会把这个查询语句的版本号同这个查询雨具遇到的行的版本号进行对比,然后结合不同的事务隔离级别来决定是否返回改行.</p>
+</blockquote>
+<p>下面以SELECT,DELETE,INSERT,UPDATE为例:</p>
+<h5 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h5><p>只有同时满足下面俩个条件的行才能被返回:</p>
+<ol>
+<li>行的版本号小于等于该事务的版本号</li>
+<li>行的删除版本号要么没有定义,要么大于等于事务的版本号<br>如果行的修改或者删除版本号大于事务号,说明行是被该食物后面启动的事务修改或者删除的 </li>
+</ol>
+<h5 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h5><p>InnoDB直接把该行的删除版本号设置为当前的事务号,相当于标记为删除而不是物理删除</p>
+<h5 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h5><p>对于新插入的行,行的修改版本号更新为该事务的事务号</p>
+<h5 id="UPDATE"><a href="#UPDATE" class="headerlink" title="UPDATE"></a>UPDATE</h5><p>更新行的时候,InnoDB会把原来的行复制一份,并把当前的事务号作为改行的修改版本号</p>
+<h3 id="事务异常"><a href="#事务异常" class="headerlink" title="事务异常"></a>事务异常</h3>
         
         
         <p class="article-more-link">
@@ -1546,7 +1740,93 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/10/08/数据库/Mysql 数据类型/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/Mysql 数据类型/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/10/08/数据库/数据库事务/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/数据库事务/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/mgits/vim/" title="GVIM" itemprop="url">GVIM</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="vimrc配置文件"><a href="#vimrc配置文件" class="headerlink" title="_vimrc配置文件"></a>_vimrc配置文件</h1><h2 id="GVIM打开即全屏"><a href="#GVIM打开即全屏" class="headerlink" title="GVIM打开即全屏"></a>GVIM打开即全屏</h2><p><code>au GUIEnter * simalt ~x</code></p>
+<h2 id="设置VeraMono字体"><a href="#设置VeraMono字体" class="headerlink" title="设置VeraMono字体"></a>设置VeraMono字体</h2><p><a href="http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf" target="_blank" rel="external">VeraMono</a>需要下载安装(百度字体安装就好)<br><code>set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI</code></p>
+<h2 id="python编译"><a href="#python编译" class="headerlink" title="python编译"></a>python编译</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  </div><div class="line">autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  </div><div class="line">autocmd BufRead *.py nmap &lt;F5&gt; :!python %&lt;CR&gt;  </div><div class="line">autocmd BufRead *.py nmap &lt;F6&gt; :make&lt;CR&gt;  </div><div class="line">autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口</div></pre></td></tr></table></figure>
+<h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
+<li>搜索：<code>/</code>向下搜索. <code>?</code>向上搜索</li>
+<li>替换： <code>:%s/abc/123/g</code>, 将abc都替换为123</li>
+<li>删除行：<code>dd</code>删除整行. <code>5dd</code>从当前行开始向后删除5整行. <code>D</code>从光标删除到行尾</li>
+<li>删除字符：<code>x</code>向后删除一个字符. <code>X</code>向前删除一个字符</li>
+<li>撤销: <code>u</code></li>
+<li>复制:<code>yy</code>复制一行. <code>5yy</code>从当前行开始向下复制5行</li>
+<li>粘贴: <code>p</code>光标向下移动. <code>P</code>光标不动</li>
+<li>块选择: <code>V</code>多行整行选择. <code>v</code>多行字符选择. <code>ctrl v</code>矩阵方式选择.</li>
+<li>光标移动：<code>$</code>移动到行尾. <code>0</code>移动到行首. <code>G</code>移动到最后一行. <code>gg</code>移动到最一行.</li>
+<li>窗口编辑: <code>：split</code>水平新建窗口. <code>：vsplit</code>垂直分割.</li>
+<li>在窗口间游走: <code>Ctrl W</code> 加 <code>h, j, k, l</code>一起使用</li>
+<li>分页编辑： <code>：tabnew</code>新建分页。 <code>：tabclose</code>关闭当前分页. <code>：tabonly</code>关闭其他所有的分页</li>
+<li>顶部底部跳转： 顶部<code>`, 底部</code>shift + g`</li>
+</ul>
+<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><h2 id="Pydiction"><a href="#Pydiction" class="headerlink" title="Pydiction "></a><a href="http://www.vim.org/scripts/script.php?script_id=850" target="_blank" rel="external">Pydiction </a></h2><p>python自动补全插件</p>
+<p>配置,<code>_vimrc</code>文件追加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">filetype plugin on</div><div class="line">let g:pydiction_location = <span class="string">'D:/Program Files/Vim/pydiction/complete-dict'</span></div></pre></td></tr></table></figure></p>
+<p>然后将<code>pydiction/after/ftplugin/python_pydiction.vim</code>复制到<code>Vim\vimfiles\ftplugin\python_pydiction.vim</code></p>
+<h2 id="The-NERD-tree"><a href="#The-NERD-tree" class="headerlink" title="The NERD tree"></a><a href="http://www.vim.org/scripts/script.php?script_id=1658" target="_blank" rel="external">The NERD tree</a></h2><p>文件树. 将下载下来的压缩包解压到<code>Vim\vimfiles</code></p>
+<ul>
+<li><code>:NERDTree</code> 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径</li>
+<li><code>:NERDTreeClose</code> 关闭目录树</li>
+</ul>
+<p>修改_vimrc配置文件,添加映射<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nmap &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="bsh-vim"><a href="#bsh-vim" class="headerlink" title="bsh.vim"></a><a href="http://www.vim.org/scripts/script.php?script_id=1202" target="_blank" rel="external">bsh.vim</a></h2><p>Shell语法高亮</p>
+<p>只需将<code>bsh.vim</code>文件拷贝到<code>Vim\vimfiles\syntax</code>就可以了</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/mgits/vim/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mgits/vim/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1745,7 +2025,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/08/数据库/数据库事务/" title="MySQL事务" itemprop="url">MySQL事务</a>
+      <a href="/2015/10/08/数据库/mycat分片/" title="Mycat分片" itemprop="url">Mycat分片</a>
   </h1>
   <p class="article-author">By
        
@@ -1758,56 +2038,27 @@
 </header>
     <div class="article-content">
         
-        <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><p>事务（Transaction）是一个操作序列，它构成了并发执行的基本单元。事务的提出主要是为了解决并发情况下保持数据一致性。</p>
-<p>数据库事务具有ACID特性,即</p>
+        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
+<p>由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解</p>
+<h2 id="分片枚举"><a href="#分片枚举" class="headerlink" title="分片枚举"></a>分片枚举</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"hash-int"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByFileMap"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-hash-int.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
 <ul>
-<li>原子性： 原子性体现在对事务的修改,要么全部执行要么都不执行</li>
-<li>一致性： 保持数据的一致性,例如整数类型的数据大小不能溢出,字符型数据长度不能超过规定范围，保证数据的完整性.</li>
-<li>隔离性： 如果数据库并发执行A,B俩个事务,那么在A事务执行完之前对B事务是不可见的,也就是说,B事务是看不见A事务的中间状态的.</li>
-<li>持久性： 事务完成后,它对数据库的影响是永久的,即使数据库出现异常也是如此.</li>
+<li>mapFile: 配置文件名称</li>
+<li>type: 0表示Integer，非零表示String</li>
+<li>defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点</li>
 </ul>
-<p>隔离级别</p>
+<p>在partition-hash-int.txt文件中,采用<code>x=y</code>的形式, x是columns值. y是节点值. 所有的节点都是从0开始的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a=0</div><div class="line">b=1</div><div class="line">c=2</div></pre></td></tr></table></figure></p>
+<p>上面这个例子中,columns值为1的sql会路由到1的这个节点上. 节点在schema.xml中配置. 具体0对应哪个节点还需要探寻.</p>
+<h2 id="范围约定"><a href="#范围约定" class="headerlink" title="范围约定"></a>范围约定</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"rang-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.AutoPartitionByLong"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>autopartition-long.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这个规则是约定好,哪个范围的sql对应哪个节点,我们可以这样配置autopartition-long.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0-500=0</div><div class="line">500-1000=1</div><div class="line">1000-1500=2</div></pre></td></tr></table></figure></p>
+<p>这种范围的就只能适应,id分片的了</p>
+<h2 id="求模"><a href="#求模" class="headerlink" title="求模"></a>求模</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"mod-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMod"</span>&gt;</span></div><div class="line"> <span class="comment">&lt;!-- how many data nodes  --&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这个是根据column的十进制值进行求模分片.</p>
+<h2 id="固定分片hash算法"><a href="#固定分片hash算法" class="headerlink" title="固定分片hash算法"></a>固定分片hash算法</h2><p>该算法是对columns的二进制的低十位进行取模运算.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"partitionByLong"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>8, 1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>128, 256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <ul>
-<li><code>Read Uncommitted</code>: 读取未提交的数据,即其他事务已经提交修改但还未提交的数据(这是最低的隔离级别)</li>
-<li><code>Read Committed</code>: 读取已经提交的数据,但是在一个事务中,对同一个项,前后俩次读取的结果可能不同.</li>
-<li><code>Repetable Read</code>: 可重复读取,在一个事务中,对同一个项,确保前后俩次读取的结果一样</li>
-<li><code>Serializable</code>: 可序列话,即数据库的事务是可串行执行的,就像一个事务执行的时候没有别的事务同时在执行<br>我们使用下面的语句来改变数据库的隔离级别<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SET</span> [<span class="keyword">SESSION</span>|<span class="keyword">GLOBAL</span>] <span class="keyword">TRANSACTION</span> <span class="keyword">ISOLATION</span> <span class="keyword">LEVEL</span> <span class="keyword">READ</span> UNCOMMITTED | <span class="keyword">READ</span> COMMITTED | REPEATABLE <span class="keyword">READ</span> | <span class="keyword">SERIALIZABLE</span></div></pre></td></tr></table></figure>
-</li>
+<li>partitionCount 分片个数列表</li>
+<li>partitionLength 分片范围列表<br>这来个参数的长度必须相等. 上面的例子的意思是, 在对低十位取模运算时, 128以内的sql要平均分配到8个分片上执行. 128 ~ 256的sql要到1个分片上执行</li>
 </ul>
-<ol>
-<li>不带<code>SESSION、GLOBAL</code>的SET命令,只对下一个事务有效</li>
-<li><code>SET SESSION</code> 为当前会话设置隔离模式</li>
-<li><code>SET GLOBAL</code>为以后新建的所有MYSQL连接设置隔离模式（当前连接不包括在内）</li>
-</ol>
-<p>读写异常</p>
-<ul>
-<li><code>Lost Update</code>: 俩个事务并发修改同一个数据,A事务提交成功,B事务提交失败回滚后,A事务的修改都可能会丢失</li>
-<li><code>Dirty Reads</code>: A事务读取了B事务更新却没有提交的数据</li>
-<li><code>Non-Repeatable Reads</code>: 一个事务对同一个数据项的多次读取可能得到不同的结果</li>
-<li><code>Second Lost Updates</code>:俩个事务并发修改同一个数据, B事务可能会覆盖掉A事务的修改</li>
-<li><code>Phantom Reads</code>: A事务进行前后俩次查询,但是在查询过程中出现了B事务向其中插入数据,那么A事务可能读取到未出现的数据</li>
-</ul>
-<p>隔离级别与读写异常的关系<br><figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">    LU  DR  NRR  SLU  PR</div><div class="line">RU  <span class="built_in">N</span>   Y   Y    Y    Y</div><div class="line">RC  <span class="built_in">N</span>   <span class="built_in">N</span>   Y    Y    Y</div><div class="line">RR  <span class="built_in">N</span>   <span class="built_in">N</span>   <span class="built_in">N</span>   <span class="built_in">N</span>     Y</div><div class="line">S   <span class="built_in">N</span>   <span class="built_in">N</span>   <span class="built_in">N</span>   <span class="built_in">N</span>     <span class="built_in">N</span></div></pre></td></tr></table></figure></p>
-<h3 id="事务语句"><a href="#事务语句" class="headerlink" title="事务语句"></a>事务语句</h3><ul>
-<li>开始事物：<code>BEGIN TRANSACTION</code></li>
-<li>提交事物：<code>COMMIT TRANSACTION</code></li>
-<li>回滚事务：<code>ROLLBACK TRANSACTION</code></li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># 开启一个事务</div><div class="line">START TRANSACTION;</div><div class="line">INSERT INTO db1.`t1`(id) VALUES(1);</div><div class="line"># 提交事务</div><div class="line">COMMIT;</div><div class="line"></div><div class="line"># 开启事务</div><div class="line">START TRANSACTION;</div><div class="line">INSERT INTO db1.`t1`(id) VALUES(2);</div><div class="line"># 回滚刚才的事务</div><div class="line">ROLLBACK;</div></pre></td></tr></table></figure>
-<h3 id="并发控制"><a href="#并发控制" class="headerlink" title="并发控制"></a>并发控制</h3><h4 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h4><h4 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h4><h4 id="多版本并发控制"><a href="#多版本并发控制" class="headerlink" title="多版本并发控制"></a>多版本并发控制</h4><p>Mysql InnoDB存储引擎,InnoDB对每一行维护了俩个隐含的列,一列用于存储行被修改的时间,另一列存储每一行被删除的时间.</p>
-<blockquote>
-<p>这里的时间并不是绝对时间,而是与时间对应的数据库系统的版本号,每当一个事务开始时,InnoDB都会给这个事务分配一个递增的版本号,所以版本号也可以被任务是事务好.对于每一行的查询语句,InnoDB都会把这个查询语句的版本号同这个查询雨具遇到的行的版本号进行对比,然后结合不同的事务隔离级别来决定是否返回改行.</p>
-</blockquote>
-<p>下面以SELECT,DELETE,INSERT,UPDATE为例:</p>
-<h5 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h5><p>只有同时满足下面俩个条件的行才能被返回:</p>
-<ol>
-<li>行的版本号小于等于该事务的版本号</li>
-<li>行的删除版本号要么没有定义,要么大于等于事务的版本号<br>如果行的修改或者删除版本号大于事务号,说明行是被该食物后面启动的事务修改或者删除的 </li>
-</ol>
-<h5 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h5><p>InnoDB直接把该行的删除版本号设置为当前的事务号,相当于标记为删除而不是物理删除</p>
-<h5 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h5><p>对于新插入的行,行的修改版本号更新为该事务的事务号</p>
-<h5 id="UPDATE"><a href="#UPDATE" class="headerlink" title="UPDATE"></a>UPDATE</h5><p>更新行的时候,InnoDB会把原来的行复制一份,并把当前的事务号作为改行的修改版本号</p>
-<h3 id="事务异常"><a href="#事务异常" class="headerlink" title="事务异常"></a>事务异常</h3>
+
         
         
         <p class="article-more-link">
@@ -1831,7 +2082,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/10/08/数据库/数据库事务/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/数据库事务/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/10/08/数据库/mycat分片/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/mycat分片/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1930,259 +2181,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/08/数据库/Mysql 增删改查/" title="Mysql 增删改查" itemprop="url">Mysql 增删改查</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -h 主机地址 -u 用户名 －<span class="selector-tag">p</span> 用户密码 （注:u与root可以不用加空格，其它也一样）</div></pre></td></tr></table></figure>
-<h2 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h2><p>创建用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'host'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'password'</span>;</div></pre></td></tr></table></figure></p>
-<p>授权:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">'username'</span>@<span class="string">'host'</span></div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>privileges - 用户的操作权限,如SELECT,INSERT,UPDATE等.如果要授予所的权限则使用ALL;如果要授予该用户对所有数据库和表的相应操作权限则可用<em>表示, 如</em>.*. </p>
-</blockquote>
-<p>用以上命令授权的用户不能给其它用户授权,如果想让该用户可以授权,用以下命令:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">'username'</span>@<span class="string">'host'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</div></pre></td></tr></table></figure></p>
-<p>设置与更改用户密码<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> <span class="string">'username'</span>@<span class="string">'host'</span> = <span class="keyword">PASSWORD</span>(<span class="string">'newpassword'</span>);</div></pre></td></tr></table></figure></p>
-<p>撤销用户权限<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">REVOKE</span> privilege <span class="keyword">ON</span> databasename.tablename <span class="keyword">FROM</span> <span class="string">'username'</span>@<span class="string">'host'</span>;</div></pre></td></tr></table></figure></p>
-<p>删除用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'host'</span>;</div></pre></td></tr></table></figure></p>
-<h2 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h2><ul>
-<li>显示数据库：<code>SHOW databases</code>; </li>
-<li>创建库：<code>CREATE DATABASE 库名</code>; </li>
-<li>删除库：<code>DROP DATABASE 库名</code>; </li>
-<li>使用库(选中库)：<code>USE 库名</code>; </li>
-</ul>
-<h2 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h2><ul>
-<li>显示数据表：<code>SHOW tables</code></li>
-<li>显示表结构：<code>DESC 表名</code></li>
-<li>删除表：<code>DROP TABLE 表名</code>; </li>
-<li>输入创建表的DDL语句 <code>SHOW CREATE TABLE 表名;</code></li>
-<li>创建表：<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span>  </div><div class="line">    <span class="keyword">USER</span>  </div><div class="line">    (  </div><div class="line">        <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </div><div class="line">        <span class="keyword">id</span> <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </div><div class="line">        stu_id <span class="built_in">INT</span>,  </div><div class="line">        phone <span class="built_in">VARCHAR</span>(<span class="number">20</span>),  </div><div class="line">        address <span class="built_in">VARCHAR</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </div><div class="line">        age <span class="built_in">INT</span>(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </div><div class="line">        PRIMARY <span class="keyword">KEY</span> (<span class="keyword">name</span>),  </div><div class="line">        <span class="keyword">CONSTRAINT</span> stu_id <span class="keyword">UNIQUE</span> (stu_id)  </div><div class="line">    )  </div><div class="line">    <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="表数据操作"><a href="#表数据操作" class="headerlink" title="表数据操作"></a>表数据操作</h3><ul>
-<li>清空表数据<code>truncate table 表名;</code>. truncate删除后不记录mysql日志，不可以恢复数据。相当于保留mysql表的结构，重新创建了这个表，所有的状态都相当于新表。</li>
-<li>清空表数据<code>delete from 表名</code>. delete的效果有点像将mysql表中所有记录一条一条删除到删完</li>
-</ul>
-<h3 id="修改表结构"><a href="#修改表结构" class="headerlink" title="修改表结构"></a>修改表结构</h3><ul>
-<li>修改列名<code>alter table 表名称 change 字段名称 字段名称</code></li>
-<li>修改表名<code>alter table 表名称 rename 表名称</code></li>
-<li>修改某个表的字段类型及指定为空或非空<code>alter table 表名称 change 字段名称字段名称 字段类型 [null/not null];</code></li>
-<li>修改某个表的字段名称及指定为空或非空<code>alter table 表名称 change 字段原名称字段新名称 字段类型 [null/not null];</code></li>
-<li>增加一个字段(一列)<code>alter table table_name add column column_name type default value;</code> type指该字段的类型,value指该字段的默认值</li>
-<li>更改一个字段名字(也可以改变类型和默认值)<code>alter table table_name change sorce_col_name dest_col_name type defaultvalue;</code> source_col_name指原来的字段名称,dest_col_name指改后的字段名称</li>
-<li>改变一个字段的默认值<code>alter table table_name alter column_name set default value;</code></li>
-<li>改变一个字段的数据类型<code>alter table table_name change column column_name column_name type;</code></li>
-<li>向一个表中增加一个列做为主键<code>alter table table_name add column column_name type auto_increment PRIMARYKEY;</code></li>
-<li>向一个表中增加一个列做为主键<code>alter table table_name add column column_name type auto_increment PRIMARYKEY;</code></li>
-<li>删除字段<code>alter table form1 drop column 列名;</code></li>
-</ul>
-<h3 id="复制表"><a href="#复制表" class="headerlink" title="复制表"></a>复制表</h3><ul>
-<li>含有主键等信息的完整表结构 <code>CREATE table 新表名 LIKE book;</code></li>
-<li>只有表结构，没有主键等信息 `create table 新表名 select * from books;</li>
-<li>将旧表中的数据灌入新表 <code>INSERT INTO 新表 SELECT * FROM 旧表；</code> 注：新表必须已经存在</li>
-</ul>
-<h3 id="导入导出数据库"><a href="#导入导出数据库" class="headerlink" title="导入导出数据库"></a>导入导出数据库</h3><ul>
-<li>数据库某表的备份,在命令行中输入:<code>mysqldump -u root -p database_name table_name &gt; bak_file_name</code></li>
-<li>导出数据<code>select_statment into outfile”dest_file”;</code></li>
-<li>导入数据<code>load data infile”file_name” into table table_name;</code></li>
-<li>将两个表里的数据拼接后插入到另一个表里<code>insert into tx select t1.com1,concat(t1.com2,t2.com1) from t1,t2;</code></li>
-</ul>
-<h3 id="查询表"><a href="#查询表" class="headerlink" title="查询表"></a>查询表</h3><p>mysql查询的五种子句 </p>
-<h4 id="where-条件查询"><a href="#where-条件查询" class="headerlink" title="where(条件查询)"></a>where(条件查询)</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1 <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;</div></pre></td></tr></table></figure>
-<ul>
-<li>数值谓词:<code>&gt;,=,&lt;,&lt;&gt;,!=,!&gt;,!&lt;,=&gt;,=&lt;</code></li>
-<li>字符串谓词：<code>=，like</code></li>
-<li>日期谓词：<code>=</code> (<code>SELECT * from t1 WHERE create_time = &#39;2011-04-08&#39;</code>)</li>
-</ul>
-<h4 id="having（筛选）"><a href="#having（筛选）" class="headerlink" title="having（筛选）"></a>having（筛选）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<h4 id="group-by（分组）"><a href="#group-by（分组）" class="headerlink" title="group by（分组）"></a>group by（分组）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">GROUP</span> <span class="keyword">BY</span> vip;</div></pre></td></tr></table></figure>
-<h4 id="order-by（排序）"><a href="#order-by（排序）" class="headerlink" title="order by（排序）"></a>order by（排序）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span>;</div></pre></td></tr></table></figure>
-<h4 id="limit（限制结果数）"><a href="#limit（限制结果数）" class="headerlink" title="limit（限制结果数）"></a>limit（限制结果数）</h4><p>查询前n条记录(默认从第0个开始)<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">LIMIT</span> <span class="number">10</span>;</div></pre></td></tr></table></figure></p>
-<p>从结果集中第1个开始查询, 查询10个<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">LIMIT</span> <span class="number">1</span>, <span class="number">10</span>;</div></pre></td></tr></table></figure></p>
-<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><p>sql语句的执行顺序<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">(7)     <span class="keyword">SELECT</span> </div><div class="line">(<span class="number">8</span>)     <span class="keyword">DISTINCT</span> &lt;select_list&gt;</div><div class="line">(<span class="number">1</span>)     <span class="keyword">FROM</span> &lt;left_table&gt;</div><div class="line">(<span class="number">3</span>)     &lt;join_type&gt; <span class="keyword">JOIN</span> &lt;right_table&gt;</div><div class="line">(<span class="number">2</span>)     <span class="keyword">ON</span> &lt;join_condition&gt;</div><div class="line">(<span class="number">4</span>)     <span class="keyword">WHERE</span> &lt;where_condition&gt;</div><div class="line">(<span class="number">5</span>)     <span class="keyword">GROUP</span> <span class="keyword">BY</span> &lt;group_by_list&gt;</div><div class="line">(<span class="number">6</span>)     <span class="keyword">HAVING</span> &lt;having_condition&gt;</div><div class="line">(<span class="number">9</span>)     <span class="keyword">ORDER</span> <span class="keyword">BY</span> &lt;order_by_condition&gt;</div><div class="line">(<span class="number">10</span>)    <span class="keyword">LIMIT</span> &lt;limit_number&gt;</div></pre></td></tr></table></figure></p>
-<p>也就是<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">FROM</span>-&gt;<span class="keyword">ON</span>-&gt;<span class="keyword">JOIN</span>-&gt;<span class="keyword">WHERE</span>-&gt;<span class="keyword">GROUP</span> <span class="keyword">BY</span>-&gt;HAVING-&gt;<span class="keyword">SELECT</span>-&gt;<span class="keyword">DISTINCT</span>-&gt;<span class="keyword">ORDER</span> <span class="keyword">BY</span>-&gt;LIMIT</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/数据库/">数据库</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/数据库/Mysql 增删改查/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/Mysql 增删改查/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/linux/2015-10-12-AWK/" title="AWK" itemprop="url">AWK</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h1><p>awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
-<p>语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk [-F  field-separator]  &apos;commands&apos;  input-file(s)</div></pre></td></tr></table></figure></p>
-<ul>
-<li>-F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符<code>-F &#39;:&#39;</code>)</li>
-<li>commands: ‘PATTERN{COMMAND}’. PATTERN为模式(正在表达式),COMMAND为要执行的命令.</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk  -F &apos;:&apos;  &apos;BEGIN &#123;print &quot;start&quot;&#125;  &#123;print $1&quot;&#125; END &#123;print &quot;end&quot;&#125;&apos; ./txt</div></pre></td></tr></table></figure>
-<p>上面的例子是读取<code>txt</code>文件,然后使用<code>:</code>分割每一行数据,在开始处理的时候输出start，在处理过程中第一列数据，最后输出end。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><p>我们可以在AWK命令中直接使用以下内置变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">ARGC               命令行参数个数</div><div class="line">ARGV               命令行参数排列</div><div class="line">ENVIRON            支持队列中系统环境变量的使用</div><div class="line">FILENAME           awk浏览的文件名</div><div class="line">FNR                浏览文件的记录数</div><div class="line">FS                 设置输入域分隔符，等价于命令行 -F选项</div><div class="line">NF                 浏览记录的域的个数</div><div class="line">NR                 已读的记录数</div><div class="line">OFS                输出域分隔符</div><div class="line">ORS                输出记录分隔符</div><div class="line">RS                 控制记录分隔符</div></pre></td></tr></table></figure></p>
-<p>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;print ARGC&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h3 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h3><p>我们通过赋值的方式直接定义一个变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;BEGIN&#123;size=0;&#125; &#123;size=1+size&#125; &#123;print $1&#125; END&#123;print size&#125;&apos;</div></pre></td></tr></table></figure></p>
-<p>上面我们定义了一个数值型的size变量.</p>
-<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><ul>
-<li><code>= += -= *= /= %= ^= **=</code>    赋值</li>
-<li><code>?:</code>    C条件表达式</li>
-<li><code>||</code>    逻辑或</li>
-<li><code>&amp;&amp;</code>    逻辑与</li>
-<li><code>~ ~!</code>    匹配正则表达式和不匹配正则表达式</li>
-<li><code>&lt; &lt;= &gt; &gt;= != ==</code>    关系运算符</li>
-<li><code>空格</code>    连接</li>
-<li><code>+ -</code>    加，减</li>
-<li><code>* / &amp;</code>    乘，除与求余</li>
-<li><code>+ - !</code>    一元加，减和逻辑非</li>
-<li><code>^ ***</code>    求幂</li>
-<li><code>++ --</code>    增加或减少，作为前缀或后缀</li>
-<li><code>$</code>    字段引用</li>
-<li><code>in</code>    数组成员</li>
-</ul>
-<h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>下面输出了大于10000的java进程号<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;BEGIN&#123;size=0&#125; &#123;if($1&gt;10000) &#123;size++;print $1&#125;&#125; END&#123;print size&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><p>awk中的循环语句借鉴于C语言，支持while、do/while、for、break、continue，这些关键字的语义和C语言中的语义完全相同。</p>
-<h1 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h1><h2 id="sub函数"><a href="#sub函数" class="headerlink" title="sub函数"></a>sub函数</h2><p>匹配从左侧开始找到的第一个符合规则的字符串，然后使用替换字符串替换这些字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<p>上面这个例子就使用sun这个字符串替换了$2中的moon字符串。</p>
-<p>我们还可以指定在哪列执行查找替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;, $1)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<p>上面的例子中我们只在第一列进行查找替换</p>
-<h2 id="gsub函数"><a href="#gsub函数" class="headerlink" title="gsub函数"></a>gsub函数</h2><p>与sub函数不同的是，这个执行的是全局替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;gsub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="index函数"><a href="#index函数" class="headerlink" title="index函数"></a>index函数</h2><p>返回子字符串第一次被匹配的位置，偏移量从位置1开始<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;print$2; $2=index($2, &quot;moon&quot;)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="length函数"><a href="#length函数" class="headerlink" title="length函数"></a>length函数</h2><p>返回记录的字符数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;print$2; $2=length($2)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="substr函数"><a href="#substr函数" class="headerlink" title="substr函数"></a>substr函数</h2><p>返回从位置1开始的子字符串，如果指定长度超过实际长度，就返回整个字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;print substr($2, 2, 10)&#125; &apos;</div></pre></td></tr></table></figure></p>
-<p>上面的例子将$2字符串从第二个字符还是截取，截取10个长度的字符串出来</p>
-<h2 id="toupper和tolower函数"><a href="#toupper和tolower函数" class="headerlink" title="toupper和tolower函数"></a>toupper和tolower函数</h2><p>可用于字符串大小间的转换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;&#123;print toupper($2)&#125; &apos;</div></pre></td></tr></table></figure></p>
-<h2 id="split函数"><a href="#split函数" class="headerlink" title="split函数"></a>split函数</h2><p>可按给定的分隔符把字符串分割为一个数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123; split($2, array, &quot;/&quot;); print array[3]&#125; &apos;</div></pre></td></tr></table></figure></p>
-<p>上面的例子我们将$2这一列按照<code>/</code>进行分割,然后将分割出的数据存储到array数组里. 注意这里首先不需要转义</p>
-<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id=""><a href="#" class="headerlink" title="\"></a>\</h2><p>将下一字符标记为特殊字符、文本、反向引用或八进制转义符。例如，“n”匹配字符“n”。“\n”匹配换行符。序列“\”匹配“\”，“(”匹配“(”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\\/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<p>过滤出带有<code>\</code>的行</p>
-<h2 id="-1"><a href="#-1" class="headerlink" title="^"></a>^</h2><p>匹配输入字符串与最左侧开始的位置的字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/^\\n/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<p>找到所有以<code>\n</code>字符串开始的数据</p>
-<h2 id="-2"><a href="#-2" class="headerlink" title="$"></a>$</h2><p>匹配输入字符串结尾的位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/)。$/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<p>过滤以<code>)。</code>结尾的行</p>
-<h2 id="-3"><a href="#-3" class="headerlink" title="*"></a>*</h2><p>零次或多次匹配前面的字符或子表达式。例如，zo<em> 匹配“z”和“zoo”。</em> 等效于 {0,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/反向引用*/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="-4"><a href="#-4" class="headerlink" title="+"></a>+</h2><p>一次或多次匹配前面的字符或子表达式。例如，“zo+”与“zo”和“zoo”匹配，但与“z”不匹配。+ 等效于 {1,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/反向引用+/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="-5"><a href="#-5" class="headerlink" title="?"></a>?</h2><p>零次或一次匹配前面的字符或子表达式。例如，“do(es)?”匹配“do”或“does”中的“do”。? 等效于 {0,1}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/反向引用?/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="n"><a href="#n" class="headerlink" title="{n}"></a>{n}</h2><p>n 是非负整数。正好匹配 n 次。例如，“o{2}”与“Bob”中的“o”不匹配，但与“food”中的两个“o”匹配。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="n-1"><a href="#n-1" class="headerlink" title="{n,}"></a>{n,}</h2><p>n 是非负整数。至少匹配 n 次。例如，“o{2,}”不匹配“Bob”中的“o”，而匹配“foooood”中的所有 o。“o{1,}”等效于“o+”。“o{0,}”等效于“o*”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="n-m"><a href="#n-m" class="headerlink" title="{n,m}"></a>{n,m}</h2><p>M 和 n 是非负整数，其中 n &lt;= m。匹配至少 n 次，至多 m 次。例如，“o{1,3}”匹配“fooooood”中的头三个 o。’o{0,1}’ 等效于 ‘o?’。注意：您不能将空格插入逗号和数字之间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="-6"><a href="#-6" class="headerlink" title="."></a>.</h2><p>匹配除“\n”之外的任何单个字符。若要匹配包括“\n”在内的任意字符，请使用诸如“[\s\S]”之类的模式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="pattern"><a href="#pattern" class="headerlink" title="(pattern)"></a>(pattern)</h2><p>匹配 pattern 并捕获该匹配的子表达式。可以使用 $0…$9 属性从结果“匹配”集合中检索捕获的匹配。若要匹配括号字符 ( )，请使用“(”或者“)”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="pattern-1"><a href="#pattern-1" class="headerlink" title="(?:pattern)"></a>(?:pattern)</h2><p>匹配 pattern 但不捕获该匹配的子表达式，即它是一个非捕获匹配，不存储供以后使用的匹配。这对于用“or”字符 (|) 组合模式部件的情况很有用。例如，’industr(?:y|ies) 是比 ‘industry|industries’ 更经济的表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="pattern-2"><a href="#pattern-2" class="headerlink" title="(?=pattern)"></a>(?=pattern)</h2><p>执行正向预测先行搜索的子表达式，该表达式匹配处于匹配 pattern 的字符串的起始点的字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?=95|98|NT|2000)’ 匹配“Windows 2000”中的“Windows”，但不匹配“Windows 3.1”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="pattern-3"><a href="#pattern-3" class="headerlink" title="(?!pattern)"></a>(?!pattern)</h2><p>执行反向预测先行搜索的子表达式，该表达式匹配不处于匹配 pattern 的字符串的起始点的搜索字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?!95|98|NT|2000)’ 匹配“Windows 3.1”中的 “Windows”，但不匹配“Windows 2000”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="x-y"><a href="#x-y" class="headerlink" title="x|y"></a>x|y</h2><p>匹配 x 或 y。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/换页符等|十六进制转义码必须正好是两位数长/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="xyz"><a href="#xyz" class="headerlink" title="[xyz]"></a>[xyz]</h2><p>匹配是否包含xyz中任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/[前面至少有]/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="xyz-1"><a href="#xyz-1" class="headerlink" title="[^xyz]"></a>[^xyz]</h2><p>匹配不能包含xyz任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/[^前面至少有]/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="a-z"><a href="#a-z" class="headerlink" title="[a-z]"></a>[a-z]</h2><p>与<code>[xyz]</code>规则相同,只不过这个模式提供了一个范围模式.例如[a-c]实际为匹配[abc]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/[a-b]/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="a-z-1"><a href="#a-z-1" class="headerlink" title="[^a-z]"></a>[^a-z]</h2><p>反向范围字符。匹配不在指定的范围内的任何字符。例如，“[^a-z]”匹配任何不在“a”到“z”范围内的任何字符。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/[^a-z]/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<p>需要注意的是’\t’会被匹配出来</p>
-<h2 id="d"><a href="#d" class="headerlink" title="\d"></a>\d</h2><p>数字字符匹配。等效于 [0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\d/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="D"><a href="#D" class="headerlink" title="\D"></a>\D</h2><p>非数字字符匹配。等效于 [^0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\D/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="n-2"><a href="#n-2" class="headerlink" title="\n"></a>\n</h2><p>换行符匹配。等效于 \x0a 和 \cJ。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\n/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="r"><a href="#r" class="headerlink" title="\r"></a>\r</h2><p>匹配一个回车符。等效于 \x0d 和 \cM。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\t/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="s"><a href="#s" class="headerlink" title="\s"></a>\s</h2><p>匹配任何空白字符，包括空格、制表符、换页符等。与 [ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\s/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="S"><a href="#S" class="headerlink" title="\S"></a>\S</h2><p>匹配任何非空白字符。与 [^ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\S/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="w"><a href="#w" class="headerlink" title="\w"></a>\w</h2><p>匹配任何字类字符，包括下划线。与“[A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\w/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="W"><a href="#W" class="headerlink" title="\W"></a>\W</h2><p>与任何非单词字符匹配。与“[^A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\W/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/linux/">linux</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/linux/2015-10-12-AWK/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/2015-10-12-AWK/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/10/08/数据库/Mysql 索引/" title="Mysql 索引" itemprop="url">Mysql 索引</a>
   </h1>
   <p class="article-author">By
@@ -2251,7 +2249,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/08/数据库/mycat分片/" title="Mycat分片" itemprop="url">Mycat分片</a>
+      <a href="/2015/10/08/数据库/Mysql 数据类型/" title="Mysql 数据类型" itemprop="url">Mysql 数据类型</a>
   </h1>
   <p class="article-author">By
        
@@ -2264,25 +2262,12 @@
 </header>
     <div class="article-content">
         
-        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
-<p>由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解</p>
-<h2 id="分片枚举"><a href="#分片枚举" class="headerlink" title="分片枚举"></a>分片枚举</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"hash-int"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByFileMap"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-hash-int.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
+        <h2 id="varchar"><a href="#varchar" class="headerlink" title="varchar"></a>varchar</h2><p>varchar 字段是将实际内容单独存储在聚簇索引之外，内容开头用1到2个字节表示实际长度（长度超过255时需要2个字节），因此最大长度不能超过65535(2^16)。</p>
 <ul>
-<li>mapFile: 配置文件名称</li>
-<li>type: 0表示Integer，非零表示String</li>
-<li>defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点</li>
-</ul>
-<p>在partition-hash-int.txt文件中,采用<code>x=y</code>的形式, x是columns值. y是节点值. 所有的节点都是从0开始的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a=0</div><div class="line">b=1</div><div class="line">c=2</div></pre></td></tr></table></figure></p>
-<p>上面这个例子中,columns值为1的sql会路由到1的这个节点上. 节点在schema.xml中配置. 具体0对应哪个节点还需要探寻.</p>
-<h2 id="范围约定"><a href="#范围约定" class="headerlink" title="范围约定"></a>范围约定</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"rang-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.AutoPartitionByLong"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>autopartition-long.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>这个规则是约定好,哪个范围的sql对应哪个节点,我们可以这样配置autopartition-long.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0-500=0</div><div class="line">500-1000=1</div><div class="line">1000-1500=2</div></pre></td></tr></table></figure></p>
-<p>这种范围的就只能适应,id分片的了</p>
-<h2 id="求模"><a href="#求模" class="headerlink" title="求模"></a>求模</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"mod-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMod"</span>&gt;</span></div><div class="line"> <span class="comment">&lt;!-- how many data nodes  --&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>这个是根据column的十进制值进行求模分片.</p>
-<h2 id="固定分片hash算法"><a href="#固定分片hash算法" class="headerlink" title="固定分片hash算法"></a>固定分片hash算法</h2><p>该算法是对columns的二进制的低十位进行取模运算.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"partitionByLong"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>8, 1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>128, 256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<ul>
-<li>partitionCount 分片个数列表</li>
-<li>partitionLength 分片范围列表<br>这来个参数的长度必须相等. 上面的例子的意思是, 在对低十位取模运算时, 128以内的sql要平均分配到8个分片上执行. 128 ~ 256的sql要到1个分片上执行</li>
+<li>字符类型若为gbk，每个字符最多占2个字节，最大长度不能超过32766; </li>
+<li>字符类型若为utf8，每个字符最多占3个字节，最大长度不能超过21845。 </li>
+<li>对于英文比较多的论坛 ，使用GBK则每个字符占用2个字节，而使用UTF－8英文却只占一个字节。 </li>
+<li>若定义的时候超过上述限制，则varchar字段会被强行转为text类型，并产生warning。 </li>
 </ul>
 
         
@@ -2308,93 +2293,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/10/08/数据库/mycat分片/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/mycat分片/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/mgits/vim/" title="GVIM" itemprop="url">GVIM</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="vimrc配置文件"><a href="#vimrc配置文件" class="headerlink" title="_vimrc配置文件"></a>_vimrc配置文件</h1><h2 id="GVIM打开即全屏"><a href="#GVIM打开即全屏" class="headerlink" title="GVIM打开即全屏"></a>GVIM打开即全屏</h2><p><code>au GUIEnter * simalt ~x</code></p>
-<h2 id="设置VeraMono字体"><a href="#设置VeraMono字体" class="headerlink" title="设置VeraMono字体"></a>设置VeraMono字体</h2><p><a href="http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf" target="_blank" rel="external">VeraMono</a>需要下载安装(百度字体安装就好)<br><code>set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI</code></p>
-<h2 id="python编译"><a href="#python编译" class="headerlink" title="python编译"></a>python编译</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  </div><div class="line">autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  </div><div class="line">autocmd BufRead *.py nmap &lt;F5&gt; :!python %&lt;CR&gt;  </div><div class="line">autocmd BufRead *.py nmap &lt;F6&gt; :make&lt;CR&gt;  </div><div class="line">autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口</div></pre></td></tr></table></figure>
-<h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
-<li>搜索：<code>/</code>向下搜索. <code>?</code>向上搜索</li>
-<li>替换： <code>:%s/abc/123/g</code>, 将abc都替换为123</li>
-<li>删除行：<code>dd</code>删除整行. <code>5dd</code>从当前行开始向后删除5整行. <code>D</code>从光标删除到行尾</li>
-<li>删除字符：<code>x</code>向后删除一个字符. <code>X</code>向前删除一个字符</li>
-<li>撤销: <code>u</code></li>
-<li>复制:<code>yy</code>复制一行. <code>5yy</code>从当前行开始向下复制5行</li>
-<li>粘贴: <code>p</code>光标向下移动. <code>P</code>光标不动</li>
-<li>块选择: <code>V</code>多行整行选择. <code>v</code>多行字符选择. <code>ctrl v</code>矩阵方式选择.</li>
-<li>光标移动：<code>$</code>移动到行尾. <code>0</code>移动到行首. <code>G</code>移动到最后一行. <code>gg</code>移动到最一行.</li>
-<li>窗口编辑: <code>：split</code>水平新建窗口. <code>：vsplit</code>垂直分割.</li>
-<li>在窗口间游走: <code>Ctrl W</code> 加 <code>h, j, k, l</code>一起使用</li>
-<li>分页编辑： <code>：tabnew</code>新建分页。 <code>：tabclose</code>关闭当前分页. <code>：tabonly</code>关闭其他所有的分页</li>
-<li>顶部底部跳转： 顶部<code>`, 底部</code>shift + g`</li>
-</ul>
-<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><h2 id="Pydiction"><a href="#Pydiction" class="headerlink" title="Pydiction "></a><a href="http://www.vim.org/scripts/script.php?script_id=850" target="_blank" rel="external">Pydiction </a></h2><p>python自动补全插件</p>
-<p>配置,<code>_vimrc</code>文件追加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">filetype plugin on</div><div class="line">let g:pydiction_location = <span class="string">'D:/Program Files/Vim/pydiction/complete-dict'</span></div></pre></td></tr></table></figure></p>
-<p>然后将<code>pydiction/after/ftplugin/python_pydiction.vim</code>复制到<code>Vim\vimfiles\ftplugin\python_pydiction.vim</code></p>
-<h2 id="The-NERD-tree"><a href="#The-NERD-tree" class="headerlink" title="The NERD tree"></a><a href="http://www.vim.org/scripts/script.php?script_id=1658" target="_blank" rel="external">The NERD tree</a></h2><p>文件树. 将下载下来的压缩包解压到<code>Vim\vimfiles</code></p>
-<ul>
-<li><code>:NERDTree</code> 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径</li>
-<li><code>:NERDTreeClose</code> 关闭目录树</li>
-</ul>
-<p>修改_vimrc配置文件,添加映射<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nmap &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</div></pre></td></tr></table></figure></p>
-<h2 id="bsh-vim"><a href="#bsh-vim" class="headerlink" title="bsh.vim"></a><a href="http://www.vim.org/scripts/script.php?script_id=1202" target="_blank" rel="external">bsh.vim</a></h2><p>Shell语法高亮</p>
-<p>只需将<code>bsh.vim</code>文件拷贝到<code>Vim\vimfiles\syntax</code>就可以了</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/mgits/vim/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mgits/vim/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/10/08/数据库/Mysql 数据类型/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/Mysql 数据类型/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -2436,11 +2335,17 @@
 		<ul>
 		
 		  
+		
+		  
 			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>63</sup></a></li>
+		  
+		
+		  
+		
 		  
 		
 		  
@@ -2476,7 +2381,13 @@
 		  
 		
 		  
+		
+		  
+		
+		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
 		  
 		
 		  
@@ -2485,6 +2396,8 @@
 		
 		  
 			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
 		  
 		
 		</ul>

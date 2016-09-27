@@ -73,6 +73,212 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/04/26/spring/Spring 任务调度/" title="Spring 任务调度" itemprop="url">Spring 任务调度</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-26T07:00:00.000Z" itemprop="datePublished"> Published 2016-04-26</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="https://spring.io/guides/gs/scheduling-tasks/" target="_blank" rel="external">官方文档</a>学习</p>
+<p>测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.Date;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.EnableScheduling;</div><div class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.Scheduled;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</div><div class="line"></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="meta">@EnableScheduling</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestScheduledTasks</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		SpringApplication.run(TestScheduledTasks.class);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScheduledTasks</span> </span>&#123;</div><div class="line">	<span class="comment">// 当任务完成之后, 再延迟fixedDelay毫秒后执行</span></div><div class="line">	<span class="meta">@Scheduled</span>(fixedDelay = <span class="number">3000</span>)</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fixedDelay</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		System.out.println(<span class="string">"fixedDelay : "</span> + <span class="keyword">new</span> Date());</div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 每三秒钟执行一次</span></div><div class="line">	<span class="meta">@Scheduled</span>(fixedRate = <span class="number">3000</span>)</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fixedRate</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</div><div class="line">		System.out.println(<span class="string">"fixedRate : "</span> + <span class="keyword">new</span> Date());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">fixedRate : Tue Apr 26 15:59:15 CST 2016</div><div class="line">fixedDelay : Tue Apr 26 15:59:15 CST 2016</div><div class="line">fixedRate : Tue Apr 26 15:59:21 CST 2016</div><div class="line">fixedRate : Tue Apr 26 15:59:24 CST 2016</div><div class="line">fixedRate : Tue Apr 26 15:59:27 CST 2016</div><div class="line">fixedDelay : Tue Apr 26 15:59:27 CST 2016</div></pre></td></tr></table></figure></p>
+<p><code>Scheduled</code>的注解还有</p>
+<ul>
+<li>cron : 这个可以让我们使用cron表达式</li>
+</ul>
+<p>最后添加所需要的Maven依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></div><div class="line">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gs-scheduling-tasks<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.3.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Spring-Guice/">Spring Guice</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/26/spring/Spring 任务调度/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/26/spring/Spring 任务调度/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/23/nginx/nginx web服务器/" title="nginx web服务器" itemprop="url">nginx web服务器</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-23T07:00:00.000Z" itemprop="datePublished"> Published 2016-04-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>官方文档<a href="https://www.nginx.com/resources/admin-guide/nginx-web-server/" target="_blank" rel="external"></a>学习</p>
+<p>在Nginx中每个用来处理HTTP请求的virtual server都被称为<code>location</code>. <code>location</code>可以参与请求处理的整个过程. <code>location</code>可以代理一个请求或者直接返回一个文件. 不但如此, 在<code>location</code>中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的<code>location</code>或者其他的virtual server. </p>
+<h2 id="Setting-Up-Virtual-Servers"><a href="#Setting-Up-Virtual-Servers" class="headerlink" title="Setting Up Virtual Servers"></a>Setting Up Virtual Servers</h2><p>Nginx插件配置必须最少包含一个<code>server</code>指令(用于定义虚拟服务器-virtual server). 当Nginx插件处理一个请求时, 它首先会选择处理该请求的虚拟服务器. 一个虚拟服务器定义在<code>http</code>上下文里, 例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http &#123;</div><div class="line">    server &#123;</div><div class="line">        # Server configuration</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在<code>http</code>上下文里可以定义多个<code>server</code>指令, 这样一来就可以实现多个虚拟服务器了.</p>
+<p>在<code>server</code>指令里通常包含一个<code>listen</code>指令, 通过<code>listen</code>指令来指定监听请求的IP地址和端口号(或者Unix domain socket and path). IPv4 和 IPv6 地址都可进行配置</p>
+<p>下面的例子展示了在IP地址<code>127.0.0.1</code>和端口<code>8080</code>上进行网络事件监听<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen 127.0.0.1:8080;</div><div class="line">    # The rest of server configuration</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果端口忽略不写的话, Nginx插件会使用标准端口. 还有如果IP地址忽略不填的话, Nginx插件会在所有的IP地址上进行网络事件监听. 如果没有配置<code>listen</code>指令的话, 在超级用户权限下, 标准端口是<code>80/tcp</code>, 默认端口<code>8000/tcp</code>.</p>
+<p>如果有多个<code>server</code>指令里配置的IP地址和端口匹配到请求, 那么Nginx插件会根据请求的<code>Host header</code>字段与<code>server_name</code>指令进行匹配. 我们可以将<code>server_name</code>指令配置成一个全名称的地址, 或者使用通配符, 正则表达式. 如果想要使用通配符的话, 可以在地址的开头或者结尾使用<code>*</code>.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen      80;</div><div class="line">    server_name example.org www.example.org;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果有多个<code>server_name</code>指令匹配到<code>Host header</code>, Nginx插件会根据如下顺序进行匹配查找, 直到找到第一个.</p>
+<ol>
+<li>名字完全符合</li>
+<li>以<code>*</code>开始的, 最符合的名字, 例如<code>*.example.org</code></li>
+<li>以<code>*</code>结束的, 最符合的名字, 例如<code>mail.*</code></li>
+<li>第一个匹配正则表达式的</li>
+</ol>
+<p>如果请求中的<code>Host header</code>没有匹配到一个合适的server name, Nginx插件会将该消息路由到默认服上面去. 默认服是在<code>nginx.conf</code>文件里进行配置的. 我们也可以使用<code>default_server</code>参数在<code>listen</code>指令中进行显示设定.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen      80 default_server;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Configuring-Locations"><a href="#Configuring-Locations" class="headerlink" title="Configuring Locations"></a>Configuring Locations</h2><p>Nginx插件可以根据请求的URI将请求派发到不同的代理上, 或者处理不同的文件. 这种功能是通过<code>server</code>指令里的<code>location</code>指令完成的.</p>
+<p>例如你可以定义三个<code>location</code>指令, 一个用来将请求派发到一个代理服务器, 一个用来将其他的请求派发到另外的一个代理服务器,最后的一个用来提供本地文件系统服务.</p>
+<p>NGINX Plus tests request URIs against the parameters of all location directives and applies the directives defined in the matching location. Inside each location block, it is usually possible (with a few exceptions) to place even more location directives to further refine the processing for specific groups of requests.</p>
+<blockquote>
+<p>注意, 在这篇教程中, location这个字指的是一个单独的<code>location</code>上下文.</p>
+</blockquote>
+<p>有俩种<code>location</code>指令参数</p>
+<ul>
+<li>prefix strings : 请求的URI是以固定的字符串开头, 例如prefix strings是<code>/some/path/</code>, 那么<code>/some/path/document.html</code>就是这种类型的, 但是<code>/my-site/some/path</code>就不是.</li>
+<li>regular expressions :</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /some/path/ &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当使用表达式的时候, 如果使用<code>~</code>开头则表示要区分大小写. 如果以<code>~*</code>开头,则表示忽略大小写. 下面的例子是只要请求包含<code>.html</code>或者<code>.htm</code>这些字符串就都匹配<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location ~ \.html? &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Nginx插件进行location匹配时, 优先进行<code>prefix string</code>匹配, 如果<code>prefix string</code>匹配不到再进行正则匹配.</p>
+<p>Higher priority is given to regular expressions, unless the ^~ modifier is used. Among the prefix strings NGINX Plus selects the most specific one (that is, the longest and most complete string). The exact logic for selecting a location to process a request is given below:</p>
+<ol>
+<li>Test the URI against all prefix strings.</li>
+<li>The = (equals sign) modifier defines an exact match of the URI and a prefix string. If the exact match is found, the search stops.</li>
+<li>If the ^~ (caret-tilde) modifier prepends the longest matching prefix string, the regular expressions are not checked.</li>
+<li>Store the longest matching prefix string.</li>
+<li>Test the URI against regular expressions.</li>
+<li>Break on the first matching regular expression and use the corresponding location.</li>
+<li>If no regular expression matches, use the location corresponding to the stored prefix string.</li>
+</ol>
+<p><code>=</code>的典型用例是请求<code>/</code>, 如果请求<code>/</code>是非常频繁的, 在<code>location</code>指令上设置<code>= /</code>可以大幅提升访问速度, 这是因为在路径搜索匹配时, 一旦匹配到就不再继续搜素匹配了, 节约了时间.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location = / &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>location</code>上下文中可以包含多个指令, 用于说明如何处理一个请求, 例如是想提供静态文件服务还是想向一个代理服务器派发请求. 例如, 在下面的例子中, 第一个请求就是提供<code>/data</code>目录下的静态文件服务, 第二个请求就是向一个代理服务器<code>www.example.com</code>派发请求.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    location /images/ &#123;</div><div class="line">        root /data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location / &#123;</div><div class="line">        proxy_pass http://www.example.com;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>root</code>指令用于指定提供静态文件服务的文件系统路径. 如果有一个请求<code>/images/example.png</code>, 那么nginx插件会在文件系统中进行如下搜索<code>/data/images/example.png</code>.</li>
+<li><code>proxy_pass</code>指令会将请求派发到代理服务器上. 在上面的例子中, 只要是请求不是以<code>/images/</code>开头的, 那么请求都会派发到那个代理服务器上.</li>
+</ul>
+<h2 id="Using-Variables"><a href="#Using-Variables" class="headerlink" title="Using Variables"></a>Using Variables</h2><p>你可以在配置文件里使用变量, 以便Nginx插件可以根据不同的情况进行不同的处理. 变量在运行时进行计算, 然后将值传递给指令使用. 我们可以通过<code>$</code>来引用一个变量(例如<code>$time</code>).</p>
+<p>在Nginx里已经为我们提前定义好了一些变量, 例如<a href="http://nginx.org/en/docs/http/ngx_http_core_module.html?&amp;_ga=1.54594219.1025068217.1457188479#variables" target="_blank" rel="external">core HTTP</a>. 而且你也可以使用<code>set</code>, <code>map</code>, <code>geo</code>等指令自定义一些变量.</p>
+<h2 id="Returning-Specific-Status-Codes"><a href="#Returning-Specific-Status-Codes" class="headerlink" title="Returning Specific Status Codes"></a>Returning Specific Status Codes</h2><p>在一些web站点中, 由于资源移除或者其他原因, 我们需要直接给前端返回一个错误码, 那么我们可以使用<code>return</code>指令来完成.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /wrong/url &#123;</div><div class="line">    return 404;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面的例子中, 第一个参数是一个错误码. 第二个参数是一个可选参数(代表一个重连接的URL)<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /permanently/moved/url &#123;</div><div class="line">    return 301 http://www.example.com/moved/here;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>return</code>指令既可以放在<code>location</code>指令里, 也可以放在<code>server</code>指令里</p>
+<h2 id="Rewriting-URIs-in-Requests"><a href="#Rewriting-URIs-in-Requests" class="headerlink" title="Rewriting URIs in Requests"></a>Rewriting URIs in Requests</h2><p>请求URI可以在被处理时通过<code>rewrite</code>指令被多次修改, <code>rewrite</code>指令包含一个可选参数和俩个必选参数.</p>
+<ul>
+<li>第一个参数(必填)是用来匹配请求的正则表达式.</li>
+<li>第二个参数(必填)是用来指向重连接所需要匹配的URI.(下面的例子中我们采用的是正则表达式进行匹配)</li>
+<li>第三个参数(选填)是用来标记是继续执行下一个重连接还是执行其他操作(例如返回一个错误码)<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /users/ &#123;</div><div class="line">    rewrite ^/users/(.*)$ /show?user=$1 break;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在<code>server</code>或者<code>location</code>指令中可以包含多个<code>rewrite</code>指令. Nginx插件会根据<code>rewrite</code>指令出现的顺序依次执行.</p>
+<p>After NGINX processes a set of rewriting instructions, it selects a location context according to the new URI. If the selected location contains rewrite directives, they are executed in turn. If the URI matches any of those, a search for the new location starts after all defined rewrite directives are processed.</p>
+<p>下面的例子展示里<code>rewrite</code>和<code>return</code>指令混合使用的方式<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    ...</div><div class="line">    rewrite ^(/download/.*)/media/(.*)\..*$ $1/mp3/$2.mp3 last;</div><div class="line">    rewrite ^(/download/.*)/audio/(.*)\..*$ $1/mp3/$2.ra  last;</div><div class="line">    return  403;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的例子区分了俩组URI. <code>/download/some/media/file</code>的URI会被替换成<code>/download/some/mp3/file.mp3</code>. 由于这个<code>rewrite</code>指令后面跟里一个<code>last</code>标记, 因此下面的<code>rewrite</code>和<code>return</code>指令就不会再执行到了. 但是如果URI例如<code>/download/some/audio/file</code>并不符合第一个,那么Nginx插件会继续匹配到第二个, 当然第二个符合, 于是URI被替换成<code>/download/some/mp3/file.ra</code>. 如果前俩个都不符合的话, 那么就会返回<code>403</code>错误码.</p>
+<p>下面, 我们会介绍俩种终止URI<code>rewrite</code>执行的方式:</p>
+<ul>
+<li><code>last</code> – 这种方式只是会在当前的<code>server</code>或者<code>location</code>上下文中停止, 但是Nginx插件会对重写的URI继续在<code>location</code>里进行查找.</li>
+<li><code>break</code> – 它不会对新的URI在当前上下文中进行查找, 而是简单的终止掉整个过程.</li>
+</ul>
+<h2 id="Rewriting-HTTP-Responses"><a href="#Rewriting-HTTP-Responses" class="headerlink" title="Rewriting HTTP Responses"></a>Rewriting HTTP Responses</h2><p>有时候你可能需要重写或者替换HTTP响应中的内容, 或者将一个字符串替换为另一个. <code>sub_filter</code>指令可以实现类似于这种的需求. <code>sub_filter</code>支持变量以及链式替换, 以便实现更加复杂的重写功能.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">    sub_filter      /blog/ /blog-staging/;</div><div class="line">    sub_filter_once off;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另一个例子是将<code>http://</code>改变为<code>https://</code>, 而且将localhost地址改变为请求头中的主机名. <code>sub_filter_once</code>指令是告诉NGINX在<code>location</code>指令里可以开启多个<code>sub_filter</code>.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">    sub_filter     'href="http://127.0.0.1:8080/'    'href="http://$host/';</div><div class="line">    sub_filter     'img src="http://127.0.0.1:8080/' 'img src="http://$host/';</div><div class="line">    sub_filter_once on;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意, 如果响应已经在一个<code>sub_filter</code>修改过里, 那么即使另一个<code>sub_filter</code>也匹配到了,但是不会再次修改.</p>
+</blockquote>
+<h2 id="Handling-Errors"><a href="#Handling-Errors" class="headerlink" title="Handling Errors"></a>Handling Errors</h2><p>使用<code>error_page</code>指令, 我们可以配置Nginx插件返回一个自定义的界面或者响应一个不同的错误码,甚至可以重定向到一个新的地址上面去. 在下面的例子中, <code>error_page</code>指令会在发生错误时返回一个指定的界面<code>/404.html</code>, 而不是像默认的返回一个404错误码.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">error_page 404 /404.html;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意, 这个指令并不是直接就返回了(<code>return</code>指令直接返回), 而是指定一种当错误发生时的一种处理方式.</p>
+</blockquote>
+<p>在下面的例子中, 当Nginx找不到文件时, 它会返回<code>301</code>错误码, 同时告诉客户端重定向到<code>http:/example.com/new/path.html</code>这个界面上.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /old/path.html &#123;</div><div class="line">    error_page 404 =301 http:/example.com/new/path.html;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>The following configuration is an example of passing a request to the back end when a file is not found. Because there is no status code specified after the equals sign in the error_page directive, the response to the client has the status code returned by the proxied server (not necessarily 404).</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    ...</div><div class="line">    location /images/ &#123;</div><div class="line">        # Set the root directory to search for the file</div><div class="line">        root /data/www;</div><div class="line"></div><div class="line">        # Disable logging of errors related to file existence</div><div class="line">        open_file_cache_errors off;</div><div class="line"></div><div class="line">        # Make an internal redirect if the file is not found</div><div class="line">        error_page 404 = /fetch$uri;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location /fetch/ &#123;</div><div class="line">        proxy_pass http://backend/;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>The error_page directive instructs NGINX Plus to make an internal redirect when a file is not found. The $uri variable in the final parameter to the error_page directive holds the URI of the current request, which gets passed in the redirect.</p>
+<p>For example, if /images/some/file is not found, it is replaced with /fetch/images/some/file and a new search for a location starts. As a result, the request ends up in the second location context and is proxied to <a href="http://backend/" target="_blank" rel="external">http://backend/</a>.</p>
+<p>The open_file_cache_errors directive prevents writing an error message if a file is not found. This is not necessary here since missing files are correctly handled.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/04/23/nginx/nginx web服务器/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/23/nginx/nginx web服务器/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/04/22/spring/Spring 异步方法访问/" title="Spring 异步方法访问" itemprop="url">Spring 异步方法访问</a>
   </h1>
   <p class="article-author">By
@@ -818,131 +1024,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/03/16/数据库/数据压缩/" title="Mysql 数据压缩" itemprop="url">Mysql 数据压缩</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-16T07:00:00.000Z" itemprop="datePublished"> Published 2016-03-16</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>我们在创建一个表的时候, 可以采用压缩技术<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> CUSTOMER (  </div><div class="line">…  </div><div class="line">) <span class="keyword">COMPRESS</span> YES;</div></pre></td></tr></table></figure></p>
-<p>如果想要在中途停止表的压缩<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> CUSTOMER <span class="keyword">COMPRESS</span> <span class="keyword">NO</span>;</div></pre></td></tr></table></figure></p>
-<p>但是停止之后并不会对已经存在的数据进行解压缩,如果想要对已经存在的数据解压缩的话, 我们可以使用<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">REORG TABLE CUSTOMER;</div></pre></td></tr></table></figure></p>
-<p>这个语句会根据当前表的压缩状态来重新整理表, 对数据进行压缩解压缩.</p>
-<p>如果我们只是想要对某个字符串字段(一般是针对Blob字段进行压缩)进行压缩的话, 那么我们可以使用压缩函数<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">COMPRESS(string_to_compress)</div></pre></td></tr></table></figure></p>
-<p>然后再对其进行解压缩<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UNCOMPRESS()</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/数据库/">数据库</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/16/数据库/数据压缩/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/数据库/数据压缩/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/16/mgits/git/" title="git" itemprop="url">git</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-16T07:00:00.000Z" itemprop="datePublished"> Published 2016-03-16</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="添加忽略文件"><a href="#添加忽略文件" class="headerlink" title="添加忽略文件"></a>添加忽略文件</h2><p>如果想要忽略文件或者文件夹的话, 可以直接修改<code>.gitignore</code>文件.</p>
-<p>例如我要忽略pulic目录下所有的文件和文件夹, 只需要在<code>.gitignore</code>文件中添加如下一行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public/*</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>需要注意的是, 如果你在master分之上将其忽略了, 那么当你跳转到其他分之的时候, 你还需要修改其他分支的<code>.gitignore</code>文件</p>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/16/mgits/git/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/mgits/git/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2016/03/16/mgits/编码和补码/" title="原码 反码 补码" itemprop="url">原码 反码 补码</a>
   </h1>
   <p class="article-author">By
@@ -995,6 +1076,69 @@
 	
 	  	<span></span>
 		<a href="/2016/03/16/mgits/编码和补码/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/mgits/编码和补码/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/16/数据库/数据压缩/" title="Mysql 数据压缩" itemprop="url">Mysql 数据压缩</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-16T07:00:00.000Z" itemprop="datePublished"> Published 2016-03-16</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>我们在创建一个表的时候, 可以采用压缩技术<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> CUSTOMER (  </div><div class="line">…  </div><div class="line">) <span class="keyword">COMPRESS</span> YES;</div></pre></td></tr></table></figure></p>
+<p>如果想要在中途停止表的压缩<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> CUSTOMER <span class="keyword">COMPRESS</span> <span class="keyword">NO</span>;</div></pre></td></tr></table></figure></p>
+<p>但是停止之后并不会对已经存在的数据进行解压缩,如果想要对已经存在的数据解压缩的话, 我们可以使用<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">REORG TABLE CUSTOMER;</div></pre></td></tr></table></figure></p>
+<p>这个语句会根据当前表的压缩状态来重新整理表, 对数据进行压缩解压缩.</p>
+<p>如果我们只是想要对某个字符串字段(一般是针对Blob字段进行压缩)进行压缩的话, 那么我们可以使用压缩函数<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">COMPRESS(string_to_compress)</div></pre></td></tr></table></figure></p>
+<p>然后再对其进行解压缩<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UNCOMPRESS()</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/16/数据库/数据压缩/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/数据库/数据压缩/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1076,6 +1220,68 @@
 	
 	  	<span></span>
 		<a href="/2016/03/16/数据库/SQL Mod/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/数据库/SQL Mod/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/16/mgits/git/" title="git" itemprop="url">git</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-16T07:00:00.000Z" itemprop="datePublished"> Published 2016-03-16</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="添加忽略文件"><a href="#添加忽略文件" class="headerlink" title="添加忽略文件"></a>添加忽略文件</h2><p>如果想要忽略文件或者文件夹的话, 可以直接修改<code>.gitignore</code>文件.</p>
+<p>例如我要忽略pulic目录下所有的文件和文件夹, 只需要在<code>.gitignore</code>文件中添加如下一行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public/*</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>需要注意的是, 如果你在master分之上将其忽略了, 那么当你跳转到其他分之的时候, 你还需要修改其他分支的<code>.gitignore</code>文件</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/16/mgits/git/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/mgits/git/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1226,73 +1432,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/03/06/nginx/nginx文件服务器/" title="Nginx 静态资源服务" itemprop="url">Nginx 静态资源服务</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>修改nginx.conf文件<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">       listen       8000;</div><div class="line"></div><div class="line">       autoindex on;             #开启索引功能</div><div class="line">       autoindex_exact_size off; # 关闭计算文件确切大小（单位bytes），只显示大概大小（单位kb、mb、gb）</div><div class="line">       autoindex_localtime on;   # 显示本机时间而非 GMT 时间</div><div class="line"></div><div class="line">       root /home/files/;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
-<p>然后在地址栏里访问<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://192.168.15.20:8000/</div></pre></td></tr></table></figure></p>
-<p>我们就能看见文件列表了.</p>
-<h2 id="403异常"><a href="#403异常" class="headerlink" title="403异常"></a>403异常</h2><p>产生了403异常的话, 说明nginx没有访问该目录, 也就是<code>/home/files/</code>的权限, 需要将nginx用户添加到这个目录的用户组里.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">usermod -G groupname username</div></pre></td></tr></table></figure></p>
-<p>然后查看用户组<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /etc/group | grep groupname</div></pre></td></tr></table></figure></p>
-<p>然后nginx用户要有要访问目录的上层所有父目录的可执行权限, 要有访问目录的读权限</p>
-<p>最后nginx用户是在nginx.conf配置里<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#user  nobody;</span></div><div class="line">user  www www;</div><div class="line">worker_processes  4;</div></pre></td></tr></table></figure></p>
-<p>user就是了</p>
-<h2 id="禁止访问目录"><a href="#禁止访问目录" class="headerlink" title="禁止访问目录"></a>禁止访问目录</h2><p>跟Apache的Deny from all类似，nginx有deny all指令来实现。</p>
-<p>禁止对叫dirdeny目录的访问并返回403 Forbidden，可以使用下面的配置:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">location /dirdeny &#123;</div><div class="line">      deny all;</div><div class="line">      return 403;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/06/nginx/nginx文件服务器/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx文件服务器/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2016/03/06/nginx/nginx负载均衡/" title="Nginx负载均衡实战" itemprop="url">Nginx负载均衡实战</a>
   </h1>
   <p class="article-author">By
@@ -1342,6 +1481,73 @@
 	
 	  	<span></span>
 		<a href="/2016/03/06/nginx/nginx负载均衡/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx负载均衡/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/06/nginx/nginx文件服务器/" title="Nginx 静态资源服务" itemprop="url">Nginx 静态资源服务</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>修改nginx.conf文件<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">       listen       8000;</div><div class="line"></div><div class="line">       autoindex on;             #开启索引功能</div><div class="line">       autoindex_exact_size off; # 关闭计算文件确切大小（单位bytes），只显示大概大小（单位kb、mb、gb）</div><div class="line">       autoindex_localtime on;   # 显示本机时间而非 GMT 时间</div><div class="line"></div><div class="line">       root /home/files/;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>然后在地址栏里访问<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://192.168.15.20:8000/</div></pre></td></tr></table></figure></p>
+<p>我们就能看见文件列表了.</p>
+<h2 id="403异常"><a href="#403异常" class="headerlink" title="403异常"></a>403异常</h2><p>产生了403异常的话, 说明nginx没有访问该目录, 也就是<code>/home/files/</code>的权限, 需要将nginx用户添加到这个目录的用户组里.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">usermod -G groupname username</div></pre></td></tr></table></figure></p>
+<p>然后查看用户组<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /etc/group | grep groupname</div></pre></td></tr></table></figure></p>
+<p>然后nginx用户要有要访问目录的上层所有父目录的可执行权限, 要有访问目录的读权限</p>
+<p>最后nginx用户是在nginx.conf配置里<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#user  nobody;</span></div><div class="line">user  www www;</div><div class="line">worker_processes  4;</div></pre></td></tr></table></figure></p>
+<p>user就是了</p>
+<h2 id="禁止访问目录"><a href="#禁止访问目录" class="headerlink" title="禁止访问目录"></a>禁止访问目录</h2><p>跟Apache的Deny from all类似，nginx有deny all指令来实现。</p>
+<p>禁止对叫dirdeny目录的访问并返回403 Forbidden，可以使用下面的配置:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">location /dirdeny &#123;</div><div class="line">      deny all;</div><div class="line">      return 403;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/06/nginx/nginx文件服务器/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx文件服务器/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1434,142 +1640,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/05/nginx/nginx配置/" title="Nginx配置大全" itemprop="url">Nginx配置大全</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-05T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>下面我们看一下Nginx官方给出的nginx.config可有的全部配置内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line">user       www www;  ## Default: nobody</div><div class="line"># 在Nginx启动的时候会启动一个Master进程,和N个worker进程,Master讲接收到的任务分配给worker进程执行. worker进程数一般与主机的CPU的核心数相等</div><div class="line">worker_processes  5;  ## Default: 1</div><div class="line"># 错误日志的输出位置. (TODO 错误日志指的是哪些?)</div><div class="line">error_log  logs/error.log;</div><div class="line"># Nginx启动时的主进程ID</div><div class="line">pid        logs/nginx.pid;</div><div class="line"># worker进程能打开的最多的文件数(TODO 在正式环境中Nginx都会打开什么文件? 指的是Socket连接吗?)</div><div class="line">worker_rlimit_nofile 8192;</div><div class="line"></div><div class="line"># events模块, 包含nginx中所有处理连接的设置</div><div class="line">events &#123;</div><div class="line">  # worker进程能打开的最大的连接数 (小于worker_rlimit_nofile数)</div><div class="line">  worker_connections  4096;  ## Default: 1024</div><div class="line">&#125;</div><div class="line"></div><div class="line"># http模块, 用于处理http请求</div><div class="line">http &#123;</div><div class="line">  # 引用mime.types配置, 主要是配置HTTP请求中的mineType类型</div><div class="line">  include    conf/mime.types;</div><div class="line">  # 引用nginx的代理配置. (TODO)</div><div class="line">  include    /etc/nginx/proxy.conf;</div><div class="line">  # 为nginx引用cgi配置</div><div class="line">  include    /etc/nginx/fastcgi.conf;</div><div class="line">  # 指定当HTTP请求没有任何请求路径时展示的界面.</div><div class="line">  index    index.html index.htm index.php;</div><div class="line"></div><div class="line">  #</div><div class="line">  default_type application/octet-stream;</div><div class="line">  # log输出格式</div><div class="line">  log_format   main &apos;$remote_addr - $remote_user [$time_local]  $status &apos;</div><div class="line">    &apos;&quot;$request&quot; $body_bytes_sent &quot;$http_referer&quot; &apos;</div><div class="line">    &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;</div><div class="line"></div><div class="line">  # 访问nginx时, 记录的http请求的日志存储位置 (TODO  如何以时间分割文件?)</div><div class="line">  access_log   logs/access.log  main;</div><div class="line">  # sendfile并不是发送文件, 而是设置磁盘和TCP Socket传输数据时直接通过系统缓存实现, 不再经过用户区的Read, write操作</div><div class="line">  sendfile     on;</div><div class="line">  # 设置在发送HTTP头文件时一次性全部发送, 而不是一个接一个的发送. (TODO)</div><div class="line">  tcp_nopush   on;</div><div class="line">  # TODO</div><div class="line">  server_names_hash_bucket_size 128; # this seems to be required for some vhosts</div><div class="line"></div><div class="line">  # 开启一个网络监听服务</div><div class="line">  server &#123; # php/fastcgi</div><div class="line">    # 该server监听的端口</div><div class="line">    listen       80;</div><div class="line">    # 绑定到的域名地址, 一般我们在主机都是使用localhost</div><div class="line">    server_name  domain1.com www.domain1.com;</div><div class="line">    # 该server生成的日志的保存地址</div><div class="line">    access_log   logs/domain1.access.log  main;</div><div class="line">    # 指定http请求中主机资源起始位置, 也就是`http://localhost:8090/`后面的位置</div><div class="line">    root         html;</div><div class="line"></div><div class="line">    # 所有请求以.php结尾的文件都到下面的代理地址中进行代理请求</div><div class="line">    location ~ \.php$ &#123;</div><div class="line">      fastcgi_pass   127.0.0.1:1025;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  # 再设置一个网络服务</div><div class="line">  server &#123; # simple reverse-proxy</div><div class="line">    listen       80;</div><div class="line">    server_name  domain2.com www.domain2.com;</div><div class="line">    access_log   logs/domain2.access.log  main;</div><div class="line"></div><div class="line">    # serve static files</div><div class="line">    location ~ ^/(images|javascript|js|css|flash|media|static)/  &#123;</div><div class="line">      root    /var/www/virtual/big.server.com/htdocs;</div><div class="line">      expires 30d;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    # 反向代理设置, 将/下所有的请求进行转发</div><div class="line">    location / &#123;</div><div class="line">      #设置反向代理的地址, 將80端口接受到的请求转发到localhost的8080端口上</div><div class="line">      proxy_pass      http://127.0.0.1:8080;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  # 设置反向代理</div><div class="line">  upstream big_server_com &#123;</div><div class="line">    # 按照权重将代理过来的请求代理到俩个代理服务器上</div><div class="line">    server 127.0.0.3:8000 weight=5;</div><div class="line">    server 127.0.0.3:8001 weight=5;</div><div class="line">    server 192.168.0.1:8000;</div><div class="line">    server 192.168.0.1:8001;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  server &#123; # simple load balancing</div><div class="line">    listen          80;</div><div class="line">    server_name     big.server.com;</div><div class="line">    access_log      logs/big.server.access.log main;</div><div class="line"></div><div class="line">    location / &#123;</div><div class="line">      # 设置反向代理, 代理到big_server_com上(upstream刚刚定义的)</div><div class="line">      proxy_pass      http://big_server_com;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面谈到的location涉及到的内容较多, 我们单独介绍一下:</p>
-<p>nginx location语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">location [=|~|~*|^~] /uri/ &#123; … &#125;</div></pre></td></tr></table></figure></p>
-<ul>
-<li><code>=</code> 严格匹配。如果这个查询匹配，那么将停止搜索并立即处理此请求。</li>
-<li><code>~</code> 为区分大小写匹配(可用正则表达式)</li>
-<li><code>~*</code> 为不区分大小写匹配(可用正则表达式)</li>
-<li><code>!~</code> 区分大小写不匹配</li>
-<li><code>!~*</code> 不区分大小写不匹配</li>
-<li><code>^~</code> 如果路径匹配那么不测试正则表达式。</li>
-</ul>
-<p>上面的配置引用里其他的配置文件,而且很多配置没有配置选项,下面是Nginx官网给出的另一种配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div></pre></td><td class="code"><pre><div class="line">user  www www;</div><div class="line">worker_processes  2;</div><div class="line">pid /var/run/nginx.pid;</div><div class="line"></div><div class="line"># [ debug | info | notice | warn | error | crit ]</div><div class="line">error_log  /var/log/nginx.error_log  info;</div><div class="line"></div><div class="line">events &#123;</div><div class="line">  worker_connections   2000;</div><div class="line">  # use [ kqueue | rtsig | epoll | /dev/poll | select | poll ] ;</div><div class="line">  use kqueue;</div><div class="line">&#125;</div><div class="line"></div><div class="line">http &#123;</div><div class="line">  include       conf/mime.types;</div><div class="line">  default_type  application/octet-stream;</div><div class="line"></div><div class="line">  log_format main      &apos;$remote_addr - $remote_user [$time_local]  &apos;</div><div class="line">    &apos;&quot;$request&quot; $status $bytes_sent &apos;</div><div class="line">    &apos;&quot;$http_referer&quot; &quot;$http_user_agent&quot; &apos;</div><div class="line">    &apos;&quot;$gzip_ratio&quot;&apos;;</div><div class="line"></div><div class="line">  log_format download  &apos;$remote_addr - $remote_user [$time_local]  &apos;</div><div class="line">    &apos;&quot;$request&quot; $status $bytes_sent &apos;</div><div class="line">    &apos;&quot;$http_referer&quot; &quot;$http_user_agent&quot; &apos;</div><div class="line">    &apos;&quot;$http_range&quot; &quot;$sent_http_content_range&quot;&apos;;</div><div class="line"></div><div class="line">  # HTTP请求,客户端相关设置</div><div class="line">  client_header_timeout  3m;</div><div class="line">  client_body_timeout    3m;</div><div class="line">  send_timeout           3m;</div><div class="line"></div><div class="line">  client_header_buffer_size    1k;</div><div class="line">  large_client_header_buffers  4 4k;</div><div class="line"></div><div class="line">  # 消息发送时开启gzip设置</div><div class="line">  gzip on;</div><div class="line">  gzip_min_length  1100;</div><div class="line">  gzip_buffers     4 8k;</div><div class="line">  gzip_types       text/plain;</div><div class="line"></div><div class="line">  output_buffers   1 32k;</div><div class="line">  postpone_output  1460;</div><div class="line"></div><div class="line">  sendfile         on;</div><div class="line">  tcp_nopush       on;</div><div class="line"></div><div class="line">  tcp_nodelay      on;</div><div class="line">  send_lowat       12000;</div><div class="line"></div><div class="line">  keepalive_timeout  75 20;</div><div class="line"></div><div class="line">  # lingering_time     30;</div><div class="line">  # lingering_timeout  10;</div><div class="line">  # reset_timedout_connection  on;</div><div class="line"></div><div class="line"></div><div class="line">  server &#123;</div><div class="line">    listen        one.example.com;</div><div class="line">    server_name   one.example.com  www.one.example.com;</div><div class="line"></div><div class="line">    access_log   /var/log/nginx.access_log  main;</div><div class="line"></div><div class="line">    location / &#123;</div><div class="line">      proxy_pass         http://127.0.0.1/;</div><div class="line">      proxy_redirect     off;</div><div class="line"></div><div class="line">      proxy_set_header   Host             $host;</div><div class="line">      proxy_set_header   X-Real-IP        $remote_addr;</div><div class="line">      # proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;</div><div class="line"></div><div class="line">      client_max_body_size       10m;</div><div class="line">      client_body_buffer_size    128k;</div><div class="line"></div><div class="line">      client_body_temp_path      /var/nginx/client_body_temp;</div><div class="line"></div><div class="line">      proxy_connect_timeout      90;</div><div class="line">      proxy_send_timeout         90;</div><div class="line">      proxy_read_timeout         90;</div><div class="line">      proxy_send_lowat           12000;</div><div class="line"></div><div class="line">      proxy_buffer_size          4k;</div><div class="line">      proxy_buffers              4 32k;</div><div class="line">      proxy_busy_buffers_size    64k;</div><div class="line">      proxy_temp_file_write_size 64k;</div><div class="line"></div><div class="line">      proxy_temp_path            /var/nginx/proxy_temp;</div><div class="line"></div><div class="line">      charset  koi8-r;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    error_page  404  /404.html;</div><div class="line"></div><div class="line">    location /404.html &#123;</div><div class="line">      root  /spool/www;</div><div class="line"></div><div class="line">      charset         on;</div><div class="line">      source_charset  koi8-r;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location /old_stuff/ &#123;</div><div class="line">      rewrite   ^/old_stuff/(.*)$  /new_stuff/$1  permanent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location /download/ &#123;</div><div class="line">      valid_referers  none  blocked  server_names  *.example.com;</div><div class="line"></div><div class="line">      if ($invalid_referer) &#123;</div><div class="line">        #rewrite   ^/   http://www.example.com/;</div><div class="line">        return   403;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      # rewrite_log  on;</div><div class="line">      # rewrite /download/*/mp3/*.any_ext to /download/*/mp3/*.mp3</div><div class="line">      rewrite ^/(download/.*)/mp3/(.*)\..*$ /$1/mp3/$2.mp3 break;</div><div class="line"></div><div class="line">      root         /spool/www;</div><div class="line">      # autoindex    on;</div><div class="line">      access_log   /var/log/nginx-download.access_log  download;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location ~* ^.+\.(jpg|jpeg|gif)$ &#123;</div><div class="line">      root         /spool/www;</div><div class="line">      access_log   off;</div><div class="line">      expires      30d;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/05/nginx/nginx配置/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/05/nginx/nginx配置/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/05/Java/Java ListVSMap/" title="List VS Map" itemprop="url">List VS Map</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-05T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-05</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在日常的使用中, 使用的最多的结构就是List和Map了. 其中又以ArrayList和HashMap使用的最多. 今天特意找了一些时间来看一下他们各自的实现以及添加索引数据时的性能.</p>
-<p>首先看一下ArrayList.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">transient</span> Object[] elementData;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></div><div class="line">    elementData[size++] = e;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    rangeCheck(index);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> elementData(index);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>它的内部就是一个Object类型的数组, 在添加数据时首先确保数组不会越界, 如果会产生越界则内部进行数组扩容拷贝操作.</p>
-<p>对于<code>HashMap</code>它的Javadoc中是如此说的:</p>
-<p><code>HashMap</code>是hash table的一个实现。它与<code>HashTable</code>不同之处就是它是非同步的而且键值都支持null.对于put和get操作，HashMap的耗时都是固定的，不会因为Map的大小而变化。因为hash函数会将元素分配到不同的bucket里面取. HashMap的迭代操作与它的容量（bucket数量+键值对数量）成正比关系.</p>
-<p>一般情况下, load factor的默认值0.75, 这个值在空间和时间上找到较为平衡的查找性能。 如果高于这个值的话，会减少空间占用但是会增加查询的消耗(这点反应在了大多数的hashMap操作中，包括get和put操作).</p>
-<p>下来我们首先看一下它的数据成员<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// load factor 默认值</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</div><div class="line"></div><div class="line"><span class="comment">// hash表存储数据的数据结构, 每个Node都是一个散列桶, 每个桶里是一个链表</span></div><div class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</div><div class="line"></div><div class="line"><span class="comment">// hash表散列桶的大小阀值, 如果超过这个值就对hash表进行拓容 (大小为: capacity * load factor)</span></div><div class="line"><span class="keyword">int</span> threshold;</div><div class="line"></div><div class="line"><span class="comment">// hash表使用的loadFactor</span></div><div class="line"><span class="keyword">final</span> <span class="keyword">float</span> loadFactor;</div></pre></td></tr></table></figure></p>
-<p>然后我们看一下<code>put()</code>方法的实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,                    <span class="keyword">boolean</span> evict)</span> </span>&#123;</div><div class="line">        Node&lt;K,V&gt;[] tab;</div><div class="line">        Node&lt;K,V&gt; p;</div><div class="line">        <span class="keyword">int</span> n, i;</div><div class="line">        <span class="comment">// 如果table不存在或者table大小为0, 则重新生成一个table</span></div><div class="line">        <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</div><div class="line">            n = (tab = resize()).length;</div><div class="line">        <span class="comment">// 根据与hash值与操作找到要插入的元素所在的散列桶的位置</span></div><div class="line">        <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>)</div><div class="line">            <span class="comment">// 发现当前位置上的散列桶上没有Node则,重新生成一个Node</span></div><div class="line">            tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 发现当前散列桶已经有元素了</span></div><div class="line">            Node&lt;K,V&gt; e; K k;</div><div class="line">            <span class="comment">// 判断插入key是否与找到的Node的key是否相等, 如果相等则将p赋值给e, 进行value的赋值操作</span></div><div class="line">            <span class="keyword">if</span> (p.hash == hash &amp;&amp; ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</div><div class="line">                e = p;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)</div><div class="line">                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 插入的key与散列桶链表中的第一个元素不相符, 则遍历整个链表</span></div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</div><div class="line">                    <span class="comment">// 在连表中找不到存在的元素, 则生成一个新的Node插入进来</span></div><div class="line">                    <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;</div><div class="line">                        p.next = newNode(hash, key, value, <span class="keyword">null</span>);</div><div class="line">                        <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">// -1 for 1st</span></div><div class="line">                            treeifyBin(tab, hash);</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    &#125;</div><div class="line">                    <span class="comment">// 找到了与要插入的key相等的散列表的元素, 则停止继续查找</span></div><div class="line">                    <span class="keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    p = e;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 在散列表里找到了相同的key的hash值, 就直接插入了, 不再需要进行下面的hash表拓容操作</span></div><div class="line">            <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// existing mapping for key</span></div><div class="line">                V oldValue = e.value;</div><div class="line">                <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>)</div><div class="line">                    e.value = value;</div><div class="line">                afterNodeAccess(e);</div><div class="line">                <span class="keyword">return</span> oldValue;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        ++modCount;</div><div class="line">        <span class="comment">// 占有了一个新的hash桶, 判断如果超过了Hash表散列桶的阀值,则对hash表进行拓容</span></div><div class="line">        <span class="keyword">if</span> (++size &gt; threshold)</div><div class="line">            resize();</div><div class="line">        afterNodeInsertion(evict);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>从上面的逻辑我们可以看出,<code>HashMap</code>在插入元素的时候,首先是根据key的hash值找到散列桶的位置, 然后再根据key与散列桶中的散列表的数据进行便利查找.</p>
-<p>因此我们应该尽量的调大HashMap的容量, 尽可能的让桶的容量大于元素的个数, 同时尽可能的保证key值hash函数的正确性, 否则如果元素过多但是桶的数量太少, 会将hash 表退化到链表结构, 将O(1)的查找复杂度变成O(N). 说完HashMap的查找复杂度, 我们再来看一下HashMap的内存占有, 每当我们插入一个新的元素的时候都会生成一个<code>Node</code>对象<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> hash;</div><div class="line">    <span class="keyword">final</span> K key;</div><div class="line">    V value;</div><div class="line">    Node&lt;K,V&gt; next;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/05/Java/Java ListVSMap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/05/Java/Java ListVSMap/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
@@ -1598,11 +1668,17 @@
 		<ul>
 		
 		  
+		
+		  
 			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>61</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>63</sup></a></li>
+		  
+		
+		  
+		
 		  
 		
 		  
@@ -1638,7 +1714,13 @@
 		  
 		
 		  
+		
+		  
+		
+		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
 		  
 		
 		  
@@ -1647,6 +1729,8 @@
 		
 		  
 			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
 		  
 		
 		</ul>

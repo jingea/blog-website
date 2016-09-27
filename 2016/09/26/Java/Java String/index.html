@@ -1,0 +1,568 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Java 字符串优化 | ming15</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="ming15">
+    
+
+    
+    <meta name="description" content="今天review同事写的一段代码, 在枚举中动态生成字符串key的时候, 使用字符串常量进行拼接, 虽然感觉这么写会有一定的GC性能消耗, 但是具体原因有点忘记了, 今天就重新写段测试代码,进行测试一下.
+当使用字符串(String)的时候, Java编译器会给我们自动的做一些优化编译的工作. 下面我们分别用三段代码, 从GC和编译俩个角度看看Java是如何给我们优化的.
+首先呢,我们使用-XX:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 字符串优化">
+<meta property="og:url" content="http://www.ming15.wang/2016/09/26/Java/Java String/index.html">
+<meta property="og:site_name" content="ming15">
+<meta property="og:description" content="今天review同事写的一段代码, 在枚举中动态生成字符串key的时候, 使用字符串常量进行拼接, 虽然感觉这么写会有一定的GC性能消耗, 但是具体原因有点忘记了, 今天就重新写段测试代码,进行测试一下.
+当使用字符串(String)的时候, Java编译器会给我们自动的做一些优化编译的工作. 下面我们分别用三段代码, 从GC和编译俩个角度看看Java是如何给我们优化的.
+首先呢,我们使用-XX:">
+<meta property="og:updated_time" content="2016-09-27T04:58:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 字符串优化">
+<meta name="twitter:description" content="今天review同事写的一段代码, 在枚举中动态生成字符串key的时候, 使用字符串常量进行拼接, 虽然感觉这么写会有一定的GC性能消耗, 但是具体原因有点忘记了, 今天就重新写段测试代码,进行测试一下.
+当使用字符串(String)的时候, Java编译器会给我们自动的做一些优化编译的工作. 下面我们分别用三段代码, 从GC和编译俩个角度看看Java是如何给我们优化的.
+首先呢,我们使用-XX:">
+
+    
+    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/09/26/Java/Java String/" title="Java 字符串优化" itemprop="url">Java 字符串优化</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2016-09-26T07:00:00.000Z" itemprop="datePublished"> Published 2016-09-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			
+		
+		</div>
+		
+		<p>今天review同事写的一段代码, 在枚举中动态生成字符串key的时候, 使用字符串常量进行拼接, 虽然感觉这么写会有一定的GC性能消耗, 但是具体原因有点忘记了, 今天就重新写段测试代码,进行测试一下.</p>
+<p>当使用字符串(<code>String</code>)的时候, Java编译器会给我们自动的做一些优化编译的工作. 下面我们分别用三段代码, 从GC和编译俩个角度看看Java是如何给我们优化的.</p>
+<p>首先呢,我们使用<code>-XX:+PrintHeapAtGC  -Xmx10M -Xms10M</code>这个参数分别运行以下三段代码</p>
+<p>首先看一下<code>TestCombine1</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCombine1</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String str1 = <span class="keyword">new</span> String(<span class="string">"123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789"</span>);</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">			String string1 = <span class="string">"string"</span> + str1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行结果为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">&#123;Heap before GC invocations=1 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 2048K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 100% used [0x00000000ffd00000,0x00000000fff00000,0x00000000fff00000)</div><div class="line">  from space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 7168K, used 0K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 0% used [0x00000000ff600000,0x00000000ff600000,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2754K, capacity 4480K, committed 4480K, reserved 1056768K</div><div class="line">  class space    used 296K, capacity 384K, committed 384K, reserved 1048576K</div><div class="line">Heap after GC invocations=1 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 488K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 0% used [0x00000000ffd00000,0x00000000ffd00000,0x00000000fff00000)</div><div class="line">  from space 512K, 95% used [0x00000000fff00000,0x00000000fff7a020,0x00000000fff80000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line"> ParOldGen       total 7168K, used 530K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 7% used [0x00000000ff600000,0x00000000ff684ac0,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2754K, capacity 4480K, committed 4480K, reserved 1056768K</div><div class="line">  class space    used 296K, capacity 384K, committed 384K, reserved 1048576K</div><div class="line">&#125;</div><div class="line">&#123;Heap before GC invocations=2 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 2536K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 100% used [0x00000000ffd00000,0x00000000fff00000,0x00000000fff00000)</div><div class="line">  from space 512K, 95% used [0x00000000fff00000,0x00000000fff7a020,0x00000000fff80000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line"> ParOldGen       total 7168K, used 530K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 7% used [0x00000000ff600000,0x00000000ff684ac0,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2969K, capacity 4490K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 319K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">Heap after GC invocations=2 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 504K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 0% used [0x00000000ffd00000,0x00000000ffd00000,0x00000000fff00000)</div><div class="line">  from space 512K, 98% used [0x00000000fff80000,0x00000000ffffe010,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 7168K, used 581K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 8% used [0x00000000ff600000,0x00000000ff691670,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2969K, capacity 4490K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 319K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">&#125;</div><div class="line">...</div><div class="line">&#123;Heap before GC invocations=38 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 2080K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 100% used [0x00000000ffd00000,0x00000000fff00000,0x00000000fff00000)</div><div class="line">  from space 512K, 6% used [0x00000000fff00000,0x00000000fff08000,0x00000000fff80000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line"> ParOldGen       total 7168K, used 1212K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 16% used [0x00000000ff600000,0x00000000ff72f050,0x00000000ffd00000)</div><div class="line"> Metaspace       used 3236K, capacity 4494K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 351K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">Heap after GC invocations=38 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 32K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 0% used [0x00000000ffd00000,0x00000000ffd00000,0x00000000fff00000)</div><div class="line">  from space 512K, 6% used [0x00000000fff80000,0x00000000fff88000,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 7168K, used 1212K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 16% used [0x00000000ff600000,0x00000000ff72f050,0x00000000ffd00000)</div><div class="line"> Metaspace       used 3236K, capacity 4494K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 351K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们看到一共GC了38次.</p>
+<p>接下来看一下<code>TestCombine2</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCombine2</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">			String string3 = <span class="string">"string"</span> + getFieldConstant();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getFieldConstant</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">&#123;Heap before GC invocations=1 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 2048K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 100% used [0x00000000ffd00000,0x00000000fff00000,0x00000000fff00000)</div><div class="line">  from space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 7168K, used 0K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 0% used [0x00000000ff600000,0x00000000ff600000,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2752K, capacity 4480K, committed 4480K, reserved 1056768K</div><div class="line">  class space    used 296K, capacity 384K, committed 384K, reserved 1048576K</div><div class="line">Heap after GC invocations=1 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 504K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 0% used [0x00000000ffd00000,0x00000000ffd00000,0x00000000fff00000)</div><div class="line">  from space 512K, 98% used [0x00000000fff00000,0x00000000fff7e010,0x00000000fff80000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line"> ParOldGen       total 7168K, used 489K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 6% used [0x00000000ff600000,0x00000000ff67a598,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2752K, capacity 4480K, committed 4480K, reserved 1056768K</div><div class="line">  class space    used 296K, capacity 384K, committed 384K, reserved 1048576K</div><div class="line">&#125;</div><div class="line">...</div><div class="line">&#123;Heap before GC invocations=38 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 2080K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 100% used [0x00000000ffd00000,0x00000000fff00000,0x00000000fff00000)</div><div class="line">  from space 512K, 6% used [0x00000000fff00000,0x00000000fff08000,0x00000000fff80000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line"> ParOldGen       total 7168K, used 1317K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 18% used [0x00000000ff600000,0x00000000ff749738,0x00000000ffd00000)</div><div class="line"> Metaspace       used 3234K, capacity 4494K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 351K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">Heap after GC invocations=38 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 32K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 0% used [0x00000000ffd00000,0x00000000ffd00000,0x00000000fff00000)</div><div class="line">  from space 512K, 6% used [0x00000000fff80000,0x00000000fff88000,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 7168K, used 1317K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 18% used [0x00000000ff600000,0x00000000ff749738,0x00000000ffd00000)</div><div class="line"> Metaspace       used 3234K, capacity 4494K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 351K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>也GC了38次</p>
+<p>接下来看一下<code>TestCombine3</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCombine3</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String str2 = <span class="string">"123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789"</span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</div><div class="line">			String string2 = <span class="string">"string"</span> + str2;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">&#123;Heap before GC invocations=1 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 2048K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 100% used [0x00000000ffd00000,0x00000000fff00000,0x00000000fff00000)</div><div class="line">  from space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 7168K, used 0K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 0% used [0x00000000ff600000,0x00000000ff600000,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2753K, capacity 4480K, committed 4480K, reserved 1056768K</div><div class="line">  class space    used 296K, capacity 384K, committed 384K, reserved 1048576K</div><div class="line">Heap after GC invocations=1 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 504K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 0% used [0x00000000ffd00000,0x00000000ffd00000,0x00000000fff00000)</div><div class="line">  from space 512K, 98% used [0x00000000fff00000,0x00000000fff7e030,0x00000000fff80000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line"> ParOldGen       total 7168K, used 435K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 6% used [0x00000000ff600000,0x00000000ff66ccc0,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2753K, capacity 4480K, committed 4480K, reserved 1056768K</div><div class="line">  class space    used 296K, capacity 384K, committed 384K, reserved 1048576K</div><div class="line">&#125;</div><div class="line">&#123;Heap before GC invocations=2 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 2552K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 100% used [0x00000000ffd00000,0x00000000fff00000,0x00000000fff00000)</div><div class="line">  from space 512K, 98% used [0x00000000fff00000,0x00000000fff7e030,0x00000000fff80000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff80000,0x00000000fff80000,0x0000000100000000)</div><div class="line"> ParOldGen       total 7168K, used 435K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 6% used [0x00000000ff600000,0x00000000ff66ccc0,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2970K, capacity 4490K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 319K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">Heap after GC invocations=2 (full 0):</div><div class="line"> PSYoungGen      total 2560K, used 488K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)</div><div class="line">  eden space 2048K, 0% used [0x00000000ffd00000,0x00000000ffd00000,0x00000000fff00000)</div><div class="line">  from space 512K, 95% used [0x00000000fff80000,0x00000000ffffa020,0x0000000100000000)</div><div class="line">  to   space 512K, 0% used [0x00000000fff00000,0x00000000fff00000,0x00000000fff80000)</div><div class="line"> ParOldGen       total 7168K, used 570K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)</div><div class="line">  object space 7168K, 7% used [0x00000000ff600000,0x00000000ff68e880,0x00000000ffd00000)</div><div class="line"> Metaspace       used 2970K, capacity 4490K, committed 4864K, reserved 1056768K</div><div class="line">  class space    used 319K, capacity 386K, committed 512K, reserved 1048576K</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>一共就GC了俩次, 为什么结果是这样的呢？我们使用javap分析一下(限于篇幅, 我们只看最关键的部分).</p>
+<p>首先看TestCombine1反编译之后的源码<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">javap -v TestCombine1</div><div class="line">...</div><div class="line">Constant pool:</div><div class="line">   #1 = Methodref          #13.#33        // java/lang/Object."&lt;init&gt;":()V</div><div class="line">   #2 = Integer            100000</div><div class="line">   #3 = Class              #34            // java/lang/StringBuilder</div><div class="line">   #4 = Methodref          #3.#33         // java/lang/StringBuilder."&lt;init&gt;":()V</div><div class="line">   #5 = String             #35            // string</div><div class="line">   #6 = Methodref          #3.#36         // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">   #7 = Fieldref           #12.#37        // testString/TestCombine1.str1:Ljava/lang/String;</div><div class="line">   #8 = Methodref          #3.#38         // java/lang/StringBuilder.toString:()Ljava/lang/String;</div><div class="line">   #9 = Class              #39            // java/lang/String</div><div class="line">  #10 = String             #40            // 123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">  #11 = Methodref          #9.#41         // java/lang/String."&lt;init&gt;":(Ljava/lang/String;)V</div><div class="line">  #12 = Class              #42            // testString/TestCombine1</div><div class="line">  #13 = Class              #43            // java/lang/Object</div><div class="line">  #14 = Utf8               str1</div><div class="line">  #15 = Utf8               Ljava/lang/String;</div><div class="line">...</div><div class="line">  #33 = NameAndType        #16:#17        // "&lt;init&gt;":()V</div><div class="line">  #34 = Utf8               java/lang/StringBuilder</div><div class="line">  #35 = Utf8               string</div><div class="line">  #36 = NameAndType        #44:#45        // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">  #37 = NameAndType        #14:#15        // str1:Ljava/lang/String;</div><div class="line">  #38 = NameAndType        #46:#47        // toString:()Ljava/lang/String;</div><div class="line">  #39 = Utf8               java/lang/String</div><div class="line">  #40 = Utf8               123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">  #41 = NameAndType        #16:#48        // "&lt;init&gt;":(Ljava/lang/String;)V</div><div class="line">  #42 = Utf8               testString/TestCombine1</div><div class="line">  #43 = Utf8               java/lang/Object</div><div class="line">  #44 = Utf8               append</div><div class="line">  #45 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">  #46 = Utf8               toString</div><div class="line">  #47 = Utf8               ()Ljava/lang/String;</div><div class="line">  #48 = Utf8               (Ljava/lang/String;)V</div><div class="line">&#123;</div><div class="line">...</div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">    descriptor: ([Ljava/lang/String;)V</div><div class="line">    flags: ACC_PUBLIC, ACC_STATIC</div><div class="line">    Code:</div><div class="line">      stack=2, locals=3, args_size=1</div><div class="line">         0: iconst_0</div><div class="line">         1: istore_1</div><div class="line">         2: iload_1</div><div class="line">         3: ldc           #2                  // int 100000</div><div class="line">         5: if_icmpge     36</div><div class="line">         8: new           #3                  // class java/lang/StringBuilder</div><div class="line">        11: dup</div><div class="line">        12: invokespecial #4                  // Method java/lang/StringBuilder."&lt;init&gt;":()V</div><div class="line">        15: ldc           #5                  // String string</div><div class="line">        17: invokevirtual #6                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">        20: getstatic     #7                  // Field str1:Ljava/lang/String;</div><div class="line">        23: invokevirtual #6                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">        26: invokevirtual #8                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;</div><div class="line">        29: astore_2</div><div class="line">        30: iinc          1, 1</div><div class="line">        33: goto          2</div><div class="line">        36: return</div><div class="line">...</div><div class="line">SourceFile: "TestCombine1.java"</div></pre></td></tr></table></figure></p>
+<p>通过看main方法, 我们可以看出, 是将<code>&quot;string&quot;</code>字符串常量和 <code>str1</code>这个静态常量通过<code>StringBuilder</code>进行拼接得到的<code>string1</code>. 所以不断产生<code>StringBuilder</code>对象,就不断地进行GC了</p>
+<p>然后看TestCombine2反编译之后的源码<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">ζ javap -v TestCombine2</div><div class="line">...</div><div class="line">Constant pool:</div><div class="line">   #1 = Methodref          #11.#30        // java/lang/Object."&lt;init&gt;":()V</div><div class="line">   #2 = Integer            100000</div><div class="line">   #3 = Class              #31            // java/lang/StringBuilder</div><div class="line">   #4 = Methodref          #3.#30         // java/lang/StringBuilder."&lt;init&gt;":()V</div><div class="line">   #5 = String             #32            // string</div><div class="line">   #6 = Methodref          #3.#33         // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">   #7 = Methodref          #10.#34        // testString/TestCombine2.getFieldConstant:()Ljava/lang/String;</div><div class="line">   #8 = Methodref          #3.#35         // java/lang/StringBuilder.toString:()Ljava/lang/String;</div><div class="line">   #9 = String             #36            // 123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">  #10 = Class              #37            // testString/TestCombine2</div><div class="line">  #11 = Class              #38            // java/lang/Object</div><div class="line">  #12 = Utf8               &lt;init&gt;</div><div class="line">  #13 = Utf8               ()V</div><div class="line">...</div><div class="line">  #26 = Utf8               getFieldConstant</div><div class="line">  #27 = Utf8               ()Ljava/lang/String;</div><div class="line">  #28 = Utf8               SourceFile</div><div class="line">  #29 = Utf8               TestCombine2.java</div><div class="line">  #30 = NameAndType        #12:#13        // "&lt;init&gt;":()V</div><div class="line">  #31 = Utf8               java/lang/StringBuilder</div><div class="line">  #32 = Utf8               string</div><div class="line">  #33 = NameAndType        #39:#40        // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">  #34 = NameAndType        #26:#27        // getFieldConstant:()Ljava/lang/String;</div><div class="line">  #35 = NameAndType        #41:#27        // toString:()Ljava/lang/String;</div><div class="line">  #36 = Utf8               123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">  #37 = Utf8               testString/TestCombine2</div><div class="line">  #38 = Utf8               java/lang/Object</div><div class="line">  #39 = Utf8               append</div><div class="line">  #40 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">  #41 = Utf8               toString</div><div class="line">&#123;</div><div class="line">...</div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">    descriptor: ([Ljava/lang/String;)V</div><div class="line">    flags: ACC_PUBLIC, ACC_STATIC</div><div class="line">    Code:</div><div class="line">      stack=2, locals=3, args_size=1</div><div class="line">         0: iconst_0</div><div class="line">         1: istore_1</div><div class="line">         2: iload_1</div><div class="line">         3: ldc           #2                  // int 100000</div><div class="line">         5: if_icmpge     36</div><div class="line">         8: new           #3                  // class java/lang/StringBuilder</div><div class="line">        11: dup</div><div class="line">        12: invokespecial #4                  // Method java/lang/StringBuilder."&lt;init&gt;":()V</div><div class="line">        15: ldc           #5                  // String string</div><div class="line">        17: invokevirtual #6                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">        20: invokestatic  #7                  // Method getFieldConstant:()Ljava/lang/String;</div><div class="line">        23: invokevirtual #6                  // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</div><div class="line">        26: invokevirtual #8                  // Method java/lang/StringBuilder.toString:()Ljava/lang/String;</div><div class="line">        29: astore_2</div><div class="line">        30: iinc          1, 1</div><div class="line">        33: goto          2</div><div class="line">        36: return</div><div class="line">...</div><div class="line">SourceFile: "TestCombine2.java"</div></pre></td></tr></table></figure></p>
+<p>和TestCombine1类似, 在mian方法中， 也是使用<code>StringBuilder</code>进行拼接处理的</p>
+<p>最后看下TestCombine3反编译之后的源码<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">ζ javap -v TestCombine3</div><div class="line">...</div><div class="line">Constant pool:</div><div class="line">   #1 = Methodref          #5.#26         // java/lang/Object."&lt;init&gt;":()V</div><div class="line">   #2 = Integer            1000000</div><div class="line">   #3 = Class              #27            // testString/TestCombine3</div><div class="line">   #4 = String             #28            // string123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">   #5 = Class              #29            // java/lang/Object</div><div class="line">   #6 = Utf8               str2</div><div class="line">   #7 = Utf8               Ljava/lang/String;</div><div class="line">   #8 = Utf8               ConstantValue</div><div class="line">   #9 = String             #30            // 123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">...</div><div class="line">  #26 = NameAndType        #10:#11        // "&lt;init&gt;":()V</div><div class="line">  #27 = Utf8               testString/TestCombine3</div><div class="line">  #28 = Utf8               string123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">  #29 = Utf8               java/lang/Object</div><div class="line">  #30 = Utf8               123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">&#123;</div><div class="line">...</div><div class="line">  public static void main(java.lang.String[]);</div><div class="line">    descriptor: ([Ljava/lang/String;)V</div><div class="line">    flags: ACC_PUBLIC, ACC_STATIC</div><div class="line">    Code:</div><div class="line">      stack=2, locals=3, args_size=1</div><div class="line">         0: iconst_0</div><div class="line">         1: istore_1</div><div class="line">         2: iload_1</div><div class="line">         3: ldc           #2                  // int 1000000</div><div class="line">         5: if_icmpge     17</div><div class="line">         8: ldc           #4                  // String string123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div><div class="line">        10: astore_2</div><div class="line">        11: iinc          1, 1</div><div class="line">        14: goto          2</div><div class="line">        17: return</div><div class="line">...</div><div class="line">&#125;</div><div class="line">SourceFile: "TestCombine3.java"</div></pre></td></tr></table></figure></p>
+<p>我们看<code>#4 = String             #28            // string123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</code>这一行, Java编译器已经将<code>String string2 = &quot;string&quot; + str2;</code>这俩个字符串字面量常量<br>优化成了一个字符串字面量常量.</p>
+<p>从上面的分析中我们可以得到, 在Java编译器进行优化的话, 只有当字符串字面量进行拼接的时候, 才会对其进行优化.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.ming15.wang/2016/09/26/Java/Java String/" data-title="Java 字符串优化 | ming15" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/09/23/Java/并发 wait sleep/"  title="wait sleep 不同">
+ <strong>下一篇：</strong><br/> 
+ <span>wait sleep 不同
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/09/26/Java/Java String/" data-title="Java 字符串优化" data-url="http://www.ming15.wang/2016/09/26/Java/Java String/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>63</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
+		  
+		
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+		  
+		
+		  
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ming15">ming15</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
