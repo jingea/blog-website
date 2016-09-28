@@ -19,9 +19,9 @@ title: Java加密 -- 对称加密
 下面介绍了分组密码的各种工作模式
 
 ###  电子密码本模式-ECB
-![]()
+![](http://images2015.cnblogs.com/blog/855014/201605/855014-20160523221603834-1959236035.jpg)
 
-* 优点：易于理解且简单易行;便于实现并行操作;没有误差产传递的问题
+* 优点：简单易行，便于实现并行操作;没有误差产传递的问题
 * 缺点：不能隐藏明文模式,如果明文重复,则对于的密文也会重复,密文内容很容易被替换,重拍,删除,重放; 对明文主动攻击的可能性较高
 * 用途：适用于加密密钥,随机数等短数据.例如安全地传递DES秘药,ECB是最合适的模式
 
@@ -66,7 +66,7 @@ title: Java加密 -- 对称加密
 
 ## 算法实现
 
-### DESCoder
+### DES
 DES安全编码组件  密钥算法 Java 6 只支持56bit密钥  Bouncy Castle 支持64bit密钥
 ```java
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -202,7 +202,7 @@ public class DESCoder {
 }
 ```
 
-### DESedeCoder
+### DESede
 
 ```java
 /**
@@ -335,7 +335,7 @@ public class DESedeCoder {
 }
 ```
 
-### AESCoder
+### AES
 
 ```java
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -449,7 +449,7 @@ public class AESCoder {
 }
 ```
 
-### RC算法实现
+### RC
 ```java
 import org.junit.Assert;
 import org.junit.Test;
@@ -491,27 +491,28 @@ public class RCCoder {
 }
 ```
 
-### PBE算法
+### PBE
 PBE算法(Password Base Encryption，基于口令加密), 它并不是一种新的加密算法, 而是采用现有的一些加密算法(DES, RC2等等)通过口令(替代秘钥)和加"盐"的方式来进行加密. 如果单单使用口令的话,很容易被穷举破解出来,但是在口令上加盐的话, 会进一步加大破解难度.
 ```java
-算法							密钥长度(默认值)	工作模式	填充方式													备注
-PBEWithMD5AndDES				56(56)				CBC			PKCS5Padding												java6实现
-PBEWithMD5AndTripeDES			112、168(168)		CBC			PKCS6Padding												java7实现
-PBEWithSHA1AndDESede			112、168(168)		CBC			PKCS7Padding												java8实现
-PBEWithSHA1AndRC2_40			40至1024(128)		CBC			PKCS8Padding												java9实现
-PBEWithMD5AndDES				64(64)				CBC			PKCS5Padding/PKCS7Padding/ISO10126Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithMD5AndRC2				128(128)			CBC			PKCS5Padding/PKCS7Padding/ISO10127Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHA1AndDES				64(64)				CBC			PKCS5Padding/PKCS7Padding/ISO10128Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHA1AndRC2				128(128)			CBC			PKCS5Padding/PKCS7Padding/ISO10129Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHAAndIDEA-CBC			128(128)			CBC			PKCS5Padding/PKCS7Padding/ISO10130Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHAAnd2-KeyTripleDES-CBC	128(128)			CBC			PKCS5Padding/PKCS7Padding/ISO10131Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHAAnd3-KeyTripleDES-CBC	192(192)			CBC			PKCS5Padding/PKCS7Padding/ISO10132Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHAAnd128BitRC2-CBC		128(128)			CBC			PKCS5Padding/PKCS7Padding/ISO10133Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHAAnd40BitRC2-CBC		40(40)				CBC			PKCS5Padding/PKCS7Padding/ISO10134Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHAAnd128BitRC4			128(128)			CBC			PKCS5Padding/PKCS7Padding/ISO10135Padding/ZeroBytePadding	BouncyCastle实现
-PBEWithSHAAnd40BitRC4			40(40)				CBC			PKCS5Padding/PKCS7Padding/ISO10136Padding/ZeroBytePadding	BouncyCastle实现
+算法                            密钥长度(默认值)    工作模式    填充方式                                                    备注
+PBEWithMD5AndDES                56(56)              CBC         PKCS5Padding                                                 java6实现
+PBEWithMD5AndTripeDES           112、168(168)       CBC         PKCS6Padding                                                 java7实现
+PBEWithSHA1AndDESede            112、168(168)       CBC         PKCS7Padding                                                 java8实现
+PBEWithSHA1AndRC2_40            40至1024(128)       CBC         PKCS8Padding                                                 java9实现
+PBEWithMD5AndDES                64(64)              CBC         PKCS5Padding/PKCS7Padding/ISO10126Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithMD5AndRC2                128(128)            CBC         PKCS5Padding/PKCS7Padding/ISO10127Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHA1AndDES               64(64)              CBC         PKCS5Padding/PKCS7Padding/ISO10128Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHA1AndRC2               128(128)            CBC         PKCS5Padding/PKCS7Padding/ISO10129Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHAAndIDEA-CBC           128(128)            CBC         PKCS5Padding/PKCS7Padding/ISO10130Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHAAnd2-KeyTripleDES-CBC 128(128)            CBC         PKCS5Padding/PKCS7Padding/ISO10131Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHAAnd3-KeyTripleDES-CBC 192(192)            CBC         PKCS5Padding/PKCS7Padding/ISO10132Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHAAnd128BitRC2-CBC      128(128)            CBC         PKCS5Padding/PKCS7Padding/ISO10133Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHAAnd40BitRC2-CBC       40(40)              CBC         PKCS5Padding/PKCS7Padding/ISO10134Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHAAnd128BitRC4          128(128)            CBC         PKCS5Padding/PKCS7Padding/ISO10135Padding/ZeroBytePadding    BouncyCastle实现
+PBEWithSHAAnd40BitRC4           40(40)              CBC         PKCS5Padding/PKCS7Padding/ISO10136Padding/ZeroBytePadding    BouncyCastle实现
 ```
 
+算法实现
 ```java
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
@@ -604,7 +605,7 @@ public class PBECoder {
 }
 ```
 
-### IDEA算法
+### IDEA
 ```java
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
@@ -698,7 +699,6 @@ public class IDEACoder {
 			return null;
 		}
 	}
-
 }
 ```
 

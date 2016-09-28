@@ -14,7 +14,6 @@ title: Java加密 -- 非对称加密
 
 非对称密码的体制的主要优点是可以适应于开放性的使用环境, 秘钥管理相对简单, 可以方便安全地实现数字签名和验证. 
 
-RSA是非对称密码体制的典范,它不仅仅可以完成一般的数据加密操作,同时也支持数字签名和验证. 除了数字签名非对称密码体制还支持数字信封等技术.
 
 非对称密码算法的安全性完全依赖于基于计算机复杂度上的难题,通常来自于数论.例如：
 * RSA来源于整数因子分解问题.
@@ -22,8 +21,9 @@ RSA是非对称密码体制的典范,它不仅仅可以完成一般的数据加�
 * ECC-椭圆曲线加密算法源于离散对数问题.
 由于这些数学难题的实现多涉及底层模数乘法和指数运算,相比分组密码需要更多的计算机资源, 为了尼补这一缺陷, 非对称密码系统通常是复合式的:用高效率的对称密码算法进行加密解密处理; 用非对称密钥加密对称密码系统所使用的密钥, 通过这种复合方式增进效率.
 
-# RSACoder
+# RSA
 
+RSA是非对称密码体制的典范,它不仅仅可以完成一般的数据加密操作,同时也支持数字签名和验证. 除了数字签名非对称密码体制还支持数字信封等技术.
 ```java
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Assert;
@@ -161,7 +161,7 @@ public class RSACoder {
 }
 ```
 
-# ElGamalCoder
+# ElGamal
 
 ```java
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -268,7 +268,7 @@ public class ElGamalCoder {
 }
 ```
 
-# DHCoder
+# DH
 
 ```java
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
