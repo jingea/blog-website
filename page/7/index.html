@@ -1213,6 +1213,102 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/08/08/mgits/unity命令行使用/" title="unity命令行使用" itemprop="url">unity命令行使用</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Command-line-arguments"><a href="#Command-line-arguments" class="headerlink" title="Command line arguments"></a>Command line arguments</h1><p>当从命令行启动<code>Unity</code>时,它可以在启动时接受一些参数和信息, 这种方式可以用于测试用例，自动构建和其他的任务。</p>
+<p>在<code>MacOS</code>系统下，你可以像下面这样启动<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Applications/Unity/Unity.app/Contents/MacOS/Unity</div></pre></td></tr></table></figure></p>
+<p>当在windows系统里，你就需要执行下面的命令了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"C:\Program Files (x86)\Unity\Editor\Unity.exe"</span></div></pre></td></tr></table></figure></p>
+<h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><p>正如上面提到的,<code>editor</code>也可以在启动时通过一些额外的命令来构建游戏, 下面就列举出了这些命令：</p>
+<ul>
+<li><code>-assetServerUpdate &lt;IP[:port] projectName username password [r &lt;revision&gt;]&gt;</code>    从<code>IP:port</code>上的<code>Asset Server</code>强制更新项目. <code>port</code>是可选的,如果不指定的话,会默认选择<code>10733</code>这个端口. 这个命令可与<code>-projectPath</code>参数一起使用, 这样可确保你不会更新错项目.如果不指定项目名称的话,那么会默认的对<code>Unity</code>上次打开的项目进行更新. 如果<code>-projectPath</code>路径下不存在项目,那么会自动创建一个.</li>
+<li><code>-batchmode</code>  在<code>batch</code>模式下运行<code>Unity</code>.这个命令我们强烈建议你与其他命令一起使用, 它会确保不会弹出Edtior. 当由脚本代码抛出异常或者<code>Asset Server</code>更新失败或者其他操作引起的异常,<code>Unity</code>会直接返回错误码<code>1</code>并退出. 需要注意的是,在<code>batch</code>模式下,<code>Unity</code>会在控制台输出一些基础日志. 还有当在<code>batch</code>模式下打开一个项目,那么<code>Editor</code>就不能再开打这个相同的项目.</li>
+<li><code>-buildLinux32Player &lt;pathname&gt;</code>    构建一个32位的linux版应用.(例如 <code>-buildLinux32Player path/to/your/build</code>).</li>
+<li><code>-buildLinux64Player &lt;pathname&gt;</code>    构建一个64位的linux版应用.(例如 <code>-buildLinux64Player path/to/your/build</code>).</li>
+<li><code>-buildLinuxUniversalPlayer &lt;pathname&gt;</code>    构建一个32位和64位的linux混合版应用.(例如 <code>-buildLinuxUniversalPlayer path/to/your/build</code>).</li>
+<li><code>-buildOSXPlayer &lt;pathname&gt;</code>    构建一个32位的MacOS版应用.(例如 <code>-buildOSXPlayer path/to/your/build.app</code>).</li>
+<li><code>-buildOSX64Player &lt;pathname&gt;</code>    构建一个64位的MacOS版应用.(例如 <code>-buildOSX64Player path/to/your/build.app</code>).</li>
+<li><code>-buildOSXUniversalPlayer &lt;pathname&gt;</code>    构建一个32位和64位的MacOs混合版应用.(例如 <code>-buildOSXUniversalPlayer path/to/your/build.app</code>).</li>
+<li><code>-buildTarget &lt;name&gt;</code>    当项目被加载之前允许用户选择的构建目标：<code>win32, win64, osx, linux, linux64, ios, android, web, webstreamed, webgl, xbox360, xboxone, ps3, ps4, psp2, wsa, wp8, bb10, tizen, samsungtv</code>.</li>
+<li><code>-buildWebPlayer &lt;pathname&gt;</code>    构建一个在web上运行的应用.(例如<code>-buildWebPlayer path/to/your/build</code>).</li>
+<li><code>-buildWebPlayerStreamed &lt;pathname&gt;</code>    Build a streamed WebPlayer (<code>-buildWebPlayerStreamed path/to/your/build</code>).</li>
+<li><code>-buildWindowsPlayer &lt;pathname&gt;</code>    构建一个32位的Windows版应用.(例如  <code>-buildWindowsPlayer path/to/your/build.exe</code>).</li>
+<li><code>-buildWindows64Player &lt;pathname&gt;</code>    构建一个64位的Windows版应用.(例如  <code>-buildWindows64Player path/to/your/build.exe</code>).</li>
+<li><code>-createProject &lt;pathname&gt;</code>    在指定路径下(<code>pathname</code>)创建一个空项目.</li>
+<li><code>-executeMethod &lt;ClassName.MethodName&gt;</code>    只要Unity启动完成并且项目打开(可能还需要等待asset server更新完成)就执行该静态方法. 该功能可用于持续集成, 运行测试用例, 执行构建任务, 准备一些数据等等. 如果你想让程序在命令行中返回一个错误码,那么你可以直接在Unity中直接抛出一个异常,这时命令行返回的错误码是1，或者你可以调用<code>EditorApplication.Exit</code>,这时会返回一个非0的状态码. 如果你想要向该方法传递参数,那么你可以直接将这些参数添加到命令行上,然后在程序中使用<code>System.Environment.GetCommandLineArgs</code>获得这些参数.To use -executeMethod, you need to place the enclosing script in an Editor folder. The method to be executed must be defined as static.</li>
+<li><code>-exportPackage &lt;exportAssetPath1 exportAssetPath2 ExportAssetPath3 exportFileName&gt;</code>    在指定的路径下导出<code>package</code>. <code>exportAssetPath</code>是一个从Unity项目导出到的文件夹(路径相对于Unity项目的根路径), <code>exportFileName</code>是package的名字. 一般这个选项可以一次性地导出整个文件夹.这个命令一般需要和<code>-projectPath</code>参数一起使用.</li>
+<li><code>-force-d3d9 (Windows only)</code>    设置editor使用<code>Direct3D 9</code>进行渲染. 这个是默认选项,一般不需要你去设置这个值.</li>
+<li><code>-force-d3d11 (Windows only)</code>    设置editor使用<code>Direct3D 11</code>进行渲染.</li>
+<li><code>-force-opengl (Windows only)</code>    设置editor使用<code>OpenGL</code>进行渲染. 即使<code>Direct3D</code>可用我们也可以说使用<code>OpenGL</code>进行渲染. 一般我们是在<code>Direct3D 9.0c</code>不可用的情况下才选择使用<code>openGL</code></li>
+<li><code>-force-free</code>    让edtior在<code>Unity license</code>下运行, 即使我们安装了<code>Unity Pro license</code></li>
+<li><code>-importPackage &lt;pathname&gt;</code>    导入指定的<code>package</code>. 如果不进行导入的话,会出现一个对话框.</li>
+<li><code>-logFile &lt;pathname&gt;</code>    指定Editor或者<code>Windows/Linux/OSX</code>版本应用的日志输出路径.</li>
+<li><code>-silent-crashes</code>    不显示crashe对话框.</li>
+<li><code>-projectPath &lt;pathname&gt;</code>    在指定的路径下打开项目.</li>
+<li><code>-quit</code>    当其他命令都执行完之后退出Unity. 注意这个会将错误日志隐藏掉，但是可以在<code>Editor.log</code>中找到它.</li>
+<li><code>-serial &lt;serial&gt;</code>    Activates Unity with the specified serial key. It is recommended to pass “-batchmode -quit” arguments as well, in order to quit Unity when done, if using this for automated activation of Unity. Please allow a few seconds before license file is created, as Unity needs to communicate with the license server. Make sure that License file folder exists, and has appropriate permissions before running Unity with this argument. In case activation fails, see the Editor.log for info. This option is new in Unity 5.0.</li>
+</ul>
+<h4 id="Example-usage"><a href="#Example-usage" class="headerlink" title="Example usage"></a>Example usage</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// C# example</span></div><div class="line">using UnityEditor;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEditorScript</span></span></div><div class="line">&#123;</div><div class="line">     <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PerformBuild</span> <span class="params">()</span></span></div><div class="line">     &#123;</div><div class="line">         string[] scenes = &#123; <span class="string">"Assets/MyScene.unity"</span> &#125;;</div><div class="line">         BuildPipeline.BuildPlayer(scenes, ...);</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// JavaScript example</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PerformBuild</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    string[] scenes = &#123; <span class="string">"Assets/MyScene.unity"</span> &#125;;</div><div class="line">    BuildPipeline.BuildPlayer(scenes, ...);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面的命令在<code>batch</code>模式下运行Unity, 同时执行<code>MyEditorScript.MyMethod</code>完成, 当该方法执行完之后退出.</p>
+<ul>
+<li><code>Windows</code>: <code>C:\program files\Unity\Editor\Unity.exe -quit -batchmode -executeMethod MyEditorScript.MyMethod</code></li>
+<li><code>Mac OS</code>: <code>/Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -executeMethod MyEditorScript.MyMethod</code></li>
+</ul>
+<p>下面的命令在<code>batch</code>执行Unity, 同时从<code>asset server</code>更新指定项目. 当全部的<code>asset</code>下载完之后, 指定的方法会被执行,当方法被完全执行之后,Unity会自动退出.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Applications/Unity/Unity.app/Contents/MacOS/Unity -batchmode -projectPath ~/UnityProjects/AutobuildProject -assetServerUpdate <span class="number">192.168</span>.1.1 MyGame AutobuildUser l33tpa33 -executeMethod MyEditorScript.PerformBuild -quit</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/08/mgits/unity命令行使用/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/mgits/unity命令行使用/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/08/08/编程语言/python2 文件和网络操作/" title="PYTHON2 文件和网络操作" itemprop="url">PYTHON2 文件和网络操作</a>
   </h1>
   <p class="article-author">By
@@ -1306,102 +1402,6 @@
 	
 	  	<span></span>
 		<a href="/2015/08/08/编程语言/python2 文件和网络操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/编程语言/python2 文件和网络操作/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/08/mgits/unity命令行使用/" title="unity命令行使用" itemprop="url">unity命令行使用</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="Command-line-arguments"><a href="#Command-line-arguments" class="headerlink" title="Command line arguments"></a>Command line arguments</h1><p>当从命令行启动<code>Unity</code>时,它可以在启动时接受一些参数和信息, 这种方式可以用于测试用例，自动构建和其他的任务。</p>
-<p>在<code>MacOS</code>系统下，你可以像下面这样启动<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Applications/Unity/Unity.app/Contents/MacOS/Unity</div></pre></td></tr></table></figure></p>
-<p>当在windows系统里，你就需要执行下面的命令了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"C:\Program Files (x86)\Unity\Editor\Unity.exe"</span></div></pre></td></tr></table></figure></p>
-<h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><p>正如上面提到的,<code>editor</code>也可以在启动时通过一些额外的命令来构建游戏, 下面就列举出了这些命令：</p>
-<ul>
-<li><code>-assetServerUpdate &lt;IP[:port] projectName username password [r &lt;revision&gt;]&gt;</code>    从<code>IP:port</code>上的<code>Asset Server</code>强制更新项目. <code>port</code>是可选的,如果不指定的话,会默认选择<code>10733</code>这个端口. 这个命令可与<code>-projectPath</code>参数一起使用, 这样可确保你不会更新错项目.如果不指定项目名称的话,那么会默认的对<code>Unity</code>上次打开的项目进行更新. 如果<code>-projectPath</code>路径下不存在项目,那么会自动创建一个.</li>
-<li><code>-batchmode</code>  在<code>batch</code>模式下运行<code>Unity</code>.这个命令我们强烈建议你与其他命令一起使用, 它会确保不会弹出Edtior. 当由脚本代码抛出异常或者<code>Asset Server</code>更新失败或者其他操作引起的异常,<code>Unity</code>会直接返回错误码<code>1</code>并退出. 需要注意的是,在<code>batch</code>模式下,<code>Unity</code>会在控制台输出一些基础日志. 还有当在<code>batch</code>模式下打开一个项目,那么<code>Editor</code>就不能再开打这个相同的项目.</li>
-<li><code>-buildLinux32Player &lt;pathname&gt;</code>    构建一个32位的linux版应用.(例如 <code>-buildLinux32Player path/to/your/build</code>).</li>
-<li><code>-buildLinux64Player &lt;pathname&gt;</code>    构建一个64位的linux版应用.(例如 <code>-buildLinux64Player path/to/your/build</code>).</li>
-<li><code>-buildLinuxUniversalPlayer &lt;pathname&gt;</code>    构建一个32位和64位的linux混合版应用.(例如 <code>-buildLinuxUniversalPlayer path/to/your/build</code>).</li>
-<li><code>-buildOSXPlayer &lt;pathname&gt;</code>    构建一个32位的MacOS版应用.(例如 <code>-buildOSXPlayer path/to/your/build.app</code>).</li>
-<li><code>-buildOSX64Player &lt;pathname&gt;</code>    构建一个64位的MacOS版应用.(例如 <code>-buildOSX64Player path/to/your/build.app</code>).</li>
-<li><code>-buildOSXUniversalPlayer &lt;pathname&gt;</code>    构建一个32位和64位的MacOs混合版应用.(例如 <code>-buildOSXUniversalPlayer path/to/your/build.app</code>).</li>
-<li><code>-buildTarget &lt;name&gt;</code>    当项目被加载之前允许用户选择的构建目标：<code>win32, win64, osx, linux, linux64, ios, android, web, webstreamed, webgl, xbox360, xboxone, ps3, ps4, psp2, wsa, wp8, bb10, tizen, samsungtv</code>.</li>
-<li><code>-buildWebPlayer &lt;pathname&gt;</code>    构建一个在web上运行的应用.(例如<code>-buildWebPlayer path/to/your/build</code>).</li>
-<li><code>-buildWebPlayerStreamed &lt;pathname&gt;</code>    Build a streamed WebPlayer (<code>-buildWebPlayerStreamed path/to/your/build</code>).</li>
-<li><code>-buildWindowsPlayer &lt;pathname&gt;</code>    构建一个32位的Windows版应用.(例如  <code>-buildWindowsPlayer path/to/your/build.exe</code>).</li>
-<li><code>-buildWindows64Player &lt;pathname&gt;</code>    构建一个64位的Windows版应用.(例如  <code>-buildWindows64Player path/to/your/build.exe</code>).</li>
-<li><code>-createProject &lt;pathname&gt;</code>    在指定路径下(<code>pathname</code>)创建一个空项目.</li>
-<li><code>-executeMethod &lt;ClassName.MethodName&gt;</code>    只要Unity启动完成并且项目打开(可能还需要等待asset server更新完成)就执行该静态方法. 该功能可用于持续集成, 运行测试用例, 执行构建任务, 准备一些数据等等. 如果你想让程序在命令行中返回一个错误码,那么你可以直接在Unity中直接抛出一个异常,这时命令行返回的错误码是1，或者你可以调用<code>EditorApplication.Exit</code>,这时会返回一个非0的状态码. 如果你想要向该方法传递参数,那么你可以直接将这些参数添加到命令行上,然后在程序中使用<code>System.Environment.GetCommandLineArgs</code>获得这些参数.To use -executeMethod, you need to place the enclosing script in an Editor folder. The method to be executed must be defined as static.</li>
-<li><code>-exportPackage &lt;exportAssetPath1 exportAssetPath2 ExportAssetPath3 exportFileName&gt;</code>    在指定的路径下导出<code>package</code>. <code>exportAssetPath</code>是一个从Unity项目导出到的文件夹(路径相对于Unity项目的根路径), <code>exportFileName</code>是package的名字. 一般这个选项可以一次性地导出整个文件夹.这个命令一般需要和<code>-projectPath</code>参数一起使用.</li>
-<li><code>-force-d3d9 (Windows only)</code>    设置editor使用<code>Direct3D 9</code>进行渲染. 这个是默认选项,一般不需要你去设置这个值.</li>
-<li><code>-force-d3d11 (Windows only)</code>    设置editor使用<code>Direct3D 11</code>进行渲染.</li>
-<li><code>-force-opengl (Windows only)</code>    设置editor使用<code>OpenGL</code>进行渲染. 即使<code>Direct3D</code>可用我们也可以说使用<code>OpenGL</code>进行渲染. 一般我们是在<code>Direct3D 9.0c</code>不可用的情况下才选择使用<code>openGL</code></li>
-<li><code>-force-free</code>    让edtior在<code>Unity license</code>下运行, 即使我们安装了<code>Unity Pro license</code></li>
-<li><code>-importPackage &lt;pathname&gt;</code>    导入指定的<code>package</code>. 如果不进行导入的话,会出现一个对话框.</li>
-<li><code>-logFile &lt;pathname&gt;</code>    指定Editor或者<code>Windows/Linux/OSX</code>版本应用的日志输出路径.</li>
-<li><code>-silent-crashes</code>    不显示crashe对话框.</li>
-<li><code>-projectPath &lt;pathname&gt;</code>    在指定的路径下打开项目.</li>
-<li><code>-quit</code>    当其他命令都执行完之后退出Unity. 注意这个会将错误日志隐藏掉，但是可以在<code>Editor.log</code>中找到它.</li>
-<li><code>-serial &lt;serial&gt;</code>    Activates Unity with the specified serial key. It is recommended to pass “-batchmode -quit” arguments as well, in order to quit Unity when done, if using this for automated activation of Unity. Please allow a few seconds before license file is created, as Unity needs to communicate with the license server. Make sure that License file folder exists, and has appropriate permissions before running Unity with this argument. In case activation fails, see the Editor.log for info. This option is new in Unity 5.0.</li>
-</ul>
-<h4 id="Example-usage"><a href="#Example-usage" class="headerlink" title="Example usage"></a>Example usage</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// C# example</span></div><div class="line">using UnityEditor;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEditorScript</span></span></div><div class="line">&#123;</div><div class="line">     <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PerformBuild</span> <span class="params">()</span></span></div><div class="line">     &#123;</div><div class="line">         string[] scenes = &#123; <span class="string">"Assets/MyScene.unity"</span> &#125;;</div><div class="line">         BuildPipeline.BuildPlayer(scenes, ...);</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// JavaScript example</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PerformBuild</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    string[] scenes = &#123; <span class="string">"Assets/MyScene.unity"</span> &#125;;</div><div class="line">    BuildPipeline.BuildPlayer(scenes, ...);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>下面的命令在<code>batch</code>模式下运行Unity, 同时执行<code>MyEditorScript.MyMethod</code>完成, 当该方法执行完之后退出.</p>
-<ul>
-<li><code>Windows</code>: <code>C:\program files\Unity\Editor\Unity.exe -quit -batchmode -executeMethod MyEditorScript.MyMethod</code></li>
-<li><code>Mac OS</code>: <code>/Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -executeMethod MyEditorScript.MyMethod</code></li>
-</ul>
-<p>下面的命令在<code>batch</code>执行Unity, 同时从<code>asset server</code>更新指定项目. 当全部的<code>asset</code>下载完之后, 指定的方法会被执行,当方法被完全执行之后,Unity会自动退出.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Applications/Unity/Unity.app/Contents/MacOS/Unity -batchmode -projectPath ~/UnityProjects/AutobuildProject -assetServerUpdate <span class="number">192.168</span>.1.1 MyGame AutobuildUser l33tpa33 -executeMethod MyEditorScript.PerformBuild -quit</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/08/mgits/unity命令行使用/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/mgits/unity命令行使用/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1921,6 +1921,89 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/06/08/Java/Java 泛型/" title="java泛型" itemprop="url">java泛型</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>泛型（Generic type 或者 generics）是对 Java 语言的类型系统的一种扩展，以支持创建可以按类型进行参数化的类.</p>
+<h3 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h3><p>我们定义一个简单的泛型类, <code>T</code>称为泛型参数, <code>G</code>被称为泛型化了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接着我们在内部定义一个泛型变量<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;T&gt; &#123;</span></div><div class="line">	T t;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后我们再添加一个泛型方法泛型方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下来我们来使用一下这个泛型类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">G&lt;String&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">g.setValue(<span class="string">"value"</span>);</div></pre></td></tr></table></figure></p>
+<h3 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h3><p>在一个非泛化的类中我们也可以直接定义泛化的方法</p>
+<h3 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h3><p>说到java中的泛型就不得不提泛型参数的类型擦除. 当java源码文件被编译成class文件的时候,编译器会将泛型中的类型参数擦除掉(其实class文件中还是会保留部分的泛型信息, 具体参考java虚拟机规范).</p>
+<p>类定义的泛型参数<code>T</code>会被替换成具体类型, 一般为Object. 而<code>&lt;T&gt;</code>信息则会被擦除掉, 例如G就会替换成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span> </span>&#123;</div><div class="line">	Object t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(Object t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而在引用该类型的时候则会擦除成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">G g = <span class="keyword">new</span> G();</div><div class="line">g.setValue(<span class="string">"value"</span>);</div></pre></td></tr></table></figure></p>
+<p>因此，java里的泛型类型安全是由编译器保证的, 在运行期是无法保证类型的安全的.</p>
+<h3 id="泛型类的继承关系"><a href="#泛型类的继承关系" class="headerlink" title="泛型类的继承关系"></a>泛型类的继承关系</h3><p>如果类被泛型化之后, 会对类本身的继承关系造成影响<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);</div><div class="line"></div><div class="line">		SubG1 subG1 = <span class="keyword">new</span> SubG1();</div><div class="line">		subG1.setValue(<span class="number">1</span>);</div><div class="line">		subG1.printValue(<span class="string">"SubG1 printValue"</span>);</div><div class="line">		subG1.print();</div><div class="line"></div><div class="line">		SubG2 subG2 = <span class="keyword">new</span> SubG2();</div><div class="line">		subG2.setValue(<span class="string">"SubG2 setValue"</span>);</div><div class="line">		subG2.printValue(<span class="string">"SubG2 printValue"</span>);</div><div class="line">		subG2.print();</div><div class="line"></div><div class="line">		SubG3&lt;Integer&gt; subG3 = <span class="keyword">new</span> SubG3&lt;&gt;();</div><div class="line">		subG3.setValue(<span class="string">"SubG3 setValue"</span>);</div><div class="line">		subG3.printValue(<span class="string">"SubG3 printValue"</span>);</div><div class="line">		subG3.print(<span class="number">3</span>);</div><div class="line"></div><div class="line">		SubG4&lt;Integer&gt; subG4 = <span class="keyword">new</span> SubG4();</div><div class="line">		subG4.setValue(<span class="string">"SubG4 setValue"</span>);</div><div class="line">		subG4.printValue(<span class="string">"SubG4 printValue"</span>);</div><div class="line">		subG4.print(<span class="number">4</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// SubG1继承了G的泛型参数. 但是SubG1本身是没有泛化的</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG1</span> <span class="keyword">extends</span> <span class="title">G</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 强制指定继承过来的T的类型为String</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG2</span> <span class="keyword">extends</span> <span class="title">G</span>&lt;<span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// G的类型由继承过来的方法指定, SubG3则再次由本类自己指定类型</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG3</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">G</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(T t1)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t + <span class="string">". this:"</span> + t1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 指定G的类型为String, SubG4则仍然由本类进行泛型化</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG4</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">G</span>&lt;<span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(T t1)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t + <span class="string">". this:"</span> + t1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"SuperParam"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SubG1 printValue</div><div class="line"><span class="number">1</span></div><div class="line">SubG2 printValue</div><div class="line">Super:SubG2 setValue</div><div class="line">SubG3 printValue</div><div class="line">Super:SubG3 setValue. <span class="keyword">this</span>:<span class="number">3</span></div><div class="line">SubG4 printValue</div><div class="line">Super:SubG4 setValue. <span class="keyword">this</span>:<span class="number">4</span></div></pre></td></tr></table></figure></p>
+<p>需要特别指出的是, 在<code>SubG1</code>对象分别调用<code>setValue()</code>和<code>printValue()</code>方法时分别使用了<code>Integer</code>和<code>String</code>俩个类型, 但是却没有产生任何异常信息.</p>
+<h3 id="泛型参数的继承关系"><a href="#泛型参数的继承关系" class="headerlink" title="泛型参数的继承关系"></a>泛型参数的继承关系</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line">		Param param = <span class="keyword">new</span> Param();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; gSuperParam = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		gSuperParam.setValue(superParam);</div><div class="line">		gSuperParam.setValue(param);</div><div class="line">		SuperParam t = gSuperParam.getT();</div><div class="line"></div><div class="line">		G&lt;Param&gt; gParam = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		gParam.setValue(param);</div><div class="line">		gParam.setValue(superParam);	<span class="comment">// compile error</span></div><div class="line"></div><div class="line">		SubParam subParam = <span class="keyword">new</span> SubParam();</div><div class="line">		gParam.setValue(subParam);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubParam</span> <span class="keyword">extends</span> <span class="title">Param</span> </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<p>从这一行<code>gParam.setValue(subParam);</code>我们可以看到类型参数的继承结构和普通类型的继承结构的规则是一样的.</p>
+<h3 id="泛化在方法中的应用"><a href="#泛化在方法中的应用" class="headerlink" title="泛化在方法中的应用"></a>泛化在方法中的应用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());</div><div class="line">		print(<span class="keyword">new</span> G&lt;SuperParam&gt;());		<span class="comment">// compile Error</span></div><div class="line">		print(<span class="keyword">new</span> SubG1());</div><div class="line">		print(<span class="keyword">new</span> SubG2());</div><div class="line">		print(<span class="keyword">new</span> SubG3());</div><div class="line">		print(<span class="keyword">new</span> SubG3&lt;SuperParam&gt;());</div><div class="line">		print(<span class="keyword">new</span> SubG4());</div><div class="line">		print(<span class="keyword">new</span> SubG4&lt;SuperParam&gt;());</div><div class="line"></div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;&gt;());</div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;SuperParam&gt;());</div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;Param&gt;());		<span class="comment">// compile Error</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;String&gt; gs)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printSuperParam</span><span class="params">(G&lt;SuperParam&gt; gs)</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从上面的例子中我们可以看出, 泛化的类的泛型参数并没有对其类型判断造成影响, 子类化的参数仍然是编译通过的. 但是类型参数的继承再传递到方法时, 却被认为不是相同的类型.</p>
+<h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><p><code>?</code>在泛型参数中作为通配符存在, 它一般和<code>extends</code>和<code>super</code>关键字一起使用. 它表示不确定的一组类型, 例如和<code>extends</code>关键字一起使用就是表示继承自某个类的所有类型</p>
+<h3 id="extends"><a href="#extends" class="headerlink" title="extends"></a>extends</h3><p><code>extends</code>关键字是用来定义泛型参数的继承关系. 它表示我们的泛型参数继承自某个类型, 也被我们称为上界符.</p>
+<p>我们修改一下G的类型定义,我们引入<code>extends</code>关键字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);</div><div class="line"></div><div class="line">		SubG1 subG1 = <span class="keyword">new</span> SubG1();</div><div class="line">		subG1.setValue(<span class="number">1</span>);</div><div class="line">		subG1.printValue(<span class="string">"SubG1 printValue"</span>);</div><div class="line">		subG1.print();</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">SuperParam</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当使用<code>extends</code>关键字之后, 我们就将这个类的泛化信息固定了下来, 在实例化的时候, 其类型参数必须是继承自某类的子类型</p>
+<p>如果我们在实例化的时候指定<code>extends</code>会发生什么呢?<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;? extends SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);		<span class="comment">// compile error</span></div><div class="line">		g.setValue(<span class="keyword">new</span> Param());		<span class="comment">// compile error</span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param1</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>不推荐这种用法, 因为这种情况下如果我们可以对其使用<code>Param</code>或者<code>Param1</code>的类型, 那么这就和不使用泛型是一样的, 会引起类型转化异常.</p>
+<p>但是我们却可以在另外一种情况下使用这个关键字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());	<span class="comment">// 默认的是SuperParam类型</span></div><div class="line">		print(<span class="keyword">new</span> G&lt;Param&gt;());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;? extends SuperParam&gt; g)</span> </span>&#123;</div><div class="line">		SuperParam t = g.getT();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="super"><a href="#super" class="headerlink" title="super"></a>super</h3><p><code>super</code>作为一种下界符存在. 也就在具体使用时的参数都必须是泛型参数的父类才行.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">G&lt;? <span class="keyword">super</span> SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">g.setValue(<span class="keyword">new</span> SuperParam());</div><div class="line">g.setValue(<span class="keyword">new</span> Param());</div></pre></td></tr></table></figure></p>
+<p>同样我们可以在方法中如此使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		print(<span class="keyword">new</span> G&lt;SuperParam&gt;());</div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());	<span class="comment">// 默认是Param</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;? <span class="keyword">super</span> Param&gt; g)</span> </span>&#123;</div><div class="line">		Object t = g.getT();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/Java/Java 泛型/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/Java/Java 泛型/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/06/08/Java/Java equals hashcode/" title="Java equals和hashcode" itemprop="url">Java equals和hashcode</a>
   </h1>
   <p class="article-author">By
@@ -1999,65 +2082,6 @@
 	
 	  	<span></span>
 		<a href="/2015/06/08/Java/Java equals hashcode/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/Java/Java equals hashcode/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/Java/读取csv文件/" title="读取csv文件" itemprop="url">读取csv文件</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>利用Apache Commons CSV读取csv文件, 首先我们添加如下依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-csv<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>读取csv文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Reader in = <span class="keyword">new</span> FileReader(<span class="string">"path/to/file.csv"</span>);</div><div class="line">Iterable&lt;CSVRecord&gt; records = CSVFormat.EXCEL.parse(in);</div><div class="line"><span class="keyword">for</span> (CSVRecord record : records) &#123;</div><div class="line">    String lastName = record.get(<span class="string">"Last Name"</span>);</div><div class="line">    String firstName = record.get(<span class="string">"First Name"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/Java/读取csv文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/Java/读取csv文件/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
