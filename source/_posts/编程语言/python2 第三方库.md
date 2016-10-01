@@ -167,3 +167,20 @@ def cd_test_dir():
 
 cd_test_dir()
 ```
+
+## 安装失败
+最近在mac上使用pip安装插件，总是提示
+```bash
+Exception:
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/pip/basecommand.py", line 215, in 
+...
+...
+...
+OSError: [Errno 1] Operation not permitted: '/tmp/pip-qo8UFu-uninstall/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/six-1.4.1-py2.7.egg-info'
+```
+各种`su`, `sudo`都不行, 在百度上找到一种解决方案
+```bash
+pip install scrapy --user -U
+```
+基于用户的权限来安装模块包, 成功安装
