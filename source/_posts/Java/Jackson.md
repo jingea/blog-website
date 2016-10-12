@@ -165,7 +165,7 @@ public class TestTreeModel {
 Streaming API 是 Jackson处理 JSON最高效地方式. 但是它的易用性却大大地降低了, 我们不能像Data Binding 或者 Tree Model 那样随机访问元素.
 
 ## SerializationFeature
-* `WRAP_ROOT_VALUE` :是否环绕根元素，默认false，如果为true，则默认以类名作为根元素，也可以通过@JsonRootName来自定义根元素名称
+* `WRAP_ROOT_VALUE` :是否环绕根元素，默认false，如果为true，则默认以类名作为根元素，也可以通过`@JsonRootName`来自定义根元素名称
 ```java
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -200,24 +200,6 @@ objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 }
 ```
 
-* `FAIL_ON_EMPTY_BEANS` :
-```java
-
-```
-结果为
-
-* `FAIL_ON_SELF_REFERENCES` :
-```java
-
-```
-结果为
-
-* `FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS` :
-```java
-
-```
-结果为
-
 * `WRITE_DATES_AS_TIMESTAMPS` : 序列化日期时以timestamps输出
 ```java
 public class TestDataBinding {
@@ -241,39 +223,8 @@ public class TestDataBinding {
 
 * `WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS` : 序列化char[]时以json数组输出
 
-
-* `WRITE_NULL_MAP_VALUES` :
-```java
-
-```
-结果为
-
-* `WRITE_EMPTY_JSON_ARRAYS` :
-```java
-
-```
-结果为
-
-* `WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED` :
-```java
-
-```
-结果为
-
-* `WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS` :
-```java
-
-```
-结果为
-
 * `ORDER_MAP_ENTRIES_BY_KEYS` : 序列化Map时对key进行排序操作
-
-* `EAGER_SERIALIZER_FETCH` :
-```java
-
-```
-结果为
-                                
+                  
 ## DeserializationFeature
 * `FAIL_ON_UNKNOWN_PROPERTIES` : 在反序列化时, 如果Java对象中不包含json串的某个数据 属性, 则会报错.
 ```java
@@ -291,5 +242,97 @@ public class TestDataBinding {
 	public static class Obj {
 		public String[] strings1 = {"123"};
 	}
+}
+```
+
+## MapperFeature
+
+* `ACCEPT_CASE_INSENSITIVE_PROPERTIES` : 在反序列化时是否忽略大小写
+```java
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
+
+import java.io.IOException;
+
+public class TestDataBinding {
+
+	@Test
+	public void test_SerializationFeature () throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Upper upper = new Upper();
+		upper.setFirstName("John");
+		System.out.println(objectMapper.writeValueAsString(upper));
+
+		Lower lower = new Lower();
+		lower.setLastName("li");
+		System.out.println(objectMapper.writeValueAsString(lower));
+
+	}
+
+	@Test
+	public void test_DeserializationFeature () throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
+
+		Upper obj1 = objectMapper.readValue("{\"firstName\":\"John\"}", Upper.class);
+		System.out.println(obj1.getFirstName());
+
+		Upper obj2 = objectMapper.readValue("{\"FirstName\":\"John\"}", Upper.class);
+		System.out.println(obj2.getFirstName());
+	}
+}
+
+class Upper {
+	private String FirstName;
+	public String getFirstName() {return FirstName;}
+	public void setFirstName(String firstName) {FirstName = firstName;}
+}
+
+class Lower {
+	private String lastName;
+	public String getLastName() {return lastName;}
+	public void setLastName(String lastName) {this.lastName = lastName;}
+}
+```
+在`test_SerializationFeature()`这个测试中, 我们可以通过结果看到, Upper的`FirstName`在JSON串 中成了`firstName`. 当反序列化得时候, 如果不指定`ACCEPT_CASE_INSENSITIVE_PROPERTIES`, 那么当JSON串中的`FirstName`为大写的时候, 是没办法序列化出来的.
+
+## 注解
+* JsonProperty : jackson 默认是根据Getter来进行注值反序列化的, 但是有时候为了节省存储空间, 字段名远小于Getter名称, 这样就造成了字段名和方法名不一致, 此时就可以利用JsonProperty注解重命名来解决这个问题
+```java
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
+
+import java.io.IOException;
+
+public class TestDataBinding {
+
+	@Test
+	public void test_Deferent () throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
+
+		Different different = new Different();
+		different.setMiddle("Nice");
+		System.out.println(objectMapper.writeValueAsString(different));
+
+		Different obj2 = objectMapper.readValue("{\"middle\":\"Nice\"}", Different.class);
+		System.out.println(obj2.getMiddle());
+
+		Different obj3 = objectMapper.readValue("{\"Mid\":\"Nice\"}", Different.class);
+		System.out.println(obj3.getMiddle());
+
+		Different obj4 = objectMapper.readValue("{\"mid\":\"Nice\"}", Different.class);
+		System.out.println(obj4.getMiddle());
+	}
+}
+
+class Different {
+	@JsonProperty("mid")
+	private String Mid;
+	public String getMiddle() {return Mid;}
+	public void setMiddle(String middle) {this.Mid = middle;}
 }
 ```
