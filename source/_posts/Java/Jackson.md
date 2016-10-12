@@ -165,7 +165,9 @@ public class TestTreeModel {
 Streaming API 是 Jackson处理 JSON最高效地方式. 但是它的易用性却大大地降低了, 我们不能像Data Binding 或者 Tree Model 那样随机访问元素.
 
 ## SerializationFeature
-* `WRAP_ROOT_VALUE` :是否环绕根元素，默认false，如果为true，则默认以类名作为根元素，也可以通过`@JsonRootName`来自定义根元素名称
+
+### WRAP_ROOT_VALUE
+是否环绕根元素，默认false，如果为true，则默认以类名作为根元素，也可以通过`@JsonRootName`来自定义根元素名称
 ```java
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -189,7 +191,8 @@ public class TestDataBinding {
 ```
 结果为`{"Obj":{"platform":"example"}}` 如果不开启`WRAP_ROOT_VALUE`的话, 结果为`{"platform":"example"}`
 
-* `INDENT_OUTPUT` : 是否缩放排列输出
+### INDENT_OUTPUT
+ 是否缩放排列输出
 ```java
 objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 ```
@@ -200,7 +203,8 @@ objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 }
 ```
 
-* `WRITE_DATES_AS_TIMESTAMPS` : 序列化日期时以timestamps输出
+### WRITE_DATES_AS_TIMESTAMPS
+序列化日期时以timestamps输出
 ```java
 public class TestDataBinding {
 
@@ -221,12 +225,16 @@ public class TestDataBinding {
 {"now":1476179780913}
 ```
 
-* `WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS` : 序列化char[]时以json数组输出
+### WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS
+序列化char[]时以json数组输出
 
-* `ORDER_MAP_ENTRIES_BY_KEYS` : 序列化Map时对key进行排序操作
+### ORDER_MAP_ENTRIES_BY_KEYS
+序列化Map时对key进行排序操作
                   
 ## DeserializationFeature
-* `FAIL_ON_UNKNOWN_PROPERTIES` : 在反序列化时, 如果Java对象中不包含json串的某个数据 属性, 则会报错.
+
+### FAIL_ON_UNKNOWN_PROPERTIES
+在反序列化时, 如果Java对象中不包含json串的某个数据 属性, 则会报错.
 ```java
 public class TestDataBinding {
 
@@ -247,7 +255,8 @@ public class TestDataBinding {
 
 ## MapperFeature
 
-* `ACCEPT_CASE_INSENSITIVE_PROPERTIES` : 在反序列化时是否忽略大小写
+### ACCEPT_CASE_INSENSITIVE_PROPERTIES
+ 在反序列化时是否忽略大小写
 ```java
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -298,7 +307,9 @@ class Lower {
 在`test_SerializationFeature()`这个测试中, 我们可以通过结果看到, Upper的`FirstName`在JSON串 中成了`firstName`. 当反序列化得时候, 如果不指定`ACCEPT_CASE_INSENSITIVE_PROPERTIES`, 那么当JSON串中的`FirstName`为大写的时候, 是没办法序列化出来的.
 
 ## 注解
-* JsonProperty : jackson 默认是根据Getter来进行注值反序列化的, 但是有时候为了节省存储空间, 字段名远小于Getter名称, 这样就造成了字段名和方法名不一致, 此时就可以利用JsonProperty注解重命名来解决这个问题
+
+### JsonProperty 
+jackson 默认是根据Getter来进行注值反序列化的, 但是有时候为了节省存储空间, 字段名远小于Getter名称, 这样就造成了字段名和方法名不一致, 此时就可以利用JsonProperty注解重命名来解决这个问题
 ```java
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -334,5 +345,85 @@ class Different {
 	private String Mid;
 	public String getMiddle() {return Mid;}
 	public void setMiddle(String middle) {this.Mid = middle;}
+}
+```
+
+### JsonInclude 
+指定在序列化时, 可以输出哪些值. 例如只输出非默认值(包含类型默认值和初始化默认值)
+```java
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
+
+public class TestDefault {
+	@Test
+	public void test_() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Foo foo = new Foo();
+		foo.string1 = "123";
+		System.out.println(objectMapper.writeValueAsString(foo));
+	}
+}
+
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+class Foo {
+	public String string1;
+	public String string2 = "xxx";
+	public String string3;
+}
+```
+
+### JsonSerialize
+实现浮点数只保留俩位
+```java
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.text.DecimalFormat;
+
+public class TestDouble {
+
+	@Test
+	public void test_() throws JsonProcessingException {
+		DoubleObject doubleObject = new DoubleObject();
+		doubleObject.aDouble = 1.101010101010101;
+		doubleObject.aFloat = 1.101010101010101f;
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String string = objectMapper.writeValueAsString(doubleObject);
+		System.out.println(string);
+	}
+
+	public static class CustomDoubleSerializer extends JsonSerializer<Number> {
+		@Override
+		public void serialize(Number value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+			if (null == value) {
+				jgen.writeNull();
+			} else if (value instanceof Double || value instanceof Float){
+				final String pattern = ".##";
+				final DecimalFormat myFormatter = new DecimalFormat(pattern);
+				final String output = myFormatter.format(value);
+				jgen.writeNumber(output);
+			}
+		}
+	}
+
+	public static class DoubleObject {
+		@JsonSerialize(using = CustomDoubleSerializer.class)
+		private double aDouble;
+		@JsonSerialize(using = CustomDoubleSerializer.class)
+		private float aFloat;
+		public double getaDouble() {return aDouble;}
+		public void setaDouble(double aDouble) {this.aDouble = aDouble;}
+		public float getaFloat() {return aFloat;}
+		public void setaFloat(float aFloat) {this.aFloat = aFloat;}
+	}
 }
 ```
