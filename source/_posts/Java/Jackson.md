@@ -10,7 +10,7 @@ Jackson 提供了三种对JSON处理的方式
 ## Data Binding
 这种方式提供了JSON数据和Java对象之间的无缝转换，而且这种方式是相当便利的. 它内部基于 Streaming API 的JSON 读写系统, 尽管Data Binding 是非常高效地,但是相比纯　streaming/incremental 方式，仍然有一些额外的性能消耗．
 
-序列化
+### 序列化
 ```java
     @Test
 	public void test_Serialization() throws IOException {
@@ -26,7 +26,7 @@ Jackson 提供了三种对JSON处理的方式
 ```
 输出为`{"platform":"qq"}`
 
-数据绑定
+### 数据绑定
 ```java
 	@Test
 	public void test_ObjectMapperRead () throws IOException {
@@ -38,7 +38,7 @@ Jackson 提供了三种对JSON处理的方式
 ```
 输出为`1`
 
-泛型数据绑定
+### 泛型绑定
 ```java
 	@Test
 	public void test_Serialization() throws IOException {
@@ -55,7 +55,7 @@ Jackson 提供了三种对JSON处理的方式
 ```
 输出为`10/11`
 
-数组绑定
+### 数组绑定
 ```java
 @Test
 	public void test_Binding() throws IOException {
@@ -69,6 +69,16 @@ Jackson 提供了三种对JSON处理的方式
 		System.out.println(arr[0]);
 	}
 ```
+
+### 线程安全
+ObjectMapper被共享出来之后, 只要重新配置共享实例, 那么它就是线程安全的. 也就是不要调用下列方法
+* `enable()`
+* `disable()`
+* `configure()`
+
+参考
+* [Should I declare Jackson's ObjectMapper as a static field?](http://stackoverflow.com/questions/3907929/should-i-declare-jacksons-objectmapper-as-a-static-field)
+* [Jackson FAQ: Thread-Safety](http://wiki.fasterxml.com/JacksonFAQThreadSafety)
 
 ## Tree Model
 Tree Model 和XML 处理方式 非常类似.
@@ -425,5 +435,79 @@ public class TestDouble {
 		public float getaFloat() {return aFloat;}
 		public void setaFloat(float aFloat) {this.aFloat = aFloat;}
 	}
+}
+```
+
+## module
+可以通过module来自定义实现 序列化和反序列机制. 下面的例子中就是演示对Double类型的序列化时保留浮点数位数的实现
+
+> 注意 如果注解和自定义序列化重复时, 那么注解的设置会覆盖自定义序列化机制. 而且对于原生类型来说, 是区分原生类型和包装类型的
+
+```java
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import java.io.IOException;
+import java.text.DecimalFormat;
+
+public class TestModule {
+
+	private static final ObjectMapper objectMapper;
+
+	static {
+		objectMapper = new ObjectMapper();
+		SimpleModule simpleModule = new SimpleModule();
+		simpleModule.addSerializer(Double.class, new CustomFiveDoubleSerializer());
+		simpleModule.addSerializer(double.class, new CustomFiveDoubleSerializer());
+		objectMapper.registerModule(simpleModule);
+	}
+
+	public static class CustomFiveDoubleSerializer extends JsonSerializer<Number> {
+		@Override
+		public void serialize(Number value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+			if (null == value) {
+				jgen.writeNull();
+			} else if (value instanceof Double || value instanceof Float){
+				final String pattern = ".#####";
+				final DecimalFormat myFormatter = new DecimalFormat(pattern);
+				final String output = myFormatter.format(value);
+				jgen.writeNumber(output);
+			}
+		}
+	}
+
+	public static class CustomOneDoubleSerializer extends JsonSerializer<Number> {
+		@Override
+		public void serialize(Number value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+			if (null == value) {
+				jgen.writeNull();
+			} else if (value instanceof Double || value instanceof Float){
+				final String pattern = ".#";
+				final DecimalFormat myFormatter = new DecimalFormat(pattern);
+				final String output = myFormatter.format(value);
+				jgen.writeNumber(output);
+			}
+		}
+	}
+
+	public static void main(String[] args) throws JsonProcessingException {
+		Obj obj = new Obj();
+		obj.aDouble1 = 1.111111111111;
+		obj.aDouble2 = 1.111111111111;
+
+		System.out.println(objectMapper.writeValueAsString(obj));
+	}
+
+	public static class Obj {
+		public Double aDouble1;
+		@JsonSerialize(using = CustomOneDoubleSerializer.class)
+		public Double aDouble2;
+	}
+
 }
 ```
