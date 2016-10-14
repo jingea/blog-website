@@ -5,10 +5,6 @@ title: Shell 编程
 每个shell脚本文件第一行都要指定使用哪个shell,我们默认使用`#!/bin/bash`
 
 # 变量
-bash变量分为
-* 局部变量: 脚本或命令中定义，仅在当前shell实例中有效
-* 环境变量: 所有的脚本和shell中都可以访问的变量
-* 预定义变量
 
 ## 变量类型
 运行shell时，会同时存在三种变量：
@@ -25,6 +21,7 @@ v1=123
 * 变量的默认类型是字符串
 * 该变量对当前以及子shell都有效
 
+### 命令结果赋值
 将命令执行的结果作为值传送给一个变量可以使用
 ```shell
 dirName=`date +%Y_%m_%d_%H_%M_%S`
@@ -32,9 +29,18 @@ dirName=`date +%Y_%m_%d_%H_%M_%S`
 dirName=$(date +%Y_%m_%d_%H_%M_%S)
 ```
 
+```shell
+Group_port=18080
 
-### declare声明
-TODO
+port_name=Group
+port=\$${port_name}"_port"
+
+port1=`eval echo $port`
+echo ${port}
+echo ${port1}
+
+echo ${Group_port}
+```
 
 ## 变量引用
 我们通过使用`$`或者`${}`符号可以引用一个变量
@@ -171,9 +177,9 @@ shell流程控制包含：
 
 同样的shell也支持`break`和`continue`
 
-##  if else
+##  if
+condition 可以使用 文件测试运算符 或者 关系运算符 进行条件判断
 
-### if
 语法格式
 ```shell
 if condition
@@ -195,7 +201,7 @@ fi
 ```
 我们一定要注意if前后的空格
 
-### if else
+`if else`
 ```shell
 if condition
 then
@@ -208,7 +214,7 @@ else
 fi
 ```
 
-### if else-if else
+`if else-if else`
 ```shell
 if condition1
 then
