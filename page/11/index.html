@@ -4,22 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>ming15</title>
+    <title>王玉</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
-    <meta name="author" content="ming15">
+    <meta name="author" content="王玉">
     
 
     
     <meta property="og:type" content="website">
-<meta property="og:title" content="ming15">
-<meta property="og:url" content="http://www.ming15.wang/page/11/index.html">
-<meta property="og:site_name" content="ming15">
+<meta property="og:title" content="王玉">
+<meta property="og:url" content="http://www.yu66.wang/page/11/index.html">
+<meta property="og:site_name" content="王玉">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ming15">
+<meta name="twitter:title" content="王玉">
 
     
-    <link rel="alternative" href="/atom.xml" title="ming15" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="王玉" type="application/atom+xml">
     
     
     
@@ -35,11 +35,11 @@
 <div>
 		
 			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="ming15" title="ming15"/></a>
+				<a href="/"><img src="/img/logo.png" alt="王玉" title="王玉"/></a>
 			</div>
 			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="ming15">ming15</a></h1>
+				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
@@ -73,11 +73,183 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2014/04/18/编程语言/Groovy JSON/" title="Groovy JSON" itemprop="url">Groovy JSON</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-04-18T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <blockquote>
+<p>本文是对Groovy部分官方文档进行了翻译</p>
+</blockquote>
+<p>Groovy 原生支持Groovy对象和JSON之间的转换. <code>groovy.json</code>包内的类用于JSON的序列化和解析功能</p>
+<h2 id="JsonSlurper"><a href="#JsonSlurper" class="headerlink" title="JsonSlurper"></a>JsonSlurper</h2><p><code>JsonSlurper</code>用于将JSON文本或者其他数据内容解析成Groovy里的数据结构,例如<code>maps&lt;/code&gt;,</code>lists, 或者其他原生基本类型 <code>Integer&lt;/code&gt;,</code>Double, <code>Boolean&lt;/code&gt;,</code>String`。</p>
+<p>这个类重载了很多方法, 而且还添加了一些特殊的方法, 例如<code>parseText&lt;/code&gt;,</code>parseFile<code>等.下面这个例子中我们使用了</code>parseText<code>方法, 它会解析一个JSON字符串, 然后递归地将它转换成</code>list, <code>map</code>结构. 一些其他的`parse* 方法和这个方法很类似, 都返回了JSON字符串, 只不过其他的方法接受的参数不一样.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</div><div class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">'&#123; "name": "John Doe" &#125; /* some comment */'</span>)</div><div class="line"></div><div class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</div><div class="line"><span class="keyword">assert</span> object.name == <span class="string">'John Doe'</span></div></pre></td></tr></table></figure>
+<p>需要注意的是, 产生的结果是一个纯map, 可以像一个普通的Groovy对象实例持有它. <code>JsonSlurper</code>根据<a href="http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf" target="_blank" rel="external">ECMA-404 JSON Interchange Standard</a>定义来解析JSON, 同时支持JavaScript的注释和时间类型.</p>
+<p>除了支持maps之外, <code>JsonSlurper</code> 还支持将JSON数组解析成list的功能<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</div><div class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">'&#123; "myList": [4, 8, 15, 16, 23, 42] &#125;'</span>)</div><div class="line"></div><div class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</div><div class="line"><span class="keyword">assert</span> object.myList <span class="keyword">instanceof</span> List</div><div class="line"><span class="keyword">assert</span> object.myList == [<span class="number">4</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">42</span>]</div></pre></td></tr></table></figure></p>
+<p>JSON标准上只支持下面这些原生数据类型：<code>string&lt;/code&gt;,</code>number, <code>object&lt;/code&gt;,</code>true, <code>false&lt;/code&gt;,</code>null. <code>JsonSlurper</code> 将那些JSON类型转换成Groovy类型.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</div><div class="line"><span class="keyword">def</span> object = jsonSlurper.parseText <span class="string">'''</span></div><div class="line">    &#123; "simple": 123,</div><div class="line">      "fraction": 123.66,</div><div class="line">      "exponential": 123e12</div><div class="line">    &#125;'''</div><div class="line"></div><div class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</div><div class="line"><span class="keyword">assert</span> object.simple.<span class="keyword">class</span> == Integer</div><div class="line"><span class="keyword">assert</span> object.fraction.<span class="keyword">class</span> == BigDecimal</div><div class="line"><span class="keyword">assert</span> object.exponential.<span class="keyword">class</span> == BigDecimal</div></pre></td></tr></table></figure></p>
+<p><code>JsonSlurper</code> 生成的结果就是纯Groovy对象实例, 她的内部不会包含任何的JSON相关的类对象, 它的用法是相当透明的. 事实上<code>JsonSlurper</code>的结果遵循<code>GPath</code>表达式. <code>GPath</code>是一个非常强大的表达式语言, 它支持多种不同的数据格式(例如<code>XmlSlurper</code>支持<code>XML</code> 就是其中一个例子)</p>
+<p>如果想要了解更多的内容, 你可以直接去<a href="http://docs.groovy-lang.org/latest/html/documentation/core-semantics.html#gpath_expressions" target="_blank" rel="external">GPath expressions</a>看一看.<br>下面给出了JSON类型与Groovy数据类型之间的对应关系.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">JSON			Groovy</div><div class="line">string			java.lang.String</div><div class="line">number			java.lang.BigDecimal or java.lang.Integer</div><div class="line">object			java.util.LinkedHashMap</div><div class="line">array			java.util.ArrayList</div><div class="line"><span class="literal">true</span>			<span class="literal">true</span></div><div class="line"><span class="literal">false</span>			<span class="literal">false</span></div><div class="line"><span class="literal">null</span>			<span class="literal">null</span></div><div class="line">date			java.util.Date based on the yyyy-MM-dd’T’<span class="string">HH:</span><span class="string">mm:</span>ssZ date format</div></pre></td></tr></table></figure></p>
+<p>如果JSON中的一个值是<code>null&lt;/code&gt;,</code>JsonSlurper<code>支持它转换成Groovy中的</code>null.这就与其他JSON解析器形成了对比, 代表一个空值与库提供的单一对象。</p>
+<h3 id="Parser-Variants"><a href="#Parser-Variants" class="headerlink" title="Parser Variants"></a>Parser Variants</h3><p>Groovy 有多个<code>JsonSlurper</code> 解析器实现. 每一个解析器都对应着不同的需求, 每一个特定的解析都能很好的处理特定需求, 所以默认的解析器并不是适应于所有的情况. 下面就对各个解析器做个简介:</p>
+<p><code>JsonParserCharArray</code> 解析器接受一个JSON字符串, 然后其内部使用一个字节数组进行解析. During value conversion it copies character sub-arrays (a mechanism known as “chopping”) and operates on them.</p>
+<ul>
+<li><p><code>JsonFastParser</code>解析器是<code>JsonParserCharArray</code>解析器的变种, 它是最快的解析器. 尽管它是最快的,但是基于某些原因,它并不是默认的解析器. <code>JsonFastParser</code>解析器也被称为索引覆盖(index-overlay)解析器. 当解析给定JSON字符串的时候,该解析器会极力避免创建新的字节数组或者字符串实例. 它一直指向原生的字节数组。 另外, 它会尽可能的推迟对象的创建. If parsed maps are put into long-term caches care must be taken as the map objects might not be created and still consist of pointer to the original char buffer only. <code>JsonFastParser</code>采取了一种特殊的切割模型, 它会尽早地分割char buffer, 以便能维持一份对原生buffer比较小的拷贝. 如果你想使用<code>JsonFastParser&lt;/code&gt;, 那么给你的建议是保持</code>JsonFastParser`的JSON buffer在2MB左右, 而且时刻要保持长期缓存限制.</p>
+</li>
+<li><p><code>JsonParserLax</code> 是<code>JsonFastParser</code>的一个变种实现. 它与<code>JsonFastParser</code> 有一些相似的想能特点, 但是不同的是它不是仅仅依靠`ECMA-404 JSON grammar. 例如,在下面例子中它支持不带引号的字符串注释.</p>
+</li>
+</ul>
+<p><code>JsonParserUsingCharacterSource</code> 用于解析非常大的文件. 它使用一种称为<code>“character windowing”</code>的技术去解析非常大(超过2MB)的JSON文件,而且性能上也非常稳定</p>
+<p><code>JsonSlurper</code>的默认实现是 <code>JsonParserCharArray&lt;/code&gt;.</code>JsonParserType`包含了解析器种类的枚举类型:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Implementation					Constant</div><div class="line">JsonParserCharArray				JsonParserType#CHAR_BUFFER</div><div class="line">JsonFastParser					JsonParserType#INDEX_OVERLAY</div><div class="line">JsonParserLax					JsonParserType#LAX</div><div class="line">JsonParserUsingCharacterSource	JsonParserType#CHARACTER_SOURCE</div></pre></td></tr></table></figure>
+<p>如果想要改变解析器的实现也非常简单, 只需要通过调用<code>JsonSlurper#setType()&lt;/code&gt;方法给</code>JsonParserType`设置上不同的值就可以了</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper(<span class="string">type:</span> JsonParserType.INDEX_OVERLAY)</div><div class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">'&#123; "myList": [4, 8, 15, 16, 23, 42] &#125;'</span>)</div><div class="line"></div><div class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</div><div class="line"><span class="keyword">assert</span> object.myList <span class="keyword">instanceof</span> List</div><div class="line"><span class="keyword">assert</span> object.myList == [<span class="number">4</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">42</span>]</div></pre></td></tr></table></figure>
+<h3 id="JsonOutput"><a href="#JsonOutput" class="headerlink" title="JsonOutput"></a>JsonOutput</h3><p><code>JsonOutput</code>用于将Groovy对象序列化成JSON字符串.</p>
+<p><code>JsonOutput</code> 重载了<code>toJson</code>静态方法. 每个不同的<code>toJson</code>方法都会接受一个不同的参数类型.</p>
+<p><code>toJson</code>方法返回的是一个包含JSOn格式的字符串<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> json = JsonOutput.toJson([<span class="string">name:</span> <span class="string">'John Doe'</span>, <span class="string">age:</span> <span class="number">42</span>])</div><div class="line"></div><div class="line"><span class="keyword">assert</span> json == <span class="string">'&#123;"name":"John Doe","age":42&#125;'</span></div></pre></td></tr></table></figure></p>
+<p><code>JsonOutput</code>不仅支持原生类型, map, list等类型序列化到JSON, 甚至还支持序列化`POGOs(一种比较老的Groovy对象)</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> &#123;</span> String name &#125;</div><div class="line"></div><div class="line"><span class="keyword">def</span> json = JsonOutput.toJson([ <span class="keyword">new</span> Person(<span class="string">name:</span> <span class="string">'John'</span>), <span class="keyword">new</span> Person(<span class="string">name:</span> <span class="string">'Max'</span>) ])</div><div class="line"></div><div class="line"><span class="keyword">assert</span> json == <span class="string">'[&#123;"name":"John"&#125;,&#123;"name":"Max"&#125;]'</span></div></pre></td></tr></table></figure>
+<p>刚才那个例子中, JSON输出默认没有进行pretty输出. 因此<code>JsonSlurper</code>还提供了<code>prettyPrint</code>方法<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> json = JsonOutput.toJson([<span class="string">name:</span> <span class="string">'John Doe'</span>, <span class="string">age:</span> <span class="number">42</span>])</div><div class="line"></div><div class="line"><span class="keyword">assert</span> json == <span class="string">'&#123;"name":"John Doe","age":42&#125;'</span></div><div class="line"></div><div class="line"><span class="keyword">assert</span> JsonOutput.prettyPrint(json) == <span class="string">'''\</span></div><div class="line">&#123;</div><div class="line">    "name": "John Doe",</div><div class="line">    "age": 42</div><div class="line">&#125;'''.stripIndent()</div></pre></td></tr></table></figure></p>
+<p><code>prettyPrint</code>方法只接受一个String类型的字符串, 它不能和<code>JsonOutput</code>里其他的方式结合起来使用, it can be applied on arbitrary JSON String instances.</p>
+<p>在Groovy中还可以使用<code>JsonBuilder&lt;/code&gt;,</code>StreamingJsonBuilder<code>方式创建JSON. 这俩个构建起都提供了一个</code>DSL, 当构建器生成一个JSON的时候,可以制定一个对象图.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// an inclusive range</span></div><div class="line"><span class="keyword">def</span> range = <span class="string">'a'</span>..<span class="string">'d'</span></div><div class="line"><span class="keyword">assert</span> range.size() == <span class="number">4</span></div><div class="line"><span class="keyword">assert</span> range.get(<span class="number">2</span>) == <span class="string">'c'</span></div><div class="line"><span class="keyword">assert</span> range[<span class="number">2</span>] == <span class="string">'c'</span></div><div class="line"><span class="keyword">assert</span> range <span class="keyword">instanceof</span> java.util.List</div><div class="line"><span class="keyword">assert</span> range.contains(<span class="string">'a'</span>)</div><div class="line"><span class="keyword">assert</span> range.contains(<span class="string">'d'</span>)</div><div class="line"><span class="keyword">assert</span> !range.contains(<span class="string">'e'</span>)</div></pre></td></tr></table></figure>
+<p>You can iterate on a range using a classic for loop:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span>) &#123;</div><div class="line">    println <span class="string">"Hello $&#123;i&#125;"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>but alternatively you can achieve the same effect in a more Groovy idiomatic style, by iterating a range with each method:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="number">1.</span><span class="number">.10</span>).each &#123; i -&gt;</div><div class="line">    println <span class="string">"Hello $&#123;i&#125;"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Ranges can be also used in the switch statement:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">switch</span> (years) &#123;</div><div class="line">    <span class="keyword">case</span> <span class="number">1.</span><span class="number">.10</span>: interestRate = <span class="number">0.076</span>; <span class="keyword">break</span>;</div><div class="line">    <span class="keyword">case</span> <span class="number">11.</span><span class="number">.25</span>: interestRate = <span class="number">0.052</span>; <span class="keyword">break</span>;</div><div class="line"><span class="symbol">    default:</span> interestRate = <span class="number">0.037</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/04/18/编程语言/Groovy JSON/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/04/18/编程语言/Groovy JSON/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/04/17/编程语言/Groovy ANT/" title="Groovy ANT" itemprop="url">Groovy ANT</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-04-17T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <blockquote>
+<p>本文是对Groovy部分官方文档进行了翻译</p>
+</blockquote>
+<p>虽然<code>Ant</code>只是一个构建工具, 但其提供了例如能够操作文件(包括zip文件), 拷贝, 资源管理等诸多实用功能. 然而如果你不喜欢使用<code>build.xml</code>文件或者<code>Jelly</code>脚本, 而是想要一种清晰简洁的构建方式, 那么你就可以试试使用Groovy编写构建过程.</p>
+<p>Groovy提供了一个辅助类<code>AntBuilder</code>帮忙编写Ant构建任务. 它看起来很像一个不带尖括号的Ant’s XML的简洁版本. 因此你可以在脚本中混合和匹配标记. Ant本身是一组Jar文件的集合. 将这组jar文件添加到你的classpath上, 你就可以在Groovy中轻轻松松的使用它们.</p>
+<p><code>AntBuilder</code>通过便捷的构造器语法直接暴露了Ant task. 下面是一个简单的示例, 它的功能是在标准输出上输出一条消息.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> ant = <span class="keyword">new</span> AntBuilder()          </div><div class="line">ant.echo(<span class="string">'hello from Ant!'</span>)</div></pre></td></tr></table></figure></p>
+<ol>
+<li>创建一个<code>AntBuilder</code>实例</li>
+<li>执行<code>AntBuilder</code>实例的echo task</li>
+</ol>
+<p>假设,现在你需要创建一个ZIP文件：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> ant = <span class="keyword">new</span> AntBuilder()</div><div class="line">ant.zip(<span class="string">destfile:</span> <span class="string">'sources.zip'</span>, <span class="string">basedir:</span> <span class="string">'src'</span>)</div></pre></td></tr></table></figure></p>
+<p>在下面的例子中, 我们将展示在Groovy中使用传统的Ant 模式通过<code>AntBuilder</code>拷贝一组文件.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lets just call one task</span></div><div class="line">ant.echo(<span class="string">"hello"</span>)</div><div class="line"></div><div class="line"><span class="comment">// here is an example of a block of Ant inside GroovyMarkup</span></div><div class="line">ant.sequential &#123;</div><div class="line">    echo(<span class="string">"inside sequential"</span>)</div><div class="line">    <span class="keyword">def</span> myDir = <span class="string">"target/AntTest/"</span></div><div class="line">    mkdir(<span class="string">dir:</span> myDir)</div><div class="line">    copy(<span class="string">todir:</span> myDir) &#123;</div><div class="line">        fileset(<span class="string">dir:</span> <span class="string">"src/test"</span>) &#123;</div><div class="line">            include(<span class="string">name:</span> <span class="string">"**/*.groovy"</span>)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    echo(<span class="string">"done"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// now lets do some normal Groovy again</span></div><div class="line"><span class="keyword">def</span> file = <span class="keyword">new</span> File(ant.project.baseDir,<span class="string">"target/AntTest/groovy/util/AntTest.groovy"</span>)</div><div class="line"><span class="keyword">assert</span> file.exists()</div></pre></td></tr></table></figure></p>
+<p>下面的例子是遍历一组文件, 然后将每个文件根据特殊模式进行匹配.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lets create a scanner of filesets</span></div><div class="line"><span class="keyword">def</span> scanner = ant.fileScanner &#123;</div><div class="line">    fileset(<span class="string">dir:</span><span class="string">"src/test"</span>) &#123;</div><div class="line">        include(<span class="string">name:</span><span class="string">"**/Ant*.groovy"</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// now lets iterate over</span></div><div class="line"><span class="keyword">def</span> found = <span class="literal">false</span></div><div class="line"><span class="keyword">for</span> (f <span class="keyword">in</span> scanner) &#123;</div><div class="line">    println(<span class="string">"Found file $f"</span>)</div><div class="line">    found = <span class="literal">true</span></div><div class="line">    <span class="keyword">assert</span> f <span class="keyword">instanceof</span> File</div><div class="line">    <span class="keyword">assert</span> f.name.endsWith(<span class="string">".groovy"</span>)</div><div class="line">&#125;</div><div class="line"><span class="keyword">assert</span> found</div></pre></td></tr></table></figure></p>
+<p>Or execute a JUnit test:</p>
+<p>下面我们执行JUnit<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lets create a scanner of filesets</span></div><div class="line">ant.junit &#123;</div><div class="line">    test(<span class="string">name:</span><span class="string">'groovy.util.SomethingThatDoesNotExist'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>现在, 让我们的步子迈地更大一点：在Groovy中编译然后执行一个Java文件.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ant.echo(<span class="string">file:</span><span class="string">'Temp.java'</span>, <span class="string">'''</span></div><div class="line">    class Temp &#123;</div><div class="line">        public static void main(String[] args) &#123;</div><div class="line">            System.out.println("Hello");</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">''')</div><div class="line">ant.javac(<span class="string">srcdir:</span><span class="string">'.'</span>, <span class="string">includes:</span><span class="string">'Temp.java'</span>, <span class="string">fork:</span><span class="string">'true'</span>)</div><div class="line">ant.java(<span class="string">classpath:</span><span class="string">'.'</span>, <span class="string">classname:</span><span class="string">'Temp'</span>, <span class="string">fork:</span><span class="string">'true'</span>)</div><div class="line">ant.echo(<span class="string">'Done'</span>)</div></pre></td></tr></table></figure></p>
+<p>需要提及的是, <code>AntBuilder</code>是内嵌于<code>Gradle</code>中的. 你可以像在Groovy中那样, 在<code>Gradle</code>使用<code>AntBuilder</code></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/04/17/编程语言/Groovy ANT/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/04/17/编程语言/Groovy ANT/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2014/04/16/编程语言/Groovy 字符串/" title="Groovy 字符串" itemprop="url">Groovy 字符串</a>
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2014-04-16T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-16</time>
@@ -211,7 +383,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2014-04-15T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-15</time>
@@ -321,7 +493,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2014-04-11T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-11</time>
@@ -497,7 +669,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2014-04-09T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-09</time>
@@ -614,7 +786,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2014-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-08</time>
@@ -701,7 +873,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2013-11-20T08:00:00.000Z" itemprop="datePublished"> Published 2013-11-20</time>
@@ -767,7 +939,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2013-11-20T08:00:00.000Z" itemprop="datePublished"> Published 2013-11-20</time>
@@ -829,7 +1001,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2013-09-13T07:00:00.000Z" itemprop="datePublished"> Published 2013-09-13</time>
@@ -901,7 +1073,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2013-09-13T07:00:00.000Z" itemprop="datePublished"> Published 2013-09-13</time>
@@ -1003,7 +1175,7 @@
   </h1>
   <p class="article-author">By
        
-		<a href="/about" title="ming15" target="_blank" itemprop="author">ming15</a>
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
     <time datetime="2012-08-20T07:00:00.000Z" itemprop="datePublished"> Published 2012-08-20</time>
@@ -1087,7 +1259,7 @@
   
 <div class="github-card">
 <p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="ming15" data-width="220" data-height="119" data-theme="medium">
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
   </div>
@@ -1106,7 +1278,7 @@
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>63</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>65</sup></a></li>
 		  
 		
 		  
@@ -1177,7 +1349,7 @@
         
           <li>
             
-            	<a href="http://www1.vertx3.cn" target="_blank" title="vertx3">vertx3</a>
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
             
           </li>
         
@@ -1236,7 +1408,7 @@
 		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
 		
 		
-		<a href="https://github.com/ming15" target="_blank" class="icon-github" title="github"></a>
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
 		
 		
 		
@@ -1257,7 +1429,7 @@
 		<p class="copyright">
 		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
 		
-		<a href="/about" target="_blank" title="ming15">ming15</a>
+		<a href="/about" target="_blank" title="王玉">王玉</a>
 		
 		
 		</p>
