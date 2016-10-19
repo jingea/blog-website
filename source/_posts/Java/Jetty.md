@@ -18,28 +18,40 @@ title: Jetty 嵌入模式
 ## 文件服务器
 通过`ResourceHandler` 指定了资源路径，并且允许列出目录和文件. 下面的例子中就是直接将`ResourceHandler`映射到根目录`/`下, 即通过`http://localhost:8080/`就可以在浏览器上看到所有的文件列表
 ```java
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 
-public class FileServer {
+public class Main {
+
 	public static void main(String[] args) throws Exception {
 		Server server = new Server(8080);
 
-		ResourceHandler resourceHandler = new ResourceHandler();
-		resourceHandler.setDirectoriesListed(true);
-		resourceHandler.setWelcomeFiles(new String[] { "index.html" });
-		resourceHandler.setResourceBase("D:\\repository");
+		ResourceHandler fileResourceHandler = new ResourceHandler();
+		fileResourceHandler.setDirectoriesListed(true);
+		fileResourceHandler.setResourceBase("D:\\repository");
 
 		GzipHandler gzip = new GzipHandler();
 		server.setHandler(gzip);
-		HandlerList handlers = new HandlerList();
-		handlers.setHandlers(new Handler[] { resourceHandler, new DefaultHandler() });
-		gzip.setHandler(handlers);
 
+		ContextHandler fileContext = new ContextHandler("/files");
+		fileContext.setHandler(fileResourceHandler);
+
+		ResourceHandler indexResourceHandler = new ResourceHandler();
+		indexResourceHandler.setDirectoriesListed(true);
+		indexResourceHandler.setWelcomeFiles(new String[]{"index.html"});
+		indexResourceHandler.setResourceBase(".");
+
+		ContextHandler indexContextHandler = new ContextHandler("/");
+		indexContextHandler.setHandler(indexResourceHandler);
+
+		HandlerList handlerList = new HandlerList();
+		handlerList.addHandler(fileContext);
+		handlerList.addHandler(indexContextHandler);
+
+		server.setHandler(handlerList);
 		server.start();
 		server.join();
 	}
