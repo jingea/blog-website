@@ -16,6 +16,7 @@ title: Jetty 嵌入模式
 * `HandlerWrapper`：继承自`HandlerWrapper`的类可以以面向切面编程的方式将handler通过链式的形式组合在一起.例如一个标准的web应用程序就实现了一个这样的规则, 他将context,session,security,servlet的handler以链式的方式组合在一起.
 
 ## 文件服务器
+通过`ResourceHandler` 指定了资源路径，并且允许列出目录和文件. 下面的例子中就是直接将`ResourceHandler`映射到根目录`/`下, 即通过`http://localhost:8080/`就可以在浏览器上看到所有的文件列表
 ```java
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -45,6 +46,86 @@ public class FileServer {
 }
 ```
 
+> 还可以使用`ContextHandler`将`ResourceHandler`映射到其他路径上. 
+
+## ContextHandler
+`ContextHandler`实现自`ScopedHandler`. `ContextHandler`实现的功能是将Http请求路径映射到某个具体处理业务逻辑的Handler上.
+
+```java
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class ManyContexts {
+	public static void main(String[] args) throws Exception {
+		Server server = new Server(8080);
+
+		// 可以在ContextHandler的构造函数中设置URI映射,但是setContextPath()会覆盖构造函数中的映射
+		ContextHandler rootContext = new ContextHandler("/");
+		rootContext.setContextPath("/root");
+		rootContext.setHandler(new HelloHandler("Root Hello"));
+
+		ContextHandler contextFR = new ContextHandler("/fr");
+		contextFR.setHandler(new HelloHandler("Bonjoir"));
+
+		ContextHandler contextV = new ContextHandler("/");
+		contextV.setVirtualHosts(new String[] { "127.0.0.2" });
+		contextV.setHandler(new HelloHandler("Virtual Hello"));
+
+		ContextHandler resourceBaseHandler = new ContextHandler("/resources");
+		// 设置web内容的路径, 即请求web资源时(Html, js, css文件等)的根路径
+		resourceBaseHandler.setResourceBase("/");
+		resourceBaseHandler.setHandler(new HelloHandler("Resource Hello"));
+
+		ContextHandlerCollection contexts = new ContextHandlerCollection();
+		contexts.setHandlers(new Handler[] { rootContext, contextFR, contextV, resourceBaseHandler});
+
+		server.setHandler(contexts);
+
+		server.start();
+		server.join();
+	}
+
+	public static class HelloHandler extends AbstractHandler {
+
+		private String path;
+		public HelloHandler(String path) {
+			this.path = path;
+		}
+
+		@Override
+		public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+			ServletOutputStream out = response.getOutputStream();
+			out.print(path);
+			out.flush();
+			response.setStatus(200);
+		}
+	}
+}
+```
+我们看一下测试结果
+```bash
+ζ curl http://192.168.10.220:8080/
+Root Hello%                                                                                         
+# wangming@OA1503P0256: ~                                                               (16:55:48)
+ζ curl http://192.168.10.220:8080/fr
+# wangming@OA1503P0256: ~                                                               (16:55:55)
+ζ curl http://192.168.10.220:8080/it
+# wangming@OA1503P0256: ~                                                               (16:56:07)
+ζ curl 127.0.0.2:8080/
+Virtual HelloRoot Hello%                                                                            
+```
+
+
 ## Servlets
 Servlet是一种标准的处理HTTP请求逻辑的方式. Servlet和Jetty Handler非常像, 但是Servlet得request对象是不可变的.
 Jetty的ServletHandler采用将请求映射到一个标准路径上.
@@ -69,6 +150,41 @@ public class MinimalServlets {
 		// 下面我们配置一个原生的Servlet, 还有其他的Servlet(例如通过web.xml或者@WebServlet注解生成的)可配置
 		handler.addServletWithMapping(HelloServlet.class, "/*");
 
+		server.start();
+		server.join();
+	}
+
+	public static class HelloServlet extends HttpServlet {
+		@Override
+		protected void doGet(HttpServletRequest request, HttpServletResponse response)
+				throws ServletException, IOException {
+			response.setContentType("text/html");
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().println("<h1>Hello from HelloServlet</h1>");
+		}
+	}
+}
+```
+
+## ServletContextHandler
+在上面的`Servlets`中我们看到每个Servlet都对应一个完整的URI地址映射, 但是如果我们想在某个特定的URI下, 增加子映射怎么办呢？这就用到了`ServletContextHandler`
+```java
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class ServletContextHandlerTest {
+	public static void main(String[] args) throws Exception {
+		Server server = new Server(8080);
+		ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		servletContextHandler.setContextPath("/servlet");
+		servletContextHandler.addServlet(HelloServlet.class, "/abc");
+		server.setHandler(servletContextHandler);
 		server.start();
 		server.join();
 	}
@@ -185,101 +301,6 @@ public class ManyConnectors {
 ```
 我们使用JMeter模拟客户端进行访问
 
-## ContextHandler
-`ContextHandler`实现自`ScopedHandler`
-
-```java
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.servlet.DefaultServlet;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-public class ManyContexts {
-	public static void main(String[] args) throws Exception {
-		Server server = new Server(8080);
-
-		ContextHandler context = new ContextHandler("/");
-		context.setContextPath("/");
-		context.setHandler(new HelloHandler("Root Hello"));
-
-		ContextHandler contextFR = new ContextHandler("/fr");
-		contextFR.setHandler(new HelloHandler("Bonjoir"));
-
-		ContextHandler contextIT = new ContextHandler("/it");
-		contextIT.setHandler(new HelloHandler("Bongiorno"));
-
-		ContextHandler contextV = new ContextHandler("/");
-		contextV.setVirtualHosts(new String[] { "127.0.0.2" });
-		contextV.setHandler(new HelloHandler("Virtual Hello"));
-
-		ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-		servletContextHandler.setContextPath("/servlet");
-		servletContextHandler.setResourceBase("d:\\ssl");
-		servletContextHandler.addServlet(HelloServlet.class, "/abc");
-
-		ContextHandlerCollection contexts = new ContextHandlerCollection();
-		contexts.setHandlers(new Handler[] { context, contextFR, contextIT, contextV, servletContextHandler});
-
-		server.setHandler(contexts);
-
-		server.start();
-		server.join();
-	}
-
-	public static class HelloServlet extends HttpServlet {
-		@Override
-		protected void doGet(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			response.setContentType("text/html");
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().println("<h1>Hello from HelloServlet</h1>");
-		}
-	}
-
-	public static class HelloHandler extends AbstractHandler {
-
-		private String path;
-		public HelloHandler(String path) {
-			this.path = path;
-		}
-
-		@Override
-		public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-			ServletOutputStream out = response.getOutputStream();
-			out.print(path);
-			out.flush();
-			response.setStatus(200);
-		}
-	}
-}
-```
-我们看一下测试结果
-```bash
-ζ curl http://192.168.10.220:8080/
-Root Hello%                                                                                         
-# wangming@OA1503P0256: ~                                                               (16:55:48)
-ζ curl http://192.168.10.220:8080/fr
-# wangming@OA1503P0256: ~                                                               (16:55:55)
-ζ curl http://192.168.10.220:8080/it
-# wangming@OA1503P0256: ~                                                               (16:56:07)
-ζ curl 127.0.0.2:8080/
-Virtual HelloRoot Hello%                                                                            
-# wangming@OA1503P0256: ~                                                               (16:56:34)
-# wangming@OA1503P0256: ~                                                               (16:56:48)
-ζ curl http://192.168.10.220:8080/servlet/abc
-<h1>Hello from HelloServlet</h1>
-```
 
 ## JMX
 服务器开启JMX
