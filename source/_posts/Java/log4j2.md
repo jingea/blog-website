@@ -199,3 +199,20 @@ log4j2的配置文件为
     </Loggers>
 </Configuration>
 ```
+
+动态修改日志级别
+```java
+		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+		final Configuration config = ctx.getConfiguration();
+
+		LoggerConfig loggerConfig = config.getLoggerConfig(logger.getName());
+		LoggerConfig specificConfig = loggerConfig;
+
+		if (!loggerConfig.getName().equals(logger.getName())) {
+			specificConfig = new LoggerConfig(logger.getName(), level, true);
+			specificConfig.setParent(loggerConfig);
+			config.addLogger(logger.getName(), specificConfig);
+		}
+		specificConfig.setLevel(level);
+		ctx.updateLoggers();
+```
