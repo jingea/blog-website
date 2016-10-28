@@ -22,7 +22,6 @@ URI一般由以下组成
 
 这里简述一下相对URL. 举例来说`<a href="java.html">` 这个超链接会继承父文档(当前文档)的协议, 主机名, 资源路径`.java.html`会替换掉,父文档里最后的文件名,还有例如`<a href="/demo/java.html"> `那这个超链接会将主机名后的资源路径一起换掉 ，用该路径替换
 
-## URL
 Java支持的传输协议：
 * 超文本传输协议: `http://www.baidu.com`		
 * 安全http协议: `https://www.amazon.com/exec/obidos/order2`
@@ -37,6 +36,45 @@ Java支持的传输协议：
 * JDBC 定制协议   通过java.sql包支持: `jdbc:mysql://luna.matalab.unc.edu:3306/NEWS`
 * rmi  远程方法的调用协议   通过java.rmi包支持: `rmi://metalab.unc.edu/RenderEngine`
 * HotJava的定制协议: `doc:/UserGuide/release.html`,`netdoc:/UserGuide/release.html`, `systemresource://www.adc.org/+/index.html`, `verbatim:http://www.adc.org`
+
+## URL
+
+URL使用的字符必须来自ASCII的子集(大写字母`A-Z`,小写字母`a-z`,数字`0-9`, 标点字符 `- _ . ! ~ * ' ,`) 需要注意的是`/ & ? @ # ; $ + = %` 也可以使用,但是必须转换为字节(每个字节为%后跟俩个16进制数字)(空格编码为+) 所以URL组成的内容是ASCII的子集 + 经过转换后的字节 但是URL不会自动地进行编码和解码因此我们需要URLEncoder来进行编码
+
+```java
+// 解码由x-www-form-url-encoded格式编码的字符串
+	@Test
+	public void testSpace() {
+		String base64 = "wKOS4FsxiFvE48KGGSuSkRui9Iap1ukgl1+eVqZiGhXQYYiP8KGCV%2FRIeTEyMLsWxE%2FEx6jhuW3DPUt4JYX+cohUOqFVVaQ%2FioGZCAge3ygaCz%2Fe4q8o9XQzOEtcdXPywGZ0e5sgE787ij4dRZy2ILK2cxsVvC8yrlIPGZ3LUg8nOj8oEg5l2AnQnA3i+Sxbgqmwe1OjIXVZqPZWb+Y4SVQL8EpWlmEjXb4HjgmGTgVYzwJ64QO7HUPP1yuQHkS0PLS%2FpbPrgL5vqTF7h%2FPvMw=%3D";
+		String decoded = null;
+		try {
+			decoded = URLDecoder.decode(base64);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// 如果url包含一个%而后却没有2个16进制数字 抛出该异常
+			e.printStackTrace();
+		}
+		System.out.println(decoded);
+		byte[] decode = UrlBase64.decode(base64);
+		System.out.println(new String(decode));
+	}
+```
+需要注意额是= 和 & URLEncoder会进行盲目地编码 因此在使用URLEncoder编码时避免将整个url字串都编码
+```java
+print("  : " + URLEncoder.encode(" ", "UTF-8"));
+print("= : " + URLEncoder.encode("=", "UTF-8"));
+print("& : " + URLEncoder.encode("&", "UTF-8"));
+print("* : " + URLEncoder.encode("*", "UTF-8"));
+print("% : " + URLEncoder.encode("%", "UTF-8"));
+print("+ : " + URLEncoder.encode("+", "UTF-8"));
+print("/ : " + URLEncoder.encode("/", "UTF-8"));
+print(". : " + URLEncoder.encode(".", "UTF-8"));
+print(": : " + URLEncoder.encode(":", "UTF-8"));
+print("~ : " + URLEncoder.encode("~", "UTF-8"));
+print("\" : " + URLEncoder.encode("\"", "UTF-8"));
+print("() : " + URLEncoder.encode("(url)", "UTF-8"));
+```
 
 
 不带端口构造`URL`(需要注意的是：该构造器生成的URL端口为-1,所以回使用该协议的默认端口   第三个参数加反斜线也是需要注意的)
