@@ -42,7 +42,7 @@
 				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -56,7 +56,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
 						</form>
 					
 					</li>
@@ -73,6 +73,221 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/03/14/JavaLibrary/Netty NioEventLoop/" title="Netty NioEventLoop" itemprop="url">Netty NioEventLoop</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-14T07:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-14</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在真实的业务环境中, 我们都是使用主从Reactor线程模型. 在Netty中主从线程池都是使用的<code>NioEventLoopGroup</code>, 它实现了<br><code>java.util.concurrent.Executor</code>. 虽然在编程中我们使用的是<code>NioEventLoopGroup</code>, 但是主要的逻辑确是在<code>MultithreadEventExecutorGroup</code>里实现的.<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/netty/NioEventLoopGroup.jpg" alt=""><br>下来我们首先看一下<code>MultithreadEventExecutorGroup</code>的数据成员<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> EventExecutor[] children;</div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> EventExecutorChooser chooser;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">MultithreadEventExecutorGroup</span><span class="params">(<span class="keyword">int</span> nThreads, ThreadFactory threadFactory, Object... args)</span> </span>&#123;</div><div class="line">        children = <span class="keyword">new</span> SingleThreadEventExecutor[nThreads];</div><div class="line">        <span class="keyword">if</span> (isPowerOfTwo(children.length)) &#123;</div><div class="line">            chooser = <span class="keyword">new</span> PowerOfTwoEventExecutorChooser();</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            chooser = <span class="keyword">new</span> GenericEventExecutorChooser();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nThreads; i ++) &#123;</div><div class="line">            <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                children[i] = newChild(threadFactory, args);</div><div class="line">                success = <span class="keyword">true</span>;</div><div class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">                <span class="comment">// <span class="doctag">TODO:</span> Think about if this is a good exception type</span></div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"failed to create a child event loop"</span>, e);</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>我们看到了<code>NioEventLoopGroup</code>内部聚合了一个<code>EventExecutor</code>的数组. 这个数组就构成了主从线程池. 线程的选择由<code>EventExecutorChooser chooser</code>来实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> EventExecutor <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> chooser.next();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">PowerOfTwoEventExecutorChooser</span> <span class="keyword">implements</span> <span class="title">EventExecutorChooser</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> EventExecutor <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> children[childIndex.getAndIncrement() &amp; children.length - <span class="number">1</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericEventExecutorChooser</span> <span class="keyword">implements</span> <span class="title">EventExecutorChooser</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> EventExecutor <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> children[Math.abs(childIndex.getAndIncrement() % children.length)];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而<code>newChild()</code>的方法实现是由子类来确定的, 我们来直接看一下<code>NioEventLoopGroup</code>的内部实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> EventExecutor <span class="title">newChild</span><span class="params">(ThreadFactory threadFactory, Object... args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> NioEventLoop(<span class="keyword">this</span>, threadFactory, (SelectorProvider) args[<span class="number">0</span>]);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它是直接生成了一个<code>NioEventLoop</code>的实例出来. 下来我们看一下<code>NioEventLoop</code>的实现<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/netty/NioEventLoop.jpg" alt=""><br>我们看一下<code>NioEventLoop</code>的属性成员<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 多路选择复用器</span></div><div class="line">Selector selector;</div><div class="line"><span class="comment">// Netty优化过的SelectedSelectionKeys</span></div><div class="line"><span class="keyword">private</span> SelectedSelectionKeySet selectedKeys;</div><div class="line"><span class="comment">// SelectorProvider.provider()提供, 在NioEventLoopGroup构造器中实现</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> SelectorProvider provider;</div></pre></td></tr></table></figure></p>
+<p>我们看到<code>NioEventLoop</code>主要是实现了IO多路复用, 它的任务执行是由父类<code>SingleThreadEventExecutor</code>实现的, 下面我们从它的构造器来追溯到<code>SingleThreadEventExecutor</code>上<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">NioEventLoop(NioEventLoopGroup parent, ThreadFactory threadFactory, SelectorProvider selectorProvider) &#123;</div><div class="line">    <span class="keyword">super</span>(parent, threadFactory, <span class="keyword">false</span>);</div><div class="line">    <span class="keyword">if</span> (selectorProvider == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"selectorProvider"</span>);</div><div class="line">    &#125;</div><div class="line">    provider = selectorProvider;</div><div class="line">    selector = openSelector();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>SingleThreadEventExecutor</code>这个类主要是实现了主从线程池中的线程功能, 所有的任务都在单线程中执行, 因此将这个线程池串行化, 可以将其看待成一个线程. 在<code>SingleThreadEventExecutor</code>中的构造器中,添加向任务队列中添加一个调用<code>NioEventLoop</code>的<code>run()</code>方法的任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">SingleThreadEventExecutor</span><span class="params">(</span></span></div><div class="line">            EventExecutorGroup parent, ThreadFactory threadFactory, <span class="keyword">boolean</span> addTaskWakesUp) &#123;</div><div class="line">        thread = threadFactory.newThread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</div><div class="line">                updateLastExecutionTime();</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    SingleThreadEventExecutor.<span class="keyword">this</span>.run();</div><div class="line">                    success = <span class="keyword">true</span>;</div><div class="line">                &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">                &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                    <span class="keyword">for</span> (;;) &#123;</div><div class="line">                        <span class="keyword">int</span> oldState = STATE_UPDATER.get(SingleThreadEventExecutor.<span class="keyword">this</span>);</div><div class="line">                        <span class="keyword">if</span> (oldState &gt;= ST_SHUTTING_DOWN || STATE_UPDATER.compareAndSet(</div><div class="line">                                SingleThreadEventExecutor.<span class="keyword">this</span>, oldState, ST_SHUTTING_DOWN)) &#123;</div><div class="line">                            <span class="keyword">break</span>;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                    <span class="comment">// Check if confirmShutdown() was called at the end of the loop.</span></div><div class="line">                    <span class="keyword">if</span> (success &amp;&amp; gracefulShutdownStartTime == <span class="number">0</span>) &#123;</div><div class="line">                        logger.error(<span class="string">"Buggy "</span> + EventExecutor.class.getSimpleName());</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="keyword">try</span> &#123;</div><div class="line">                        <span class="comment">// Run all remaining tasks and shutdown hooks.</span></div><div class="line">                        <span class="keyword">for</span> (;;) &#123;</div><div class="line">                            <span class="keyword">if</span> (confirmShutdown()) &#123;</div><div class="line">                                <span class="keyword">break</span>;</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                        <span class="keyword">try</span> &#123;</div><div class="line">                            cleanup();</div><div class="line">                        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                            STATE_UPDATER.set(SingleThreadEventExecutor.<span class="keyword">this</span>, ST_TERMINATED);</div><div class="line">                            threadLock.release();</div><div class="line">                            terminationFuture.setSuccess(<span class="keyword">null</span>);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        taskQueue = newTaskQueue();</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>我们看到了一行关键性代码<code>SingleThreadEventExecutor.this.run()</code>, 它调用了自己的<code>run()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure></p>
+<p>而这个方法是在<code>NioEventLoop</code>中实现的,也是我们要重点分析的代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (;;) &#123;</div><div class="line">            <span class="keyword">boolean</span> oldWakenUp = wakenUp.getAndSet(<span class="keyword">false</span>);</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="comment">// 查看taskQueue里是否有任务, 如果有任务的话, 则直接selector.selectNow();</span></div><div class="line">                <span class="keyword">if</span> (hasTasks()) &#123;</div><div class="line">                    selectNow();</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    select(oldWakenUp);</div><div class="line"></div><div class="line">                    <span class="keyword">if</span> (wakenUp.get()) &#123;</div><div class="line">                        selector.wakeup();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                cancelledKeys = <span class="number">0</span>;</div><div class="line">                needsToSelectAgain = <span class="keyword">false</span>;</div><div class="line">                <span class="keyword">final</span> <span class="keyword">int</span> ioRatio = <span class="keyword">this</span>.ioRatio;</div><div class="line">                <span class="comment">// 如果当前线程是百分百执行的话, 则直接处理所有的任务</span></div><div class="line">                <span class="keyword">if</span> (ioRatio == <span class="number">100</span>) &#123;</div><div class="line">                    processSelectedKeys();</div><div class="line">                    runAllTasks();</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="keyword">final</span> <span class="keyword">long</span> ioStartTime = System.nanoTime();</div><div class="line"></div><div class="line">                    processSelectedKeys();</div><div class="line"></div><div class="line">                    <span class="keyword">final</span> <span class="keyword">long</span> ioTime = System.nanoTime() - ioStartTime;</div><div class="line">                    runAllTasks(ioTime * (<span class="number">100</span> - ioRatio) / ioRatio);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="comment">//</span></div><div class="line">                <span class="keyword">if</span> (isShuttingDown()) &#123;</div><div class="line">                    closeAll();</div><div class="line">                    <span class="keyword">if</span> (confirmShutdown()) &#123;</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>上面的<code>run()</code>就是不断的轮询当前<code>NioEventLoop</code>里是否有任务. 然后处理Selector上已经就绪的Channel和任务队列里的任务.<br>然后我们接着往下看<code>processSelectedKeys()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKeys</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">if</span> (selectedKeys != <span class="keyword">null</span>) &#123;</div><div class="line">           processSelectedKeysOptimized(selectedKeys.flip());</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           processSelectedKeysPlain(selector.selectedKeys());</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line"></div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKeysPlain</span><span class="params">(Set&lt;SelectionKey&gt; selectedKeys)</span> </span>&#123;</div><div class="line">           <span class="comment">// check if the set is empty and if so just return to not create garbage by</span></div><div class="line">           <span class="comment">// creating a new Iterator every time even if there is nothing to process.</span></div><div class="line">           <span class="comment">// See https://github.com/netty/netty/issues/597</span></div><div class="line">           <span class="keyword">if</span> (selectedKeys.isEmpty()) &#123;</div><div class="line">               <span class="keyword">return</span>;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           Iterator&lt;SelectionKey&gt; i = selectedKeys.iterator();</div><div class="line">           <span class="keyword">for</span> (;;) &#123;</div><div class="line">               <span class="keyword">final</span> SelectionKey k = i.next();</div><div class="line">               <span class="comment">// 取出SelectionKey的附件</span></div><div class="line">               <span class="keyword">final</span> Object a = k.attachment();</div><div class="line">               i.remove();</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (a <span class="keyword">instanceof</span> AbstractNioChannel) &#123;</div><div class="line">                 <span class="comment">// a有可能是NioServerSocketChannel或者NioSocketChannel</span></div><div class="line">                   processSelectedKey(k, (AbstractNioChannel) a);</div><div class="line">               &#125; <span class="keyword">else</span> &#123;</div><div class="line">                   <span class="comment">// 如果a不是Channel的话, 那就是NioTask了</span></div><div class="line">                   <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">                   NioTask&lt;SelectableChannel&gt; task = (NioTask&lt;SelectableChannel&gt;) a;</div><div class="line">                   processSelectedKey(k, task);</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (!i.hasNext()) &#123;</div><div class="line">                   <span class="keyword">break</span>;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (needsToSelectAgain) &#123;</div><div class="line">                   selectAgain();</div><div class="line">                   selectedKeys = selector.selectedKeys();</div><div class="line"></div><div class="line">                   <span class="comment">// Create the iterator again to avoid ConcurrentModificationException</span></div><div class="line">                   <span class="keyword">if</span> (selectedKeys.isEmpty()) &#123;</div><div class="line">                       <span class="keyword">break</span>;</div><div class="line">                   &#125; <span class="keyword">else</span> &#123;</div><div class="line">                       i = selectedKeys.iterator();</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">       &#125;</div></pre></td></tr></table></figure></p>
+<p>然后咱们接着往下看对Channel的处理<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">processSelectedKey</span><span class="params">(SelectionKey k, AbstractNioChannel ch)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> NioUnsafe unsafe = ch.unsafe();</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">int</span> readyOps = k.readyOps();</div><div class="line">        <span class="comment">// Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead</span></div><div class="line">        <span class="comment">// to a spin loop</span></div><div class="line">        <span class="keyword">if</span> ((readyOps &amp; (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != <span class="number">0</span> || readyOps == <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// 如果是读事件或者连接的事件,则直接调用read方法</span></div><div class="line">            unsafe.read();</div><div class="line">            <span class="keyword">if</span> (!ch.isOpen()) &#123;</div><div class="line">                <span class="comment">// Connection already closed - no need to handle write.</span></div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> ((readyOps &amp; SelectionKey.OP_WRITE) != <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// 如果是写操作位, 则说明有半包消息没有写完, 需要继续</span></div><div class="line">            ch.unsafe().forceFlush();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> ((readyOps &amp; SelectionKey.OP_CONNECT) != <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// remove OP_CONNECT as otherwise Selector.select(..) will always return without blocking</span></div><div class="line">            <span class="comment">// See https://github.com/netty/netty/issues/924</span></div><div class="line">            <span class="keyword">int</span> ops = k.interestOps();</div><div class="line">            ops &amp;= ~SelectionKey.OP_CONNECT;</div><div class="line">            k.interestOps(ops);</div><div class="line"></div><div class="line">            unsafe.finishConnect();</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (CancelledKeyException ignored) &#123;</div><div class="line">        unsafe.close(unsafe.voidPromise());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>在unsafe的多态这我们要多说一些, 我们知道NioEventLoop内部处理的Channel其实是有俩种类型的, 一个是<code>NioServerScoketChannel</code>一个是<code>NioSocketChannel</code>.</p>
+<p><code>NioServerSocketChannel</code>继承自<code>AbstractNioMessageChannel</code>, 而这个父类实现了一个<code>NioMessageUnsafe</code>的一个内部类, 这个内部类的<code>read()</code>方法会调用Channel里的<code>doReadMessage()</code>方法. 父类的<code>doReadMessage()</code>方法是由子类来具体实现的. 在<code>NioServerScoketChannel</code>中是生成了一个<code>NioSocketChannel</code>的列表作为消息返回, 然后再让<code>ServerBootstrapAcceptor</code>将<code>NioSocketChannel</code>绑定到从Reactor上.</p>
+<p><code>NioSocketChannel</code>继承自<code>AbstractNioByteChannel</code>, 这个父类实现了一个<code>NioByteUnsafe</code>, 这个Unsafe就负责创建ByteBuf, 接受真正的网络数据了.</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Netty/">Netty</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/14/JavaLibrary/Netty NioEventLoop/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/14/JavaLibrary/Netty NioEventLoop/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/12/算法/环形队列/" title="环形队列" itemprop="url">环形队列</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-12T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-12</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#-*- coding=utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="comment"># 环形队列实现</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">CircleQueue</span>:</span></div><div class="line">    <span class="comment"># 队列头</span></div><div class="line">    queueHead = <span class="number">0</span></div><div class="line">    <span class="comment"># 队列尾</span></div><div class="line">    queueTail = <span class="number">0</span></div><div class="line">    <span class="comment"># 队列容量</span></div><div class="line">    queueCacity = <span class="number">0</span></div><div class="line">    <span class="comment"># 队列当前长度</span></div><div class="line">    queueLength = <span class="number">0</span></div><div class="line">    <span class="comment"># 队列容器</span></div><div class="line">    queue = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, capacity)</span>:</span></div><div class="line">        self.queueCacity = capacity</div><div class="line">        self.queue = [<span class="number">0</span>] * capacity</div><div class="line"></div><div class="line">    <span class="comment"># 入列</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">enqueue</span><span class="params">(self, obj)</span>:</span></div><div class="line">        <span class="keyword">if</span>(self.isFull()):</div><div class="line">            <span class="keyword">raise</span> RuntimeError(<span class="string">"Queue is Full"</span>)</div><div class="line"></div><div class="line">        self.queue[self.queueTail] = obj</div><div class="line">        self.queueTail += <span class="number">1</span></div><div class="line">        <span class="comment"># 为了让队列头一直在环形队列中进行变化, 因此进行取余操作,</span></div><div class="line">        <span class="comment"># 当队列头达到最大容量时,再增长就回到初始队列头的位置</span></div><div class="line">        self.queueTail = self.queueTail % self.queueCacity</div><div class="line">        self.queueLength += <span class="number">1</span></div><div class="line"></div><div class="line">        <span class="keyword">return</span> self.queueLength</div><div class="line"></div><div class="line">    <span class="comment"># 出列</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dequeue</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">if</span>(self.isEmpoty()):</div><div class="line">            <span class="keyword">raise</span> RuntimeError(<span class="string">"Queue is Empoty"</span>)</div><div class="line">        obj = self.queue[self.queueHead]</div><div class="line">        self.queueHead += <span class="number">1</span></div><div class="line">        self.queueHead = self.queueHead % self.queueCacity</div><div class="line">        self.queueLength -= <span class="number">1</span></div><div class="line">        <span class="keyword">return</span> obj</div><div class="line"></div><div class="line">    <span class="comment"># 判断队列是否为空</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isEmpoty</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.queueLength == <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="comment"># 判断队列是否已满</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isFull</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.queueLength == self.queueCacity</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 测试</span></div><div class="line">circleQueue = CircleQueue(<span class="number">5</span>)</div><div class="line"></div><div class="line"><span class="comment"># 入列5个元素</span></div><div class="line"><span class="keyword">assert</span> circleQueue.enqueue(<span class="number">1</span>) == <span class="number">1</span></div><div class="line"><span class="keyword">assert</span> circleQueue.enqueue(<span class="number">2</span>) == <span class="number">2</span></div><div class="line"><span class="keyword">assert</span> circleQueue.enqueue(<span class="number">3</span>) == <span class="number">3</span></div><div class="line"><span class="keyword">assert</span> circleQueue.enqueue(<span class="number">4</span>) == <span class="number">4</span></div><div class="line"><span class="keyword">assert</span> circleQueue.enqueue(<span class="number">5</span>) == <span class="number">5</span></div><div class="line"></div><div class="line"><span class="comment"># 现在队列的长度为5, 且队列尾已经和队列头重合了</span></div><div class="line"><span class="keyword">assert</span> circleQueue.queueLength == <span class="number">5</span></div><div class="line"><span class="keyword">assert</span> circleQueue.queueTail == <span class="number">0</span></div><div class="line"><span class="keyword">assert</span> circleQueue.queueHead == <span class="number">0</span></div><div class="line"></div><div class="line"><span class="keyword">assert</span> circleQueue.dequeue() == <span class="number">1</span></div><div class="line"><span class="keyword">assert</span> circleQueue.dequeue() == <span class="number">2</span></div><div class="line"><span class="keyword">assert</span> circleQueue.dequeue() == <span class="number">3</span></div><div class="line"><span class="keyword">assert</span> circleQueue.dequeue() == <span class="number">4</span></div><div class="line"><span class="keyword">assert</span> circleQueue.dequeue() == <span class="number">5</span></div><div class="line"></div><div class="line"><span class="keyword">assert</span> circleQueue.queueTail == <span class="number">0</span></div><div class="line"><span class="keyword">assert</span> circleQueue.queueHead == <span class="number">0</span></div><div class="line"></div><div class="line"><span class="comment"># 再入列一个数据,当前长度为1,且队列头为0,队列尾为1</span></div><div class="line"><span class="keyword">assert</span> circleQueue.enqueue(<span class="number">6</span>) == <span class="number">1</span></div><div class="line"></div><div class="line"><span class="keyword">assert</span> circleQueue.queueTail == <span class="number">1</span></div><div class="line"><span class="keyword">assert</span> circleQueue.queueHead == <span class="number">0</span></div></pre></td></tr></table></figure>
+<p>环形队列的关键是能让头索引和尾索引能够在整个环形队列中自己循环</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/12/算法/环形队列/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/12/算法/环形队列/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/06/nginx/nginx安装与命令/" title="Nginx安装与启动,关闭" itemprop="url">Nginx安装与启动,关闭</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>在MAC上安装Nginx</p>
+<p>使用命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">brew install nginx</div></pre></td></tr></table></figure></p>
+<p>homebrew会自动为我们安装. 程序会安装在<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/local/Cellar/nginx/1.6.2</div></pre></td></tr></table></figure></p>
+<p>nginx的配置文件在<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd /usr/local/etc/nginx</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>一般通过Homebrew安装的程序都会放在<code>/usr/local/Cellar/</code>里, 而配置文件会存储在<code>/usr/local/etc/</code>里</p>
+</blockquote>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>我们可以通过下面这个简单的命令直接启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/bin/nginx</div></pre></td></tr></table></figure></p>
+<p>或者使用一个经过配置化的参数启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/bin/nginx -t -c ~/mynginx.conf -g &quot;pid /var/run/nginx.pid; worker_processes 2;&quot;</div></pre></td></tr></table></figure></p>
+<h2 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h2><p>一般我们可以通过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/bin/nginx -s stop</div></pre></td></tr></table></figure></p>
+<p>但是我们还可以通过想Nginx 主进程发送信号的方式来关闭它.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kill -QUIT $( cat /usr/local/nginx/logs/nginx.pid )</div></pre></td></tr></table></figure></p>
+<p>一般我们推荐第二种方式, 让Nginx自己去停掉所有的主从进程</p>
+<p>Nginx还接受如下参数</p>
+<ul>
+<li>TERM, INT    : Quick shutdown</li>
+<li>QUIT :    Graceful shutdown</li>
+<li>KILL :    Halts a stubborn process</li>
+<li>HUP : Configuration reload, Start the new worker processes with a new configuration, Gracefully shutdown the old worker processes</li>
+<li>USR1 :    Reopen the log files</li>
+<li>USR2 :    Upgrade Executable on the fly</li>
+<li>WINCH :    Gracefully shutdown the worker processes</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/06/nginx/nginx安装与命令/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx安装与命令/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/03/06/nginx/nginx文件服务器/" title="Nginx 静态资源服务" itemprop="url">Nginx 静态资源服务</a>
   </h1>
   <p class="article-author">By
@@ -80,7 +295,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-06</time>
+    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-06</time>
     
   </p>
 </header>
@@ -147,7 +362,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-06</time>
+    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-06</time>
     
   </p>
 </header>
@@ -215,7 +430,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-03-05T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-05</time>
+    <time datetime="2016-03-05T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-05</time>
     
   </p>
 </header>
@@ -277,14 +492,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/03/05/Java/Java ListVSMap/" title="List VS Map" itemprop="url">List VS Map</a>
+      <a href="/2016/03/05/JavaSE/Java ListVSMap/" title="List VS Map" itemprop="url">List VS Map</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-03-05T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-05</time>
+    <time datetime="2016-03-05T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-05</time>
     
   </p>
 </header>
@@ -324,7 +539,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/03/05/Java/Java ListVSMap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/05/Java/Java ListVSMap/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/03/05/JavaSE/Java ListVSMap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/05/JavaSE/Java ListVSMap/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -344,14 +559,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/03/04/mgits/java游戏服务器/" title="Java游戏服务器设计" itemprop="url">Java游戏服务器设计</a>
+      <a href="/2016/03/04/杂记/java游戏服务器/" title="Java游戏服务器设计" itemprop="url">Java游戏服务器设计</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-03-04T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-04</time>
+    <time datetime="2016-03-04T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-04</time>
     
   </p>
 </header>
@@ -375,7 +590,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
 </div>
 
 
@@ -387,7 +602,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/03/04/mgits/java游戏服务器/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/04/mgits/java游戏服务器/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/03/04/杂记/java游戏服务器/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/04/杂记/java游戏服务器/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -414,7 +629,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-03-02T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-02</time>
+    <time datetime="2016-03-02T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-02</time>
     
   </p>
 </header>
@@ -478,14 +693,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/02/22/netty/ServerBootstrap/" title="NettyServerBootstrap" itemprop="url">NettyServerBootstrap</a>
+      <a href="/2016/02/22/JavaLibrary/Netty ServerBootstrap/" title="NettyServerBootstrap" itemprop="url">NettyServerBootstrap</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-02-22T08:00:00.000Z" itemprop="datePublished"> Published 2016-02-22</time>
+    <time datetime="2016-02-22T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-02-22</time>
     
   </p>
 </header>
@@ -525,9 +740,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Netty/">Netty</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Netty/">Netty</a>
+  </div>
 
 </div>
 
@@ -537,7 +757,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/02/22/netty/ServerBootstrap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/22/netty/ServerBootstrap/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/02/22/JavaLibrary/Netty ServerBootstrap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/22/JavaLibrary/Netty ServerBootstrap/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -557,14 +777,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/02/03/Java/MessagePack 初探/" title="MessagePack 初探" itemprop="url">MessagePack 初探</a>
+      <a href="/2016/02/03/JavaLibrary/MessagePack 初探/" title="MessagePack 初探" itemprop="url">MessagePack 初探</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-02-03T08:00:00.000Z" itemprop="datePublished"> Published 2016-02-03</time>
+    <time datetime="2016-02-03T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-02-03</time>
     
   </p>
 </header>
@@ -596,7 +816,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
 
@@ -608,7 +828,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/02/03/Java/MessagePack 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/03/Java/MessagePack 初探/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/02/03/JavaLibrary/MessagePack 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/03/JavaLibrary/MessagePack 初探/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -628,14 +848,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/02/02/netty/ChannelPipeline/" title="Netty ChannelPipeline" itemprop="url">Netty ChannelPipeline</a>
+      <a href="/2016/02/02/JavaLibrary/Netty ChannelPipeline/" title="Netty ChannelPipeline" itemprop="url">Netty ChannelPipeline</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-02-02T08:00:00.000Z" itemprop="datePublished"> Published 2016-02-02</time>
+    <time datetime="2016-02-02T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-02-02</time>
     
   </p>
 </header>
@@ -702,9 +922,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Netty/">Netty</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Netty/">Netty</a>
+  </div>
 
 </div>
 
@@ -714,7 +939,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/02/02/netty/ChannelPipeline/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/02/netty/ChannelPipeline/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/02/02/JavaLibrary/Netty ChannelPipeline/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/02/JavaLibrary/Netty ChannelPipeline/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -734,14 +959,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/02/02/Java/Java volatile/" title="volatile 使用" itemprop="url">volatile 使用</a>
+      <a href="/2016/02/02/JavaSE/Java volatile/" title="volatile 使用" itemprop="url">volatile 使用</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-02-02T08:00:00.000Z" itemprop="datePublished"> Published 2016-02-02</time>
+    <time datetime="2016-02-02T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-02-02</time>
     
   </p>
 </header>
@@ -803,7 +1028,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/02/02/Java/Java volatile/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/02/Java/Java volatile/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/02/02/JavaSE/Java volatile/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/02/02/JavaSE/Java volatile/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -823,14 +1048,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/01/30/Java/Typesafe Config 初探/" title="Typesafe Config 初探" itemprop="url">Typesafe Config 初探</a>
+      <a href="/2016/01/30/JavaLibrary/Typesafe Config 初探/" title="Typesafe Config 初探" itemprop="url">Typesafe Config 初探</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-30T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-30</time>
+    <time datetime="2016-01-30T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-30</time>
     
   </p>
 </header>
@@ -864,7 +1089,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
 
@@ -876,7 +1101,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/01/30/Java/Typesafe Config 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/30/Java/Typesafe Config 初探/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/01/30/JavaLibrary/Typesafe Config 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/30/JavaLibrary/Typesafe Config 初探/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -903,7 +1128,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-29T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-29</time>
+    <time datetime="2016-01-29T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-29</time>
     
   </p>
 </header>
@@ -984,14 +1209,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/01/23/netty/ChannelHandler/" title="Netty ChannelHandler" itemprop="url">Netty ChannelHandler</a>
+      <a href="/2016/01/23/JavaLibrary/Netty ChannelHandler/" title="Netty ChannelHandler" itemprop="url">Netty ChannelHandler</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-23T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-23</time>
+    <time datetime="2016-01-23T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-23</time>
     
   </p>
 </header>
@@ -1091,9 +1316,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Netty/">Netty</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Netty/">Netty</a>
+  </div>
 
 </div>
 
@@ -1103,7 +1333,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/01/23/netty/ChannelHandler/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/23/netty/ChannelHandler/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/01/23/JavaLibrary/Netty ChannelHandler/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/23/JavaLibrary/Netty ChannelHandler/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1123,14 +1353,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/01/20/Java/Retrofit/" title="Retrofit 初探" itemprop="url">Retrofit 初探</a>
+      <a href="/2016/01/20/JavaLibrary/Retrofit/" title="Retrofit 初探" itemprop="url">Retrofit 初探</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-20T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-20</time>
+    <time datetime="2016-01-20T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-20</time>
     
   </p>
 </header>
@@ -1174,7 +1404,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
 
@@ -1186,7 +1416,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/01/20/Java/Retrofit/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/20/Java/Retrofit/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/01/20/JavaLibrary/Retrofit/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/20/JavaLibrary/Retrofit/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1206,14 +1436,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/01/19/Java/OWNER 初探/" title="OWNER 初探" itemprop="url">OWNER 初探</a>
+      <a href="/2016/01/19/JavaLibrary/OWNER 初探/" title="OWNER 初探" itemprop="url">OWNER 初探</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-19T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-19</time>
+    <time datetime="2016-01-19T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-19</time>
     
   </p>
 </header>
@@ -1308,7 +1538,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
 
@@ -1320,7 +1550,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/01/19/Java/OWNER 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/19/Java/OWNER 初探/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/01/19/JavaLibrary/OWNER 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/19/JavaLibrary/OWNER 初探/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1347,7 +1577,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-14T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-14</time>
+    <time datetime="2016-01-14T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-14</time>
     
   </p>
 </header>
@@ -1414,7 +1644,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-01-13T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-13</time>
+    <time datetime="2016-01-13T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-13</time>
     
   </p>
 </header>
@@ -1469,246 +1699,21 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/01/12/asm/ASM Core(2) 操作/" title="ASM Core(2) Class的增删改查" itemprop="url">ASM Core(2) Class的增删改查</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-01-12T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-12</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><a href="http://download.forge.objectweb.org/asm/asm4-guide.pdf" target="_blank" rel="external">asm4-guide</a>学习心得</p>
-<h2 id="获取class信息"><a href="#获取class信息" class="headerlink" title="获取class信息"></a>获取class信息</h2><p>下来的示例中我们通过重写<code>ClassVisitor</code>相关函数然后依次打印出类型信息, 字段信息和函数信息.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClassPrinter</span> <span class="keyword">extends</span> <span class="title">ClassVisitor</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ClassPrinter</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>(Opcodes.ASM4);</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(<span class="keyword">int</span> version, <span class="keyword">int</span> access, String name, String signature, String superName, String[] interfaces)</span> </span>&#123;</div><div class="line">		System.out.println(name + <span class="string">" extends "</span> + superName + <span class="string">" &#123;"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitSource</span><span class="params">(String source, String debug)</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitOuterClass</span><span class="params">(String owner, String name, String desc)</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> AnnotationVisitor <span class="title">visitAnnotation</span><span class="params">(String desc, <span class="keyword">boolean</span> visible)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitAttribute</span><span class="params">(Attribute attr)</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitInnerClass</span><span class="params">(String name, String outerName, String innerName, <span class="keyword">int</span> access)</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> FieldVisitor <span class="title">visitField</span><span class="params">(<span class="keyword">int</span> access, String name, String desc, String signature, Object value)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">" "</span> + desc + <span class="string">" "</span> + name);</div><div class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> MethodVisitor <span class="title">visitMethod</span><span class="params">(<span class="keyword">int</span> access, String name, String desc, String signature, String[] exceptions)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">" "</span> + name + desc);</div><div class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitEnd</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"&#125;"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后我们写一段运行代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		<span class="comment">// 读取解析二进制字节流</span></div><div class="line">		ClassReader cr = <span class="keyword">new</span> ClassReader(<span class="string">"Test"</span>);</div><div class="line">		ClassPrinter cp = <span class="keyword">new</span> ClassPrinter();</div><div class="line">		<span class="comment">// 开始处理字节流信息</span></div><div class="line">		cr.accept(cp, <span class="number">0</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Test extends java/lang/Object &#123;</div><div class="line"> &lt;init&gt;()<span class="function">V</span></div><div class="line"> <span class="title">main</span><span class="params">([Ljava/lang/String;)</span>V</div><div class="line"> lambda$main$22<span class="params">(Ljava/lang/Integer;)</span>V</div><div class="line"> lambda$main$21<span class="params">(Ljava/lang/Integer;Ljava/lang/Integer;)</span>I</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在测试代码中我们首先创建了一个<code>ClassReader</code>实例用于读取<code>Test</code>字节码. 然后由<code>accept()</code>方法依次调用<code>ClassPrinter</code>的方法</p>
-<h2 id="动态生成Class"><a href="#动态生成Class" class="headerlink" title="动态生成Class"></a>动态生成Class</h2><p>我们仅仅使用<code>ClassWriter</code>就可以生成一个类, 例如我们要生成一个如下的接口<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> pkg;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Comparable</span> <span class="keyword">extends</span> <span class="title">Mesurable</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> LESS = -<span class="number">1</span>;</div><div class="line">	<span class="keyword">int</span> EQUAL = <span class="number">0</span>;</div><div class="line">	<span class="keyword">int</span> GREATER = <span class="number">1</span>;</div><div class="line">	<span class="function"><span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(Object o)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>我们仅仅需要调用<code>ClassVisitor</code>的六个方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">		cw.visit(V1_8,											<span class="comment">// 指定class文件版本号, 我们将其设置为java8</span></div><div class="line">				ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,	<span class="comment">// 设置接口的修饰符, 需要指出的是由于interface是不可实例化的,</span></div><div class="line">																<span class="comment">// 因此我们将其设置为ACC_ABSTRACT的</span></div><div class="line">				<span class="string">"pkg/Comparable"</span>,								<span class="comment">// 我们设置classname, 需要在这里指定全限定名</span></div><div class="line">				<span class="keyword">null</span>,											<span class="comment">// 设置泛型信息, 因为我们的接口是非泛化的, 因此我们将其设置为null</span></div><div class="line">				<span class="string">"java/lang/Object"</span>,							<span class="comment">// 设置父类, 同时需要设定全限定名</span></div><div class="line">				<span class="keyword">new</span> String[] &#123; <span class="string">"pkg/Mesurable"</span> &#125;);			<span class="comment">// 设置接口, 同样需要设置全限定名</span></div><div class="line"></div><div class="line">		cw.visitField(</div><div class="line">				ACC_PUBLIC + ACC_FINAL + ACC_STATIC,	<span class="comment">// 设置字段的修饰符</span></div><div class="line">				<span class="string">"LESS"</span>,										<span class="comment">// 设置字段名</span></div><div class="line">				<span class="string">"I"</span>,										<span class="comment">// 设置字段类型</span></div><div class="line">				<span class="keyword">null</span>,										<span class="comment">// 设置泛型信息</span></div><div class="line">				<span class="keyword">new</span> Integer(-<span class="number">1</span>))							<span class="comment">// 设置字面量值. (如果这个字段是常量值的话,例如 final static,</span></div><div class="line">																					<span class="comment">// 那么我们就必须设置这个值)</span></div><div class="line">				.visitEnd();</div><div class="line"></div><div class="line">		cw.visitMethod(ACC_PUBLIC + ACC_ABSTRACT,		<span class="comment">// 设置字段的修饰符</span></div><div class="line">				<span class="string">"compareTo"</span>,								<span class="comment">// 设置方法名</span></div><div class="line">				<span class="string">"(Ljava/lang/Object;)I"</span>,					<span class="comment">// 设置返回值类型</span></div><div class="line">				<span class="keyword">null</span>,										<span class="comment">// 设置泛型信息</span></div><div class="line">				<span class="keyword">null</span>)										<span class="comment">// 设置异常信息</span></div><div class="line">				.visitEnd();</div><div class="line"></div><div class="line">		cw.visitEnd();</div><div class="line">		<span class="keyword">byte</span>[] b = cw.toByteArray();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="使用生成的类"><a href="#使用生成的类" class="headerlink" title="使用生成的类"></a>使用生成的类</h2><p>记下来我们自定义一个<code>ClassLoader</code>来加载生成的字节码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> Class <span class="title">defineClass</span><span class="params">(String name, <span class="keyword">byte</span>[] b)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> defineClass(name, b, <span class="number">0</span>, b.length);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后使用它<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] bytes = genComparableInterface();</div><div class="line">MyClassLoader myClassLoader = <span class="keyword">new</span> MyClassLoader();</div><div class="line">Class c = myClassLoader.defineClass(<span class="string">"pkg.Comparable"</span>, bytes);</div></pre></td></tr></table></figure></p>
-<p>我们直接使用<code>defineClass</code>函数来加载这个类.</p>
-<p>另外我们还可以重写<code>findClass</code>这个函数来动态的生成我们所需要的类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">StubClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> Class <span class="title">findClass</span><span class="params">(String name)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</div><div class="line">		<span class="keyword">if</span> (name.endsWith(<span class="string">"_Stub"</span>)) &#123;</div><div class="line">			ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">			...</div><div class="line">			<span class="keyword">byte</span>[] b = cw.toByteArray();</div><div class="line">			<span class="keyword">return</span> defineClass(name, b, <span class="number">0</span>, b.length);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.findClass(name);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="修改已存在的Class"><a href="#修改已存在的Class" class="headerlink" title="修改已存在的Class"></a>修改已存在的Class</h2><p>在上篇文章中我们只是单独的使用了<code>ClassReader</code>和<code>ClassWriter</code>,但是更多的应用其实应该是将其组合到一起使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] b1 = ...;</div><div class="line">ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">ClassReader cr = <span class="keyword">new</span> ClassReader(b1);</div><div class="line">cr.accept(cw, <span class="number">0</span>);</div><div class="line"><span class="keyword">byte</span>[] b2 = cw.toByteArray(); <span class="comment">// b2 represents the same class as b1</span></div></pre></td></tr></table></figure></p>
-<p>这个例子中我们什么都没有做, 只不过完成了一个copy字节码的功能, 接下来我们在这俩个过程中加入<code>ClassVisitor</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] b1 = ...;</div><div class="line">ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line"><span class="comment">// cv forwards all events to cw</span></div><div class="line">ClassVisitor cv = <span class="keyword">new</span> ClassVisitor(ASM4, cw) &#123; &#125;;</div><div class="line">ClassReader cr = <span class="keyword">new</span> ClassReader(b1);</div><div class="line">cr.accept(cv, <span class="number">0</span>);</div><div class="line"><span class="keyword">byte</span>[] b2 = cw.toByteArray(); <span class="comment">// b2 represents the same class as b1</span></div></pre></td></tr></table></figure></p>
-<p>这段代码的处理流程如下图<img src="https://raw.githubusercontent.com/ming15/blog-website/images/asm/transformation%20chain.jpg" alt=""></p>
-<blockquote>
-<p>方框代表我们的核心组件, 箭头代表我们的数据流.</p>
-</blockquote>
-<p>下面我们给出一个<code>ClassVisitor</code>小例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChangeVersionAdapter</span> <span class="keyword">extends</span> <span class="title">ClassVisitor</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ChangeVersionAdapter</span><span class="params">(ClassVisitor cv)</span> </span>&#123;</div><div class="line">		<span class="comment">// ASM4为ASM的版本号</span></div><div class="line">		<span class="keyword">super</span>(ASM4, cv);</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(<span class="keyword">int</span> version, <span class="keyword">int</span> access, String name,</span></span></div><div class="line">					  String signature, String superName, String[] interfaces) &#123;</div><div class="line">		<span class="comment">// 修改class信息</span></div><div class="line">		cv.visit(V1_5,			<span class="comment">// 改变class的版本号</span></div><div class="line">				access,			<span class="comment">// 改变class的标识符</span></div><div class="line">				name,			<span class="comment">// 改变类名</span></div><div class="line">				signature,		<span class="comment">// 泛型信息</span></div><div class="line">				superName,		<span class="comment">// 父类信息</span></div><div class="line">				interfaces);	<span class="comment">// 接口信息</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在上面的实现中,除了调用<code>visit</code>函数(修改类本身函数, 将class版本号转化为1.5), 其他的方法都没有重写,因此他们什么改变都不会做. 下来我们给出这个类执行的时序图<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/asm/Sequence%20diagram%20for%20the%20ChangeVersionAdapter.jpg" alt=""><br>从这个时序图中我们可以看出, 用户调用了<code>accept</code>方法之后, 有ASM自动调用<code>ClassReader</code>的<code>visti(version)</code>方法, 接着调用<code>ChangeVersionAdapter</code>的<code>visti(1.5)</code>方法, 最后调用<code>ClassWriter</code>的相关方法. 从这个模式中我们可以看出, ASM的调用模式是链式调用的, 先调用visit, 然后调用责任链中所有的<code>ClassVisitor</code>的vist最后调用<code>ClassWriter</code>的完结方法. 当<code>visit</code>调用完之后再调用<code>visitSource</code>责任链流程, 依次类推下去.</p>
-<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>在上述的代码中, 其实代码的运行效率并不是高效进行的. 这是因为当<code>b1</code>字节码被<code>ClassReader</code>读取并通过<code>ClassVisitor</code>将其执行转换的时候, 我们可能只改变了class的版本号, 其他部分并没有转换, 但是在实际的执行中其他的部分也都被执行了一边, 那这就浪费了cpu计算和内存空间的占用, 其实只需要将不需要改变的字节从<code>b1</code>直接拷贝到<code>b2</code>就好了.  </p>
-<p>好在ASM为我们内部构建了这种优化过程.<br>*</p>
-<h2 id="删除成员"><a href="#删除成员" class="headerlink" title="删除成员"></a>删除成员</h2><p>如果我们想将class中的某个成员删除掉, 那么只需在执行asm责任链调用时, 中断调用过程(不调用super或者直接return)就可以了.</p>
-<p>例如我们下面的例子我们将类中的内部类和外部类以及编译成该class的源文件信息删除掉<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RemoveDebugAdapter</span> <span class="keyword">extends</span> <span class="title">ClassVisitor</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RemoveDebugAdapter</span><span class="params">(ClassVisitor cv)</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>(ASM4, cv);</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitSource</span><span class="params">(String source, String debug)</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitOuterClass</span><span class="params">(String owner, String name, String desc)</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitInnerClass</span><span class="params">(String name, String outerName, String innerName, <span class="keyword">int</span> access)</span> </span>&#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>看,就是如此简单, 我们在这三个方法内部什么都不做(不进行super调用)就轻松地完成了我们需要的功能, 但是这种做法却并不适合<br>字段和方法的删除, 因为在字段和方法的删除中除了不进行super调用之外还需要return null, 如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RemoveMethodAdapter</span> <span class="keyword">extends</span> <span class="title">ClassVisitor</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> String mName;</div><div class="line">	<span class="keyword">private</span> String mDesc;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RemoveMethodAdapter</span><span class="params">(</span></span></div><div class="line">			ClassVisitor cv, String mName, String mDesc) &#123;</div><div class="line">		<span class="keyword">super</span>(ASM4, cv);</div><div class="line">		<span class="keyword">this</span>.mName = mName;</div><div class="line">		<span class="keyword">this</span>.mDesc = mDesc;</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> MethodVisitor <span class="title">visitMethod</span><span class="params">(<span class="keyword">int</span> access, String name,</span></span></div><div class="line">									 String desc, String signature, String[] exceptions) &#123;</div><div class="line">		<span class="keyword">if</span> (name.equals(mName) &amp;&amp; desc.equals(mDesc)) &#123;</div><div class="line">			<span class="comment">// do not delegate to next visitor -&gt; this removes the method</span></div><div class="line">			<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> cv.visitMethod(access, name, desc, signature, exceptions);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="添加成员"><a href="#添加成员" class="headerlink" title="添加成员"></a>添加成员</h2><p>当我们中断方法调用的时候,会删除成员. 但是当我们在责任链中的原生方法调用(<code>visitXxx</code>方法)中新增加一些方法调用的话, 会增加成员.</p>
-<p>例如如果你想要增加一个字段, 那么你必须在<code>visitXxx</code>方法中增加一个<code>visitField</code>方法调用. 需要注意的是<code>visitXxx</code>方法只包含<code>visitInnerClass,visitField, visitMethod,visitEnd</code>这四个方法, 这是因为<code>visit,visitSource,visitOuterClass,visitAnnotation,visitAttribute</code> 这些方法正如我们在第一篇文章中给出那些顺序一样, <code>visitField</code>方法只能在这些方法之后调用.</p>
-<blockquote>
-<p>需要注意的是,由于<code>visitInnerClass,visitField, visitMethod</code>这些方法会进行多次调用, 因此有可能会添加N个相同的成员, 因此我们建议在<code>visitEnd</code>的时候进行成员添加, 这是因为这个方法总会有且只有一次调用.</p>
-</blockquote>
-<p>如下例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddFieldAdapter</span> <span class="keyword">extends</span> <span class="title">ClassVisitor</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> fAcc;</div><div class="line">	<span class="keyword">private</span> String fName;</div><div class="line">	<span class="keyword">private</span> String fDesc;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> isFieldPresent;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">AddFieldAdapter</span><span class="params">(ClassVisitor cv, <span class="keyword">int</span> fAcc, String fName, String fDesc)</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>(ASM4, cv);</div><div class="line">		<span class="keyword">this</span>.fAcc = fAcc;</div><div class="line">		<span class="keyword">this</span>.fName = fName;</div><div class="line">		<span class="keyword">this</span>.fDesc = fDesc;</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> FieldVisitor <span class="title">visitField</span><span class="params">(<span class="keyword">int</span> access, String name, String desc, String signature, Object value)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (name.equals(fName)) &#123;</div><div class="line">			isFieldPresent = <span class="keyword">true</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> cv.visitField(access, name, desc, signature, value);</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitEnd</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (!isFieldPresent) &#123;</div><div class="line">			FieldVisitor fv = cv.visitField(fAcc, fName, fDesc, <span class="keyword">null</span>, <span class="keyword">null</span>);</div><div class="line">			<span class="keyword">if</span> (fv != <span class="keyword">null</span>) &#123;</div><div class="line">				fv.visitEnd();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		cv.visitEnd();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/asm/">asm</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/01/12/asm/ASM Core(2) 操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/12/asm/ASM Core(2) 操作/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/01/11/asm/ASM Core(1) 初探/" title="ASM Core(1) 初探" itemprop="url">ASM Core(1) 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-01-11T08:00:00.000Z" itemprop="datePublished"> Published 2016-01-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><a href="http://download.forge.objectweb.org/asm/asm4-guide.pdf" target="_blank" rel="external">asm4-guide</a>学习心得<br> ASM是一种小巧轻便的 Java 字节码操控框架，它能方便地生成和改造 Java 代码</p>
-<p>ASM通过<code>ClassVisitor</code>来生成和转换class字节码. <code>ClassVisitor</code>中的每个方法都对应着class数据结构, 你可以通过每个方法名轻松的判断出这个方法对应的是哪个数据结构. </p>
-<p><code>ClassVisitor</code>内的方法调用顺序如下:</p>
-<ol>
-<li>visit  : 调用<code>visit</code>方法(有且仅有调用一次)</li>
-<li>visitSource?  : 调用<code>visitSource</code>函数(最多调用一次)</li>
-<li>visitOuterClass?  : 调用<code>visitOuterClass</code>函数(最多调用一次)</li>
-<li>( visitAnnotation | visitAttribute )* : 调用<code>visitAnnotation</code>和<code>visitAttribute</code>函数, 这俩个函数的调用可调用任意次且不分前后顺序</li>
-<li>( visitInnerClass | visitField | visitMethod )* : 调用<code>visitInnerClass</code>,<code>visitField</code>和<code>visitMethod</code>函数, 同样对这三个函数的调用不限制次数以及不分前后顺序</li>
-<li>visitEnd : 调用<code>visitEnd</code>函数(有且仅有调用一次),调用这个函数用于结束整个过程.</li>
-</ol>
-<p>ASM通过基于<code>ClassVisitor</code>的三个API来生成和转换class字节码</p>
-<ul>
-<li><code>ClassReader</code>: 用于解析一个给定的class二进制字节数组, 然后按照上文介绍的顺序依次调用<code>accept()</code>的<code>ClassVisitor</code>参数的方法.</li>
-<li><code>ClassWriter</code> : 一个<code>ClassVisitor</code>的子类, 用于直接生成二进制的字节码. </li>
-<li><code>ClassVisitor</code> : 代理了全部的字节码相关的方法调用. 它接收另一个<code>ClassVisitor</code>对象形成责任链模式调用.</li>
-</ul>
-<p>我们通过<code>ClassReader</code>来解析一个二进制的class结构数据, 然后<code>ClassReader</code>按照一定的顺序调用<code>ClassVisitor</code> 来改变class结构数据, 最后通过<code>ClassVisitor</code>生成新的class二进制数据.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/asm/">asm</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/01/11/asm/ASM Core(1) 初探/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/11/asm/ASM Core(1) 初探/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/12/30/Java/args4j/" title="args4j 初探" itemprop="url">args4j 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-12-30T08:00:00.000Z" itemprop="datePublished"> Published 2015-12-30</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>args4j可以方便地解析CUI（命令行接口）程序的输入参数或选项, 将其解析到一个参数类中.</p>
-<p>我们使用MAVEN测试一下这个工具, 首先我们创建一个MAVEN项目<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></div><div class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wang.ming15.args4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>demo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>args4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>args4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.32<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>然后创建一个参数类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Args</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> String name;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Args Init"</span>);</div><div class="line">		System.out.println(<span class="string">"- name: "</span> + name);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后写一个主类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.kohsuke.args4j.CmdLineException;</div><div class="line"><span class="keyword">import</span> org.kohsuke.args4j.CmdLineParser;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Args args1 = <span class="keyword">new</span> Args();</div><div class="line">		CmdLineParser parser = <span class="keyword">new</span> CmdLineParser(args1);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			parser.parseArgument(args);</div><div class="line">		&#125; <span class="keyword">catch</span> (CmdLineException e) &#123;</div><div class="line">			<span class="comment">// handling of wrong arguments</span></div><div class="line">			System.err.println(e.getMessage());</div><div class="line">			parser.printUsage(System.err);</div><div class="line">		&#125;</div><div class="line">		System.out.println(args1.name);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>接着执行<code>mvn package</code>打出一个包, 然后执行命令<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar ./target/demo-<span class="number">1.0</span>-SNAPSHOT.jar Args -name <span class="string">"Hello World"</span></div></pre></td></tr></table></figure></p>
-<p>最后我们会看到输出</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/12/30/Java/args4j/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/12/30/Java/args4j/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github Card</p>
+<p class="asidetitle">Github 名片</p>
 <div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -1718,7 +1723,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分类</p>
 		<ul>
 		
 		  
@@ -1728,15 +1733,17 @@
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>65</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>42</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>42</sup></a></li>
 		  
 		
 		  
 		
 		  
 		
-		  
-			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
 		  
 		
 		  
@@ -1748,8 +1755,6 @@
 		  
 		
 		  
-			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
-		  
 		
 		  
 			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
@@ -1760,11 +1765,7 @@
 		  
 		
 		  
-			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
-		  
 		
-		  
-			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
 		  
 		
 		  
@@ -1778,13 +1779,21 @@
 		  
 		
 		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
 		  
 		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>19</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/�Ӽ�/" title="�Ӽ�">�Ӽ�<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -1792,9 +1801,28 @@
 
 
   
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>5</sup></a></li>
+			
+		
+		</ul>
+</div>
+
 
   <div class="linkslist">
-  <p class="asidetitle">Links</p>
+  <p class="asidetitle">友情链接</p>
     <ul>
         
           <li>
@@ -1809,7 +1837,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
+<p class="asidetitle">豆瓣秀</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -1817,11 +1845,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
+  <p class="asidetitle">新浪微博</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -1995,7 +2023,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

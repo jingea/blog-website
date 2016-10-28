@@ -42,7 +42,7 @@
 				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -56,7 +56,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
 						</form>
 					
 					</li>
@@ -73,6 +73,193 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/10/08/数据库/Mysql 增删改查/" title="Mysql 增删改查" itemprop="url">Mysql 增删改查</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -h 主机地址 -u 用户名 －<span class="selector-tag">p</span> 用户密码 （注:u与root可以不用加空格，其它也一样）</div></pre></td></tr></table></figure>
+<h2 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h2><p>创建用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'host'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'password'</span>;</div></pre></td></tr></table></figure></p>
+<p>授权:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">'username'</span>@<span class="string">'host'</span></div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>privileges - 用户的操作权限,如SELECT,INSERT,UPDATE等.如果要授予所的权限则使用ALL;如果要授予该用户对所有数据库和表的相应操作权限则可用<em>表示, 如</em>.*. </p>
+</blockquote>
+<p>用以上命令授权的用户不能给其它用户授权,如果想让该用户可以授权,用以下命令:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GRANT</span> <span class="keyword">privileges</span> <span class="keyword">ON</span> databasename.tablename <span class="keyword">TO</span> <span class="string">'username'</span>@<span class="string">'host'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</div></pre></td></tr></table></figure></p>
+<p>设置与更改用户密码<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> <span class="string">'username'</span>@<span class="string">'host'</span> = <span class="keyword">PASSWORD</span>(<span class="string">'newpassword'</span>);</div></pre></td></tr></table></figure></p>
+<p>撤销用户权限<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">REVOKE</span> privilege <span class="keyword">ON</span> databasename.tablename <span class="keyword">FROM</span> <span class="string">'username'</span>@<span class="string">'host'</span>;</div></pre></td></tr></table></figure></p>
+<p>删除用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> <span class="string">'username'</span>@<span class="string">'host'</span>;</div></pre></td></tr></table></figure></p>
+<h2 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h2><ul>
+<li>显示数据库：<code>SHOW databases</code>; </li>
+<li>创建库：<code>CREATE DATABASE 库名</code>; </li>
+<li>删除库：<code>DROP DATABASE 库名</code>; </li>
+<li>使用库(选中库)：<code>USE 库名</code>; </li>
+</ul>
+<h2 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h2><ul>
+<li>显示数据表：<code>SHOW tables</code></li>
+<li>显示表结构：<code>DESC 表名</code></li>
+<li>删除表：<code>DROP TABLE 表名</code>; </li>
+<li>输入创建表的DDL语句 <code>SHOW CREATE TABLE 表名;</code></li>
+<li>创建表：<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span>  </div><div class="line">    <span class="keyword">USER</span>  </div><div class="line">    (  </div><div class="line">        <span class="keyword">name</span> <span class="built_in">VARCHAR</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </div><div class="line">        <span class="keyword">id</span> <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </div><div class="line">        stu_id <span class="built_in">INT</span>,  </div><div class="line">        phone <span class="built_in">VARCHAR</span>(<span class="number">20</span>),  </div><div class="line">        address <span class="built_in">VARCHAR</span>(<span class="number">30</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </div><div class="line">        age <span class="built_in">INT</span>(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,  </div><div class="line">        PRIMARY <span class="keyword">KEY</span> (<span class="keyword">name</span>),  </div><div class="line">        <span class="keyword">CONSTRAINT</span> stu_id <span class="keyword">UNIQUE</span> (stu_id)  </div><div class="line">    )  </div><div class="line">    <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="表数据操作"><a href="#表数据操作" class="headerlink" title="表数据操作"></a>表数据操作</h3><ul>
+<li>清空表数据<code>truncate table 表名;</code>. truncate删除后不记录mysql日志，不可以恢复数据。相当于保留mysql表的结构，重新创建了这个表，所有的状态都相当于新表。</li>
+<li>清空表数据<code>delete from 表名</code>. delete的效果有点像将mysql表中所有记录一条一条删除到删完</li>
+</ul>
+<h3 id="修改表结构"><a href="#修改表结构" class="headerlink" title="修改表结构"></a>修改表结构</h3><ul>
+<li>修改列名<code>alter table 表名称 change 字段名称 字段名称</code></li>
+<li>修改表名<code>alter table 表名称 rename 表名称</code></li>
+<li>修改某个表的字段类型及指定为空或非空<code>alter table 表名称 change 字段名称字段名称 字段类型 [null/not null];</code></li>
+<li>修改某个表的字段名称及指定为空或非空<code>alter table 表名称 change 字段原名称字段新名称 字段类型 [null/not null];</code></li>
+<li>增加一个字段(一列)<code>alter table table_name add column column_name type default value;</code> type指该字段的类型,value指该字段的默认值</li>
+<li>更改一个字段名字(也可以改变类型和默认值)<code>alter table table_name change sorce_col_name dest_col_name type defaultvalue;</code> source_col_name指原来的字段名称,dest_col_name指改后的字段名称</li>
+<li>改变一个字段的默认值<code>alter table table_name alter column_name set default value;</code></li>
+<li>改变一个字段的数据类型<code>alter table table_name change column column_name column_name type;</code></li>
+<li>向一个表中增加一个列做为主键<code>alter table table_name add column column_name type auto_increment PRIMARYKEY;</code></li>
+<li>向一个表中增加一个列做为主键<code>alter table table_name add column column_name type auto_increment PRIMARYKEY;</code></li>
+<li>删除字段<code>alter table form1 drop column 列名;</code></li>
+</ul>
+<h3 id="复制表"><a href="#复制表" class="headerlink" title="复制表"></a>复制表</h3><ul>
+<li>含有主键等信息的完整表结构 <code>CREATE table 新表名 LIKE book;</code></li>
+<li>只有表结构，没有主键等信息 `create table 新表名 select * from books;</li>
+<li>将旧表中的数据灌入新表 <code>INSERT INTO 新表 SELECT * FROM 旧表；</code> 注：新表必须已经存在</li>
+</ul>
+<h3 id="导入导出数据库"><a href="#导入导出数据库" class="headerlink" title="导入导出数据库"></a>导入导出数据库</h3><ul>
+<li>数据库某表的备份,在命令行中输入:<code>mysqldump -u root -p database_name table_name &gt; bak_file_name</code></li>
+<li>导出数据<code>select_statment into outfile”dest_file”;</code></li>
+<li>导入数据<code>load data infile”file_name” into table table_name;</code></li>
+<li>将两个表里的数据拼接后插入到另一个表里<code>insert into tx select t1.com1,concat(t1.com2,t2.com1) from t1,t2;</code></li>
+</ul>
+<h3 id="查询表"><a href="#查询表" class="headerlink" title="查询表"></a>查询表</h3><p>mysql查询的五种子句 </p>
+<h4 id="where-条件查询"><a href="#where-条件查询" class="headerlink" title="where(条件查询)"></a>where(条件查询)</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> t1 <span class="keyword">WHERE</span> <span class="keyword">id</span> &gt; <span class="number">100</span>;</div></pre></td></tr></table></figure>
+<ul>
+<li>数值谓词:<code>&gt;,=,&lt;,&lt;&gt;,!=,!&gt;,!&lt;,=&gt;,=&lt;</code></li>
+<li>字符串谓词：<code>=，like</code></li>
+<li>日期谓词：<code>=</code> (<code>SELECT * from t1 WHERE create_time = &#39;2011-04-08&#39;</code>)</li>
+</ul>
+<h4 id="having（筛选）"><a href="#having（筛选）" class="headerlink" title="having（筛选）"></a>having（筛选）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<h4 id="group-by（分组）"><a href="#group-by（分组）" class="headerlink" title="group by（分组）"></a>group by（分组）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">GROUP</span> <span class="keyword">BY</span> vip;</div></pre></td></tr></table></figure>
+<h4 id="order-by（排序）"><a href="#order-by（排序）" class="headerlink" title="order by（排序）"></a>order by（排序）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span>;</div></pre></td></tr></table></figure>
+<h4 id="limit（限制结果数）"><a href="#limit（限制结果数）" class="headerlink" title="limit（限制结果数）"></a>limit（限制结果数）</h4><p>查询前n条记录(默认从第0个开始)<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">LIMIT</span> <span class="number">10</span>;</div></pre></td></tr></table></figure></p>
+<p>从结果集中第1个开始查询, 查询10个<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span> <span class="keyword">FROM</span> player <span class="keyword">LIMIT</span> <span class="number">1</span>, <span class="number">10</span>;</div></pre></td></tr></table></figure></p>
+<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><p>sql语句的执行顺序<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">(7)     <span class="keyword">SELECT</span> </div><div class="line">(<span class="number">8</span>)     <span class="keyword">DISTINCT</span> &lt;select_list&gt;</div><div class="line">(<span class="number">1</span>)     <span class="keyword">FROM</span> &lt;left_table&gt;</div><div class="line">(<span class="number">3</span>)     &lt;join_type&gt; <span class="keyword">JOIN</span> &lt;right_table&gt;</div><div class="line">(<span class="number">2</span>)     <span class="keyword">ON</span> &lt;join_condition&gt;</div><div class="line">(<span class="number">4</span>)     <span class="keyword">WHERE</span> &lt;where_condition&gt;</div><div class="line">(<span class="number">5</span>)     <span class="keyword">GROUP</span> <span class="keyword">BY</span> &lt;group_by_list&gt;</div><div class="line">(<span class="number">6</span>)     <span class="keyword">HAVING</span> &lt;having_condition&gt;</div><div class="line">(<span class="number">9</span>)     <span class="keyword">ORDER</span> <span class="keyword">BY</span> &lt;order_by_condition&gt;</div><div class="line">(<span class="number">10</span>)    <span class="keyword">LIMIT</span> &lt;limit_number&gt;</div></pre></td></tr></table></figure></p>
+<p>也就是<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">FROM</span>-&gt;<span class="keyword">ON</span>-&gt;<span class="keyword">JOIN</span>-&gt;<span class="keyword">WHERE</span>-&gt;<span class="keyword">GROUP</span> <span class="keyword">BY</span>-&gt;HAVING-&gt;<span class="keyword">SELECT</span>-&gt;<span class="keyword">DISTINCT</span>-&gt;<span class="keyword">ORDER</span> <span class="keyword">BY</span>-&gt;LIMIT</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/数据库/Mysql 增删改查/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/Mysql 增删改查/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/数据库/Mysql 数据类型/" title="Mysql 数据类型" itemprop="url">Mysql 数据类型</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="varchar"><a href="#varchar" class="headerlink" title="varchar"></a>varchar</h2><p>varchar 字段是将实际内容单独存储在聚簇索引之外，内容开头用1到2个字节表示实际长度（长度超过255时需要2个字节），因此最大长度不能超过65535(2^16)。</p>
+<ul>
+<li>字符类型若为gbk，每个字符最多占2个字节，最大长度不能超过32766; </li>
+<li>字符类型若为utf8，每个字符最多占3个字节，最大长度不能超过21845。 </li>
+<li>对于英文比较多的论坛 ，使用GBK则每个字符占用2个字节，而使用UTF－8英文却只占一个字节。 </li>
+<li>若定义的时候超过上述限制，则varchar字段会被强行转为text类型，并产生warning。 </li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/数据库/Mysql 数据类型/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/Mysql 数据类型/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/08/数据库/Mysql 索引/" title="Mysql 索引" itemprop="url">Mysql 索引</a>
   </h1>
   <p class="article-author">By
@@ -80,7 +267,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
     
   </p>
 </header>
@@ -141,100 +328,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/08/mgits/vim/" title="GVIM" itemprop="url">GVIM</a>
+      <a href="/2015/10/08/杂记/shell/" title="Shell 编程" itemprop="url">Shell 编程</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="vimrc配置文件"><a href="#vimrc配置文件" class="headerlink" title="_vimrc配置文件"></a>_vimrc配置文件</h1><h2 id="GVIM打开即全屏"><a href="#GVIM打开即全屏" class="headerlink" title="GVIM打开即全屏"></a>GVIM打开即全屏</h2><p><code>au GUIEnter * simalt ~x</code></p>
-<h2 id="设置VeraMono字体"><a href="#设置VeraMono字体" class="headerlink" title="设置VeraMono字体"></a>设置VeraMono字体</h2><p><a href="http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf" target="_blank" rel="external">VeraMono</a>需要下载安装(百度字体安装就好)<br><code>set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI</code></p>
-<h2 id="python编译"><a href="#python编译" class="headerlink" title="python编译"></a>python编译</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  </div><div class="line">autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  </div><div class="line">autocmd BufRead *.py nmap &lt;F5&gt; :!python %&lt;CR&gt;  </div><div class="line">autocmd BufRead *.py nmap &lt;F6&gt; :make&lt;CR&gt;  </div><div class="line">autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口</div></pre></td></tr></table></figure>
-<h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
-<li>搜索：<code>/</code>向下搜索. <code>?</code>向上搜索</li>
-<li>替换： <code>:%s/abc/123/g</code>, 将abc都替换为123</li>
-<li>删除行：<code>dd</code>删除整行. <code>5dd</code>从当前行开始向后删除5整行. <code>D</code>从光标删除到行尾</li>
-<li>删除字符：<code>x</code>向后删除一个字符. <code>X</code>向前删除一个字符</li>
-<li>撤销: <code>u</code></li>
-<li>复制:<code>yy</code>复制一行. <code>5yy</code>从当前行开始向下复制5行</li>
-<li>粘贴: <code>p</code>光标向下移动. <code>P</code>光标不动</li>
-<li>块选择: <code>V</code>多行整行选择. <code>v</code>多行字符选择. <code>ctrl v</code>矩阵方式选择.</li>
-<li>光标移动：<code>$</code>移动到行尾. <code>0</code>移动到行首. <code>G</code>移动到最后一行. <code>gg</code>移动到最一行.</li>
-<li>窗口编辑: <code>：split</code>水平新建窗口. <code>：vsplit</code>垂直分割.</li>
-<li>在窗口间游走: <code>Ctrl W</code> 加 <code>h, j, k, l</code>一起使用</li>
-<li>分页编辑： <code>：tabnew</code>新建分页。 <code>：tabclose</code>关闭当前分页. <code>：tabonly</code>关闭其他所有的分页</li>
-<li>顶部底部跳转： 顶部<code>`, 底部</code>shift + g`</li>
-</ul>
-<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><h2 id="Pydiction"><a href="#Pydiction" class="headerlink" title="Pydiction "></a><a href="http://www.vim.org/scripts/script.php?script_id=850" target="_blank" rel="external">Pydiction </a></h2><p>python自动补全插件</p>
-<p>配置,<code>_vimrc</code>文件追加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">filetype plugin on</div><div class="line">let g:pydiction_location = <span class="string">'D:/Program Files/Vim/pydiction/complete-dict'</span></div></pre></td></tr></table></figure></p>
-<p>然后将<code>pydiction/after/ftplugin/python_pydiction.vim</code>复制到<code>Vim\vimfiles\ftplugin\python_pydiction.vim</code></p>
-<h2 id="The-NERD-tree"><a href="#The-NERD-tree" class="headerlink" title="The NERD tree"></a><a href="http://www.vim.org/scripts/script.php?script_id=1658" target="_blank" rel="external">The NERD tree</a></h2><p>文件树. 将下载下来的压缩包解压到<code>Vim\vimfiles</code></p>
-<ul>
-<li><code>:NERDTree</code> 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径</li>
-<li><code>:NERDTreeClose</code> 关闭目录树</li>
-</ul>
-<p>修改_vimrc配置文件,添加映射<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nmap &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</div></pre></td></tr></table></figure></p>
-<h2 id="bsh-vim"><a href="#bsh-vim" class="headerlink" title="bsh.vim"></a><a href="http://www.vim.org/scripts/script.php?script_id=1202" target="_blank" rel="external">bsh.vim</a></h2><p>Shell语法高亮</p>
-<p>只需将<code>bsh.vim</code>文件拷贝到<code>Vim\vimfiles\syntax</code>就可以了</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/10/08/mgits/vim/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/mgits/vim/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/linux/shell/" title="Shell 编程" itemprop="url">Shell 编程</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
     
   </p>
 </header>
@@ -369,7 +470,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/linux/">linux</a>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
 </div>
 
 
@@ -381,7 +482,93 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/10/08/linux/shell/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/linux/shell/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/10/08/杂记/shell/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/杂记/shell/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/08/杂记/vim/" title="GVIM" itemprop="url">GVIM</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="vimrc配置文件"><a href="#vimrc配置文件" class="headerlink" title="_vimrc配置文件"></a>_vimrc配置文件</h1><h2 id="GVIM打开即全屏"><a href="#GVIM打开即全屏" class="headerlink" title="GVIM打开即全屏"></a>GVIM打开即全屏</h2><p><code>au GUIEnter * simalt ~x</code></p>
+<h2 id="设置VeraMono字体"><a href="#设置VeraMono字体" class="headerlink" title="设置VeraMono字体"></a>设置VeraMono字体</h2><p><a href="http://www.vimer.cn/wp-content/uploads/2009/11/VeraMono.ttf" target="_blank" rel="external">VeraMono</a>需要下载安装(百度字体安装就好)<br><code>set guifont=Bitstream_Vera_Sans_Mono:h10:cANSI</code></p>
+<h2 id="python编译"><a href="#python编译" class="headerlink" title="python编译"></a>python编译</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"  </div><div class="line">autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m  </div><div class="line">autocmd BufRead *.py nmap &lt;F5&gt; :!python %&lt;CR&gt;  </div><div class="line">autocmd BufRead *.py nmap &lt;F6&gt; :make&lt;CR&gt;  </div><div class="line">autocmd BufRead *.py copen "如果是py文件，则同时打开编译信息窗口</div></pre></td></tr></table></figure>
+<h1 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h1><ul>
+<li>搜索：<code>/</code>向下搜索. <code>?</code>向上搜索</li>
+<li>替换： <code>:%s/abc/123/g</code>, 将abc都替换为123</li>
+<li>删除行：<code>dd</code>删除整行. <code>5dd</code>从当前行开始向后删除5整行. <code>D</code>从光标删除到行尾</li>
+<li>删除字符：<code>x</code>向后删除一个字符. <code>X</code>向前删除一个字符</li>
+<li>撤销: <code>u</code></li>
+<li>复制:<code>yy</code>复制一行. <code>5yy</code>从当前行开始向下复制5行</li>
+<li>粘贴: <code>p</code>光标向下移动. <code>P</code>光标不动</li>
+<li>块选择: <code>V</code>多行整行选择. <code>v</code>多行字符选择. <code>ctrl v</code>矩阵方式选择.</li>
+<li>光标移动：<code>$</code>移动到行尾. <code>0</code>移动到行首. <code>G</code>移动到最后一行. <code>gg</code>移动到最一行.</li>
+<li>窗口编辑: <code>：split</code>水平新建窗口. <code>：vsplit</code>垂直分割.</li>
+<li>在窗口间游走: <code>Ctrl W</code> 加 <code>h, j, k, l</code>一起使用</li>
+<li>分页编辑： <code>：tabnew</code>新建分页。 <code>：tabclose</code>关闭当前分页. <code>：tabonly</code>关闭其他所有的分页</li>
+<li>顶部底部跳转： 顶部<code>`, 底部</code>shift + g`</li>
+</ul>
+<h1 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h1><h2 id="Pydiction"><a href="#Pydiction" class="headerlink" title="Pydiction "></a><a href="http://www.vim.org/scripts/script.php?script_id=850" target="_blank" rel="external">Pydiction </a></h2><p>python自动补全插件</p>
+<p>配置,<code>_vimrc</code>文件追加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">filetype plugin on</div><div class="line">let g:pydiction_location = <span class="string">'D:/Program Files/Vim/pydiction/complete-dict'</span></div></pre></td></tr></table></figure></p>
+<p>然后将<code>pydiction/after/ftplugin/python_pydiction.vim</code>复制到<code>Vim\vimfiles\ftplugin\python_pydiction.vim</code></p>
+<h2 id="The-NERD-tree"><a href="#The-NERD-tree" class="headerlink" title="The NERD tree"></a><a href="http://www.vim.org/scripts/script.php?script_id=1658" target="_blank" rel="external">The NERD tree</a></h2><p>文件树. 将下载下来的压缩包解压到<code>Vim\vimfiles</code></p>
+<ul>
+<li><code>:NERDTree</code> 打开当前文件所在目录树. 该命令后可跟需要打开的目录路径</li>
+<li><code>:NERDTreeClose</code> 关闭目录树</li>
+</ul>
+<p>修改_vimrc配置文件,添加映射<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nmap &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="bsh-vim"><a href="#bsh-vim" class="headerlink" title="bsh.vim"></a><a href="http://www.vim.org/scripts/script.php?script_id=1202" target="_blank" rel="external">bsh.vim</a></h2><p>Shell语法高亮</p>
+<p>只需将<code>bsh.vim</code>文件拷贝到<code>Vim\vimfiles\syntax</code>就可以了</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/杂记/vim/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/杂记/vim/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -408,7 +595,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-10-08</time>
+    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
     
   </p>
 </header>
@@ -480,14 +667,170 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/Java/Archiva/" title="Archiva 初探" itemprop="url">Archiva 初探</a>
+      <a href="/2015/10/08/数据库/mycat分片/" title="Mycat分片" itemprop="url">Mycat分片</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
+    <time datetime="2015-10-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="https://item.taobao.com/item.htm?spm=a230r.1.14.8.eRsdoe&amp;id=44263828402&amp;ns=1&amp;abbucket=17#detail" target="_blank" rel="external">Mycat权威指南V1</a>学习总结</p>
+<p>由于分片规则主要定义在function里,因此下面的讲解中主要是针对function的讲解</p>
+<h2 id="分片枚举"><a href="#分片枚举" class="headerlink" title="分片枚举"></a>分片枚举</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"hash-int"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByFileMap"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>partition-hash-int.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"type"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>mapFile: 配置文件名称</li>
+<li>type: 0表示Integer，非零表示String</li>
+<li>defaultNode: 枚举分片时，如果碰到不识别的枚举值，就让它路由到默认节点</li>
+</ul>
+<p>在partition-hash-int.txt文件中,采用<code>x=y</code>的形式, x是columns值. y是节点值. 所有的节点都是从0开始的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a=0</div><div class="line">b=1</div><div class="line">c=2</div></pre></td></tr></table></figure></p>
+<p>上面这个例子中,columns值为1的sql会路由到1的这个节点上. 节点在schema.xml中配置. 具体0对应哪个节点还需要探寻.</p>
+<h2 id="范围约定"><a href="#范围约定" class="headerlink" title="范围约定"></a>范围约定</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"rang-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.AutoPartitionByLong"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"mapFile"</span>&gt;</span>autopartition-long.txt<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"defaultNode"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这个规则是约定好,哪个范围的sql对应哪个节点,我们可以这样配置autopartition-long.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0-500=0</div><div class="line">500-1000=1</div><div class="line">1000-1500=2</div></pre></td></tr></table></figure></p>
+<p>这种范围的就只能适应,id分片的了</p>
+<h2 id="求模"><a href="#求模" class="headerlink" title="求模"></a>求模</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"mod-long"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByMod"</span>&gt;</span></div><div class="line"> <span class="comment">&lt;!-- how many data nodes  --&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这个是根据column的十进制值进行求模分片.</p>
+<h2 id="固定分片hash算法"><a href="#固定分片hash算法" class="headerlink" title="固定分片hash算法"></a>固定分片hash算法</h2><p>该算法是对columns的二进制的低十位进行取模运算.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"partitionByLong"</span> <span class="attr">class</span>=<span class="string">"org.opencloudb.route.function.PartitionByLong"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionCount"</span>&gt;</span>8, 1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"partitionLength"</span>&gt;</span>128, 256<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li>partitionCount 分片个数列表</li>
+<li>partitionLength 分片范围列表<br>这来个参数的长度必须相等. 上面的例子的意思是, 在对低十位取模运算时, 128以内的sql要平均分配到8个分片上执行. 128 ~ 256的sql要到1个分片上执行</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/10/08/数据库/mycat分片/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/10/08/数据库/mycat分片/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/08/编程语言/JavaScript/" title="JavaScript变量和流程控制" itemprop="url">JavaScript变量和流程控制</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h3 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h3><p>JavaScript只有一个数字类型,它在内部被表示为64位的浮点数. 它没有分离出整数类型,因此1和1.0的值是相同的</p>
+<p>NaN是一个数值，它表示一个不能产生正常结果的运算结果。<code>NaN</code>不等于任何值，包括它自己。可以使用函数<code>isNaN</code>来检测<code>NaN</code>。</p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>字符串可以由一对单引号或者一对双引号构成，可以包含0到多个字符。<code>\</code>是转义字符。JavaScript采用Unicode16作为字符集，因此所有的字符都是16位的。</p>
+<p>字符串有一个length属性，可以获得字符串长度。</p>
+<p>字符串同样也是不可变的。一旦字符串被创建出来就无法改变它。我们同+链接其他字符串创建一个新的字符串。俩个包含着相同字符且字符顺序也相同的字符被认为是同一个字符串。<code>===</code>进行字符串判断。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>我们通过 <code>var</code>关键字来声明一个变量</p>
+<h3 id="函数私有变量"><a href="#函数私有变量" class="headerlink" title="函数私有变量"></a>函数私有变量</h3><p>JavaScript通过函数管理作用域。在函数内部声明的变量只在这个函数内部可用，而在函数外面不可用。</p>
+<h3 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h3><p>每个JavaScript环境有一个全局对象，当你在任意的函数外面使用this的时候可以访问到。你创建的每一个全局变量都成了这个全局对象的属性。</p>
+<h2 id="控制流程"><a href="#控制流程" class="headerlink" title="控制流程"></a>控制流程</h2><p>我们可以通过条件语句(if和switch),循环语句（while，for和do）强制跳转语句（break,return，throw）和函数调用来改变执行序列。</p>
+<h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><p>进行if判断时，下列值被作为假：</p>
+<ul>
+<li>false</li>
+<li>null</li>
+<li>空字符串 <code>&#39;&#39;</code></li>
+<li>数字0</li>
+<li>数字NaN</li>
+</ul>
+<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><p>其表达式的值和case条件进行匹配。表达式可以是字符串或者数字。case表达式不一定必须是常量<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">switch</span> (num)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">	  x=<span class="string">"输入正确"</span>;</div><div class="line">	  <span class="keyword">break</span>;</div><div class="line">	<span class="keyword">default</span>:</div><div class="line">	  x=<span class="string">"输入错误"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> (i&lt;<span class="number">5</span>)</div><div class="line">&#123;</div><div class="line">	sum += i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</div><div class="line">&#123;</div><div class="line">	sum += i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>for…in<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">1</span>, <span class="number">2</span>]</div><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> array)</div><div class="line">&#123;</div><div class="line">	sum += i;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/08/编程语言/JavaScript/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/编程语言/JavaScript/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/08/JavaLibrary/Archiva/" title="Archiva 初探" itemprop="url">Archiva 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-08</time>
     
   </p>
 </header>
@@ -522,7 +865,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
 
@@ -534,94 +877,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/08/Java/Archiva/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/Java/Archiva/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/08/编程语言/JavaScript面向对象/" title="JavaScript面向对象和原型链" itemprop="url">JavaScript面向对象和原型链</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
-<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><p>JavaScript的简单数据类型包括数字，字符串，布尔值，null值和undefined值，其他值都是对象(数组，函数都是对象)。 数字，字符串和布尔值虽然拥有方法，但他们是不可变的，因此不能称他们为对象。JavaScript中的对象是可变的键控集合。</p>
-<p>对象是属性的容器，每个属性都有名字和值。</p>
-<ul>
-<li>属性名：包括空串在内的任意字符串。如果字符串不是JavaScript保留的关键字切是合法的标识符则可以不必使用双引号。</li>
-<li>属性值：包括undefined值之外的任何值</li>
-</ul>
-<p>但是JavaScript里的对象是无类型的。</p>
-<p>JavaScript包含一种原型链特性,允许对象继承另一个对象的属性.正确的使用它能减少对象初始化时小号的时间和内存.</p>
-<h3 id="对象字面量"><a href="#对象字面量" class="headerlink" title="对象字面量"></a>对象字面量</h3><p>包围在一对花括号中的0~N个键值对即为对象字面量。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> empoty = &#123;&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> xiaoming = &#123;</div><div class="line">	name : <span class="string">"小明"</span>,</div><div class="line">	age  : <span class="number">18</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>对象字面量还可以嵌套使用</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> xiaoming = &#123;</div><div class="line">	name : <span class="string">"小明"</span>,</div><div class="line">	age  : <span class="number">18</span></div><div class="line">	chengji: &#123;</div><div class="line">		yuwen: <span class="number">99</span>,</div><div class="line">		shuxu: <span class="number">100</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="检索对象里的值"><a href="#检索对象里的值" class="headerlink" title="检索对象里的值"></a>检索对象里的值</h3><p>我们可以使用<code>[]</code>括住一个字符串表达式来索引某个值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming[<span class="string">"name"</span>]</div></pre></td></tr></table></figure></p>
-<p>如果该字符串是一个合法的标识符且不是保留关键字，那么也可以使用<code>.</code>进行索引<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.name</div></pre></td></tr></table></figure></p>
-<p>如果我们索引<code>hair</code>这个属性的话,会得到一个<code>undefined</code>值,因此我们也可以使用<code>||</code>指定一个默认值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.hair || <span class="string">"red"</span></div></pre></td></tr></table></figure></p>
-<p>这样我们获得的结果就是<code>red</code>这个字符串,可是如果我们向一个<code>undefined</code>值继续索引的话会得到一个<code>TypeError</code>异常,我们可以使用<code>&amp;&amp;</code>来避免<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.cars &amp;&amp; xiaoming.cars.changcheng</div></pre></td></tr></table></figure></p>
-<p>我们通过这种方式获得小明拥有的汽车中长城汽车的属性值.</p>
-<h3 id="更新对象的值"><a href="#更新对象的值" class="headerlink" title="更新对象的值"></a>更新对象的值</h3><p>我们可以通过<code>=</code>对对象进行赋值.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">xiaoming.name = <span class="string">"zhangxiaoming"</span></div><div class="line"></div><div class="line"><span class="comment">// 或者赋值某个新的对象</span></div><div class="line">xiaoming.chengji: &#123;</div><div class="line">		yuwen: <span class="number">99</span>,</div><div class="line">		shuxu: <span class="number">100</span></div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="引用对象"><a href="#引用对象" class="headerlink" title="引用对象"></a>引用对象</h3><p>对象通过引用来传递</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chengji = xiaoming.chengji</div></pre></td></tr></table></figure>
-<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><h4 id="Object-模式"><a href="#Object-模式" class="headerlink" title="Object 模式"></a>Object 模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o1 = &#123;&#125;;<span class="comment">//字面量的表现形式</span></div><div class="line"><span class="keyword">var</span> o2 = <span class="keyword">new</span> <span class="built_in">Object</span>;</div><div class="line"><span class="keyword">var</span> o3 = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line"><span class="keyword">var</span> o4 = <span class="keyword">new</span> <span class="built_in">Object</span>(<span class="literal">null</span>);</div><div class="line"><span class="keyword">var</span> o5 = <span class="keyword">new</span> <span class="built_in">Object</span>(<span class="literal">undefined</span>);</div><div class="line"><span class="keyword">var</span> o6 = <span class="built_in">Object</span>.create(<span class="built_in">Object</span>.prototype);<span class="comment">//等价于 var o = &#123;&#125;;//即以 Object.prototype 对象为一个原型模板,新建一个以这个原型模板为原型的对象</span></div><div class="line"><span class="comment">// 区别</span></div><div class="line"><span class="keyword">var</span> o7 = <span class="built_in">Object</span>.create(<span class="literal">null</span>);<span class="comment">//创建一个原型为 null 的对象</span></div></pre></td></tr></table></figure>
-<h4 id="构造器模式"><a href="#构造器模式" class="headerlink" title="构造器模式"></a>构造器模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Car</span>(<span class="params">sColor</span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.color = sColor;      </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> car = <span class="keyword">new</span> Car(<span class="string">"red"</span>);</div></pre></td></tr></table></figure>
-<h3 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h3><p>每个对象都会连接到一个原型对象,并且从中继承属性. 对象字面量会连接到<code>Object.prototype</code></p>
-<p>需要指出的是原型连接在对象更新时是不起作用的(如果我们对某个对象做出改变是不会触及该对象的原型).原型连接只有在索引值的时候才会被用到.</p>
-<h4 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h4><p>如果我们尝试去索引某个对象A的值,但该对象没有此属性名,那么JavaScript会试着从A的原型B中进行查找,如果B中也没有的话,会继续向B的原型C中查找,一直找到<code>Object.prototype</code>,如果都没有找到那么值就是<code>undefined</code>.</p>
-<h4 id="指定对象的原型"><a href="#指定对象的原型" class="headerlink" title="指定对象的原型"></a>指定对象的原型</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>我们可以使用typeof来观察我们的对象中是否包含某个属性<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> xiaoming.name  <span class="comment">// 值为string</span></div><div class="line"><span class="keyword">typeof</span> xiaoming.address  <span class="comment">// 值为undefined</span></div></pre></td></tr></table></figure></p>
-<p>这样我们可以通过<code>undefined</code>来判断某个对象中是否包含某个值,但是有一点需要说明的是<code>typeof</code>也会在原型链进行索引判断。</p>
-<p>那么我们可以使用<code>hasOwnProperty</code>方法进行判断，它不对原型链进行检查同时它的返回值只有布尔值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.hasOwnProperty(<span class="string">"address"</span>)  <span class="comment">// 值为false</span></div></pre></td></tr></table></figure></p>
-<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>delete运算符可以用来删除对象的属性.它不会触及原型链中的任何对象. 如果我们自定义的对象属性覆盖了原型中的属性,我们可以通过删除对象的属性而让原型中的属性显露出来</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/08/编程语言/JavaScript面向对象/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/编程语言/JavaScript面向对象/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/08/JavaLibrary/Archiva/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/JavaLibrary/Archiva/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -648,7 +904,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
+    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-08</time>
     
   </p>
 </header>
@@ -730,93 +986,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/编程语言/JavaScript/" title="JavaScript变量和流程控制" itemprop="url">JavaScript变量和流程控制</a>
+      <a href="/2015/09/08/JavaSE/Java8 流/" title="java8 流" itemprop="url">java8 流</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
-<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h3 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h3><p>JavaScript只有一个数字类型,它在内部被表示为64位的浮点数. 它没有分离出整数类型,因此1和1.0的值是相同的</p>
-<p>NaN是一个数值，它表示一个不能产生正常结果的运算结果。<code>NaN</code>不等于任何值，包括它自己。可以使用函数<code>isNaN</code>来检测<code>NaN</code>。</p>
-<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>字符串可以由一对单引号或者一对双引号构成，可以包含0到多个字符。<code>\</code>是转义字符。JavaScript采用Unicode16作为字符集，因此所有的字符都是16位的。</p>
-<p>字符串有一个length属性，可以获得字符串长度。</p>
-<p>字符串同样也是不可变的。一旦字符串被创建出来就无法改变它。我们同+链接其他字符串创建一个新的字符串。俩个包含着相同字符且字符顺序也相同的字符被认为是同一个字符串。<code>===</code>进行字符串判断。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>我们通过 <code>var</code>关键字来声明一个变量</p>
-<h3 id="函数私有变量"><a href="#函数私有变量" class="headerlink" title="函数私有变量"></a>函数私有变量</h3><p>JavaScript通过函数管理作用域。在函数内部声明的变量只在这个函数内部可用，而在函数外面不可用。</p>
-<h3 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h3><p>每个JavaScript环境有一个全局对象，当你在任意的函数外面使用this的时候可以访问到。你创建的每一个全局变量都成了这个全局对象的属性。</p>
-<h2 id="控制流程"><a href="#控制流程" class="headerlink" title="控制流程"></a>控制流程</h2><p>我们可以通过条件语句(if和switch),循环语句（while，for和do）强制跳转语句（break,return，throw）和函数调用来改变执行序列。</p>
-<h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><p>进行if判断时，下列值被作为假：</p>
-<ul>
-<li>false</li>
-<li>null</li>
-<li>空字符串 <code>&#39;&#39;</code></li>
-<li>数字0</li>
-<li>数字NaN</li>
-</ul>
-<h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><p>其表达式的值和case条件进行匹配。表达式可以是字符串或者数字。case表达式不一定必须是常量<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">switch</span> (num)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">	  x=<span class="string">"输入正确"</span>;</div><div class="line">	  <span class="keyword">break</span>;</div><div class="line">	<span class="keyword">default</span>:</div><div class="line">	  x=<span class="string">"输入错误"</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> (i&lt;<span class="number">5</span>)</div><div class="line">&#123;</div><div class="line">	sum += i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</div><div class="line">&#123;</div><div class="line">	sum += i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>for…in<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> array = [<span class="number">1</span>, <span class="number">2</span>]</div><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> array)</div><div class="line">&#123;</div><div class="line">	sum += i;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/08/编程语言/JavaScript/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/编程语言/JavaScript/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/08/Java/Java8 流/" title="java8 流" itemprop="url">java8 流</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
+    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-08</time>
     
   </p>
 </header>
@@ -934,7 +1111,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/08/Java/Java8 流/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/Java/Java8 流/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/08/JavaSE/Java8 流/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/JavaSE/Java8 流/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -954,14 +1131,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/mgits/io/" title="IO" itemprop="url">IO</a>
+      <a href="/2015/09/08/杂记/io/" title="IO" itemprop="url">IO</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
+    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-08</time>
     
   </p>
 </header>
@@ -996,7 +1173,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
 </div>
 
 
@@ -1008,7 +1185,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/08/mgits/io/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/mgits/io/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/08/杂记/io/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/杂记/io/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1028,14 +1205,14 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/Java/Java8 lambda/" title="java lambda" itemprop="url">java lambda</a>
+      <a href="/2015/09/08/JavaSE/Java8 lambda/" title="java lambda" itemprop="url">java lambda</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
+    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-08</time>
     
   </p>
 </header>
@@ -1133,7 +1310,94 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/09/08/Java/Java8 lambda/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/Java/Java8 lambda/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/09/08/JavaSE/Java8 lambda/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/JavaSE/Java8 lambda/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/08/编程语言/JavaScript面向对象/" title="JavaScript面向对象和原型链" itemprop="url">JavaScript面向对象和原型链</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-09-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
+<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><p>JavaScript的简单数据类型包括数字，字符串，布尔值，null值和undefined值，其他值都是对象(数组，函数都是对象)。 数字，字符串和布尔值虽然拥有方法，但他们是不可变的，因此不能称他们为对象。JavaScript中的对象是可变的键控集合。</p>
+<p>对象是属性的容器，每个属性都有名字和值。</p>
+<ul>
+<li>属性名：包括空串在内的任意字符串。如果字符串不是JavaScript保留的关键字切是合法的标识符则可以不必使用双引号。</li>
+<li>属性值：包括undefined值之外的任何值</li>
+</ul>
+<p>但是JavaScript里的对象是无类型的。</p>
+<p>JavaScript包含一种原型链特性,允许对象继承另一个对象的属性.正确的使用它能减少对象初始化时小号的时间和内存.</p>
+<h3 id="对象字面量"><a href="#对象字面量" class="headerlink" title="对象字面量"></a>对象字面量</h3><p>包围在一对花括号中的0~N个键值对即为对象字面量。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> empoty = &#123;&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> xiaoming = &#123;</div><div class="line">	name : <span class="string">"小明"</span>,</div><div class="line">	age  : <span class="number">18</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>对象字面量还可以嵌套使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> xiaoming = &#123;</div><div class="line">	name : <span class="string">"小明"</span>,</div><div class="line">	age  : <span class="number">18</span></div><div class="line">	chengji: &#123;</div><div class="line">		yuwen: <span class="number">99</span>,</div><div class="line">		shuxu: <span class="number">100</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="检索对象里的值"><a href="#检索对象里的值" class="headerlink" title="检索对象里的值"></a>检索对象里的值</h3><p>我们可以使用<code>[]</code>括住一个字符串表达式来索引某个值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming[<span class="string">"name"</span>]</div></pre></td></tr></table></figure></p>
+<p>如果该字符串是一个合法的标识符且不是保留关键字，那么也可以使用<code>.</code>进行索引<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.name</div></pre></td></tr></table></figure></p>
+<p>如果我们索引<code>hair</code>这个属性的话,会得到一个<code>undefined</code>值,因此我们也可以使用<code>||</code>指定一个默认值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.hair || <span class="string">"red"</span></div></pre></td></tr></table></figure></p>
+<p>这样我们获得的结果就是<code>red</code>这个字符串,可是如果我们向一个<code>undefined</code>值继续索引的话会得到一个<code>TypeError</code>异常,我们可以使用<code>&amp;&amp;</code>来避免<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.cars &amp;&amp; xiaoming.cars.changcheng</div></pre></td></tr></table></figure></p>
+<p>我们通过这种方式获得小明拥有的汽车中长城汽车的属性值.</p>
+<h3 id="更新对象的值"><a href="#更新对象的值" class="headerlink" title="更新对象的值"></a>更新对象的值</h3><p>我们可以通过<code>=</code>对对象进行赋值.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">xiaoming.name = <span class="string">"zhangxiaoming"</span></div><div class="line"></div><div class="line"><span class="comment">// 或者赋值某个新的对象</span></div><div class="line">xiaoming.chengji: &#123;</div><div class="line">		yuwen: <span class="number">99</span>,</div><div class="line">		shuxu: <span class="number">100</span></div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="引用对象"><a href="#引用对象" class="headerlink" title="引用对象"></a>引用对象</h3><p>对象通过引用来传递</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chengji = xiaoming.chengji</div></pre></td></tr></table></figure>
+<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><h4 id="Object-模式"><a href="#Object-模式" class="headerlink" title="Object 模式"></a>Object 模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o1 = &#123;&#125;;<span class="comment">//字面量的表现形式</span></div><div class="line"><span class="keyword">var</span> o2 = <span class="keyword">new</span> <span class="built_in">Object</span>;</div><div class="line"><span class="keyword">var</span> o3 = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line"><span class="keyword">var</span> o4 = <span class="keyword">new</span> <span class="built_in">Object</span>(<span class="literal">null</span>);</div><div class="line"><span class="keyword">var</span> o5 = <span class="keyword">new</span> <span class="built_in">Object</span>(<span class="literal">undefined</span>);</div><div class="line"><span class="keyword">var</span> o6 = <span class="built_in">Object</span>.create(<span class="built_in">Object</span>.prototype);<span class="comment">//等价于 var o = &#123;&#125;;//即以 Object.prototype 对象为一个原型模板,新建一个以这个原型模板为原型的对象</span></div><div class="line"><span class="comment">// 区别</span></div><div class="line"><span class="keyword">var</span> o7 = <span class="built_in">Object</span>.create(<span class="literal">null</span>);<span class="comment">//创建一个原型为 null 的对象</span></div></pre></td></tr></table></figure>
+<h4 id="构造器模式"><a href="#构造器模式" class="headerlink" title="构造器模式"></a>构造器模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Car</span>(<span class="params">sColor</span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.color = sColor;      </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> car = <span class="keyword">new</span> Car(<span class="string">"red"</span>);</div></pre></td></tr></table></figure>
+<h3 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h3><p>每个对象都会连接到一个原型对象,并且从中继承属性. 对象字面量会连接到<code>Object.prototype</code></p>
+<p>需要指出的是原型连接在对象更新时是不起作用的(如果我们对某个对象做出改变是不会触及该对象的原型).原型连接只有在索引值的时候才会被用到.</p>
+<h4 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h4><p>如果我们尝试去索引某个对象A的值,但该对象没有此属性名,那么JavaScript会试着从A的原型B中进行查找,如果B中也没有的话,会继续向B的原型C中查找,一直找到<code>Object.prototype</code>,如果都没有找到那么值就是<code>undefined</code>.</p>
+<h4 id="指定对象的原型"><a href="#指定对象的原型" class="headerlink" title="指定对象的原型"></a>指定对象的原型</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>我们可以使用typeof来观察我们的对象中是否包含某个属性<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> xiaoming.name  <span class="comment">// 值为string</span></div><div class="line"><span class="keyword">typeof</span> xiaoming.address  <span class="comment">// 值为undefined</span></div></pre></td></tr></table></figure></p>
+<p>这样我们可以通过<code>undefined</code>来判断某个对象中是否包含某个值,但是有一点需要说明的是<code>typeof</code>也会在原型链进行索引判断。</p>
+<p>那么我们可以使用<code>hasOwnProperty</code>方法进行判断，它不对原型链进行检查同时它的返回值只有布尔值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.hasOwnProperty(<span class="string">"address"</span>)  <span class="comment">// 值为false</span></div></pre></td></tr></table></figure></p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>delete运算符可以用来删除对象的属性.它不会触及原型链中的任何对象. 如果我们自定义的对象属性覆盖了原型中的属性,我们可以通过删除对象的属性而让原型中的属性显露出来</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/09/08/编程语言/JavaScript面向对象/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/编程语言/JavaScript面向对象/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1160,7 +1424,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-09T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-09</time>
+    <time datetime="2015-08-09T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-09</time>
     
   </p>
 </header>
@@ -1220,14 +1484,110 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/08/mgits/IntelliJ IDEA/" title="IntelliJ IDEA" itemprop="url">IntelliJ IDEA</a>
+      <a href="/2015/08/08/杂记/unity命令行使用/" title="unity命令行使用" itemprop="url">unity命令行使用</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-08</time>
+    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Command-line-arguments"><a href="#Command-line-arguments" class="headerlink" title="Command line arguments"></a>Command line arguments</h1><p>当从命令行启动<code>Unity</code>时,它可以在启动时接受一些参数和信息, 这种方式可以用于测试用例，自动构建和其他的任务。</p>
+<p>在<code>MacOS</code>系统下，你可以像下面这样启动<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Applications/Unity/Unity.app/Contents/MacOS/Unity</div></pre></td></tr></table></figure></p>
+<p>当在windows系统里，你就需要执行下面的命令了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"C:\Program Files (x86)\Unity\Editor\Unity.exe"</span></div></pre></td></tr></table></figure></p>
+<h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><p>正如上面提到的,<code>editor</code>也可以在启动时通过一些额外的命令来构建游戏, 下面就列举出了这些命令：</p>
+<ul>
+<li><code>-assetServerUpdate &lt;IP[:port] projectName username password [r &lt;revision&gt;]&gt;</code>    从<code>IP:port</code>上的<code>Asset Server</code>强制更新项目. <code>port</code>是可选的,如果不指定的话,会默认选择<code>10733</code>这个端口. 这个命令可与<code>-projectPath</code>参数一起使用, 这样可确保你不会更新错项目.如果不指定项目名称的话,那么会默认的对<code>Unity</code>上次打开的项目进行更新. 如果<code>-projectPath</code>路径下不存在项目,那么会自动创建一个.</li>
+<li><code>-batchmode</code>  在<code>batch</code>模式下运行<code>Unity</code>.这个命令我们强烈建议你与其他命令一起使用, 它会确保不会弹出Edtior. 当由脚本代码抛出异常或者<code>Asset Server</code>更新失败或者其他操作引起的异常,<code>Unity</code>会直接返回错误码<code>1</code>并退出. 需要注意的是,在<code>batch</code>模式下,<code>Unity</code>会在控制台输出一些基础日志. 还有当在<code>batch</code>模式下打开一个项目,那么<code>Editor</code>就不能再开打这个相同的项目.</li>
+<li><code>-buildLinux32Player &lt;pathname&gt;</code>    构建一个32位的linux版应用.(例如 <code>-buildLinux32Player path/to/your/build</code>).</li>
+<li><code>-buildLinux64Player &lt;pathname&gt;</code>    构建一个64位的linux版应用.(例如 <code>-buildLinux64Player path/to/your/build</code>).</li>
+<li><code>-buildLinuxUniversalPlayer &lt;pathname&gt;</code>    构建一个32位和64位的linux混合版应用.(例如 <code>-buildLinuxUniversalPlayer path/to/your/build</code>).</li>
+<li><code>-buildOSXPlayer &lt;pathname&gt;</code>    构建一个32位的MacOS版应用.(例如 <code>-buildOSXPlayer path/to/your/build.app</code>).</li>
+<li><code>-buildOSX64Player &lt;pathname&gt;</code>    构建一个64位的MacOS版应用.(例如 <code>-buildOSX64Player path/to/your/build.app</code>).</li>
+<li><code>-buildOSXUniversalPlayer &lt;pathname&gt;</code>    构建一个32位和64位的MacOs混合版应用.(例如 <code>-buildOSXUniversalPlayer path/to/your/build.app</code>).</li>
+<li><code>-buildTarget &lt;name&gt;</code>    当项目被加载之前允许用户选择的构建目标：<code>win32, win64, osx, linux, linux64, ios, android, web, webstreamed, webgl, xbox360, xboxone, ps3, ps4, psp2, wsa, wp8, bb10, tizen, samsungtv</code>.</li>
+<li><code>-buildWebPlayer &lt;pathname&gt;</code>    构建一个在web上运行的应用.(例如<code>-buildWebPlayer path/to/your/build</code>).</li>
+<li><code>-buildWebPlayerStreamed &lt;pathname&gt;</code>    Build a streamed WebPlayer (<code>-buildWebPlayerStreamed path/to/your/build</code>).</li>
+<li><code>-buildWindowsPlayer &lt;pathname&gt;</code>    构建一个32位的Windows版应用.(例如  <code>-buildWindowsPlayer path/to/your/build.exe</code>).</li>
+<li><code>-buildWindows64Player &lt;pathname&gt;</code>    构建一个64位的Windows版应用.(例如  <code>-buildWindows64Player path/to/your/build.exe</code>).</li>
+<li><code>-createProject &lt;pathname&gt;</code>    在指定路径下(<code>pathname</code>)创建一个空项目.</li>
+<li><code>-executeMethod &lt;ClassName.MethodName&gt;</code>    只要Unity启动完成并且项目打开(可能还需要等待asset server更新完成)就执行该静态方法. 该功能可用于持续集成, 运行测试用例, 执行构建任务, 准备一些数据等等. 如果你想让程序在命令行中返回一个错误码,那么你可以直接在Unity中直接抛出一个异常,这时命令行返回的错误码是1，或者你可以调用<code>EditorApplication.Exit</code>,这时会返回一个非0的状态码. 如果你想要向该方法传递参数,那么你可以直接将这些参数添加到命令行上,然后在程序中使用<code>System.Environment.GetCommandLineArgs</code>获得这些参数.To use -executeMethod, you need to place the enclosing script in an Editor folder. The method to be executed must be defined as static.</li>
+<li><code>-exportPackage &lt;exportAssetPath1 exportAssetPath2 ExportAssetPath3 exportFileName&gt;</code>    在指定的路径下导出<code>package</code>. <code>exportAssetPath</code>是一个从Unity项目导出到的文件夹(路径相对于Unity项目的根路径), <code>exportFileName</code>是package的名字. 一般这个选项可以一次性地导出整个文件夹.这个命令一般需要和<code>-projectPath</code>参数一起使用.</li>
+<li><code>-force-d3d9 (Windows only)</code>    设置editor使用<code>Direct3D 9</code>进行渲染. 这个是默认选项,一般不需要你去设置这个值.</li>
+<li><code>-force-d3d11 (Windows only)</code>    设置editor使用<code>Direct3D 11</code>进行渲染.</li>
+<li><code>-force-opengl (Windows only)</code>    设置editor使用<code>OpenGL</code>进行渲染. 即使<code>Direct3D</code>可用我们也可以说使用<code>OpenGL</code>进行渲染. 一般我们是在<code>Direct3D 9.0c</code>不可用的情况下才选择使用<code>openGL</code></li>
+<li><code>-force-free</code>    让edtior在<code>Unity license</code>下运行, 即使我们安装了<code>Unity Pro license</code></li>
+<li><code>-importPackage &lt;pathname&gt;</code>    导入指定的<code>package</code>. 如果不进行导入的话,会出现一个对话框.</li>
+<li><code>-logFile &lt;pathname&gt;</code>    指定Editor或者<code>Windows/Linux/OSX</code>版本应用的日志输出路径.</li>
+<li><code>-silent-crashes</code>    不显示crashe对话框.</li>
+<li><code>-projectPath &lt;pathname&gt;</code>    在指定的路径下打开项目.</li>
+<li><code>-quit</code>    当其他命令都执行完之后退出Unity. 注意这个会将错误日志隐藏掉，但是可以在<code>Editor.log</code>中找到它.</li>
+<li><code>-serial &lt;serial&gt;</code>    Activates Unity with the specified serial key. It is recommended to pass “-batchmode -quit” arguments as well, in order to quit Unity when done, if using this for automated activation of Unity. Please allow a few seconds before license file is created, as Unity needs to communicate with the license server. Make sure that License file folder exists, and has appropriate permissions before running Unity with this argument. In case activation fails, see the Editor.log for info. This option is new in Unity 5.0.</li>
+</ul>
+<h4 id="Example-usage"><a href="#Example-usage" class="headerlink" title="Example usage"></a>Example usage</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// C# example</span></div><div class="line">using UnityEditor;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEditorScript</span></span></div><div class="line">&#123;</div><div class="line">     <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PerformBuild</span> <span class="params">()</span></span></div><div class="line">     &#123;</div><div class="line">         string[] scenes = &#123; <span class="string">"Assets/MyScene.unity"</span> &#125;;</div><div class="line">         BuildPipeline.BuildPlayer(scenes, ...);</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// JavaScript example</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PerformBuild</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    string[] scenes = &#123; <span class="string">"Assets/MyScene.unity"</span> &#125;;</div><div class="line">    BuildPipeline.BuildPlayer(scenes, ...);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面的命令在<code>batch</code>模式下运行Unity, 同时执行<code>MyEditorScript.MyMethod</code>完成, 当该方法执行完之后退出.</p>
+<ul>
+<li><code>Windows</code>: <code>C:\program files\Unity\Editor\Unity.exe -quit -batchmode -executeMethod MyEditorScript.MyMethod</code></li>
+<li><code>Mac OS</code>: <code>/Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -executeMethod MyEditorScript.MyMethod</code></li>
+</ul>
+<p>下面的命令在<code>batch</code>执行Unity, 同时从<code>asset server</code>更新指定项目. 当全部的<code>asset</code>下载完之后, 指定的方法会被执行,当方法被完全执行之后,Unity会自动退出.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Applications/Unity/Unity.app/Contents/MacOS/Unity -batchmode -projectPath ~/UnityProjects/AutobuildProject -assetServerUpdate <span class="number">192.168</span>.1.1 MyGame AutobuildUser l33tpa33 -executeMethod MyEditorScript.PerformBuild -quit</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/08/杂记/unity命令行使用/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/杂记/unity命令行使用/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/08/杂记/IntelliJ IDEA/" title="IntelliJ IDEA" itemprop="url">IntelliJ IDEA</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-08</time>
     
   </p>
 </header>
@@ -1338,7 +1698,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
 </div>
 
 
@@ -1350,103 +1710,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/08/08/mgits/IntelliJ IDEA/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/mgits/IntelliJ IDEA/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/08/mgits/unity命令行使用/" title="unity命令行使用" itemprop="url">unity命令行使用</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h1 id="Command-line-arguments"><a href="#Command-line-arguments" class="headerlink" title="Command line arguments"></a>Command line arguments</h1><p>当从命令行启动<code>Unity</code>时,它可以在启动时接受一些参数和信息, 这种方式可以用于测试用例，自动构建和其他的任务。</p>
-<p>在<code>MacOS</code>系统下，你可以像下面这样启动<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Applications/Unity/Unity.app/Contents/MacOS/Unity</div></pre></td></tr></table></figure></p>
-<p>当在windows系统里，你就需要执行下面的命令了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"C:\Program Files (x86)\Unity\Editor\Unity.exe"</span></div></pre></td></tr></table></figure></p>
-<h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><p>正如上面提到的,<code>editor</code>也可以在启动时通过一些额外的命令来构建游戏, 下面就列举出了这些命令：</p>
-<ul>
-<li><code>-assetServerUpdate &lt;IP[:port] projectName username password [r &lt;revision&gt;]&gt;</code>    从<code>IP:port</code>上的<code>Asset Server</code>强制更新项目. <code>port</code>是可选的,如果不指定的话,会默认选择<code>10733</code>这个端口. 这个命令可与<code>-projectPath</code>参数一起使用, 这样可确保你不会更新错项目.如果不指定项目名称的话,那么会默认的对<code>Unity</code>上次打开的项目进行更新. 如果<code>-projectPath</code>路径下不存在项目,那么会自动创建一个.</li>
-<li><code>-batchmode</code>  在<code>batch</code>模式下运行<code>Unity</code>.这个命令我们强烈建议你与其他命令一起使用, 它会确保不会弹出Edtior. 当由脚本代码抛出异常或者<code>Asset Server</code>更新失败或者其他操作引起的异常,<code>Unity</code>会直接返回错误码<code>1</code>并退出. 需要注意的是,在<code>batch</code>模式下,<code>Unity</code>会在控制台输出一些基础日志. 还有当在<code>batch</code>模式下打开一个项目,那么<code>Editor</code>就不能再开打这个相同的项目.</li>
-<li><code>-buildLinux32Player &lt;pathname&gt;</code>    构建一个32位的linux版应用.(例如 <code>-buildLinux32Player path/to/your/build</code>).</li>
-<li><code>-buildLinux64Player &lt;pathname&gt;</code>    构建一个64位的linux版应用.(例如 <code>-buildLinux64Player path/to/your/build</code>).</li>
-<li><code>-buildLinuxUniversalPlayer &lt;pathname&gt;</code>    构建一个32位和64位的linux混合版应用.(例如 <code>-buildLinuxUniversalPlayer path/to/your/build</code>).</li>
-<li><code>-buildOSXPlayer &lt;pathname&gt;</code>    构建一个32位的MacOS版应用.(例如 <code>-buildOSXPlayer path/to/your/build.app</code>).</li>
-<li><code>-buildOSX64Player &lt;pathname&gt;</code>    构建一个64位的MacOS版应用.(例如 <code>-buildOSX64Player path/to/your/build.app</code>).</li>
-<li><code>-buildOSXUniversalPlayer &lt;pathname&gt;</code>    构建一个32位和64位的MacOs混合版应用.(例如 <code>-buildOSXUniversalPlayer path/to/your/build.app</code>).</li>
-<li><code>-buildTarget &lt;name&gt;</code>    当项目被加载之前允许用户选择的构建目标：<code>win32, win64, osx, linux, linux64, ios, android, web, webstreamed, webgl, xbox360, xboxone, ps3, ps4, psp2, wsa, wp8, bb10, tizen, samsungtv</code>.</li>
-<li><code>-buildWebPlayer &lt;pathname&gt;</code>    构建一个在web上运行的应用.(例如<code>-buildWebPlayer path/to/your/build</code>).</li>
-<li><code>-buildWebPlayerStreamed &lt;pathname&gt;</code>    Build a streamed WebPlayer (<code>-buildWebPlayerStreamed path/to/your/build</code>).</li>
-<li><code>-buildWindowsPlayer &lt;pathname&gt;</code>    构建一个32位的Windows版应用.(例如  <code>-buildWindowsPlayer path/to/your/build.exe</code>).</li>
-<li><code>-buildWindows64Player &lt;pathname&gt;</code>    构建一个64位的Windows版应用.(例如  <code>-buildWindows64Player path/to/your/build.exe</code>).</li>
-<li><code>-createProject &lt;pathname&gt;</code>    在指定路径下(<code>pathname</code>)创建一个空项目.</li>
-<li><code>-executeMethod &lt;ClassName.MethodName&gt;</code>    只要Unity启动完成并且项目打开(可能还需要等待asset server更新完成)就执行该静态方法. 该功能可用于持续集成, 运行测试用例, 执行构建任务, 准备一些数据等等. 如果你想让程序在命令行中返回一个错误码,那么你可以直接在Unity中直接抛出一个异常,这时命令行返回的错误码是1，或者你可以调用<code>EditorApplication.Exit</code>,这时会返回一个非0的状态码. 如果你想要向该方法传递参数,那么你可以直接将这些参数添加到命令行上,然后在程序中使用<code>System.Environment.GetCommandLineArgs</code>获得这些参数.To use -executeMethod, you need to place the enclosing script in an Editor folder. The method to be executed must be defined as static.</li>
-<li><code>-exportPackage &lt;exportAssetPath1 exportAssetPath2 ExportAssetPath3 exportFileName&gt;</code>    在指定的路径下导出<code>package</code>. <code>exportAssetPath</code>是一个从Unity项目导出到的文件夹(路径相对于Unity项目的根路径), <code>exportFileName</code>是package的名字. 一般这个选项可以一次性地导出整个文件夹.这个命令一般需要和<code>-projectPath</code>参数一起使用.</li>
-<li><code>-force-d3d9 (Windows only)</code>    设置editor使用<code>Direct3D 9</code>进行渲染. 这个是默认选项,一般不需要你去设置这个值.</li>
-<li><code>-force-d3d11 (Windows only)</code>    设置editor使用<code>Direct3D 11</code>进行渲染.</li>
-<li><code>-force-opengl (Windows only)</code>    设置editor使用<code>OpenGL</code>进行渲染. 即使<code>Direct3D</code>可用我们也可以说使用<code>OpenGL</code>进行渲染. 一般我们是在<code>Direct3D 9.0c</code>不可用的情况下才选择使用<code>openGL</code></li>
-<li><code>-force-free</code>    让edtior在<code>Unity license</code>下运行, 即使我们安装了<code>Unity Pro license</code></li>
-<li><code>-importPackage &lt;pathname&gt;</code>    导入指定的<code>package</code>. 如果不进行导入的话,会出现一个对话框.</li>
-<li><code>-logFile &lt;pathname&gt;</code>    指定Editor或者<code>Windows/Linux/OSX</code>版本应用的日志输出路径.</li>
-<li><code>-silent-crashes</code>    不显示crashe对话框.</li>
-<li><code>-projectPath &lt;pathname&gt;</code>    在指定的路径下打开项目.</li>
-<li><code>-quit</code>    当其他命令都执行完之后退出Unity. 注意这个会将错误日志隐藏掉，但是可以在<code>Editor.log</code>中找到它.</li>
-<li><code>-serial &lt;serial&gt;</code>    Activates Unity with the specified serial key. It is recommended to pass “-batchmode -quit” arguments as well, in order to quit Unity when done, if using this for automated activation of Unity. Please allow a few seconds before license file is created, as Unity needs to communicate with the license server. Make sure that License file folder exists, and has appropriate permissions before running Unity with this argument. In case activation fails, see the Editor.log for info. This option is new in Unity 5.0.</li>
-</ul>
-<h4 id="Example-usage"><a href="#Example-usage" class="headerlink" title="Example usage"></a>Example usage</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// C# example</span></div><div class="line">using UnityEditor;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEditorScript</span></span></div><div class="line">&#123;</div><div class="line">     <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PerformBuild</span> <span class="params">()</span></span></div><div class="line">     &#123;</div><div class="line">         string[] scenes = &#123; <span class="string">"Assets/MyScene.unity"</span> &#125;;</div><div class="line">         BuildPipeline.BuildPlayer(scenes, ...);</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// JavaScript example</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PerformBuild</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    string[] scenes = &#123; <span class="string">"Assets/MyScene.unity"</span> &#125;;</div><div class="line">    BuildPipeline.BuildPlayer(scenes, ...);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>下面的命令在<code>batch</code>模式下运行Unity, 同时执行<code>MyEditorScript.MyMethod</code>完成, 当该方法执行完之后退出.</p>
-<ul>
-<li><code>Windows</code>: <code>C:\program files\Unity\Editor\Unity.exe -quit -batchmode -executeMethod MyEditorScript.MyMethod</code></li>
-<li><code>Mac OS</code>: <code>/Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -executeMethod MyEditorScript.MyMethod</code></li>
-</ul>
-<p>下面的命令在<code>batch</code>执行Unity, 同时从<code>asset server</code>更新指定项目. 当全部的<code>asset</code>下载完之后, 指定的方法会被执行,当方法被完全执行之后,Unity会自动退出.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/Applications/Unity/Unity.app/Contents/MacOS/Unity -batchmode -projectPath ~/UnityProjects/AutobuildProject -assetServerUpdate <span class="number">192.168</span>.1.1 MyGame AutobuildUser l33tpa33 -executeMethod MyEditorScript.PerformBuild -quit</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/08/mgits/unity命令行使用/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/mgits/unity命令行使用/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/08/08/杂记/IntelliJ IDEA/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/杂记/IntelliJ IDEA/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1473,7 +1737,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-08</time>
+    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-08</time>
     
   </p>
 </header>
@@ -1585,7 +1849,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-07T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-07</time>
+    <time datetime="2015-08-07T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-07</time>
     
   </p>
 </header>
@@ -1665,7 +1929,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-06T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-06</time>
+    <time datetime="2015-08-06T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-08-06</time>
     
   </p>
 </header>
@@ -1807,286 +2071,21 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/13/zookeeper/ZooKeeper 原理/" title="ZooKeeper 原理" itemprop="url">ZooKeeper 原理</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-13T07:00:00.000Z" itemprop="datePublished"> Published 2015-07-13</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>Zookeeper 会维护一个类似于标准的文件系统的数据结构<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/data-node-tree.jpg" alt=""></p>
-<h2 id="节点类型"><a href="#节点类型" class="headerlink" title="节点类型"></a>节点类型</h2><ul>
-<li>PERSISTENT：持久化目录节点，这个目录节点存储的数据不会丢失；</li>
-<li>PERSISTENT_SEQUENTIAL：顺序自动编号的目录节点，这种目录节点会根据当前已近存在的节点数自动加 1，然后返回给客户端已经成功创建的目录节点名；</li>
-<li>EPHEMERAL：临时目录节点，一旦创建这个节点的客户端与服务器端口也就是 session 超时，这种节点会被自动删除；</li>
-<li>EPHEMERAL_SEQUENTIAL：临时自动编号节点</li>
-</ul>
-<h2 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h2><p>ZK中有如下三种角色</p>
-<ul>
-<li>Leader：领导者，负责投票的发起和决议，以及更新系统状态</li>
-<li>Follower：接受客户端的请求并返回结果给客户端，并参与投票</li>
-<li>Observer：接受客户端的请求，将写的请求转发给leader，不参与投票。Observer目的是扩展系统，提高读的速度。</li>
-</ul>
-<h2 id="选举"><a href="#选举" class="headerlink" title="选举"></a>选举</h2><p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/40280796_2.jpg" alt=""></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/ZooKeeper/">ZooKeeper</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/07/13/zookeeper/ZooKeeper 原理/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/zookeeper/ZooKeeper 原理/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/10/Java/Maven pom 配置/" title="Maven POM文件配置" itemprop="url">Maven POM文件配置</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-10T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="maven属性"><a href="#maven属性" class="headerlink" title="maven属性"></a>maven属性</h2><p>内置属性</p>
-<ul>
-<li><code>${basedir}</code>: 表示项目根目录,即包含<code>pom.xml</code>文件的目录</li>
-<li><code>${version}</code>:项目版本</li>
-</ul>
-<p>POM属性<br>该类属性引用POM文件中对应的元素值,例如：</p>
-<ul>
-<li><code>${project.artifactId}</code>: 引用<code>&lt;project&gt;&lt;artifactId&gt;</code>值</li>
-<li><code>${project.build.sourceDirectory}</code>: 项目的主源码目录</li>
-<li><code>${project.build.directory}</code>: 项目构建的输出目录</li>
-</ul>
-<p>自定义属性, 在<code>&lt;Properties&gt;&lt;property&gt;</code>里定义的属性</p>
-<p>setting属性, 与POM属性同理,但是以<code>settings</code>开头. 这个属性引用的是<code>setting.xml</code>文件中XML元素的值.</p>
-<p>Java系统属性, 所有JAVA系统中的属性都可以使用Maven属性引用,使用<code>mvn help:system</code>查看所有Java系统属性</p>
-<p>环境变量属性, 所有环境变量属性属性都可以使用<code>env</code>开头的属性引用,例如<code>${env.JAVA_HOME}</code></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/10/Java/Maven pom 配置/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/10/Java/Maven pom 配置/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/mgits/docker命令/" title="docker命令" itemprop="url">docker命令</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Docker命令"><a href="#Docker命令" class="headerlink" title="Docker命令"></a>Docker命令</h2><h3 id="service-docker-start"><a href="#service-docker-start" class="headerlink" title="service docker start"></a><code>service docker start</code></h3><p>安装之后启动 Docker 服务.</p>
-<h3 id="docker-pull"><a href="#docker-pull" class="headerlink" title="docker pull"></a><code>docker pull</code></h3><p>命令来从仓库获取所需要的镜像<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull ubuntu12.04</div></pre></td></tr></table></figure></p>
-<h3 id="docker-push"><a href="#docker-push" class="headerlink" title="docker push"></a><code>docker push</code></h3><p>把自己创建的镜像上传到仓库中来共享<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker push ouruser/sinatra</div></pre></td></tr></table></figure></p>
-<h3 id="docker-images"><a href="#docker-images" class="headerlink" title="docker images"></a><code>docker images</code></h3><p>显示本地已有的镜像.</p>
-<h3 id="docker-commit"><a href="#docker-commit" class="headerlink" title="docker commit"></a><code>docker commit</code></h3><p>使用 docker commit 命令来提交更新后的副本. 这个命令是用来将容器的改变提交到镜像身上.如果目标镜像不存在就创建一个.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo docker commit -m <span class="string">"Added json gem"</span> -a <span class="string">"Docker Newbee"</span> <span class="number">0</span>b2616b0e5a8 ouruser/sinatrav2</div></pre></td></tr></table></figure></p>
-<ul>
-<li><code>-m</code> : 来指定提交的说明信息，跟我们使用的版本控制工具一样；</li>
-<li><code>-a</code> : 可以指定更新的用户信息；</li>
-<li><code>0b2616b0e5a8</code> : 用来创建镜像的容器的 ID；</li>
-<li><code>ouruser/sinatrav2</code> : 指定目标镜像的仓库名和 tag 信息。</li>
-</ul>
-<h3 id="docker-build"><a href="#docker-build" class="headerlink" title="docker build"></a><code>docker build</code></h3><p>使用 docker build 来创建一个新的镜像.为此,首先需要创建一个 Dockerfile,包含一些如何创建镜像的指令.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build -t=<span class="string">"ouruser/sinatrav2"</span></div></pre></td></tr></table></figure></p>
-<ul>
-<li>-t 标记来添加 tag,指定新的镜像的用户信息</li>
-</ul>
-<h3 id="docker-tag"><a href="#docker-tag" class="headerlink" title="docker tag"></a><code>docker tag</code></h3><p>命令来修改镜像的标签.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker tag <span class="number">5</span>db5f8471261 ouruser/sinatradevel</div></pre></td></tr></table></figure></p>
-<h3 id="docker-import"><a href="#docker-import" class="headerlink" title="docker import"></a><code>docker import</code></h3><p>从本地文件系统导入一个镜像,可以使用 openvz(容器虚拟化的先锋技术)的模板来创建 openvz 的模板下载地址为 templates .比如,先下载了一个 ubuntu-14.04 的镜像,之后使用以下命令导入<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat ubuntu-<span class="number">14.04</span>-x86_64-minimal.tar.gz  |docker <span class="keyword">import</span> - ubuntu14.04</div></pre></td></tr></table></figure></p>
-<h3 id="docker-save"><a href="#docker-save" class="headerlink" title="docker save"></a><code>docker save</code></h3><p>导出镜像到本地文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker save -o ubuntu_14.04.tar ubuntu14.04</div></pre></td></tr></table></figure></p>
-<h3 id="docker-load"><a href="#docker-load" class="headerlink" title="docker load"></a><code>docker load</code></h3><p>从导出的本地文件中再导入到本地镜像库<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker load --input ubuntu_14.04.tar</div><div class="line">docker load &lt; ubuntu_14.04.tar</div></pre></td></tr></table></figure></p>
-<h3 id="docker-rmi"><a href="#docker-rmi" class="headerlink" title="docker rmi"></a><code>docker rmi</code></h3><p>移除本地的镜像. 注意在删除镜像之前要先用 docker rm 删掉依赖于这个镜像的所有容器.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo docker rmi training/sinatra</div></pre></td></tr></table></figure></p>
-<h3 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a><code>docker run</code></h3><p>基于镜像新建一个容器并启动<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker run ubuntu14.04</div><div class="line"></div><div class="line">docker run -t -i ubuntu14.04 /bin/bash</div></pre></td></tr></table></figure></p>
-<ul>
-<li>-t 选项让Docker分配一个伪终端(pseudo-tty)并绑定到容器的标准输入上</li>
-<li>-i 则让容器的标准输入保持打开.</li>
-<li>-d 让 Docker 容器在后台以守护态(Daemonized)形式运行</li>
-<li>-P 端口映射.当使用 -P 标记时，Docker 会随机映射一个 49000~49900 的端口到内部容器开放的网络端口。</li>
-</ul>
-<blockquote>
-<p>-p（小写的）则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有 <code>ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort</code>   在<code>--net=host</code>模式下，可以时容器内的端口自动映射到宿主主机上</p>
-</blockquote>
-<p>映射所有接口地址： 使用 <code>hostPort:containerPort</code> 格式本地的 <code>5000</code> 端口映射到容器的 <code>5000</code> 端口，可以执行<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -d -p <span class="number">5000</span>:<span class="number">5000</span> training/webapp python app.py</div></pre></td></tr></table></figure></p>
-<p>此时默认会绑定本地所有接口上的所有地址。 映射到指定地址的指定端口</p>
-<p>可以使用 <code>ip:hostPort:containerPort</code> 格式指定映射使用一个特定地址，比如 <code>localhost</code> 地址 <code>127.0.0.1</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -d -p <span class="number">127.0</span>.0.1:<span class="number">5000</span>:<span class="number">5000</span> training/webapp python app.py</div></pre></td></tr></table></figure></p>
-<p>映射到指定地址的任意端口。 使用 <code>ip::containerPort</code> 绑定 <code>localhost</code> 的任意端口到容器的 <code>5000</code> 端口，本地主机会自动分配一个端口。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo docker run -d -p <span class="number">127.0</span>.0.1::<span class="number">5000</span> training/webapp python app.py</div></pre></td></tr></table></figure></p>
-<h3 id="docker-start"><a href="#docker-start" class="headerlink" title="docker start"></a><code>docker start</code></h3><p>直接将一个已经终止的容器启动运行</p>
-<h3 id="docker-stop"><a href="#docker-stop" class="headerlink" title="docker stop"></a><code>docker stop</code></h3><p>终止一个运行中的容器.</p>
-<h3 id="docker-restart"><a href="#docker-restart" class="headerlink" title="docker restart"></a><code>docker restart</code></h3><p>将一个运行态的容器终止,然后再重新启动它.</p>
-<h3 id="docker-attach"><a href="#docker-attach" class="headerlink" title="docker attach"></a><code>docker attach</code></h3><p>进入容器</p>
-<h3 id="docker-export"><a href="#docker-export" class="headerlink" title="docker export"></a><code>docker export</code></h3><p>导出本地某个容器<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker export <span class="number">7691</span>a814370e &gt; ubuntu.tar</div></pre></td></tr></table></figure></p>
-<h3 id="docker-import-1"><a href="#docker-import-1" class="headerlink" title="docker import"></a><code>docker import</code></h3><p>从容器快照文件中再导入为镜像<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat ubuntu.tar | sudo docker <span class="keyword">import</span> - test/buntuv1.0</div><div class="line"></div><div class="line">docker <span class="keyword">import</span> http<span class="comment">//example.com/exampleimage.tgz example/imagerepo</span></div></pre></td></tr></table></figure></p>
-<h3 id="docker-rm"><a href="#docker-rm" class="headerlink" title="docker rm"></a><code>docker rm</code></h3><p>移除容器.删除一个处于终止状态的容器<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker rm  trusting_newton</div></pre></td></tr></table></figure></p>
-<h3 id="docker-search"><a href="#docker-search" class="headerlink" title="docker search"></a><code>docker search</code></h3><p>查找官方仓库中的镜像</p>
-<h3 id="docker-ps"><a href="#docker-ps" class="headerlink" title="docker ps"></a><code>docker ps</code></h3><h3 id="docker-logs"><a href="#docker-logs" class="headerlink" title="docker logs"></a><code>docker logs</code></h3><p>获取容器的输出信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker logs insane_babbage</div></pre></td></tr></table></figure></p>
-<h3 id="docker-port"><a href="#docker-port" class="headerlink" title="docker port"></a><code>docker port</code></h3><p>查看当前映射的端口配置，也可以查看到绑定的地址<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker port nostalgic_morse <span class="number">5000</span></div></pre></td></tr></table></figure></p>
-<h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><p>Dockerfile中每一条指令都创建镜像的一层,例如<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># This is a comment</div><div class="line">FROM ubuntu14.04</div><div class="line">MAINTAINER Docker Newbee &lt;newbee@docker.com&gt;</div><div class="line">RUN apt-get -qq update</div><div class="line">RUN apt-get -qqy install ruby ruby-dev</div><div class="line">RUN gem install sinatra</div><div class="line">Dockerfile 基本的语法是</div></pre></td></tr></table></figure></p>
-<ol>
-<li>使用<code>#</code>来注释</li>
-<li><code>FROM</code> 指令告诉 <code>Docker</code> 使用哪个镜像作为基础</li>
-<li>接着是维护者的信息</li>
-<li><code>RUN</code>开头的指令会在创建中运行,比如安装一个软件包,在这里使用 <code>apt-get</code> 来安装了一些软件</li>
-<li><code>ADD</code> 命令复制本地文件到镜像;</li>
-<li><code>EXPOSE</code> 命令来向外部开放端口;</li>
-<li><code>CMD</code> 命令来描述容器启动后运行的程序等</li>
-</ol>
-<p>当利用 <code>docker run</code> 来创建容器时,<code>Docker</code> 在后台运行的标准操作包括</p>
-<ol>
-<li>检查本地是否存在指定的镜像,不存在就从公有仓库下载</li>
-<li>利用镜像创建并启动一个容器</li>
-<li>分配一个文件系统,并在只读的镜像层外面挂载一层可读写层</li>
-<li>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去</li>
-<li>从地址池配置一个 ip 地址给容器</li>
-<li>执行用户指定的应用程序</li>
-<li>执行完毕后容器被终止</li>
-</ol>
-<p><code>docker load</code> vs <code>docker import</code> 用户既可以使用 <code>docker load</code> 来导入镜像存储文件到本地镜像库,也可以使用 <code>docker import</code>来导入一个容器快照到本地镜像库.这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息(即仅保存容器当时的快照状态),而镜像存储文件将保存完整记录,体积也要大.此外,从容器快照文件导入时可以重新指定标签等元数据信息.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/mgits/">mgits</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/mgits/docker命令/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/mgits/docker命令/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/6/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/8/">Next<span></span></a>
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github Card</p>
+<p class="asidetitle">Github 名片</p>
 <div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -2096,7 +2095,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分类</p>
 		<ul>
 		
 		  
@@ -2106,15 +2105,17 @@
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>65</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>42</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>42</sup></a></li>
 		  
 		
 		  
 		
 		  
 		
-		  
-			<li><a href="/categories/Netty/" title="Netty">Netty<sup>8</sup></a></li>
 		  
 		
 		  
@@ -2126,8 +2127,6 @@
 		  
 		
 		  
-			<li><a href="/categories/Spring-Guice/" title="Spring Guice">Spring Guice<sup>12</sup></a></li>
-		  
 		
 		  
 			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
@@ -2138,11 +2137,7 @@
 		  
 		
 		  
-			<li><a href="/categories/linux/" title="linux">linux<sup>8</sup></a></li>
-		  
 		
-		  
-			<li><a href="/categories/mgits/" title="mgits">mgits<sup>16</sup></a></li>
 		  
 		
 		  
@@ -2156,13 +2151,21 @@
 		  
 		
 		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>10</sup></a></li>
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>18</sup></a></li>
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
 		  
 		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>19</sup></a></li>
+		  
+		
+		  
+		
+		  
+			<li><a href="/categories/�Ӽ�/" title="�Ӽ�">�Ӽ�<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -2170,9 +2173,28 @@
 
 
   
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>5</sup></a></li>
+			
+		
+		</ul>
+</div>
+
 
   <div class="linkslist">
-  <p class="asidetitle">Links</p>
+  <p class="asidetitle">友情链接</p>
     <ul>
         
           <li>
@@ -2187,7 +2209,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
+<p class="asidetitle">豆瓣秀</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -2195,11 +2217,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
+  <p class="asidetitle">新浪微博</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -2373,7 +2395,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
