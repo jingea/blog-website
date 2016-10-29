@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Java加密 -- 辅助工具 | 王玉</title>
+    <title>Java加密 -- Bouncy Castle 和 Base64 | 王玉</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="王玉">
@@ -19,7 +19,7 @@
 
 修改JDK修改java.security配置文件(jdk1.7.0_75\jr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java加密 -- 辅助工具">
+<meta property="og:title" content="Java加密 -- Bouncy Castle 和 Base64">
 <meta property="og:url" content="http://www.yu66.wang/2014/11/13/JavaSE/Java加密 辅助工具/index.html">
 <meta property="og:site_name" content="王玉">
 <meta property="og:description" content="Bouncy Castle在官网 下载 bcprov-jdk15on-151.jar 和 bcprov-ext-jdk15on-151.jar
@@ -29,9 +29,9 @@
 
 
 修改JDK修改java.security配置文件(jdk1.7.0_75\jr">
-<meta property="og:updated_time" content="2016-10-28T05:30:11.000Z">
+<meta property="og:updated_time" content="2016-10-29T06:36:53.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java加密 -- 辅助工具">
+<meta name="twitter:title" content="Java加密 -- Bouncy Castle 和 Base64">
 <meta name="twitter:description" content="Bouncy Castle在官网 下载 bcprov-jdk15on-151.jar 和 bcprov-ext-jdk15on-151.jar
 对于Bouncy Castle 提供的扩充算法支持,有俩种方案可选
 
@@ -64,7 +64,7 @@
 				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -78,7 +78,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
 						</form>
 					
 					</li>
@@ -93,21 +93,21 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/11/13/JavaSE/Java加密 辅助工具/" title="Java加密 -- 辅助工具" itemprop="url">Java加密 -- 辅助工具</a>
+      <a href="/2014/11/13/JavaSE/Java加密 辅助工具/" title="Java加密 -- Bouncy Castle 和 Base64" itemprop="url">Java加密 -- Bouncy Castle 和 Base64</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-11-13T08:00:00.000Z" itemprop="datePublished"> 发表于 2014-11-13</time>
+    <time datetime="2014-11-13T08:00:00.000Z" itemprop="datePublished"> Published 2014-11-13</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
+			<strong class="toc-title">Contents</strong>
 		
 			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Bouncy-Castle"><span class="toc-number">1.</span> <span class="toc-text">Bouncy Castle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Base64"><span class="toc-number">2.</span> <span class="toc-text">Base64</span></a></li></ol>
 		
@@ -141,8 +141,7 @@
 <li>将获得的十进制码转换为base64字符表中对应的字符</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">对A进行Base64编码</div><div class="line">字符				A</div><div class="line">ASCII码			<span class="number">65</span></div><div class="line">二进制码			<span class="number">01000001</span></div><div class="line"><span class="number">4</span>-<span class="number">6</span>二进制码		<span class="number">010000</span>		<span class="number">010000</span></div><div class="line"><span class="number">4</span>-<span class="number">8</span>二进制码		<span class="number">00010000</span>	<span class="number">00010000</span></div><div class="line">十进制			<span class="number">16</span>			<span class="number">16</span></div><div class="line">字符表映射码		Q			Q			=	=</div><div class="line"></div><div class="line">字符A编码之后就变成了QQ==</div><div class="line"></div><div class="line">base64 映射表</div><div class="line">V E			  V E			V E			  V E</div><div class="line"><span class="number">0</span> A            <span class="number">17</span> R            <span class="number">34</span> i            <span class="number">51</span> z</div><div class="line"><span class="number">1</span> B            <span class="number">18</span> S            <span class="number">35</span> j            <span class="number">52</span> <span class="number">0</span></div><div class="line"><span class="number">2</span> C            <span class="number">19</span> T            <span class="number">36</span> k            <span class="number">53</span> <span class="number">1</span></div><div class="line"><span class="number">3</span> D            <span class="number">20</span> U            <span class="number">37</span> l            <span class="number">54</span> <span class="number">2</span></div><div class="line"><span class="number">4</span> E            <span class="number">21</span> V            <span class="number">38</span> m            <span class="number">55</span> <span class="number">3</span></div><div class="line"><span class="number">5</span> F            <span class="number">22</span> W            <span class="number">39</span> n            <span class="number">56</span> <span class="number">4</span></div><div class="line"><span class="number">6</span> G            <span class="number">23</span> X            <span class="number">40</span> o            <span class="number">57</span> <span class="number">5</span></div><div class="line"><span class="number">7</span> H            <span class="number">24</span> Y            <span class="number">41</span> p            <span class="number">58</span> <span class="number">6</span></div><div class="line"><span class="number">8</span> I            <span class="number">25</span> Z            <span class="number">42</span> q            <span class="number">59</span> <span class="number">7</span></div><div class="line"><span class="number">9</span> J            <span class="number">26</span> a            <span class="number">43</span> r            <span class="number">60</span> <span class="number">8</span></div><div class="line"><span class="number">10</span> K           <span class="number">27</span> b            <span class="number">44</span> s            <span class="number">61</span> <span class="number">9</span></div><div class="line"><span class="number">11</span> L           <span class="number">28</span> c            <span class="number">45</span> t            <span class="number">62</span> +</div><div class="line"><span class="number">12</span> M           <span class="number">29</span> d            <span class="number">46</span> u            <span class="number">63</span> /</div><div class="line"><span class="number">13</span> N           <span class="number">30</span> e            <span class="number">47</span> v</div><div class="line"><span class="number">14</span> O           <span class="number">31</span> f            <span class="number">48</span> w         (pad) =</div><div class="line"><span class="number">15</span> P           <span class="number">32</span> g            <span class="number">49</span> x</div><div class="line"><span class="number">16</span> Q           <span class="number">33</span> h            <span class="number">50</span> y</div></pre></td></tr></table></figure>
-<p>代码举例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestBase64</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="keyword">final</span> String base64 = <span class="string">"base64编码!@#$%^&amp;*()+_=-&#123;&#125;[];:'&lt;&gt;,./?|"</span>;</div><div class="line"></div><div class="line">	<span class="meta">@before</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span> <span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(base64);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUrlBase64</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="comment">// 不能编码空格</span></div><div class="line">		<span class="keyword">byte</span>[] encode = UrlBase64.encode(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"UrlBase64 : "</span> + <span class="keyword">new</span> String(encode));</div><div class="line"></div><div class="line">		<span class="keyword">byte</span>[] decode = UrlBase64.decode(encode);</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decode));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testJavaBase64</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println();</div><div class="line">		<span class="keyword">byte</span>[] encode = java.util.Base64.getEncoder().encode(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"JavaBase64 : "</span> + <span class="keyword">new</span> String(encode));</div><div class="line">		<span class="keyword">byte</span>[] decode = java.util.Base64.getDecoder().decode(encode);</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decode));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testApacheBase64</span><span class="params">()</span> </span>&#123;</div><div class="line">		String encode = org.apache.commons.codec.binary.Base64.encodeBase64String(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"apacheBase64 : "</span> + encode);</div><div class="line">		<span class="keyword">byte</span>[] decode = org.apache.commons.codec.binary.Base64.decodeBase64(encode.getBytes());</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decode));</div><div class="line"></div><div class="line">		String url = org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"apacheBase64 url : "</span> + url);</div><div class="line">		<span class="keyword">byte</span>[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(url);</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decoded));</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testBouncycastleBase64</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">byte</span>[] encode = org.bouncycastle.util.encoders.Base64.encode(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"BouncycastleBase64 : "</span> + <span class="keyword">new</span> String(encode));</div><div class="line">		<span class="keyword">byte</span>[] decode = org.bouncycastle.util.encoders.Base64.decode(encode);</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decode));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 解码由x-www-form-url-encoded格式编码的字符串</span></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSpace</span><span class="params">()</span> </span>&#123;</div><div class="line">		String base64 = <span class="string">"wKOS4FsxiFvE48KGGSuSkRui9Iap1ukgl1+eVqZiGhXQYYiP8KGCV%2FRIeTEyMLsWxE%2FEx6jhuW3DPUt4JYX+cohUOqFVVaQ%2FioGZCAge3ygaCz%2Fe4q8o9XQzOEtcdXPywGZ0e5sgE787ij4dRZy2ILK2cxsVvC8yrlIPGZ3LUg8nOj8oEg5l2AnQnA3i+Sxbgqmwe1OjIXVZqPZWb+Y4SVQL8EpWlmEjXb4HjgmGTgVYzwJ64QO7HUPP1yuQHkS0PLS%2FpbPrgL5vqTF7h%2FPvMw=%3D"</span>;</div><div class="line">		String decoded = <span class="keyword">null</span>;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			decoded = URLDecoder.decode(base64);</div><div class="line">		&#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</div><div class="line">			<span class="comment">// 如果url包含一个%而后却没有2个16进制数字 抛出该异常</span></div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">		System.out.println(decoded);</div><div class="line">		<span class="keyword">byte</span>[] decode = UrlBase64.decode(base64);</div><div class="line">		System.out.println(<span class="keyword">new</span> String(decode));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>URL使用的字符必须来自ASCII的子集(大写字母<code>A-Z</code>,小写字母<code>a-z</code>,数字<code>0-9</code>, 标点字符 <code>- _ . ! ~ * &#39; ,</code>) 需要注意的是<code>/ &amp; ? @ # ; $ + = %</code> 也可以使用,但是必须转换为字节(每个字节为%后跟俩个16进制数字)(空格编码为+) 所以URL组成的内容是ASCII的子集 + 经过转换后的字节 但是URL不会自动地进行编码和解码因此我们需要URLEncoder来进行编码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 需要注意额是= 和 &amp; URLEncoder会进行盲目地编码 因此在使用URLEncoder编码时避免将整个url字串都编码</span></div><div class="line">print(<span class="string">"  : "</span> + URLEncoder.encode(<span class="string">" "</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"= : "</span> + URLEncoder.encode(<span class="string">"="</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"&amp; : "</span> + URLEncoder.encode(<span class="string">"&amp;"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"* : "</span> + URLEncoder.encode(<span class="string">"*"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"% : "</span> + URLEncoder.encode(<span class="string">"%"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"+ : "</span> + URLEncoder.encode(<span class="string">"+"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"/ : "</span> + URLEncoder.encode(<span class="string">"/"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">". : "</span> + URLEncoder.encode(<span class="string">"."</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">": : "</span> + URLEncoder.encode(<span class="string">":"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"~ : "</span> + URLEncoder.encode(<span class="string">"~"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"\" : "</span> + URLEncoder.encode(<span class="string">"\""</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"() : "</span> + URLEncoder.encode(<span class="string">"(url)"</span>, <span class="string">"UTF-8"</span>));</div></pre></td></tr></table></figure></p>
+<p>代码举例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestBase64</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="keyword">final</span> String base64 = <span class="string">"base64编码!@#$%^&amp;*()+_=-&#123;&#125;[];:'&lt;&gt;,./?|"</span>;</div><div class="line"></div><div class="line">	<span class="meta">@before</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span> <span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(base64);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUrlBase64</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="comment">// 不能编码空格</span></div><div class="line">		<span class="keyword">byte</span>[] encode = UrlBase64.encode(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"UrlBase64 : "</span> + <span class="keyword">new</span> String(encode));</div><div class="line"></div><div class="line">		<span class="keyword">byte</span>[] decode = UrlBase64.decode(encode);</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decode));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testJavaBase64</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println();</div><div class="line">		<span class="keyword">byte</span>[] encode = java.util.Base64.getEncoder().encode(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"JavaBase64 : "</span> + <span class="keyword">new</span> String(encode));</div><div class="line">		<span class="keyword">byte</span>[] decode = java.util.Base64.getDecoder().decode(encode);</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decode));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testApacheBase64</span><span class="params">()</span> </span>&#123;</div><div class="line">		String encode = org.apache.commons.codec.binary.Base64.encodeBase64String(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"apacheBase64 : "</span> + encode);</div><div class="line">		<span class="keyword">byte</span>[] decode = org.apache.commons.codec.binary.Base64.decodeBase64(encode.getBytes());</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decode));</div><div class="line"></div><div class="line">		String url = org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"apacheBase64 url : "</span> + url);</div><div class="line">		<span class="keyword">byte</span>[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(url);</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decoded));</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testBouncycastleBase64</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">byte</span>[] encode = org.bouncycastle.util.encoders.Base64.encode(base64.getBytes());</div><div class="line">		System.out.println(<span class="string">"BouncycastleBase64 : "</span> + <span class="keyword">new</span> String(encode));</div><div class="line">		<span class="keyword">byte</span>[] decode = org.bouncycastle.util.encoders.Base64.decode(encode);</div><div class="line">		Assert.assertEquals(base64, <span class="keyword">new</span> String(decode));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -160,7 +159,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.yu66.wang/2014/11/13/JavaSE/Java加密 辅助工具/" data-title="Java加密 -- 辅助工具 | 王玉" data-tsina="3253370782" class="share clearfix">
+	  <div data-url="http://www.yu66.wang/2014/11/13/JavaSE/Java加密 辅助工具/" data-title="Java加密 -- Bouncy Castle 和 Base64 | 王玉" data-tsina="3253370782" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -194,27 +193,27 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2014/11/13/JavaSE/Java加密 辅助工具/" data-title="Java加密 -- 辅助工具" data-url="http://www.yu66.wang/2014/11/13/JavaSE/Java加密 辅助工具/"></div>
+	<div class="ds-thread" data-thread-key="2014/11/13/JavaSE/Java加密 辅助工具/" data-title="Java加密 -- Bouncy Castle 和 Base64" data-url="http://www.yu66.wang/2014/11/13/JavaSE/Java加密 辅助工具/"></div>
 </section>
 
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
+  <strong class="toc-title">Contents</strong>
  
  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Bouncy-Castle"><span class="toc-number">1.</span> <span class="toc-text">Bouncy Castle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Base64"><span class="toc-number">2.</span> <span class="toc-text">Base64</span></a></li></ol>
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github 名片</p>
+<p class="asidetitle">Github Card</p>
 <div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -224,7 +223,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -274,7 +273,7 @@
 		  
 		
 		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
 		  
 		
 		  
@@ -288,13 +287,9 @@
 		  
 		
 		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>19</sup></a></li>
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
 		  
 		
-		  
-		
-		  
-			<li><a href="/categories/�Ӽ�/" title="�Ӽ�">�Ӽ�<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -303,7 +298,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -323,7 +318,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -338,7 +333,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
+<p class="asidetitle">Douban Show</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -346,11 +341,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
+  <p class="asidetitle">Weibo</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -601,7 +596,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

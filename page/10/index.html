@@ -42,7 +42,7 @@
 				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -56,7 +56,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
 						</form>
 					
 					</li>
@@ -73,250 +73,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/10/01/jvm/Jmap/" title="Jmap" itemprop="url">Jmap</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2014-10-01T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-10-01</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><p>java内存映射工具,用于生成堆转储快照.</p>
-<p>如果不使用jmap命令,想要获取java堆转储快照还有一些比较暴力的手段:</p>
-<ul>
-<li><code>-XX:+HeapDumpOnOutOfMemoryError</code>: 可以让虚拟机在OOM异常自动生成dump文件,通过</li>
-<li><code>-XX:+HeapDumpOnCtrlBreak</code>参数则可以使用<code>[CTRL] + [Break]</code>: 键让虚拟机生成dump文件,又或者在Linux系统<br>下通过<code>kill -3</code>命令发送进程退出信号,也能拿到dump文件.</li>
-</ul>
-<p>jmap的作用并不仅仅是为了获取dump文件,它还可以查询<code>finalize</code>执行队列,java堆和永久代的详细信息,如空间使用率,当前使用的是哪种收集器.</p>
-<p>和jinfo命令一样,jmap有不少功能是在windows平台下受限的,除了生成dump文件<code>-dump</code>选项和用于查看每个类的实例,空间占用统计的<code>-histo</code>选项所有系统操作系统都提供之外,其余选项只能在Linux/Solaris下使用.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jmap [ option ] vmid</div></pre></td></tr></table></figure>
-<p>jmap工具主要选项</p>
-<ul>
-<li><code>-dump</code>: 生成java堆转储快照.格式为:<code>-dump:[live,]format=b,file=&lt;filename&gt;</code>.live表示只dump存活对象</li>
-<li><code>-finalizerinfo</code>: 显示在<code>F-Queue</code>中等待<code>Finalizer</code>线程执行<code>finalize</code>方法的对象.</li>
-<li><code>-heap</code>: 显示java堆的详细信息,使用哪种回收器,参数配置,分代状况.</li>
-<li><code>-histo</code>: 显示堆中对象统计信息,包括类,实例数量和合计容量</li>
-<li><code>-permstat</code>: 以<code>ClassLoader</code>为统计口径显示永久代内存状态.</li>
-<li><code>-F</code>: 当虚拟机进程对<code>-dump</code>选项没有响应时,可使用这个选项强制生成dump快照</li>
-</ul>
-<p>获取当前进程的堆快照<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">➜ <span class="built_in">test</span> jmap -dump:live,format=b,file=2028dump 2028</div><div class="line">Dumping heap to /Users/wangming/Desktop/<span class="built_in">test</span>/2028dump ...</div><div class="line">Heap dump file created</div></pre></td></tr></table></figure></p>
-<p>获取当前进程的对象统计信息, 下面统计出了数量大于10000个对象的类<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">➜ <span class="built_in">test</span> jmap -histo 2028 | awk <span class="string">'&#123;if($2&gt; 10000) print $1 "  " $2 "  "  $3 "  " $4 &#125;'</span></div><div class="line">1:  36397  6363208  [C</div><div class="line">3:  35324  847776  java.lang.String</div><div class="line">7:  10522  336704  java.util.concurrent.ConcurrentHashMap<span class="variable">$Node</span></div><div class="line">Total  207899  14900384</div></pre></td></tr></table></figure></p>
-<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>我们先看一下jmap的help帮助手册<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">D:\&gt;jmap -help</div><div class="line">Usage:</div><div class="line">    jmap [option] &lt;pid&gt;</div><div class="line">        (to connect to running process)</div><div class="line">    jmap [option] &lt;executable &lt;core&gt;</div><div class="line">        (to connect to a core file)</div><div class="line">    jmap [option] [server_id@]&lt;remote server IP or hostname&gt;</div><div class="line">        (to connect to remote debug server)</div><div class="line"></div><div class="line"><span class="built_in">where</span> &lt;option&gt; is one of:</div><div class="line">    &lt;none&gt;               to <span class="built_in">print</span> same info as Solaris pmap</div><div class="line">    -heap                打印Java堆概览</div><div class="line">    -histo[:live]        打印Java堆得对象柱状分布图; 如果指定<span class="string">"live"</span> 的话, 那么就只统计存活的对象</div><div class="line">    -clstats             打印class 加载的统计信息</div><div class="line">    -finalizerinfo       to <span class="built_in">print</span> information on objects awaiting finalization</div><div class="line">    -dump:&lt;dump-options&gt; 以二进制格式dump JVM 堆内存信息 (示例: jmap -dump:live,format=b,file=heap.bin &lt;pid&gt;)</div><div class="line">                         dump-options:</div><div class="line">                           live         只dump 存活的对象; 如果不指定的话, 堆内存内的所有对象都会被dump出来.</div><div class="line">                           format=b     二进制格式</div><div class="line">                           file=&lt;file&gt;  dump 堆内存到哪个文件</div><div class="line">                         </div><div class="line">    -F                   force. Use with -dump:&lt;dump-options&gt; &lt;pid&gt; or -histo to force a heap dump or histogram when &lt;pid&gt; does not respond. The <span class="string">"live"</span> suboption is not supported <span class="keyword">in</span> this mode.</div><div class="line">    -h | -help           to <span class="built_in">print</span> this <span class="built_in">help</span> message</div><div class="line">    -J&lt;flag&gt;             to pass &lt;flag&gt; directly to the runtime system</div></pre></td></tr></table></figure></p>
-<p>jmap 命令支持三种模式, 分别是本地进程, core文件和远程进程模式.</p>
-<p>JMap类是jmap命令的封装实现类. 这个类同样是由参数决定来调用<a href="">VM attach mechanism</a>还是<a href="">SA tool</a>.</p>
-<blockquote>
-<p>现在只有<code>-heap</code>,<code>-finalizerinfo</code>和<code>-F</code>选项下会使用<a href="">VM attach mechanism</a>,其他的情况都是使用<a href="">SA tools</a>.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.io.File;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.sun.tools.attach.VirtualMachine;</div><div class="line"><span class="keyword">import</span> com.sun.tools.attach.AttachNotSupportedException;</div><div class="line"><span class="keyword">import</span> sun.tools.attach.HotSpotVirtualMachine;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMap</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="comment">// 使用 attach mechanism 的选项</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String HISTO_OPTION = <span class="string">"-histo"</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String LIVE_HISTO_OPTION = <span class="string">"-histo:live"</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String DUMP_OPTION_PREFIX = <span class="string">"-dump:"</span>;</div><div class="line"></div><div class="line">	<span class="comment">// 使用 SA tool 的选项</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String SA_TOOL_OPTIONS = <span class="string">"-heap|-heap:format=b|-permstat|-finalizerinfo"</span>;</div><div class="line"></div><div class="line">	<span class="comment">// The -F (force) option is currently not passed through to SA</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String FORCE_SA_OPTION = <span class="string">"-F"</span>;</div><div class="line"></div><div class="line">	<span class="comment">// Default option (if nothing provided)</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String DEFAULT_OPTION = <span class="string">"-pmap"</span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="keyword">if</span> (args.length == <span class="number">0</span>) &#123;</div><div class="line">			usage(); <span class="comment">// no arguments</span></div><div class="line">		&#125;</div><div class="line">		<span class="keyword">boolean</span> useSA = <span class="keyword">false</span>;</div><div class="line">		<span class="comment">// 例如选中的选项 (-heap, -dump:*, ... )</span></div><div class="line">		String option = <span class="keyword">null</span>;</div><div class="line">		<span class="comment">// 开始遍历所有的选项(选项以-开始). 如果选项中不包含-F, 则应该只有一个选项</span></div><div class="line">		<span class="keyword">int</span> optionCount = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span> (optionCount &lt; args.length) &#123;</div><div class="line">			String arg = args[optionCount];</div><div class="line">			<span class="keyword">if</span> (!arg.startsWith(<span class="string">"-"</span>)) &#123;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="comment">// 判断是否是-F选项, 如果是则使用SA</span></div><div class="line">			<span class="keyword">if</span> (arg.equals(FORCE_SA_OPTION)) &#123;</div><div class="line">				useSA = <span class="keyword">true</span>;</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				<span class="keyword">if</span> (option != <span class="keyword">null</span>) &#123;</div><div class="line">					usage();  <span class="comment">// option already specified</span></div><div class="line">				&#125;</div><div class="line">				option = arg;</div><div class="line">			&#125;</div><div class="line">			optionCount++;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// if no option provided then use default.</span></div><div class="line">		<span class="keyword">if</span> (option == <span class="keyword">null</span>) &#123;</div><div class="line">			option = DEFAULT_OPTION;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (option.matches(SA_TOOL_OPTIONS)) &#123;</div><div class="line">			useSA = <span class="keyword">true</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 下面开始检查参数个数. SA Tool只会使用1或者2个参数. 在使用-dump参数时只会使用一个参数</span></div><div class="line">		<span class="keyword">int</span> paramCount = args.length - optionCount;</div><div class="line">		<span class="keyword">if</span> (paramCount == <span class="number">0</span> || paramCount &gt; <span class="number">2</span>) &#123;</div><div class="line">			usage();</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (optionCount == <span class="number">0</span> || paramCount != <span class="number">1</span>) &#123;</div><div class="line">			useSA = <span class="keyword">true</span>;</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="comment">// 如果只有一个参数且没办法解析成pid的话, 那么肯定是要连接一个debug server, 也要使用SA Tool</span></div><div class="line">			<span class="keyword">if</span> (!args[optionCount].matches(<span class="string">"[0-9]+"</span>)) &#123;</div><div class="line">				useSA = <span class="keyword">true</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (useSA) &#123;</div><div class="line">			<span class="comment">// parameters (&lt;pid&gt; or &lt;exe&gt; &lt;core&gt;)</span></div><div class="line">			String params[] = <span class="keyword">new</span> String[paramCount];</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i=optionCount; i&lt;args.length; i++ )&#123;</div><div class="line">				params[i-optionCount] = args[i];</div><div class="line">			&#125;</div><div class="line">			runTool(option, params);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="comment">// 开始调用VirtualMachine相关的接口方法</span></div><div class="line">			String pid = args[<span class="number">1</span>];</div><div class="line">			<span class="keyword">if</span> (option.equals(HISTO_OPTION)) &#123;</div><div class="line">				histo(pid, <span class="keyword">false</span>);</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (option.equals(LIVE_HISTO_OPTION)) &#123;</div><div class="line">				histo(pid, <span class="keyword">true</span>);</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (option.startsWith(DUMP_OPTION_PREFIX)) &#123;</div><div class="line">				dump(pid, option);</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				usage();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 调用 SA tool</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runTool</span><span class="params">(String option, String args[])</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		String[][] tools = &#123;</div><div class="line">				&#123; <span class="string">"-pmap"</span>,           <span class="string">"sun.jvm.hotspot.tools.PMap"</span>     &#125;,</div><div class="line">				&#123; <span class="string">"-heap"</span>,           <span class="string">"sun.jvm.hotspot.tools.HeapSummary"</span>     &#125;,</div><div class="line">				&#123; <span class="string">"-heap:format=b"</span>,  <span class="string">"sun.jvm.hotspot.tools.HeapDumper"</span>      &#125;,</div><div class="line">				&#123; <span class="string">"-histo"</span>,          <span class="string">"sun.jvm.hotspot.tools.ObjectHistogram"</span> &#125;,</div><div class="line">				&#123; <span class="string">"-permstat"</span>,       <span class="string">"sun.jvm.hotspot.tools.PermStat"</span>        &#125;,</div><div class="line">				&#123; <span class="string">"-finalizerinfo"</span>,  <span class="string">"sun.jvm.hotspot.tools.FinalizerInfo"</span>   &#125;,</div><div class="line">		&#125;;</div><div class="line"></div><div class="line">		String tool = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">		<span class="comment">// -dump option needs to be handled in a special way</span></div><div class="line">		<span class="keyword">if</span> (option.startsWith(DUMP_OPTION_PREFIX)) &#123;</div><div class="line">			<span class="comment">// first check that the option can be parsed</span></div><div class="line">			String fn = parseDumpOptions(option);</div><div class="line">			<span class="keyword">if</span> (fn == <span class="keyword">null</span>) usage();</div><div class="line">			<span class="comment">// tool for heap dumping</span></div><div class="line">			tool = <span class="string">"sun.jvm.hotspot.tools.HeapDumper"</span>;</div><div class="line"></div><div class="line">			<span class="comment">// HeapDumper -f &lt;file&gt;</span></div><div class="line">			args = prepend(fn, args);</div><div class="line">			args = prepend(<span class="string">"-f"</span>, args);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">int</span> i=<span class="number">0</span>;</div><div class="line">			<span class="keyword">while</span> (i &lt; tools.length) &#123;</div><div class="line">				<span class="keyword">if</span> (option.equals(tools[i][<span class="number">0</span>])) &#123;</div><div class="line">					tool = tools[i][<span class="number">1</span>];</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				i++;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">if</span> (tool == <span class="keyword">null</span>) &#123;</div><div class="line">			usage();   <span class="comment">// no mapping to tool</span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 加载相关的工具类, PMap, HeapSummary, HeapDumper, ObjectHistogram, PermStat, FinalizerInfo</span></div><div class="line">		Class&lt;?&gt; c = loadClass(tool);</div><div class="line">		<span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">			usage();</div><div class="line">		&#125;</div><div class="line">		Class[] argTypes = &#123; String[].class &#125; ;</div><div class="line">		Method m = c.getDeclaredMethod(<span class="string">"main"</span>, argTypes);</div><div class="line">		Object[] invokeArgs = &#123; args &#125;;</div><div class="line">		m.invoke(<span class="keyword">null</span>, invokeArgs);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Class <span class="title">loadClass</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			<span class="keyword">return</span> Class.forName(name, <span class="keyword">true</span>, ClassLoader.getSystemClassLoader());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception x)  &#123; &#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LIVE_OBJECTS_OPTION = <span class="string">"-live"</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ALL_OBJECTS_OPTION = <span class="string">"-all"</span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">histo</span><span class="params">(String pid, <span class="keyword">boolean</span> live)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		VirtualMachine vm = attach(pid);</div><div class="line">		InputStream in = ((HotSpotVirtualMachine)vm).</div><div class="line">				heapHisto(live ? LIVE_OBJECTS_OPTION : ALL_OBJECTS_OPTION);</div><div class="line">		drain(vm, in);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dump</span><span class="params">(String pid, String options)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		<span class="comment">// 从options中将dump filename解析出来</span></div><div class="line">		String filename = parseDumpOptions(options);</div><div class="line">		<span class="keyword">if</span> (filename == <span class="keyword">null</span>) &#123;</div><div class="line">			usage();  <span class="comment">// invalid options or no filename</span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// get the canonical path - important to avoid just passing</span></div><div class="line">		<span class="comment">// a "heap.bin" and having the dump created in the target VM</span></div><div class="line">		<span class="comment">// working directory rather than the directory where jmap</span></div><div class="line">		<span class="comment">// is executed.</span></div><div class="line">		filename = <span class="keyword">new</span> File(filename).getCanonicalPath();</div><div class="line"></div><div class="line">		<span class="comment">// 是否只dump 存活的对象</span></div><div class="line">		<span class="keyword">boolean</span> live = isDumpLiveObjects(options);</div><div class="line"></div><div class="line">		VirtualMachine vm = attach(pid);</div><div class="line">		System.out.println(<span class="string">"Dumping heap to "</span> + filename + <span class="string">" ..."</span>);</div><div class="line">		InputStream in = ((HotSpotVirtualMachine)vm).</div><div class="line">				dumpHeap((Object)filename,</div><div class="line">						(live ? LIVE_OBJECTS_OPTION : ALL_OBJECTS_OPTION));</div><div class="line">		drain(vm, in);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 解析-dump选项. 合法的选项为format=b和file=&lt;file&gt;.</span></div><div class="line">	<span class="comment">// 如果文件存在的话, 就返回文件名。 如果文件不存在或者是非法选项的话则返回null</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">parseDumpOptions</span><span class="params">(String arg)</span> </span>&#123;</div><div class="line">		<span class="keyword">assert</span> arg.startsWith(DUMP_OPTION_PREFIX);</div><div class="line"></div><div class="line">		String filename = <span class="keyword">null</span>;</div><div class="line">		<span class="comment">// 将-dump:后面的参数以, 分割</span></div><div class="line">		String options[] = arg.substring(DUMP_OPTION_PREFIX.length()).split(<span class="string">","</span>);</div><div class="line"></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;options.length; i++) &#123;</div><div class="line">			String option = options[i];</div><div class="line"></div><div class="line">			<span class="keyword">if</span> (option.equals(<span class="string">"format=b"</span>)) &#123;</div><div class="line">				<span class="comment">// ignore format (not needed at this time)</span></div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (option.equals(<span class="string">"live"</span>)) &#123;</div><div class="line">				<span class="comment">// a valid suboption</span></div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				<span class="comment">// file=&lt;file&gt; - check that &lt;file&gt; is specified</span></div><div class="line">				<span class="keyword">if</span> (option.startsWith(<span class="string">"file="</span>)) &#123;</div><div class="line">					filename = option.substring(<span class="number">5</span>);</div><div class="line">					<span class="keyword">if</span> (filename.length() == <span class="number">0</span>) &#123;</div><div class="line">						<span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">					&#125;</div><div class="line">				&#125; <span class="keyword">else</span> &#123;</div><div class="line">					<span class="keyword">return</span> <span class="keyword">null</span>;  <span class="comment">// option not recognized</span></div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> filename;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isDumpLiveObjects</span><span class="params">(String arg)</span> </span>&#123;</div><div class="line">		String options[] = arg.substring(DUMP_OPTION_PREFIX.length()).split(<span class="string">","</span>);</div><div class="line">		<span class="keyword">for</span> (String suboption : options) &#123;</div><div class="line">			<span class="keyword">if</span> (suboption.equals(<span class="string">"live"</span>)) &#123;</div><div class="line">				<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// Attach to &lt;pid&gt;, existing if we fail to attach</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> VirtualMachine <span class="title">attach</span><span class="params">(String pid)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			<span class="keyword">return</span> VirtualMachine.attach(pid);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception x) &#123;</div><div class="line">			String msg = x.getMessage();</div><div class="line">			<span class="keyword">if</span> (msg != <span class="keyword">null</span>) &#123;</div><div class="line">				System.err.println(pid + <span class="string">": "</span> + msg);</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				x.printStackTrace();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">if</span> ((x <span class="keyword">instanceof</span> AttachNotSupportedException) &amp;&amp; haveSA()) &#123;</div><div class="line">				System.err.println(<span class="string">"The -F option can be used when the "</span> +</div><div class="line">						<span class="string">"target process is not responding"</span>);</div><div class="line">			&#125;</div><div class="line">			System.exit(<span class="number">1</span>);</div><div class="line">			<span class="keyword">return</span> <span class="keyword">null</span>; <span class="comment">// keep compiler happy</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// Read the stream from the target VM until EOF, then detach</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">drain</span><span class="params">(VirtualMachine vm, InputStream in)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		<span class="comment">// read to EOF and just print output</span></div><div class="line">		<span class="keyword">byte</span> b[] = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">256</span>];</div><div class="line">		<span class="keyword">int</span> n;</div><div class="line">		do &#123;</div><div class="line">			n = in.read(b);</div><div class="line">			<span class="keyword">if</span> (n &gt; <span class="number">0</span>) &#123;</div><div class="line">				String s = <span class="keyword">new</span> String(b, <span class="number">0</span>, n, <span class="string">"UTF-8"</span>);</div><div class="line">				System.out.print(s);</div><div class="line">			&#125;</div><div class="line">		&#125; <span class="keyword">while</span> (n &gt; <span class="number">0</span>);</div><div class="line">		in.close();</div><div class="line">		vm.detach();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 将arg加入到args中</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String[] prepend(String arg, String args[]) &#123;</div><div class="line">		String[] newargs = <span class="keyword">new</span> String[args.length+<span class="number">1</span>];</div><div class="line">		newargs[<span class="number">0</span>] = arg;</div><div class="line">		System.arraycopy(args, <span class="number">0</span>, newargs, <span class="number">1</span>, args.length);</div><div class="line">		<span class="keyword">return</span> newargs;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">haveSA</span><span class="params">()</span> </span>&#123;</div><div class="line">		Class c = loadClass(<span class="string">"sun.jvm.hotspot.tools.HeapSummary"</span>);</div><div class="line">		<span class="keyword">return</span> (c != <span class="keyword">null</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// print usage message</span></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">usage</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Usage:"</span>);</div><div class="line">		<span class="keyword">if</span> (haveSA()) &#123;</div><div class="line">			System.out.println(<span class="string">"    jmap [option] &lt;pid&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"        (to connect to running process)"</span>);</div><div class="line">			System.out.println(<span class="string">"    jmap [option] &lt;executable &lt;core&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"        (to connect to a core file)"</span>);</div><div class="line">			System.out.println(<span class="string">"    jmap [option] [server_id@]&lt;remote server IP or hostname&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"        (to connect to remote debug server)"</span>);</div><div class="line">			System.out.println(<span class="string">""</span>);</div><div class="line">			System.out.println(<span class="string">"where &lt;option&gt; is one of:"</span>);</div><div class="line">			System.out.println(<span class="string">"    &lt;none&gt;               to print same info as Solaris pmap"</span>);</div><div class="line">			System.out.println(<span class="string">"    -heap                to print java heap summary"</span>);</div><div class="line">			System.out.println(<span class="string">"    -histo[:live]        to print histogram of java object heap; if the \"live\""</span>);</div><div class="line">			System.out.println(<span class="string">"                         suboption is specified, only count live objects"</span>);</div><div class="line">			System.out.println(<span class="string">"    -permstat            to print permanent generation statistics"</span>);</div><div class="line">			System.out.println(<span class="string">"    -finalizerinfo       to print information on objects awaiting finalization"</span>);</div><div class="line">			System.out.println(<span class="string">"    -dump:&lt;dump-options&gt; to dump java heap in hprof binary format"</span>);</div><div class="line">			System.out.println(<span class="string">"                         dump-options:"</span>);</div><div class="line">			System.out.println(<span class="string">"                           live         dump only live objects; if not specified,"</span>);</div><div class="line">			System.out.println(<span class="string">"                                        all objects in the heap are dumped."</span>);</div><div class="line">			System.out.println(<span class="string">"                           format=b     binary format"</span>);</div><div class="line">			System.out.println(<span class="string">"                           file=&lt;file&gt;  dump heap to &lt;file&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"                         Example: jmap -dump:live,format=b,file=heap.bin &lt;pid&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"    -F                   force. Use with -dump:&lt;dump-options&gt; &lt;pid&gt; or -histo"</span>);</div><div class="line">			System.out.println(<span class="string">"                         to force a heap dump or histogram when &lt;pid&gt; does not"</span>);</div><div class="line">			System.out.println(<span class="string">"                         respond. The \"live\" suboption is not supported"</span>);</div><div class="line">			System.out.println(<span class="string">"                         in this mode."</span>);</div><div class="line">			System.out.println(<span class="string">"    -h | -help           to print this help message"</span>);</div><div class="line">			System.out.println(<span class="string">"    -J&lt;flag&gt;             to pass &lt;flag&gt; directly to the runtime system"</span>);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			System.out.println(<span class="string">"    jmap -histo &lt;pid&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"      (to connect to running process and print histogram of java object heap"</span>);</div><div class="line">			System.out.println(<span class="string">"    jmap -dump:&lt;dump-options&gt; &lt;pid&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">"      (to connect to running process and dump java heap)"</span>);</div><div class="line">			System.out.println(<span class="string">""</span>);</div><div class="line">			System.out.println(<span class="string">"    dump-options:"</span>);</div><div class="line">			System.out.println(<span class="string">"      format=b     binary default"</span>);</div><div class="line">			System.out.println(<span class="string">"      file=&lt;file&gt;  dump heap to &lt;file&gt;"</span>);</div><div class="line">			System.out.println(<span class="string">""</span>);</div><div class="line">			System.out.println(<span class="string">"    Example:       jmap -dump:format=b,file=heap.bin &lt;pid&gt;"</span>);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		System.exit(<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/10/01/jvm/Jmap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/10/01/jvm/Jmap/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/09/26/JavaSE/Java网络 BIO server/" title="java BIO服务器" itemprop="url">java BIO服务器</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2014-09-26T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-26</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>一个Java阻塞服务器实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>(ServerSocket server =  <span class="keyword">new</span> ServerSocket(<span class="number">9090</span>)) &#123;</div><div class="line">	<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">		<span class="keyword">try</span>(<span class="keyword">final</span> Socket finalSocket = server.accept();) &#123;</div><div class="line">			Runnable runnable = () -&gt; &#123;</div><div class="line"></div><div class="line">				<span class="keyword">try</span>(BufferedReader in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(finalSocket.getInputStream()));</div><div class="line">					PrintWriter out = <span class="keyword">new</span> PrintWriter(finalSocket.getOutputStream(), <span class="keyword">true</span>);) &#123;</div><div class="line"></div><div class="line">					String body = <span class="keyword">null</span>;</div><div class="line">					<span class="keyword">while</span> ((body = in.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">						System.out.println(<span class="string">"Server Revice： "</span> + body);</div><div class="line">						out.println(<span class="string">"Server -&gt; client"</span>);</div><div class="line">					&#125;</div><div class="line"></div><div class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;;</div><div class="line">			<span class="keyword">new</span> Thread(runnable).start();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>客户端测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>(Socket socket = <span class="keyword">new</span> Socket(<span class="string">"127.0.0.1"</span>, <span class="number">9090</span>);</div><div class="line">	BufferedReader in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(</div><div class="line">			socket.getInputStream()));</div><div class="line">	PrintWriter out = <span class="keyword">new</span> PrintWriter(socket.getOutputStream(), <span class="keyword">true</span>);) &#123;</div><div class="line">	System.out.println(<span class="string">"Server Revice： "</span> + in.readLine());</div><div class="line">	out.println(<span class="string">"client -&gt; Server"</span>);</div><div class="line"></div><div class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="socket-api"><a href="#socket-api" class="headerlink" title="socket api"></a>socket api</h2><ul>
-<li><p><code>Socket(String, int, InetAddress, int)</code> 这个构造函数创建一个指向指定主机指定端口的TCP socket,并尝试连接远程socket.它连接到前俩个参数指定的主机上,从后俩个参数指定的本地网络接口和端口进行连接.本地网络接口<br>可以是物理的(如不同的以太网卡)或者虚拟的(一个多宿主主机).如果本地端口为0,会从1024-65535之间随机可用端口.之所以希望显示选择本地地址,这种情况可能出现在使用双以太网端口的路由器/防火墙上.入站连接会在一个接口接受,处理并通过另一个接口转发到本地网络.</p>
-<blockquote>
-<p><code>Socket(InetAddress, int, InetAddress, int)</code>作用与<code>Socket(String, int, InetAddress, int)</code>相同,只不过连接地址是通过InteAdderss进行连接</p>
-</blockquote>
-</li>
-<li><p><code>Socket()</code> 如果要要派生<code>Socket</code>子类或者实现一种特殊的socket,从而能加密事务或者理解本地代理服务器,此时就要用到这个函数.新的socket类的大部分实现要在一个<code>SocketImpl</code>对象中编写.该构造函数安装默认的<code>SocketImpl</code>(来自工厂方法或者<code>PlainSocketImpl</code>).</p>
-</li>
-<li><code>Socket(String, int)</code> 这个构造函数创建一个指向指定主机指定端口的TCP socket,并尝试连接远程socket.</li>
-<li><code>Socket(InetAddress, int)</code> 这个构造函数创建一个指向指定主机指定端口的TCP socket,并尝试连接远程socket.在很少的情况下,当你向相同的主机打开很多socket时,先将主机名转换为InetAddress,然后重复使用此InetAddress是更有效的.</li>
-<li><code>connect(SocketAddress)</code> 我们一般使用INetSocketAddress</li>
-<li><code>close()</code> 对于socket敏感的程序,在垃圾回收器介入之前,系统会很快达到所能打开socket的上限.关闭一个<code>Socket</code>之后,其<code>InetAddress</code>,端口号,本地地址,本地端口号仍然可以通过<code>getInetAddress(),getPort(),getLocalAddress(),getLocalPort()</code>方法访问.不过虽然扔可以调用<code>getInputStream</code>或<code>getOutputStream()</code>,但试图从<code>InputStream</code>读取数据或者<code>OutputStream</code>写入数据抛出一个<code>IOException</code>异常.</li>
-<li><code>getInputStream()</code>返回一个输入流,可以将socket的数据读入程序</li>
-<li><code>getPort()</code> 获取Socket连接(或过去连接或将要连接)远程主机的哪个端口返回一个原始的<code>OutputStream</code>,用于将应用程序的数据写入socket另一端.出于性能原因,将其缓冲也是个好主意.</li>
-<li><code>getInetAddress()</code> socket连接哪台远程服务器,或者当连接已关闭时,告知它连接时所连接的是哪台主机</li>
-<li><code>getLocalAddress()</code> 获取socket绑定于哪个网络接口,一般会在多宿主主机或有多个网络接口的主机使用此方法</li>
-<li><code>setTcpNoDelay(boolean)</code>设置<code>TCP_NODELAY</code>为<code>true</code>,可确保包会尽快地发送,而无论包的大小.正常情况下,小的包(1byte)在发送前会组合为大点的包.在发送另一个包之前,本地主机要等待远程系统对前一个包的响应,这称为<code>Nagle</code>算法.<code>Nagle</code>算法的问题是,如果远程系统没有尽可能快地将回应发送回本地系统,那么依赖于小数据量信息稳定传输的应用程序会变得很慢.为true关闭socket缓冲,为false再次打开socket缓冲.</li>
-<li><code>setSoLinger(boolean, int)</code>该设置规定了当socket关闭时如何处理尚未发送的数据报.如果socket关闭(close方法)系统仍会将剩余的数据发送出去.如果延迟时间为0,那所有未发送的数据都会被丢弃.如果延迟时间为任意正数,close方法会被堵塞指定秒数,等待数据发送和接受回应,该段时间过去后socket被关闭,将会关闭输出输入流,既不会接收到数据也不会在发送数据.</li>
-<li><code>setOOBInline(boolean)</code> 用于发送紧急数据</li>
-<li><code>setSoTimeout(int)</code> 当socket尝试读取数据时,<code>read</code>方法会阻塞尽可能长的时间来得到足够的字节.该选项就是确保此次调用阻塞的时间不会大于某个固定的毫秒数,如果阻塞时间长于固定毫秒数就会抛出<code>InterruptedIoException</code>.尽管抛出了该异常但是socket仍然是连接的.此次read失败,但是仍然可以尝试再次读取该socket</li>
-<li><code>setSendBufferSize(int)</code> 设置socket网络输出的缓冲区字节数</li>
-<li><code>setReceiveBufferSize(int)</code> 设置socket网络输入的缓冲区的字节数.大多数TCP栈使用缓冲区提升网络性能,较大的缓冲区会提升快速连接(比如10M或更快)的网络性能,而较慢的拨号连接在较小的缓冲区下表现更加.一般来讲,传输大的连续的数据块(在FTP和HTTP很常见),这可以从大缓冲区收益;而大缓冲区对交互式会话如<code>telnet</code>和许多游戏则没有多大帮助.</li>
-<li><code>setKeepAlive(boolean)</code> 启用<code>SO_KEEPALIVE</code>客户端会偶尔(一般俩个小时)利用一个空闲连接发送一个数据包,确保服务器没有崩溃.如果服务器没有响应,客户端会在11分钟之内持续发送此包,直到接受到服务器的回馈或者到12分钟左右直接将客户端关闭.</li>
-<li><code>setReuseAddress(boolean)</code> 设置主机地址可重用</li>
-<li><code>getReuseAddress()</code> socket关闭时,可能不会立即释放本地地址,一般会等待一段时间,确保所有寻址到待端口在网络上传输的数据接受到.关闭后一般接收到的数据报不会再进行任何处理,这么做是为了当有新的进程关联到该端口的时候不会接受到莫名其妙的数据.要想使用这个设置必须将老的socket如下设置</li>
-<li><code>shutdownInput()</code> 半关闭连接.关闭socket的输入流,实际上这并不会关闭socket,但是它会影响与之连接的流认为已经到了流的末尾.即使半关闭了连接,甚至关闭了俩次,仍需要在结束使用时关闭socket.该方法只影响输出流,他们不释放与socket关联的资源,如占用的端口.</li>
-<li><code>isConnected()</code> 指向远端服务器.这个方法不能告诉你socket当前是否连接到远程主机,而是告知socket是否曾经连接过主机.如果socket能够连接到远程主机,则此主机返回为<code>true</code>,即使此时socket已被关闭.要判断socket当前是否打开,需要检查<code>isConnected()</code>返回<code>true</code>,并且<code>isClosed()</code>返回<code>false</code>.</li>
-<li><code>isBound()</code> 指的是本地端,它告知socket是否绑定于本地系统的向外端口.</li>
-<li><code>isClosed()</code> 在socket已经关闭时返回<code>true</code>,未关闭时返回<code>false</code>.但是如果socket从未连接过也降返回<code>false</code>.</li>
-</ul>
-<h2 id="ServerSocket-api"><a href="#ServerSocket-api" class="headerlink" title="ServerSocket api"></a>ServerSocket api</h2><p>socket实现进程通信(实质上提供了进程通信的端点). 每一个socket用一个半相关描述:(协议，本地地址，本地端口). 一个完整的socket有一个本地唯一的socket号，由操作系统分配。于一个网络连接来说，套接字是平等的，并没有差别，不因为在服务器端或在客户端而产生不同级别.</p>
-<p>适用于在绑定端口前设置服务器socket选项<br><figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="type">ServerSocket</span> socket = <span class="function"><span class="keyword">new</span> <span class="title">ServerSocket</span>();</span></div><div class="line"><span class="comment">// 设置socket选项</span></div><div class="line"><span class="title">SocketAddress</span> <span class="title">address</span> = <span class="title">new</span> <span class="title">InetSocketAddress</span>(port);</div><div class="line"><span class="title">socket</span>.<span class="title">bind</span>(address); <span class="comment">// 绑定端口</span></div></pre></td></tr></table></figure></p>
-<p>在当前主机的所有网络接口或者所有IP地址的指定port上进行入站监听,如果port为0系统会随意指定一个端口<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">new ServerSocket(<span class="name">port</span>)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
-<p>在当前主机的所有网络接口或者所以IP地址的该指定port上进行入站监听.如果port为0系统会随意指定一个端口,queueLenght设置入栈请求的队列长度(如果队列超过最大值,会使用系统最大值)</p>
-<p>第二个参数为backlog参数,accept()方法，该方法从队列中取出连接请求，使得队列能够及时的腾出空间，以容纳新的连接请求。 即ServerSocket构造函数中的backlog参数时，是可以serverSocket在不调用accept方法取出连接时，能接受的最大连接数<br><figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">return</span> <span class="function"><span class="keyword">new</span> <span class="title">ServerSocket</span>(port, queueLenght);</span></div></pre></td></tr></table></figure></p>
-<p>在当前主机的指定的IP地址的指定port上进行入站监听(适用于多IP地址系统上运行的服务器)如果port为0系统会随意指定一个端口queueLenght设置入栈请求的队列长度(如果队列超过最大值,会使用系统最大值)<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">new ServerSocket(<span class="name">port</span>, queueLenght, address)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
-<p>关闭ServerSocket ：释放本地主机的绑定端口,允许其他程序继续使用释放掉的端口。终端ServerSocket接受的目前处于打开状态的所以Socket 关闭Socket .尽管在程序结束时ServerSocket会自动关闭但是尽量还是在程序中保证,当ServerSocket结束时将其手动关闭<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">connect</span>.<span class="built_in">close</span>();</div></pre></td></tr></table></figure></p>
-<p>检查ServerSocket是否打开.当关闭后isClosed会返回true, isBound指的是是否曾经绑定过端口,但是并不指现在的状态<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">if</span>(!<span class="built_in">connect</span>.isClosed() &amp;&amp; <span class="built_in">connect</span>.isBound())</div><div class="line">	<span class="built_in">return</span> false;</div></pre></td></tr></table></figure></p>
-<p>该选项是在accept抛出java.ioInterruptedIOException前等待入栈连接的时间,以毫秒计<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">setSoTimeout</span><span class="params">(timeout)</span></span></div></pre></td></tr></table></figure></p>
-<p>指定如果仍有旧的数据在网络上传输,新的程序是否可以绑定到该端口<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">connect<span class="selector-class">.setReuseAddress</span>(isSet);</div></pre></td></tr></table></figure></p>
-<p>这相当于调用accept()返回的socket的socket.setReceiveBufferSize(size);可以在绑定服务器socket之前或之后设置此选项 除非要设置大于64K的缓冲区大小,这时对于未绑定的ServerSocket必须在绑定他之前设置这个选项<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setRcvBuf</span><span class="params">(ServerSocket connect)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> size;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		size = connect.getReceiveBufferSize();</div><div class="line">		<span class="keyword">if</span>(size &lt; <span class="number">131072</span>)</div><div class="line">			connect.setReceiveBufferSize(<span class="number">131072</span>);</div><div class="line">		connect.bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">8080</span>));</div><div class="line">	&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</div><div class="line">		e.printStackTrace();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/09/26/JavaSE/Java网络 BIO server/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/26/JavaSE/Java网络 BIO server/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/09/25/JavaSE/Java网络 代理/" title="java代理" itemprop="url">java代理</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2014-09-25T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-25</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>通过系统属性来指出本地代理服务器地址。 采用的参数有<code>http.proxyHost,http.proxyPort,http.nonProxyHost</code>以及三个相同的ftp协议开头的代理参数。 java不支持其他任何应用层协议,但如果对所有TCP连接都使用socks代理则可以使用<code>socksProxyHost</code>和<code>socksProxyPort</code>系统属性来确定<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 设置代理服务器的ip地址</span></div><div class="line">System.setProperty(<span class="string">"http.proxyHost"</span>, <span class="string">"192.168.254.254"</span>);</div><div class="line"><span class="comment">// 设置代理服务器的端口</span></div><div class="line">System.setProperty(<span class="string">"http.proxyPort"</span>, <span class="string">"9000"</span>);</div><div class="line"><span class="comment">// 设置java.oreilly.com和xml.oreilly.com主机不被代理而是直接连接</span></div><div class="line">System.setProperty(<span class="string">"http.nonProxyHost"</span>, <span class="string">"java.oreilly.com|xml.oreilly.com"</span>);</div><div class="line"></div><div class="line">SocketAddress add = <span class="keyword">new</span> InetSocketAddress(<span class="string">"proxy.example.com"</span>, <span class="number">80</span>);</div><div class="line">Proxy proxy = <span class="keyword">new</span> Proxy(Proxy.Type.HTTP, add);</div></pre></td></tr></table></figure></p>
-<p>虚拟机都有一个为不同连接定位代理服务器的<code>ProxySelector</code> 对象. 默认的<code>ProxySelector</code>只检查各种系统属性和URL协议,决定如何连接到不同的主机.</p>
-<p>下面<code>LocalProxySelect</code>是一个自己实现的选择器<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testLocalProxySelect</span><span class="params">()</span> </span>&#123;</div><div class="line">	ProxySelector select = <span class="keyword">new</span> LocalProxySelect();</div><div class="line">	<span class="comment">// 每个虚拟机只运行着一个ProxySelector对象.setDefault之后所以的连接都会询问这个代理</span></div><div class="line">	<span class="comment">// 因此不能在公共的环境下改变代理连接.  那ProxySelector要如何使用</span></div><div class="line">	ProxySelector.setDefault(select);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">LocalProxySelect</span> <span class="keyword">extends</span> <span class="title">ProxySelector</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> List&lt;Object&gt; failed = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> List&lt;Proxy&gt; <span class="title">select</span><span class="params">(URI uri)</span> </span>&#123;</div><div class="line">		<span class="comment">// uri 连接所需的主机</span></div><div class="line"></div><div class="line">		List&lt;Proxy&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		<span class="keyword">if</span>(failed.contains(uri) || <span class="string">"http"</span>.equalsIgnoreCase(uri.getScheme())) &#123;</div><div class="line">			result.add(Proxy.NO_PROXY);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="comment">// 所有的连接都会使用proxy.example.com 进行代理</span></div><div class="line">			SocketAddress address = <span class="keyword">new</span> InetSocketAddress(<span class="string">"proxy.example.com"</span>, <span class="number">8000</span>);</div><div class="line">			Proxy proxy = <span class="keyword">new</span> Proxy(Proxy.Type.HTTP, address);</div><div class="line">			result.add(proxy);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> result;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">connectFailed</span><span class="params">(URI uri, SocketAddress sa, IOException ioe)</span> </span>&#123;</div><div class="line">		failed.add(uri);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>下面实现一个socket代理<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Socket socket = <span class="keyword">null</span>;</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">	SocketAddress proxyAddress = <span class="keyword">new</span> InetSocketAddress(<span class="string">"myproxy.example.com"</span>, <span class="number">1080</span>);</div><div class="line">	Proxy  proxy = <span class="keyword">new</span> Proxy(Proxy.Type.SOCKS, proxyAddress);</div><div class="line">	socket = <span class="keyword">new</span> Socket(proxy);</div><div class="line">	SocketAddress remote = <span class="keyword">new</span> InetSocketAddress(<span class="string">"login.ibiblio.org"</span>, <span class="number">25</span>);</div><div class="line">	socket.connect(remote);</div><div class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">	<span class="keyword">if</span>(socket != <span class="keyword">null</span>)</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			socket.close();</div><div class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/09/25/JavaSE/Java网络 代理/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/25/JavaSE/Java网络 代理/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2014/09/21/JavaSE/Java网络 URL/" title="Java URL" itemprop="url">Java URL</a>
   </h1>
   <p class="article-author">By
@@ -324,7 +80,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-21T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-21</time>
+    <time datetime="2014-09-21T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-21</time>
     
   </p>
 </header>
@@ -345,7 +101,7 @@
 <li>URN ：不指向位置的资源名.  (具体的内容参考例子磁力链接)<code>urn:namespace:resource_name</code>. <code>namespace</code>:某个授权机构维护的某类资源的集合名.  <code>resource_name</code> 集合中的资源名</li>
 </ol>
 <p>这里简述一下相对URL. 举例来说<code>&lt;a href=&quot;java.html&quot;&gt;</code> 这个超链接会继承父文档(当前文档)的协议, 主机名, 资源路径<code>.java.html</code>会替换掉,父文档里最后的文件名,还有例如<code>&lt;a href=&quot;/demo/java.html&quot;&gt;</code>那这个超链接会将主机名后的资源路径一起换掉 ，用该路径替换</p>
-<h2 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h2><p>Java支持的传输协议：</p>
+<p>Java支持的传输协议：</p>
 <ul>
 <li>超文本传输协议: <code>http://www.baidu.com</code>        </li>
 <li>安全http协议: <code>https://www.amazon.com/exec/obidos/order2</code></li>
@@ -361,6 +117,9 @@
 <li>rmi  远程方法的调用协议   通过java.rmi包支持: <code>rmi://metalab.unc.edu/RenderEngine</code></li>
 <li>HotJava的定制协议: <code>doc:/UserGuide/release.html</code>,<code>netdoc:/UserGuide/release.html</code>, <code>systemresource://www.adc.org/+/index.html</code>, <code>verbatim:http://www.adc.org</code></li>
 </ul>
+<h2 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h2><p>URL使用的字符必须来自ASCII的子集(大写字母<code>A-Z</code>,小写字母<code>a-z</code>,数字<code>0-9</code>, 标点字符 <code>- _ . ! ~ * &#39; ,</code>) 需要注意的是<code>/ &amp; ? @ # ; $ + = %</code> 也可以使用,但是必须转换为字节(每个字节为%后跟俩个16进制数字)(空格编码为+) 所以URL组成的内容是ASCII的子集 + 经过转换后的字节 但是URL不会自动地进行编码和解码因此我们需要URLEncoder来进行编码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 解码由x-www-form-url-encoded格式编码的字符串</span></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSpace</span><span class="params">()</span> </span>&#123;</div><div class="line">		String base64 = <span class="string">"wKOS4FsxiFvE48KGGSuSkRui9Iap1ukgl1+eVqZiGhXQYYiP8KGCV%2FRIeTEyMLsWxE%2FEx6jhuW3DPUt4JYX+cohUOqFVVaQ%2FioGZCAge3ygaCz%2Fe4q8o9XQzOEtcdXPywGZ0e5sgE787ij4dRZy2ILK2cxsVvC8yrlIPGZ3LUg8nOj8oEg5l2AnQnA3i+Sxbgqmwe1OjIXVZqPZWb+Y4SVQL8EpWlmEjXb4HjgmGTgVYzwJ64QO7HUPP1yuQHkS0PLS%2FpbPrgL5vqTF7h%2FPvMw=%3D"</span>;</div><div class="line">		String decoded = <span class="keyword">null</span>;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			decoded = URLDecoder.decode(base64);</div><div class="line">		&#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</div><div class="line">			<span class="comment">// 如果url包含一个%而后却没有2个16进制数字 抛出该异常</span></div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">		System.out.println(decoded);</div><div class="line">		<span class="keyword">byte</span>[] decode = UrlBase64.decode(base64);</div><div class="line">		System.out.println(<span class="keyword">new</span> String(decode));</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>需要注意额是= 和 &amp; URLEncoder会进行盲目地编码 因此在使用URLEncoder编码时避免将整个url字串都编码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">"  : "</span> + URLEncoder.encode(<span class="string">" "</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"= : "</span> + URLEncoder.encode(<span class="string">"="</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"&amp; : "</span> + URLEncoder.encode(<span class="string">"&amp;"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"* : "</span> + URLEncoder.encode(<span class="string">"*"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"% : "</span> + URLEncoder.encode(<span class="string">"%"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"+ : "</span> + URLEncoder.encode(<span class="string">"+"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"/ : "</span> + URLEncoder.encode(<span class="string">"/"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">". : "</span> + URLEncoder.encode(<span class="string">"."</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">": : "</span> + URLEncoder.encode(<span class="string">":"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"~ : "</span> + URLEncoder.encode(<span class="string">"~"</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"\" : "</span> + URLEncoder.encode(<span class="string">"\""</span>, <span class="string">"UTF-8"</span>));</div><div class="line">print(<span class="string">"() : "</span> + URLEncoder.encode(<span class="string">"(url)"</span>, <span class="string">"UTF-8"</span>));</div></pre></td></tr></table></figure></p>
 <p>不带端口构造<code>URL</code>(需要注意的是：该构造器生成的URL端口为-1,所以回使用该协议的默认端口   第三个参数加反斜线也是需要注意的)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"http"</span> , <span class="string">"www.eff.org"</span>, <span class="string">"/blueribbon.html#intro"</span>);</div></pre></td></tr></table></figure></p>
 <p>带端口构造<code>URL</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"http"</span> , <span class="string">"www.eff.org"</span>, <span class="number">8080</span>, <span class="string">"/blueribbon.html#intro"</span>);</div></pre></td></tr></table></figure></p>
 <p>根据相对URL和基础URL构建一个绝对URL,当希望迭代处理位于相同目录下的一组文件时, 可以考虑使用该构造器<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">URL url = <span class="keyword">new</span> URL(<span class="string">"http://ibiblio.org/javafaq/index.html"</span>);</div><div class="line">URL newURL = <span class="keyword">new</span> URL(url, <span class="string">"mailinglists.html"</span>);</div><div class="line">Assert.assertEquals(<span class="string">"http://ibiblio.org/javafaq/mailinglists.html"</span>, newURL.toString());</div></pre></td></tr></table></figure></p>
@@ -426,7 +185,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-20T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-20</time>
+    <time datetime="2014-09-20T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-20</time>
     
   </p>
 </header>
@@ -540,7 +299,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-10T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-10</time>
+    <time datetime="2014-09-10T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-10</time>
     
   </p>
 </header>
@@ -1471,7 +1230,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-09T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-09</time>
+    <time datetime="2014-09-09T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-09</time>
     
   </p>
 </header>
@@ -1646,7 +1405,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-08</time>
+    <time datetime="2014-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-08</time>
     
   </p>
 </header>
@@ -1723,7 +1482,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-08</time>
+    <time datetime="2014-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-08</time>
     
   </p>
 </header>
@@ -2356,7 +2115,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-07T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-07</time>
+    <time datetime="2014-09-07T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-07</time>
     
   </p>
 </header>
@@ -2488,6 +2247,247 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2014/09/06/jvm/JVM内存溢出之 ConstantPool OOM/" title="JVM内存溢出之 ConstantPool OOM" itemprop="url">JVM内存溢出之 ConstantPool OOM</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>溢出代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 运行时常量溢出</div><div class="line"> * VM Args: -XX:PermSize=10M -XX:MaxPermSize=10M</div><div class="line"> * <span class="doctag">@author</span> mingwang</div><div class="line"> *</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		<span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			list.add(String.valueOf(i++).intern());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果想运行时常量池添加内容最简单的方式就是String.intern()这个native方法.该方法的作用是:如果池中已经包含一个等于此String对象的字符串,则返回池中这个字符串的String对象.否则将次String对象包含的字符串添加到常量池中,并返回次String对象音乐.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/09/06/jvm/JVM内存溢出之 ConstantPool OOM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/06/jvm/JVM内存溢出之 ConstantPool OOM/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/09/06/jvm/JVM内存溢出之 DirectMemory OOM/" title="JVM内存溢出之 DirectMemory OOM" itemprop="url">JVM内存溢出之 DirectMemory OOM</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>溢出代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * VM Args: -Xmx20M -XX:MaxDirectMemorySize=10M</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DirectMemoryOOM</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        Field unsafeField = Unsafe.class.getDeclaredFields()[<span class="number">0</span>];</div><div class="line">        unsafeField.setAccessible(<span class="keyword">true</span>);</div><div class="line">        Unsafe unsafe = (Unsafe)unsafeField.get(<span class="keyword">null</span>);</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)</div><div class="line">            unsafe.allocateMemory(_1MB);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>直接通过反射获取Unsafe实例并进行内存分配,Unsafe类的getUnsafe()方法限制了只有引导类加载器才会返回实例,也就是设计者希望只有rt.jar中的类才能使用unsafe的功能. 因为虽然使用DirectbyeBuffer分配内存也会抛出内存异常,但抛出异常时并没有真正向操作系统申请分配内存,而是通过计算得知内存无法分配,于是手动抛出异常,真正申请分配内存的方法是:unsafe.allocateMemory(_1MB);</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/09/06/jvm/JVM内存溢出之 DirectMemory OOM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/06/jvm/JVM内存溢出之 DirectMemory OOM/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/09/06/jvm/JVM内存溢出之 Metadata OOM/" title="JVM内存溢出之 Metadata OOM" itemprop="url">JVM内存溢出之 Metadata OOM</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaMethodAreaOOM</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			Enhancer enhancer = <span class="keyword">new</span> Enhancer();</div><div class="line">			enhancer.setSuperclass(OOMObject.class);</div><div class="line">			enhancer.setUseCache(<span class="keyword">false</span>);</div><div class="line">			enhancer.setCallBack(<span class="keyword">new</span> MethodInterceptor()&#123;</div><div class="line">				<span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object obj, Method method, Object[] objs,</span></span></div><div class="line">				MethodProxy proxy) <span class="keyword">throws</span> Throwable &#123;</div><div class="line">					<span class="keyword">return</span> proxy.invokeSuper(obj, args);</div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">OOMObject</span> </span>&#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">javac JavaMethodAreaOOMRun.java</div><div class="line">java -XX:PermSize10M -XX:MaxPermSize10M JavaMethodAreaOOMRun</div></pre></td></tr></table></figure></p>
+<p>方法区用于存放Class信息,为了测试这个区域,基本思路是产生大量的类去填充方法区,直到溢出.本例中使用的是CGLib, 还可以使用ASM等框架进行测试.方法区溢出也是一种常见的内存溢出异常.一个类如果被垃圾收集器回收,其条件是非常苛刻的. 在经常动态生成大量Class的应用中,需要特别注意类的回收状况. (基于OSGI的应用即使是同一个类文件被不同的加载器加载也会视为不同的类)</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/09/06/jvm/JVM内存溢出之 Metadata OOM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/06/jvm/JVM内存溢出之 Metadata OOM/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/09/06/jvm/JVM内存溢出之 Stack OOM/" title="JVM内存溢出之 Heap OOM" itemprop="url">JVM内存溢出之 Heap OOM</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>溢出代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestStackSOF</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> stackLength = <span class="number">1</span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stackLeak</span><span class="params">()</span> </span>&#123;</div><div class="line">		stackLength ++;</div><div class="line">		stackLeak();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			stackLeak();</div><div class="line">		&#125; <span class="keyword">catch</span>(Throwable e) &#123;</div><div class="line">			System.out.println(<span class="string">"stack length:"</span> + stackLength + <span class="string">". "</span> + e.getMessage());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行上面的程序<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java -XX:+HeapDumpOnOutOfMemoryError -Xss1M TestStackSOF</div><div class="line">stack length:22427. null</div></pre></td></tr></table></figure></p>
+<p>1M的栈空间大概能执行以上那个简单方法的22427次. 这个次数并不是在编译期就决定的,而是在运行时根据具体的内存使用情况而变化的.<br>我们还注意到使用<code>-XX:+HeapDumpOnOutOfMemoryError</code>并不能产生堆内存溢出错误, 也没有产生类似于java_pid19212.hprof文件的文件.</p>
+<p>上面的并没有产生<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaVMStackOOM</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dontStop</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line"></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stackLeakByThread</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">					dontStop();</div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		JavaVMStackOM om = <span class="keyword">new</span> JavaVMStackOM();</div><div class="line">		om.stackLeakByThread();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>以上俩个实现都都无法让虚拟机产生OutOfMemoryError异常,只能产生StackOverflowError.实验结果表明: 单个线程下,无论由于栈帧太大还是虚拟机容量太小,当内存无法分配时,虚拟机抛出的都是StackOverflowError.如果测试时不是限于单线程,通过不断建立新线程的方式倒是可以产生内存溢出异常. 但是这样产生的内存溢出异常与栈空间是否足够大并不存在任何联系,或者准确说,在这种情况下,给每个线程的栈分配的内存越大,反而越容易产生内存溢出异常.</p>
+<p>当开发多线程应用时应该特别注意的是,出现StackOverflowError异常时有错误堆栈可以阅读,相对来说比较容易找到问题.如果使用虚拟机默认参数,栈深度在大多数情况下达到1000-2000完全没有问题,对于正常的方法调用(包括递归),这个深度应该够用了,但是如果建立过多的线程导致的内存溢出,在不能减少线程数或者更换64位虚拟机的情况下,就只能通过减少最大堆和减少栈容量来换取更多的线程.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/09/06/jvm/JVM内存溢出之 Stack OOM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/06/jvm/JVM内存溢出之 Stack OOM/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2014/09/06/jvm/JVM内存溢出之 Heap OOM/" title="JVM内存溢出之 Heap OOM" itemprop="url">JVM内存溢出之 Heap OOM</a>
   </h1>
   <p class="article-author">By
@@ -2495,7 +2495,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-06</time>
+    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-06</time>
     
   </p>
 </header>
@@ -2565,247 +2565,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/09/06/jvm/JVM内存溢出之 Stack OOM/" title="JVM内存溢出之 Heap OOM" itemprop="url">JVM内存溢出之 Heap OOM</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>溢出代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestStackSOF</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> stackLength = <span class="number">1</span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stackLeak</span><span class="params">()</span> </span>&#123;</div><div class="line">		stackLength ++;</div><div class="line">		stackLeak();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			stackLeak();</div><div class="line">		&#125; <span class="keyword">catch</span>(Throwable e) &#123;</div><div class="line">			System.out.println(<span class="string">"stack length:"</span> + stackLength + <span class="string">". "</span> + e.getMessage());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行上面的程序<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java -XX:+HeapDumpOnOutOfMemoryError -Xss1M TestStackSOF</div><div class="line">stack length:22427. null</div></pre></td></tr></table></figure></p>
-<p>1M的栈空间大概能执行以上那个简单方法的22427次. 这个次数并不是在编译期就决定的,而是在运行时根据具体的内存使用情况而变化的.<br>我们还注意到使用<code>-XX:+HeapDumpOnOutOfMemoryError</code>并不能产生堆内存溢出错误, 也没有产生类似于java_pid19212.hprof文件的文件.</p>
-<p>上面的并没有产生<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaVMStackOOM</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dontStop</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line"></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stackLeakByThread</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">					dontStop();</div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		JavaVMStackOM om = <span class="keyword">new</span> JavaVMStackOM();</div><div class="line">		om.stackLeakByThread();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>以上俩个实现都都无法让虚拟机产生OutOfMemoryError异常,只能产生StackOverflowError.实验结果表明: 单个线程下,无论由于栈帧太大还是虚拟机容量太小,当内存无法分配时,虚拟机抛出的都是StackOverflowError.如果测试时不是限于单线程,通过不断建立新线程的方式倒是可以产生内存溢出异常. 但是这样产生的内存溢出异常与栈空间是否足够大并不存在任何联系,或者准确说,在这种情况下,给每个线程的栈分配的内存越大,反而越容易产生内存溢出异常.</p>
-<p>当开发多线程应用时应该特别注意的是,出现StackOverflowError异常时有错误堆栈可以阅读,相对来说比较容易找到问题.如果使用虚拟机默认参数,栈深度在大多数情况下达到1000-2000完全没有问题,对于正常的方法调用(包括递归),这个深度应该够用了,但是如果建立过多的线程导致的内存溢出,在不能减少线程数或者更换64位虚拟机的情况下,就只能通过减少最大堆和减少栈容量来换取更多的线程.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/09/06/jvm/JVM内存溢出之 Stack OOM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/06/jvm/JVM内存溢出之 Stack OOM/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/09/06/jvm/JVM内存溢出之 DirectMemory OOM/" title="JVM内存溢出之 DirectMemory OOM" itemprop="url">JVM内存溢出之 DirectMemory OOM</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>溢出代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * VM Args: -Xmx20M -XX:MaxDirectMemorySize=10M</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DirectMemoryOOM</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        Field unsafeField = Unsafe.class.getDeclaredFields()[<span class="number">0</span>];</div><div class="line">        unsafeField.setAccessible(<span class="keyword">true</span>);</div><div class="line">        Unsafe unsafe = (Unsafe)unsafeField.get(<span class="keyword">null</span>);</div><div class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)</div><div class="line">            unsafe.allocateMemory(_1MB);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>直接通过反射获取Unsafe实例并进行内存分配,Unsafe类的getUnsafe()方法限制了只有引导类加载器才会返回实例,也就是设计者希望只有rt.jar中的类才能使用unsafe的功能. 因为虽然使用DirectbyeBuffer分配内存也会抛出内存异常,但抛出异常时并没有真正向操作系统申请分配内存,而是通过计算得知内存无法分配,于是手动抛出异常,真正申请分配内存的方法是:unsafe.allocateMemory(_1MB);</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/09/06/jvm/JVM内存溢出之 DirectMemory OOM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/06/jvm/JVM内存溢出之 DirectMemory OOM/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/09/06/jvm/JVM内存溢出之 ConstantPool OOM/" title="JVM内存溢出之 ConstantPool OOM" itemprop="url">JVM内存溢出之 ConstantPool OOM</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>溢出代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 运行时常量溢出</div><div class="line"> * VM Args: -XX:PermSize=10M -XX:MaxPermSize=10M</div><div class="line"> * <span class="doctag">@author</span> mingwang</div><div class="line"> *</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">		<span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			list.add(String.valueOf(i++).intern());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>如果想运行时常量池添加内容最简单的方式就是String.intern()这个native方法.该方法的作用是:如果池中已经包含一个等于此String对象的字符串,则返回池中这个字符串的String对象.否则将次String对象包含的字符串添加到常量池中,并返回次String对象音乐.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/09/06/jvm/JVM内存溢出之 ConstantPool OOM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/06/jvm/JVM内存溢出之 ConstantPool OOM/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/09/06/jvm/JVM内存溢出之 Metadata OOM/" title="JVM内存溢出之 Metadata OOM" itemprop="url">JVM内存溢出之 Metadata OOM</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2014-09-06T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaMethodAreaOOM</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			Enhancer enhancer = <span class="keyword">new</span> Enhancer();</div><div class="line">			enhancer.setSuperclass(OOMObject.class);</div><div class="line">			enhancer.setUseCache(<span class="keyword">false</span>);</div><div class="line">			enhancer.setCallBack(<span class="keyword">new</span> MethodInterceptor()&#123;</div><div class="line">				<span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object obj, Method method, Object[] objs,</span></span></div><div class="line">				MethodProxy proxy) <span class="keyword">throws</span> Throwable &#123;</div><div class="line">					<span class="keyword">return</span> proxy.invokeSuper(obj, args);</div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">OOMObject</span> </span>&#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>执行代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">javac JavaMethodAreaOOMRun.java</div><div class="line">java -XX:PermSize10M -XX:MaxPermSize10M JavaMethodAreaOOMRun</div></pre></td></tr></table></figure></p>
-<p>方法区用于存放Class信息,为了测试这个区域,基本思路是产生大量的类去填充方法区,直到溢出.本例中使用的是CGLib, 还可以使用ASM等框架进行测试.方法区溢出也是一种常见的内存溢出异常.一个类如果被垃圾收集器回收,其条件是非常苛刻的. 在经常动态生成大量Class的应用中,需要特别注意类的回收状况. (基于OSGI的应用即使是同一个类文件被不同的加载器加载也会视为不同的类)</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2014/09/06/jvm/JVM内存溢出之 Metadata OOM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/06/jvm/JVM内存溢出之 Metadata OOM/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2014/09/04/jvm/JVM 方法调用/" title="JVM方法调用" itemprop="url">JVM方法调用</a>
   </h1>
   <p class="article-author">By
@@ -2813,7 +2572,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-04T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-04</time>
+    <time datetime="2014-09-04T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-04</time>
     
   </p>
 </header>
@@ -2893,7 +2652,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-03T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-03</time>
+    <time datetime="2014-09-03T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-03</time>
     
   </p>
 </header>
@@ -2989,6 +2748,66 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2014/09/02/jvm/JVM 直接内存/" title="JVM 直接内存" itemprop="url">JVM 直接内存</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-09-02T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>直接内存并不是虚拟机运行时数据区的一部分,也不是java虚拟机规范中定义的内存区域,但是这部分内存也被频繁使用,而且也会导致OutOfMemoryError异常出现</p>
+<p>在JDK1.4引入的NIO类,一种基于通道与缓冲区的I/O方式,它可以利用Native函数库直接分配堆外内存,然后通过一个存储在java堆里面的DirectByteBuffer对象作为这块内存的引用进行操作.这样能在一些场景中显著提高性能,因为避免了java堆和Native堆中来回复制数据.</p>
+<p>显然本机直接内存的分配不会收到java堆大小的限制,但是既然是内存,则肯定会收到本机总内存(包括RAM及SWAP区或者分页文件)及处理器寻址空间的限制.一般在配置虚拟机参数时,会genuine实际内存设置-Xmx等参数信息,但经常会忽略掉直接内存,使得各个区域的总和大于物理内存限制,从而导致动态拓展时,出现OutOfMemoryError.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/09/02/jvm/JVM 直接内存/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/02/jvm/JVM 直接内存/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2014/09/02/jvm/JVM 方法区/" title="JVM 方法区" itemprop="url">JVM 方法区</a>
   </h1>
   <p class="article-author">By
@@ -2996,7 +2815,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-02T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-02</time>
+    <time datetime="2014-09-02T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-02</time>
     
   </p>
 </header>
@@ -3079,7 +2898,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-02T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-02</time>
+    <time datetime="2014-09-02T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-02</time>
     
   </p>
 </header>
@@ -3181,22 +3000,56 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/09/02/jvm/JVM 直接内存/" title="JVM 直接内存" itemprop="url">JVM 直接内存</a>
+      <a href="/2014/09/01/jvm/JVM 参数 -- 内存设置/" title="JVM 参数 -- 内存设置" itemprop="url">JVM 参数 -- 内存设置</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-02T07:00:00.000Z" itemprop="datePublished"> 发表于 2014-09-02</time>
+    <time datetime="2014-09-01T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-01</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>直接内存并不是虚拟机运行时数据区的一部分,也不是java虚拟机规范中定义的内存区域,但是这部分内存也被频繁使用,而且也会导致OutOfMemoryError异常出现</p>
-<p>在JDK1.4引入的NIO类,一种基于通道与缓冲区的I/O方式,它可以利用Native函数库直接分配堆外内存,然后通过一个存储在java堆里面的DirectByteBuffer对象作为这块内存的引用进行操作.这样能在一些场景中显著提高性能,因为避免了java堆和Native堆中来回复制数据.</p>
-<p>显然本机直接内存的分配不会收到java堆大小的限制,但是既然是内存,则肯定会收到本机总内存(包括RAM及SWAP区或者分页文件)及处理器寻址空间的限制.一般在配置虚拟机参数时,会genuine实际内存设置-Xmx等参数信息,但经常会忽略掉直接内存,使得各个区域的总和大于物理内存限制,从而导致动态拓展时,出现OutOfMemoryError.</p>
+        <h2 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h2><h3 id="Xmx"><a href="#Xmx" class="headerlink" title="Xmx"></a>Xmx</h3><p>这个参数设置可用的最大堆内存, 如果我们不使用这个参数,在Mac平台上,默认分配的堆内存为1431M.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] main)</span> </span>&#123;</div><div class="line">		<span class="keyword">long</span> maxMemory = Runtime.getRuntime().maxMemory();</div><div class="line"></div><div class="line">		System.out.println(maxMemory / <span class="number">1000</span> / <span class="number">1000</span> + <span class="string">"M"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当我们使用上<code>-Xmx1m</code>的时候,我们手动地将堆内存设置为1m, 通过刚才的程序输出,确实是最大的内存为1m.  在这个例子中我们还要注意到, 在JVM分配内存时候, 1M = 1000KBM, 而不是1024KBM</p>
+<h3 id="Xss"><a href="#Xss" class="headerlink" title="Xss"></a>Xss</h3><p>这个参数用来分配线程最大的栈空间, 这个参数决定了方法调用的最大的次数. 如果我们不使用这个参数,在mac平台上大概能进行16000个方法调用. 这个参数可设置的最小值为160k. 当我们设置上160k的时候, 程序能调用818次的方法调用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">long</span> count = <span class="number">0</span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] main)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			invokeSelf();</div><div class="line">		&#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">			System.out.println(<span class="string">"invoke:"</span> + count);</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">invokeSelf</span><span class="params">()</span> </span>&#123;</div><div class="line">		count++;</div><div class="line">		invokeSelf();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们知道在java的方法调用就是在栈帧不断地在java栈中出栈入栈, 因此栈帧的大小也影响着方法的调用次数.  栈帧是由局部变量表,操作数栈,和帧数据几个部分组成.</p>
+<p>下面我们测试一下将上例的递归函数加入一个参数,看看调用次数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">long</span> count = <span class="number">0</span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] main)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			invokeSelf(count);</div><div class="line">		&#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">			System.out.println(<span class="string">"invoke:"</span> + count);</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">invokeSelf</span><span class="params">(<span class="keyword">long</span> times)</span> </span>&#123;</div><div class="line">		count++;</div><div class="line">		invokeSelf(times);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这次的调用次数成了682次,说明局部变量表确实是在影响方法调用的次数.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">long</span> count = <span class="number">0</span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] main)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			invokeSelf(count);</div><div class="line">		&#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">			System.out.println(<span class="string">"invoke:"</span> + count);</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">invokeSelf</span><span class="params">(<span class="keyword">long</span> times)</span> </span>&#123;</div><div class="line">		count++;</div><div class="line">		<span class="keyword">int</span> newCount = (<span class="keyword">int</span>)count;</div><div class="line">		invokeSelf(times);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这次我添加了一个中间过程,调用次数变成了629</p>
+<p>本想这个次数是针对一个线程的设置还是个共享值, 但是在多线程的情况下,明显的出现了难以预料的结果,他的调用次数有了明显的提升<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">long</span> count = <span class="number">0</span>;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] main)</span> </span>&#123;</div><div class="line"></div><div class="line">        Runnable runnable = () -&gt; &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                invokeSelf(count);</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">                System.out.println(<span class="string">"invoke : "</span> + count);</div><div class="line">    <span class="comment">//            e.printStackTrace();</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        Runnable runnable2 = () -&gt; &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                invokeSelf2(count);</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">                System.out.println(<span class="string">"invoke : "</span> + count);</div><div class="line">                <span class="comment">//            e.printStackTrace();</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        Thread t = <span class="keyword">new</span> Thread(runnable);</div><div class="line">        Thread t2 = <span class="keyword">new</span> Thread(runnable2);</div><div class="line">        t.start();</div><div class="line">        t2.start();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">invokeSelf</span><span class="params">(<span class="keyword">long</span> times)</span> </span>&#123;</div><div class="line">        count++;</div><div class="line">        <span class="keyword">int</span> newCount = (<span class="keyword">int</span>)count;</div><div class="line">        invokeSelf(times);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">invokeSelf2</span><span class="params">(<span class="keyword">long</span> times)</span> </span>&#123;</div><div class="line">        count++;</div><div class="line">        <span class="keyword">int</span> newCount = (<span class="keyword">int</span>)count;</div><div class="line">        invokeSelf2(times);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个很奇怪,<br>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">invoke : <span class="number">1083</span></div><div class="line">invoke : <span class="number">1083</span></div></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">invoke : <span class="number">650</span></div><div class="line">invoke : <span class="number">1300</span></div></pre></td></tr></table></figure></p>
+<p>要不然次数是一样的,要不然次数是个倍数的关系</p>
+<h3 id="MaxPermSize"><a href="#MaxPermSize" class="headerlink" title="MaxPermSize"></a>MaxPermSize</h3><p><code>-XX:MaxPermSize</code>:永久代的最大值</p>
+<h3 id="ms"><a href="#ms" class="headerlink" title="ms"></a>ms</h3><p><code>-XX:ms</code>:初始堆大小</p>
+<h3 id="mn"><a href="#mn" class="headerlink" title="mn"></a>mn</h3><p><code>-XX:</code>:设置年轻代大小.整个JVM内存大小=年轻代大小+年老代大小+持久代大小.(Xms必须大于Xmn)</p>
+<h3 id="NewSize"><a href="#NewSize" class="headerlink" title="NewSize"></a>NewSize</h3><p><code>-XX:NewSize=2m</code>:新生代默认大小(单位是字节)</p>
+<h3 id="MaxNewSize"><a href="#MaxNewSize" class="headerlink" title="MaxNewSize"></a>MaxNewSize</h3><p><code>-XX:MaxNewSize=size</code>:新生代最大值(单位字节)</p>
+<h3 id="ThreadStackSize"><a href="#ThreadStackSize" class="headerlink" title="ThreadStackSize"></a>ThreadStackSize</h3><p><code>-XX:ThreadStackSize=512</code>:线程堆栈大小(单位Kbytes,0使用默认大小)</p>
+<h3 id="SurvivorRatio"><a href="#SurvivorRatio" class="headerlink" title="SurvivorRatio"></a>SurvivorRatio</h3><p><code>-XX:SurvivorRatio=6</code>:新生代中Eden区和Survivor区的容量比值(默认为8)</p>
+<h3 id="PretenureSizeThreshold"><a href="#PretenureSizeThreshold" class="headerlink" title="PretenureSizeThreshold"></a>PretenureSizeThreshold</h3><p><code>-XX:PretenureSizeThreshold</code>:直接晋升到老年代的对象大小,设置这个参数后,大于这个参数的对象将直接在老年代分配</p>
+<h3 id="MaxTenuringThreshold"><a href="#MaxTenuringThreshold" class="headerlink" title="MaxTenuringThreshold"></a>MaxTenuringThreshold</h3><p><code>-XX:MaxTenuringThreshold</code>:晋升到老年代的对象年龄,每个对象在坚持过一次MinorGC之后,年龄就+1,当超过这个参数值时就进入老年代</p>
+<h3 id="UseAdaptiveSizePolicy"><a href="#UseAdaptiveSizePolicy" class="headerlink" title="UseAdaptiveSizePolicy"></a>UseAdaptiveSizePolicy</h3><p><code>-XX:UseAdaptiveSizePolicy</code>:动态调整java堆中各个区域的大小及进入老年代的年龄</p>
+<blockquote>
+<p>吞吐量垃圾回收器利用了一种叫做自适应大小的特性，自适应大小是基于对象的分配和存活率来自动改变eden空间和survivor空间大小，目的是优化对象的岁数分布。自适应大小的企图是提供易用性，容易优化JVM，以致于提供可靠的吞吐量</p>
+</blockquote>
+<h3 id="HandlePromotionFailure"><a href="#HandlePromotionFailure" class="headerlink" title="HandlePromotionFailure"></a>HandlePromotionFailure</h3><p><code>-XX:HandlePromotionFailure</code>:是否允许分配担保失败,即老年代的剩余空间不足以应付新生代的整个Eden和Survivor区的所有对象都存活的极端情况</p>
+<h3 id="UseTLAB"><a href="#UseTLAB" class="headerlink" title="UseTLAB"></a>UseTLAB</h3><p><code>-XX:UseTLAB</code>:优先在本地线程缓冲区中分配对象,避免分配内存时的锁定过程</p>
+<h3 id="NewRatio"><a href="#NewRatio" class="headerlink" title="NewRatio"></a>NewRatio</h3><p><code>-XX:NewRatio=n</code>:老年代与新生代比例(默认是2).</p>
+<h3 id="MaxHeapFreeRatio"><a href="#MaxHeapFreeRatio" class="headerlink" title="MaxHeapFreeRatio"></a>MaxHeapFreeRatio</h3><p><code>-XX:MaxHeapFreeRatio</code>:当Xmx值比Xms值大时,堆可以动态收缩和扩展,这个参数控制当堆空闲大于指定比率时自动收缩</p>
+<h3 id="MinHeapFreeRatio"><a href="#MinHeapFreeRatio" class="headerlink" title="MinHeapFreeRatio"></a>MinHeapFreeRatio</h3><p><code>-XX:MinHeapFreeRatio</code>:当Xmx值比Xms值大时,堆可以动态收缩和扩展,这个参数控制当堆空闲小于指定比率时自动收缩</p>
+<h2 id="设置GC"><a href="#设置GC" class="headerlink" title="设置GC"></a>设置GC</h2><h3 id="DisableExplicitGC"><a href="#DisableExplicitGC" class="headerlink" title="DisableExplicitGC"></a>DisableExplicitGC</h3><p><code>-XDisableExplicitGC</code> 忽略来自System.gc()方法触发的垃圾收集</p>
+<h3 id="GCTimeRatio"><a href="#GCTimeRatio" class="headerlink" title="GCTimeRatio"></a>GCTimeRatio</h3><p><code>-XX:</code>:GC时间占总时间的比率.仅在使用ParallelScavenge收集器时生效</p>
+<h3 id="MaxGCPauseMillis"><a href="#MaxGCPauseMillis" class="headerlink" title="MaxGCPauseMillis"></a>MaxGCPauseMillis</h3><p><code>-XX:</code>:设置GC最大停顿时间.仅在使用ParallelScavenge收集器时生效</p>
+<h3 id="ScavengeBeforeFullGC"><a href="#ScavengeBeforeFullGC" class="headerlink" title="ScavengeBeforeFullGC"></a>ScavengeBeforeFullGC</h3><p><code>-XX:</code>:在FullGC发生之前触发一次MinorGC</p>
+<h3 id="UseGCOverheadLimit"><a href="#UseGCOverheadLimit" class="headerlink" title="UseGCOverheadLimit"></a>UseGCOverheadLimit</h3><p><code>-XX:</code>:禁止GC过程无限制的执行,如果过于频繁,就直接发生OutOfMemory</p>
+<h3 id="InitiatingHeapOccupancyPercent"><a href="#InitiatingHeapOccupancyPercent" class="headerlink" title="InitiatingHeapOccupancyPercent"></a>InitiatingHeapOccupancyPercent</h3><p><code>-XX:InitiatingHeapOccupancyPercent=n</code>:设置触发标记周期的Java堆占用率阈值.默认占用率是整个Java堆的45%.</p>
+<h3 id="G1HeapRegionSize"><a href="#G1HeapRegionSize" class="headerlink" title="G1HeapRegionSize"></a>G1HeapRegionSize</h3><p><code>-XX:G1HeapRegionSize=n</code>:设置的G1区域的大小.值是2的幂,范围是1MB到32MB之间.目标是根据最小的Java堆大小划分出约2048个区域.</p>
+<h3 id="G1ReservePercent"><a href="#G1ReservePercent" class="headerlink" title="G1ReservePercent"></a>G1ReservePercent</h3><p><code>-XX:G1ReservePercent=n</code>:设置作为空闲空间的预留内存百分比,以降低目标空间溢出的风险.默认值是10%.增加或减少百分比时,请确保对总的Java堆调整相同的量.JavaHotSpotVMbuild23中没有此设置.</p>
 
         
         
@@ -3221,7 +3074,179 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2014/09/02/jvm/JVM 直接内存/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/02/jvm/JVM 直接内存/" data-count-type="comments">&nbsp;</a>
+		<a href="/2014/09/01/jvm/JVM 参数 -- 内存设置/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/09/01/jvm/JVM 参数 -- 内存设置/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/04/18/编程语言/Groovy JSON/" title="Groovy JSON" itemprop="url">Groovy JSON</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-04-18T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-18</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <blockquote>
+<p>本文是对Groovy部分官方文档进行了翻译</p>
+</blockquote>
+<p>Groovy 原生支持Groovy对象和JSON之间的转换. <code>groovy.json</code>包内的类用于JSON的序列化和解析功能</p>
+<h2 id="JsonSlurper"><a href="#JsonSlurper" class="headerlink" title="JsonSlurper"></a>JsonSlurper</h2><p><code>JsonSlurper</code>用于将JSON文本或者其他数据内容解析成Groovy里的数据结构,例如<code>maps&lt;/code&gt;,</code>lists, 或者其他原生基本类型 <code>Integer&lt;/code&gt;,</code>Double, <code>Boolean&lt;/code&gt;,</code>String`。</p>
+<p>这个类重载了很多方法, 而且还添加了一些特殊的方法, 例如<code>parseText&lt;/code&gt;,</code>parseFile<code>等.下面这个例子中我们使用了</code>parseText<code>方法, 它会解析一个JSON字符串, 然后递归地将它转换成</code>list, <code>map</code>结构. 一些其他的`parse* 方法和这个方法很类似, 都返回了JSON字符串, 只不过其他的方法接受的参数不一样.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</div><div class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">'&#123; "name": "John Doe" &#125; /* some comment */'</span>)</div><div class="line"></div><div class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</div><div class="line"><span class="keyword">assert</span> object.name == <span class="string">'John Doe'</span></div></pre></td></tr></table></figure>
+<p>需要注意的是, 产生的结果是一个纯map, 可以像一个普通的Groovy对象实例持有它. <code>JsonSlurper</code>根据<a href="http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf" target="_blank" rel="external">ECMA-404 JSON Interchange Standard</a>定义来解析JSON, 同时支持JavaScript的注释和时间类型.</p>
+<p>除了支持maps之外, <code>JsonSlurper</code> 还支持将JSON数组解析成list的功能<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</div><div class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">'&#123; "myList": [4, 8, 15, 16, 23, 42] &#125;'</span>)</div><div class="line"></div><div class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</div><div class="line"><span class="keyword">assert</span> object.myList <span class="keyword">instanceof</span> List</div><div class="line"><span class="keyword">assert</span> object.myList == [<span class="number">4</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">42</span>]</div></pre></td></tr></table></figure></p>
+<p>JSON标准上只支持下面这些原生数据类型：<code>string&lt;/code&gt;,</code>number, <code>object&lt;/code&gt;,</code>true, <code>false&lt;/code&gt;,</code>null. <code>JsonSlurper</code> 将那些JSON类型转换成Groovy类型.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</div><div class="line"><span class="keyword">def</span> object = jsonSlurper.parseText <span class="string">'''</span></div><div class="line">    &#123; "simple": 123,</div><div class="line">      "fraction": 123.66,</div><div class="line">      "exponential": 123e12</div><div class="line">    &#125;'''</div><div class="line"></div><div class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</div><div class="line"><span class="keyword">assert</span> object.simple.<span class="keyword">class</span> == Integer</div><div class="line"><span class="keyword">assert</span> object.fraction.<span class="keyword">class</span> == BigDecimal</div><div class="line"><span class="keyword">assert</span> object.exponential.<span class="keyword">class</span> == BigDecimal</div></pre></td></tr></table></figure></p>
+<p><code>JsonSlurper</code> 生成的结果就是纯Groovy对象实例, 她的内部不会包含任何的JSON相关的类对象, 它的用法是相当透明的. 事实上<code>JsonSlurper</code>的结果遵循<code>GPath</code>表达式. <code>GPath</code>是一个非常强大的表达式语言, 它支持多种不同的数据格式(例如<code>XmlSlurper</code>支持<code>XML</code> 就是其中一个例子)</p>
+<p>如果想要了解更多的内容, 你可以直接去<a href="http://docs.groovy-lang.org/latest/html/documentation/core-semantics.html#gpath_expressions" target="_blank" rel="external">GPath expressions</a>看一看.<br>下面给出了JSON类型与Groovy数据类型之间的对应关系.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">JSON			Groovy</div><div class="line">string			java.lang.String</div><div class="line">number			java.lang.BigDecimal or java.lang.Integer</div><div class="line">object			java.util.LinkedHashMap</div><div class="line">array			java.util.ArrayList</div><div class="line"><span class="literal">true</span>			<span class="literal">true</span></div><div class="line"><span class="literal">false</span>			<span class="literal">false</span></div><div class="line"><span class="literal">null</span>			<span class="literal">null</span></div><div class="line">date			java.util.Date based on the yyyy-MM-dd’T’<span class="string">HH:</span><span class="string">mm:</span>ssZ date format</div></pre></td></tr></table></figure></p>
+<p>如果JSON中的一个值是<code>null&lt;/code&gt;,</code>JsonSlurper<code>支持它转换成Groovy中的</code>null.这就与其他JSON解析器形成了对比, 代表一个空值与库提供的单一对象。</p>
+<h3 id="Parser-Variants"><a href="#Parser-Variants" class="headerlink" title="Parser Variants"></a>Parser Variants</h3><p>Groovy 有多个<code>JsonSlurper</code> 解析器实现. 每一个解析器都对应着不同的需求, 每一个特定的解析都能很好的处理特定需求, 所以默认的解析器并不是适应于所有的情况. 下面就对各个解析器做个简介:</p>
+<p><code>JsonParserCharArray</code> 解析器接受一个JSON字符串, 然后其内部使用一个字节数组进行解析. During value conversion it copies character sub-arrays (a mechanism known as “chopping”) and operates on them.</p>
+<ul>
+<li><p><code>JsonFastParser</code>解析器是<code>JsonParserCharArray</code>解析器的变种, 它是最快的解析器. 尽管它是最快的,但是基于某些原因,它并不是默认的解析器. <code>JsonFastParser</code>解析器也被称为索引覆盖(index-overlay)解析器. 当解析给定JSON字符串的时候,该解析器会极力避免创建新的字节数组或者字符串实例. 它一直指向原生的字节数组。 另外, 它会尽可能的推迟对象的创建. If parsed maps are put into long-term caches care must be taken as the map objects might not be created and still consist of pointer to the original char buffer only. <code>JsonFastParser</code>采取了一种特殊的切割模型, 它会尽早地分割char buffer, 以便能维持一份对原生buffer比较小的拷贝. 如果你想使用<code>JsonFastParser&lt;/code&gt;, 那么给你的建议是保持</code>JsonFastParser`的JSON buffer在2MB左右, 而且时刻要保持长期缓存限制.</p>
+</li>
+<li><p><code>JsonParserLax</code> 是<code>JsonFastParser</code>的一个变种实现. 它与<code>JsonFastParser</code> 有一些相似的想能特点, 但是不同的是它不是仅仅依靠`ECMA-404 JSON grammar. 例如,在下面例子中它支持不带引号的字符串注释.</p>
+</li>
+</ul>
+<p><code>JsonParserUsingCharacterSource</code> 用于解析非常大的文件. 它使用一种称为<code>“character windowing”</code>的技术去解析非常大(超过2MB)的JSON文件,而且性能上也非常稳定</p>
+<p><code>JsonSlurper</code>的默认实现是 <code>JsonParserCharArray&lt;/code&gt;.</code>JsonParserType`包含了解析器种类的枚举类型:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Implementation					Constant</div><div class="line">JsonParserCharArray				JsonParserType#CHAR_BUFFER</div><div class="line">JsonFastParser					JsonParserType#INDEX_OVERLAY</div><div class="line">JsonParserLax					JsonParserType#LAX</div><div class="line">JsonParserUsingCharacterSource	JsonParserType#CHARACTER_SOURCE</div></pre></td></tr></table></figure>
+<p>如果想要改变解析器的实现也非常简单, 只需要通过调用<code>JsonSlurper#setType()&lt;/code&gt;方法给</code>JsonParserType`设置上不同的值就可以了</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper(<span class="string">type:</span> JsonParserType.INDEX_OVERLAY)</div><div class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">'&#123; "myList": [4, 8, 15, 16, 23, 42] &#125;'</span>)</div><div class="line"></div><div class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</div><div class="line"><span class="keyword">assert</span> object.myList <span class="keyword">instanceof</span> List</div><div class="line"><span class="keyword">assert</span> object.myList == [<span class="number">4</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">42</span>]</div></pre></td></tr></table></figure>
+<h3 id="JsonOutput"><a href="#JsonOutput" class="headerlink" title="JsonOutput"></a>JsonOutput</h3><p><code>JsonOutput</code>用于将Groovy对象序列化成JSON字符串.</p>
+<p><code>JsonOutput</code> 重载了<code>toJson</code>静态方法. 每个不同的<code>toJson</code>方法都会接受一个不同的参数类型.</p>
+<p><code>toJson</code>方法返回的是一个包含JSOn格式的字符串<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> json = JsonOutput.toJson([<span class="string">name:</span> <span class="string">'John Doe'</span>, <span class="string">age:</span> <span class="number">42</span>])</div><div class="line"></div><div class="line"><span class="keyword">assert</span> json == <span class="string">'&#123;"name":"John Doe","age":42&#125;'</span></div></pre></td></tr></table></figure></p>
+<p><code>JsonOutput</code>不仅支持原生类型, map, list等类型序列化到JSON, 甚至还支持序列化`POGOs(一种比较老的Groovy对象)</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> &#123;</span> String name &#125;</div><div class="line"></div><div class="line"><span class="keyword">def</span> json = JsonOutput.toJson([ <span class="keyword">new</span> Person(<span class="string">name:</span> <span class="string">'John'</span>), <span class="keyword">new</span> Person(<span class="string">name:</span> <span class="string">'Max'</span>) ])</div><div class="line"></div><div class="line"><span class="keyword">assert</span> json == <span class="string">'[&#123;"name":"John"&#125;,&#123;"name":"Max"&#125;]'</span></div></pre></td></tr></table></figure>
+<p>刚才那个例子中, JSON输出默认没有进行pretty输出. 因此<code>JsonSlurper</code>还提供了<code>prettyPrint</code>方法<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> json = JsonOutput.toJson([<span class="string">name:</span> <span class="string">'John Doe'</span>, <span class="string">age:</span> <span class="number">42</span>])</div><div class="line"></div><div class="line"><span class="keyword">assert</span> json == <span class="string">'&#123;"name":"John Doe","age":42&#125;'</span></div><div class="line"></div><div class="line"><span class="keyword">assert</span> JsonOutput.prettyPrint(json) == <span class="string">'''\</span></div><div class="line">&#123;</div><div class="line">    "name": "John Doe",</div><div class="line">    "age": 42</div><div class="line">&#125;'''.stripIndent()</div></pre></td></tr></table></figure></p>
+<p><code>prettyPrint</code>方法只接受一个String类型的字符串, 它不能和<code>JsonOutput</code>里其他的方式结合起来使用, it can be applied on arbitrary JSON String instances.</p>
+<p>在Groovy中还可以使用<code>JsonBuilder&lt;/code&gt;,</code>StreamingJsonBuilder<code>方式创建JSON. 这俩个构建起都提供了一个</code>DSL, 当构建器生成一个JSON的时候,可以制定一个对象图.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// an inclusive range</span></div><div class="line"><span class="keyword">def</span> range = <span class="string">'a'</span>..<span class="string">'d'</span></div><div class="line"><span class="keyword">assert</span> range.size() == <span class="number">4</span></div><div class="line"><span class="keyword">assert</span> range.get(<span class="number">2</span>) == <span class="string">'c'</span></div><div class="line"><span class="keyword">assert</span> range[<span class="number">2</span>] == <span class="string">'c'</span></div><div class="line"><span class="keyword">assert</span> range <span class="keyword">instanceof</span> java.util.List</div><div class="line"><span class="keyword">assert</span> range.contains(<span class="string">'a'</span>)</div><div class="line"><span class="keyword">assert</span> range.contains(<span class="string">'d'</span>)</div><div class="line"><span class="keyword">assert</span> !range.contains(<span class="string">'e'</span>)</div></pre></td></tr></table></figure>
+<p>You can iterate on a range using a classic for loop:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span>) &#123;</div><div class="line">    println <span class="string">"Hello $&#123;i&#125;"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>but alternatively you can achieve the same effect in a more Groovy idiomatic style, by iterating a range with each method:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="number">1.</span><span class="number">.10</span>).each &#123; i -&gt;</div><div class="line">    println <span class="string">"Hello $&#123;i&#125;"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Ranges can be also used in the switch statement:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">switch</span> (years) &#123;</div><div class="line">    <span class="keyword">case</span> <span class="number">1.</span><span class="number">.10</span>: interestRate = <span class="number">0.076</span>; <span class="keyword">break</span>;</div><div class="line">    <span class="keyword">case</span> <span class="number">11.</span><span class="number">.25</span>: interestRate = <span class="number">0.052</span>; <span class="keyword">break</span>;</div><div class="line"><span class="symbol">    default:</span> interestRate = <span class="number">0.037</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/04/18/编程语言/Groovy JSON/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/04/18/编程语言/Groovy JSON/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/04/17/编程语言/Groovy ANT/" title="Groovy ANT" itemprop="url">Groovy ANT</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2014-04-17T07:00:00.000Z" itemprop="datePublished"> Published 2014-04-17</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <blockquote>
+<p>本文是对Groovy部分官方文档进行了翻译</p>
+</blockquote>
+<p>虽然<code>Ant</code>只是一个构建工具, 但其提供了例如能够操作文件(包括zip文件), 拷贝, 资源管理等诸多实用功能. 然而如果你不喜欢使用<code>build.xml</code>文件或者<code>Jelly</code>脚本, 而是想要一种清晰简洁的构建方式, 那么你就可以试试使用Groovy编写构建过程.</p>
+<p>Groovy提供了一个辅助类<code>AntBuilder</code>帮忙编写Ant构建任务. 它看起来很像一个不带尖括号的Ant’s XML的简洁版本. 因此你可以在脚本中混合和匹配标记. Ant本身是一组Jar文件的集合. 将这组jar文件添加到你的classpath上, 你就可以在Groovy中轻轻松松的使用它们.</p>
+<p><code>AntBuilder</code>通过便捷的构造器语法直接暴露了Ant task. 下面是一个简单的示例, 它的功能是在标准输出上输出一条消息.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> ant = <span class="keyword">new</span> AntBuilder()          </div><div class="line">ant.echo(<span class="string">'hello from Ant!'</span>)</div></pre></td></tr></table></figure></p>
+<ol>
+<li>创建一个<code>AntBuilder</code>实例</li>
+<li>执行<code>AntBuilder</code>实例的echo task</li>
+</ol>
+<p>假设,现在你需要创建一个ZIP文件：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">def</span> ant = <span class="keyword">new</span> AntBuilder()</div><div class="line">ant.zip(<span class="string">destfile:</span> <span class="string">'sources.zip'</span>, <span class="string">basedir:</span> <span class="string">'src'</span>)</div></pre></td></tr></table></figure></p>
+<p>在下面的例子中, 我们将展示在Groovy中使用传统的Ant 模式通过<code>AntBuilder</code>拷贝一组文件.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lets just call one task</span></div><div class="line">ant.echo(<span class="string">"hello"</span>)</div><div class="line"></div><div class="line"><span class="comment">// here is an example of a block of Ant inside GroovyMarkup</span></div><div class="line">ant.sequential &#123;</div><div class="line">    echo(<span class="string">"inside sequential"</span>)</div><div class="line">    <span class="keyword">def</span> myDir = <span class="string">"target/AntTest/"</span></div><div class="line">    mkdir(<span class="string">dir:</span> myDir)</div><div class="line">    copy(<span class="string">todir:</span> myDir) &#123;</div><div class="line">        fileset(<span class="string">dir:</span> <span class="string">"src/test"</span>) &#123;</div><div class="line">            include(<span class="string">name:</span> <span class="string">"**/*.groovy"</span>)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    echo(<span class="string">"done"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// now lets do some normal Groovy again</span></div><div class="line"><span class="keyword">def</span> file = <span class="keyword">new</span> File(ant.project.baseDir,<span class="string">"target/AntTest/groovy/util/AntTest.groovy"</span>)</div><div class="line"><span class="keyword">assert</span> file.exists()</div></pre></td></tr></table></figure></p>
+<p>下面的例子是遍历一组文件, 然后将每个文件根据特殊模式进行匹配.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lets create a scanner of filesets</span></div><div class="line"><span class="keyword">def</span> scanner = ant.fileScanner &#123;</div><div class="line">    fileset(<span class="string">dir:</span><span class="string">"src/test"</span>) &#123;</div><div class="line">        include(<span class="string">name:</span><span class="string">"**/Ant*.groovy"</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// now lets iterate over</span></div><div class="line"><span class="keyword">def</span> found = <span class="literal">false</span></div><div class="line"><span class="keyword">for</span> (f <span class="keyword">in</span> scanner) &#123;</div><div class="line">    println(<span class="string">"Found file $f"</span>)</div><div class="line">    found = <span class="literal">true</span></div><div class="line">    <span class="keyword">assert</span> f <span class="keyword">instanceof</span> File</div><div class="line">    <span class="keyword">assert</span> f.name.endsWith(<span class="string">".groovy"</span>)</div><div class="line">&#125;</div><div class="line"><span class="keyword">assert</span> found</div></pre></td></tr></table></figure></p>
+<p>Or execute a JUnit test:</p>
+<p>下面我们执行JUnit<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// lets create a scanner of filesets</span></div><div class="line">ant.junit &#123;</div><div class="line">    test(<span class="string">name:</span><span class="string">'groovy.util.SomethingThatDoesNotExist'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>现在, 让我们的步子迈地更大一点：在Groovy中编译然后执行一个Java文件.<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ant.echo(<span class="string">file:</span><span class="string">'Temp.java'</span>, <span class="string">'''</span></div><div class="line">    class Temp &#123;</div><div class="line">        public static void main(String[] args) &#123;</div><div class="line">            System.out.println("Hello");</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">''')</div><div class="line">ant.javac(<span class="string">srcdir:</span><span class="string">'.'</span>, <span class="string">includes:</span><span class="string">'Temp.java'</span>, <span class="string">fork:</span><span class="string">'true'</span>)</div><div class="line">ant.java(<span class="string">classpath:</span><span class="string">'.'</span>, <span class="string">classname:</span><span class="string">'Temp'</span>, <span class="string">fork:</span><span class="string">'true'</span>)</div><div class="line">ant.echo(<span class="string">'Done'</span>)</div></pre></td></tr></table></figure></p>
+<p>需要提及的是, <code>AntBuilder</code>是内嵌于<code>Gradle</code>中的. 你可以像在Groovy中那样, 在<code>Gradle</code>使用<code>AntBuilder</code></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2014/04/17/编程语言/Groovy ANT/#comments" class="ds-thread-count comments-count-link" data-thread-key="2014/04/17/编程语言/Groovy ANT/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -3241,15 +3266,15 @@
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github 名片</p>
+<p class="asidetitle">Github Card</p>
 <div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -3259,7 +3284,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -3309,7 +3334,7 @@
 		  
 		
 		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
 		  
 		
 		  
@@ -3323,13 +3348,9 @@
 		  
 		
 		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>19</sup></a></li>
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
 		  
 		
-		  
-		
-		  
-			<li><a href="/categories/�Ӽ�/" title="�Ӽ�">�Ӽ�<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -3338,7 +3359,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -3358,7 +3379,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -3373,7 +3394,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
+<p class="asidetitle">Douban Show</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -3381,11 +3402,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
+  <p class="asidetitle">Weibo</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -3559,7 +3580,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

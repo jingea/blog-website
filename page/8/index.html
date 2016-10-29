@@ -42,7 +42,7 @@
 				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -56,7 +56,7 @@
  					
 						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
 							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
 						</form>
 					
 					</li>
@@ -73,33 +73,45 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/13/zookeeper/ZooKeeper 原理/" title="ZooKeeper 原理" itemprop="url">ZooKeeper 原理</a>
+      <a href="/2015/06/08/JavaSE/Java 泛型/" title="java泛型" itemprop="url">java泛型</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-13T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-07-13</time>
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>Zookeeper 会维护一个类似于标准的文件系统的数据结构<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/data-node-tree.jpg" alt=""></p>
-<h2 id="节点类型"><a href="#节点类型" class="headerlink" title="节点类型"></a>节点类型</h2><ul>
-<li>PERSISTENT：持久化目录节点，这个目录节点存储的数据不会丢失；</li>
-<li>PERSISTENT_SEQUENTIAL：顺序自动编号的目录节点，这种目录节点会根据当前已近存在的节点数自动加 1，然后返回给客户端已经成功创建的目录节点名；</li>
-<li>EPHEMERAL：临时目录节点，一旦创建这个节点的客户端与服务器端口也就是 session 超时，这种节点会被自动删除；</li>
-<li>EPHEMERAL_SEQUENTIAL：临时自动编号节点</li>
-</ul>
-<h2 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h2><p>ZK中有如下三种角色</p>
-<ul>
-<li>Leader：领导者，负责投票的发起和决议，以及更新系统状态</li>
-<li>Follower：接受客户端的请求并返回结果给客户端，并参与投票</li>
-<li>Observer：接受客户端的请求，将写的请求转发给leader，不参与投票。Observer目的是扩展系统，提高读的速度。</li>
-</ul>
-<h2 id="选举"><a href="#选举" class="headerlink" title="选举"></a>选举</h2><p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/40280796_2.jpg" alt=""></p>
+        <p>泛型（Generic type 或者 generics）是对 Java 语言的类型系统的一种扩展，以支持创建可以按类型进行参数化的类.</p>
+<h3 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h3><p>我们定义一个简单的泛型类, <code>T</code>称为泛型参数, <code>G</code>被称为泛型化了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接着我们在内部定义一个泛型变量<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;T&gt; &#123;</span></div><div class="line">	T t;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后我们再添加一个泛型方法泛型方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下来我们来使用一下这个泛型类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">G&lt;String&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">g.setValue(<span class="string">"value"</span>);</div></pre></td></tr></table></figure></p>
+<h3 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h3><p>在一个非泛化的类中我们也可以直接定义泛化的方法</p>
+<h3 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h3><p>说到java中的泛型就不得不提泛型参数的类型擦除. 当java源码文件被编译成class文件的时候,编译器会将泛型中的类型参数擦除掉(其实class文件中还是会保留部分的泛型信息, 具体参考java虚拟机规范).</p>
+<p>类定义的泛型参数<code>T</code>会被替换成具体类型, 一般为Object. 而<code>&lt;T&gt;</code>信息则会被擦除掉, 例如G就会替换成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span> </span>&#123;</div><div class="line">	Object t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(Object t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而在引用该类型的时候则会擦除成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">G g = <span class="keyword">new</span> G();</div><div class="line">g.setValue(<span class="string">"value"</span>);</div></pre></td></tr></table></figure></p>
+<p>因此，java里的泛型类型安全是由编译器保证的, 在运行期是无法保证类型的安全的.</p>
+<h3 id="泛型类的继承关系"><a href="#泛型类的继承关系" class="headerlink" title="泛型类的继承关系"></a>泛型类的继承关系</h3><p>如果类被泛型化之后, 会对类本身的继承关系造成影响<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);</div><div class="line"></div><div class="line">		SubG1 subG1 = <span class="keyword">new</span> SubG1();</div><div class="line">		subG1.setValue(<span class="number">1</span>);</div><div class="line">		subG1.printValue(<span class="string">"SubG1 printValue"</span>);</div><div class="line">		subG1.print();</div><div class="line"></div><div class="line">		SubG2 subG2 = <span class="keyword">new</span> SubG2();</div><div class="line">		subG2.setValue(<span class="string">"SubG2 setValue"</span>);</div><div class="line">		subG2.printValue(<span class="string">"SubG2 printValue"</span>);</div><div class="line">		subG2.print();</div><div class="line"></div><div class="line">		SubG3&lt;Integer&gt; subG3 = <span class="keyword">new</span> SubG3&lt;&gt;();</div><div class="line">		subG3.setValue(<span class="string">"SubG3 setValue"</span>);</div><div class="line">		subG3.printValue(<span class="string">"SubG3 printValue"</span>);</div><div class="line">		subG3.print(<span class="number">3</span>);</div><div class="line"></div><div class="line">		SubG4&lt;Integer&gt; subG4 = <span class="keyword">new</span> SubG4();</div><div class="line">		subG4.setValue(<span class="string">"SubG4 setValue"</span>);</div><div class="line">		subG4.printValue(<span class="string">"SubG4 printValue"</span>);</div><div class="line">		subG4.print(<span class="number">4</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// SubG1继承了G的泛型参数. 但是SubG1本身是没有泛化的</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG1</span> <span class="keyword">extends</span> <span class="title">G</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 强制指定继承过来的T的类型为String</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG2</span> <span class="keyword">extends</span> <span class="title">G</span>&lt;<span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// G的类型由继承过来的方法指定, SubG3则再次由本类自己指定类型</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG3</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">G</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(T t1)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t + <span class="string">". this:"</span> + t1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 指定G的类型为String, SubG4则仍然由本类进行泛型化</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG4</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">G</span>&lt;<span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(T t1)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t + <span class="string">". this:"</span> + t1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"SuperParam"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SubG1 printValue</div><div class="line"><span class="number">1</span></div><div class="line">SubG2 printValue</div><div class="line">Super:SubG2 setValue</div><div class="line">SubG3 printValue</div><div class="line">Super:SubG3 setValue. <span class="keyword">this</span>:<span class="number">3</span></div><div class="line">SubG4 printValue</div><div class="line">Super:SubG4 setValue. <span class="keyword">this</span>:<span class="number">4</span></div></pre></td></tr></table></figure></p>
+<p>需要特别指出的是, 在<code>SubG1</code>对象分别调用<code>setValue()</code>和<code>printValue()</code>方法时分别使用了<code>Integer</code>和<code>String</code>俩个类型, 但是却没有产生任何异常信息.</p>
+<h3 id="泛型参数的继承关系"><a href="#泛型参数的继承关系" class="headerlink" title="泛型参数的继承关系"></a>泛型参数的继承关系</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line">		Param param = <span class="keyword">new</span> Param();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; gSuperParam = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		gSuperParam.setValue(superParam);</div><div class="line">		gSuperParam.setValue(param);</div><div class="line">		SuperParam t = gSuperParam.getT();</div><div class="line"></div><div class="line">		G&lt;Param&gt; gParam = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		gParam.setValue(param);</div><div class="line">		gParam.setValue(superParam);	<span class="comment">// compile error</span></div><div class="line"></div><div class="line">		SubParam subParam = <span class="keyword">new</span> SubParam();</div><div class="line">		gParam.setValue(subParam);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubParam</span> <span class="keyword">extends</span> <span class="title">Param</span> </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<p>从这一行<code>gParam.setValue(subParam);</code>我们可以看到类型参数的继承结构和普通类型的继承结构的规则是一样的.</p>
+<h3 id="泛化在方法中的应用"><a href="#泛化在方法中的应用" class="headerlink" title="泛化在方法中的应用"></a>泛化在方法中的应用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());</div><div class="line">		print(<span class="keyword">new</span> G&lt;SuperParam&gt;());		<span class="comment">// compile Error</span></div><div class="line">		print(<span class="keyword">new</span> SubG1());</div><div class="line">		print(<span class="keyword">new</span> SubG2());</div><div class="line">		print(<span class="keyword">new</span> SubG3());</div><div class="line">		print(<span class="keyword">new</span> SubG3&lt;SuperParam&gt;());</div><div class="line">		print(<span class="keyword">new</span> SubG4());</div><div class="line">		print(<span class="keyword">new</span> SubG4&lt;SuperParam&gt;());</div><div class="line"></div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;&gt;());</div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;SuperParam&gt;());</div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;Param&gt;());		<span class="comment">// compile Error</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;String&gt; gs)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printSuperParam</span><span class="params">(G&lt;SuperParam&gt; gs)</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从上面的例子中我们可以看出, 泛化的类的泛型参数并没有对其类型判断造成影响, 子类化的参数仍然是编译通过的. 但是类型参数的继承再传递到方法时, 却被认为不是相同的类型.</p>
+<h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><p><code>?</code>在泛型参数中作为通配符存在, 它一般和<code>extends</code>和<code>super</code>关键字一起使用. 它表示不确定的一组类型, 例如和<code>extends</code>关键字一起使用就是表示继承自某个类的所有类型</p>
+<h3 id="extends"><a href="#extends" class="headerlink" title="extends"></a>extends</h3><p><code>extends</code>关键字是用来定义泛型参数的继承关系. 它表示我们的泛型参数继承自某个类型, 也被我们称为上界符.</p>
+<p>我们修改一下G的类型定义,我们引入<code>extends</code>关键字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);</div><div class="line"></div><div class="line">		SubG1 subG1 = <span class="keyword">new</span> SubG1();</div><div class="line">		subG1.setValue(<span class="number">1</span>);</div><div class="line">		subG1.printValue(<span class="string">"SubG1 printValue"</span>);</div><div class="line">		subG1.print();</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">SuperParam</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当使用<code>extends</code>关键字之后, 我们就将这个类的泛化信息固定了下来, 在实例化的时候, 其类型参数必须是继承自某类的子类型</p>
+<p>如果我们在实例化的时候指定<code>extends</code>会发生什么呢?<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;? extends SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);		<span class="comment">// compile error</span></div><div class="line">		g.setValue(<span class="keyword">new</span> Param());		<span class="comment">// compile error</span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param1</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>不推荐这种用法, 因为这种情况下如果我们可以对其使用<code>Param</code>或者<code>Param1</code>的类型, 那么这就和不使用泛型是一样的, 会引起类型转化异常.</p>
+<p>但是我们却可以在另外一种情况下使用这个关键字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());	<span class="comment">// 默认的是SuperParam类型</span></div><div class="line">		print(<span class="keyword">new</span> G&lt;Param&gt;());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;? extends SuperParam&gt; g)</span> </span>&#123;</div><div class="line">		SuperParam t = g.getT();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="super"><a href="#super" class="headerlink" title="super"></a>super</h3><p><code>super</code>作为一种下界符存在. 也就在具体使用时的参数都必须是泛型参数的父类才行.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">G&lt;? <span class="keyword">super</span> SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">g.setValue(<span class="keyword">new</span> SuperParam());</div><div class="line">g.setValue(<span class="keyword">new</span> Param());</div></pre></td></tr></table></figure></p>
+<p>同样我们可以在方法中如此使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		print(<span class="keyword">new</span> G&lt;SuperParam&gt;());</div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());	<span class="comment">// 默认是Param</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;? <span class="keyword">super</span> Param&gt; g)</span> </span>&#123;</div><div class="line">		Object t = g.getT();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
 
         
         
@@ -112,7 +124,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/ZooKeeper/">ZooKeeper</a>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
 </div>
 
 
@@ -124,79 +136,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/07/13/zookeeper/ZooKeeper 原理/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/zookeeper/ZooKeeper 原理/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/10/JavaLibrary/Maven pom 配置/" title="Maven POM文件配置" itemprop="url">Maven POM文件配置</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-10T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-10</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="maven属性"><a href="#maven属性" class="headerlink" title="maven属性"></a>maven属性</h2><p>内置属性</p>
-<ul>
-<li><code>${basedir}</code>: 表示项目根目录,即包含<code>pom.xml</code>文件的目录</li>
-<li><code>${version}</code>:项目版本</li>
-</ul>
-<p>POM属性<br>该类属性引用POM文件中对应的元素值,例如：</p>
-<ul>
-<li><code>${project.artifactId}</code>: 引用<code>&lt;project&gt;&lt;artifactId&gt;</code>值</li>
-<li><code>${project.build.sourceDirectory}</code>: 项目的主源码目录</li>
-<li><code>${project.build.directory}</code>: 项目构建的输出目录</li>
-</ul>
-<p>自定义属性, 在<code>&lt;Properties&gt;&lt;property&gt;</code>里定义的属性</p>
-<p>setting属性, 与POM属性同理,但是以<code>settings</code>开头. 这个属性引用的是<code>setting.xml</code>文件中XML元素的值.</p>
-<p>Java系统属性, 所有JAVA系统中的属性都可以使用Maven属性引用,使用<code>mvn help:system</code>查看所有Java系统属性</p>
-<p>环境变量属性, 所有环境变量属性属性都可以使用<code>env</code>开头的属性引用,例如<code>${env.JAVA_HOME}</code></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/10/JavaLibrary/Maven pom 配置/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/10/JavaLibrary/Maven pom 配置/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/06/08/JavaSE/Java 泛型/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/JavaSE/Java 泛型/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -223,7 +163,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
     
   </p>
 </header>
@@ -345,7 +285,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
     
   </p>
 </header>
@@ -435,89 +375,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/08/JavaSE/Java 泛型/" title="java泛型" itemprop="url">java泛型</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>泛型（Generic type 或者 generics）是对 Java 语言的类型系统的一种扩展，以支持创建可以按类型进行参数化的类.</p>
-<h3 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h3><p>我们定义一个简单的泛型类, <code>T</code>称为泛型参数, <code>G</code>被称为泛型化了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>接着我们在内部定义一个泛型变量<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;T&gt; &#123;</span></div><div class="line">	T t;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后我们再添加一个泛型方法泛型方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>下来我们来使用一下这个泛型类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">G&lt;String&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">g.setValue(<span class="string">"value"</span>);</div></pre></td></tr></table></figure></p>
-<h3 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h3><p>在一个非泛化的类中我们也可以直接定义泛化的方法</p>
-<h3 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h3><p>说到java中的泛型就不得不提泛型参数的类型擦除. 当java源码文件被编译成class文件的时候,编译器会将泛型中的类型参数擦除掉(其实class文件中还是会保留部分的泛型信息, 具体参考java虚拟机规范).</p>
-<p>类定义的泛型参数<code>T</code>会被替换成具体类型, 一般为Object. 而<code>&lt;T&gt;</code>信息则会被擦除掉, 例如G就会替换成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span> </span>&#123;</div><div class="line">	Object t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(Object t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>而在引用该类型的时候则会擦除成<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">G g = <span class="keyword">new</span> G();</div><div class="line">g.setValue(<span class="string">"value"</span>);</div></pre></td></tr></table></figure></p>
-<p>因此，java里的泛型类型安全是由编译器保证的, 在运行期是无法保证类型的安全的.</p>
-<h3 id="泛型类的继承关系"><a href="#泛型类的继承关系" class="headerlink" title="泛型类的继承关系"></a>泛型类的继承关系</h3><p>如果类被泛型化之后, 会对类本身的继承关系造成影响<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);</div><div class="line"></div><div class="line">		SubG1 subG1 = <span class="keyword">new</span> SubG1();</div><div class="line">		subG1.setValue(<span class="number">1</span>);</div><div class="line">		subG1.printValue(<span class="string">"SubG1 printValue"</span>);</div><div class="line">		subG1.print();</div><div class="line"></div><div class="line">		SubG2 subG2 = <span class="keyword">new</span> SubG2();</div><div class="line">		subG2.setValue(<span class="string">"SubG2 setValue"</span>);</div><div class="line">		subG2.printValue(<span class="string">"SubG2 printValue"</span>);</div><div class="line">		subG2.print();</div><div class="line"></div><div class="line">		SubG3&lt;Integer&gt; subG3 = <span class="keyword">new</span> SubG3&lt;&gt;();</div><div class="line">		subG3.setValue(<span class="string">"SubG3 setValue"</span>);</div><div class="line">		subG3.printValue(<span class="string">"SubG3 printValue"</span>);</div><div class="line">		subG3.print(<span class="number">3</span>);</div><div class="line"></div><div class="line">		SubG4&lt;Integer&gt; subG4 = <span class="keyword">new</span> SubG4();</div><div class="line">		subG4.setValue(<span class="string">"SubG4 setValue"</span>);</div><div class="line">		subG4.printValue(<span class="string">"SubG4 printValue"</span>);</div><div class="line">		subG4.print(<span class="number">4</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// SubG1继承了G的泛型参数. 但是SubG1本身是没有泛化的</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG1</span> <span class="keyword">extends</span> <span class="title">G</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 强制指定继承过来的T的类型为String</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG2</span> <span class="keyword">extends</span> <span class="title">G</span>&lt;<span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// G的类型由继承过来的方法指定, SubG3则再次由本类自己指定类型</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG3</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">G</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(T t1)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t + <span class="string">". this:"</span> + t1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 指定G的类型为String, SubG4则仍然由本类进行泛型化</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubG4</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">G</span>&lt;<span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(T t1)</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Super:"</span> + t + <span class="string">". this:"</span> + t1);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"SuperParam"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">SubG1 printValue</div><div class="line"><span class="number">1</span></div><div class="line">SubG2 printValue</div><div class="line">Super:SubG2 setValue</div><div class="line">SubG3 printValue</div><div class="line">Super:SubG3 setValue. <span class="keyword">this</span>:<span class="number">3</span></div><div class="line">SubG4 printValue</div><div class="line">Super:SubG4 setValue. <span class="keyword">this</span>:<span class="number">4</span></div></pre></td></tr></table></figure></p>
-<p>需要特别指出的是, 在<code>SubG1</code>对象分别调用<code>setValue()</code>和<code>printValue()</code>方法时分别使用了<code>Integer</code>和<code>String</code>俩个类型, 但是却没有产生任何异常信息.</p>
-<h3 id="泛型参数的继承关系"><a href="#泛型参数的继承关系" class="headerlink" title="泛型参数的继承关系"></a>泛型参数的继承关系</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line">		Param param = <span class="keyword">new</span> Param();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; gSuperParam = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		gSuperParam.setValue(superParam);</div><div class="line">		gSuperParam.setValue(param);</div><div class="line">		SuperParam t = gSuperParam.getT();</div><div class="line"></div><div class="line">		G&lt;Param&gt; gParam = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		gParam.setValue(param);</div><div class="line">		gParam.setValue(superParam);	<span class="comment">// compile error</span></div><div class="line"></div><div class="line">		SubParam subParam = <span class="keyword">new</span> SubParam();</div><div class="line">		gParam.setValue(subParam);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubParam</span> <span class="keyword">extends</span> <span class="title">Param</span> </span>&#123;&#125;</div></pre></td></tr></table></figure>
-<p>从这一行<code>gParam.setValue(subParam);</code>我们可以看到类型参数的继承结构和普通类型的继承结构的规则是一样的.</p>
-<h3 id="泛化在方法中的应用"><a href="#泛化在方法中的应用" class="headerlink" title="泛化在方法中的应用"></a>泛化在方法中的应用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());</div><div class="line">		print(<span class="keyword">new</span> G&lt;SuperParam&gt;());		<span class="comment">// compile Error</span></div><div class="line">		print(<span class="keyword">new</span> SubG1());</div><div class="line">		print(<span class="keyword">new</span> SubG2());</div><div class="line">		print(<span class="keyword">new</span> SubG3());</div><div class="line">		print(<span class="keyword">new</span> SubG3&lt;SuperParam&gt;());</div><div class="line">		print(<span class="keyword">new</span> SubG4());</div><div class="line">		print(<span class="keyword">new</span> SubG4&lt;SuperParam&gt;());</div><div class="line"></div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;&gt;());</div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;SuperParam&gt;());</div><div class="line">		printSuperParam(<span class="keyword">new</span> G&lt;Param&gt;());		<span class="comment">// compile Error</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;String&gt; gs)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printSuperParam</span><span class="params">(G&lt;SuperParam&gt; gs)</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从上面的例子中我们可以看出, 泛化的类的泛型参数并没有对其类型判断造成影响, 子类化的参数仍然是编译通过的. 但是类型参数的继承再传递到方法时, 却被认为不是相同的类型.</p>
-<h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><p><code>?</code>在泛型参数中作为通配符存在, 它一般和<code>extends</code>和<code>super</code>关键字一起使用. 它表示不确定的一组类型, 例如和<code>extends</code>关键字一起使用就是表示继承自某个类的所有类型</p>
-<h3 id="extends"><a href="#extends" class="headerlink" title="extends"></a>extends</h3><p><code>extends</code>关键字是用来定义泛型参数的继承关系. 它表示我们的泛型参数继承自某个类型, 也被我们称为上界符.</p>
-<p>我们修改一下G的类型定义,我们引入<code>extends</code>关键字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line"></div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);</div><div class="line"></div><div class="line">		SubG1 subG1 = <span class="keyword">new</span> SubG1();</div><div class="line">		subG1.setValue(<span class="number">1</span>);</div><div class="line">		subG1.printValue(<span class="string">"SubG1 printValue"</span>);</div><div class="line">		subG1.print();</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span> <span class="keyword">extends</span> <span class="title">SuperParam</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		System.out.println(t);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>当使用<code>extends</code>关键字之后, 我们就将这个类的泛化信息固定了下来, 在实例化的时候, 其类型参数必须是继承自某类的子类型</p>
-<p>如果我们在实例化的时候指定<code>extends</code>会发生什么呢?<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		G&lt;? extends SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">		g.setValue(superParam);		<span class="comment">// compile error</span></div><div class="line">		g.setValue(<span class="keyword">new</span> Param());		<span class="comment">// compile error</span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param1</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
-<p>不推荐这种用法, 因为这种情况下如果我们可以对其使用<code>Param</code>或者<code>Param1</code>的类型, 那么这就和不使用泛型是一样的, 会引起类型转化异常.</p>
-<p>但是我们却可以在另外一种情况下使用这个关键字<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SuperParam superParam = <span class="keyword">new</span> SuperParam();</div><div class="line"></div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());	<span class="comment">// 默认的是SuperParam类型</span></div><div class="line">		print(<span class="keyword">new</span> G&lt;Param&gt;());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;? extends SuperParam&gt; g)</span> </span>&#123;</div><div class="line">		SuperParam t = g.getT();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="super"><a href="#super" class="headerlink" title="super"></a>super</h3><p><code>super</code>作为一种下界符存在. 也就在具体使用时的参数都必须是泛型参数的父类才行.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">G&lt;? <span class="keyword">super</span> SuperParam&gt; g = <span class="keyword">new</span> G&lt;&gt;();</div><div class="line">g.setValue(<span class="keyword">new</span> SuperParam());</div><div class="line">g.setValue(<span class="keyword">new</span> Param());</div></pre></td></tr></table></figure></p>
-<p>同样我们可以在方法中如此使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGeneric</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		print(<span class="keyword">new</span> G&lt;SuperParam&gt;());</div><div class="line">		print(<span class="keyword">new</span> G&lt;&gt;());	<span class="comment">// 默认是Param</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(G&lt;? <span class="keyword">super</span> Param&gt; g)</span> </span>&#123;</div><div class="line">		Object t = g.getT();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">G</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	T t;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.t = t;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> T <span class="title">getT</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> t;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Param</span> <span class="keyword">extends</span> <span class="title">SuperParam</span> </span>&#123;&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/JavaSE/Java 泛型/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/JavaSE/Java 泛型/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/06/08/JavaLibrary/Maven 插件/" title="Maven 插件" itemprop="url">Maven 插件</a>
   </h1>
   <p class="article-author">By
@@ -525,7 +382,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
     
   </p>
 </header>
@@ -666,7 +523,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
     
   </p>
 </header>
@@ -727,65 +584,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/08/JavaSE/读取csv文件/" title="读取csv文件" itemprop="url">读取csv文件</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>利用Apache Commons CSV读取csv文件, 首先我们添加如下依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-csv<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>读取csv文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Reader in = <span class="keyword">new</span> FileReader(<span class="string">"path/to/file.csv"</span>);</div><div class="line">Iterable&lt;CSVRecord&gt; records = CSVFormat.EXCEL.parse(in);</div><div class="line"><span class="keyword">for</span> (CSVRecord record : records) &#123;</div><div class="line">    String lastName = record.get(<span class="string">"Last Name"</span>);</div><div class="line">    String firstName = record.get(<span class="string">"First Name"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/JavaSE/读取csv文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/JavaSE/读取csv文件/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/06/07/JavaLibrary/Maven 命令/" title="Maven 命令" itemprop="url">Maven 命令</a>
   </h1>
   <p class="article-author">By
@@ -793,7 +591,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-06-07T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-06-07</time>
+    <time datetime="2015-06-07T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-07</time>
     
   </p>
 </header>
@@ -930,7 +728,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-05-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-05-08</time>
+    <time datetime="2015-05-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-05-08</time>
     
   </p>
 </header>
@@ -1007,7 +805,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-09T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-04-09</time>
+    <time datetime="2015-04-09T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-09</time>
     
   </p>
 </header>
@@ -1084,6 +882,280 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/08/JavaLibrary/spring boot/" title="SpringBoot 构建应用程序" itemprop="url">SpringBoot 构建应用程序</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>SpringBoot提供了一种快速构建应用的方式. 它会根据Classpath和beans上的现有配置来推测你缺少哪些配置, 从而将缺少的配置自动加载.</p>
+<p>我们来构建一个最简单的应用来测试一下这个功能</p>
+<p>我们首先在Maven中添加一个非常简单的Spring依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>然后上我们的Java代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> testSpringBoot;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.context.ConfigurableApplicationContext;</div><div class="line"></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		ConfigurableApplicationContext app = SpringApplication.run(App.class, args);</div><div class="line"></div><div class="line">		PrintNameService printHelloWorldService = app.getBean(<span class="string">"printHelloWorldService"</span>, PrintNameService.class);</div><div class="line">		printHelloWorldService.printHelloWorld();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>@SpringBootApplication</code>聚合了以下注解</p>
+<ul>
+<li><code>@Configuration</code> 标记该class为应用上下文的bean资源.</li>
+<li><code>@EnableAutoConfiguration</code> 该注解是让Spring自动从classpath, 其他beans以及配置文件中加载bean.</li>
+<li><code>@EnableWebMvc</code> 开启Spring的MVN功能, 但是当Spring Boot 在classpath中发现SpringMVN依赖后会自动开启该模块(依赖了<code>@EnableAutoConfiguration</code>). 这注解会将当前应用作为一个web应用启动.</li>
+<li><p><code>@ComponentScan</code> Spring 会在指定包下搜索components, configurations, 和services. 在本例中, 它会在hello包中所搜, 以及找到一个<code>HelloController</code>.</p>
+</li>
+<li><p><code>Autowired</code> : 注入值. 可以用于属性, 方法, 构造器等.</p>
+</li>
+</ul>
+<p>然后我们可以使用下面提供的注解来标记Spring中的Bean</p>
+<ul>
+<li><code>@Configuration</code> 注解类等价与XML中配置beans.</li>
+<li><code>@Bean</code> 标注方法等价于XML中配置bean</li>
+<li><code>@Import</code></li>
+<li><code>@DependsOn</code></li>
+<li><code>@Component</code> : 通用注解, 可以用于注解任何bean.</li>
+<li><code>@Repository</code> : <code>Component</code>的子注解, 一般用来注解DAO类</li>
+<li><code>@Service</code> : <code>Component</code>的子注解, 一般用来注解Service类</li>
+<li><code>@Controller</code> : <code>Component</code>的子注解, 一般用来注解控制层</li>
+<li><code>@Scope</code> : 指定bean的作用域<blockquote>
+<p><code>@Component</code>可以作为元注解去注解我们自定义的注解, 然后我们自定义的注解注解到类的时候, 也会被自动加载到SpringContext中.</p>
+</blockquote>
+</li>
+</ul>
+<p>我们采用Service<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> testSpringBoot;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</div><div class="line"></div><div class="line"><span class="meta">@Service</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintNameService</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printHelloWorld</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(nameGenerateService.lily());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Autowired</span></div><div class="line">	<span class="keyword">private</span> NameGenerateService nameGenerateService;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">package</span> testSpringBoot;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</div><div class="line"></div><div class="line"><span class="meta">@Service</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NameGenerateService</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">lily</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"Lily"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最后就输出了Lily.</p>
+<blockquote>
+<p>注意, SpringBoot不能放在启动程序的根目录下, 例如<code>src/main/java</code>这样的目录下, 必须再封装一层, 例如<code>src/main/java/testSpringBoot</code>下</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Spring/">Spring</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/08/JavaLibrary/spring boot/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/JavaLibrary/spring boot/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/08/编程语言/haskell表达式/" title="haskell表达式" itemprop="url">haskell表达式</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="条件表达式"><a href="#条件表达式" class="headerlink" title="条件表达式"></a>条件表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">isOne</span> :: <span class="type">Int</span> -&gt; <span class="type">Bool</span></div><div class="line"><span class="title">isOne</span> arg =</div><div class="line">    <span class="keyword">if</span> arg == <span class="number">1</span> <span class="keyword">then</span> <span class="type">True</span></div><div class="line">    <span class="keyword">else</span> <span class="type">False</span></div></pre></td></tr></table></figure>
+<h2 id="情况分析表达式"><a href="#情况分析表达式" class="headerlink" title="情况分析表达式"></a>情况分析表达式</h2><p>与<code>switch case</code>类似,只不过情况分析表达式没有<code>break</code>, 使用<code>_</code>作为通配符.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">month</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">month</span> n = <span class="keyword">case</span> n <span class="keyword">of</span></div><div class="line">    <span class="number">1</span> -&gt; <span class="number">31</span></div><div class="line">    <span class="number">2</span> -&gt; <span class="number">28</span></div><div class="line">    <span class="number">12</span> -&gt; <span class="number">31</span></div><div class="line">    _ -&gt; error <span class="string">"error"</span></div></pre></td></tr></table></figure></p>
+<h2 id="守卫表达式"><a href="#守卫表达式" class="headerlink" title="守卫表达式"></a>守卫表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">abs</span> :: <span class="type">Num</span> a =&gt; a -&gt; a</div><div class="line"><span class="title">abs</span> n | n &gt; <span class="number">0</span> = n</div><div class="line">      | otherwise = -n</div></pre></td></tr></table></figure>
+<h2 id="匹配模式表达式"><a href="#匹配模式表达式" class="headerlink" title="匹配模式表达式"></a>匹配模式表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">month</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">month</span> <span class="number">1</span> = <span class="number">31</span></div><div class="line"><span class="title">month</span> <span class="number">2</span> = <span class="number">28</span></div><div class="line"><span class="title">month</span> <span class="number">3</span> = <span class="number">21</span></div><div class="line"><span class="title">month</span> <span class="number">12</span> = <span class="number">31</span></div><div class="line"><span class="title">month</span> _ = error <span class="string">"error"</span></div></pre></td></tr></table></figure>
+<h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">优先级<span class="number">9</span> : !!, .</div><div class="line">优先级<span class="number">8</span> : ^, ^^, **</div><div class="line">优先级<span class="number">7</span> : *, /, div,   mod, rem, quot</div><div class="line">优先级<span class="number">6</span> : +, -</div><div class="line">优先级<span class="number">5</span> : :, ++</div><div class="line">优先级<span class="number">4</span> : ==, /=, &lt;, &lt;=, &gt;, &gt;=,     elem, notElem</div><div class="line">优先级<span class="number">3</span> : &amp;&amp;</div><div class="line">优先级<span class="number">2</span> : ||</div><div class="line">优先级<span class="number">1</span> : &gt;&gt;, &gt;&gt;=</div><div class="line">优先级<span class="number">0</span> : $, $!, $!!seq</div></pre></td></tr></table></figure>
+<blockquote>
+<p>凡是英文运算符,其前后都必须带有`标点</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/08/编程语言/haskell表达式/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/编程语言/haskell表达式/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/08/编程语言/haskell/" title="haskell类型系统" itemprop="url">haskell类型系统</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>在Haskell中数据只是函数的一种方言,他们并没有本质上的区别.<br>在Haskell中所有的数据类型都必须首字母都必须大写.</p>
+<p>在GHCI中我们可以通过<code>::t</code>命令来查看一个数据类型或者函数类型.</p>
+<p>我们可以通过下面的语法声明一个数据<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">var</span> :: 数据类型</div><div class="line"><span class="title">var</span> = 数据初始值</div></pre></td></tr></table></figure></p>
+<p>或者我们可以将这俩行并为一行<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">var</span> = 数据初始值 :: 数据类型</div></pre></td></tr></table></figure></p>
+<h3 id="Bool类型"><a href="#Bool类型" class="headerlink" title="Bool类型"></a>Bool类型</h3><p>我们声明一个bool类型的数据,并将其初始化为<code>True</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">true</span> = <span class="type">True</span> :: <span class="type">Bool</span></div></pre></td></tr></table></figure></p>
+<h3 id="Char类型"><a href="#Char类型" class="headerlink" title="Char类型"></a>Char类型</h3><p>单字符类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="title">char</span> = 'a' :: <span class="type">Char</span></div><div class="line"></div><div class="line"><span class="title">char</span> = '\<span class="number">100</span>' :: <span class="type">Char</span></div><div class="line"></div><div class="line"><span class="title">char</span> = '\n' :: <span class="type">Char</span></div></pre></td></tr></table></figure></p>
+<h3 id="Int类型"><a href="#Int类型" class="headerlink" title="Int类型"></a>Int类型</h3><p>有符号整数,其范围和OS与GHC的位数有关.在32位系统中,其范围就是<code>-2^31~2^31-1</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">int</span> = <span class="number">-1</span> :: <span class="type">Int</span></div></pre></td></tr></table></figure></p>
+<h3 id="Word类型"><a href="#Word类型" class="headerlink" title="Word类型"></a>Word类型</h3><p>有符号整数类型,其范围和OS与GHC的位数有关.在32位系统中,其范围就是<code>0~2^32-1</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Data.Word</div><div class="line"></div><div class="line"><span class="title">word</span> = <span class="number">1</span> :: <span class="type">Word</span></div></pre></td></tr></table></figure></p>
+<h3 id="Integer类型"><a href="#Integer类型" class="headerlink" title="Integer类型"></a>Integer类型</h3><p>任意精度类型. 可以表示任意整数的大小, 限制它的因素只和OS有关.</p>
+<p>当数据不指明类型时,Integer是整数的默认类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">integer</span> = <span class="number">199999</span> :: <span class="type">Integer</span></div></pre></td></tr></table></figure></p>
+<h3 id="Float类型"><a href="#Float类型" class="headerlink" title="Float类型"></a>Float类型</h3><p>单精度浮点小数<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">float</span> = <span class="number">1.1</span> :: <span class="type">Float</span></div></pre></td></tr></table></figure></p>
+<h3 id="Double类型"><a href="#Double类型" class="headerlink" title="Double类型"></a>Double类型</h3><p>双精度浮点小数<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">double</span> = <span class="number">1.11111</span> :: <span class="type">Double</span></div></pre></td></tr></table></figure></p>
+<h3 id="Rational类型"><a href="#Rational类型" class="headerlink" title="Rational类型"></a>Rational类型</h3><p>有理数类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">rational</span> = <span class="number">1</span> / <span class="number">500</span> :: <span class="type">Rational</span></div></pre></td></tr></table></figure></p>
+<h3 id="String类型"><a href="#String类型" class="headerlink" title="String类型"></a>String类型</h3><p><code>String</code>的类型为<code>[Char]</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">string</span> = <span class="string">"char array"</span> :: <span class="type">String</span></div></pre></td></tr></table></figure></p>
+<h3 id="元组类型"><a href="#元组类型" class="headerlink" title="元组类型"></a>元组类型</h3><p>元祖用<code>(,)</code>表示,其中的内容称为元件. 元件的个数并不限制(如有俩个元件的称为2元元组).</p>
+<p>一旦确定了元件的个数和元件的类型,那他们就是不可再变的.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">tuple</span> = (<span class="number">123</span>, <span class="string">"abc"</span>) :: (<span class="type">Int</span>, [<span class="type">Char</span>])</div></pre></td></tr></table></figure></p>
+<h3 id="列表类型"><a href="#列表类型" class="headerlink" title="列表类型"></a>列表类型</h3><p>列表本身就是一个容器,内存可以存放各种类型的数据(包括函数),但是一旦类型确定了,就不可再变.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">list</span> = [<span class="number">123</span>, <span class="number">8</span>, <span class="number">9</span>] :: [<span class="type">Int</span>]</div></pre></td></tr></table></figure></p>
+<h4 id="拼接列表"><a href="#拼接列表" class="headerlink" title="拼接列表"></a>拼接列表</h4><p>采用<code>x:xs</code>的形式进行拼接列表, <code>x</code>代表一个元素, <code>xs</code>代表一个列表.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">list</span> = [<span class="number">123</span>, <span class="number">8</span>, <span class="number">9</span>]</div><div class="line"></div><div class="line"><span class="title">newList</span> = <span class="number">1</span> : list</div></pre></td></tr></table></figure></p>
+<h4 id="多维列表"><a href="#多维列表" class="headerlink" title="多维列表"></a>多维列表</h4><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">mulList</span> = [[]]  <span class="comment">-- 列表中套有一个列表,类似于2维数组</span></div><div class="line"></div><div class="line"><span class="title">mulList</span> = [[[]]]</div></pre></td></tr></table></figure>
+<h2 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h2><p>我们可以使用<code>type</code>关键字将复杂类型起一个简单的名字</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">type</span> <span class="type">NewType</span> = (<span class="type">Int</span>, <span class="type">Int</span>)</span></div></pre></td></tr></table></figure>
+<p>接下来我们就可以使用这个类型了<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">point</span> :: <span class="type">NewType</span></div><div class="line"><span class="title">point</span> = (<span class="number">1</span>, <span class="number">2</span>)</div></pre></td></tr></table></figure></p>
+<p><code>type</code>关键字并没有产生新的类型,只是在编译期将新的类型替换为原来的类型.</p>
+<h2 id="类型类"><a href="#类型类" class="headerlink" title="类型类"></a>类型类</h2><p>Haskell提供了以下的类型类</p>
+<ul>
+<li>Eq</li>
+<li>Ord</li>
+<li>Enum</li>
+<li>Bounded</li>
+<li>Num</li>
+<li>Show</li>
+</ul>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
+<li>show</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<ul>
+<li>read</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<ul>
+<li>lines</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<ul>
+<li>unlines</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<ul>
+<li>word</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<ul>
+<li>unword</li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/08/编程语言/haskell/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/编程语言/haskell/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/08/编程语言/haskell函数/" title="haskell函数" itemprop="url">haskell函数</a>
   </h1>
   <p class="article-author">By
@@ -1091,7 +1163,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-04-08</time>
+    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
     
   </p>
 </header>
@@ -1309,7 +1381,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-04-08</time>
+    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
     
   </p>
 </header>
@@ -1402,280 +1474,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/04/08/编程语言/haskell表达式/" title="haskell表达式" itemprop="url">haskell表达式</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-04-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="条件表达式"><a href="#条件表达式" class="headerlink" title="条件表达式"></a>条件表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">isOne</span> :: <span class="type">Int</span> -&gt; <span class="type">Bool</span></div><div class="line"><span class="title">isOne</span> arg =</div><div class="line">    <span class="keyword">if</span> arg == <span class="number">1</span> <span class="keyword">then</span> <span class="type">True</span></div><div class="line">    <span class="keyword">else</span> <span class="type">False</span></div></pre></td></tr></table></figure>
-<h2 id="情况分析表达式"><a href="#情况分析表达式" class="headerlink" title="情况分析表达式"></a>情况分析表达式</h2><p>与<code>switch case</code>类似,只不过情况分析表达式没有<code>break</code>, 使用<code>_</code>作为通配符.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">month</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">month</span> n = <span class="keyword">case</span> n <span class="keyword">of</span></div><div class="line">    <span class="number">1</span> -&gt; <span class="number">31</span></div><div class="line">    <span class="number">2</span> -&gt; <span class="number">28</span></div><div class="line">    <span class="number">12</span> -&gt; <span class="number">31</span></div><div class="line">    _ -&gt; error <span class="string">"error"</span></div></pre></td></tr></table></figure></p>
-<h2 id="守卫表达式"><a href="#守卫表达式" class="headerlink" title="守卫表达式"></a>守卫表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">abs</span> :: <span class="type">Num</span> a =&gt; a -&gt; a</div><div class="line"><span class="title">abs</span> n | n &gt; <span class="number">0</span> = n</div><div class="line">      | otherwise = -n</div></pre></td></tr></table></figure>
-<h2 id="匹配模式表达式"><a href="#匹配模式表达式" class="headerlink" title="匹配模式表达式"></a>匹配模式表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">month</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">month</span> <span class="number">1</span> = <span class="number">31</span></div><div class="line"><span class="title">month</span> <span class="number">2</span> = <span class="number">28</span></div><div class="line"><span class="title">month</span> <span class="number">3</span> = <span class="number">21</span></div><div class="line"><span class="title">month</span> <span class="number">12</span> = <span class="number">31</span></div><div class="line"><span class="title">month</span> _ = error <span class="string">"error"</span></div></pre></td></tr></table></figure>
-<h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">优先级<span class="number">9</span> : !!, .</div><div class="line">优先级<span class="number">8</span> : ^, ^^, **</div><div class="line">优先级<span class="number">7</span> : *, /, div,   mod, rem, quot</div><div class="line">优先级<span class="number">6</span> : +, -</div><div class="line">优先级<span class="number">5</span> : :, ++</div><div class="line">优先级<span class="number">4</span> : ==, /=, &lt;, &lt;=, &gt;, &gt;=,     elem, notElem</div><div class="line">优先级<span class="number">3</span> : &amp;&amp;</div><div class="line">优先级<span class="number">2</span> : ||</div><div class="line">优先级<span class="number">1</span> : &gt;&gt;, &gt;&gt;=</div><div class="line">优先级<span class="number">0</span> : $, $!, $!!seq</div></pre></td></tr></table></figure>
-<blockquote>
-<p>凡是英文运算符,其前后都必须带有`标点</p>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/08/编程语言/haskell表达式/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/编程语言/haskell表达式/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/08/JavaLibrary/spring boot/" title="SpringBoot 构建应用程序" itemprop="url">SpringBoot 构建应用程序</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-04-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>SpringBoot提供了一种快速构建应用的方式. 它会根据Classpath和beans上的现有配置来推测你缺少哪些配置, 从而将缺少的配置自动加载.</p>
-<p>我们来构建一个最简单的应用来测试一下这个功能</p>
-<p>我们首先在Maven中添加一个非常简单的Spring依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>然后上我们的Java代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> testSpringBoot;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.context.ConfigurableApplicationContext;</div><div class="line"></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		ConfigurableApplicationContext app = SpringApplication.run(App.class, args);</div><div class="line"></div><div class="line">		PrintNameService printHelloWorldService = app.getBean(<span class="string">"printHelloWorldService"</span>, PrintNameService.class);</div><div class="line">		printHelloWorldService.printHelloWorld();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><code>@SpringBootApplication</code>聚合了以下注解</p>
-<ul>
-<li><code>@Configuration</code> 标记该class为应用上下文的bean资源.</li>
-<li><code>@EnableAutoConfiguration</code> 该注解是让Spring自动从classpath, 其他beans以及配置文件中加载bean.</li>
-<li><code>@EnableWebMvc</code> 开启Spring的MVN功能, 但是当Spring Boot 在classpath中发现SpringMVN依赖后会自动开启该模块(依赖了<code>@EnableAutoConfiguration</code>). 这注解会将当前应用作为一个web应用启动.</li>
-<li><p><code>@ComponentScan</code> Spring 会在指定包下搜索components, configurations, 和services. 在本例中, 它会在hello包中所搜, 以及找到一个<code>HelloController</code>.</p>
-</li>
-<li><p><code>Autowired</code> : 注入值. 可以用于属性, 方法, 构造器等.</p>
-</li>
-</ul>
-<p>然后我们可以使用下面提供的注解来标记Spring中的Bean</p>
-<ul>
-<li><code>@Configuration</code> 注解类等价与XML中配置beans.</li>
-<li><code>@Bean</code> 标注方法等价于XML中配置bean</li>
-<li><code>@Import</code></li>
-<li><code>@DependsOn</code></li>
-<li><code>@Component</code> : 通用注解, 可以用于注解任何bean.</li>
-<li><code>@Repository</code> : <code>Component</code>的子注解, 一般用来注解DAO类</li>
-<li><code>@Service</code> : <code>Component</code>的子注解, 一般用来注解Service类</li>
-<li><code>@Controller</code> : <code>Component</code>的子注解, 一般用来注解控制层</li>
-<li><code>@Scope</code> : 指定bean的作用域<blockquote>
-<p><code>@Component</code>可以作为元注解去注解我们自定义的注解, 然后我们自定义的注解注解到类的时候, 也会被自动加载到SpringContext中.</p>
-</blockquote>
-</li>
-</ul>
-<p>我们采用Service<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> testSpringBoot;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</div><div class="line"></div><div class="line"><span class="meta">@Service</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintNameService</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printHelloWorld</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(nameGenerateService.lily());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Autowired</span></div><div class="line">	<span class="keyword">private</span> NameGenerateService nameGenerateService;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">package</span> testSpringBoot;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</div><div class="line"></div><div class="line"><span class="meta">@Service</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NameGenerateService</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">lily</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"Lily"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>最后就输出了Lily.</p>
-<blockquote>
-<p>注意, SpringBoot不能放在启动程序的根目录下, 例如<code>src/main/java</code>这样的目录下, 必须再封装一层, 例如<code>src/main/java/testSpringBoot</code>下</p>
-</blockquote>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Spring/">Spring</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/08/JavaLibrary/spring boot/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/JavaLibrary/spring boot/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/08/编程语言/haskell/" title="haskell类型系统" itemprop="url">haskell类型系统</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-04-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>在Haskell中数据只是函数的一种方言,他们并没有本质上的区别.<br>在Haskell中所有的数据类型都必须首字母都必须大写.</p>
-<p>在GHCI中我们可以通过<code>::t</code>命令来查看一个数据类型或者函数类型.</p>
-<p>我们可以通过下面的语法声明一个数据<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">var</span> :: 数据类型</div><div class="line"><span class="title">var</span> = 数据初始值</div></pre></td></tr></table></figure></p>
-<p>或者我们可以将这俩行并为一行<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">var</span> = 数据初始值 :: 数据类型</div></pre></td></tr></table></figure></p>
-<h3 id="Bool类型"><a href="#Bool类型" class="headerlink" title="Bool类型"></a>Bool类型</h3><p>我们声明一个bool类型的数据,并将其初始化为<code>True</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">true</span> = <span class="type">True</span> :: <span class="type">Bool</span></div></pre></td></tr></table></figure></p>
-<h3 id="Char类型"><a href="#Char类型" class="headerlink" title="Char类型"></a>Char类型</h3><p>单字符类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="title">char</span> = 'a' :: <span class="type">Char</span></div><div class="line"></div><div class="line"><span class="title">char</span> = '\<span class="number">100</span>' :: <span class="type">Char</span></div><div class="line"></div><div class="line"><span class="title">char</span> = '\n' :: <span class="type">Char</span></div></pre></td></tr></table></figure></p>
-<h3 id="Int类型"><a href="#Int类型" class="headerlink" title="Int类型"></a>Int类型</h3><p>有符号整数,其范围和OS与GHC的位数有关.在32位系统中,其范围就是<code>-2^31~2^31-1</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">int</span> = <span class="number">-1</span> :: <span class="type">Int</span></div></pre></td></tr></table></figure></p>
-<h3 id="Word类型"><a href="#Word类型" class="headerlink" title="Word类型"></a>Word类型</h3><p>有符号整数类型,其范围和OS与GHC的位数有关.在32位系统中,其范围就是<code>0~2^32-1</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Data.Word</div><div class="line"></div><div class="line"><span class="title">word</span> = <span class="number">1</span> :: <span class="type">Word</span></div></pre></td></tr></table></figure></p>
-<h3 id="Integer类型"><a href="#Integer类型" class="headerlink" title="Integer类型"></a>Integer类型</h3><p>任意精度类型. 可以表示任意整数的大小, 限制它的因素只和OS有关.</p>
-<p>当数据不指明类型时,Integer是整数的默认类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">integer</span> = <span class="number">199999</span> :: <span class="type">Integer</span></div></pre></td></tr></table></figure></p>
-<h3 id="Float类型"><a href="#Float类型" class="headerlink" title="Float类型"></a>Float类型</h3><p>单精度浮点小数<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">float</span> = <span class="number">1.1</span> :: <span class="type">Float</span></div></pre></td></tr></table></figure></p>
-<h3 id="Double类型"><a href="#Double类型" class="headerlink" title="Double类型"></a>Double类型</h3><p>双精度浮点小数<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">double</span> = <span class="number">1.11111</span> :: <span class="type">Double</span></div></pre></td></tr></table></figure></p>
-<h3 id="Rational类型"><a href="#Rational类型" class="headerlink" title="Rational类型"></a>Rational类型</h3><p>有理数类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">rational</span> = <span class="number">1</span> / <span class="number">500</span> :: <span class="type">Rational</span></div></pre></td></tr></table></figure></p>
-<h3 id="String类型"><a href="#String类型" class="headerlink" title="String类型"></a>String类型</h3><p><code>String</code>的类型为<code>[Char]</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">string</span> = <span class="string">"char array"</span> :: <span class="type">String</span></div></pre></td></tr></table></figure></p>
-<h3 id="元组类型"><a href="#元组类型" class="headerlink" title="元组类型"></a>元组类型</h3><p>元祖用<code>(,)</code>表示,其中的内容称为元件. 元件的个数并不限制(如有俩个元件的称为2元元组).</p>
-<p>一旦确定了元件的个数和元件的类型,那他们就是不可再变的.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">tuple</span> = (<span class="number">123</span>, <span class="string">"abc"</span>) :: (<span class="type">Int</span>, [<span class="type">Char</span>])</div></pre></td></tr></table></figure></p>
-<h3 id="列表类型"><a href="#列表类型" class="headerlink" title="列表类型"></a>列表类型</h3><p>列表本身就是一个容器,内存可以存放各种类型的数据(包括函数),但是一旦类型确定了,就不可再变.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">list</span> = [<span class="number">123</span>, <span class="number">8</span>, <span class="number">9</span>] :: [<span class="type">Int</span>]</div></pre></td></tr></table></figure></p>
-<h4 id="拼接列表"><a href="#拼接列表" class="headerlink" title="拼接列表"></a>拼接列表</h4><p>采用<code>x:xs</code>的形式进行拼接列表, <code>x</code>代表一个元素, <code>xs</code>代表一个列表.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">list</span> = [<span class="number">123</span>, <span class="number">8</span>, <span class="number">9</span>]</div><div class="line"></div><div class="line"><span class="title">newList</span> = <span class="number">1</span> : list</div></pre></td></tr></table></figure></p>
-<h4 id="多维列表"><a href="#多维列表" class="headerlink" title="多维列表"></a>多维列表</h4><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">mulList</span> = [[]]  <span class="comment">-- 列表中套有一个列表,类似于2维数组</span></div><div class="line"></div><div class="line"><span class="title">mulList</span> = [[[]]]</div></pre></td></tr></table></figure>
-<h2 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h2><p>我们可以使用<code>type</code>关键字将复杂类型起一个简单的名字</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">type</span> <span class="type">NewType</span> = (<span class="type">Int</span>, <span class="type">Int</span>)</span></div></pre></td></tr></table></figure>
-<p>接下来我们就可以使用这个类型了<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">point</span> :: <span class="type">NewType</span></div><div class="line"><span class="title">point</span> = (<span class="number">1</span>, <span class="number">2</span>)</div></pre></td></tr></table></figure></p>
-<p><code>type</code>关键字并没有产生新的类型,只是在编译期将新的类型替换为原来的类型.</p>
-<h2 id="类型类"><a href="#类型类" class="headerlink" title="类型类"></a>类型类</h2><p>Haskell提供了以下的类型类</p>
-<ul>
-<li>Eq</li>
-<li>Ord</li>
-<li>Enum</li>
-<li>Bounded</li>
-<li>Num</li>
-<li>Show</li>
-</ul>
-<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
-<li>show</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>read</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>lines</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>unlines</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>word</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>unword</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/08/编程语言/haskell/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/编程语言/haskell/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/04/02/nosql/Redis部署/" title="Redis 部署" itemprop="url">Redis 部署</a>
   </h1>
   <p class="article-author">By
@@ -1683,7 +1481,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-04-02T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-04-02</time>
+    <time datetime="2015-04-02T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-02</time>
     
   </p>
 </header>
@@ -1745,7 +1543,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-12T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-03-12</time>
+    <time datetime="2015-03-12T07:00:00.000Z" itemprop="datePublished"> Published 2015-03-12</time>
     
   </p>
 </header>
@@ -1823,7 +1621,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-10T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-03-10</time>
+    <time datetime="2015-03-10T07:00:00.000Z" itemprop="datePublished"> Published 2015-03-10</time>
     
   </p>
 </header>
@@ -1924,7 +1722,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-03-09T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-03-09</time>
+    <time datetime="2015-03-09T07:00:00.000Z" itemprop="datePublished"> Published 2015-03-09</time>
     
   </p>
 </header>
@@ -2027,21 +1825,327 @@
 
 
 
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/08/nosql/MongoDB/" title="运行MongoDB" itemprop="url">运行MongoDB</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-08T08:00:00.000Z" itemprop="datePublished"> Published 2015-03-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Run-MongoDB-On-Windows"><a href="#Run-MongoDB-On-Windows" class="headerlink" title="Run MongoDB On Windows"></a>Run MongoDB On Windows</h2><p>如果在没有进行auth设置且在Secure Mode运行, 那么就不要使 mongod.exe在公共网络上可见.</p>
+<h3 id="设置MOngoDB环境"><a href="#设置MOngoDB环境" class="headerlink" title="设置MOngoDB环境"></a>设置MOngoDB环境</h3><h4 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h4><p>在环境变量里添加环境变量 <code>D:\Program Files\MongoDB\Server\3.0\</code> 然后在Path里添加： <code>%MONGODB_HOME%\bin</code></p>
+<h4 id="data-directory"><a href="#data-directory" class="headerlink" title="data directory"></a>data directory</h4><p>MongoDB 需要一个data directory来存储全部的数据. MongoDB默认的data directory路径是<code>\data\db</code>,<br>所以我们需要创建一个data directory. 假设我们在D盘创建了一个这样的目录: <code>D:\mongodb\data\db</code>.</p>
+<p>你可以通过–dbpath选项给mongod.exe设置另一个data directory.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod.exe --dbpath D:\mongodb\data\db</div></pre></td></tr></table></figure></p>
+<p>如果你的data directory包含空格的话,那么就需要使用””将他们包含起来：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod.exe --dbpath <span class="string">"d:\test\mongo db data"</span></div></pre></td></tr></table></figure></p>
+<h2 id="启动MongoDB"><a href="#启动MongoDB" class="headerlink" title="启动MongoDB"></a>启动MongoDB</h2><h3 id="使用mongod-exe命令启动mongoDB"><a href="#使用mongod-exe命令启动mongoDB" class="headerlink" title="使用mongod.exe命令启动mongoDB"></a>使用mongod.exe命令启动mongoDB</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod.exe</div></pre></td></tr></table></figure>
+<h3 id="启动日志"><a href="#启动日志" class="headerlink" title="启动日志"></a>启动日志</h3><p>最后我们在启动日志里看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">waiting for connections on port 27017</div></pre></td></tr></table></figure></p>
+<h3 id="命令行方式启动"><a href="#命令行方式启动" class="headerlink" title="命令行方式启动"></a>命令行方式启动</h3><p>MongoDB 默认存储数据目录为/data/db/ (或者 c:/data/db), 默认端口 27017,默认 HTTP 端口 28017.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod --dbpath=/data/db</div></pre></td></tr></table></figure></p>
+<h3 id="配置文件方式启动"><a href="#配置文件方式启动" class="headerlink" title="配置文件方式启动"></a>配置文件方式启动</h3><p>MongoDB 也支持同 mysql 一样的读取启动配置文件的方式来启动数据库,配置文件的内容如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /etc/mongodb.cnf</div></pre></td></tr></table></figure></p>
+<p>启动时加上”-f”参数,并指向配置文件即可:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod -f /etc/mongodb.cnf</div></pre></td></tr></table></figure></p>
+<h4 id="Daemon-方式启动"><a href="#Daemon-方式启动" class="headerlink" title="Daemon 方式启动"></a>Daemon 方式启动</h4><p>MongoDB 提供了一种后台 Daemon 方式启动的选择,只需加上一个” –fork”参数即可,,但如果用到了 ” –fork”参数就必须也启用 ”–logpath”参数,这是强制的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod --dbpath=/data/db --logpath=/data/log/r3.log --fork</div></pre></td></tr></table></figure></p>
+<h4 id="mongod-参数说明"><a href="#mongod-参数说明" class="headerlink" title="mongod 参数说明"></a>mongod 参数说明</h4><p>mongod 的参数分为一般参数, windows 参数, replication 参数, replica set 参数,以及隐含参数.上面列举的都是一般参数</p>
+<p>mongod 的参数中,没有设置内存大小相关的参数,是的, MongoDB 使用 os mmap 机制来缓存数据文件数据,自身目前不提供缓存机制.这样好处是代码简单,<br>mmap 在数据量不超过内存时效率很高.但是数据量超过系统可用内存后,则写入的性能可能不太稳定,容易出现大起大落,不过在最新的 1.8 版本中,这个情况相对以前的版本已经<br>有了一定程度的改善.</p>
+<h5 id="mongod-的主要参数有："><a href="#mongod-的主要参数有：" class="headerlink" title="mongod 的主要参数有："></a>mongod 的主要参数有：</h5><ul>
+<li>dbpath —— 数据文件存放路径,每个数据库会在其中创建一个子目录,用于防止同一个实例多次运行的 mongod.lock 也保存在此目录中.</li>
+<li>logpath —— 错误日志文件</li>
+<li>logappend —— 错误日志采用追加模式（默认是覆写模式）</li>
+<li>bind_ip —— 对外服务的绑定 ip,一般设置为空,及绑定在本机所有可用 ip 上,如有需要可以单独指定</li>
+<li>port —— 对外服务端口 . Web 管理端口在这个 port 的基础上+1000</li>
+<li>fork —— 以后台 Daemon 形式运行服务</li>
+<li>journal —— 开启日志功能,通过保存操作日志来降低单机故障的恢复时间,在 1.8 版本后正式加入,取代在 1.7.5 版本中的 dur 参数.</li>
+<li>syncdelay —— 系统同步刷新磁盘的时间,单位为秒,默认是 60 秒.</li>
+<li>directoryperdb —— 每个 db 存放在单独的目录中,建议设置该参数.与 MySQL 的独立表空间类似</li>
+<li>maxConns —— 最大连接数</li>
+<li>repairpath —— 执行 repair 时的临时目录.在如果没有开启 journal,异常 down 机后重启 ,必须执行 repair操作.</li>
+</ul>
+<h2 id="停止数据库"><a href="#停止数据库" class="headerlink" title="停止数据库"></a>停止数据库</h2><ul>
+<li>Control-C</li>
+<li>shutdownServer()指令<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mongo --port 28013</div><div class="line">use admin</div><div class="line">db.shutdownServer()</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="常用工具集"><a href="#常用工具集" class="headerlink" title="常用工具集"></a>常用工具集</h2><p>MongoDB 在 bin 目录下提供了一系列有用的工具,这些工具提供了 MongoDB 在运维管理上的方便。</p>
+<ul>
+<li>bsondump: 将 bson 格式的文件转储为 json 格式的数据</li>
+<li>mongo: 客户端命令行工具,其实也是一个 js 解释器,支持 js 语法</li>
+<li>mongod: 数据库服务端,每个实例启动一个进程,可以 fork 为后台运行</li>
+<li>mongodump/ mongorestore: 数据库备份和恢复工具</li>
+<li>mongoexport/ mongoimport: 数据导出和导入工具</li>
+<li>mongofiles: GridFS 管理工具,可实现二制文件的存取</li>
+<li>mongos: 分片路由,如果使用了 sharding 功能,则应用程序连接的是 mongos 而不是mongod</li>
+<li>mongosniff: 这一工具的作用类似于 tcpdump,不同的是他只监控 MongoDB 相关的包请求,并且是以指定的可读性的形式输出</li>
+<li>mongostat: 实时性能监控工具</li>
+</ul>
+<h2 id="部署-Replica-Sets"><a href="#部署-Replica-Sets" class="headerlink" title="部署 Replica Sets"></a>部署 Replica Sets</h2><ul>
+<li><p>创建数据文件存储路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mkdir E:/mongoData/data/r0</div><div class="line">mkdir E:/mongoData/data/r1</div><div class="line">mkdir E:/mongoData/data/r2</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建日志文件路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkdir E:/mongoData/log</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建主从 key 文件，用于标识集群的私钥的完整路径，如果各个实例的 key file 内容不一致，程序将不能正常用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mkdir E:/mongoData/key</div><div class="line">echo &quot;this is rs1 super secret key&quot; &gt; E:/mongoData/key/r0</div><div class="line">echo &quot;this is rs1 super secret key&quot; &gt; E:/mongoData/key/r1</div><div class="line">echo &quot;this is rs1 super secret key&quot; &gt; E:/mongoData/key/r2</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动 3 个实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mongod --replSet rs1 --keyFile E:/mongoData/key/r0 -fork --port 28010 --dbpath E:/mongoData/data/r0 --logpath=E:/mongoData/log/r0.log --logappend</div><div class="line">mongod --replSet rs1 --keyFile E:/mongoData/key/r1 -fork --port 28011 --dbpath E:/mongoData/data/r1 --logpath=E:/mongoData/log/r1.log --logappend</div><div class="line">mongod --replSet rs1 --keyFile E:/mongoData/key/r2 -fork --port 28012 --dbpath E:/mongoData/data/r2 --logpath=E:/mongoData/log/r2.log --logappend</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置及初始化 Replica Sets</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongo -port 28010</div></pre></td></tr></table></figure>
+</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/03/08/nosql/MongoDB/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/03/08/nosql/MongoDB/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/08/nosql/MongoDB Replica/" title="MongoDB Replica" itemprop="url">MongoDB Replica</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-08T08:00:00.000Z" itemprop="datePublished"> Published 2015-03-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="Deploy-a-Replica-Set"><a href="#Deploy-a-Replica-Set" class="headerlink" title="Deploy a Replica Set"></a>Deploy a Replica Set</h1><p>这篇教程讲述的是如何基于正在运行的不进行控制访问的<code>mongod</code>创建三个<code>replica set</code>.</p>
+<p>如果想要创建带有控制访问功能的<code>replica set</code>,参考<a href="http://docs.mongodb.org/manual/tutorial/deploy-replica-set-with-auth/" target="_blank" rel="external">Deploy Replica Set and Configure Authentication and Authorization</a>. 如果你想要在一个单独的MongoDB上部署<code>replica set</code>, 可以参考<a href="http://docs.mongodb.org/manual/tutorial/convert-standalone-to-replica-set/" target="_blank" rel="external">Convert a Standalone to a Replica Set</a>. 关于更多的<code>replica set</code>部署信息,参考<a href="http://docs.mongodb.org/manual/replication/" target="_blank" rel="external">Replication</a>和<a href="http://docs.mongodb.org/manual/core/replica-set-architectures/" target="_blank" rel="external">Replica Set Deployment Architectures</a></p>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>带有三个成员的<code>replica sets</code>就足够应付网络切分和其他类型的系统失败. 那些sets有足够的能力来应付分布式类型的读操作. <code>Replica sets</code>应该保证它的成员数量维持在一个奇数上. 这条规则能够保证正常的<a href="http://docs.mongodb.org/manual/core/replica-set-elections/" target="_blank" rel="external">elections</a>. 更多关于对<code>replica sets</code>的设计,参考<a href="http://docs.mongodb.org/manual/core/replication-introduction/" target="_blank" rel="external">Replication overview</a></p>
+<p>基本的步骤是: 首先启动要成为<code>replica set</code>成员的<code>mongod</code>, 然后配置<code>replica set</code>, 最后将<code>mongod</code>添加到<code>replica set</code>上.</p>
+<h2 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h2><p>在生产部署阶段, 你应该尽量在不同的主机上部署代理<code>mongod</code>的成员. 当使用虚拟主机进行生产部署时, 你应该在不同的主机服务器上都部署一个’mongod’.</p>
+<p>在你创建<code>replica set</code>之前, 你必须先检查你的网络配置能够允许每一个成员都能够相互连接上. 一个成功的<code>replica set</code>部署, 每一个成员都能够连接得上其他成员. 关于如何检查连接,参考<a href="http://docs.mongodb.org/manual/tutorial/troubleshoot-replica-sets/#replica-set-troubleshooting-check-connection" target="_blank" rel="external">Test Connections Between all Members</a></p>
+<h2 id="Considerations-When-Deploying-a-Replica-Set"><a href="#Considerations-When-Deploying-a-Replica-Set" class="headerlink" title="Considerations When Deploying a Replica Set"></a>Considerations When Deploying a Replica Set</h2><h3 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h3><p>在生产阶段, 将<code>replica set</code>和它的成员部署到同一台机器上. 如果可能的话, 绑定到MongoDB标准端口27017上. 使用<code>bind_ip</code>选项确保MongoDB会根据配置好的地址监听来自应用程序的连接.</p>
+<p>如果<code>replica set</code>在不同的机房内部署, 那么应该确保大多数的<code>mongod</code>实例部署在第一站点上.参考<a href="">Replica Set Deployment Architectures</a></p>
+<h3 id="Connectivity"><a href="#Connectivity" class="headerlink" title="Connectivity"></a>Connectivity</h3><p>确保网络中所有的<code>replica set</code>成员和客户端的流量能够安全和高效地传输:</p>
+<ul>
+<li>创建一个虚拟的私有网络. 确保该网络上一个单独站点可以路由不同成员间 间所有的流量.</li>
+<li>配置访问控制能够阻止未知的客户端连接到 <code>replica set</code>上</li>
+<li>配置网络和防火墙规则以便进站和出站的网络包仅仅是在MongoDB的默认端口和你的配置上.</li>
+</ul>
+<p>最终确保<code>replica set</code>中每个成员都可以通过可解析的<code>DNS</code>或者<code>hostname</code>访问到. 你应该恰当地设置上<code>DNS</code>名称或者通过<code>/etc/hosts</code>文件来映射这个配置</p>
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><p>Specify the run time configuration on each system in a configuration file stored in /etc/mongodb.conf or a related location. Create the directory where MongoDB stores data files before deploying MongoDB.</p>
+<p>For more information about the run time options used above and other configuration options, see Configuration File Options.</p>
+<h2 id="Procedure"><a href="#Procedure" class="headerlink" title="Procedure"></a>Procedure</h2><p>下面的步骤概括了在<code>access control</code>失效的情况下如何部署replica set</p>
+<h3 id="Start-each-member-of-the-replica-set-with-the-appropriate-options"><a href="#Start-each-member-of-the-replica-set-with-the-appropriate-options" class="headerlink" title="Start each member of the replica set with the appropriate options."></a>Start each member of the replica set with the appropriate options.</h3><p>启动<code>mongod</code>然后通过<code>replSet</code>选项设定<code>replica set</code>名字, 向<code>replica set</code>中添加一个成员. 如果想要配置其他特有参数,参考<a href="">Replication Options</a></p>
+<p>如果你的应用程序连接了多个<code>replica set</code>, 每一个<code>replica set</code>都应该有一个独立的名字. 某些驱动会根据<code>replica set</code>名称将<code>replica set</code>连接进行分组.</p>
+<p>下面是一个示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod --replSet &quot;rs0&quot;</div></pre></td></tr></table></figure></p>
+<p>你也通过配置文件设置<code>replica set</code>名字. 如果想要通过配置文件启动<code>mongod</code>, 那么你需要<code>--config</code>选项指定配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongod --config $HOME/.mongodb/config</div></pre></td></tr></table></figure></p>
+<p>在生产部署阶段, 你可以通过配置一个控制脚本来管理这个进程. 但是控制脚本的使用超过了该教程的介绍范围.</p>
+<blockquote>
+<p>注意:</p>
+<p>如果你的c盘没有创建C:/data/db, 那么会抛出 ：Hotfix KB2731284 or later update is not installed. 以及 C:\data\db not found 的字样.</p>
+<p>那么你就需要在命令上加上 –dbpath 选项了</p>
+</blockquote>
+<h3 id="Connect-a-mongo-shell-to-a-replica-set-member"><a href="#Connect-a-mongo-shell-to-a-replica-set-member" class="headerlink" title="Connect a mongo shell to a replica set member."></a>Connect a mongo shell to a replica set member.</h3><p>下例展示了如何连接到在<code>localhost:27017</code>上运行的<code>mongod</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongo</div></pre></td></tr></table></figure></p>
+<h3 id="Initiate-the-replica-set"><a href="#Initiate-the-replica-set" class="headerlink" title="Initiate the replica set."></a>Initiate the replica set.</h3><p>接着这<code>mongo</code>shell里使用<code>rs.initiate()</code>设置成员.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rs.initiate()</div></pre></td></tr></table></figure></p>
+<p>MongoDB使用<code>replica set</code>默认配置启动了一个包含当前成员的<code>replica set</code></p>
+<blockquote>
+<p>注意:</p>
+<p>这个过程大概需要几分钟的时间, 所以需要耐心的稍等一下.</p>
+</blockquote>
+<h3 id="Verify-the-initial-replica-set-configuration"><a href="#Verify-the-initial-replica-set-configuration" class="headerlink" title="Verify the initial replica set configuration."></a>Verify the initial replica set configuration.</h3><p>在<code>mongo</code>shell中使用<code>rs.conf()</code>输出<code>replica set</code>配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rs.conf()</div></pre></td></tr></table></figure></p>
+<p>输出的<code>replica set</code>配置类似于下面的结构<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">   <span class="attr">"_id"</span> : <span class="string">"rs0"</span>,</div><div class="line">   <span class="attr">"version"</span> : <span class="number">1</span>,</div><div class="line">   <span class="attr">"members"</span> : [</div><div class="line">      &#123;</div><div class="line">         <span class="attr">"_id"</span> : <span class="number">1</span>,</div><div class="line">         <span class="attr">"host"</span> : <span class="string">"mongodb0.example.net:27017"</span></div><div class="line">      &#125;</div><div class="line">   ]</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="Add-the-remaining-members-to-the-replica-set"><a href="#Add-the-remaining-members-to-the-replica-set" class="headerlink" title="Add the remaining members to the replica set."></a>Add the remaining members to the replica set.</h3><p>在<code>mongo</code>shell中使用<code>rs.add()</code>方法添加俩个成员:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">rs.add(&quot;mongodb1.example.net&quot;)</div><div class="line">rs.add(&quot;mongodb2.example.net&quot;)</div></pre></td></tr></table></figure></p>
+<p>完成这一步之后,你就获得了一个拥有完整功能的<code>replica set</code>. 新的<code>replica set</code>会选出一个主要的来.</p>
+<h3 id="Check-the-status-of-the-replica-set"><a href="#Check-the-status-of-the-replica-set" class="headerlink" title="Check the status of the replica set."></a>Check the status of the replica set.</h3><p>在<code>mongo</code>shell中使用<code>rs.status()</code>方法查看<code>replica set</code>状态.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rs.status()</div></pre></td></tr></table></figure></p>
+<h2 id="Replication-Introduction"><a href="#Replication-Introduction" class="headerlink" title="Replication Introduction"></a>Replication Introduction</h2><p><code>Replication</code> 是用于多台服务器间数据同步的一个进程.</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/03/08/nosql/MongoDB Replica/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/03/08/nosql/MongoDB Replica/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/08/JavaSE/Java hook/" title="JAVA钩子程序" itemprop="url">JAVA钩子程序</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-08T08:00:00.000Z" itemprop="datePublished"> Published 2015-03-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>触发的时机有：</p>
+<ol>
+<li>当所有的非deamon线程(守护线程)结束, 或者调用了<code>Systrem.exit()</code>方法 而导致的程序正常的退出</li>
+<li>JVM收到需要关闭自己的信号（比如SIGINT、SIGTERM等，但像SIGKILL，JVM就没有机会去处理了），也或者发生如系统关闭这种不可阻挡的事件。</li>
+</ol>
+<p>对于addShutdownHook中的钩子代码，也是有一些要注意的地方，下面列举几点：</p>
+<ol>
+<li>关闭钩子可以注册多个，在关闭JVM时就会起多个线程来运行钩子。通常来说，一个钩子就足够了，但如果需要启用多个钩子，就需要注意并发带来的问题。</li>
+<li>钩子里也要注意对异常的处理，如果不幸抛出了异常，那么钩子的执行序列就会被终止。</li>
+<li>在钩子运行期间，工作线程也在运行，需要考虑到工作线程是否会对钩子的执行带来影响</li>
+<li>钩子里的代码尽可能简洁，否则当像系统关闭等情景可能钩子来不及运行完JVM就被退出了。</li>
+</ol>
+<h2 id="信号触发"><a href="#信号触发" class="headerlink" title="信号触发"></a>信号触发</h2><p>使信号触发JVM的钩子程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>)&#123;&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"Hook execute!!!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行钩子程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup java HookTest &amp;</div></pre></td></tr></table></figure></p>
+<p>关闭程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kill HookTest_PID</div></pre></td></tr></table></figure></p>
+<p>我们可以在nohup程序中看到Hook execute!!!输出</p>
+<p>我从<a href="http://journal.thobe.org/2013/02/jvms-and-kill-signals.html" target="_blank" rel="external">JVMs and kill signals</a>看到一篇博客, 这个上面总结了哪些信号会导致JVM运行Hook<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="function">signal			shutdown	runs hook	exit code	comment</span></div><div class="line"><span class="title">default</span> <span class="params">(<span class="number">15</span>)</span>	yes			yes			143			SIGTERM is the <span class="keyword">default</span> unix kill signal</div><div class="line">0				no			-			-	</div><div class="line">1 <span class="params">(SIGHUP)</span>		yes			yes			129	</div><div class="line">2 <span class="params">(SIGINT)</span>		yes			yes			130			SIGINT is the signal sent on ^C</div><div class="line">3 <span class="params">(SIGQUIT)</span>		no			-			-			触发 JVM dump threads / stack-traces</div><div class="line">4 <span class="params">(SIGILL)</span>		yes			no			134			触发 JVM 输出一个 core dump 文件, 同时abort on trap 6</div><div class="line">5				yes			no			133			Makes the JVM exit with "Trace/BPT trap: 5"</div><div class="line">6 <span class="params">(SIGABRT)</span>		yes			no			134			Makes the JVM exit with "Abort trap: 6"</div><div class="line">7				yes			no			135			Makes the JVM exit with "EMT trap: 7"</div><div class="line">8 <span class="params">(SIGFPE)</span>		yes			no			134			Makes the JVM write a core dump and abort on trap 6</div><div class="line">9 <span class="params">(SIGKILL)</span>		yes			no			137			The JVM is forcibly <span class="title">killed</span> <span class="params">(exits with <span class="string">"Killed: 9"</span>)</span></div><div class="line">10 <span class="params">(SIGBUS)</span>		yes			no			134			Emulates a "Bus Error"</div><div class="line">11 <span class="params">(SIGSEGV)</span>	yes			no			134			Emulates a "Segmentation fault"</div><div class="line">12				yes			no			140			Makes the JVM exit with "Bad system call: 12"</div><div class="line">13				no			-			-			</div><div class="line">14				yes			no			142			Makes the JVM exit with "Alarm clock: 14"</div><div class="line">15 <span class="params">(SIGTERM)</span>	yes			yes			143			This is the <span class="keyword">default</span> unix kill signal</div><div class="line">16				no			-			-			</div><div class="line">17				no			-			145			Stops the <span class="title">application</span> <span class="params">(sends it to the background)</span>, same as ^Z</div><div class="line">18				no			-			146			Stops the <span class="title">application</span> <span class="params">(sends it to the background)</span>, same as ^Z</div><div class="line">19				no			-			-			</div><div class="line">20				no			-			-			</div><div class="line">21				no			-			149			Stops the <span class="title">application</span> <span class="params">(sends it to the background)</span>, same as ^Z</div><div class="line">22				no			-			150			Stops the <span class="title">application</span> <span class="params">(sends it to the background)</span>, same as ^Z</div><div class="line">23				no			-			-			</div><div class="line">24				yes			no			152			Makes the JVM exit with "Cputime limit exceeded: 24"</div><div class="line">25				no			-			-			</div><div class="line">26				yes			no			154			Makes the JVM exit with "Virtual timer expired: 26"</div><div class="line">27				yes			no			155			Makes the JVM exit with "Profiling timer expired: 27"</div><div class="line">28				no			-			-			</div><div class="line">29				no			-			-			</div><div class="line">30				yes			no			158			Makes the JVM exit with "User defined signal 1: 30"</div><div class="line">31				yes			no			134			Makes the JVM exit on Segmentation fault</div></pre></td></tr></table></figure></p>
+<h2 id="内存溢出触发"><a href="#内存溢出触发" class="headerlink" title="内存溢出触发"></a>内存溢出触发</h2><p>测试JVM栈溢出后调用钩子程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line">		exec();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exec</span><span class="params">()</span> </span>&#123;</div><div class="line">		exec();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"Hook execute!!!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行后输出为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java HookTest</div><div class="line">Exception <span class="keyword">in</span> thread <span class="string">"main"</span> java.lang.StackOverflowError</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	...</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">Hook execute!!!</div><div class="line"></div><div class="line">D:\<span class="built_in">test</span>OOM&gt;</div></pre></td></tr></table></figure></p>
+<p>为了测试在更加复杂的环境下, Hook的使用情况, 看下面的测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.time.LocalDateTime;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, String&gt; cache = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		cache.put(<span class="string">"abc"</span>, <span class="string">"abc"</span>);</div><div class="line"></div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line"></div><div class="line">		<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span> *<span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line">				System.out.println(LocalDateTime.now());</div><div class="line">				System.out.println(<span class="string">"    freeMemory ： "</span> + Runtime.getRuntime().freeMemory());</div><div class="line">				System.out.println(<span class="string">"    maxMemory ： "</span> + Runtime.getRuntime().maxMemory());</div><div class="line">				System.out.println(<span class="string">"    totalMemory ： "</span> + Runtime.getRuntime().totalMemory());</div><div class="line">				System.out.println(<span class="string">"    currentThread name : "</span> + Thread.currentThread().getName());</div><div class="line">				System.out.println(<span class="string">"    cache size : "</span> + cache.size());</div><div class="line">				cache.put(LocalDateTime.now().toString(), LocalDateTime.now().toString());</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行后的输出结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">ζ java HookTest</div><div class="line">2016-07-09T16:12:12.479</div><div class="line">    freeMemory : 155922512</div><div class="line">    maxMemory : 2375024640</div><div class="line">    totalMemory : 160956416</div><div class="line">    currentThread name : Thread-0</div><div class="line">    cache size : 1</div><div class="line">2016-07-09T16:12:13.480</div><div class="line">    freeMemory : 155922512</div><div class="line">    maxMemory : 2375024640</div><div class="line">    totalMemory : 160956416</div><div class="line">    currentThread name : Thread-0</div><div class="line">    cache size : 2</div><div class="line">2016-07-09T16:12:14.480</div><div class="line">    freeMemory : 155922512</div><div class="line">    maxMemory : 2375024640</div><div class="line">    totalMemory : 160956416</div><div class="line">    currentThread name : Thread-0</div><div class="line">    cache size : 3</div><div class="line">2016-07-09T16:12:15.480</div><div class="line">    freeMemory : 155922512</div><div class="line">    maxMemory : 2375024640</div><div class="line">    totalMemory : 160956416</div><div class="line">    currentThread name : Thread-0</div><div class="line">    cache size : 4</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<h2 id="正常结束触发"><a href="#正常结束触发" class="headerlink" title="正常结束触发"></a>正常结束触发</h2><p>测试程序正常结束后也会调用钩子程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"Hook execute!!!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>运行结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java HookTest</div><div class="line">Hook execute!!!</div><div class="line"></div><div class="line">D:\<span class="built_in">test</span>OOM&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="调用exit-触发"><a href="#调用exit-触发" class="headerlink" title="调用exit()触发"></a>调用exit()触发</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line">		System.exit(<span class="number">0</span>);</div><div class="line"></div><div class="line">		System.out.println(<span class="string">"Main over"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"Hook execute!!!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java HookTest</div><div class="line">Hook execute!!!</div><div class="line"></div><div class="line">D:\<span class="built_in">test</span>OOM&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="不被触发"><a href="#不被触发" class="headerlink" title="不被触发"></a>不被触发</h2><p>再google上找到了一篇这样的文章<a href="https://dzone.com/articles/know-jvm-series-2-shutdown" target="_blank" rel="external">Know the JVM Series: Shutdown Hooks</a>里面介绍了钩子程序在什么情况下不会执行<br>尽管上面列举出了N多触发钩子程序的示例, 但是并不保证这个钩子程序总是能被触发执行的, 例如</p>
+<ul>
+<li>JVM内部发生错误, 可能还没有来得及触发钩子程序, JVM就挂掉了(JVM 发生内部错误, 有没有日志呢?)</li>
+<li>还有上面我们给出的那个信号表, 如果操作系统发送出上面的信号的话, 同样的, JVM没有执行钩子程序就退出了</li>
+<li>还有调用<code>Runime.halt()</code>函数也不会执行钩子程序</li>
+</ul>
+<p>还有一种情况是, 当操作系统向进程发送一个<code>SIGTERM</code>信号之后, 如果进程没有在指定的时间之内关闭, 那么操作系统会强制将该进程杀掉, 如此一来钩子程序也不会得到完整的执行(因为钩子程序可能执行到一半就被操作系统杀死了). 因此不管是这篇文章还是JDK API都推荐不要在钩子程序里写复杂的业务逻辑, 避免产生死锁或者产生长时间的IO操作, 尽可能快地让钩子程序执行完毕.</p>
+<p>在oracle上的<a href="http://docs.oracle.com/javase/1.5.0/docs/guide/lang/hook-design.html" target="_blank" rel="external">Design of the Shutdown Hooks API</a>同样见到这样一句话,<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Will shutdown hooks be run <span class="keyword">if</span> the VM crashes?</div><div class="line">	If the VM crashes due to an error <span class="keyword">in</span> native code <span class="keyword">then</span> no guarantee can be made about whether or not the hooks will be run.</div></pre></td></tr></table></figure></p>
+<p>哎,, 怎么着才能监控JVM挂掉的信息呢？</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/03/08/JavaSE/Java hook/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/03/08/JavaSE/Java hook/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/7/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/">Next<span></span></a>
   </nav>
 
 </div>
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="github-card">
-<p class="asidetitle">Github 名片</p>
+<p class="asidetitle">Github Card</p>
 <div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
 <script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
 </div>
@@ -2051,7 +2155,7 @@
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分类</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 		  
@@ -2101,7 +2205,7 @@
 		  
 		
 		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>13</sup></a></li>
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
 		  
 		
 		  
@@ -2115,13 +2219,9 @@
 		  
 		
 		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>19</sup></a></li>
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
 		  
 		
-		  
-		
-		  
-			<li><a href="/categories/�Ӽ�/" title="�Ӽ�">�Ӽ�<sup>1</sup></a></li>
 		  
 		
 		</ul>
@@ -2130,7 +2230,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">标签</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			
@@ -2150,7 +2250,7 @@
 
 
   <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
+  <p class="asidetitle">Links</p>
     <ul>
         
           <li>
@@ -2165,7 +2265,7 @@
   
 
 <div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
+<p class="asidetitle">Douban Show</p>
 <div>
 <script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
 </div>
@@ -2173,11 +2273,11 @@
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
 </div>
 
   <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
+  <p class="asidetitle">Weibo</p>
     <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
 </div>
 
@@ -2351,7 +2451,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 
