@@ -77,9 +77,7 @@ protected abstract void decode(ChannelHandlerContext ctx, I msg, List<Object> ou
 这个方法就可以了
 
 ## LineBasedFrameDecoder
-`LineBasedFrameDecoder`的原理是从`ByteBuf`的可读字节中找到`\n`或者`\r\n`,找到之后就以此为结束,然后将当前读取到的数据组成一行.
-
-如果我们设置每一行的最大长度, 但是当达到最大长度之后还没有找到结束符,就会抛出异常,同时将读取的数据舍弃掉.
+`LineBasedFrameDecoder`的原理是从`ByteBuf`的可读字节中找到`\n`或者`\r\n`,找到之后就以此为结束,然后将当前读取到的数据组成一行. 如果我们设置每一行的最大长度, 但是当达到最大长度之后还没有找到结束符,就会抛出异常,同时将读取的数据舍弃掉.
 
 `LineBasedFrameDecoder`的用法很简单, 我们可以向其指定大小或者不指定大小
 ```java
@@ -91,6 +89,8 @@ ch.pipline().addLast(new LineBasedFrameDecoder());
 ch.pipline().addLast(new LineBasedFrameDecoder(1024));
 ...
 ```
+
+
 
 ## DelimiterBasedFrameDecoder
 使用`DelimiterBasedFrameDecoder`我们可以自定义设定分隔符
