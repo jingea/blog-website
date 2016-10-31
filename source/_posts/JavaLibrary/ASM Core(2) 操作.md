@@ -1,4 +1,5 @@
-category: asm
+category: Java Library
+tag: asm
 date: 2016-01-12
 title: ASM Core(2) Class的增删改查
 ---

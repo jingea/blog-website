@@ -1,7 +1,6 @@
 category: Java Library
-tag: Guice
 date: 2015-12-09
-title: Guice Mybatis 初探
+title: Guice Mybatis 使用笔记
 ---
 参考文档[mybatis-guice](http://mybatis.org/guice/index.html)
 

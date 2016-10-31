@@ -1,4 +1,5 @@
-category: asm
+category: Java Library
+tag: asm
 date: 2016-01-11
 title: ASM Core(1) 初探
 ---
