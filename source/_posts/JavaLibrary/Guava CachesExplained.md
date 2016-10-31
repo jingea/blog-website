@@ -1,4 +1,4 @@
-﻿category: Java
+﻿category: Java Library
 date: 2013-09-13
 title: Guava Cache
 ---
