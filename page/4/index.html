@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>王玉</title>
+    <title>·</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="王玉">
@@ -12,14 +12,14 @@
 
     
     <meta property="og:type" content="website">
-<meta property="og:title" content="王玉">
+<meta property="og:title" content="·">
 <meta property="og:url" content="http://www.yu66.wang/page/4/index.html">
-<meta property="og:site_name" content="王玉">
+<meta property="og:site_name" content="·">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="王玉">
+<meta name="twitter:title" content="·">
 
     
-    <link rel="alternative" href="/atom.xml" title="王玉" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
     
     
     
@@ -34,12 +34,8 @@
       
 <div>
 		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="王玉" title="王玉"/></a>
-			</div>
-			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
@@ -209,74 +205,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/03/06/nginx/nginx负载均衡/" title="Nginx负载均衡实战" itemprop="url">Nginx负载均衡实战</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>我们测试一次Nginx的负载均衡配置.</p>
-<p>首先我们使用python启动俩个HTTP服务器<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> BaseHTTPServer</div><div class="line"><span class="keyword">import</span> urlparse</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line">port = sys.argv[<span class="number">1</span>]</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">WebRequestHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        """</div><div class="line">        <span class="keyword">print</span> port</div><div class="line"></div><div class="line">server = BaseHTTPServer.HTTPServer((<span class="string">'0.0.0.0'</span>,int(sys.argv[<span class="number">1</span>])), WebRequestHandler)</div><div class="line">server.serve_forever()</div></pre></td></tr></table></figure></p>
-<p>然后在命令行分别启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">python ./PyHttpServer.py 8091</div><div class="line">python ./PyHttpServer.py 8092</div></pre></td></tr></table></figure></p>
-<p>然后我们配置nginx.conf文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">#user  nobody;</div><div class="line">worker_processes  1;</div><div class="line"></div><div class="line">pid        logs/nginx.pid;</div><div class="line"></div><div class="line">events &#123;</div><div class="line">    worker_connections  1024;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">http &#123;</div><div class="line">    include       mime.types;</div><div class="line">    default_type  application/octet-stream;</div><div class="line"></div><div class="line">    sendfile        on;</div><div class="line">    upstream big_server_com &#123;</div><div class="line">      server 127.0.0.1:8091 weight=5;</div><div class="line">      server 127.0.0.1:8092 weight=5;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    server &#123;</div><div class="line">        listen       8090;</div><div class="line">        server_name  localhost;</div><div class="line"></div><div class="line">        location / &#123;</div><div class="line">            root   html;</div><div class="line">            index  index.html index.htm;</div><div class="line">            proxy_pass      http://big_server_com;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        error_page   500 502 503 504  /50x.html;</div><div class="line">        location = /50x.html &#123;</div><div class="line">            root   html;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>我们让nginx在8090端口上监听, 然后将其反向代理到<code>8091</code>和<code>8092</code>端口上.</p>
-<blockquote>
-<p>还有一点很重要的是, 要代理的服务必须在Nginx启动之前都启动完毕, 否则Nginx没办法完成代理工作.</p>
-</blockquote>
-<p>最后我们在浏览器上发送HTTP请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:8090</div></pre></td></tr></table></figure></p>
-<p>我们发现那俩个python的HTTP服务器果真都有输出了.</p>
-<p>但是我们发现, 就是那俩个服务器同时都有输出, 而不是应该只有其中一个有输出. 所以下来还需要研究一下如何配置Upstream, 看看如何让其真正实现负载均衡和单点失败</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/06/nginx/nginx负载均衡/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx负载均衡/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2016/03/06/nginx/nginx文件服务器/" title="Nginx 静态资源服务" itemprop="url">Nginx 静态资源服务</a>
   </h1>
   <p class="article-author">By
@@ -423,29 +351,30 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/03/05/JavaSE/Java ListVSMap/" title="List VS Map" itemprop="url">List VS Map</a>
+      <a href="/2016/03/06/nginx/nginx负载均衡/" title="Nginx负载均衡实战" itemprop="url">Nginx负载均衡实战</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-03-05T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-05</time>
+    <time datetime="2016-03-06T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-06</time>
     
   </p>
 </header>
     <div class="article-content">
         
-        <p>在日常的使用中, 使用的最多的结构就是List和Map了. 其中又以ArrayList和HashMap使用的最多. 今天特意找了一些时间来看一下他们各自的实现以及添加索引数据时的性能.</p>
-<p>首先看一下ArrayList.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">transient</span> Object[] elementData;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></div><div class="line">    elementData[size++] = e;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    rangeCheck(index);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> elementData(index);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>它的内部就是一个Object类型的数组, 在添加数据时首先确保数组不会越界, 如果会产生越界则内部进行数组扩容拷贝操作.</p>
-<p>对于<code>HashMap</code>它的Javadoc中是如此说的:</p>
-<p><code>HashMap</code>是hash table的一个实现。它与<code>HashTable</code>不同之处就是它是非同步的而且键值都支持null.对于put和get操作，HashMap的耗时都是固定的，不会因为Map的大小而变化。因为hash函数会将元素分配到不同的bucket里面取. HashMap的迭代操作与它的容量（bucket数量+键值对数量）成正比关系.</p>
-<p>一般情况下, load factor的默认值0.75, 这个值在空间和时间上找到较为平衡的查找性能。 如果高于这个值的话，会减少空间占用但是会增加查询的消耗(这点反应在了大多数的hashMap操作中，包括get和put操作).</p>
-<p>下来我们首先看一下它的数据成员<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// load factor 默认值</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</div><div class="line"></div><div class="line"><span class="comment">// hash表存储数据的数据结构, 每个Node都是一个散列桶, 每个桶里是一个链表</span></div><div class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</div><div class="line"></div><div class="line"><span class="comment">// hash表散列桶的大小阀值, 如果超过这个值就对hash表进行拓容 (大小为: capacity * load factor)</span></div><div class="line"><span class="keyword">int</span> threshold;</div><div class="line"></div><div class="line"><span class="comment">// hash表使用的loadFactor</span></div><div class="line"><span class="keyword">final</span> <span class="keyword">float</span> loadFactor;</div></pre></td></tr></table></figure></p>
-<p>然后我们看一下<code>put()</code>方法的实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,                    <span class="keyword">boolean</span> evict)</span> </span>&#123;</div><div class="line">        Node&lt;K,V&gt;[] tab;</div><div class="line">        Node&lt;K,V&gt; p;</div><div class="line">        <span class="keyword">int</span> n, i;</div><div class="line">        <span class="comment">// 如果table不存在或者table大小为0, 则重新生成一个table</span></div><div class="line">        <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</div><div class="line">            n = (tab = resize()).length;</div><div class="line">        <span class="comment">// 根据与hash值与操作找到要插入的元素所在的散列桶的位置</span></div><div class="line">        <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>)</div><div class="line">            <span class="comment">// 发现当前位置上的散列桶上没有Node则,重新生成一个Node</span></div><div class="line">            tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 发现当前散列桶已经有元素了</span></div><div class="line">            Node&lt;K,V&gt; e; K k;</div><div class="line">            <span class="comment">// 判断插入key是否与找到的Node的key是否相等, 如果相等则将p赋值给e, 进行value的赋值操作</span></div><div class="line">            <span class="keyword">if</span> (p.hash == hash &amp;&amp; ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</div><div class="line">                e = p;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)</div><div class="line">                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 插入的key与散列桶链表中的第一个元素不相符, 则遍历整个链表</span></div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</div><div class="line">                    <span class="comment">// 在连表中找不到存在的元素, 则生成一个新的Node插入进来</span></div><div class="line">                    <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;</div><div class="line">                        p.next = newNode(hash, key, value, <span class="keyword">null</span>);</div><div class="line">                        <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">// -1 for 1st</span></div><div class="line">                            treeifyBin(tab, hash);</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    &#125;</div><div class="line">                    <span class="comment">// 找到了与要插入的key相等的散列表的元素, 则停止继续查找</span></div><div class="line">                    <span class="keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    p = e;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 在散列表里找到了相同的key的hash值, 就直接插入了, 不再需要进行下面的hash表拓容操作</span></div><div class="line">            <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// existing mapping for key</span></div><div class="line">                V oldValue = e.value;</div><div class="line">                <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>)</div><div class="line">                    e.value = value;</div><div class="line">                afterNodeAccess(e);</div><div class="line">                <span class="keyword">return</span> oldValue;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        ++modCount;</div><div class="line">        <span class="comment">// 占有了一个新的hash桶, 判断如果超过了Hash表散列桶的阀值,则对hash表进行拓容</span></div><div class="line">        <span class="keyword">if</span> (++size &gt; threshold)</div><div class="line">            resize();</div><div class="line">        afterNodeInsertion(evict);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>从上面的逻辑我们可以看出,<code>HashMap</code>在插入元素的时候,首先是根据key的hash值找到散列桶的位置, 然后再根据key与散列桶中的散列表的数据进行便利查找.</p>
-<p>因此我们应该尽量的调大HashMap的容量, 尽可能的让桶的容量大于元素的个数, 同时尽可能的保证key值hash函数的正确性, 否则如果元素过多但是桶的数量太少, 会将hash 表退化到链表结构, 将O(1)的查找复杂度变成O(N). 说完HashMap的查找复杂度, 我们再来看一下HashMap的内存占有, 每当我们插入一个新的元素的时候都会生成一个<code>Node</code>对象<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> hash;</div><div class="line">    <span class="keyword">final</span> K key;</div><div class="line">    V value;</div><div class="line">    Node&lt;K,V&gt; next;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+        <p>我们测试一次Nginx的负载均衡配置.</p>
+<p>首先我们使用python启动俩个HTTP服务器<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> BaseHTTPServer</div><div class="line"><span class="keyword">import</span> urlparse</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line">port = sys.argv[<span class="number">1</span>]</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">WebRequestHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        """</div><div class="line">        <span class="keyword">print</span> port</div><div class="line"></div><div class="line">server = BaseHTTPServer.HTTPServer((<span class="string">'0.0.0.0'</span>,int(sys.argv[<span class="number">1</span>])), WebRequestHandler)</div><div class="line">server.serve_forever()</div></pre></td></tr></table></figure></p>
+<p>然后在命令行分别启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">python ./PyHttpServer.py 8091</div><div class="line">python ./PyHttpServer.py 8092</div></pre></td></tr></table></figure></p>
+<p>然后我们配置nginx.conf文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">#user  nobody;</div><div class="line">worker_processes  1;</div><div class="line"></div><div class="line">pid        logs/nginx.pid;</div><div class="line"></div><div class="line">events &#123;</div><div class="line">    worker_connections  1024;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">http &#123;</div><div class="line">    include       mime.types;</div><div class="line">    default_type  application/octet-stream;</div><div class="line"></div><div class="line">    sendfile        on;</div><div class="line">    upstream big_server_com &#123;</div><div class="line">      server 127.0.0.1:8091 weight=5;</div><div class="line">      server 127.0.0.1:8092 weight=5;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    server &#123;</div><div class="line">        listen       8090;</div><div class="line">        server_name  localhost;</div><div class="line"></div><div class="line">        location / &#123;</div><div class="line">            root   html;</div><div class="line">            index  index.html index.htm;</div><div class="line">            proxy_pass      http://big_server_com;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        error_page   500 502 503 504  /50x.html;</div><div class="line">        location = /50x.html &#123;</div><div class="line">            root   html;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们让nginx在8090端口上监听, 然后将其反向代理到<code>8091</code>和<code>8092</code>端口上.</p>
+<blockquote>
+<p>还有一点很重要的是, 要代理的服务必须在Nginx启动之前都启动完毕, 否则Nginx没办法完成代理工作.</p>
+</blockquote>
+<p>最后我们在浏览器上发送HTTP请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:8090</div></pre></td></tr></table></figure></p>
+<p>我们发现那俩个python的HTTP服务器果真都有输出了.</p>
+<p>但是我们发现, 就是那俩个服务器同时都有输出, 而不是应该只有其中一个有输出. 所以下来还需要研究一下如何配置Upstream, 看看如何让其真正实现负载均衡和单点失败</p>
 
         
         
@@ -458,7 +387,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
+  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
 </div>
 
 
@@ -470,7 +399,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/03/05/JavaSE/Java ListVSMap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/05/JavaSE/Java ListVSMap/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/03/06/nginx/nginx负载均衡/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx负载均衡/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -540,6 +469,73 @@
 	
 	  	<span></span>
 		<a href="/2016/03/05/nginx/nginx配置/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/05/nginx/nginx配置/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/05/JavaSE/Java ListVSMap/" title="List VS Map" itemprop="url">List VS Map</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-05T08:00:00.000Z" itemprop="datePublished"> Published 2016-03-05</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在日常的使用中, 使用的最多的结构就是List和Map了. 其中又以ArrayList和HashMap使用的最多. 今天特意找了一些时间来看一下他们各自的实现以及添加索引数据时的性能.</p>
+<p>首先看一下ArrayList.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">transient</span> Object[] elementData;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// Increments modCount!!</span></div><div class="line">    elementData[size++] = e;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    rangeCheck(index);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> elementData(index);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它的内部就是一个Object类型的数组, 在添加数据时首先确保数组不会越界, 如果会产生越界则内部进行数组扩容拷贝操作.</p>
+<p>对于<code>HashMap</code>它的Javadoc中是如此说的:</p>
+<p><code>HashMap</code>是hash table的一个实现。它与<code>HashTable</code>不同之处就是它是非同步的而且键值都支持null.对于put和get操作，HashMap的耗时都是固定的，不会因为Map的大小而变化。因为hash函数会将元素分配到不同的bucket里面取. HashMap的迭代操作与它的容量（bucket数量+键值对数量）成正比关系.</p>
+<p>一般情况下, load factor的默认值0.75, 这个值在空间和时间上找到较为平衡的查找性能。 如果高于这个值的话，会减少空间占用但是会增加查询的消耗(这点反应在了大多数的hashMap操作中，包括get和put操作).</p>
+<p>下来我们首先看一下它的数据成员<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// load factor 默认值</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</div><div class="line"></div><div class="line"><span class="comment">// hash表存储数据的数据结构, 每个Node都是一个散列桶, 每个桶里是一个链表</span></div><div class="line"><span class="keyword">transient</span> Node&lt;K,V&gt;[] table;</div><div class="line"></div><div class="line"><span class="comment">// hash表散列桶的大小阀值, 如果超过这个值就对hash表进行拓容 (大小为: capacity * load factor)</span></div><div class="line"><span class="keyword">int</span> threshold;</div><div class="line"></div><div class="line"><span class="comment">// hash表使用的loadFactor</span></div><div class="line"><span class="keyword">final</span> <span class="keyword">float</span> loadFactor;</div></pre></td></tr></table></figure></p>
+<p>然后我们看一下<code>put()</code>方法的实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,                    <span class="keyword">boolean</span> evict)</span> </span>&#123;</div><div class="line">        Node&lt;K,V&gt;[] tab;</div><div class="line">        Node&lt;K,V&gt; p;</div><div class="line">        <span class="keyword">int</span> n, i;</div><div class="line">        <span class="comment">// 如果table不存在或者table大小为0, 则重新生成一个table</span></div><div class="line">        <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</div><div class="line">            n = (tab = resize()).length;</div><div class="line">        <span class="comment">// 根据与hash值与操作找到要插入的元素所在的散列桶的位置</span></div><div class="line">        <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>)</div><div class="line">            <span class="comment">// 发现当前位置上的散列桶上没有Node则,重新生成一个Node</span></div><div class="line">            tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 发现当前散列桶已经有元素了</span></div><div class="line">            Node&lt;K,V&gt; e; K k;</div><div class="line">            <span class="comment">// 判断插入key是否与找到的Node的key是否相等, 如果相等则将p赋值给e, 进行value的赋值操作</span></div><div class="line">            <span class="keyword">if</span> (p.hash == hash &amp;&amp; ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</div><div class="line">                e = p;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)</div><div class="line">                e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 插入的key与散列桶链表中的第一个元素不相符, 则遍历整个链表</span></div><div class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</div><div class="line">                    <span class="comment">// 在连表中找不到存在的元素, 则生成一个新的Node插入进来</span></div><div class="line">                    <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;</div><div class="line">                        p.next = newNode(hash, key, value, <span class="keyword">null</span>);</div><div class="line">                        <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">// -1 for 1st</span></div><div class="line">                            treeifyBin(tab, hash);</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    &#125;</div><div class="line">                    <span class="comment">// 找到了与要插入的key相等的散列表的元素, 则停止继续查找</span></div><div class="line">                    <span class="keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    p = e;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">// 在散列表里找到了相同的key的hash值, 就直接插入了, 不再需要进行下面的hash表拓容操作</span></div><div class="line">            <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// existing mapping for key</span></div><div class="line">                V oldValue = e.value;</div><div class="line">                <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>)</div><div class="line">                    e.value = value;</div><div class="line">                afterNodeAccess(e);</div><div class="line">                <span class="keyword">return</span> oldValue;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        ++modCount;</div><div class="line">        <span class="comment">// 占有了一个新的hash桶, 判断如果超过了Hash表散列桶的阀值,则对hash表进行拓容</span></div><div class="line">        <span class="keyword">if</span> (++size &gt; threshold)</div><div class="line">            resize();</div><div class="line">        afterNodeInsertion(evict);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>从上面的逻辑我们可以看出,<code>HashMap</code>在插入元素的时候,首先是根据key的hash值找到散列桶的位置, 然后再根据key与散列桶中的散列表的数据进行便利查找.</p>
+<p>因此我们应该尽量的调大HashMap的容量, 尽可能的让桶的容量大于元素的个数, 同时尽可能的保证key值hash函数的正确性, 否则如果元素过多但是桶的数量太少, 会将hash 表退化到链表结构, 将O(1)的查找复杂度变成O(N). 说完HashMap的查找复杂度, 我们再来看一下HashMap的内存占有, 每当我们插入一个新的元素的时候都会生成一个<code>Node</code>对象<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Map</span>.<span class="title">Entry</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> hash;</div><div class="line">    <span class="keyword">final</span> K key;</div><div class="line">    V value;</div><div class="line">    Node&lt;K,V&gt; next;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/05/JavaSE/Java ListVSMap/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/05/JavaSE/Java ListVSMap/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1274,8 +1270,7 @@
 <h2 id="MessageToMessageDecoder"><a href="#MessageToMessageDecoder" class="headerlink" title="MessageToMessageDecoder"></a>MessageToMessageDecoder</h2><p><code>MessageToMessageDecoder</code>一般作为二次解码器, 当我们在<code>ByteToMessageDecoder</code>将一个bytes数组转换成一个java对象的时候, 我们可能还需要将这个对象进行二次解码成其他对象, 我们就可以继承这个类,<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageToMessageDecoder</span>&lt;<span class="title">I</span>&gt; <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span></span></div></pre></td></tr></table></figure></p>
 <p>然后实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, I msg, List&lt;Object&gt; out)</span> <span class="keyword">throws</span> Exception</span>;</div></pre></td></tr></table></figure></p>
 <p>这个方法就可以了</p>
-<h2 id="LineBasedFrameDecoder"><a href="#LineBasedFrameDecoder" class="headerlink" title="LineBasedFrameDecoder"></a>LineBasedFrameDecoder</h2><p><code>LineBasedFrameDecoder</code>的原理是从<code>ByteBuf</code>的可读字节中找到<code>\n</code>或者<code>\r\n</code>,找到之后就以此为结束,然后将当前读取到的数据组成一行.</p>
-<p>如果我们设置每一行的最大长度, 但是当达到最大长度之后还没有找到结束符,就会抛出异常,同时将读取的数据舍弃掉.</p>
+<h2 id="LineBasedFrameDecoder"><a href="#LineBasedFrameDecoder" class="headerlink" title="LineBasedFrameDecoder"></a>LineBasedFrameDecoder</h2><p><code>LineBasedFrameDecoder</code>的原理是从<code>ByteBuf</code>的可读字节中找到<code>\n</code>或者<code>\r\n</code>,找到之后就以此为结束,然后将当前读取到的数据组成一行. 如果我们设置每一行的最大长度, 但是当达到最大长度之后还没有找到结束符,就会抛出异常,同时将读取的数据舍弃掉.</p>
 <p><code>LineBasedFrameDecoder</code>的用法很简单, 我们可以向其指定大小或者不指定大小<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">ch.pipline().addLast(<span class="keyword">new</span> LineBasedFrameDecoder());</div><div class="line">...</div><div class="line">或者</div><div class="line">...</div><div class="line">ch.pipline().addLast(<span class="keyword">new</span> LineBasedFrameDecoder(<span class="number">1024</span>));</div><div class="line">...</div></pre></td></tr></table></figure></p>
 <h2 id="DelimiterBasedFrameDecoder"><a href="#DelimiterBasedFrameDecoder" class="headerlink" title="DelimiterBasedFrameDecoder"></a>DelimiterBasedFrameDecoder</h2><p>使用<code>DelimiterBasedFrameDecoder</code>我们可以自定义设定分隔符<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">ByteBuf delimiter = Unpooled.copiedBuffer(<span class="string">"$_"</span>.getBytes());</div><div class="line">ch.pipline().addLast(<span class="keyword">new</span> DelimiterBasedFrameDecoder(<span class="number">1024</span>, delimiter));</div></pre></td></tr></table></figure></p>
 <p>在上面的例子中我们使用了自定义的分隔符<code>$_</code>, 同样的如果在1024个字节中找不到<code>$_</code>, 也会抛出.</p>
@@ -1570,7 +1565,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/01/14/asm/ASM Core(5) 工具/" title="ASM Core(5) 工具" itemprop="url">ASM Core(5) 工具</a>
+      <a href="/2016/01/14/JavaLibrary/ASM Core(5) 工具/" title="ASM Core(5) 工具" itemprop="url">ASM Core(5) 工具</a>
   </h1>
   <p class="article-author">By
        
@@ -1605,9 +1600,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/asm/">asm</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/asm/">asm</a>
+  </div>
 
 </div>
 
@@ -1617,7 +1617,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/01/14/asm/ASM Core(5) 工具/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/14/asm/ASM Core(5) 工具/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/01/14/JavaLibrary/ASM Core(5) 工具/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/14/JavaLibrary/ASM Core(5) 工具/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1637,7 +1637,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/01/13/asm/ASM Core(3) Methods/" title="ASM Core(3) Methods" itemprop="url">ASM Core(3) Methods</a>
+      <a href="/2016/01/13/JavaLibrary/ASM Core(3) Methods/" title="ASM Core(3) Methods" itemprop="url">ASM Core(3) Methods</a>
   </h1>
   <p class="article-author">By
        
@@ -1673,9 +1673,14 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/asm/">asm</a>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
 </div>
 
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/asm/">asm</a>
+  </div>
 
 </div>
 
@@ -1685,7 +1690,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2016/01/13/asm/ASM Core(3) Methods/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/13/asm/ASM Core(3) Methods/" data-count-type="comments">&nbsp;</a>
+		<a href="/2016/01/13/JavaLibrary/ASM Core(3) Methods/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/01/13/JavaLibrary/ASM Core(3) Methods/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1701,7 +1706,7 @@
 
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/5/">Next<span></span></a>
   </nav>
 
 </div>
@@ -1727,23 +1732,15 @@
 		<ul>
 		
 		  
-		
-		  
 			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>42</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>42</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
 		  
 		
 		  
@@ -1755,27 +1752,11 @@
 		  
 		
 		  
-		
-		  
 			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
 		  
 		
 		  
@@ -1788,8 +1769,6 @@
 		
 		  
 			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
 		  
 		
 		</ul>
@@ -1806,11 +1785,15 @@
 			
 		
 			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>7</sup></a></li>
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>5</sup></a></li>
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
 			
 		
 		</ul>

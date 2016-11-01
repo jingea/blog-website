@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Netty ChannelHandler | 王玉</title>
+    <title>Netty ChannelHandler | ·</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="王玉">
@@ -24,7 +24,7 @@ ChannelHandlerAdapter
 <meta property="og:type" content="article">
 <meta property="og:title" content="Netty ChannelHandler">
 <meta property="og:url" content="http://www.yu66.wang/2016/01/23/JavaLibrary/Netty ChannelHandler/index.html">
-<meta property="og:site_name" content="王玉">
+<meta property="og:site_name" content="·">
 <meta property="og:description" content="首先我们看一下ChannelHandler的继承结构
 
 ChannelHandler
@@ -36,7 +36,7 @@ ChannelHandlerAdapter
 
 123456public interface Channel">
 <meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/netty/netty%20ChannelHadler.jpg">
-<meta property="og:updated_time" content="2016-10-29T06:34:11.000Z">
+<meta property="og:updated_time" content="2016-11-01T06:11:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty ChannelHandler">
 <meta name="twitter:description" content="首先我们看一下ChannelHandler的继承结构
@@ -52,7 +52,7 @@ ChannelHandlerAdapter
 <meta name="twitter:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/netty/netty%20ChannelHadler.jpg">
 
     
-    <link rel="alternative" href="/atom.xml" title="王玉" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
     
     
     
@@ -67,12 +67,8 @@ ChannelHandlerAdapter
       
 <div>
 		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="王玉" title="王玉"/></a>
-			</div>
-			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
@@ -176,8 +172,7 @@ ChannelHandlerAdapter
 <h2 id="MessageToMessageDecoder"><a href="#MessageToMessageDecoder" class="headerlink" title="MessageToMessageDecoder"></a>MessageToMessageDecoder</h2><p><code>MessageToMessageDecoder</code>一般作为二次解码器, 当我们在<code>ByteToMessageDecoder</code>将一个bytes数组转换成一个java对象的时候, 我们可能还需要将这个对象进行二次解码成其他对象, 我们就可以继承这个类,<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageToMessageDecoder</span>&lt;<span class="title">I</span>&gt; <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span></span></div></pre></td></tr></table></figure></p>
 <p>然后实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">decode</span><span class="params">(ChannelHandlerContext ctx, I msg, List&lt;Object&gt; out)</span> <span class="keyword">throws</span> Exception</span>;</div></pre></td></tr></table></figure></p>
 <p>这个方法就可以了</p>
-<h2 id="LineBasedFrameDecoder"><a href="#LineBasedFrameDecoder" class="headerlink" title="LineBasedFrameDecoder"></a>LineBasedFrameDecoder</h2><p><code>LineBasedFrameDecoder</code>的原理是从<code>ByteBuf</code>的可读字节中找到<code>\n</code>或者<code>\r\n</code>,找到之后就以此为结束,然后将当前读取到的数据组成一行.</p>
-<p>如果我们设置每一行的最大长度, 但是当达到最大长度之后还没有找到结束符,就会抛出异常,同时将读取的数据舍弃掉.</p>
+<h2 id="LineBasedFrameDecoder"><a href="#LineBasedFrameDecoder" class="headerlink" title="LineBasedFrameDecoder"></a>LineBasedFrameDecoder</h2><p><code>LineBasedFrameDecoder</code>的原理是从<code>ByteBuf</code>的可读字节中找到<code>\n</code>或者<code>\r\n</code>,找到之后就以此为结束,然后将当前读取到的数据组成一行. 如果我们设置每一行的最大长度, 但是当达到最大长度之后还没有找到结束符,就会抛出异常,同时将读取的数据舍弃掉.</p>
 <p><code>LineBasedFrameDecoder</code>的用法很简单, 我们可以向其指定大小或者不指定大小<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">ch.pipline().addLast(<span class="keyword">new</span> LineBasedFrameDecoder());</div><div class="line">...</div><div class="line">或者</div><div class="line">...</div><div class="line">ch.pipline().addLast(<span class="keyword">new</span> LineBasedFrameDecoder(<span class="number">1024</span>));</div><div class="line">...</div></pre></td></tr></table></figure></p>
 <h2 id="DelimiterBasedFrameDecoder"><a href="#DelimiterBasedFrameDecoder" class="headerlink" title="DelimiterBasedFrameDecoder"></a>DelimiterBasedFrameDecoder</h2><p>使用<code>DelimiterBasedFrameDecoder</code>我们可以自定义设定分隔符<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">ByteBuf delimiter = Unpooled.copiedBuffer(<span class="string">"$_"</span>.getBytes());</div><div class="line">ch.pipline().addLast(<span class="keyword">new</span> DelimiterBasedFrameDecoder(<span class="number">1024</span>, delimiter));</div></pre></td></tr></table></figure></p>
 <p>在上面的例子中我们使用了自定义的分隔符<code>$_</code>, 同样的如果在1024个字节中找不到<code>$_</code>, 也会抛出.</p>
@@ -228,7 +223,7 @@ ChannelHandlerAdapter
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.yu66.wang/2016/01/23/JavaLibrary/Netty ChannelHandler/" data-title="Netty ChannelHandler | 王玉" data-tsina="3253370782" class="share clearfix">
+	  <div data-url="http://www.yu66.wang/2016/01/23/JavaLibrary/Netty ChannelHandler/" data-title="Netty ChannelHandler | ·" data-tsina="3253370782" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -296,23 +291,15 @@ ChannelHandlerAdapter
 		<ul>
 		
 		  
-		
-		  
 			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>42</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>42</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
 		  
 		
 		  
@@ -324,27 +311,11 @@ ChannelHandlerAdapter
 		  
 		
 		  
-		
-		  
 			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
 		  
 		
 		  
@@ -357,8 +328,6 @@ ChannelHandlerAdapter
 		
 		  
 			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
 		  
 		
 		</ul>
@@ -375,11 +344,15 @@ ChannelHandlerAdapter
 			
 		
 			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>7</sup></a></li>
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>5</sup></a></li>
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
 			
 		
 		</ul>

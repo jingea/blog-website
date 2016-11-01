@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>JVM栈 | 王玉</title>
+    <title>JVM栈 | ·</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="王玉">
@@ -16,17 +16,17 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM栈">
 <meta property="og:url" content="http://www.yu66.wang/2014/09/03/jvm/JVM 栈/index.html">
-<meta property="og:site_name" content="王玉">
+<meta property="og:site_name" content="·">
 <meta property="og:description" content="概述JVM栈和常用的数据结构很相似,都是一种先进后出的数据结构. JVM栈是每个线程私有的内存空间.线程的基本行为就是方法调用, 而方法调用就是通过JVM栈传递的.每当我们创建一个线程对象的的时候, 都会创建一个JVM栈. 它的生命周期与线程相同.
 JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入JVM栈,也称入栈, 当方法执行完(不管是return还是异常),栈帧都会被弹出J">
-<meta property="og:updated_time" content="2016-09-09T06:03:37.000Z">
+<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM栈">
 <meta name="twitter:description" content="概述JVM栈和常用的数据结构很相似,都是一种先进后出的数据结构. JVM栈是每个线程私有的内存空间.线程的基本行为就是方法调用, 而方法调用就是通过JVM栈传递的.每当我们创建一个线程对象的的时候, 都会创建一个JVM栈. 它的生命周期与线程相同.
 JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入JVM栈,也称入栈, 当方法执行完(不管是return还是异常),栈帧都会被弹出J">
 
     
-    <link rel="alternative" href="/atom.xml" title="王玉" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
     
     
     
@@ -41,12 +41,8 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
       
 <div>
 		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="王玉" title="王玉"/></a>
-			</div>
-			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
@@ -121,7 +117,7 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
 <li>用来支持native方法</li>
 </ul>
 <h2 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h2><p>每个栈帧内部都包含一个称为操作数栈的先进后出栈. 同局部变量表一样,操作数栈的最大深度也是在编译的时候被写入到Code属性的max_stacks数据项之中的.操作数栈的每一个元素都可以是任意的java数据类型,包括long和double(一个long或者double类型的数据会占用俩个单位的栈深度, 其他类型占用一个单位的栈深度). 32位的数据类型所占的栈容量为1,64位数据类型所占的栈容量为2.在方法执行的时候,操作数栈的深度都不会超过在max_stacks数据项中设定的最大值. </p>
-<p>栈帧在刚创建的时候, 操作数栈是空的, JVM提供了一系列指令从局部变量表或者对象实例的字段中复制常量或变量值到操作数栈中.也提供了一些列指令从操作数栈取走, 操作数据, 以及把结果重新入栈. 也就是入栈和出栈操作.例如:在做算术运算的时候是通过操作数栈来进行的,又或者在调用其他方法的时候是通过操作数栈来进行参数传递的.参考<a href="http://www.ming15.wang/2014/09/08/jvm/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/">字节码指令</a></p>
+<p>栈帧在刚创建的时候, 操作数栈是空的, JVM提供了一系列指令从局部变量表或者对象实例的字段中复制常量或变量值到操作数栈中.也提供了一些列指令从操作数栈取走, 操作数据, 以及把结果重新入栈. 也就是入栈和出栈操作.例如:在做算术运算的时候是通过操作数栈来进行的,又或者在调用其他方法的时候是通过操作数栈来进行参数传递的.参考<a href="http://www.ming15.wang/2014/09/08/jvm/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8C%87%E4%BB%A4/" target="_blank" rel="external">字节码指令</a></p>
 <p>例如,整数加法的字节码指令iadd在运行的时候要求操作数栈中最接近栈顶的俩个元素已经存入了俩个int型的数值,当执行这个指令时,会将这俩个int值出栈并相加,然后将相加的结果入栈.</p>
 <p>另外,在概念模型中,俩个栈帧为虚拟机栈的元素,相互之间是完全独立的.但是大多数虚拟机的实现里都会做一些优化处理,令俩个栈帧出现一部分重叠.让下面栈帧的部分操作数栈与上面栈帧的部分局部变量表重叠在一起,这样在进行方法调用时就可以共有一部分数据,而无需进行额外的参数复制传递:</p>
 <h2 id="局部变量表"><a href="#局部变量表" class="headerlink" title="局部变量表"></a>局部变量表</h2><p>局部变量表存放基本类型的数据和对象的引用,但对象本身不存放在栈中,而是存放在堆中.</p>
@@ -161,7 +157,7 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.yu66.wang/2014/09/03/jvm/JVM 栈/" data-title="JVM栈 | 王玉" data-tsina="3253370782" class="share clearfix">
+	  <div data-url="http://www.yu66.wang/2014/09/03/jvm/JVM 栈/" data-title="JVM栈 | ·" data-tsina="3253370782" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -184,9 +180,9 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
 
 
 <div class="next">
-<a href="/2014/09/02/jvm/JVM 直接内存/"  title="JVM 直接内存">
+<a href="/2014/09/02/jvm/JVM 方法区/"  title="JVM 方法区">
  <strong>下一篇：</strong><br/> 
- <span>JVM 直接内存
+ <span>JVM 方法区
 </span>
 </a>
 </div>
@@ -229,23 +225,15 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
 		<ul>
 		
 		  
-		
-		  
 			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>42</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>42</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
 		  
 		
 		  
@@ -257,27 +245,11 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
 		  
 		
 		  
-		
-		  
 			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
 		  
 		
 		  
@@ -290,8 +262,6 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
 		
 		  
 			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
 		  
 		
 		</ul>
@@ -308,11 +278,15 @@ JVM栈是由JVM栈帧组成的, 每次方法调用都会有一个JVM栈帧进入
 			
 		
 			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>7</sup></a></li>
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>5</sup></a></li>
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
 			
 		
 		</ul>

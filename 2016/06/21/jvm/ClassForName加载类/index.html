@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>ClassForName加载类 | 王玉</title>
+    <title>ClassForName加载类 | ·</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="王玉">
@@ -15,15 +15,15 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="ClassForName加载类">
 <meta property="og:url" content="http://www.yu66.wang/2016/06/21/jvm/ClassForName加载类/index.html">
-<meta property="og:site_name" content="王玉">
+<meta property="og:site_name" content="·">
 <meta property="og:description" content="我在使用Classloader加载类这篇文章中介绍了, 使用ClassLoader加载类. 但是我们还可以使用一个更简单的方式Class.forName()让系统来加载一个类. 其实我们看它的源码实现的话, 会发现, 它自己也是通过ClassLoader实现的加载12345678@CallerSensitivepublic static Class&amp;lt;?&amp;gt; forName(String">
-<meta property="og:updated_time" content="2016-09-09T06:03:37.000Z">
+<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ClassForName加载类">
 <meta name="twitter:description" content="我在使用Classloader加载类这篇文章中介绍了, 使用ClassLoader加载类. 但是我们还可以使用一个更简单的方式Class.forName()让系统来加载一个类. 其实我们看它的源码实现的话, 会发现, 它自己也是通过ClassLoader实现的加载12345678@CallerSensitivepublic static Class&amp;lt;?&amp;gt; forName(String">
 
     
-    <link rel="alternative" href="/atom.xml" title="王玉" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
     
     
     
@@ -38,12 +38,8 @@
       
 <div>
 		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="王玉" title="王玉"/></a>
-			</div>
-			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
@@ -95,7 +91,7 @@
 		
 		</div>
 		
-		<p>我在<a href="http://www.ming15.wang/2016/01/29/jvm/使用Classloader加载类/">使用Classloader加载类</a>这篇文章中介绍了, 使用ClassLoader加载类. 但是我们还可以使用一个更简单的方式<br><code>Class.forName()</code>让系统来加载一个类. 其实我们看它的源码实现的话, 会发现, 它自己也是通过ClassLoader实现的加载<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@CallerSensitive</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt; forName(String className)</div><div class="line">            <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">    <span class="keyword">return</span> forName0(className, <span class="keyword">true</span>, ClassLoader.getClassLoader(Reflection.getCallerClass()));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> Class&lt;?&gt; forName0(String name, <span class="keyword">boolean</span> initialize, ClassLoader loader)</div><div class="line">        <span class="keyword">throws</span> ClassNotFoundException;</div></pre></td></tr></table></figure></p>
+		<p>我在<a href="http://www.ming15.wang/2016/01/29/jvm/使用Classloader加载类/" target="_blank" rel="external">使用Classloader加载类</a>这篇文章中介绍了, 使用ClassLoader加载类. 但是我们还可以使用一个更简单的方式<br><code>Class.forName()</code>让系统来加载一个类. 其实我们看它的源码实现的话, 会发现, 它自己也是通过ClassLoader实现的加载<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@CallerSensitive</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Class&lt;?&gt; forName(String className)</div><div class="line">            <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">    <span class="keyword">return</span> forName0(className, <span class="keyword">true</span>, ClassLoader.getClassLoader(Reflection.getCallerClass()));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> Class&lt;?&gt; forName0(String name, <span class="keyword">boolean</span> initialize, ClassLoader loader)</div><div class="line">        <span class="keyword">throws</span> ClassNotFoundException;</div></pre></td></tr></table></figure></p>
 <p>我们看到了, 它内部也是找到了一个系统的ClassLoader开始对Class进行加载的.</p>
 <p>我们写个测试代码测试一下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClassForName</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException, ClassNotFoundException </span>&#123;</div><div class="line">        Class&lt;?&gt; simpleClass = Class.forName(<span class="string">"SimpleClass"</span>);</div><div class="line">        <span class="keyword">for</span> (Method method: simpleClass.getMethods()) &#123;</div><div class="line">            System.out.println(method.getName());</div><div class="line">        &#125;</div><div class="line">        Class&lt;?&gt; simpleClass1 = Class.forName(<span class="string">"SimpleClass"</span>);</div><div class="line">        System.out.println(simpleClass.equals(simpleClass1));</div><div class="line">        System.out.println(simpleClass == simpleClass1);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>然后我在同一级包下定义一个类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleClass</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">empotyMethod</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -118,7 +114,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.yu66.wang/2016/06/21/jvm/ClassForName加载类/" data-title="ClassForName加载类 | 王玉" data-tsina="3253370782" class="share clearfix">
+	  <div data-url="http://www.yu66.wang/2016/06/21/jvm/ClassForName加载类/" data-title="ClassForName加载类 | ·" data-tsina="3253370782" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -186,23 +182,15 @@
 		<ul>
 		
 		  
-		
-		  
 			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>42</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>42</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
 		  
 		
 		  
@@ -214,27 +202,11 @@
 		  
 		
 		  
-		
-		  
 			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
 		  
 		
 		  
@@ -247,8 +219,6 @@
 		
 		  
 			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
 		  
 		
 		</ul>
@@ -265,11 +235,15 @@
 			
 		
 			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>7</sup></a></li>
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>5</sup></a></li>
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
 			
 		
 		</ul>

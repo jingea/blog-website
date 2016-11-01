@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>JVM内存溢出之 Heap OOM | 王玉</title>
+    <title>JVM内存溢出之 栈 OOM | ·</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="王玉">
@@ -13,17 +13,17 @@
     
     <meta name="description" content="溢出代码12345678910111213141516public class TestStackSOF &amp;#123;	private static int stackLength = 1;	public static void stackLeak() &amp;#123;		stackLength ++;		stackLeak();	&amp;#125;	public static void main(Stri">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JVM内存溢出之 Heap OOM">
+<meta property="og:title" content="JVM内存溢出之 栈 OOM">
 <meta property="og:url" content="http://www.yu66.wang/2014/09/06/jvm/JVM内存溢出之 Stack OOM/index.html">
-<meta property="og:site_name" content="王玉">
+<meta property="og:site_name" content="·">
 <meta property="og:description" content="溢出代码12345678910111213141516public class TestStackSOF &amp;#123;	private static int stackLength = 1;	public static void stackLeak() &amp;#123;		stackLength ++;		stackLeak();	&amp;#125;	public static void main(Stri">
-<meta property="og:updated_time" content="2016-08-07T09:15:53.000Z">
+<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JVM内存溢出之 Heap OOM">
+<meta name="twitter:title" content="JVM内存溢出之 栈 OOM">
 <meta name="twitter:description" content="溢出代码12345678910111213141516public class TestStackSOF &amp;#123;	private static int stackLength = 1;	public static void stackLeak() &amp;#123;		stackLength ++;		stackLeak();	&amp;#125;	public static void main(Stri">
 
     
-    <link rel="alternative" href="/atom.xml" title="王玉" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
     
     
     
@@ -38,12 +38,8 @@
       
 <div>
 		
-			<div id="imglogo">
-				<a href="/"><img src="/img/logo.png" alt="王玉" title="王玉"/></a>
-			</div>
-			
 			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="王玉">王玉</a></h1>
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
@@ -75,7 +71,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/09/06/jvm/JVM内存溢出之 Stack OOM/" title="JVM内存溢出之 Heap OOM" itemprop="url">JVM内存溢出之 Heap OOM</a>
+      <a href="/2014/09/06/jvm/JVM内存溢出之 Stack OOM/" title="JVM内存溢出之 栈 OOM" itemprop="url">JVM内存溢出之 栈 OOM</a>
   </h1>
   <p class="article-author">By
        
@@ -97,8 +93,9 @@
 		
 		<p>溢出代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestStackSOF</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> stackLength = <span class="number">1</span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stackLeak</span><span class="params">()</span> </span>&#123;</div><div class="line">		stackLength ++;</div><div class="line">		stackLeak();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			stackLeak();</div><div class="line">		&#125; <span class="keyword">catch</span>(Throwable e) &#123;</div><div class="line">			System.out.println(<span class="string">"stack length:"</span> + stackLength + <span class="string">". "</span> + e.getMessage());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>运行上面的程序<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java -XX:+HeapDumpOnOutOfMemoryError -Xss1M TestStackSOF</div><div class="line">stack length:22427. null</div></pre></td></tr></table></figure></p>
-<p>1M的栈空间大概能执行以上那个简单方法的22427次. 这个次数并不是在编译期就决定的,而是在运行时根据具体的内存使用情况而变化的.<br>我们还注意到使用<code>-XX:+HeapDumpOnOutOfMemoryError</code>并不能产生堆内存溢出错误, 也没有产生类似于java_pid19212.hprof文件的文件.</p>
-<p>上面的并没有产生<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaVMStackOOM</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dontStop</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line"></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stackLeakByThread</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">					dontStop();</div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		JavaVMStackOM om = <span class="keyword">new</span> JavaVMStackOM();</div><div class="line">		om.stackLeakByThread();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>1M的栈空间大概能执行以上那个简单方法的22427次. 这个次数并不是在编译期就决定的,而是在运行时根据具体的内存使用情况而变化的. </p>
+<p>下面的代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stackLeak</span><span class="params">()</span> </span>&#123;</div><div class="line">                stackLeak();</div><div class="line">        &#125;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">                stackLeak();</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用<code>-XX:+HeapDumpOnOutOfMemoryError</code>并不能产生堆内存溢出错误, 也没有产生类似于java_pid19212.hprof文件的文件.<br>使用<code>java -XX:ErrorFile=./error.log -Xss1M Test</code> 也没有产生错误文件<br>上面的并没有产生<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaVMStackOOM</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dontStop</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line"></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stackLeakByThread</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</div><div class="line">			Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">					dontStop();</div><div class="line">				&#125;</div><div class="line">			&#125;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		JavaVMStackOM om = <span class="keyword">new</span> JavaVMStackOM();</div><div class="line">		om.stackLeakByThread();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>以上俩个实现都都无法让虚拟机产生OutOfMemoryError异常,只能产生StackOverflowError.实验结果表明: 单个线程下,无论由于栈帧太大还是虚拟机容量太小,当内存无法分配时,虚拟机抛出的都是StackOverflowError.如果测试时不是限于单线程,通过不断建立新线程的方式倒是可以产生内存溢出异常. 但是这样产生的内存溢出异常与栈空间是否足够大并不存在任何联系,或者准确说,在这种情况下,给每个线程的栈分配的内存越大,反而越容易产生内存溢出异常.</p>
 <p>当开发多线程应用时应该特别注意的是,出现StackOverflowError异常时有错误堆栈可以阅读,相对来说比较容易找到问题.如果使用虚拟机默认参数,栈深度在大多数情况下达到1000-2000完全没有问题,对于正常的方法调用(包括递归),这个深度应该够用了,但是如果建立过多的线程导致的内存溢出,在不能减少线程数或者更换64位虚拟机的情况下,就只能通过减少最大堆和减少栈容量来换取更多的线程.</p>
   
@@ -118,7 +115,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.yu66.wang/2014/09/06/jvm/JVM内存溢出之 Stack OOM/" data-title="JVM内存溢出之 Heap OOM | 王玉" data-tsina="3253370782" class="share clearfix">
+	  <div data-url="http://www.yu66.wang/2014/09/06/jvm/JVM内存溢出之 Stack OOM/" data-title="JVM内存溢出之 栈 OOM | ·" data-tsina="3253370782" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -132,18 +129,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/09/06/jvm/JVM内存溢出之 Metadata OOM/" title="JVM内存溢出之 Metadata OOM">
+ <a href="/2014/09/06/jvm/JVM内存溢出之 Heap OOM/" title="JVM内存溢出之 Heap OOM">
   <strong>上一篇：</strong><br/>
   <span>
-  JVM内存溢出之 Metadata OOM</span>
+  JVM内存溢出之 Heap OOM</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2014/09/06/jvm/JVM内存溢出之 Heap OOM/"  title="JVM内存溢出之 Heap OOM">
+<a href="/2014/09/06/jvm/JVM内存溢出之 DirectMemory OOM/"  title="JVM内存溢出之 DirectMemory OOM">
  <strong>下一篇：</strong><br/> 
- <span>JVM内存溢出之 Heap OOM
+ <span>JVM内存溢出之 DirectMemory OOM
 </span>
 </a>
 </div>
@@ -152,7 +149,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2014/09/06/jvm/JVM内存溢出之 Stack OOM/" data-title="JVM内存溢出之 Heap OOM" data-url="http://www.yu66.wang/2014/09/06/jvm/JVM内存溢出之 Stack OOM/"></div>
+	<div class="ds-thread" data-thread-key="2014/09/06/jvm/JVM内存溢出之 Stack OOM/" data-title="JVM内存溢出之 栈 OOM" data-url="http://www.yu66.wang/2014/09/06/jvm/JVM内存溢出之 Stack OOM/"></div>
 </section>
 
 
@@ -186,23 +183,15 @@
 		<ul>
 		
 		  
-		
-		  
 			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>42</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>42</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
 		  
 		
 		  
@@ -214,27 +203,11 @@
 		  
 		
 		  
-		
-		  
 			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/asm/" title="asm">asm<sup>4</sup></a></li>
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
-		
-		  
 			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
 		  
 		
 		  
@@ -247,8 +220,6 @@
 		
 		  
 			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
 		  
 		
 		</ul>
@@ -265,11 +236,15 @@
 			
 		
 			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>7</sup></a></li>
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>5</sup></a></li>
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
 			
 		
 		</ul>

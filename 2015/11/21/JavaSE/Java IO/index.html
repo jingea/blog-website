@@ -1,0 +1,688 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>JAVA IO | ·</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="王玉">
+    
+
+    
+    <meta name="description" content="文件操作FileFilter检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.123456FileFilter fileFilter = pathname -&amp;gt; &amp;#123;	System.out.println(pathname.getP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA IO">
+<meta property="og:url" content="http://www.yu66.wang/2015/11/21/JavaSE/Java IO/index.html">
+<meta property="og:site_name" content="·">
+<meta property="og:description" content="文件操作FileFilter检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.123456FileFilter fileFilter = pathname -&amp;gt; &amp;#123;	System.out.println(pathname.getP">
+<meta property="og:updated_time" content="2016-11-01T06:11:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JAVA IO">
+<meta name="twitter:description" content="文件操作FileFilter检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.123456FileFilter fileFilter = pathname -&amp;gt; &amp;#123;	System.out.println(pathname.getP">
+
+    
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/21/JavaSE/Java IO/" title="JAVA IO" itemprop="url">JAVA IO</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-21T08:00:00.000Z" itemprop="datePublished"> Published 2015-11-21</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件操作"><span class="toc-number">1.</span> <span class="toc-text">文件操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FileFilter"><span class="toc-number">1.1.</span> <span class="toc-text">FileFilter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FilenameFilter"><span class="toc-number">1.2.</span> <span class="toc-text">FilenameFilter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#File"><span class="toc-number">1.3.</span> <span class="toc-text">File</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileDescriptor"><span class="toc-number">1.4.</span> <span class="toc-text">FileDescriptor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileLock"><span class="toc-number">1.5.</span> <span class="toc-text">FileLock</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DirectoryStream"><span class="toc-number">1.6.</span> <span class="toc-text">DirectoryStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileVisitor"><span class="toc-number">1.7.</span> <span class="toc-text">FileVisitor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#监控文件变化"><span class="toc-number">1.8.</span> <span class="toc-text">监控文件变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileStore"><span class="toc-number">1.9.</span> <span class="toc-text">FileStore</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileSystems"><span class="toc-number">1.10.</span> <span class="toc-text">FileSystems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Paths"><span class="toc-number">1.11.</span> <span class="toc-text">Paths</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写文件"><span class="toc-number">2.</span> <span class="toc-text">写文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferedOutputStream"><span class="toc-number">2.1.</span> <span class="toc-text">BufferedOutputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferedWriter"><span class="toc-number">2.2.</span> <span class="toc-text">BufferedWriter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OutputStreamWriter"><span class="toc-number">2.3.</span> <span class="toc-text">OutputStreamWriter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PrintStream"><span class="toc-number">2.4.</span> <span class="toc-text">PrintStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PrintWriter"><span class="toc-number">2.5.</span> <span class="toc-text">PrintWriter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读文件"><span class="toc-number">3.</span> <span class="toc-text">读文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferedInputStream"><span class="toc-number">3.1.</span> <span class="toc-text">BufferedInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferedReader"><span class="toc-number">3.2.</span> <span class="toc-text">BufferedReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LineNumberInputStream"><span class="toc-number">3.3.</span> <span class="toc-text">LineNumberInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LineNumberReader"><span class="toc-number">3.4.</span> <span class="toc-text">LineNumberReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RandomAccessFile"><span class="toc-number">3.5.</span> <span class="toc-text">RandomAccessFile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getResourceAsStream"><span class="toc-number">3.6.</span> <span class="toc-text">getResourceAsStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取压缩包文件"><span class="toc-number">3.7.</span> <span class="toc-text">读取压缩包文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存IO"><span class="toc-number">4.</span> <span class="toc-text">内存IO</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteArrayInputStream"><span class="toc-number">4.1.</span> <span class="toc-text">ByteArrayInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteArrayOutputStream"><span class="toc-number">4.2.</span> <span class="toc-text">ByteArrayOutputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CharArrayReader"><span class="toc-number">4.3.</span> <span class="toc-text">CharArrayReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CharArrayWriter"><span class="toc-number">4.4.</span> <span class="toc-text">CharArrayWriter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PushbackInputStream"><span class="toc-number">4.5.</span> <span class="toc-text">PushbackInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PushbackReader"><span class="toc-number">4.6.</span> <span class="toc-text">PushbackReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PipedReader"><span class="toc-number">4.7.</span> <span class="toc-text">PipedReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PipedWriter"><span class="toc-number">4.8.</span> <span class="toc-text">PipedWriter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PipedInputStream"><span class="toc-number">4.9.</span> <span class="toc-text">PipedInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PipedOutputStream"><span class="toc-number">4.10.</span> <span class="toc-text">PipedOutputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SequenceInputStream"><span class="toc-number">4.11.</span> <span class="toc-text">SequenceInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StreamTokenizer"><span class="toc-number">4.12.</span> <span class="toc-text">StreamTokenizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Console"><span class="toc-number">4.13.</span> <span class="toc-text">Console</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#序列化"><span class="toc-number">5.</span> <span class="toc-text">序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Externalizable"><span class="toc-number">5.1.</span> <span class="toc-text">Externalizable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flushable"><span class="toc-number">5.2.</span> <span class="toc-text">Flushable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectInputValidation"><span class="toc-number">5.3.</span> <span class="toc-text">ObjectInputValidation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectStreamConstants"><span class="toc-number">5.4.</span> <span class="toc-text">ObjectStreamConstants</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataInputStream"><span class="toc-number">5.5.</span> <span class="toc-text">DataInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataOutputStream"><span class="toc-number">5.6.</span> <span class="toc-text">DataOutputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectInputStream"><span class="toc-number">5.7.</span> <span class="toc-text">ObjectInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectOutputStream"><span class="toc-number">5.8.</span> <span class="toc-text">ObjectOutputStream</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h2><h3 id="FileFilter"><a href="#FileFilter" class="headerlink" title="FileFilter"></a>FileFilter</h3><p>检测文件是否存在.FileFilter 和他的前身FilenameFilter 唯一的不同是FileFilter 提供文件对象的访问方法,而FilenameFilter 是按照目录和文件名的方式来工作的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">FileFilter fileFilter = pathname -&gt; &#123;</div><div class="line">	System.out.println(pathname.getPath());</div><div class="line">	<span class="keyword">return</span> pathname.isFile();</div><div class="line">&#125;;</div><div class="line"></div><div class="line">fileFilter.accept(<span class="keyword">new</span> File(<span class="string">"D:\\hazelcast-documentation-3.5.3.pdf"</span>));</div></pre></td></tr></table></figure></p>
+<h3 id="FilenameFilter"><a href="#FilenameFilter" class="headerlink" title="FilenameFilter"></a>FilenameFilter</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">FilenameFilter filenameFilter = (dir, name) -&gt; &#123;</div><div class="line">	System.out.println(dir);</div><div class="line">	System.out.println(name);</div><div class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">filenameFilter.accept(<span class="keyword">new</span> File(<span class="string">"D"</span>), <span class="string">"hazelcast-documentation-3.5.3.pdf"</span>);</div></pre></td></tr></table></figure>
+<h3 id="File"><a href="#File" class="headerlink" title="File"></a>File</h3><p>File对象给我们提供了以下的功能</p>
+<ul>
+<li>删除文件</li>
+<li>文件重命名</li>
+<li>创建新的文件</li>
+<li>创建新的文件</li>
+<li>获取文件的最后修改时间</li>
+<li>设置文件只读</li>
+<li>设置文件可写</li>
+<li>获取文件长度(总字节数)</li>
+<li>获取文件路径</li>
+<li>获取绝对文件路径</li>
+<li>文件是否隐藏</li>
+<li>获得剩余磁盘空间？</li>
+<li>拷贝文件夹</li>
+<li>遍历文件夹</li>
+<li>检查文件夹是否为空？</li>
+</ul>
+<h3 id="FileDescriptor"><a href="#FileDescriptor" class="headerlink" title="FileDescriptor"></a>FileDescriptor</h3><p>用来表示开放文件、开放套接字等.当FileDescriptor表示某文件时,我们可以通俗的将FileDescriptor看成是该文件.但是,我们不能直接通过FileDescriptor对该文件进行操作；若需要通过FileDescriptor对该文件进行操作,则需要新创建FileDescriptor对应的FileOutputStream,再对文件进行操作.</p>
+<p>类实例作为一个不透明的句柄底层机器特有的结构表示一个打开的文件,打开的套接字或其他来源或字节的接收器.以下是关于FileDescriptor要点：</p>
+<ol>
+<li>主要实际使用的文件描述符是创建一个FileInputStream或FileOutputStream来遏制它.</li>
+<li>应用程序不应创建自己的文件描述符.</li>
+</ol>
+<h3 id="FileLock"><a href="#FileLock" class="headerlink" title="FileLock"></a>FileLock</h3><p>锁定文件</p>
+<p>ByteBuffer.allocate()语句改为ByteBuffer.allocateDirect().用来证实性能之间的差异,但是请注意程序的启动时间是否发生了明显的改变.</p>
+<p>修改{@link JGrep}让其使java的nio内存映射文件.</p>
+<p>JDK1.4引入了文件加锁机制,它允许我们同步访问某个作为共享资源的文件.不过,竞争同一文件的两个线程可能在不同的Java虚拟机上;或者一个是Java线程,另一个是操作系统中其他的某个本地线程.</p>
+<p>文件锁对其他的操作系统进程是可见的,因为Java的文件加锁直接映射到了本地操作系统的加锁工具.通过对FileChannel调用tryLock()或lock(),就可以获得整个文件的FileLock.</p>
+<p>(SocketChannel、DatagramChannel和 ServerSocketChannel不需要加锁,因为他们是从单进程实体继承而来;我们通常不在两个进程之间共享网络socket.)</p>
+<p>tryLock()是非阻塞式的,它设法获取锁,但是如果不能获得(当其他一些进程已经持有相同的锁,并且不共享时),它将直接从方法调用返回.lock()则是阻塞式的,它要阻塞进程直至锁可以获得,或调用lock()的线程中断,或调用lock()的通道关闭.</p>
+<p>使用FileLock.release()可以释放锁.</p>
+<p>也可以使用此方法对文件上锁tryLock()或者lock()其中,加锁的区域由size-position决定.第三个参数指定是否是共享锁.</p>
+<p>尽管无参数的加锁方法将根据文件尺寸的变化而变化,但是具有固定尺寸的锁不随文件尺寸的变化而变化.如果你获得了某一区域(从position到position+size)上的锁,当文件增大超出position+size时,那么在position+size之外的部分不会被锁定.无参数的加锁方法会对 整个文件进行加锁,甚至文件变大后也是如此.</p>
+<p>对独占锁或者共享锁的支持必须由底层的操作系统提供.如果操作系统不支持共享锁并为每一个请求都创建一个锁,那么它就会使用独占锁.</p>
+<p>锁的 类型(共享或独占)可以通过FileLock.isShared()进行查询.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="string">"file.txt"</span>);</div><div class="line">FileLock fl = fos.getChannel().tryLock();</div><div class="line"><span class="keyword">if</span> (fl != <span class="keyword">null</span>) &#123;</div><div class="line">	System.out.println(<span class="string">"Locked File"</span>);</div><div class="line">	TimeUnit.MILLISECONDS.sleep(<span class="number">100</span>);</div><div class="line">	fl.release();</div><div class="line">	System.out.println(<span class="string">"Released Lock"</span>);</div><div class="line">&#125;</div><div class="line">fos.close()</div></pre></td></tr></table></figure></p>
+<h3 id="DirectoryStream"><a href="#DirectoryStream" class="headerlink" title="DirectoryStream"></a>DirectoryStream</h3><p>遍历某个文件夹内的所有文件,但是不会遍历子目录. 也就是这会遍历当前路径中的所有文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">DirectoryStream&lt;Path&gt; paths = Files.newDirectoryStream(Paths.get(<span class="string">"E:"</span>));</div><div class="line">paths.forEach(path -&gt; &#123;</div><div class="line">	System.out.println(path.getFileName());</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>SecureDirectoryStream</p>
+</blockquote>
+<h3 id="FileVisitor"><a href="#FileVisitor" class="headerlink" title="FileVisitor"></a>FileVisitor</h3><p>遍历某个文件夹内的所有文件接口.</p>
+<p><code>SimpleFileVisitor</code>实现了这个接口. 与<code>DirectoryStream</code> 不同的是,这个类会遍历目录下包括子目录的所有文件并且提供了多种处理接口方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">SimpleFileVisitor visitor = <span class="keyword">new</span> SimpleFileVisitor&lt;Path&gt;() &#123;</div><div class="line">			<span class="meta">@Override</span></div><div class="line">			<span class="function"><span class="keyword">public</span> FileVisitResult <span class="title">visitFile</span><span class="params">(Path file, BasicFileAttributes attrs)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">				System.out.println(file.getFileName());</div><div class="line">				<span class="keyword">return</span> <span class="keyword">super</span>.visitFile(file, attrs);</div><div class="line">			&#125;</div><div class="line">		&#125;;</div><div class="line"></div><div class="line">		Files.walkFileTree(Paths.get(<span class="string">"E:"</span>), visitor);</div></pre></td></tr></table></figure></p>
+<h3 id="监控文件变化"><a href="#监控文件变化" class="headerlink" title="监控文件变化"></a>监控文件变化</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">WatchService service = FileSystems.getDefault().newWatchService();</div><div class="line">		Paths.get(<span class="string">"D:/"</span>).register(service,</div><div class="line">		ENTRY_CREATE,</div><div class="line">		ENTRY_DELETE,</div><div class="line">		ENTRY_MODIFY);</div><div class="line"></div><div class="line">WatchKey watchKey = service.take();</div><div class="line"></div><div class="line">watchKey.pollEvents().stream().forEach(watchEvent -&gt; &#123;</div><div class="line">	System.out.println(watchEvent.context() + <span class="string">"  "</span> + watchEvent.kind());</div><div class="line">&#125;);</div><div class="line">watchKey.reset();</div></pre></td></tr></table></figure>
+<h3 id="FileStore"><a href="#FileStore" class="headerlink" title="FileStore"></a>FileStore</h3><p>代表了真正的存储设备,提供了设备的详尽信息</p>
+<h3 id="FileSystems"><a href="#FileSystems" class="headerlink" title="FileSystems"></a>FileSystems</h3><ul>
+<li>FileSystems.getDefault() ：返回 JVM 默认的 FileSystem – 一般说来,也就是操作系统的默认文件系统</li>
+<li>FileSystems.getFileSystem(uri) ： 可以获取远程主机的FileSystem<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">FileSystem system = FileSystems.getDefault();</div><div class="line"><span class="comment">// 得到文件系统支持的属性视图列表</span></div><div class="line">Set&lt;String&gt; views = system.supportedFileAttributeViews();</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>FileSystem</p>
+</blockquote>
+<h3 id="Paths"><a href="#Paths" class="headerlink" title="Paths"></a>Paths</h3><blockquote>
+<p>Path 类可以在任何文件系统（FileSystem）和任何存储空间 Path 类引用默认文件系统（计算机的文件系统）的文件,但是 NIO.2是完全模块化的—— FileSystem 的具体实现是在内存中的一组数据,因此在网络环境或在虚拟文件系统中,NIO.2 也完全适用.NIO.2提供给我们在文件系统中操作文件、文件夹或链接的所有方法</p>
+</blockquote>
+<h2 id="写文件"><a href="#写文件" class="headerlink" title="写文件"></a>写文件</h2><h3 id="BufferedOutputStream"><a href="#BufferedOutputStream" class="headerlink" title="BufferedOutputStream"></a>BufferedOutputStream</h3><p>我们使用<code>FileOutputStream</code>, <code>BufferedOutputStream</code>来读取文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> (BufferedOutputStream bf = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(<span class="string">""</span>)));) &#123;</div><div class="line">	bf.write(<span class="number">1</span>);</div><div class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> IOException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>BufferedOutputStream 缓冲输出流。它继承于FilterOutputStream。作用是为另一个输出流提供“缓冲功能”。输出byte[]字节数组<br>BufferedOutputStream只提供了输出byte数据的方式,因此这种方式只能读取二进制流</p>
+<blockquote>
+<p>FileOutputStream 一个字节一个字节的向文件里输出数据</p>
+</blockquote>
+<h3 id="BufferedWriter"><a href="#BufferedWriter" class="headerlink" title="BufferedWriter"></a>BufferedWriter</h3><ol>
+<li>支持字符串输出</li>
+<li>支持换行输出</li>
+<li>支持文件追加输出<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">BufferedWriter writer = Files.newBufferedWriter(Paths.get(<span class="string">"new.txt"</span>), StandardCharsets.UTF_8);</div><div class="line">writer.write(<span class="string">"123456\n"</span>); <span class="comment">// 换行输出</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<p>另外还有一点需要提到的是FileWriter, 它一个字符一个字符地输出</p>
+</blockquote>
+<h3 id="OutputStreamWriter"><a href="#OutputStreamWriter" class="headerlink" title="OutputStreamWriter"></a>OutputStreamWriter</h3><p>OutputStreamWriter 将字节流转换为字符流。是字节流通向字符流的桥梁。如果不指定字符集编码，该解码过程将使用平台默认的字符编码，如：GBK。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 写入UTF-8格式编码的文件</span></div><div class="line">StringBuffer buffer = <span class="keyword">new</span> StringBuffer();</div><div class="line"><span class="keyword">try</span> (Writer out = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> OutputStreamWriter(</div><div class="line">		<span class="keyword">new</span> FileOutputStream(file), <span class="string">"UTF8"</span>))) &#123;</div><div class="line"></div><div class="line">	out.append(<span class="string">"Website UTF-8"</span>).append(<span class="string">"\r\n"</span>);</div><div class="line">	out.append(<span class="string">"中文 UTF-8"</span>).append(<span class="string">"\r\n"</span>);</div><div class="line"></div><div class="line">	out.flush();</div><div class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="PrintStream"><a href="#PrintStream" class="headerlink" title="PrintStream"></a>PrintStream</h3><p>标准IO重定向</p>
+<p>打印输出流,用来装饰其它输出流。它能为其他输出流添加了功能，使它们能够方便地打印各种数据值表示形式。PrintStream永远不会抛出IOException；PrintStream提供了自动flush和字符集设置功能。所谓自动flush，就是往PrintStream写入的数据会立刻调用flush()函数。</p>
+<p>System类提供了一些简单的静态方法调用,以允许我们对标准输入,输出和错误IO进行重定向IO重定向是对字节流的操纵而不是字符流,因此在该例中使用的是InputStream和OutputStream而不是Reader和Writer</p>
+<p>示例 如果在显示器上创建大量输出,而这些输出滚动地太快而无法阅读时,IO重定向就显得很有用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">PrintStream console = System.out;</div><div class="line">BufferedInputStream in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"Redirecting.java"</span>));</div><div class="line"></div><div class="line">PrintStream out = <span class="keyword">new</span> PrintStream(<span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"MapDB.test.out"</span>)));</div><div class="line"></div><div class="line">System.setIn(in);</div><div class="line">System.setOut(out);</div><div class="line">System.setErr(out);</div><div class="line"></div><div class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</div><div class="line">String s;</div><div class="line"><span class="keyword">while</span> ((s = br.readLine()) != <span class="keyword">null</span>)</div><div class="line">	System.out.println(s);</div><div class="line"></div><div class="line">out.close(); <span class="comment">// Remember this!</span></div><div class="line">System.setOut(console);</div></pre></td></tr></table></figure></p>
+<h3 id="PrintWriter"><a href="#PrintWriter" class="headerlink" title="PrintWriter"></a>PrintWriter</h3><p>用于向文本输出流打印对象的格式化表示形式。它实现在 PrintStream 中的所有 print 方法。它不包含用于写入原始字节的方法，对于这些字节，程序应该使用未编码的字节流进行写入。</p>
+<p>FileWriter可以向文件输出数据. 首先创建一个与指定文件连接的FileWriter.然后使用BufferedWriter对其进行包装进行性能提升 最后使用PrintWriter提供格式化功能<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> (PrintWriter out = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(file)));) &#123;</div><div class="line">	out.println(string);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>System.out 是一个PrintStream,而PrintStream是一个OutputStream而PrintWriter有一个参数是接受OutputStream,因此我们可以将System.out转换成PrintWriter<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> (PrintWriter out = <span class="keyword">new</span> PrintWriter(System.out);) &#123;</div><div class="line">out.println(string);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><h3 id="BufferedInputStream"><a href="#BufferedInputStream" class="headerlink" title="BufferedInputStream"></a>BufferedInputStream</h3><p>我们使用<code>FileInputStream</code>, <code>BufferedInputStream</code>来读取文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读取二进制文件</span></div><div class="line"><span class="keyword">try</span> (BufferedInputStream bf = <span class="keyword">new</span> BufferedInputStream(</div><div class="line">		<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">""</span>)));) &#123;</div><div class="line"></div><div class="line">	<span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[bf.available()];</div><div class="line">	bf.read(data);</div><div class="line"></div><div class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> IOException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>BufferedInputStream</code>是一个带有缓冲区域的<code>InputStream</code>, 支持<code>mark()</code>标记和<code>reset()</code>重置方法.输入到byte[]数组里.只将数据读取进byte字节数组里, 因此这种方式只能读取二进制字节流</p>
+<blockquote>
+<p>FileInputStream 一个字节一个字节的从文件里读取数据</p>
+</blockquote>
+<h3 id="BufferedReader"><a href="#BufferedReader" class="headerlink" title="BufferedReader"></a>BufferedReader</h3><p>BufferedReader 从字符输入流中读取文本,缓冲各个字符.提供字符、数组和行的高效读取.<br>我们有俩种方式创建BufferedReader.</p>
+<ul>
+<li>使用带缓冲区的写入器 <code>Files.newBufferedReader(Paths.get(&quot;new.txt&quot;), StandardCharsets.UTF_8);</code>;</li>
+<li>读取UTF-8格式编码的文件 <code>new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))</code></li>
+</ul>
+<blockquote>
+<p>InputStreamReader 是字节流通向字符流的桥梁：它使用指定的 charset 读写字节并将其解码为字符.将“字节输入流”转换成“字符输入流”.它继承于Reader.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">BufferedReader reader = Files.newBufferedReader(Paths.get(<span class="string">"new.txt"</span>), StandardCharsets.UTF_8);</div><div class="line">reader.lines().forEach(line -&gt; System.out.println(line));</div></pre></td></tr></table></figure>
+<p>我们可以使用JAVA8中的Stream来快捷的遍历每一行</p>
+<blockquote>
+<p>从标准IO中输入. 按照标准的IO模型,Java提供了<code>System.out, System.out, System.err System.out,System.err</code> 已经被包装成了<code>PrintStream</code>对象,但是<code>System.in</code>作为原生<code>InputStream</code>却没有进行过任何包装. 所以在使用<code>System.in</code>时必须对其进行包装,下例中展示了,我们使用<code>InputStreamReader</code>将<code>System.in</code>包装<code>Reader</code>,然后再包装一层<code>BufferedReader</code></p>
+<p>另外还有一点需要提到的是FileReader, 它一个字符一个字符地读取.</p>
+</blockquote>
+<h3 id="LineNumberInputStream"><a href="#LineNumberInputStream" class="headerlink" title="LineNumberInputStream"></a>LineNumberInputStream</h3><p>此类是一个输入流过滤器,它提供跟踪当前行号的附加功能.行是以回车符 (<code>\r</code>)、换行符 (<code>\n</code>)或回车符后面紧跟换行符结尾的字节序列.在所有这三种情况下,都以单个换行符形式返回行终止字符.行号以 0 开头,并在 read 返回换行符时递增 1.</p>
+<h3 id="LineNumberReader"><a href="#LineNumberReader" class="headerlink" title="LineNumberReader"></a>LineNumberReader</h3><p>跟踪行号的缓冲字符输入流.此类定义了方法 <code>setLineNumber(int)</code> 和 <code>getLineNumber()</code>,它们可分别用于设置和获取当前行号.默认情况下,行编号从 0 开始.该行号随数据读取在每个行结束符处递增,并且可以通过调用 <code>setLineNumber(int)</code> 更改行号.但要注意的是,<code>setLineNumber(int)</code> 不会实际更改流中的当前位置；它只更改将由<code>getLineNumber()</code>返回的值.可认为行在遇到以下符号之一时结束：换行符（<code>\n</code>）、回车符（<code>\r</code>）、回车后紧跟换行符.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//  获取行数</span></div><div class="line"><span class="keyword">int</span> lineCount = <span class="number">0</span>;</div><div class="line"><span class="keyword">try</span> (FileReader reader = <span class="keyword">new</span> FileReader(IOUtils.newFile(<span class="string">""</span>));</div><div class="line">		LineNumberReader lnr = <span class="keyword">new</span> LineNumberReader(reader);) &#123;</div><div class="line">	<span class="keyword">while</span> (lnr.readLine() != <span class="keyword">null</span>) &#123;</div><div class="line">		lineCount++;</div><div class="line">	&#125;</div><div class="line">&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="RandomAccessFile"><a href="#RandomAccessFile" class="headerlink" title="RandomAccessFile"></a>RandomAccessFile</h3><p>读写随机访问文件 <code>RandomAccessFile</code>除了实现了<code>DataInput</code>和<code>DataOutput</code>接口之外,有效地与IO继承层次结构的其他部分实现了分离.</p>
+<p>因为它不支持装饰模式,所以不能将其与<code>InputStream</code>和<code>OutputStream</code>子类的任何部分组合起来而且必须假定<code>RandomAccessFile</code>已经被正确的缓冲</p>
+<p>用来访问那些保存数据记录的文件的,你就可以用<code>seek()</code>方法来访问记录,并进行读写了.这些记录的大小不必相同；但是其大小和位置必须是可知的.但是该类仅限于操作文件.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读取所有的行</span></div><div class="line"><span class="keyword">try</span> (RandomAccessFile r = <span class="keyword">new</span> RandomAccessFile(file, <span class="string">"rw"</span>)) &#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; r.length(); i++) &#123;</div><div class="line">		r.read();	<span class="comment">// r.readLine();</span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 写入数据,第二个参数必须为 "r", "rw", "rws", or "rwd"</span></div><div class="line"><span class="keyword">try</span> (RandomAccessFile w = <span class="keyword">new</span> RandomAccessFile(file, <span class="string">"rw"</span>)) &#123;</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span>; i++)</div><div class="line">		w.writeByte(<span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"><span class="keyword">try</span> (FileChannel fc = <span class="keyword">new</span> RandomAccessFile(<span class="keyword">new</span> File(<span class="string">"temp.tmp"</span>), <span class="string">"rw"</span>).getChannel();) &#123;</div><div class="line">	IntBuffer ib = fc.map(FileChannel.MapMode.READ_WRITE, <span class="number">0</span>, fc.size()).asIntBuffer();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">10000</span>; i++)</div><div class="line">		ib.put(ib.get(i - <span class="number">1</span>));</div><div class="line"></div><div class="line">&#125;</div><div class="line">RandomAccessFile raf = <span class="keyword">new</span> RandomAccessFile(<span class="keyword">new</span> File(<span class="string">"temp.tmp"</span>), <span class="string">"rw"</span>);</div><div class="line">raf.writeInt(<span class="number">1</span>);</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2000000</span>; i++) &#123;</div><div class="line">	raf.seek(raf.length() - <span class="number">4</span>);</div><div class="line">	raf.writeInt(raf.readInt());</div><div class="line">&#125;</div><div class="line">raf.close();</div></pre></td></tr></table></figure></p>
+<h3 id="getResourceAsStream"><a href="#getResourceAsStream" class="headerlink" title="getResourceAsStream"></a>getResourceAsStream</h3><p>我们还可以使用类加载器的<code>getResourceAsStream()</code>从指定路径或者jar包中加载文件资源</p>
+<ol>
+<li>Class.getResourceAsStream(String path) ： path 不以’/‘开头时默认是从此类所在的包下取资源，以’/‘开头则是从ClassPath根下获取。其只是通过path构造一个绝对路径，最终还是由ClassLoader获取资源。</li>
+<li>Class.getClassLoader.getResourceAsStream(String path) ：默认则是从ClassPath根下获取，path不能以’/‘开头，最终是由ClassLoader获取资源。<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestReadFile</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line"></div><div class="line">		InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream(<span class="string">"./mybatis-config.xml"</span>);</div><div class="line">		BufferedReader buffer = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in));</div><div class="line">		System.out.println(buffer.readLine());</div><div class="line">		in = <span class="keyword">new</span> TestReadFile().getClass().getResourceAsStream(<span class="string">"./mybatis-config.xml"</span>);</div><div class="line">		buffer = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in));</div><div class="line">		System.out.println(buffer.readLine());</div><div class="line"></div><div class="line">		System.out.println(<span class="keyword">new</span> File(<span class="string">"."</span>).getCanonicalPath());</div><div class="line">		System.out.println(<span class="keyword">new</span> File(<span class="string">"."</span>).getAbsolutePath());</div><div class="line">		System.out.println(<span class="keyword">new</span> File(<span class="string">"."</span>).getPath());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>输出结果为<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> <span class="meta">?&gt;</span></span></div><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> <span class="meta">?&gt;</span></span></div><div class="line">D:\ming\test</div><div class="line">D:\ming\test\.</div><div class="line">.</div></pre></td></tr></table></figure></p>
+<h3 id="读取压缩包文件"><a href="#读取压缩包文件" class="headerlink" title="读取压缩包文件"></a>读取压缩包文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> Map&lt;String, <span class="keyword">byte</span>[]&gt; getLoadedClass(String jarPath) &#123;</div><div class="line">	Map&lt;String, <span class="keyword">byte</span>[]&gt; loadClass = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">	<span class="keyword">try</span>(InputStream in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(jarPath)));</div><div class="line">		ZipInputStream zin = <span class="keyword">new</span> ZipInputStream(in)) &#123;</div><div class="line">        ZipEntry ze;</div><div class="line">        <span class="keyword">while</span> ((ze = zin.getNextEntry()) != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (ze.isDirectory()) &#123;</div><div class="line">                <span class="comment">// TODO 检查是否还有其他操作要做</span></div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">if</span> (ze.getSize() &gt; <span class="number">0</span>) &#123;</div><div class="line">                    String fileName = ze.getName();</div><div class="line">                    <span class="keyword">if</span> (!fileName.endsWith(<span class="string">".class"</span>)) &#123;</div><div class="line">                        <span class="keyword">continue</span>;</div><div class="line">                    &#125;</div><div class="line">					<span class="keyword">try</span>(ZipFile zf = <span class="keyword">new</span> ZipFile(jarPath); InputStream input = zf.getInputStream(ze);</div><div class="line">						ByteArrayOutputStream byteArrayOutputStream = <span class="keyword">new</span> ByteArrayOutputStream()) &#123;</div><div class="line">						<span class="keyword">if</span> (input == <span class="keyword">null</span>) &#123;</div><div class="line">							logger.error(<span class="string">"Code Reload cant find file : "</span> + fileName);</div><div class="line">							<span class="keyword">continue</span>;</div><div class="line">						&#125;</div><div class="line">						<span class="keyword">int</span> b = <span class="number">0</span>;</div><div class="line">						<span class="keyword">while</span> ((b = input.read()) != -<span class="number">1</span>) &#123;</div><div class="line">							byteArrayOutputStream.write(b);</div><div class="line">						&#125;</div><div class="line">						<span class="keyword">byte</span>[] bytes = byteArrayOutputStream.toByteArray();</div><div class="line">						<span class="comment">// TODO </span></div><div class="line">					&#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</div><div class="line">        e.printStackTrace();</div><div class="line">    &#125;</div><div class="line">	<span class="keyword">return</span> loadClass;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在写这个东西的时候遇到个小坑, 刚开始使用的是<code>input.available()</code>读取的文件内容, 但是大概要读取100多个文件, 总有6个文件读取的不完整,查看JDK的文档,上面说<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Returns an estimate of the number of bytes that can be <span class="built_in">read</span> (or skipped over) from this input stream without blocking by the next invocation of a method <span class="keyword">for</span> this input stream. The next invocation might be the same thread or another thread.  A single <span class="built_in">read</span> or skip of this many bytes will not block, but may <span class="built_in">read</span> or skip fewer bytes.</div><div class="line"></div><div class="line">Note that <span class="keyword">while</span> some implementations of InputStream will <span class="built_in">return</span> the total number of bytes <span class="keyword">in</span> the stream, many will not.  It is never correct to use the <span class="built_in">return</span> value of this method to allocate a buffer intended to hold all data <span class="keyword">in</span> this stream.</div></pre></td></tr></table></figure></p>
+<p>这个方法返回的是在非阻塞情况下对该流进行下一次某个方法(读或者skip操作)调用时的预估字节数.下一个方法调用可以在同一个线程或者在不同的线程中。下一次读取或者skip掉available预估字节数不会产生阻塞的情况，但是实际读取出来的字节数可能小于预估数。</p>
+<p>因此在ZipFileInputStream中，它依赖于native方法实现，我们也不知道它返回的究竟是流里剩下的全部的字节数还是部分的。最后文档也说了，永远不要使用这个方法返回的预估字节数分配buffer大小的buffer.</p>
+<h2 id="内存IO"><a href="#内存IO" class="headerlink" title="内存IO"></a>内存IO</h2><h3 id="ByteArrayInputStream"><a href="#ByteArrayInputStream" class="headerlink" title="ByteArrayInputStream"></a>ByteArrayInputStream</h3><p>从byte[]数组中读取数据到缓存中.可以将字节数组转化为输入流此类中的方法在关闭此流后仍可被调用，而不会产生任何 <code>IOException</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] buff = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</div><div class="line"><span class="keyword">try</span>(ByteArrayInputStream in = <span class="keyword">new</span> ByteArrayInputStream(buff)) &#123;</div><div class="line"></div><div class="line">	<span class="keyword">while</span>(in.available() != <span class="number">0</span>)</div><div class="line">		System.out.println(in.read());</div><div class="line"></div><div class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="ByteArrayOutputStream"><a href="#ByteArrayOutputStream" class="headerlink" title="ByteArrayOutputStream"></a>ByteArrayOutputStream</h3><p>输出数据到byte[]数组里，可以捕获内存缓冲区的数据，转换成字节数组。缓冲区会随着数据的不断写入而自动增长。可使用 toByteArray()和 toString()获取数据。    关闭 <code>ByteArrayOutputStream</code>无效。此类中的方法在关闭此流后仍可被调用，而不会产生任何<code>IOException</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] buff = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</div><div class="line"><span class="keyword">try</span>(ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream()) &#123;</div><div class="line">	out.write(buff);</div><div class="line"></div><div class="line">	<span class="keyword">byte</span>[] byteArray = out.toByteArray();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">byte</span> b : byteArray) &#123;</div><div class="line">		System.out.println(<span class="string">"flush before : "</span> + b);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	out.flush();</div><div class="line"></div><div class="line">	byteArray = out.toByteArray();</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">byte</span> b : byteArray) &#123;</div><div class="line">		System.out.println(<span class="string">"flush after : "</span> + b);</div><div class="line">	&#125;</div><div class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="CharArrayReader"><a href="#CharArrayReader" class="headerlink" title="CharArrayReader"></a>CharArrayReader</h3><p>与ByteArrayInputStream对应。 支持mark和reset读取char[] 数组<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span>[] array = &#123;<span class="string">'a'</span>, <span class="string">'z'</span>, <span class="string">'g'</span>&#125;;</div><div class="line"><span class="keyword">try</span>(CharArrayReader in = <span class="keyword">new</span> CharArrayReader(array)) &#123;</div><div class="line">	<span class="keyword">while</span>(in.ready())</div><div class="line">		System.out.println(in.read());</div><div class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="CharArrayWriter"><a href="#CharArrayWriter" class="headerlink" title="CharArrayWriter"></a>CharArrayWriter</h3><p>向内部char[] 缓冲区存储数据.  支持rest, 文件追加写操作, 支持string write<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>(CharArrayWriter out = <span class="keyword">new</span> CharArrayWriter()) &#123;</div><div class="line">	out.write(<span class="string">"TestChararray"</span>);</div><div class="line">	System.out.println(out.toString());</div><div class="line">	out.append(<span class="string">"test_"</span>);</div><div class="line">	System.out.println(out.toString());</div><div class="line">&#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="PushbackInputStream"><a href="#PushbackInputStream" class="headerlink" title="PushbackInputStream"></a>PushbackInputStream</h3><p>拥有一个PushBack缓冲区，从PushbackInputStream读出数据后，只要PushBack缓冲区没有满，就可以使用unread()将数据推回流的前端。</p>
+<h3 id="PushbackReader"><a href="#PushbackReader" class="headerlink" title="PushbackReader"></a>PushbackReader</h3><p>允许将字符推回到流的字符流 reader。当程序调用推回输入流的unread()方法时，系统会把指定数组的内容推回到该缓冲区中，而推回输入流每次调用read()方法时，总是先从推回缓冲区读取内容，只有完全读取了推回缓冲区里的内容后，但是还没有装满read()所需要的数组时才会从原输入流中读取<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> (</div><div class="line"><span class="comment">// 创建一个PushbackReader对象，指定推回缓冲区的长度为64</span></div><div class="line">PushbackReader pr = <span class="keyword">new</span> PushbackReader(<span class="keyword">new</span> FileReader(<span class="string">"PushBackTest.java"</span>), <span class="number">64</span>);</div><div class="line"><span class="keyword">char</span>[] buf = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">32</span>];</div><div class="line"><span class="comment">// 用以保存上次读取字符串的内容</span></div><div class="line">String lastContent = <span class="string">""</span>;</div><div class="line"><span class="keyword">int</span> hasRead = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">// 循环读取文件内容</span></div><div class="line"><span class="keyword">while</span> ((hasRead = pr.read(buf)) &gt; <span class="number">0</span>) &#123;</div><div class="line">	<span class="comment">// 将读取的内容转化为字符串</span></div><div class="line">	String content = <span class="keyword">new</span> String(buf, <span class="number">0</span>, hasRead);</div><div class="line">	<span class="keyword">int</span> targetIndex = <span class="number">0</span>;</div><div class="line"></div><div class="line">	<span class="comment">// 将上次读取的字符串和本次读取的字符串拼接起来</span></div><div class="line">	<span class="comment">// 查看是否包含目标字符串，</span></div><div class="line">	<span class="comment">// 如果包含目标字符串</span></div><div class="line">	<span class="keyword">if</span> ((targetIndex = (lastContent + content)</div><div class="line">			.indexOf(<span class="string">"new PushbackReader"</span>)) &gt; <span class="number">0</span>) &#123;</div><div class="line">		<span class="comment">// 将本次的内容和上次的内容一起推回缓冲区</span></div><div class="line">		pr.unread((lastContent + content).toCharArray());</div><div class="line"></div><div class="line">		<span class="comment">// 重现定义一个长度为targetIndex的char类型的数组</span></div><div class="line">		<span class="keyword">if</span> (targetIndex &gt; <span class="number">32</span>) &#123;</div><div class="line">			buf = <span class="keyword">new</span> <span class="keyword">char</span>[targetIndex];</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 再次读取指定长度的内容，即目标字符串之前的内容</span></div><div class="line">		pr.read(buf, <span class="number">0</span>, targetIndex);</div><div class="line"></div><div class="line">		<span class="comment">// 答应读取指定长度的内容</span></div><div class="line">		System.out.println(<span class="keyword">new</span> String(buf, <span class="number">0</span>, targetIndex));</div><div class="line">		System.exit(<span class="number">0</span>);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line"></div><div class="line">		<span class="comment">// 打印上次读取的内容</span></div><div class="line">		System.out.println(lastContent);</div><div class="line">		<span class="comment">// 将本次读取的内容设置为上次读取的内容</span></div><div class="line">		lastContent = content;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="PipedReader"><a href="#PipedReader" class="headerlink" title="PipedReader"></a>PipedReader</h3><p>PipedWriter 是字符管道输出流,可以通过管道进行线程间的通讯。</p>
+<h3 id="PipedWriter"><a href="#PipedWriter" class="headerlink" title="PipedWriter"></a>PipedWriter</h3><p>PipedReader 是字符管道输入流,可以通过管道进行线程间的通讯。</p>
+<h3 id="PipedInputStream"><a href="#PipedInputStream" class="headerlink" title="PipedInputStream"></a>PipedInputStream</h3><p>管道输入流是让多线程可以通过管道进行线程间的通讯</p>
+<h3 id="PipedOutputStream"><a href="#PipedOutputStream" class="headerlink" title="PipedOutputStream"></a>PipedOutputStream</h3><p>管道输出流是让多线程可以通过管道进行线程间的通讯</p>
+<h3 id="SequenceInputStream"><a href="#SequenceInputStream" class="headerlink" title="SequenceInputStream"></a>SequenceInputStream</h3><p>从多个输入流中向程序读入数据。此时，可以使用合并流，将多个输入流合并成一个SequenceInputStream流对象。SequenceInputStream会将与之相连接的流集组合成一个输入流并从第一个输入流开始读取，直到到达文件末尾，接着从第二个输入流读取，依次类推，直到到达包含的最后一个输入流的文件末 尾为止。 合并流的作用是将多个源合并合一个源。</p>
+<h3 id="StreamTokenizer"><a href="#StreamTokenizer" class="headerlink" title="StreamTokenizer"></a>StreamTokenizer</h3><p>获取输入流并将其解析为“标记”，允许一次读取一个标记。解析过程由一个表和许多可以设置为各种状态的标志控制。该流的标记生成器可以识别标识符、数字、引用的字符串和各种注释样式等。</p>
+<h3 id="Console"><a href="#Console" class="headerlink" title="Console"></a>Console</h3><p>专用来访问基于字符的控制台设备。如果你的Java程序要与Windows下的cmd或者Linux下的Terminal交互，就可以用这个Java Console类java.io.Console 只能用在标准输入、输出流未被重定向的原始控制台中使用，在 Eclipse 或者其他 IDE 的控制台是用不了的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Console cons = System.console();</div><div class="line"><span class="keyword">if</span> (cons != <span class="keyword">null</span>) &#123;</div><div class="line">	<span class="comment">// -------------------------</span></div><div class="line">	PrintWriter printWriter = cons.writer();</div><div class="line">	printWriter.write(<span class="string">"input:"</span>);</div><div class="line">	cons.flush();</div><div class="line">	String str1 = cons.readLine();</div><div class="line">	cons.format(<span class="string">"%s"</span>, str1);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><h3 id="Externalizable"><a href="#Externalizable" class="headerlink" title="Externalizable"></a>Externalizable</h3><p>Externalizable继承于Serializable，当使用该接口时，序列化的细节需要由程序员去完成. 如上所示的代码，由于writeExternal()与readExternal()方法未作任何处理，那么该序列化行为将不会保存/读取任何一个字段. </p>
+<h3 id="Flushable"><a href="#Flushable" class="headerlink" title="Flushable"></a>Flushable</h3><p>实现了Flushable接口的类的对象，可以强制将缓存的输出写入到与对象关联的流中. 写入流的所有I/O类都实现了Flushable接口. </p>
+<h3 id="ObjectInputValidation"><a href="#ObjectInputValidation" class="headerlink" title="ObjectInputValidation"></a>ObjectInputValidation</h3><p>序列化流验证机制.一般情况下，我们认为序列化流中的数据总是与最初写到流中的数据一致，这并没有问题. 但当黑客获取流信息并篡改一些敏感信息重新序列化到流中后，用户通过反序列化得到的将是被篡改的信息. Java序列化提供一套验证机制. 序列化类通过实现 java.io.ObjectInputValidation接口，就可以做到验证了</p>
+<h3 id="ObjectStreamConstants"><a href="#ObjectStreamConstants" class="headerlink" title="ObjectStreamConstants"></a>ObjectStreamConstants</h3><p>Java序列化序列化对象的信息包括：类元数据描述、类的属性、父类信息以及属性域的值. Java将这些信息分成3部分：序列化头信息、类的描述部分以及属性域的值部分. 现在对a.txt文件加以分析，其中包含一些序列化机制中提供的特殊字段，这些字段被定义在java.io.ObjectStreamConstants接口中.  </p>
+<h3 id="DataInputStream"><a href="#DataInputStream" class="headerlink" title="DataInputStream"></a>DataInputStream</h3><p>用来装饰其它输入流，它“允许应用程序以与机器无关方式从底层输入流中读取基本 Java 数据类型”</p>
+<p>从DataInputStream一次一个字节地读取字符,那么任何值都是合法的,因此返回值不能用来检测输入是否结束.但是可以使用available()函数来查看还有多少字符可供读取</p>
+<p>available()函数的工作方式会随之所读取的媒介类不同而不同, 该函数从字面上的意思来讲就是”在没有阻塞的情况下所能读取的字节数”.对于文件这指的是整个文件,而对于其他流可能就不是这样的</p>
+<p>格式化的内存输入 当读取格式化数据时可以使用DataInputStream，它是一个面向字节的IO类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>(DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(TestDataInputStream.class.getCanonicalName())));) &#123;</div><div class="line">	<span class="keyword">while</span> (in.available() != <span class="number">0</span>)</div><div class="line">		System.out.print((<span class="keyword">char</span>) in.readByte());</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>DataInput 接口用于从二进制流中读取字节，并重构所有 Java 基本类型数据. 同时还提供根据 UTF-8 修改版格式的数据重构 String 的工具. 对于此接口中的所有数据读取例程来说，如果在读取到所需字节数的数据之前已经到达文件末尾 (end of file)，则都将抛出 EOFException（IOException 的一种）. 如果因为文件末尾以外的其他原因无法读取字节，则抛出 IOException而不是 EOFException. 尤其在输入流已关闭的情况下，将抛出 IOException. </p>
+</blockquote>
+<h3 id="DataOutputStream"><a href="#DataOutputStream" class="headerlink" title="DataOutputStream"></a>DataOutputStream</h3><p>用来装饰其它输出流，将DataOutputStream和DataInputStream输入流配合使用，“允许应用程序以与机器无关方式从底层输入流中读写基本 Java 数据类型”. </p>
+<p>我们可以使用DataOutputStream指定格式存储数据, 然后使用DataInputStream轻松的再次指定读取格式来恢复这些数据.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">DataOutputStream out = <span class="keyword">new</span> DataOutputStream(<span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"Data.txt"</span>)));</div><div class="line">out.writeDouble(<span class="number">3.14159</span>);</div><div class="line">out.writeUTF(<span class="string">"That was pi"</span>);</div><div class="line">out.writeDouble(<span class="number">1.41413</span>);</div><div class="line">out.writeUTF(<span class="string">"Square root of 2"</span>);</div><div class="line">out.close();</div><div class="line"></div><div class="line">DataInputStream in = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"Data.txt"</span>)));</div><div class="line">System.out.println(in.readDouble());</div><div class="line"><span class="comment">// Only readUTF() will recover the Java-UTF String properly:</span></div><div class="line">System.out.println(in.readUTF());</div><div class="line">System.out.println(in.readDouble());</div><div class="line">System.out.println(in.readUTF());</div><div class="line"></div><div class="line">in.close();</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>DataOutput 接口用于将任意 Java 基本类型转换为一系列字节，并将这些字节写入二进制流. 同时还提供了一个将 String 转换成 UTF-8 修改版格式并写入所得到的系列字节的工具. 对于此接口中写入字节的所有方法，如果由于某种原因无法写入某个字节，则抛出 IOException.</p>
+</blockquote>
+<h3 id="ObjectInputStream"><a href="#ObjectInputStream" class="headerlink" title="ObjectInputStream"></a>ObjectInputStream</h3><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。</p>
+<h3 id="ObjectOutputStream"><a href="#ObjectOutputStream" class="headerlink" title="ObjectOutputStream"></a>ObjectOutputStream</h3><p>用于从底层输入流中读取对象类型的数据和对象类型的数据写入到底层输出流。将对象中所有成员变量的取值保存起来就等于保存了对象，将对象中所有成员变量的取值还原就相等于读取了对象。 </p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2015/11/21/JavaSE/Java IO/" data-title="JAVA IO | ·" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/23/JavaSE/Java NIO/" title="JDK4 NIO">
+  <strong>上一篇：</strong><br/>
+  <span>
+  JDK4 NIO</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/20/JavaLibrary/Netty ByteBuf/"  title="Netty ByteBuf">
+ <strong>下一篇：</strong><br/> 
+ <span>Netty ByteBuf
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/11/21/JavaSE/Java IO/" data-title="JAVA IO" data-url="http://www.yu66.wang/2015/11/21/JavaSE/Java IO/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件操作"><span class="toc-number">1.</span> <span class="toc-text">文件操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FileFilter"><span class="toc-number">1.1.</span> <span class="toc-text">FileFilter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FilenameFilter"><span class="toc-number">1.2.</span> <span class="toc-text">FilenameFilter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#File"><span class="toc-number">1.3.</span> <span class="toc-text">File</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileDescriptor"><span class="toc-number">1.4.</span> <span class="toc-text">FileDescriptor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileLock"><span class="toc-number">1.5.</span> <span class="toc-text">FileLock</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DirectoryStream"><span class="toc-number">1.6.</span> <span class="toc-text">DirectoryStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileVisitor"><span class="toc-number">1.7.</span> <span class="toc-text">FileVisitor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#监控文件变化"><span class="toc-number">1.8.</span> <span class="toc-text">监控文件变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileStore"><span class="toc-number">1.9.</span> <span class="toc-text">FileStore</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FileSystems"><span class="toc-number">1.10.</span> <span class="toc-text">FileSystems</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Paths"><span class="toc-number">1.11.</span> <span class="toc-text">Paths</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写文件"><span class="toc-number">2.</span> <span class="toc-text">写文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferedOutputStream"><span class="toc-number">2.1.</span> <span class="toc-text">BufferedOutputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferedWriter"><span class="toc-number">2.2.</span> <span class="toc-text">BufferedWriter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OutputStreamWriter"><span class="toc-number">2.3.</span> <span class="toc-text">OutputStreamWriter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PrintStream"><span class="toc-number">2.4.</span> <span class="toc-text">PrintStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PrintWriter"><span class="toc-number">2.5.</span> <span class="toc-text">PrintWriter</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读文件"><span class="toc-number">3.</span> <span class="toc-text">读文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferedInputStream"><span class="toc-number">3.1.</span> <span class="toc-text">BufferedInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BufferedReader"><span class="toc-number">3.2.</span> <span class="toc-text">BufferedReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LineNumberInputStream"><span class="toc-number">3.3.</span> <span class="toc-text">LineNumberInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LineNumberReader"><span class="toc-number">3.4.</span> <span class="toc-text">LineNumberReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RandomAccessFile"><span class="toc-number">3.5.</span> <span class="toc-text">RandomAccessFile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getResourceAsStream"><span class="toc-number">3.6.</span> <span class="toc-text">getResourceAsStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#读取压缩包文件"><span class="toc-number">3.7.</span> <span class="toc-text">读取压缩包文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存IO"><span class="toc-number">4.</span> <span class="toc-text">内存IO</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteArrayInputStream"><span class="toc-number">4.1.</span> <span class="toc-text">ByteArrayInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteArrayOutputStream"><span class="toc-number">4.2.</span> <span class="toc-text">ByteArrayOutputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CharArrayReader"><span class="toc-number">4.3.</span> <span class="toc-text">CharArrayReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CharArrayWriter"><span class="toc-number">4.4.</span> <span class="toc-text">CharArrayWriter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PushbackInputStream"><span class="toc-number">4.5.</span> <span class="toc-text">PushbackInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PushbackReader"><span class="toc-number">4.6.</span> <span class="toc-text">PushbackReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PipedReader"><span class="toc-number">4.7.</span> <span class="toc-text">PipedReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PipedWriter"><span class="toc-number">4.8.</span> <span class="toc-text">PipedWriter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PipedInputStream"><span class="toc-number">4.9.</span> <span class="toc-text">PipedInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PipedOutputStream"><span class="toc-number">4.10.</span> <span class="toc-text">PipedOutputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SequenceInputStream"><span class="toc-number">4.11.</span> <span class="toc-text">SequenceInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StreamTokenizer"><span class="toc-number">4.12.</span> <span class="toc-text">StreamTokenizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Console"><span class="toc-number">4.13.</span> <span class="toc-text">Console</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#序列化"><span class="toc-number">5.</span> <span class="toc-text">序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Externalizable"><span class="toc-number">5.1.</span> <span class="toc-text">Externalizable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flushable"><span class="toc-number">5.2.</span> <span class="toc-text">Flushable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectInputValidation"><span class="toc-number">5.3.</span> <span class="toc-text">ObjectInputValidation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectStreamConstants"><span class="toc-number">5.4.</span> <span class="toc-text">ObjectStreamConstants</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataInputStream"><span class="toc-number">5.5.</span> <span class="toc-text">DataInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataOutputStream"><span class="toc-number">5.6.</span> <span class="toc-text">DataOutputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectInputStream"><span class="toc-number">5.7.</span> <span class="toc-text">ObjectInputStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ObjectOutputStream"><span class="toc-number">5.8.</span> <span class="toc-text">ObjectOutputStream</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">Douban Show</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">Weibo</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="王玉">王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
