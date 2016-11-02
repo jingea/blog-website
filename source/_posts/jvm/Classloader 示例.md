@@ -7,9 +7,6 @@ title: 使用Classloader加载类
 
 > 判断俩个类相等可以通过下面方法: `Class`对象的`equals()`方法, `isAssignbleFrom()`方法, `isInstance()`方法的返回结果, 也包括使用`instanceof`关键字做对象所属关系判断等. 不同的类加载器对`instanceof`关键字运算结果的影响
 
-
-## 双亲委派模型
-
 ![ClassLoader的体系架构](https://raw.githubusercontent.com/ming15/blog-website/images/jvm/ClassLoader%E7%9A%84%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png)
 从JVM来角度讲, 只存在俩种不同的类加载器:
 * 启动类加载器: 使用C++语言实践,是虚拟机自身的一部分. 

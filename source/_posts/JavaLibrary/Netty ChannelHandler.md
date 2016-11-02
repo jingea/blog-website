@@ -89,7 +89,69 @@ ch.pipline().addLast(new LineBasedFrameDecoder());
 ch.pipline().addLast(new LineBasedFrameDecoder(1024));
 ...
 ```
+它的源码也很简单
+```java
+    protected Object decode(ChannelHandlerContext ctx, ByteBuf buffer) throws Exception {
+        // 找到 \n 的位置 (如果是\n\r的话, 则向前移动一位,只取\n)
+        final int eol = findEndOfLine(buffer);
+        //
+        if (!discarding) {
+            if (eol >= 0) {
+                // 找到了 \n ，开始截取有效数据
+                final ByteBuf frame;
+                final int length = eol - buffer.readerIndex();
+                // 如果分隔符是\n的话,分隔符长度是1, 如果分隔符是\n\r的话,则分隔符长度是2
+                final int delimLength = buffer.getByte(eol) == '\r'? 2 : 1;
 
+                if (length > maxLength) {
+                    // 超过最大长度, 将读取的数据舍掉
+                    buffer.readerIndex(eol + delimLength);
+                    fail(ctx, length);
+                    return null;
+                }
+
+                if (stripDelimiter) {
+                    // 读取数据不带分隔符, 读取有效数据后将分隔符去掉
+                    frame = buffer.readRetainedSlice(length);
+                    buffer.skipBytes(delimLength);
+                } else {
+                    // 有效数据中带有分隔符
+                    frame = buffer.readRetainedSlice(length + delimLength);
+                }
+
+                return frame;
+            } else {
+                // 没有找到分隔符, 返回null
+                final int length = buffer.readableBytes();
+                if (length > maxLength) {
+                    // 如果数据超过最大长度, 则将多余的数据舍弃
+                    discardedBytes = length;
+                    buffer.readerIndex(buffer.writerIndex());
+                    discarding = true;
+                    if (failFast) {
+                        fail(ctx, "over " + discardedBytes);
+                    }
+                }
+                return null;
+            }
+        } else {
+            if (eol >= 0) {
+                final int length = discardedBytes + eol - buffer.readerIndex();
+                final int delimLength = buffer.getByte(eol) == '\r'? 2 : 1;
+                buffer.readerIndex(eol + delimLength);
+                discardedBytes = 0;
+                discarding = false;
+                if (!failFast) {
+                    fail(ctx, length);
+                }
+            } else {
+                discardedBytes += buffer.readableBytes();
+                buffer.readerIndex(buffer.writerIndex());
+            }
+            return null;
+        }
+    }
+```
 
 
 ## DelimiterBasedFrameDecoder
