@@ -4,10 +4,14 @@ title: Hotswap
 ---
 
 如果想要动态替换JVM中的字节码, Hotspot JVM 为我们提供了俩种机制
-* Hotswap
-* instrument
+* [Hotswap]()
+* [instrument](http://www.yu66.wang/2015/11/24/jvm/instrument%20premain/) (貌似内部也是依赖的HotSwap技术, 待确定)
 
-[instrument](http://www.yu66.wang/2015/11/24/jvm/instrument%20premain/) 我已经在其他文章中有过详细介绍, 今天这篇文章主要就在探究 what's the Hotswap???
+Hotswap
+
+还有一篇参考文章
+* [Why HotSwap wasn’t good enough in 2001…and still isn’t today](http://zeroturnaround.com/rebellabs/why-hotswap-wasnt-good-enough-in-2001-and-still-isnt-today/)
+* [Reloading Java Classes: HotSwap and JRebel — Behind the Scenes](https://dzone.com/articles/reloading-java-classes-401)
 
 ## JDK
 

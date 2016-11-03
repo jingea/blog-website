@@ -147,3 +147,17 @@ sql语句的执行顺序
 ```
 FROM->ON->JOIN->WHERE->GROUP BY->HAVING->SELECT->DISTINCT->ORDER BY->LIMIT
 ```
+
+## 多表查询
+* `SELECT * FROM a, b WHERE a.`id`=b.`id`;`
+* `SELECT * FROM a INNER JOIN b ON a.`id`=b.`id`;`
+* `SELECT * FROM a FULL JOIN b ON a.`id`=b.`id`;`
+* `SELECT * FROM a LEFT JOIN b ON a.`id`=b.`id`;`
+* `SELECT * FROM a RIGHT JOIN b ON a.`id`=b.`id`;`
+* `SELECT * FROM a CROSS JOIN b ON a.`id`=b.`id`;`
+
+* `SELECT * FROM a INNER JOIN b USING(id);`
+* `SELECT * FROM a FULL JOIN b USING(id);`
+* `SELECT * FROM a LEFT JOIN b USING(id);`
+* `SELECT * FROM a RIGHT JOIN b USING(id);`
+* `SELECT * FROM a CROSS JOIN b USING(id);`
