@@ -30,5 +30,6 @@ Java SE 1.4 Enhancements](https://docs.oracle.com/javase/8/docs/technotes/guides
 但是目前为止, 这个项目还处于实验阶段, 虽然能够在debug阶段稳定运行, 但是并不推荐在生产环境中使用.
 
 ## HotswapAgent
-[HotswapAgent](https://github.com/HotswapProjects/HotswapAgent)也可以为我们带来像DCE VM那样替换JVM字节码的功能(实际它也是依赖了DCE VM). 但是这个项目当前也是beta版本, 在生成环境阶段. 我们也是不敢使用.
+[HotswapAgent](https://github.com/HotswapProjects/HotswapAgent)也可以为我们带来像DCE VM那样替换JVM字节码的功能(实际它也是依赖了DCE VM). 但是这个项目当前也是beta版本, 在生成环境阶段. 我也是不敢使用. 
 
+现在项目中采用的是instrument 对方法体进行小bug热更, 但是还是希望能找到更加灵活的热更方式, 目前只能寄希望于Spring-loaded和JRebel了.
