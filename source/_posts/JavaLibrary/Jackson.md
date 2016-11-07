@@ -358,6 +358,72 @@ class Different {
 }
 ```
 
+说到这里就需要点出一个坑了
+```java
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+
+public class TestPrivate {
+
+	public static void main(String[] args) throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		SimpleId simpleId = new SimpleId();
+		simpleId.setString("simple Id");
+		String json = objectMapper.writeValueAsString(simpleId);
+		System.out.println("Jsckson  ---> " + json);
+
+		Gson gson = new Gson();
+		json = gson.toJson(simpleId);
+		System.out.println("Gson     ---> " + json);
+
+		json = JSON.toJSONString(simpleId);
+		System.out.println("FastJson ---> " + json);
+	}
+
+	public static class SimpleId {
+		private String stringId;
+		private String stringName = "empty name";
+
+		public String getString() {
+			return stringId;
+		}
+
+		public void setString(String string) {
+			this.stringId = string;
+		}
+
+		public String getString1() {
+			return "123456";
+		}
+	}
+}
+```
+结果为
+```bash
+Jsckson  ---> {"string":"simple Id","string1":"123456"}
+Gson     ---> {"stringId":"simple Id","stringName":"empty name"}
+FastJson ---> {"string":"simple Id","string1":"123456"}
+```
+有时候我们需要Gson这种输出结果, 即不使用Getter, 而是使用filed进行序列化, 怎么办呢？我们可以使用`JsonIgnoreProperty`, 但是对于有时候我们并不想在每个类上面都加一个这样的注解, 配置一些ObjectMapper就可以了
+```java
+ObjectMapper objectMapper = new ObjectMapper();
+objectMapper.setVisibility(objectMapper.getSerializationConfig().getDefaultVisibilityChecker()
+		.withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+		.withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+		.withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+		.withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+```
+这样结果为
+```bash
+Jsckson  ---> {"stringId":"simple Id","stringName":"empty name"}
+Gson     ---> {"stringId":"simple Id","stringName":"empty name"}
+FastJson ---> {"string":"simple Id","string1":"123456"}
+```
+
 ### JsonInclude 
 指定在序列化时, 可以输出哪些值. 例如只输出非默认值(包含类型默认值和初始化默认值)
 ```java
