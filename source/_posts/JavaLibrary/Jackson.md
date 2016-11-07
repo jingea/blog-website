@@ -408,7 +408,7 @@ Jsckson  ---> {"string":"simple Id","string1":"123456"}
 Gson     ---> {"stringId":"simple Id","stringName":"empty name"}
 FastJson ---> {"string":"simple Id","string1":"123456"}
 ```
-有时候我们需要Gson这种输出结果, 即不使用Getter, 而是使用filed进行序列化, 怎么办呢？我们可以使用`JsonIgnoreProperty`, 但是对于有时候我们并不想在每个类上面都加一个这样的注解, 配置一些ObjectMapper就可以了
+有时候我们需要Gson这种输出结果, 即不使用Getter, 而是使用filed进行序列化, 怎么办呢？我们可以使用` @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)`, 但是对于有时候我们并不想在每个类上面都加一个这样的注解, 配置一些ObjectMapper就可以了
 ```java
 ObjectMapper objectMapper = new ObjectMapper();
 objectMapper.setVisibility(objectMapper.getSerializationConfig().getDefaultVisibilityChecker()
