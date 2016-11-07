@@ -7,9 +7,9 @@ title: Java URL
 scheme:scheme-specific-part (模式:模式特有部分)
 ```
 URI模式包含 data, file, ftp, http, news, telnet, urn (还有基于JAVA的rmi, jndi 等非标准模式,也称为protocol)
-例如：`http://www.ming15.wang/2015/10/13/%E5%B7%A5%E5%85%B7/2015-10-12-AWK/`这个例子中模式为`http`, 负责解析该URI的机构`ming15.wang` 负责将`/2015/10/13/%E5%B7%A5%E5%85%B7/2015-10-12-AWK/`地址映射到主机资源
+例如：`http://www.yu66.wang/2015/10/13/%E5%B7%A5%E5%85%B7/2015-10-12-AWK/`这个例子中模式为`http`, 负责解析该URI的机构`yu66.wang` 负责将`/2015/10/13/%E5%B7%A5%E5%85%B7/2015-10-12-AWK/`地址映射到主机资源
 
-还有的URI路径中含有? 这是URI的查询部分.后面紧跟查询参数,多个参数用&分割. 例如：`git@github.com:ming15/VertxServer.git`该URI中模式为`git` 解析结构为`github.com` 还可以在git和@之间加上用户名和密码`git://username:password@github.com:ming15/VertxServer.git`
+还有的URI路径中含有? 这是URI的查询部分.后面紧跟查询参数,多个参数用&分割. 例如：`git@github.com:yu66/VertxServer.git`该URI中模式为`git` 解析结构为`github.com` 还可以在git和@之间加上用户名和密码`git://username:password@github.com:yu66/VertxServer.git`
 
 URI一般由以下组成
 * 模式

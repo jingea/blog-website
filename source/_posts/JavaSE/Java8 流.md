@@ -28,7 +28,7 @@ Stream.of(1, 2, 3)
 当然我们还可以调用`Collectors.toSet()`等其他方法,构建其他集合
 
 ### map
-![](https://raw.githubusercontent.com/ming15/blog-website/images/java8/map.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/java8/map.jpg)
 该操作会将一个流中的值转换为一个新的流
 ```java
 Stream.of(1, 2, 3)
@@ -44,7 +44,7 @@ Stream.of(1, 2, 3)
 ```
 
 ### filter
-![](https://raw.githubusercontent.com/ming15/blog-website/images/java8/filter.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/java8/filter.jpg)
 遍历数据并检查其中的元素是否符合某种条件
 
 这个操作看起来和`map`很像, 但是`map`是根据操作的结果产生新的流,而`filter`是判断流中的数据是否符合条件保留下来
@@ -62,7 +62,7 @@ Stream.of(1, 2, 3)
 ```
 
 ### flatMap
-![](https://raw.githubusercontent.com/ming15/blog-website/images/java8/flatMap.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/java8/flatMap.jpg)
 用于Stream替换值然后将多个流连接到一起
 
 首先我们看一种情况,流里有俩个列表
@@ -510,13 +510,13 @@ List<String> result = list.stream().collect(Collectors.mapping(ele -> ele + 1, C
 ```
 
 ## distinct
-![](https://raw.githubusercontent.com/ming15/blog-website/images/java8/distinct.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/java8/distinct.jpg)
 
 ## limit
-![](https://raw.githubusercontent.com/ming15/blog-website/images/java8/limit.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/java8/limit.jpg)
 
 ## peek
-![](https://raw.githubusercontent.com/ming15/blog-website/images/java8/peek.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/java8/peek.jpg)
 
 ## skip
-![](https://raw.githubusercontent.com/ming15/blog-website/images/java8/skip.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/java8/skip.jpg)

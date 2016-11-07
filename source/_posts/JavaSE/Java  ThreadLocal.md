@@ -112,7 +112,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
     }
 }
 ```
-`Entry`是一个弱引用类型([Java 引用类型](http://www.ming15.wang/2016/05/05/jvm/Java%20%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/)). 当GC的时候, 如果weakReference的引用没有被强依赖的话, 则势必会被回收掉, 但是在ThreadLocal的时候则不然, 因为我们会一直保留ThreadLocal作为强引用依赖, 那么ThreadLocal则会一直被引用着, GC也不会回收它, Entry里面的value也就一直是可用的. 并不会发生ThreadLocal实例被回收, 而Entry里面value一直保存下来, 发生内存泄漏的情况.
+`Entry`是一个弱引用类型([Java 引用类型](http://www.yu66.wang/2016/05/05/jvm/Java%20%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/)). 当GC的时候, 如果weakReference的引用没有被强依赖的话, 则势必会被回收掉, 但是在ThreadLocal的时候则不然, 因为我们会一直保留ThreadLocal作为强引用依赖, 那么ThreadLocal则会一直被引用着, GC也不会回收它, Entry里面的value也就一直是可用的. 并不会发生ThreadLocal实例被回收, 而Entry里面value一直保存下来, 发生内存泄漏的情况.
 
 
 第一个应用中就是我实际代码中使用的示例, 下面我使用`-Xmx10M -Xms10M -XX:+PrintGC`这几个JVM参数测试一下上面程序的内存泄漏问题, 结果为

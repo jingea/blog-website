@@ -5,7 +5,7 @@ title: Netty NioEventLoop
 ---
 在真实的业务环境中, 我们都是使用主从Reactor线程模型. 在Netty中主从线程池都是使用的`NioEventLoopGroup`, 它实现了
 `java.util.concurrent.Executor`. 虽然在编程中我们使用的是`NioEventLoopGroup`, 但是主要的逻辑确是在`MultithreadEventExecutorGroup`里实现的.
-![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/NioEventLoopGroup.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/netty/NioEventLoopGroup.jpg)
 下来我们首先看一下`MultithreadEventExecutorGroup`的数据成员
 ```java
 private final EventExecutor[] children;
@@ -59,7 +59,7 @@ protected EventExecutor newChild(ThreadFactory threadFactory, Object... args) th
 }
 ```
 它是直接生成了一个`NioEventLoop`的实例出来. 下来我们看一下`NioEventLoop`的实现
-![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/NioEventLoop.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/netty/NioEventLoop.jpg)
 我们看一下`NioEventLoop`的属性成员
 ```java
 // 多路选择复用器

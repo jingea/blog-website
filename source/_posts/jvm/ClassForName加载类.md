@@ -2,7 +2,7 @@ category: JVM
 date: 2016-06-21
 title: ClassForName加载类
 ---
-我在[使用Classloader加载类](http://www.ming15.wang/2016/01/29/jvm/使用Classloader加载类/)这篇文章中介绍了, 使用ClassLoader加载类. 但是我们还可以使用一个更简单的方式
+我在[使用Classloader加载类](http://www.yu66.wang/2016/01/29/jvm/使用Classloader加载类/)这篇文章中介绍了, 使用ClassLoader加载类. 但是我们还可以使用一个更简单的方式
 `Class.forName()`让系统来加载一个类. 其实我们看它的源码实现的话, 会发现, 它自己也是通过ClassLoader实现的加载
 ```java
 @CallerSensitive

@@ -20,7 +20,7 @@ premain函数是JavaSE5中实现instrument的方式.
 使用premain我们要自定义MANIFEST.MF文件, 定义Premain-Class
 ```java
 Manifest-Version: 1.0
-Premain-Class: wang.ming15.instrument.core.Premain
+Premain-Class: wang.yu66.instrument.core.Premain
 ```
 然后我们在maven文件中输出该文件
 ```xml
@@ -91,7 +91,7 @@ public class PrintObjectSize {
 ```
 然后执行命令
 ```java
-java -javaagent:../instrument/target/core-1.0-SNAPSHOT.jar -cp ./target/examples-1.0-SNAPSHOT.jar wang.ming15.instrument.examples.PrintObjectSize
+java -javaagent:../instrument/target/core-1.0-SNAPSHOT.jar -cp ./target/examples-1.0-SNAPSHOT.jar wang.yu66.instrument.examples.PrintObjectSize
 ```
 然后就会获得对象的大小
 ```java
@@ -148,17 +148,17 @@ public class TestJarLoader {
 ```
 然后执行命令
 ```java
-java -javaagent:../instrument/target/core-1.0-SNAPSHOT.jar -cp ./target/examples-1.0-SNAPSHOT.jar wang.ming15.instrument.examples.TestJarLoader D:/workspace/idea/instrument/trunk/print/target/print-1.0-SNAPSHOT.jar
+java -javaagent:../instrument/target/core-1.0-SNAPSHOT.jar -cp ./target/examples-1.0-SNAPSHOT.jar wang.yu66.instrument.examples.TestJarLoader D:/workspace/idea/instrument/trunk/print/target/print-1.0-SNAPSHOT.jar
 ```
 结果输出为
 ```java
 Now Time is Thu Dec 31 10:50:39 CST 2015
 
-wang.ming15.instrument.print.Print  11
+wang.yu66.instrument.print.Print  11
 java.io.PrintStream  44
 Now Time is Thu Dec 31 10:50:44 CST 2015
 
-wang.ming15.instrument.print.Print  11
+wang.yu66.instrument.print.Print  11
 java.io.PrintStream  44
 ```
 
@@ -438,7 +438,7 @@ java.lang.UnsupportedOperationException: class redefinition failed: attempted to
 2
 ```
 
-完整项目[JVM-reload](https://github.com/ming15/JVM-reload)
+完整项目[JVM-reload](https://github.com/yu66/JVM-reload)
 
 ## Agentmain
 在 Java SE 5 中premain 所作的 Instrumentation 也仅限与 main 函数执行前，这样的方式存在一定的局限性。Java SE 6 针对这种状况做出了改进，开发者可以在 main 函数开始执行以后，再启动自己的 Instrumentation 程序。在 Java SE 6 的 Instrumentation 当中，有一个跟 premain“并驾齐驱”的“agentmain”方法，可以在 main 函数开始运行之后再运行。

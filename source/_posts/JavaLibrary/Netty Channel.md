@@ -4,7 +4,7 @@ date: 2015-11-23
 title: Netty Channel
 ---
 `Channel`是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等.
-![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/channel.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/netty/channel.jpg)
 
 下面我们看一下Channel提供的API
 

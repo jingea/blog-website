@@ -7,7 +7,7 @@ title: Gradle 初探
 
 我使用idea创建一个gradle项目
 ```java
-group 'wang.ming15.gradle'
+group 'wang.yu66.gradle'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -97,7 +97,7 @@ apply plugin: 'java'
 
 ### java插件任务
 我们使用了java插件, 然后我们打开idea右侧的Gradle标签(我们会看到一些java插件自带的一些task.)：
-![](https://raw.githubusercontent.com/ming15/blog-website/images/gradle/gradle_ui.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/gradle/gradle_ui.jpg)
 
 命令含义参考[](http://wiki.jikexueyuan.com/project/gradle/java-package.html)
 

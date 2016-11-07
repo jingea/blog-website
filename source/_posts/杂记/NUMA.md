@@ -70,7 +70,7 @@ Java只通过`java.net.Socket、java.net.ServerSocket、java.net.Datagram`对传
 
 SDP也能让Java具备非常强大的“零拷贝”,这个零拷贝并不是指的是`java.nio.channels.FileChannel`的`transferTo()`实现的零拷贝.而是直接使用原生的InfiniBand零拷贝协议实现。现在CPU不用将一个内存区域的数据拷贝到另一个内存区域。CPU可以继续处理其他任务，数据拷贝则由机器的另一部分并行处理，这样就提升了性能。此外，零拷贝操作减少了在用户空间和内核空间之间切换所消耗的时间。
 
-![](https://raw.githubusercontent.com/ming15/blog-website/images/net/javasdp.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/net/javasdp.jpg)
 
 ### 配置JVM7支持SDP
 SDP配置文件是个文本文件，JVM启动时会从本地文件系统读取该文件。我们有俩种规则来定义：

@@ -205,7 +205,7 @@ deploy                       |maven-deploy-plugin:deploy            |将项目�
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>wang.ming15</groupId>
+    <groupId>wang.yu66</groupId>
     <artifactId>testMavenPlugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -285,7 +285,7 @@ maven-dependency-plugin是处理与依赖相关的插件. 我们一般使用它�
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>wang.ming15</groupId>
+    <groupId>wang.yu66</groupId>
     <artifactId>testMavenPlugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -376,7 +376,7 @@ maven-dependency-plugin是处理与依赖相关的插件. 我们一般使用它�
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>wang.ming15</groupId>
+    <groupId>wang.yu66</groupId>
     <artifactId>testMavenPlugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>

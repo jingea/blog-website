@@ -5,7 +5,7 @@ title: ZooKeeper 原理
 
 ## 数据结构
 Zookeeper 会维护一个类似于标准的文件系统的数据结构
-![](https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/data-node-tree.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/zookeeper/data-node-tree.jpg)
 
 ## 节点类型
 * PERSISTENT：持久化目录节点，这个目录节点存储的数据不会丢失；
@@ -20,4 +20,4 @@ ZK中有如下三种角色
 * Observer：接受客户端的请求，将写的请求转发给leader，不参与投票。Observer目的是扩展系统，提高读的速度。
 
 ## 选举
-![](https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/40280796_2.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/zookeeper/40280796_2.jpg)

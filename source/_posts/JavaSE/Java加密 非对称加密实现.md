@@ -6,7 +6,7 @@ title: Java加密 -- 非对称加密
 
 非对称密码与对称密码体制相对,他们的主要区别在于：非对称密码体制的加密密钥和解密密钥不相同,分为俩个密钥,一个公开(公钥),一个保密(密钥).
 
-![非对称密码体制的保密通信模型](https://raw.githubusercontent.com/ming15/blog-website/images/secure/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6%E7%9A%84%E4%BF%9D%E5%AF%86%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9E%8B.png)
+![非对称密码体制的保密通信模型](https://raw.githubusercontent.com/yu66/blog-website/images/secure/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81%E4%BD%93%E5%88%B6%E7%9A%84%E4%BF%9D%E5%AF%86%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9E%8B.png)
 
 在非对称密码体制中,公玥与私钥均可用于加密与解密操作,但它与对称密码体制有极大的不同. 公玥与私钥分属通信双方,一份消息的加密与解密需要公玥和私钥共同参与. 公玥加密需要私钥解密, 反之, 私钥加密需要公玥解密.
 

@@ -4,14 +4,14 @@ title: JMeter
 ---
 ## Aggregate report
 使用JMeter压测服务器登录压力,首先给出几张图看一下我们的配置
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/JMeter1.png)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/JMeter2.png)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/JMeter3.png)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/JMeter4.png)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/JMeter5.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jmeter/JMeter1.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jmeter/JMeter2.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jmeter/JMeter3.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jmeter/JMeter4.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jmeter/JMeter5.png)
 > 最后一张图是概要结果, 测试GameCenter结果.csv 是聚合报告结果
 
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/JMeter6.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jmeter/JMeter6.png)
 这个是我们要配置的统计结果, 我们只统计了延迟, 耗时以及消息的字节数.
 
 下面我们看一下, JMeter官方对Aggregate report(聚合报告)的说明:
@@ -35,7 +35,7 @@ title: JMeter
 
 ## Summy Report
 接下来我们看一下Summy Report
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/JMeter7.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jmeter/JMeter7.png)
 summary 报告为每个不同名的请求(注意是不同名的哦)都创建了一个结果记录. 这个和聚合报告非常像, 但不同的是它所使用的内存要比聚合报告少.
 
 * Label - 统计标签
@@ -50,4 +50,4 @@ summary 报告为每个不同名的请求(注意是不同名的哦)都创建了�
 * Avg. Bytes - average size of the sample response in bytes. (in JMeter 2.2 it wrongly showed the value in kB)
 
 ## SSL
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jmeter/ssl.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jmeter/ssl.png)

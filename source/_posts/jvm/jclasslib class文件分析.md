@@ -24,8 +24,8 @@ public class JClassLibObject {
 }
 ```
 看一下在jclasslib bytecode viewer中的样子
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jvm/jclasslib_constant_pool.jpg)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/jvm/jclasslib_fields_methods.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jvm/jclasslib_constant_pool.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/jvm/jclasslib_fields_methods.jpg)
 
 [github地址](https://github.com/ingokegel/jclasslib)
 [下载地址](https://sourceforge.net/projects/jclasslib/)

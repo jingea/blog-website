@@ -63,7 +63,7 @@ title: IntelliJ IDEA
 * `Ctrl+SHIFT+Alt+UP/DOWN`  跳转到当前文件的上一个修改或者下一个修改
 
 ## 缩进设置
-![](https://raw.githubusercontent.com/ming15/blog-website/images/other/idea_indent.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/other/idea_indent.jpg)
 * `Use tab character` : 如果勾选则使用tab缩进,否则使用空格缩进
 * `Tab size` : 每个tab占用几个空格.
 * `Indent` : 每个缩进占用几个空格.
@@ -85,7 +85,7 @@ IDEA如果要使用eclipse的格式化文件需要安装`Eclipse Code Formatter`
 
 ## Idea打包与classpath
 当我们使用maven创建一个项目的时候会创建出如下的目录
-![](https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20classpath.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/other/idea%20classpath.png)
 我们会看到如下的几个目录, 这几个目录都是设置在classpath上
 * Sources ：src/main/java
 * Resources : src/main/resources
@@ -102,11 +102,11 @@ InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream("./myba
 
 ## Javadoc 报错
 在新的项目中Javadoc写的并不规范, 因此Idea在检查中, 会产生报错标红信息，采用下面的方法就可以将其取消
-![](https://raw.githubusercontent.com/ming15/blog-website/images/other/Idea%20Inspections.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/other/Idea%20Inspections.jpg)
 
 ## 方法断点、
 在Idea中千万不要加方法断点, 这个会严重的降低服务器性能. 下面那个就是方法断点
-![](https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20method%20breakpoints.bmp)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/other/idea%20method%20breakpoints.bmp)
 
 ## 生成类图
-![](https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20lei%20tu.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/other/idea%20lei%20tu.png)

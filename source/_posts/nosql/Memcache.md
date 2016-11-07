@@ -6,7 +6,7 @@ title: memcached
 memcached是一个高性能内存对象缓存系统. 它基于libevent,可方便地拓展为任意大小, 而且对防止内存swap和使用非阻塞IO做了大量优化工作.
 
 memcached内存分配：
-![](https://raw.githubusercontent.com/ming15/blog-website/images/memcached/20120314163538_438.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/memcached/20120314163538_438.png)
 memcached默认情况下采用了名为Slab Allocator的机制分配、管理内存.
 
 如果我们在启动memcached时没有指定`-m`参数的话, 那么memcached能使用的最大内存为默认的64M,但是memcached启动的时候并不会一次性就都分配出来,而是当发现memcached已被分配的内存不够用的时候才会进行申请. memcached申请内存时一次会申请一个Slab(默认为1M). 然后会将这一个Slab分成不同的Class, 每个Class内部都有N个大小相等的Chunk.每个chunk中都保存了一个item结构体、一对key value键值对.

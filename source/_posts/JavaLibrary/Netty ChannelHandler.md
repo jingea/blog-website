@@ -4,7 +4,7 @@ date: 2016-01-23
 title: Netty ChannelHandler
 ---
 在写Netty Application的时候, 首先我们看一下`ChannelHandler`的继承结构
-![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/netty%20ChannelHadler.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/netty/netty%20ChannelHadler.jpg)
 * `ChannelHandler`
 * `ChannelInboundHandler`
 * `ChannelOutboundHandler`

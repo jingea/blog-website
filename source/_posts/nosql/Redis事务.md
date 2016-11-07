@@ -11,9 +11,9 @@ title: Redis事务
 * `DISCARD`告诉 redis 取消事务
 
 `MULTI`命令执行后, redis进入事务状态,redis会持续缓存某个客户端的命令(其他客户端处于饥饿状态).
-![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-multi.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis-multi.png)
 当redis接受到客户端的`EXEC`命令后会开始执行刚才缓存在事务队列里的任务. `DISCARD` 会将事务队列清空.
-![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-tranactions.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis-tranactions.png)
 ```shell
 redis 127.0.0.1:7006> MULTI
 OK
@@ -59,15 +59,15 @@ redis 127.0.0.1:7006>
 7. 再次开启事务,然后使用`SET`命令将n设置为"n"
 8. 退出事务
 9. 接下来我们依次使用`GET`命令获取值,但是n取不到,说明退出事务确实没有执行事务队列里的命令
-![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis_transaction.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis_transaction.png)
 
 ## watch机制
 下来我们来看一下redis的watch机制
-![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch1.png)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch2.png)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch3.png)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch4.png)
-![](https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis_watched_keys.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch1.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch2.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch3.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch4.png)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis_watched_keys.png)
 
 ## pipline机制
 

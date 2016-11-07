@@ -4,7 +4,7 @@ date: 2016-03-19
 title: Netty Unsafe
 ---
 首先我们来看一下`Unsafe`的继承
-![](https://raw.githubusercontent.com/ming15/blog-website/images/netty/unsafe.jpg)
+![](https://raw.githubusercontent.com/yu66/blog-website/images/netty/unsafe.jpg)
 
 ## Unsafe
 `Unsafe`是`Channel`的内部接口, 它定义了下面的相关功能
