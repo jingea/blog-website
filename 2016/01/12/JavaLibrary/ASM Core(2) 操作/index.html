@@ -19,14 +19,14 @@
 <meta property="og:site_name" content="·">
 <meta property="og:description" content="asm4-guide学习心得
 获取class信息下来的示例中我们通过重写ClassVisitor相关函数然后依次打印出类型信息, 字段信息和函数信息.123456789101112131415161718192021222324252627282930class ClassPrinter extends ClassVisitor &amp;#123;	public ClassPrinter() &amp;#123">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/asm/transformation%20chain.jpg">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/asm/Sequence%20diagram%20for%20the%20ChangeVersionAdapter.jpg">
-<meta property="og:updated_time" content="2016-11-01T06:11:17.000Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/asm/transformation%20chain.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/asm/Sequence%20diagram%20for%20the%20ChangeVersionAdapter.jpg">
+<meta property="og:updated_time" content="2016-11-08T04:30:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ASM Core(2) Class的增删改查">
 <meta name="twitter:description" content="asm4-guide学习心得
 获取class信息下来的示例中我们通过重写ClassVisitor相关函数然后依次打印出类型信息, 字段信息和函数信息.123456789101112131415161718192021222324252627282930class ClassPrinter extends ClassVisitor &amp;#123;	public ClassPrinter() &amp;#123">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/asm/transformation%20chain.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/asm/transformation%20chain.jpg">
 
     
     <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
@@ -110,12 +110,12 @@
 <p>另外我们还可以重写<code>findClass</code>这个函数来动态的生成我们所需要的类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">StubClassLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> Class <span class="title">findClass</span><span class="params">(String name)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</div><div class="line">		<span class="keyword">if</span> (name.endsWith(<span class="string">"_Stub"</span>)) &#123;</div><div class="line">			ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">			...</div><div class="line">			<span class="keyword">byte</span>[] b = cw.toByteArray();</div><div class="line">			<span class="keyword">return</span> defineClass(name, b, <span class="number">0</span>, b.length);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.findClass(name);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h2 id="修改已存在的Class"><a href="#修改已存在的Class" class="headerlink" title="修改已存在的Class"></a>修改已存在的Class</h2><p>在上篇文章中我们只是单独的使用了<code>ClassReader</code>和<code>ClassWriter</code>,但是更多的应用其实应该是将其组合到一起使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] b1 = ...;</div><div class="line">ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">ClassReader cr = <span class="keyword">new</span> ClassReader(b1);</div><div class="line">cr.accept(cw, <span class="number">0</span>);</div><div class="line"><span class="keyword">byte</span>[] b2 = cw.toByteArray(); <span class="comment">// b2 represents the same class as b1</span></div></pre></td></tr></table></figure></p>
 <p>这个例子中我们什么都没有做, 只不过完成了一个copy字节码的功能, 接下来我们在这俩个过程中加入<code>ClassVisitor</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">byte</span>[] b1 = ...;</div><div class="line">ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line"><span class="comment">// cv forwards all events to cw</span></div><div class="line">ClassVisitor cv = <span class="keyword">new</span> ClassVisitor(ASM4, cw) &#123; &#125;;</div><div class="line">ClassReader cr = <span class="keyword">new</span> ClassReader(b1);</div><div class="line">cr.accept(cv, <span class="number">0</span>);</div><div class="line"><span class="keyword">byte</span>[] b2 = cw.toByteArray(); <span class="comment">// b2 represents the same class as b1</span></div></pre></td></tr></table></figure></p>
-<p>这段代码的处理流程如下图<img src="https://raw.githubusercontent.com/ming15/blog-website/images/asm/transformation%20chain.jpg" alt=""></p>
+<p>这段代码的处理流程如下图<img src="https://raw.githubusercontent.com/yu66/blog-website/images/asm/transformation%20chain.jpg" alt=""></p>
 <blockquote>
 <p>方框代表我们的核心组件, 箭头代表我们的数据流.</p>
 </blockquote>
 <p>下面我们给出一个<code>ClassVisitor</code>小例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChangeVersionAdapter</span> <span class="keyword">extends</span> <span class="title">ClassVisitor</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ChangeVersionAdapter</span><span class="params">(ClassVisitor cv)</span> </span>&#123;</div><div class="line">		<span class="comment">// ASM4为ASM的版本号</span></div><div class="line">		<span class="keyword">super</span>(ASM4, cv);</div><div class="line">	&#125;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(<span class="keyword">int</span> version, <span class="keyword">int</span> access, String name,</span></span></div><div class="line">					  String signature, String superName, String[] interfaces) &#123;</div><div class="line">		<span class="comment">// 修改class信息</span></div><div class="line">		cv.visit(V1_5,			<span class="comment">// 改变class的版本号</span></div><div class="line">				access,			<span class="comment">// 改变class的标识符</span></div><div class="line">				name,			<span class="comment">// 改变类名</span></div><div class="line">				signature,		<span class="comment">// 泛型信息</span></div><div class="line">				superName,		<span class="comment">// 父类信息</span></div><div class="line">				interfaces);	<span class="comment">// 接口信息</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在上面的实现中,除了调用<code>visit</code>函数(修改类本身函数, 将class版本号转化为1.5), 其他的方法都没有重写,因此他们什么改变都不会做. 下来我们给出这个类执行的时序图<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/asm/Sequence%20diagram%20for%20the%20ChangeVersionAdapter.jpg" alt=""><br>从这个时序图中我们可以看出, 用户调用了<code>accept</code>方法之后, 有ASM自动调用<code>ClassReader</code>的<code>visti(version)</code>方法, 接着调用<code>ChangeVersionAdapter</code>的<code>visti(1.5)</code>方法, 最后调用<code>ClassWriter</code>的相关方法. 从这个模式中我们可以看出, ASM的调用模式是链式调用的, 先调用visit, 然后调用责任链中所有的<code>ClassVisitor</code>的vist最后调用<code>ClassWriter</code>的完结方法. 当<code>visit</code>调用完之后再调用<code>visitSource</code>责任链流程, 依次类推下去.</p>
+<p>在上面的实现中,除了调用<code>visit</code>函数(修改类本身函数, 将class版本号转化为1.5), 其他的方法都没有重写,因此他们什么改变都不会做. 下来我们给出这个类执行的时序图<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/asm/Sequence%20diagram%20for%20the%20ChangeVersionAdapter.jpg" alt=""><br>从这个时序图中我们可以看出, 用户调用了<code>accept</code>方法之后, 有ASM自动调用<code>ClassReader</code>的<code>visti(version)</code>方法, 接着调用<code>ChangeVersionAdapter</code>的<code>visti(1.5)</code>方法, 最后调用<code>ClassWriter</code>的相关方法. 从这个模式中我们可以看出, ASM的调用模式是链式调用的, 先调用visit, 然后调用责任链中所有的<code>ClassVisitor</code>的vist最后调用<code>ClassWriter</code>的完结方法. 当<code>visit</code>调用完之后再调用<code>visitSource</code>责任链流程, 依次类推下去.</p>
 <h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>在上述的代码中, 其实代码的运行效率并不是高效进行的. 这是因为当<code>b1</code>字节码被<code>ClassReader</code>读取并通过<code>ClassVisitor</code>将其执行转换的时候, 我们可能只改变了class的版本号, 其他部分并没有转换, 但是在实际的执行中其他的部分也都被执行了一边, 那这就浪费了cpu计算和内存空间的占用, 其实只需要将不需要改变的字节从<code>b1</code>直接拷贝到<code>b2</code>就好了.  </p>
 <p>好在ASM为我们内部构建了这种优化过程.<br>*</p>
 <h2 id="删除成员"><a href="#删除成员" class="headerlink" title="删除成员"></a>删除成员</h2><p>如果我们想将class中的某个成员删除掉, 那么只需在执行asm责任链调用时, 中断调用过程(不调用super或者直接return)就可以了.</p>
@@ -217,15 +217,15 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>32</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>35</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>35</sup></a></li>
 		  
 		
 		  
@@ -266,7 +266,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
 			
 		
 			

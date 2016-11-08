@@ -69,182 +69,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/08/编程语言/JavaScript函数/" title="JavaScript函数" itemprop="url">JavaScript函数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
-<p>JavaScript中函数就是对象。函数对象连接到Function.prototype(该原型连接到Object.prototype).</p>
-<ul>
-<li>每个函数对象在创建时也随配一个prototype属性,它的值是一个拥有constructor属性且值为该函数的对象（这和连接到Function.prototype全完不同）.</li>
-<li>因为函数是对象,所以函数可以保存在变量,对象和数组中. 函数可以当做参数传递给其他函数,函数也可以再返回给函数.而且因为函数是对象,函数还可以拥有方法</li>
-<li>一个函数总会有一个返回值,如果没有指定返回值则返回undefined(如果函数调用前加上了new前缀,且返回的不是一个对象,则返回this)</li>
-</ul>
-<h3 id="函数字面量"><a href="#函数字面量" class="headerlink" title="函数字面量"></a>函数字面量</h3><p>我们定义一个函数字面量<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> a + b;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面这个函数字面量是通过将一个匿名函数赋值给一个变量.</p>
-<p>函数字面量可以出现在任何允许表达式出现的地方. 函数可以被定义在其他函数中. 可以作为函数参数或者函数返回值出现。函数甚至拥有自己的作用域(就像变量有自己的作用域一样)</p>
-<p>每声明一个函数实际是创建了一个Function 实例,上面的函数等价于<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Add = <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"a"</span>,<span class="string">"b"</span>,<span class="string">"a + b;"</span>);</div><div class="line"></div><div class="line"><span class="keyword">var</span> add = <span class="keyword">new</span> Add(<span class="number">1</span>, <span class="number">2</span>);</div></pre></td></tr></table></figure></p>
-<h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><p>内部函数可以访问自己内部的参数和变量还可以访问嵌套在父函数的参数和变量。通过函数字面量创建的函数对象包含了一个连接到外部上下文的连接，这杯称为闭包(每个函数在创建时会附加俩个隐藏属性：函数的上下文和实现函数行为的代码).</p>
-<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><p>当调用函数时除了显示地向其传递的参数,每个函数还会接受俩个附加参数<code>this</code>, <code>arguments</code>. 当实际参数大于形式参数时,多余的参数会被忽略,而当实际参数小于形式,参数时缺少的参数会被赋值为undefined.</p>
-<p>下面会介绍四种调用模式,每种调用模式对<code>this</code>参数的初始化是不一样的.</p>
-<h4 id="方法调用模式"><a href="#方法调用模式" class="headerlink" title="方法调用模式"></a>方法调用模式</h4><p>当一个函数作为一个对象的属性时,我们称其为方法.方法里的this参数被被绑定到该对象上.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;</div><div class="line">	value : <span class="number">1</span>;</div><div class="line">	addOne : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">this</span>.value += <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">obj.addOne();</div></pre></td></tr></table></figure></p>
-<h4 id="函数调用模式"><a href="#函数调用模式" class="headerlink" title="函数调用模式"></a>函数调用模式</h4><p>当一个函数并非一个对象属性时,那么它就被当做是一个函数来调用<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> a + b;</div><div class="line">&#125;</div><div class="line"></div><div class="line">c = add(<span class="number">1</span>, <span class="number">2</span>);</div></pre></td></tr></table></figure></p>
-<p>这种模式下this被绑定到全局对象上</p>
-<h4 id="构造器调用模式"><a href="#构造器调用模式" class="headerlink" title="构造器调用模式"></a>构造器调用模式</h4><p>一个函数如果创建的目的就是希望集合new关键字来使用,那么它就是构造器函数</p>
-<p>如果在一个函数前面带上一个new来调用,实际上会创建一个连接到该函数prototype成员的新对象,同时this也会绑定到那个新对象上.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Quo = <span class="function"><span class="keyword">function</span>(<span class="params">string</span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.status = string;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Quo.prototype.get_status = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.status;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> myQuo = <span class="keyword">new</span> Quo(<span class="string">"hello"</span>);</div></pre></td></tr></table></figure></p>
-<h4 id="Apply调用模式"><a href="#Apply调用模式" class="headerlink" title="Apply调用模式"></a>Apply调用模式</h4><p>JavaScript的函数可以拥有方法,apply方法可以让我们构建一个参数数组传递给调用函数. apply方法接受俩个参数<code>this</code>和参数数组.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> a + b;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> argus = [<span class="number">3</span>, <span class="number">4</span>];</div><div class="line"><span class="keyword">var</span> sum = add.apply(<span class="literal">null</span>, argus);</div></pre></td></tr></table></figure></p>
-<h3 id="arguments数组"><a href="#arguments数组" class="headerlink" title="arguments数组"></a>arguments数组</h3><p>在函数内部我们可以通过arguments数组变量访问所有的实际参数<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> sum = <span class="number">0</span>;</div><div class="line">	<span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="built_in">arguments</span>.length; i += <span class="number">1</span>) &#123;</div><div class="line">		sum += argements[i];</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> sum = add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</div></pre></td></tr></table></figure></p>
-<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>throw语句中断函数的执行,它应该抛出一个exception对象,这个对象包含一个<code>name</code>和<code>message</code>属性(你也可以添加额外的属性).</p>
-<p>我们使用try catch来捕获异常<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span>(<span class="built_in">arguments</span>.length &lt; <span class="number">2</span>) &#123;</div><div class="line">		<span class="keyword">throw</span> &#123;</div><div class="line">				name: <span class="string">"arguments error"</span>,</div><div class="line">				message: <span class="string">"need more arguments"</span></div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> tryAdd = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		<span class="keyword">return</span> add(a, b);</div><div class="line">	&#125; <span class="keyword">catch</span>(e) &#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">tryAdd(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</div></pre></td></tr></table></figure></p>
-<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>代码块是包在一对花括号中的一组语句，JavaScript中的代码块不会创建新的作用域.但是函数确实是有其自己的作用域的,但是在函数内部定义的变量在整个函数体的任意位置都是可见的,因此变量应该被定义在函数的头部。</p>
-<p>作用域的好处是内部函数可以访问定义在他们的外部函数的参数和变量(除了this和arguments)</p>
-<h3 id="闭包-1"><a href="#闭包-1" class="headerlink" title="闭包"></a>闭包</h3><p>当我们在函数A中定义了函数B,函数B引用了函数A中的变量I,当函数A执行完毕,函数B作为返回值继续被执行时,函数A的变量I是仍然可以被访问的,这就是闭包.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> f1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> id = <span class="number">1132</span>;</div><div class="line">	<span class="keyword">return</span> &#123;</div><div class="line">		add: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			<span class="keyword">return</span> id += <span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> if1 = fi();</div><div class="line"><span class="keyword">var</span> id = if1.add(); <span class="comment">// 结果是1133</span></div></pre></td></tr></table></figure></p>
-<p>简而言之呢,闭包的特性是保存了创建它时的上下文信息.</p>
-<h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>我们可以使用函数和闭包来构造模块. 模块是一个提供接口却隐藏状态与实现的函数或者对象.</p>
-<p>模块的一般形式是：一个定义了私有变量和函数的函数,利用闭包创建可以访问私有变量和函数的特权函数,最后返回这个特权函数,或者将他们保存到一个可访问到的地方.</p>
-<h3 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h3><p>函数也是值,我们可以像往常操作值那样去操作函数, 将函数作为一个变量.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span>(<span class="params">a, b, c</span>) </span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> f1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> p(<span class="number">1</span>);</div><div class="line">&#125; </div><div class="line"></div><div class="line"><span class="keyword">var</span> c = f1();</div></pre></td></tr></table></figure></p>
-<p>上面就实现了函数的柯里化</p>
-<h3 id="普通函数"><a href="#普通函数" class="headerlink" title="普通函数"></a>普通函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> a + b;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/08/编程语言/JavaScript函数/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/编程语言/JavaScript函数/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/09/08/编程语言/JavaScript面向对象/" title="JavaScript面向对象和原型链" itemprop="url">JavaScript面向对象和原型链</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-09-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
-<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><p>JavaScript的简单数据类型包括数字，字符串，布尔值，null值和undefined值，其他值都是对象(数组，函数都是对象)。 数字，字符串和布尔值虽然拥有方法，但他们是不可变的，因此不能称他们为对象。JavaScript中的对象是可变的键控集合。</p>
-<p>对象是属性的容器，每个属性都有名字和值。</p>
-<ul>
-<li>属性名：包括空串在内的任意字符串。如果字符串不是JavaScript保留的关键字切是合法的标识符则可以不必使用双引号。</li>
-<li>属性值：包括undefined值之外的任何值</li>
-</ul>
-<p>但是JavaScript里的对象是无类型的。</p>
-<p>JavaScript包含一种原型链特性,允许对象继承另一个对象的属性.正确的使用它能减少对象初始化时小号的时间和内存.</p>
-<h3 id="对象字面量"><a href="#对象字面量" class="headerlink" title="对象字面量"></a>对象字面量</h3><p>包围在一对花括号中的0~N个键值对即为对象字面量。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> empoty = &#123;&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> xiaoming = &#123;</div><div class="line">	name : <span class="string">"小明"</span>,</div><div class="line">	age  : <span class="number">18</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>对象字面量还可以嵌套使用</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> xiaoming = &#123;</div><div class="line">	name : <span class="string">"小明"</span>,</div><div class="line">	age  : <span class="number">18</span></div><div class="line">	chengji: &#123;</div><div class="line">		yuwen: <span class="number">99</span>,</div><div class="line">		shuxu: <span class="number">100</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="检索对象里的值"><a href="#检索对象里的值" class="headerlink" title="检索对象里的值"></a>检索对象里的值</h3><p>我们可以使用<code>[]</code>括住一个字符串表达式来索引某个值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming[<span class="string">"name"</span>]</div></pre></td></tr></table></figure></p>
-<p>如果该字符串是一个合法的标识符且不是保留关键字，那么也可以使用<code>.</code>进行索引<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.name</div></pre></td></tr></table></figure></p>
-<p>如果我们索引<code>hair</code>这个属性的话,会得到一个<code>undefined</code>值,因此我们也可以使用<code>||</code>指定一个默认值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.hair || <span class="string">"red"</span></div></pre></td></tr></table></figure></p>
-<p>这样我们获得的结果就是<code>red</code>这个字符串,可是如果我们向一个<code>undefined</code>值继续索引的话会得到一个<code>TypeError</code>异常,我们可以使用<code>&amp;&amp;</code>来避免<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.cars &amp;&amp; xiaoming.cars.changcheng</div></pre></td></tr></table></figure></p>
-<p>我们通过这种方式获得小明拥有的汽车中长城汽车的属性值.</p>
-<h3 id="更新对象的值"><a href="#更新对象的值" class="headerlink" title="更新对象的值"></a>更新对象的值</h3><p>我们可以通过<code>=</code>对对象进行赋值.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">xiaoming.name = <span class="string">"zhangxiaoming"</span></div><div class="line"></div><div class="line"><span class="comment">// 或者赋值某个新的对象</span></div><div class="line">xiaoming.chengji: &#123;</div><div class="line">		yuwen: <span class="number">99</span>,</div><div class="line">		shuxu: <span class="number">100</span></div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="引用对象"><a href="#引用对象" class="headerlink" title="引用对象"></a>引用对象</h3><p>对象通过引用来传递</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> chengji = xiaoming.chengji</div></pre></td></tr></table></figure>
-<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><h4 id="Object-模式"><a href="#Object-模式" class="headerlink" title="Object 模式"></a>Object 模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o1 = &#123;&#125;;<span class="comment">//字面量的表现形式</span></div><div class="line"><span class="keyword">var</span> o2 = <span class="keyword">new</span> <span class="built_in">Object</span>;</div><div class="line"><span class="keyword">var</span> o3 = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line"><span class="keyword">var</span> o4 = <span class="keyword">new</span> <span class="built_in">Object</span>(<span class="literal">null</span>);</div><div class="line"><span class="keyword">var</span> o5 = <span class="keyword">new</span> <span class="built_in">Object</span>(<span class="literal">undefined</span>);</div><div class="line"><span class="keyword">var</span> o6 = <span class="built_in">Object</span>.create(<span class="built_in">Object</span>.prototype);<span class="comment">//等价于 var o = &#123;&#125;;//即以 Object.prototype 对象为一个原型模板,新建一个以这个原型模板为原型的对象</span></div><div class="line"><span class="comment">// 区别</span></div><div class="line"><span class="keyword">var</span> o7 = <span class="built_in">Object</span>.create(<span class="literal">null</span>);<span class="comment">//创建一个原型为 null 的对象</span></div></pre></td></tr></table></figure>
-<h4 id="构造器模式"><a href="#构造器模式" class="headerlink" title="构造器模式"></a>构造器模式</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Car</span>(<span class="params">sColor</span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.color = sColor;      </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> car = <span class="keyword">new</span> Car(<span class="string">"red"</span>);</div></pre></td></tr></table></figure>
-<h3 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h3><p>每个对象都会连接到一个原型对象,并且从中继承属性. 对象字面量会连接到<code>Object.prototype</code></p>
-<p>需要指出的是原型连接在对象更新时是不起作用的(如果我们对某个对象做出改变是不会触及该对象的原型).原型连接只有在索引值的时候才会被用到.</p>
-<h4 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h4><p>如果我们尝试去索引某个对象A的值,但该对象没有此属性名,那么JavaScript会试着从A的原型B中进行查找,如果B中也没有的话,会继续向B的原型C中查找,一直找到<code>Object.prototype</code>,如果都没有找到那么值就是<code>undefined</code>.</p>
-<h4 id="指定对象的原型"><a href="#指定对象的原型" class="headerlink" title="指定对象的原型"></a>指定对象的原型</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>我们可以使用typeof来观察我们的对象中是否包含某个属性<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typeof</span> xiaoming.name  <span class="comment">// 值为string</span></div><div class="line"><span class="keyword">typeof</span> xiaoming.address  <span class="comment">// 值为undefined</span></div></pre></td></tr></table></figure></p>
-<p>这样我们可以通过<code>undefined</code>来判断某个对象中是否包含某个值,但是有一点需要说明的是<code>typeof</code>也会在原型链进行索引判断。</p>
-<p>那么我们可以使用<code>hasOwnProperty</code>方法进行判断，它不对原型链进行检查同时它的返回值只有布尔值<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xiaoming.hasOwnProperty(<span class="string">"address"</span>)  <span class="comment">// 值为false</span></div></pre></td></tr></table></figure></p>
-<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>delete运算符可以用来删除对象的属性.它不会触及原型链中的任何对象. 如果我们自定义的对象属性覆盖了原型中的属性,我们可以通过删除对象的属性而让原型中的属性显露出来</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/09/08/编程语言/JavaScript面向对象/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/09/08/编程语言/JavaScript面向对象/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/08/09/编程语言/python2 第三方库/" title="PYTHON2 第三方库" itemprop="url">PYTHON2 第三方库</a>
   </h1>
   <p class="article-author">By
@@ -293,6 +117,156 @@
 	
 	  	<span></span>
 		<a href="/2015/08/09/编程语言/python2 第三方库/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/09/编程语言/python2 第三方库/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/08/杂记/IntelliJ IDEA/" title="IntelliJ IDEA" itemprop="url">IntelliJ IDEA</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><p>编辑快捷键</p>
+<ul>
+<li><code>ALT Shift Insert</code> 块选择 </li>
+<li><code>Ctrl+/</code>   注释//   </li>
+<li><code>Ctrl+SHIFT+/</code>  注释/<em>…</em>/ </li>
+<li><code>Ctrl+W</code>   选中代码，连续按会有其他效果 </li>
+</ul>
+<p>查询快捷键</p>
+<ul>
+<li><code>Ctrl+N</code>   查找类 </li>
+<li><code>Ctrl+SHIFT+N</code>  查找文件 </li>
+<li><code>CIRL+B / F4</code>   找变量的来源 </li>
+<li><code>Ctrl+ALT+B</code>  找所有的子类 </li>
+<li><code>Ctrl+G</code>   定位行 </li>
+<li><code>Ctrl+F</code>   在当前窗口查找文本 </li>
+<li><code>Ctrl+SHIFT+F</code>  在指定窗口查找文本 </li>
+<li><code>Ctrl+R</code>   在当前窗口替换文本 </li>
+<li><code>Ctrl+SHIFT+R</code>  在指定窗口替换文本 </li>
+<li><code>Ctrl+E</code>   最近打开的文件 </li>
+<li><code>F3</code>   向下查找关键字出现位置 </li>
+<li><code>SHIFT+F3</code>  向上一个关键字出现位置 </li>
+<li><code>F4</code>   查找变量来源 </li>
+<li><code>Ctrl+ALT+F7</code>  选中的字符查找工程出现的地方 </li>
+</ul>
+<p>自动代码</p>
+<ul>
+<li><code>ALT+回车</code>  导入包,自动修正 </li>
+<li><code>Ctrl+ALT+L</code>  格式化代码 </li>
+<li><code>Ctrl+ALT+I</code>  自动缩进 </li>
+<li><code>Ctrl+ALT+O</code>  优化导入的类和包 </li>
+<li><code>ALT+INSERT</code>  生成代码(如GET,SET方法,构造函数等)  </li>
+<li><code>Ctrl+SHIFT+SPACE</code> 自动补全代码 </li>
+<li><code>Ctrl+空格</code>  代码提示 </li>
+<li><code>Ctrl+ALT+SPACE</code>  类名或接口名提示 </li>
+<li><code>Ctrl+P</code>   方法参数提示 </li>
+<li><code>Ctrl+J</code>   自动代码 </li>
+<li><code>Ctrl+ALT+T</code>  把选中的代码放在 TRY{} IF{} ELSE{} 里</li>
+</ul>
+<p>复制快捷方式</p>
+<ul>
+<li><code>Ctrl+D</code>   复制行 </li>
+<li><code>Ctrl+X</code>   剪切,删除行  </li>
+</ul>
+<p>其他快捷方式</p>
+<ul>
+<li><code>Ctrl+Z</code>   倒退 </li>
+<li><code>Ctrl+SHIFT+Z</code>  向前 </li>
+<li><code>Ctrl+ALT+F12</code>  资源管理器打开文件夹 </li>
+<li><code>Ctrl+B</code>   快速打开光标处的类或方法 </li>
+<li><code>ALT+ ←/→</code>  切换代码视图 </li>
+<li><code>Ctrl+ALT ←/→</code>  返回上次编辑的位置 </li>
+<li><code>ALT+ ↑/↓</code>  在方法间快速移动定位 </li>
+<li><code>SHIFT+F6</code>  重构-重命名 </li>
+<li><code>Ctrl+Q</code>   显示注释文档 </li>
+<li><code>ALT+1</code>   快速打开或隐藏工程面板 </li>
+<li><code>Ctrl+SHIFT+UP/DOWN</code> 代码向上/下移动。 </li>
+<li><code>Ctrl+UP/DOWN</code>  光标跳转到第一行或最后一行下 </li>
+<li><code>F2 或Shift+F2</code> 高亮错误或警告快速定位</li>
+</ul>
+<p>版本控制相关</p>
+<ul>
+<li><code>ALT+SHIFT+C</code>  查找修改的文件 </li>
+<li><code>Ctrl+SHIFT+Alt+UP/DOWN</code>  跳转到当前文件的上一个修改或者下一个修改</li>
+</ul>
+<h2 id="缩进设置"><a href="#缩进设置" class="headerlink" title="缩进设置"></a>缩进设置</h2><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/other/idea_indent.jpg" alt=""></p>
+<ul>
+<li><code>Use tab character</code> : 如果勾选则使用tab缩进,否则使用空格缩进</li>
+<li><code>Tab size</code> : 每个tab占用几个空格.</li>
+<li><code>Indent</code> : 每个缩进占用几个空格.</li>
+</ul>
+<h2 id="Gradle-Idea编译报错"><a href="#Gradle-Idea编译报错" class="headerlink" title="Gradle Idea编译报错"></a>Gradle Idea编译报错</h2><p>刚刚来到了新的项目, 新的项目里使用Gradle作为编译工具.  说完前文说正题: 开发完新的模块后打算写单元测试来验证一下自己的功能. 但是在运行的时候遇到了一些问题, 由于整个项目都没进行单元测试的编写, 因此需要搭建起这个环境,</p>
+<p>其实环境很简单只要单元测试能编译通过运行就ok了，但是仍然发生了一些问题,由于项目是从JDK7升级上来的, 因此有些地方还是采用的配置, 因此当发现在编译时遇到了</p>
+<ul>
+<li>class版本不支持</li>
+<li>提示:无效的源发行版: 1.8<br>我们要检查俩个地方</li>
+<li>build.gradle 这个文件里指定了编译器版本(例如sourceCompatibility, 需要注意的是看看是否依赖了其他的gradle配置, 我就踩中了这个坑)</li>
+<li>Intellij IDEA -Preference-Build, Execution, Deployment-Gradle -Gradle JVM, 看一下这个配置里面的配置, 当我将gradle的配置修改之后如果不修改这里就会出现  无效的源发行版: 1.8</li>
+</ul>
+<p>另外我们一般在项目里会设置JDK版本(项目右击Open Moudle Setting), 这个只是设置整个idea的项目相关的, 也就是和你写代码相关, 和项目的构建等等没啥关系</p>
+<h2 id="eclipse格式化文件"><a href="#eclipse格式化文件" class="headerlink" title="eclipse格式化文件"></a>eclipse格式化文件</h2><p>IDEA如果要使用eclipse的格式化文件需要安装<code>Eclipse Code Formatter</code>插件, 然后在setting里的<code>Other Seetings</code>里的<code>Eclipse Code Formatter</code>里引用格式化文件就好了</p>
+<h2 id="Idea打包与classpath"><a href="#Idea打包与classpath" class="headerlink" title="Idea打包与classpath"></a>Idea打包与classpath</h2><p>当我们使用maven创建一个项目的时候会创建出如下的目录<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/other/idea%20classpath.png" alt=""><br>我们会看到如下的几个目录, 这几个目录都是设置在classpath上</p>
+<ul>
+<li>Sources ：src/main/java</li>
+<li>Resources : src/main/resources<br>如果我们要新添加一个classpath时, 点击add Content Root就好. <blockquote>
+<p>注意我们不要使用<code>Run/Debug Configurations</code>里的VM options, 这个路径有时候是让启动我们自己程序的Idea进程使用的.<br>我们在程序里可以使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream(<span class="string">"./mybatis-config.xml"</span>);</div></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+<p>这种直接读取classpath也就是resources中的文件. 当使用Maven打包之后, 也可以直接从jar包中读取<br><img src="" alt=""><br>我们看到resources目录直接放到了jar包的根目录下,但是我们需要配置一些maven的打包方式</p>
+<h2 id="Javadoc-报错"><a href="#Javadoc-报错" class="headerlink" title="Javadoc 报错"></a>Javadoc 报错</h2><p>在新的项目中Javadoc写的并不规范, 因此Idea在检查中, 会产生报错标红信息，采用下面的方法就可以将其取消<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/other/Idea%20Inspections.jpg" alt=""></p>
+<h2 id="方法断点、"><a href="#方法断点、" class="headerlink" title="方法断点、"></a>方法断点、</h2><p>在Idea中千万不要加方法断点, 这个会严重的降低服务器性能. 下面那个就是方法断点<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/other/idea%20method%20breakpoints.bmp" alt=""></p>
+<h2 id="生成类图"><a href="#生成类图" class="headerlink" title="生成类图"></a>生成类图</h2><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/other/idea%20lei%20tu.png" alt=""></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/08/08/杂记/IntelliJ IDEA/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/杂记/IntelliJ IDEA/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -501,156 +475,6 @@
 	
 	  	<span></span>
 		<a href="/2015/08/08/编程语言/python2 文件和网络操作/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/编程语言/python2 文件和网络操作/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/08/08/杂记/IntelliJ IDEA/" title="IntelliJ IDEA" itemprop="url">IntelliJ IDEA</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-08-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-08-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><p>编辑快捷键</p>
-<ul>
-<li><code>ALT Shift Insert</code> 块选择 </li>
-<li><code>Ctrl+/</code>   注释//   </li>
-<li><code>Ctrl+SHIFT+/</code>  注释/<em>…</em>/ </li>
-<li><code>Ctrl+W</code>   选中代码，连续按会有其他效果 </li>
-</ul>
-<p>查询快捷键</p>
-<ul>
-<li><code>Ctrl+N</code>   查找类 </li>
-<li><code>Ctrl+SHIFT+N</code>  查找文件 </li>
-<li><code>CIRL+B / F4</code>   找变量的来源 </li>
-<li><code>Ctrl+ALT+B</code>  找所有的子类 </li>
-<li><code>Ctrl+G</code>   定位行 </li>
-<li><code>Ctrl+F</code>   在当前窗口查找文本 </li>
-<li><code>Ctrl+SHIFT+F</code>  在指定窗口查找文本 </li>
-<li><code>Ctrl+R</code>   在当前窗口替换文本 </li>
-<li><code>Ctrl+SHIFT+R</code>  在指定窗口替换文本 </li>
-<li><code>Ctrl+E</code>   最近打开的文件 </li>
-<li><code>F3</code>   向下查找关键字出现位置 </li>
-<li><code>SHIFT+F3</code>  向上一个关键字出现位置 </li>
-<li><code>F4</code>   查找变量来源 </li>
-<li><code>Ctrl+ALT+F7</code>  选中的字符查找工程出现的地方 </li>
-</ul>
-<p>自动代码</p>
-<ul>
-<li><code>ALT+回车</code>  导入包,自动修正 </li>
-<li><code>Ctrl+ALT+L</code>  格式化代码 </li>
-<li><code>Ctrl+ALT+I</code>  自动缩进 </li>
-<li><code>Ctrl+ALT+O</code>  优化导入的类和包 </li>
-<li><code>ALT+INSERT</code>  生成代码(如GET,SET方法,构造函数等)  </li>
-<li><code>Ctrl+SHIFT+SPACE</code> 自动补全代码 </li>
-<li><code>Ctrl+空格</code>  代码提示 </li>
-<li><code>Ctrl+ALT+SPACE</code>  类名或接口名提示 </li>
-<li><code>Ctrl+P</code>   方法参数提示 </li>
-<li><code>Ctrl+J</code>   自动代码 </li>
-<li><code>Ctrl+ALT+T</code>  把选中的代码放在 TRY{} IF{} ELSE{} 里</li>
-</ul>
-<p>复制快捷方式</p>
-<ul>
-<li><code>Ctrl+D</code>   复制行 </li>
-<li><code>Ctrl+X</code>   剪切,删除行  </li>
-</ul>
-<p>其他快捷方式</p>
-<ul>
-<li><code>Ctrl+Z</code>   倒退 </li>
-<li><code>Ctrl+SHIFT+Z</code>  向前 </li>
-<li><code>Ctrl+ALT+F12</code>  资源管理器打开文件夹 </li>
-<li><code>Ctrl+B</code>   快速打开光标处的类或方法 </li>
-<li><code>ALT+ ←/→</code>  切换代码视图 </li>
-<li><code>Ctrl+ALT ←/→</code>  返回上次编辑的位置 </li>
-<li><code>ALT+ ↑/↓</code>  在方法间快速移动定位 </li>
-<li><code>SHIFT+F6</code>  重构-重命名 </li>
-<li><code>Ctrl+Q</code>   显示注释文档 </li>
-<li><code>ALT+1</code>   快速打开或隐藏工程面板 </li>
-<li><code>Ctrl+SHIFT+UP/DOWN</code> 代码向上/下移动。 </li>
-<li><code>Ctrl+UP/DOWN</code>  光标跳转到第一行或最后一行下 </li>
-<li><code>F2 或Shift+F2</code> 高亮错误或警告快速定位</li>
-</ul>
-<p>版本控制相关</p>
-<ul>
-<li><code>ALT+SHIFT+C</code>  查找修改的文件 </li>
-<li><code>Ctrl+SHIFT+Alt+UP/DOWN</code>  跳转到当前文件的上一个修改或者下一个修改</li>
-</ul>
-<h2 id="缩进设置"><a href="#缩进设置" class="headerlink" title="缩进设置"></a>缩进设置</h2><p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/other/idea_indent.jpg" alt=""></p>
-<ul>
-<li><code>Use tab character</code> : 如果勾选则使用tab缩进,否则使用空格缩进</li>
-<li><code>Tab size</code> : 每个tab占用几个空格.</li>
-<li><code>Indent</code> : 每个缩进占用几个空格.</li>
-</ul>
-<h2 id="Gradle-Idea编译报错"><a href="#Gradle-Idea编译报错" class="headerlink" title="Gradle Idea编译报错"></a>Gradle Idea编译报错</h2><p>刚刚来到了新的项目, 新的项目里使用Gradle作为编译工具.  说完前文说正题: 开发完新的模块后打算写单元测试来验证一下自己的功能. 但是在运行的时候遇到了一些问题, 由于整个项目都没进行单元测试的编写, 因此需要搭建起这个环境,</p>
-<p>其实环境很简单只要单元测试能编译通过运行就ok了，但是仍然发生了一些问题,由于项目是从JDK7升级上来的, 因此有些地方还是采用的配置, 因此当发现在编译时遇到了</p>
-<ul>
-<li>class版本不支持</li>
-<li>提示:无效的源发行版: 1.8<br>我们要检查俩个地方</li>
-<li>build.gradle 这个文件里指定了编译器版本(例如sourceCompatibility, 需要注意的是看看是否依赖了其他的gradle配置, 我就踩中了这个坑)</li>
-<li>Intellij IDEA -Preference-Build, Execution, Deployment-Gradle -Gradle JVM, 看一下这个配置里面的配置, 当我将gradle的配置修改之后如果不修改这里就会出现  无效的源发行版: 1.8</li>
-</ul>
-<p>另外我们一般在项目里会设置JDK版本(项目右击Open Moudle Setting), 这个只是设置整个idea的项目相关的, 也就是和你写代码相关, 和项目的构建等等没啥关系</p>
-<h2 id="eclipse格式化文件"><a href="#eclipse格式化文件" class="headerlink" title="eclipse格式化文件"></a>eclipse格式化文件</h2><p>IDEA如果要使用eclipse的格式化文件需要安装<code>Eclipse Code Formatter</code>插件, 然后在setting里的<code>Other Seetings</code>里的<code>Eclipse Code Formatter</code>里引用格式化文件就好了</p>
-<h2 id="Idea打包与classpath"><a href="#Idea打包与classpath" class="headerlink" title="Idea打包与classpath"></a>Idea打包与classpath</h2><p>当我们使用maven创建一个项目的时候会创建出如下的目录<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20classpath.png" alt=""><br>我们会看到如下的几个目录, 这几个目录都是设置在classpath上</p>
-<ul>
-<li>Sources ：src/main/java</li>
-<li>Resources : src/main/resources<br>如果我们要新添加一个classpath时, 点击add Content Root就好. <blockquote>
-<p>注意我们不要使用<code>Run/Debug Configurations</code>里的VM options, 这个路径有时候是让启动我们自己程序的Idea进程使用的.<br>我们在程序里可以使用</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">InputStream in = TestReadFile.class.getClassLoader().getResourceAsStream(<span class="string">"./mybatis-config.xml"</span>);</div></pre></td></tr></table></figure>
-</blockquote>
-</li>
-</ul>
-<p>这种直接读取classpath也就是resources中的文件. 当使用Maven打包之后, 也可以直接从jar包中读取<br><img src="" alt=""><br>我们看到resources目录直接放到了jar包的根目录下,但是我们需要配置一些maven的打包方式</p>
-<h2 id="Javadoc-报错"><a href="#Javadoc-报错" class="headerlink" title="Javadoc 报错"></a>Javadoc 报错</h2><p>在新的项目中Javadoc写的并不规范, 因此Idea在检查中, 会产生报错标红信息，采用下面的方法就可以将其取消<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/other/Idea%20Inspections.jpg" alt=""></p>
-<h2 id="方法断点、"><a href="#方法断点、" class="headerlink" title="方法断点、"></a>方法断点、</h2><p>在Idea中千万不要加方法断点, 这个会严重的降低服务器性能. 下面那个就是方法断点<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20method%20breakpoints.bmp" alt=""></p>
-<h2 id="生成类图"><a href="#生成类图" class="headerlink" title="生成类图"></a>生成类图</h2><p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/other/idea%20lei%20tu.png" alt=""></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/杂记/">杂记</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/08/08/杂记/IntelliJ IDEA/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/08/08/杂记/IntelliJ IDEA/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -918,7 +742,7 @@
 </header>
     <div class="article-content">
         
-        <h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>Zookeeper 会维护一个类似于标准的文件系统的数据结构<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/data-node-tree.jpg" alt=""></p>
+        <h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>Zookeeper 会维护一个类似于标准的文件系统的数据结构<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/zookeeper/data-node-tree.jpg" alt=""></p>
 <h2 id="节点类型"><a href="#节点类型" class="headerlink" title="节点类型"></a>节点类型</h2><ul>
 <li>PERSISTENT：持久化目录节点，这个目录节点存储的数据不会丢失；</li>
 <li>PERSISTENT_SEQUENTIAL：顺序自动编号的目录节点，这种目录节点会根据当前已近存在的节点数自动加 1，然后返回给客户端已经成功创建的目录节点名；</li>
@@ -931,7 +755,7 @@
 <li>Follower：接受客户端的请求并返回结果给客户端，并参与投票</li>
 <li>Observer：接受客户端的请求，将写的请求转发给leader，不参与投票。Observer目的是扩展系统，提高读的速度。</li>
 </ul>
-<h2 id="选举"><a href="#选举" class="headerlink" title="选举"></a>选举</h2><p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/zookeeper/40280796_2.jpg" alt=""></p>
+<h2 id="选举"><a href="#选举" class="headerlink" title="选举"></a>选举</h2><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/zookeeper/40280796_2.jpg" alt=""></p>
 
         
         
@@ -957,6 +781,74 @@
 	
 	  	<span></span>
 		<a href="/2015/07/13/zookeeper/ZooKeeper 原理/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/07/13/zookeeper/ZooKeeper 原理/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/06/08/杂记/windows rust/" title="在windows上搭建rust开发环境" itemprop="url">在windows上搭建rust开发环境</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>在windows上搭建rust开发环境</p>
+<ol>
+<li>安装<a href="http://sourceforge.net/projects/msys2/" target="_blank" rel="external">msys2</a> (我的电脑是64位的,所以以下操作都是以64位为主)</li>
+<li>在<code>msys2</code>中安装<code>openssl</code> -&gt; <code>pacman -S mingw-w64-x86_64-openssl</code> (32位<code>pacman -S mingw-w64-i686-openssl</code>)</li>
+<li>将<code>C:\msys64\mingw64\bin</code>添加到环境变量<code>Path</code>中</li>
+<li>将<code>C:\msys64\mingw64\lib</code>下的<code>libcrypto.dll.a</code>复制一份,将新文件命名为<code>libeay32.a</code></li>
+<li>将<code>C:\msys64\mingw64\lib</code>下的<code>libssl.dll.a</code>复制一份,将新文件命名为<code>libssl32.a</code></li>
+<li>下载安装<a href="http://www.rust-lang.org/" target="_blank" rel="external">rust</a></li>
+<li>将<code>Rust stable 1.0\bin\rustlib\x86_64-pc-windows-gnu\bin</code>这个<code>bin</code>改成其他的名字(随便什么名字,不让Path找到就好了)</li>
+<li>现在rust程序就可以正常运行了</li>
+</ol>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/06/08/杂记/windows rust/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/杂记/windows rust/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1098,162 +990,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/08/JavaSE/Java equals hashcode/" title="Java equals和hashcode" itemprop="url">Java equals和hashcode</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Effective Java学习总结</p>
-<h2 id="euqals"><a href="#euqals" class="headerlink" title="euqals"></a>euqals</h2><p>如果类不具有自己的逻辑相等概念，那么就没有必要自己去覆盖<code>euqals()</code>方法. 在这种情况下,每个类的实例都和自身相等.</p>
-<p>但是如果程序里也关心逻辑上是否是相等,那么在实现<code>equals()</code>时就要考虑它的通用约定：</p>
-<ul>
-<li>自反性: 对于任何非null的引用值x,<code>x.equals(x)</code>必须返回true. 这一点保证的是对象的自身必须等于其自身.</li>
-<li>对称性: 对于任何非null的引用值x和y,当且仅当<code>y.equals(x)</code>返回true时,<code>x.equals(y)</code>必须返回true.</li>
-<li>传递性: 对于任何非null的引用值x，y和z,如果<code>y.equals(x)</code>返回true且<code>y.equals(z)</code>返回true,则<code>z.equals(x)</code>也必须返回true</li>
-<li>一致性: 对于任何非null的引用值x和y,只要equals的比较操作在对象中的信息没有被修改,多次调用<code>x.equals(y)</code>则一致地返回true或者返回false. 这也就是说如果俩个对象相等,那么他们就应该始终保持着相等.</li>
-<li>非空性: 对于任何非null的引用值,<code>x.euqals(null)</code>都必须返回false</li>
-</ul>
-<p>下面依次是违反上面几个特性的例子：</p>
-<p>违反自反性:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> !<span class="keyword">super</span>.equals(obj);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>违反对称性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String str1[])</span> </span>&#123;</div><div class="line"></div><div class="line">	N n1 = <span class="keyword">new</span> N();</div><div class="line">	n1.id = <span class="number">123</span>;</div><div class="line">	Integer id = <span class="number">123</span>;</div><div class="line">	System.out.println(n1.equals(id));</div><div class="line">	System.out.println(id.equals(n1));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">N</span></span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> Integer id;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Integer) &#123;</div><div class="line">			<span class="keyword">return</span> obj.equals(id);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.equals(obj);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>违反传递性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<p>违反一致性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String str1[])</span> </span>&#123;</div><div class="line">		N n1 = <span class="keyword">new</span> N();</div><div class="line">		n1.id = <span class="number">123</span>;</div><div class="line">		N n2 = <span class="keyword">new</span> N();</div><div class="line">		n2.id = <span class="number">123</span>;</div><div class="line">		System.out.println(n1.equals(n2));</div><div class="line">		n2.id = <span class="number">12</span>;</div><div class="line">		System.out.println(n1.equals(n2));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">N</span></span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">int</span> id;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (!(obj <span class="keyword">instanceof</span> N)) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> ((N) obj).id == id;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>违反非空性： 这个一般我们不会犯错，因为我们一般都有下面这样的语法,当obj为null时,就会自动返回false<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> N) &#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>一般在实现equals方法时,我们要做到以下几点<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">N</span></span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">int</span> id;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">		<span class="comment">// 检查参数是否是这个对象的引用,当equals操作代价昂贵时,这么做会达到性能的提升</span></div><div class="line">		<span class="keyword">if</span> (obj == <span class="keyword">this</span>) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 检查是否是正确的类型</span></div><div class="line">		<span class="keyword">if</span> (!(obj <span class="keyword">instanceof</span> N)) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 把参数转换为正确的类型</span></div><div class="line">		N target = (N)obj;</div><div class="line"></div><div class="line">		<span class="comment">// 对于该类中的每个关键域都对其进行匹配</span></div><div class="line">		<span class="keyword">return</span> target.id == id;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>对于对每个关键域进行判断的时候,除了<code>float</code>和<code>double</code>都可使用<code>==</code>进行判断</p>
-<ul>
-<li>float采用<code>Float.compare()</code>进行判断</li>
-<li>double采用<code>Double.compare()</code>进行判断<br>如果是数组可以使用<code>Arrays.equals()</code>进行判断.</li>
-</ul>
-<p>当equals完成了上述之后,还要对其进行对称性,传递性,一致性进行单元测试.</p>
-<h2 id="hashCode"><a href="#hashCode" class="headerlink" title="hashCode"></a>hashCode</h2><p>当覆盖<code>equals()</code>时总要覆盖<code>hashCode()</code>.</p>
-<p>对于hashCode的通俗约定：</p>
-<ul>
-<li>在运行期,如果对象的<code>equals()</code>方法的用到的关键域没有被修改，那么多次调用对象的hashCode方法每次必须都返回同一个整数。</li>
-<li>如果俩个对象调用<code>equals()</code>方法比较是相等的,那么调用这俩个对象的<code>hashCode()</code>方法,它们返回的整数也必须相等</li>
-<li>如果俩个对象调用<code>equals()</code>方法比较是不相等的,那么调用这俩个对象的<code>hashCode()</code>方法,它们返回的整数也可能是相等的.</li>
-</ul>
-<p>下面给出了一个计算散列值的一个规则：<br>将<code>equals()</code>方法中涉及到的每个关键域<code>f</code>进行如下计算,然后得出一个散列值c：</p>
-<ul>
-<li>如果域是<code>boolean</code>，则计算<code>f ? 1 : 0</code></li>
-<li>如果域是<code>byte,char,short,int</code>，则计算<code>(int)f</code></li>
-<li>如果域是<code>long</code>，则计算<code>(int)(f^(f&gt;&gt;32))</code></li>
-<li>如果域是<code>float</code>，则计算<code>Float.floatToIntBits(f)</code></li>
-<li>如果域是<code>double</code>，则计算<code>Double.doubleToLongBits(f)</code>,接着调用long类型的计算</li>
-<li>如果域是引用类型，则按照<code>equals()</code>递归方式,依次递归调用<code>hashCode()</code>,如果引用是个<code>null</code>,则返回0<br>计算完每个关键域的散列值之后,依次进行如下计算<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> result = <span class="number">17</span>;</div><div class="line">result = <span class="number">31</span> * result + c;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/JavaSE/Java equals hashcode/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/JavaSE/Java equals hashcode/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/06/08/JavaLibrary/读取csv文件/" title="读取csv文件" itemprop="url">读取csv文件</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-06-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-06-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>利用Apache Commons CSV读取csv文件, 首先我们添加如下依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-csv<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>读取csv文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Reader in = <span class="keyword">new</span> FileReader(<span class="string">"path/to/file.csv"</span>);</div><div class="line">Iterable&lt;CSVRecord&gt; records = CSVFormat.EXCEL.parse(in);</div><div class="line"><span class="keyword">for</span> (CSVRecord record : records) &#123;</div><div class="line">    String lastName = record.get(<span class="string">"Last Name"</span>);</div><div class="line">    String firstName = record.get(<span class="string">"First Name"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/06/08/JavaLibrary/读取csv文件/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/JavaLibrary/读取csv文件/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2015/06/08/JavaSE/Java 泛型/" title="java泛型" itemprop="url">java泛型</a>
   </h1>
   <p class="article-author">By
@@ -1337,7 +1073,7 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/06/08/杂记/windows rust/" title="在windows上搭建rust开发环境" itemprop="url">在windows上搭建rust开发环境</a>
+      <a href="/2015/06/08/JavaSE/Java equals hashcode/" title="Java equals和hashcode" itemprop="url">Java equals和hashcode</a>
   </h1>
   <p class="article-author">By
        
@@ -1350,17 +1086,46 @@
 </header>
     <div class="article-content">
         
-        <p>在windows上搭建rust开发环境</p>
-<ol>
-<li>安装<a href="http://sourceforge.net/projects/msys2/" target="_blank" rel="external">msys2</a> (我的电脑是64位的,所以以下操作都是以64位为主)</li>
-<li>在<code>msys2</code>中安装<code>openssl</code> -&gt; <code>pacman -S mingw-w64-x86_64-openssl</code> (32位<code>pacman -S mingw-w64-i686-openssl</code>)</li>
-<li>将<code>C:\msys64\mingw64\bin</code>添加到环境变量<code>Path</code>中</li>
-<li>将<code>C:\msys64\mingw64\lib</code>下的<code>libcrypto.dll.a</code>复制一份,将新文件命名为<code>libeay32.a</code></li>
-<li>将<code>C:\msys64\mingw64\lib</code>下的<code>libssl.dll.a</code>复制一份,将新文件命名为<code>libssl32.a</code></li>
-<li>下载安装<a href="http://www.rust-lang.org/" target="_blank" rel="external">rust</a></li>
-<li>将<code>Rust stable 1.0\bin\rustlib\x86_64-pc-windows-gnu\bin</code>这个<code>bin</code>改成其他的名字(随便什么名字,不让Path找到就好了)</li>
-<li>现在rust程序就可以正常运行了</li>
-</ol>
+        <p>Effective Java学习总结</p>
+<h2 id="euqals"><a href="#euqals" class="headerlink" title="euqals"></a>euqals</h2><p>如果类不具有自己的逻辑相等概念，那么就没有必要自己去覆盖<code>euqals()</code>方法. 在这种情况下,每个类的实例都和自身相等.</p>
+<p>但是如果程序里也关心逻辑上是否是相等,那么在实现<code>equals()</code>时就要考虑它的通用约定：</p>
+<ul>
+<li>自反性: 对于任何非null的引用值x,<code>x.equals(x)</code>必须返回true. 这一点保证的是对象的自身必须等于其自身.</li>
+<li>对称性: 对于任何非null的引用值x和y,当且仅当<code>y.equals(x)</code>返回true时,<code>x.equals(y)</code>必须返回true.</li>
+<li>传递性: 对于任何非null的引用值x，y和z,如果<code>y.equals(x)</code>返回true且<code>y.equals(z)</code>返回true,则<code>z.equals(x)</code>也必须返回true</li>
+<li>一致性: 对于任何非null的引用值x和y,只要equals的比较操作在对象中的信息没有被修改,多次调用<code>x.equals(y)</code>则一致地返回true或者返回false. 这也就是说如果俩个对象相等,那么他们就应该始终保持着相等.</li>
+<li>非空性: 对于任何非null的引用值,<code>x.euqals(null)</code>都必须返回false</li>
+</ul>
+<p>下面依次是违反上面几个特性的例子：</p>
+<p>违反自反性:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> !<span class="keyword">super</span>.equals(obj);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>违反对称性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String str1[])</span> </span>&#123;</div><div class="line"></div><div class="line">	N n1 = <span class="keyword">new</span> N();</div><div class="line">	n1.id = <span class="number">123</span>;</div><div class="line">	Integer id = <span class="number">123</span>;</div><div class="line">	System.out.println(n1.equals(id));</div><div class="line">	System.out.println(id.equals(n1));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">N</span></span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> Integer id;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Integer) &#123;</div><div class="line">			<span class="keyword">return</span> obj.equals(id);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">super</span>.equals(obj);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>违反传递性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
+<p>违反一致性<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String str1[])</span> </span>&#123;</div><div class="line">		N n1 = <span class="keyword">new</span> N();</div><div class="line">		n1.id = <span class="number">123</span>;</div><div class="line">		N n2 = <span class="keyword">new</span> N();</div><div class="line">		n2.id = <span class="number">123</span>;</div><div class="line">		System.out.println(n1.equals(n2));</div><div class="line">		n2.id = <span class="number">12</span>;</div><div class="line">		System.out.println(n1.equals(n2));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">N</span></span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">int</span> id;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (!(obj <span class="keyword">instanceof</span> N)) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> ((N) obj).id == id;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>违反非空性： 这个一般我们不会犯错，因为我们一般都有下面这样的语法,当obj为null时,就会自动返回false<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (obj <span class="keyword">instanceof</span> N) &#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>一般在实现equals方法时,我们要做到以下几点<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">N</span></span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">int</span> id;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">		<span class="comment">// 检查参数是否是这个对象的引用,当equals操作代价昂贵时,这么做会达到性能的提升</span></div><div class="line">		<span class="keyword">if</span> (obj == <span class="keyword">this</span>) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 检查是否是正确的类型</span></div><div class="line">		<span class="keyword">if</span> (!(obj <span class="keyword">instanceof</span> N)) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 把参数转换为正确的类型</span></div><div class="line">		N target = (N)obj;</div><div class="line"></div><div class="line">		<span class="comment">// 对于该类中的每个关键域都对其进行匹配</span></div><div class="line">		<span class="keyword">return</span> target.id == id;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>对于对每个关键域进行判断的时候,除了<code>float</code>和<code>double</code>都可使用<code>==</code>进行判断</p>
+<ul>
+<li>float采用<code>Float.compare()</code>进行判断</li>
+<li>double采用<code>Double.compare()</code>进行判断<br>如果是数组可以使用<code>Arrays.equals()</code>进行判断.</li>
+</ul>
+<p>当equals完成了上述之后,还要对其进行对称性,传递性,一致性进行单元测试.</p>
+<h2 id="hashCode"><a href="#hashCode" class="headerlink" title="hashCode"></a>hashCode</h2><p>当覆盖<code>equals()</code>时总要覆盖<code>hashCode()</code>.</p>
+<p>对于hashCode的通俗约定：</p>
+<ul>
+<li>在运行期,如果对象的<code>equals()</code>方法的用到的关键域没有被修改，那么多次调用对象的hashCode方法每次必须都返回同一个整数。</li>
+<li>如果俩个对象调用<code>equals()</code>方法比较是相等的,那么调用这俩个对象的<code>hashCode()</code>方法,它们返回的整数也必须相等</li>
+<li>如果俩个对象调用<code>equals()</code>方法比较是不相等的,那么调用这俩个对象的<code>hashCode()</code>方法,它们返回的整数也可能是相等的.</li>
+</ul>
+<p>下面给出了一个计算散列值的一个规则：<br>将<code>equals()</code>方法中涉及到的每个关键域<code>f</code>进行如下计算,然后得出一个散列值c：</p>
+<ul>
+<li>如果域是<code>boolean</code>，则计算<code>f ? 1 : 0</code></li>
+<li>如果域是<code>byte,char,short,int</code>，则计算<code>(int)f</code></li>
+<li>如果域是<code>long</code>，则计算<code>(int)(f^(f&gt;&gt;32))</code></li>
+<li>如果域是<code>float</code>，则计算<code>Float.floatToIntBits(f)</code></li>
+<li>如果域是<code>double</code>，则计算<code>Double.doubleToLongBits(f)</code>,接着调用long类型的计算</li>
+<li>如果域是引用类型，则按照<code>equals()</code>递归方式,依次递归调用<code>hashCode()</code>,如果引用是个<code>null</code>,则返回0<br>计算完每个关键域的散列值之后,依次进行如下计算<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> result = <span class="number">17</span>;</div><div class="line">result = <span class="number">31</span> * result + c;</div></pre></td></tr></table></figure>
+</li>
+</ul>
 
         
         
@@ -1373,7 +1138,7 @@
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/杂记/">杂记</a>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
 </div>
 
 
@@ -1385,7 +1150,7 @@
 <div class="comments-count">
 	
 	  	<span></span>
-		<a href="/2015/06/08/杂记/windows rust/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/杂记/windows rust/" data-count-type="comments">&nbsp;</a>
+		<a href="/2015/06/08/JavaSE/Java equals hashcode/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/06/08/JavaSE/Java equals hashcode/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1554,12 +1319,12 @@
 </table>
 <p>我们来自定义绑定：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.codehaus.mojo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>exec-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>install<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>java<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>我们在<code>install</code>阶段绑定了<code>exec-maven-plugin</code>插件的<code>java</code>目标.</p>
-<h3 id="maven-jar-plugin"><a href="#maven-jar-plugin" class="headerlink" title="maven-jar-plugin"></a>maven-jar-plugin</h3><p>当我们定义了<code>&lt;packaging&gt;jar&lt;/packaging&gt;</code>后, 在packaging阶段就会自动调用<code>maven-jar-plugin</code>插件。如果是<code>&lt;packaging&gt;war&lt;/packaging&gt;</code>则会调用<code>maven-war-plugin</code>插件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></div><div class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wang.ming15<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testMavenPlugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jar-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">archive</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">manifestFile</span>&gt;</span></div><div class="line">                            src/main/resources/META-INF/MANIFEST.MF</div><div class="line">                        <span class="tag">&lt;/<span class="name">manifestFile</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="maven-jar-plugin"><a href="#maven-jar-plugin" class="headerlink" title="maven-jar-plugin"></a>maven-jar-plugin</h3><p>当我们定义了<code>&lt;packaging&gt;jar&lt;/packaging&gt;</code>后, 在packaging阶段就会自动调用<code>maven-jar-plugin</code>插件。如果是<code>&lt;packaging&gt;war&lt;/packaging&gt;</code>则会调用<code>maven-war-plugin</code>插件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></div><div class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wang.yu66<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testMavenPlugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jar-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">archive</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">manifestFile</span>&gt;</span></div><div class="line">                            src/main/resources/META-INF/MANIFEST.MF</div><div class="line">                        <span class="tag">&lt;/<span class="name">manifestFile</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>在上面的例子中我们指定了MANIFEST文件, 其实还有另外一种写法<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jar-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">archive</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">addClasspath</span>&gt;</span>true<span class="tag">&lt;/<span class="name">addClasspath</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">classpathPrefix</span>&gt;</span>lib/<span class="tag">&lt;/<span class="name">classpathPrefix</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span></div><div class="line">                    App</div><div class="line">                <span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>除了<code>archive</code>还有一些其他的配置选项<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jar-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 指定排除的文件 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">excludes</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>**/service/*<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 指定包含的文件 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">includes</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 最终的jar包名, 会替换jarName --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">finalName</span>&gt;</span>finalName<span class="tag">&lt;/<span class="name">finalName</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 如果没有指定finalName, 则会使用这个名字--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">jarName</span>&gt;</span>jarName<span class="tag">&lt;/<span class="name">jarName</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 重新指定输出路径, 替换target--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>./newoutput<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<h3 id="maven-dependency-plugin"><a href="#maven-dependency-plugin" class="headerlink" title="maven-dependency-plugin"></a>maven-dependency-plugin</h3><p>maven-dependency-plugin是处理与依赖相关的插件. 我们一般使用它的copy依赖功能, 下面的例子就是将依赖copy到target/lib目录下<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></div><div class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wang.ming15<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testMavenPlugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-dependency-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">id</span>&gt;</span>copy-dependencies<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>copy-dependencies<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>$&#123;project.build.directory&#125;/lib<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">overWriteReleases</span>&gt;</span>false<span class="tag">&lt;/<span class="name">overWriteReleases</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">overWriteSnapshots</span>&gt;</span>false<span class="tag">&lt;/<span class="name">overWriteSnapshots</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">overWriteIfNewer</span>&gt;</span>true<span class="tag">&lt;/<span class="name">overWriteIfNewer</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="maven-dependency-plugin"><a href="#maven-dependency-plugin" class="headerlink" title="maven-dependency-plugin"></a>maven-dependency-plugin</h3><p>maven-dependency-plugin是处理与依赖相关的插件. 我们一般使用它的copy依赖功能, 下面的例子就是将依赖copy到target/lib目录下<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></div><div class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wang.yu66<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testMavenPlugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-dependency-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">id</span>&gt;</span>copy-dependencies<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>copy-dependencies<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>$&#123;project.build.directory&#125;/lib<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">overWriteReleases</span>&gt;</span>false<span class="tag">&lt;/<span class="name">overWriteReleases</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">overWriteSnapshots</span>&gt;</span>false<span class="tag">&lt;/<span class="name">overWriteSnapshots</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">overWriteIfNewer</span>&gt;</span>true<span class="tag">&lt;/<span class="name">overWriteIfNewer</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <h3 id="maven-shade-plugin"><a href="#maven-shade-plugin" class="headerlink" title="maven-shade-plugin"></a>maven-shade-plugin</h3><p>引用或者排除引用指定的依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-shade-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.4.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">executions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">goals</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>shade<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">filters</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">filter</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifact</span>&gt;</span>junit:junit<span class="tag">&lt;/<span class="name">artifact</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">includes</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">include</span>&gt;</span>junit/framework/**<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">include</span>&gt;</span>org/junit/**<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">excludes</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>org/junit/experimental/**<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>org/junit/runners/**<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></div><div class="line">              <span class="tag">&lt;/<span class="name">filter</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">filter</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifact</span>&gt;</span>*:*<span class="tag">&lt;/<span class="name">artifact</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">excludes</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>META-INF/*.SF<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>META-INF/*.DSA<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>META-INF/*.RSA<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></div><div class="line">              <span class="tag">&lt;/<span class="name">filter</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">filters</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<h3 id="maven-resources-plugin"><a href="#maven-resources-plugin" class="headerlink" title="maven-resources-plugin"></a>maven-resources-plugin</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></div><div class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wang.ming15<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testMavenPlugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-resources-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                    <span class="comment">&lt;!-- 因为拷贝文件涉及到了文件的读写, 在此指定读写文件时的编码格式--&gt;</span></div><div class="line">                    <span class="comment">&lt;!--&lt;encoding&gt;UTF-8&lt;/encoding&gt;--&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">id</span>&gt;</span>copy-resources<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>copy-resources<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>$&#123;basedir&#125;/target/package<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line">                                <span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">                                    <span class="tag">&lt;<span class="name">directory</span>&gt;</span>d://copy<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></div><div class="line">                                    <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></div><div class="line">                                    <span class="tag">&lt;<span class="name">includes</span>&gt;</span></div><div class="line">                                        <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.jar<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">                                    <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></div><div class="line">                                <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="maven-resources-plugin"><a href="#maven-resources-plugin" class="headerlink" title="maven-resources-plugin"></a>maven-resources-plugin</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></div><div class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wang.yu66<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testMavenPlugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-resources-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                    <span class="comment">&lt;!-- 因为拷贝文件涉及到了文件的读写, 在此指定读写文件时的编码格式--&gt;</span></div><div class="line">                    <span class="comment">&lt;!--&lt;encoding&gt;UTF-8&lt;/encoding&gt;--&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">id</span>&gt;</span>copy-resources<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>copy-resources<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>$&#123;basedir&#125;/target/package<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line">                                <span class="tag">&lt;<span class="name">resource</span>&gt;</span></div><div class="line">                                    <span class="tag">&lt;<span class="name">directory</span>&gt;</span>d://copy<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></div><div class="line">                                    <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>false<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></div><div class="line">                                    <span class="tag">&lt;<span class="name">includes</span>&gt;</span></div><div class="line">                                        <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.jar<span class="tag">&lt;/<span class="name">include</span>&gt;</span></div><div class="line">                                    <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></div><div class="line">                                <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>上面的例子中只拷贝了jar后缀的文件.</p>
 <blockquote>
 <p>因为每个execution只能指定一个输出目录, 因此我们要差异化拷贝的话, 可以多写几个execution来实现</p>
@@ -1936,6 +1701,71 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/08/编程语言/haskell表达式/" title="haskell表达式" itemprop="url">haskell表达式</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="条件表达式"><a href="#条件表达式" class="headerlink" title="条件表达式"></a>条件表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">isOne</span> :: <span class="type">Int</span> -&gt; <span class="type">Bool</span></div><div class="line"><span class="title">isOne</span> arg =</div><div class="line">    <span class="keyword">if</span> arg == <span class="number">1</span> <span class="keyword">then</span> <span class="type">True</span></div><div class="line">    <span class="keyword">else</span> <span class="type">False</span></div></pre></td></tr></table></figure>
+<h2 id="情况分析表达式"><a href="#情况分析表达式" class="headerlink" title="情况分析表达式"></a>情况分析表达式</h2><p>与<code>switch case</code>类似,只不过情况分析表达式没有<code>break</code>, 使用<code>_</code>作为通配符.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">month</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">month</span> n = <span class="keyword">case</span> n <span class="keyword">of</span></div><div class="line">    <span class="number">1</span> -&gt; <span class="number">31</span></div><div class="line">    <span class="number">2</span> -&gt; <span class="number">28</span></div><div class="line">    <span class="number">12</span> -&gt; <span class="number">31</span></div><div class="line">    _ -&gt; error <span class="string">"error"</span></div></pre></td></tr></table></figure></p>
+<h2 id="守卫表达式"><a href="#守卫表达式" class="headerlink" title="守卫表达式"></a>守卫表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">abs</span> :: <span class="type">Num</span> a =&gt; a -&gt; a</div><div class="line"><span class="title">abs</span> n | n &gt; <span class="number">0</span> = n</div><div class="line">      | otherwise = -n</div></pre></td></tr></table></figure>
+<h2 id="匹配模式表达式"><a href="#匹配模式表达式" class="headerlink" title="匹配模式表达式"></a>匹配模式表达式</h2><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="title">month</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">month</span> <span class="number">1</span> = <span class="number">31</span></div><div class="line"><span class="title">month</span> <span class="number">2</span> = <span class="number">28</span></div><div class="line"><span class="title">month</span> <span class="number">3</span> = <span class="number">21</span></div><div class="line"><span class="title">month</span> <span class="number">12</span> = <span class="number">31</span></div><div class="line"><span class="title">month</span> _ = error <span class="string">"error"</span></div></pre></td></tr></table></figure>
+<h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">优先级<span class="number">9</span> : !!, .</div><div class="line">优先级<span class="number">8</span> : ^, ^^, **</div><div class="line">优先级<span class="number">7</span> : *, /, div,   mod, rem, quot</div><div class="line">优先级<span class="number">6</span> : +, -</div><div class="line">优先级<span class="number">5</span> : :, ++</div><div class="line">优先级<span class="number">4</span> : ==, /=, &lt;, &lt;=, &gt;, &gt;=,     elem, notElem</div><div class="line">优先级<span class="number">3</span> : &amp;&amp;</div><div class="line">优先级<span class="number">2</span> : ||</div><div class="line">优先级<span class="number">1</span> : &gt;&gt;, &gt;&gt;=</div><div class="line">优先级<span class="number">0</span> : $, $!, $!!seq</div></pre></td></tr></table></figure>
+<blockquote>
+<p>凡是英文运算符,其前后都必须带有`标点</p>
+</blockquote>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/08/编程语言/haskell表达式/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/编程语言/haskell表达式/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/08/编程语言/haskell/" title="haskell类型系统" itemprop="url">haskell类型系统</a>
   </h1>
   <p class="article-author">By
@@ -2030,106 +1860,6 @@
 	
 	  	<span></span>
 		<a href="/2015/04/08/编程语言/haskell/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/编程语言/haskell/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/08/JavaLibrary/dropwizard/" title="Dropwizard 初探" itemprop="url">Dropwizard 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <h2 id="Setting-Up-Maven"><a href="#Setting-Up-Maven" class="headerlink" title="Setting Up Maven"></a>Setting Up Maven</h2><p>在MAVEN的dependency里添加<code>metrics-core</code>库<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>注意，使用上面依赖你需要在pom文件里声明了<code>metrics.version</code>属性,并且该属性值是<code>3.1.0</code></p>
-<h2 id="Meters"><a href="#Meters" class="headerlink" title="Meters"></a>Meters</h2><p><code>meter</code>表示的是单位时间内事件数的比例(例如每秒请求数). 除了平均速率之外, <code>meter</code>仍然会追踪<code>1-,5-,15-</code>分钟的移动平均数.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Meter requests = metrics.meter(<span class="string">"requests"</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleRequest</span><span class="params">(Request request, Response response)</span> </span>&#123;</div><div class="line">    requests.mark();</div><div class="line">    <span class="comment">// etc</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面的<code>meter</code>表示每秒请求数的比例。</p>
-<h2 id="Console-Reporter"><a href="#Console-Reporter" class="headerlink" title="Console Reporter"></a>Console Reporter</h2><p><code>Console Reporter</code>正如其名,向控制台进行输出日志,下面的示例将每秒进行输出一次.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)</div><div class="line">       .convertRatesTo(TimeUnit.SECONDS)</div><div class="line">       .convertDurationsTo(TimeUnit.MILLISECONDS)</div><div class="line">       .build();</div><div class="line">   reporter.start(<span class="number">1</span>, TimeUnit.SECONDS);</div></pre></td></tr></table></figure></p>
-<h2 id="Complete-getting-started"><a href="#Complete-getting-started" class="headerlink" title="Complete getting started"></a>Complete getting started</h2><p>下面是一个完整的示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">  <span class="keyword">package</span> sample;</div><div class="line">  <span class="keyword">import</span> com.codahale.metrics.*;</div><div class="line">  <span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetStarted</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> MetricRegistry metrics = <span class="keyword">new</span> MetricRegistry();</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</div><div class="line">      startReport();</div><div class="line">      Meter requests = metrics.meter(<span class="string">"requests"</span>);</div><div class="line">      requests.mark();</div><div class="line">      wait5Seconds();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">startReport</span><span class="params">()</span> </span>&#123;</div><div class="line">      ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)</div><div class="line">          .convertRatesTo(TimeUnit.SECONDS)</div><div class="line">          .convertDurationsTo(TimeUnit.MILLISECONDS)</div><div class="line">          .build();</div><div class="line">      reporter.start(<span class="number">1</span>, TimeUnit.SECONDS);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wait5Seconds</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          Thread.sleep(<span class="number">5</span>*<span class="number">1000</span>);</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">catch</span>(InterruptedException e) &#123;&#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>somegroup<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sample<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>Example project for Metrics<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>注意：使用上面依赖你需要在pom文件里声明了<code>metrics.version</code>属性,并且该属性值是<code>3.1.0</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn <span class="keyword">package</span> exec:java -Dexec.mainClass=sample.First</div></pre></td></tr></table></figure>
-<h2 id="The-Registry"><a href="#The-Registry" class="headerlink" title="The Registry"></a>The Registry</h2><p>Metrics的核心部分是<code>MetricRegistry</code>类,这个类是应用程序中所有的metrics的容器. 下面的示例创建一个新的<code>MetricRegistry</code>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> MetricRegistry metrics = <span class="keyword">new</span> MetricRegistry();</div></pre></td></tr></table></figure></p>
-<p>如果你在应用程序中嵌入一个自己创建的<code>MetricRegistry</code>实例，你应该将这个属性置为静态的.</p>
-<h2 id="Gauges"><a href="#Gauges" class="headerlink" title="Gauges"></a>Gauges</h2><p><code>gauge</code>表示的是一个瞬时值. 例如我们获取队列里待执行的任务数<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class QueueManager &#123;</div><div class="line">    private final Queue queue;</div><div class="line"></div><div class="line">    public QueueManager(MetricRegistry metrics, String name) &#123;</div><div class="line">        this.queue = new Queue();</div><div class="line">        metrics.register(MetricRegistry.name(QueueManager.class, name, "size"),</div><div class="line">                         new Gauge<span class="tag">&lt;<span class="name">Integer</span>&gt;</span>() &#123;</div><div class="line">                             @Override</div><div class="line">                             public Integer getValue() &#123;</div><div class="line">                                 return queue.size();</div><div class="line">                             &#125;</div><div class="line">                         &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>当完成计算之后,它将会返回队列里的任务数。</p>
-<p>在<code>registry</code>里的每个<code>metric</code>都有一个唯一的名字,其命名规范为用<code>.</code>分割的字符串,例如<code>things.count</code>或者<code>com.example.Thing.latency</code>. <code>MetricRegistry</code>类提供了一个静态方法来构建这些名字.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">MetricRegistry.name(QueueManager.class, "jobs", "size")</div></pre></td></tr></table></figure></p>
-<p>上面的调用会返回<code>com.example.QueueManager.jobs.size</code>。</p>
-<p>对于大多数队列或者类队列结构,你也许仅想要获得<code>queue.size()</code>这个值. 大多数<code>java.util</code>和<code>java.util.concurrent</code>包都实现了<code>size()</code>方法,它的复杂度是<code>O(n)</code>,这意味着你的<code>gauge</code>也许会很慢(也许还会持有锁)</p>
-<h2 id="Counters"><a href="#Counters" class="headerlink" title="Counters"></a>Counters</h2><p><code>counter</code>是一个内部采用<code>AtomicLong</code>计数器的<code>gauge</code>实现. 你可以增加或者减少这个值.例如,我们想要一种更加高效的计算队列大小的方式:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final Counter pendingJobs = metrics.counter(name(QueueManager.class, "pending-jobs"));</div><div class="line"></div><div class="line">public void addJob(Job job) &#123;</div><div class="line">    pendingJobs.inc();</div><div class="line">    queue.offer(job);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public Job takeJob() &#123;</div><div class="line">    pendingJobs.dec();</div><div class="line">    return queue.take();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>每一次业务逻辑的调用，counter都会被计算一次,它会返回队列中的任务数.</p>
-<p>正如你看到的,counter的API是非常不同的是,<code>counter(String)</code>取代了<code>register(String, Metric)</code>，然而你可以仍然可以使用<code>register</code>方法创建你自己的<code>Counter</code>实例,实际上<code>counter(String)</code>在内部里已经将这些工作都为你做好了,还允许你使用相同的名字对metric进行复用</p>
-<p>还需要说明一点,在上例中,我们静态引入了<code>MetricRegistry</code>的<code>name</code>方法.</p>
-<h2 id="Histograms"><a href="#Histograms" class="headerlink" title="Histograms"></a>Histograms</h2><p><code>histogram</code>表示的是流中数据值的静态分布. 除了计算<code>minimum, maximum, mean, etc</code>等值,它还计算中间值或者<code>75th, 90th, 95th, 98th, 99th, 99.9th</code>等百分比.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">private final Histogram responseSizes = metrics.histogram(name(RequestHandler.class, "response-sizes"));</div><div class="line"></div><div class="line">public void handleRequest(Request request, Response response) &#123;</div><div class="line">    // etc</div><div class="line">    responseSizes.update(response.getContent().length);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面的<code>histogram</code>统计了响应中的字节数.</p>
-<h2 id="Timers"><a href="#Timers" class="headerlink" title="Timers"></a>Timers</h2><p><code>timer</code>可以计算某个代码段的调用比例,和调用期间的分布状况.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final Timer responses = metrics.timer(name(RequestHandler.class, "responses"));</div><div class="line"></div><div class="line">public String handleRequest(Request request, Response response) &#123;</div><div class="line">    final Timer.Context context = responses.time();</div><div class="line">    try &#123;</div><div class="line">        // etc;</div><div class="line">        return "OK";</div><div class="line">    &#125; finally &#123;</div><div class="line">        context.stop();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>This timer will measure the amount of time it takes to process each request in nanoseconds and provide a rate of requests in requests per second.</p>
-<h2 id="Health-Checks"><a href="#Health-Checks" class="headerlink" title="Health Checks"></a>Health Checks</h2><p>Metrics还可以通过<code>metrics-healthchecks</code>模块集中检查你的服务的健康.</p>
-<p>首先创建一个新的<code>HealthCheckRegistry</code>实例<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">final HealthCheckRegistry healthChecks = new HealthCheckRegistry();</div><div class="line">Second, implement a HealthCheck subclass:</div><div class="line"></div><div class="line">public class DatabaseHealthCheck extends HealthCheck &#123;</div><div class="line">    private final Database database;</div><div class="line"></div><div class="line">    public DatabaseHealthCheck(Database database) &#123;</div><div class="line">        this.database = database;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public HealthCheck.Result check() throws Exception &#123;</div><div class="line">        if (database.isConnected()) &#123;</div><div class="line">            return HealthCheck.Result.healthy();</div><div class="line">        &#125; else &#123;</div><div class="line">            return HealthCheck.Result.unhealthy("Cannot connect to " + database.getUrl());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后将Metrics注册到它身上：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">healthChecks.register("postgres", new DatabaseHealthCheck(database));</div></pre></td></tr></table></figure></p>
-<p>接下来运行所有的health checks:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">final Map&lt;String, HealthCheck.Resultresults = healthChecks.runHealthChecks();</div><div class="line">for (Entry&lt;String, HealthCheck.Resultentry : results.entrySet()) &#123;</div><div class="line">    if (entry.getValue().isHealthy()) &#123;</div><div class="line">        System.out.println(entry.getKey() + " is healthy");</div><div class="line">    &#125; else &#123;</div><div class="line">        System.err.println(entry.getKey() + " is UNHEALTHY: " + entry.getValue().getMessage());</div><div class="line">        final Throwable e = entry.getValue().getError();</div><div class="line">        if (e != null) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>Metrics内置了一种health check：<code>ThreadDeadlockHealthCheck</code>,它使用了java内置的线程死锁检测来查找死锁线程.</p>
-<h2 id="Reporting-Via-JMX"><a href="#Reporting-Via-JMX" class="headerlink" title="Reporting Via JMX"></a>Reporting Via JMX</h2><p>通过<code>JMX</code>报告metrics：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">final JmxReporter reporter = JmxReporter.forRegistry(registry).build();</div><div class="line">reporter.start();</div></pre></td></tr></table></figure></p>
-<p>一旦reporter启动了,registry中的所有的metrics都可以通过<code>JConsole</code>或者<code>VisualVM</code>看到.</p>
-<p>Metrics被包装成<code>JMX MBeans</code>,可以在<code>VisualVM&#39;s MBeans browser</code>查看<code>Metrics</code>.</p>
-<p>注意：在VisualVM中，你双击任一metric属性,VisualVM将会将这些属性数据通过图形化的方式展示给你.</p>
-<h2 id="Reporting-Via-HTTP"><a href="#Reporting-Via-HTTP" class="headerlink" title="Reporting Via HTTP"></a>Reporting Via HTTP</h2><p>Metrics仍然可以通过servlet(AdminServlet)展示给你, 提供JSON形式的数据. 它可以报告<code>health checks</code>,打印<code>thread dump</code>,或者提供一个负载均衡的简单响应. (它还提供了其他的<code>servlets–MetricsServlet</code>,例如<code>HealthCheckServlet, ThreadDumpServlet</code>或者<code>PingServlet</code>.)</p>
-<p>如果想要使用servlet你必须在pom文件中依赖<code>metrics-servlets</code>.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-servlets<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<h2 id="Other-Reporting"><a href="#Other-Reporting" class="headerlink" title="Other Reporting"></a>Other Reporting</h2><p>除了<code>JMX</code>和<code>HTTP</code>以外,Metrics还提供了下面的报告方式</p>
-<ul>
-<li><code>STDOUT</code>: 使用<code>metrics-core</code>的<code>ConsoleReporter</code>报告</li>
-<li><code>CSV files</code>, 使用<code>metrics-core</code>的<code>CsvReporter</code>报告</li>
-<li><code>SLF4J loggers</code>, 使用<code>metrics-core</code>的<code>Slf4jReporter</code>报告</li>
-<li><code>Ganglia</code>, 使用<code>metrics-ganglia</code>的<code>GangliaReporter</code>报告</li>
-<li><code>Graphite</code>, 使用<code>metrics-graphite</code>的<code>GraphiteReporter</code>报告</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/08/JavaLibrary/dropwizard/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/JavaLibrary/dropwizard/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -2261,6 +1991,246 @@
 
 
 
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/08/JavaLibrary/dropwizard/" title="Dropwizard 初探" itemprop="url">Dropwizard 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="Setting-Up-Maven"><a href="#Setting-Up-Maven" class="headerlink" title="Setting Up Maven"></a>Setting Up Maven</h2><p>在MAVEN的dependency里添加<code>metrics-core</code>库<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>注意，使用上面依赖你需要在pom文件里声明了<code>metrics.version</code>属性,并且该属性值是<code>3.1.0</code></p>
+<h2 id="Meters"><a href="#Meters" class="headerlink" title="Meters"></a>Meters</h2><p><code>meter</code>表示的是单位时间内事件数的比例(例如每秒请求数). 除了平均速率之外, <code>meter</code>仍然会追踪<code>1-,5-,15-</code>分钟的移动平均数.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Meter requests = metrics.meter(<span class="string">"requests"</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleRequest</span><span class="params">(Request request, Response response)</span> </span>&#123;</div><div class="line">    requests.mark();</div><div class="line">    <span class="comment">// etc</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的<code>meter</code>表示每秒请求数的比例。</p>
+<h2 id="Console-Reporter"><a href="#Console-Reporter" class="headerlink" title="Console Reporter"></a>Console Reporter</h2><p><code>Console Reporter</code>正如其名,向控制台进行输出日志,下面的示例将每秒进行输出一次.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)</div><div class="line">       .convertRatesTo(TimeUnit.SECONDS)</div><div class="line">       .convertDurationsTo(TimeUnit.MILLISECONDS)</div><div class="line">       .build();</div><div class="line">   reporter.start(<span class="number">1</span>, TimeUnit.SECONDS);</div></pre></td></tr></table></figure></p>
+<h2 id="Complete-getting-started"><a href="#Complete-getting-started" class="headerlink" title="Complete getting started"></a>Complete getting started</h2><p>下面是一个完整的示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">  <span class="keyword">package</span> sample;</div><div class="line">  <span class="keyword">import</span> com.codahale.metrics.*;</div><div class="line">  <span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetStarted</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> MetricRegistry metrics = <span class="keyword">new</span> MetricRegistry();</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</div><div class="line">      startReport();</div><div class="line">      Meter requests = metrics.meter(<span class="string">"requests"</span>);</div><div class="line">      requests.mark();</div><div class="line">      wait5Seconds();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">startReport</span><span class="params">()</span> </span>&#123;</div><div class="line">      ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)</div><div class="line">          .convertRatesTo(TimeUnit.SECONDS)</div><div class="line">          .convertDurationsTo(TimeUnit.MILLISECONDS)</div><div class="line">          .build();</div><div class="line">      reporter.start(<span class="number">1</span>, TimeUnit.SECONDS);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wait5Seconds</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          Thread.sleep(<span class="number">5</span>*<span class="number">1000</span>);</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">catch</span>(InterruptedException e) &#123;&#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>somegroup<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sample<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>Example project for Metrics<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>注意：使用上面依赖你需要在pom文件里声明了<code>metrics.version</code>属性,并且该属性值是<code>3.1.0</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn <span class="keyword">package</span> exec:java -Dexec.mainClass=sample.First</div></pre></td></tr></table></figure>
+<h2 id="The-Registry"><a href="#The-Registry" class="headerlink" title="The Registry"></a>The Registry</h2><p>Metrics的核心部分是<code>MetricRegistry</code>类,这个类是应用程序中所有的metrics的容器. 下面的示例创建一个新的<code>MetricRegistry</code>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> MetricRegistry metrics = <span class="keyword">new</span> MetricRegistry();</div></pre></td></tr></table></figure></p>
+<p>如果你在应用程序中嵌入一个自己创建的<code>MetricRegistry</code>实例，你应该将这个属性置为静态的.</p>
+<h2 id="Gauges"><a href="#Gauges" class="headerlink" title="Gauges"></a>Gauges</h2><p><code>gauge</code>表示的是一个瞬时值. 例如我们获取队列里待执行的任务数<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class QueueManager &#123;</div><div class="line">    private final Queue queue;</div><div class="line"></div><div class="line">    public QueueManager(MetricRegistry metrics, String name) &#123;</div><div class="line">        this.queue = new Queue();</div><div class="line">        metrics.register(MetricRegistry.name(QueueManager.class, name, "size"),</div><div class="line">                         new Gauge<span class="tag">&lt;<span class="name">Integer</span>&gt;</span>() &#123;</div><div class="line">                             @Override</div><div class="line">                             public Integer getValue() &#123;</div><div class="line">                                 return queue.size();</div><div class="line">                             &#125;</div><div class="line">                         &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当完成计算之后,它将会返回队列里的任务数。</p>
+<p>在<code>registry</code>里的每个<code>metric</code>都有一个唯一的名字,其命名规范为用<code>.</code>分割的字符串,例如<code>things.count</code>或者<code>com.example.Thing.latency</code>. <code>MetricRegistry</code>类提供了一个静态方法来构建这些名字.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">MetricRegistry.name(QueueManager.class, "jobs", "size")</div></pre></td></tr></table></figure></p>
+<p>上面的调用会返回<code>com.example.QueueManager.jobs.size</code>。</p>
+<p>对于大多数队列或者类队列结构,你也许仅想要获得<code>queue.size()</code>这个值. 大多数<code>java.util</code>和<code>java.util.concurrent</code>包都实现了<code>size()</code>方法,它的复杂度是<code>O(n)</code>,这意味着你的<code>gauge</code>也许会很慢(也许还会持有锁)</p>
+<h2 id="Counters"><a href="#Counters" class="headerlink" title="Counters"></a>Counters</h2><p><code>counter</code>是一个内部采用<code>AtomicLong</code>计数器的<code>gauge</code>实现. 你可以增加或者减少这个值.例如,我们想要一种更加高效的计算队列大小的方式:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final Counter pendingJobs = metrics.counter(name(QueueManager.class, "pending-jobs"));</div><div class="line"></div><div class="line">public void addJob(Job job) &#123;</div><div class="line">    pendingJobs.inc();</div><div class="line">    queue.offer(job);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public Job takeJob() &#123;</div><div class="line">    pendingJobs.dec();</div><div class="line">    return queue.take();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>每一次业务逻辑的调用，counter都会被计算一次,它会返回队列中的任务数.</p>
+<p>正如你看到的,counter的API是非常不同的是,<code>counter(String)</code>取代了<code>register(String, Metric)</code>，然而你可以仍然可以使用<code>register</code>方法创建你自己的<code>Counter</code>实例,实际上<code>counter(String)</code>在内部里已经将这些工作都为你做好了,还允许你使用相同的名字对metric进行复用</p>
+<p>还需要说明一点,在上例中,我们静态引入了<code>MetricRegistry</code>的<code>name</code>方法.</p>
+<h2 id="Histograms"><a href="#Histograms" class="headerlink" title="Histograms"></a>Histograms</h2><p><code>histogram</code>表示的是流中数据值的静态分布. 除了计算<code>minimum, maximum, mean, etc</code>等值,它还计算中间值或者<code>75th, 90th, 95th, 98th, 99th, 99.9th</code>等百分比.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">private final Histogram responseSizes = metrics.histogram(name(RequestHandler.class, "response-sizes"));</div><div class="line"></div><div class="line">public void handleRequest(Request request, Response response) &#123;</div><div class="line">    // etc</div><div class="line">    responseSizes.update(response.getContent().length);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的<code>histogram</code>统计了响应中的字节数.</p>
+<h2 id="Timers"><a href="#Timers" class="headerlink" title="Timers"></a>Timers</h2><p><code>timer</code>可以计算某个代码段的调用比例,和调用期间的分布状况.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final Timer responses = metrics.timer(name(RequestHandler.class, "responses"));</div><div class="line"></div><div class="line">public String handleRequest(Request request, Response response) &#123;</div><div class="line">    final Timer.Context context = responses.time();</div><div class="line">    try &#123;</div><div class="line">        // etc;</div><div class="line">        return "OK";</div><div class="line">    &#125; finally &#123;</div><div class="line">        context.stop();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>This timer will measure the amount of time it takes to process each request in nanoseconds and provide a rate of requests in requests per second.</p>
+<h2 id="Health-Checks"><a href="#Health-Checks" class="headerlink" title="Health Checks"></a>Health Checks</h2><p>Metrics还可以通过<code>metrics-healthchecks</code>模块集中检查你的服务的健康.</p>
+<p>首先创建一个新的<code>HealthCheckRegistry</code>实例<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">final HealthCheckRegistry healthChecks = new HealthCheckRegistry();</div><div class="line">Second, implement a HealthCheck subclass:</div><div class="line"></div><div class="line">public class DatabaseHealthCheck extends HealthCheck &#123;</div><div class="line">    private final Database database;</div><div class="line"></div><div class="line">    public DatabaseHealthCheck(Database database) &#123;</div><div class="line">        this.database = database;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public HealthCheck.Result check() throws Exception &#123;</div><div class="line">        if (database.isConnected()) &#123;</div><div class="line">            return HealthCheck.Result.healthy();</div><div class="line">        &#125; else &#123;</div><div class="line">            return HealthCheck.Result.unhealthy("Cannot connect to " + database.getUrl());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后将Metrics注册到它身上：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">healthChecks.register("postgres", new DatabaseHealthCheck(database));</div></pre></td></tr></table></figure></p>
+<p>接下来运行所有的health checks:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">final Map&lt;String, HealthCheck.Resultresults = healthChecks.runHealthChecks();</div><div class="line">for (Entry&lt;String, HealthCheck.Resultentry : results.entrySet()) &#123;</div><div class="line">    if (entry.getValue().isHealthy()) &#123;</div><div class="line">        System.out.println(entry.getKey() + " is healthy");</div><div class="line">    &#125; else &#123;</div><div class="line">        System.err.println(entry.getKey() + " is UNHEALTHY: " + entry.getValue().getMessage());</div><div class="line">        final Throwable e = entry.getValue().getError();</div><div class="line">        if (e != null) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Metrics内置了一种health check：<code>ThreadDeadlockHealthCheck</code>,它使用了java内置的线程死锁检测来查找死锁线程.</p>
+<h2 id="Reporting-Via-JMX"><a href="#Reporting-Via-JMX" class="headerlink" title="Reporting Via JMX"></a>Reporting Via JMX</h2><p>通过<code>JMX</code>报告metrics：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">final JmxReporter reporter = JmxReporter.forRegistry(registry).build();</div><div class="line">reporter.start();</div></pre></td></tr></table></figure></p>
+<p>一旦reporter启动了,registry中的所有的metrics都可以通过<code>JConsole</code>或者<code>VisualVM</code>看到.</p>
+<p>Metrics被包装成<code>JMX MBeans</code>,可以在<code>VisualVM&#39;s MBeans browser</code>查看<code>Metrics</code>.</p>
+<p>注意：在VisualVM中，你双击任一metric属性,VisualVM将会将这些属性数据通过图形化的方式展示给你.</p>
+<h2 id="Reporting-Via-HTTP"><a href="#Reporting-Via-HTTP" class="headerlink" title="Reporting Via HTTP"></a>Reporting Via HTTP</h2><p>Metrics仍然可以通过servlet(AdminServlet)展示给你, 提供JSON形式的数据. 它可以报告<code>health checks</code>,打印<code>thread dump</code>,或者提供一个负载均衡的简单响应. (它还提供了其他的<code>servlets–MetricsServlet</code>,例如<code>HealthCheckServlet, ThreadDumpServlet</code>或者<code>PingServlet</code>.)</p>
+<p>如果想要使用servlet你必须在pom文件中依赖<code>metrics-servlets</code>.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-servlets<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h2 id="Other-Reporting"><a href="#Other-Reporting" class="headerlink" title="Other Reporting"></a>Other Reporting</h2><p>除了<code>JMX</code>和<code>HTTP</code>以外,Metrics还提供了下面的报告方式</p>
+<ul>
+<li><code>STDOUT</code>: 使用<code>metrics-core</code>的<code>ConsoleReporter</code>报告</li>
+<li><code>CSV files</code>, 使用<code>metrics-core</code>的<code>CsvReporter</code>报告</li>
+<li><code>SLF4J loggers</code>, 使用<code>metrics-core</code>的<code>Slf4jReporter</code>报告</li>
+<li><code>Ganglia</code>, 使用<code>metrics-ganglia</code>的<code>GangliaReporter</code>报告</li>
+<li><code>Graphite</code>, 使用<code>metrics-graphite</code>的<code>GraphiteReporter</code>报告</li>
+</ul>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/08/JavaLibrary/dropwizard/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/08/JavaLibrary/dropwizard/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/04/02/nosql/Redis部署/" title="Redis 部署" itemprop="url">Redis 部署</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-02T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p><a href="http://www.redis.cn/download.html" target="_blank" rel="external">Redis安装 使用</a></p>
+<p>下载，解压和安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ wget http://download.redis.io/releases/redis-2.8.19.tar.gz</div><div class="line">$ tar xzf redis-2.8.19.tar.gz</div><div class="line">$ cd redis-2.8.19</div><div class="line">$ make</div></pre></td></tr></table></figure></p>
+<p>编译后的可执行文件在src目录中，可以使用下面的命令运行Redis:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ src/redis-server</div></pre></td></tr></table></figure></p>
+<p>你可以使用内置的客户端连接Redis:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ src/redis-cli</div><div class="line">redis&gt; set foo bar</div><div class="line">OK</div><div class="line">redis&gt; get foo</div><div class="line">&quot;bar&quot;</div></pre></td></tr></table></figure></p>
+<h3 id="启动redis服务器"><a href="#启动redis服务器" class="headerlink" title="启动redis服务器"></a>启动redis服务器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">cd redis-2.8.19</div><div class="line">src/redis-server</div></pre></td></tr></table></figure>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/02/nosql/Redis部署/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/02/nosql/Redis部署/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/12/JavaSE/并发 线程同步辅助类/" title="线程同步辅助类" itemprop="url">线程同步辅助类</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-12T07:00:00.000Z" itemprop="datePublished"> Published 2015-03-12</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="在集合点的同步"><a href="#在集合点的同步" class="headerlink" title="在集合点的同步"></a>在集合点的同步</h2><p>CyclicBarrier使用一个整数进行初始化,这个数是需要在某个点上同步线程数.当线程完成工作,它可以调用await()方法等待其他线程.当最后一个线程完成工作调用await()方法时,CyclicBarrier将唤醒所有等待的线程,然后这些线程将继续执行</p>
+<p>还有一点值得说明的是：可以在CyclicBarrier的构造参数里传入Runnable对象.当所有线程都达到集合点后,CyclicBarrier将这个Runnable对象作为线程执行.</p>
+<p>CyclicBarrier还有一种await()方式,就是指定结束时间点.<br>如果CyclicBarrier的内部计数器不为0,但是时间到后,就可以唤醒现在被中断的线程</p>
+<p>可以通过reset()方法重置CyclicBarrier</p>
+<p>如果已经在阻塞的线程,被其他的线程中断了,CyclicBarrier将会抛出BrokenBarrierException状态<br>可以通过isBroken()来检查CyclicBarrier是否处于Broken状态</p>
+<h2 id="并发任务间的数据交换"><a href="#并发任务间的数据交换" class="headerlink" title="并发任务间的数据交换"></a>并发任务间的数据交换</h2><h2 id="并发阶段任务中的阶段切换"><a href="#并发阶段任务中的阶段切换" class="headerlink" title="并发阶段任务中的阶段切换"></a>并发阶段任务中的阶段切换</h2><h2 id="并发阶段任务的运行"><a href="#并发阶段任务的运行" class="headerlink" title="并发阶段任务的运行"></a>并发阶段任务的运行</h2><p>Phaser提供了onAdvance()方法,它在phaser阶段改变的时候会自动运行.<br>Phaser允许执行并发任务多阶段任务.在每一步结束的位置进行同步,当所有线程都完成了这一步,才允许执行下一步</p>
+<p>new Phaser(3),初始化3个线程参与的Phaser对象.个数字通知Phaser对象在唤醒所以休眠线程以进行下一个阶段之前,须执行arriveAndAwaitAdvance()的次数</p>
+<p>Phaser有俩种状态：<br>1.活跃态. 当存在参与同步的线程的时候,Phaser对象就是活跃的,并且在每个阶段结束的时候进行同步<br>2.终止态. 当所有参与同步的线程都取消注册的时候,Phaser就处于终止状态,在这种状态下,Phaser没有任何参与者当Phaser对象的onAdvance()方法返回true,Phaser就处于终止态.覆盖通过onAdvance()方法可以改变默认的行为,当Phaser处于终止态,同步方法arriveAndAwaitAdvance()会立即返回,而且不会做任何同步的操作</p>
+<p>arriveAndAwaitAdvance() Phaser对象计数器减一,并且把这个线程置为休眠状态,直到其他线程完成了这个阶段arriveAndDeregister()  通知Phaser对象,当前线程已经完成了当前任务,并且不会在下一个阶段中参与,因而Phaser对象在开始下一个阶段不会等待这个线程</p>
+<p>arrive()<br>awaitAdvance(phase)<br>awaitAdvanceInterruptibly(phase)<br>register()<br>bulkRegister(parties)</p>
+<h2 id="等待多个并发事件的完成"><a href="#等待多个并发事件的完成" class="headerlink" title="等待多个并发事件的完成"></a>等待多个并发事件的完成</h2><p>CountDownLatch是一个同步辅助类. 在完成一组正在其他线程执行的操作之前,它允许线程一直等待.</p>
+<p>该类使用一个整数初始化,这个整数就是线程要等待完成的操作数目.</p>
+<p>当一个线程要等待某些操作先执行时,需要调用await()方法,这个方法让线程进行睡眠,直到所有的操作都完成</p>
+<p>当某一个操作完成后,他它将调用countDown(),将CountDownLatch里的计数器减一.</p>
+<p>当计数器为0时,CountDownLatch将唤醒所有调用await()方法而进入休眠的线程</p>
+<p>CountDownLatch对象内部的计数器被初始化之后就不能再次初始化或者修改. 而且当计数器为0后也不能在调用countDown()方法</p>
+<p>对比同步方法 1.CountDownLatch不是用来保护共享资源或者临界区的.它是用来同步执行多个任务的一个或者多个线程<br>2.CountDownLatch只准许进入一次<br>,一旦CountDownLatch的内部计数器为0,就不可再调用countDown(),如果想要做类似的同步,必须再重新创建一个对象</p>
+<h2 id="资源的多副本的并发访问控制"><a href="#资源的多副本的并发访问控制" class="headerlink" title="资源的多副本的并发访问控制"></a>资源的多副本的并发访问控制</h2><h2 id="资源的并发访问控制"><a href="#资源的并发访问控制" class="headerlink" title="资源的并发访问控制"></a>资源的并发访问控制</h2><p>本例中使用Semaphore来实现二进制信号量(一种特殊信号量,用来保护唯一共享资源的访问).<br>本例使用了Java提供的信号量机制.信号量是一种计数器,用来保护一个或者多个共享资源的访问.</p>
+<p>如果线程要访问一个共享资源,它必须首先获得它的信号量(内含计数器C).C &gt; 0 –&gt; C–,然后允许线程访问该共享变量(C&gt;0 有可用资源,线程被允许使用其中一个资源)C== 0 –&gt; 信号量将线程置为睡眠,直至C&lt;0(C=0, 所以的共享资源都被其他线程使用了,以想要访问该共享资源的线程必须等待).</p>
+<p>当线程使用完某个共享资源,信号量必须被释放(C++),以便其他的线程能够访问共享资源.</p>
+<p>获取信号量<br>1.acquire()<br>2.acqu</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/03/12/JavaSE/并发 线程同步辅助类/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/03/12/JavaSE/并发 线程同步辅助类/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/6/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/8/">Next<span></span></a>
@@ -2289,15 +2259,15 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>32</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>35</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>35</sup></a></li>
 		  
 		
 		  
@@ -2338,7 +2308,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
 			
 		
 			

@@ -29,15 +29,15 @@ EXEC告诉 redis 开始执行事务
 DISCARD告诉 redis 取消事务
 
 MULTI命令执行后, redis进入事务状态,redis会持续缓存某个客户端的命令(其他客户端处于饥饿状态).当redis接受到客户端的EXEC命令后会开始执行刚才缓存在事务队列里的任务. DISCA">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-multi.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-tranactions.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis_transaction.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch1.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch2.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch3.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch4.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis_watched_keys.png">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis-multi.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis-tranactions.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis_transaction.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis_watched_keys.png">
+<meta property="og:updated_time" content="2016-11-08T04:30:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis事务">
 <meta name="twitter:description" content="普通事务首先介绍普通事务MULTI，EXEC，DISCARD:
@@ -47,7 +47,7 @@ EXEC告诉 redis 开始执行事务
 DISCARD告诉 redis 取消事务
 
 MULTI命令执行后, redis进入事务状态,redis会持续缓存某个客户端的命令(其他客户端处于饥饿状态).当redis接受到客户端的EXEC命令后会开始执行刚才缓存在事务队列里的任务. DISCA">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-multi.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis-multi.png">
 
     
     <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
@@ -124,7 +124,7 @@ MULTI命令执行后, redis进入事务状态,redis会持续缓存某个客户�
 <li><code>EXEC</code>告诉 redis 开始执行事务</li>
 <li><code>DISCARD</code>告诉 redis 取消事务</li>
 </ul>
-<p><code>MULTI</code>命令执行后, redis进入事务状态,redis会持续缓存某个客户端的命令(其他客户端处于饥饿状态).<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-multi.png" alt=""><br>当redis接受到客户端的<code>EXEC</code>命令后会开始执行刚才缓存在事务队列里的任务. <code>DISCARD</code> 会将事务队列清空.<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis-tranactions.png" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET a &quot;&quot;redis 127.0.0.1:7006&gt; SET a &quot;&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; SET a &quot;a&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt;  EXEC</div><div class="line">1) OK</div><div class="line">2) OK</div><div class="line">redis 127.0.0.1:7006&gt; SET b &quot;b&quot;</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; EXEC</div><div class="line">(error) ERR EXEC without MULTI</div><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET n &quot;n&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; EXEC</div><div class="line">1) OK</div><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET c &quot;c&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; DISCARD</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; GET a</div><div class="line">&quot;a&quot;</div><div class="line">redis 127.0.0.1:7006&gt; GET b</div><div class="line">&quot;b&quot;</div><div class="line">redis 127.0.0.1:7006&gt; Get c</div><div class="line">(error) ERR Operation against a key holding the wrong kind of value</div><div class="line">redis 127.0.0.1:7006&gt; GET n</div><div class="line">&quot;n&quot;</div><div class="line">redis 127.0.0.1:7006&gt;</div></pre></td></tr></table></figure></p>
+<p><code>MULTI</code>命令执行后, redis进入事务状态,redis会持续缓存某个客户端的命令(其他客户端处于饥饿状态).<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis-multi.png" alt=""><br>当redis接受到客户端的<code>EXEC</code>命令后会开始执行刚才缓存在事务队列里的任务. <code>DISCARD</code> 会将事务队列清空.<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis-tranactions.png" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET a &quot;&quot;redis 127.0.0.1:7006&gt; SET a &quot;&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; SET a &quot;a&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt;  EXEC</div><div class="line">1) OK</div><div class="line">2) OK</div><div class="line">redis 127.0.0.1:7006&gt; SET b &quot;b&quot;</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; EXEC</div><div class="line">(error) ERR EXEC without MULTI</div><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET n &quot;n&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; EXEC</div><div class="line">1) OK</div><div class="line">redis 127.0.0.1:7006&gt; MULTI</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; SET c &quot;c&quot;</div><div class="line">QUEUED</div><div class="line">redis 127.0.0.1:7006&gt; DISCARD</div><div class="line">OK</div><div class="line">redis 127.0.0.1:7006&gt; GET a</div><div class="line">&quot;a&quot;</div><div class="line">redis 127.0.0.1:7006&gt; GET b</div><div class="line">&quot;b&quot;</div><div class="line">redis 127.0.0.1:7006&gt; Get c</div><div class="line">(error) ERR Operation against a key holding the wrong kind of value</div><div class="line">redis 127.0.0.1:7006&gt; GET n</div><div class="line">&quot;n&quot;</div><div class="line">redis 127.0.0.1:7006&gt;</div></pre></td></tr></table></figure></p>
 <ol>
 <li>使用<code>MULTI</code>命令开启事务</li>
 <li>输入一个错误的命令,点击回车,redis并没有报错,说明这个命令确实是被缓存起来了没有执行</li>
@@ -134,9 +134,9 @@ MULTI命令执行后, redis进入事务状态,redis会持续缓存某个客户�
 <li>再次执行事务, 并不成功,提示我们要开启事务,说明事务一旦执行完就自动退出了</li>
 <li>再次开启事务,然后使用<code>SET</code>命令将n设置为”n”</li>
 <li>退出事务</li>
-<li>接下来我们依次使用<code>GET</code>命令获取值,但是n取不到,说明退出事务确实没有执行事务队列里的命令<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis_transaction.png" alt=""></li>
+<li>接下来我们依次使用<code>GET</code>命令获取值,但是n取不到,说明退出事务确实没有执行事务队列里的命令<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis_transaction.png" alt=""></li>
 </ol>
-<h2 id="watch机制"><a href="#watch机制" class="headerlink" title="watch机制"></a>watch机制</h2><p>下来我们来看一下redis的watch机制<br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch1.png" alt=""><br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch2.png" alt=""><br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch3.png" alt=""><br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/watch4.png" alt=""><br><img src="https://raw.githubusercontent.com/ming15/blog-website/images/redis/redis_watched_keys.png" alt=""></p>
+<h2 id="watch机制"><a href="#watch机制" class="headerlink" title="watch机制"></a>watch机制</h2><p>下来我们来看一下redis的watch机制<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch1.png" alt=""><br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch2.png" alt=""><br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch3.png" alt=""><br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/redis/watch4.png" alt=""><br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/redis/redis_watched_keys.png" alt=""></p>
 <h2 id="pipline机制"><a href="#pipline机制" class="headerlink" title="pipline机制"></a>pipline机制</h2><p>参考文章</p>
 <ul>
 <li><a href="http://redisbook.readthedocs.org/en/latest/feature/transaction.html" target="_blank" rel="external"></a></li>
@@ -228,15 +228,15 @@ MULTI命令执行后, redis进入事务状态,redis会持续缓存某个客户�
 		<ul>
 		
 		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>38</sup></a></li>
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>32</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>36</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>35</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>40</sup></a></li>
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>35</sup></a></li>
 		  
 		
 		  
@@ -277,7 +277,7 @@ MULTI命令执行后, redis进入事务状态,redis会持续缓存某个客户�
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>8</sup></a></li>
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
 			
 		
 			
