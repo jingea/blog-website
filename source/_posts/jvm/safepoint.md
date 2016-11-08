@@ -12,8 +12,7 @@ JVM有俩种运行方式, 解释形和编译形。
 safepoint 的状态检查实现机制非常灵活. 像一般的内存变量检查, 需要消耗非常昂贵的内存屏障(memory barriers).
 
 
-在讲Safepoint之前, 先看一下
-在Java中判断一个对象是否存活采用的是reachability analysis(即root reference)。如果一个对象的引用可以在mutator的栈slot中被直接找到, 那么就说这个对象是reachable的. 当然如果这个对象内部还还引用有其他对象, 那么其他对象也是reachable的.
+在JVM中判断一个对象是否存活采用的是reference reachability analysis。如果一个对象的引用可以在mutator的栈slot中被直接找到, 那么就说这个对象是reachable的. 当然如果这个对象内部还还引用有其他对象, 那么其他对象也是reachable的.
 
 
 在Java GC时需要获得整个JVM环境中的一致性的RootReference信息. 但是如果想要获得这个信息的话, 最简单的一种方式是, 在Root Reference过程中, 暂停整个JVM中Java Thread(以及涉及到Java Thread相关的VMThread) ,也就是发生了Stop The World.  但是STW之后, JVM也不一定能够枚举到整个JVM中的所有的root reference, 除非JVM保存了所有的rootRerence信息. 也就是说JVM能够知道都有JVM栈中的哪些slot和register含有对象的引用信息. 如果JVM能够知道这些信息的话，那么 JVM就能进行一次完整的root enumeration，否则JVM root reference出来的结果就是不完整的。
@@ -30,29 +29,9 @@ safepoint 的状态检查实现机制非常灵活. 像一般的内存变量检�
 在 Harmony中采用的架构是主动式的，当GC想要触发一个收集垃圾动作时，它会设置一个标记。mutator会在safe-point上检查这个标记，一旦发现这个标记被设置了，就会中断当前执行. 绝大多数都是由JIT来负责插入safe-point位置的。
 
 
-	1. 一个线程要么在Safepoint中，要么就是出于非Safepoint中。 当线程在Safepoint中时，它的Java machine状态可以被很好的描述出来，而且也可以很安全的被其他线程
+一个线程要么在Safepoint中，要么就是出于非Safepoint中。 当线程在Safepoint中时，它的Java machine状态可以被很好的描述出来，而且也可以很安全的被其他线程
 
 
-
-
-
-
-
-
-文章参考
-* [Safepoints in HotSpot JVM](http://blog.ragozin.info/2012/10/safepoints-in-hotspot-jvm.html)
-* [聊聊JVM（六）理解JVM的safepoint](http://blog.csdn.net/iter_zc/article/details/41847887)
-* [JVM的Stop The World，安全点，黑暗的地底世界](http://calvin1978.blogcn.com/articles/safepoint.html)
-* [Logging stop-the-world pauses in JVM](https://plumbr.eu/blog/performance-blog/logging-stop-the-world-pauses-in-jvm)
-* [GC safe-point (or safepoint) and safe-region](http://xiao-feng.blogspot.tw/2008/01/gc-safe-point-and-safe-region.html)
-* [](http://chriskirk.blogspot.jp/2013/09/what-is-java-safepoint.html )
-* [](http://blog.ragozin.info/2012/10/safepoints-in-hotspot-jvm.html )
-* [](http://blog.csdn.net/iter_zc/article/details/41847887)
-* []( http://www.zhihu.com/question/29268019)
-
-
-
-https://groups.google.com/forum/#!msg/mechanical-sympathy/vO7oq9aiG4Y/NrDeAQ1xzcYJ
 
 -XX:+PrintGCApplicationStoppedTime
 2016-08-09T20:24:00.003+0800: 6632.406: Total time for which application threads were stopped: 0.0002730 seconds, Stopping threads took: 0.0000517 seconds
@@ -64,3 +43,31 @@ https://groups.google.com/forum/#!msg/mechanical-sympathy/vO7oq9aiG4Y/NrDeAQ1xzc
 -XX:+PrintGCApplicationConcurrentTime
 2016-08-09T20:24:00.003+0800: 6632.406: Application time: 0.0001614 seconds
 程序未间断执行的时间
+
+
+
+
+文章参考
+* [Safepoints in HotSpot JVM](http://blog.ragozin.info/2012/10/safepoints-in-hotspot-jvm.html)
+* [Logging stop-the-world pauses in JVM](https://plumbr.eu/blog/performance-blog/logging-stop-the-world-pauses-in-jvm)
+* [GC safe-point (or safepoint) and safe-region](http://xiao-feng.blogspot.tw/2008/01/gc-safe-point-and-safe-region.html)
+* [What is a Java Safepoint](http://chriskirk.blogspot.jp/2013/09/what-is-java-safepoint.html )
+* [聊聊JVM（六）理解JVM的safepoint](http://blog.csdn.net/iter_zc/article/details/41847887)
+* [JVM的Stop The World，安全点，黑暗的地底世界](http://calvin1978.blogcn.com/articles/safepoint.html)
+* [现代JVM中的Safe Region和Safe Point到底是如何定义和划分的?]( http://www.zhihu.com/question/29268019)
+http://rednaxelafx.iteye.com/blog/1044951
+http://blog.csdn.net/iter_zc/article/details/41868999
+https://mritd.me/2016/03/24/HotSpot-%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0/
+http://blog.5ibc.net/p/73981.html
+http://mojijs.com/2016/10/219414/index.html
+https://www.zhihu.com/question/34341582
+http://www.infoq.com/cn/articles/jvm-memory-collection
+http://peg.hengtiansoft.com/article/jvm-zhong-de-safepoint/
+http://mail.openjdk.java.net/pipermail/hotspot-gc-use/2015-May/002262.html
+http://jpbempel.blogspot.com/2013/03/safety-first-safepoints.html
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.2891&rep=rep1&type=pdf
+https://www.lmax.com/blog/staff-blogs/2015/08/05/jvm-guaranteed-safepoints/
+http://flyingfrogblog.blogspot.com/2012/03/gc-safe-points-mutator-suspension-and.html
+http://mattwarren.org/2016/08/08/GC-Pauses-and-Safe-Points/
+
+
