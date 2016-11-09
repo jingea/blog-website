@@ -255,22 +255,73 @@ private AbstractChannelHandlerContext findContextInbound() {
 ```
 这里就直接找到了handler, 触发了我们最终自己实现的`channelRead()`方法.
 
-也许你已经注意到了, 在handler中不得不调用`ChannelHandlerContext`的事件传播方法, 将事件传递给下一个handler. 下面的是能够触发`inbound`事件的方法
-* `ChannelHandlerContext#fireChannelRegistered()` Channel注册事件. (``触发)
-* `ChannelHandlerContext#fireChannelActive()` TCP链路建立成功,Channel激活事件. (``触发)
-* `ChannelHandlerContext#fireChannelRead(Object var1)` 读事件. (``触发)
-* `ChannelHandlerContext#fireChannelReadComplete()` 读操作完成通知事件. (``触发)
-* `ChannelHandlerContext#fireExceptionCaught(Throwable var1)` 异常通知事件. (``触发)
-* `ChannelHandlerContext#fireUserEventTriggered(Object var1)` 用户自定义事件. (``触发)
-* `ChannelHandlerContext#fireChannelWritabilityChanged()` Channel的可写状态变化通知事件. (``触发)
-* `ChannelHandlerContext#fireChannelInactive()` TCP链路关闭, 链路不可用通知事件. (``触发)
-触发`outbound`事件的方法有
-* `ChannelHandlerContext#bind(SocketAddress var1, ChannelPromise var2)` 绑定本地地址事件
-* `ChannelHandlerContext#connect(SocketAddress var1, ChannelPromise var2)` 连接服务端事件
-* `ChannelHandlerContext#flush()` 刷新事件
-* `ChannelHandlerContext#read()` 读事件
-* `ChannelHandlerContext#disconnect(ChannelPromise var1)` 断开连接事件
-* `ChannelHandlerContext#close(ChannelPromise var1)` 关闭当前Channel事件
+也许你已经注意到了, 在handler中不得不调用`ChannelHandlerContext`的事件传播方法, 将事件传递给下一个handler. 下面的是能够触发`inbound`事件的方法(`ChannelInboundHandler`)
+
+### channelRegistered
+Channel注册事件
+```bash
+SingleThreadEventLoop#register()  
+                ↓
+AbstractChannel#AbstractUnsafe#register()
+                ↓
+AbstractChannel#AbstractUnsafe#register0()
+                ↓				
+DefaultChannelPipeline#fireChannelRegistered()
+                ↓
+ChannelInboundHandler#channelRegistered()
+```
+
+### channelActive
+TCP链路建立成功,Channel激活事件
+```bash
+SingleThreadEventLoop#register()  
+                ↓
+AbstractChannel#AbstractUnsafe#register()
+                ↓
+AbstractChannel#AbstractUnsafe#register0()
+                ↓				
+DefaultChannelPipeline#fireChannelActive()
+                ↓
+ChannelInboundHandler#channelActive()
+```
+
+### channelRead
+读事件
+
+### channelReadComplete
+读操作完成通知事件
+
+### exceptionCaught
+异常通知事件
+
+### userEventTriggered
+用户自定义事件
+
+### channelWritabilityChanged
+Channel的可写状态变化通知事件
+
+### channelInactive
+TCP链路关闭, 链路不可用通知事件
+
+触发`outbound`事件的方法有(ChannelOutboundHandler)
+
+### bind
+绑定本地地址事件
+
+### connect
+连接服务端事件
+
+### flush
+刷新事件
+
+### read
+读事件
+
+### disconnect
+断开连接事件
+
+### close
+关闭当前Channel事件
 
 
 
