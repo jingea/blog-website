@@ -17,7 +17,7 @@
 <meta property="og:url" content="http://www.yu66.wang/2014/09/26/JavaSE/Java网络 BIO server/index.html">
 <meta property="og:site_name" content="·">
 <meta property="og:description" content="一个Java阻塞服务器实现12345678910111213141516171819202122try(ServerSocket server =  new ServerSocket(9090)) &amp;#123;	while (true) &amp;#123;		try(final Socket finalSocket = server.accept();) &amp;#123;			Runnable runnab">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
+<meta property="og:updated_time" content="2016-11-09T04:24:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java BIO服务器">
 <meta name="twitter:description" content="一个Java阻塞服务器实现12345678910111213141516171819202122try(ServerSocket server =  new ServerSocket(9090)) &amp;#123;	while (true) &amp;#123;		try(final Socket finalSocket = server.accept();) &amp;#123;			Runnable runnab">
@@ -78,7 +78,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2014-09-26T07:00:00.000Z" itemprop="datePublished"> Published 2014-09-26</time>
+    <time datetime="2014-09-25T16:00:00.000Z" itemprop="datePublished"> Published 2014-09-26</time>
     
   </p>
 </header>
@@ -87,7 +87,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#socket-api"><span class="toc-number">1.</span> <span class="toc-text">socket api</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServerSocket-api"><span class="toc-number">2.</span> <span class="toc-text">ServerSocket api</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#socket-api"><span class="toc-number">1.</span> <span class="toc-text">socket api</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServerSocket-api"><span class="toc-number">2.</span> <span class="toc-text">ServerSocket api</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP参数"><span class="toc-number">3.</span> <span class="toc-text">TCP参数</span></a></li></ol>
 		
 		</div>
 		
@@ -109,31 +109,38 @@
 <li><code>getPort()</code> 获取Socket连接(或过去连接或将要连接)远程主机的哪个端口返回一个原始的<code>OutputStream</code>,用于将应用程序的数据写入socket另一端.出于性能原因,将其缓冲也是个好主意.</li>
 <li><code>getInetAddress()</code> socket连接哪台远程服务器,或者当连接已关闭时,告知它连接时所连接的是哪台主机</li>
 <li><code>getLocalAddress()</code> 获取socket绑定于哪个网络接口,一般会在多宿主主机或有多个网络接口的主机使用此方法</li>
-<li><code>setTcpNoDelay(boolean)</code>设置<code>TCP_NODELAY</code>为<code>true</code>,可确保包会尽快地发送,而无论包的大小.正常情况下,小的包(1byte)在发送前会组合为大点的包.在发送另一个包之前,本地主机要等待远程系统对前一个包的响应,这称为<code>Nagle</code>算法.<code>Nagle</code>算法的问题是,如果远程系统没有尽可能快地将回应发送回本地系统,那么依赖于小数据量信息稳定传输的应用程序会变得很慢.为true关闭socket缓冲,为false再次打开socket缓冲.</li>
-<li><code>setSoLinger(boolean, int)</code>该设置规定了当socket关闭时如何处理尚未发送的数据报.如果socket关闭(close方法)系统仍会将剩余的数据发送出去.如果延迟时间为0,那所有未发送的数据都会被丢弃.如果延迟时间为任意正数,close方法会被堵塞指定秒数,等待数据发送和接受回应,该段时间过去后socket被关闭,将会关闭输出输入流,既不会接收到数据也不会在发送数据.</li>
-<li><code>setOOBInline(boolean)</code> 用于发送紧急数据</li>
-<li><code>setSoTimeout(int)</code> 当socket尝试读取数据时,<code>read</code>方法会阻塞尽可能长的时间来得到足够的字节.该选项就是确保此次调用阻塞的时间不会大于某个固定的毫秒数,如果阻塞时间长于固定毫秒数就会抛出<code>InterruptedIoException</code>.尽管抛出了该异常但是socket仍然是连接的.此次read失败,但是仍然可以尝试再次读取该socket</li>
-<li><code>setSendBufferSize(int)</code> 设置socket网络输出的缓冲区字节数</li>
-<li><code>setReceiveBufferSize(int)</code> 设置socket网络输入的缓冲区的字节数.大多数TCP栈使用缓冲区提升网络性能,较大的缓冲区会提升快速连接(比如10M或更快)的网络性能,而较慢的拨号连接在较小的缓冲区下表现更加.一般来讲,传输大的连续的数据块(在FTP和HTTP很常见),这可以从大缓冲区收益;而大缓冲区对交互式会话如<code>telnet</code>和许多游戏则没有多大帮助.</li>
-<li><code>setKeepAlive(boolean)</code> 启用<code>SO_KEEPALIVE</code>客户端会偶尔(一般俩个小时)利用一个空闲连接发送一个数据包,确保服务器没有崩溃.如果服务器没有响应,客户端会在11分钟之内持续发送此包,直到接受到服务器的回馈或者到12分钟左右直接将客户端关闭.</li>
-<li><code>setReuseAddress(boolean)</code> 设置主机地址可重用</li>
-<li><code>getReuseAddress()</code> socket关闭时,可能不会立即释放本地地址,一般会等待一段时间,确保所有寻址到待端口在网络上传输的数据接受到.关闭后一般接收到的数据报不会再进行任何处理,这么做是为了当有新的进程关联到该端口的时候不会接受到莫名其妙的数据.要想使用这个设置必须将老的socket如下设置</li>
 <li><code>shutdownInput()</code> 半关闭连接.关闭socket的输入流,实际上这并不会关闭socket,但是它会影响与之连接的流认为已经到了流的末尾.即使半关闭了连接,甚至关闭了俩次,仍需要在结束使用时关闭socket.该方法只影响输出流,他们不释放与socket关联的资源,如占用的端口.</li>
 <li><code>isConnected()</code> 指向远端服务器.这个方法不能告诉你socket当前是否连接到远程主机,而是告知socket是否曾经连接过主机.如果socket能够连接到远程主机,则此主机返回为<code>true</code>,即使此时socket已被关闭.要判断socket当前是否打开,需要检查<code>isConnected()</code>返回<code>true</code>,并且<code>isClosed()</code>返回<code>false</code>.</li>
 <li><code>isBound()</code> 指的是本地端,它告知socket是否绑定于本地系统的向外端口.</li>
 <li><code>isClosed()</code> 在socket已经关闭时返回<code>true</code>,未关闭时返回<code>false</code>.但是如果socket从未连接过也降返回<code>false</code>.</li>
 </ul>
 <h2 id="ServerSocket-api"><a href="#ServerSocket-api" class="headerlink" title="ServerSocket api"></a>ServerSocket api</h2><p>socket实现进程通信(实质上提供了进程通信的端点). 每一个socket用一个半相关描述:(协议，本地地址，本地端口). 一个完整的socket有一个本地唯一的socket号，由操作系统分配。于一个网络连接来说，套接字是平等的，并没有差别，不因为在服务器端或在客户端而产生不同级别.</p>
-<p>适用于在绑定端口前设置服务器socket选项<br><figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="type">ServerSocket</span> socket = <span class="function"><span class="keyword">new</span> <span class="title">ServerSocket</span>();</span></div><div class="line"><span class="comment">// 设置socket选项</span></div><div class="line"><span class="title">SocketAddress</span> <span class="title">address</span> = <span class="title">new</span> <span class="title">InetSocketAddress</span>(port);</div><div class="line"><span class="title">socket</span>.<span class="title">bind</span>(address); <span class="comment">// 绑定端口</span></div></pre></td></tr></table></figure></p>
-<p>在当前主机的所有网络接口或者所有IP地址的指定port上进行入站监听,如果port为0系统会随意指定一个端口<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">new ServerSocket(<span class="name">port</span>)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
-<p>在当前主机的所有网络接口或者所以IP地址的该指定port上进行入站监听.如果port为0系统会随意指定一个端口,queueLenght设置入栈请求的队列长度(如果队列超过最大值,会使用系统最大值)</p>
-<p>第二个参数为backlog参数,accept()方法，该方法从队列中取出连接请求，使得队列能够及时的腾出空间，以容纳新的连接请求。 即ServerSocket构造函数中的backlog参数时，是可以serverSocket在不调用accept方法取出连接时，能接受的最大连接数<br><figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">return</span> <span class="function"><span class="keyword">new</span> <span class="title">ServerSocket</span>(port, queueLenght);</span></div></pre></td></tr></table></figure></p>
-<p>在当前主机的指定的IP地址的指定port上进行入站监听(适用于多IP地址系统上运行的服务器)如果port为0系统会随意指定一个端口queueLenght设置入栈请求的队列长度(如果队列超过最大值,会使用系统最大值)<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">new ServerSocket(<span class="name">port</span>, queueLenght, address)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
-<p>关闭ServerSocket ：释放本地主机的绑定端口,允许其他程序继续使用释放掉的端口。终端ServerSocket接受的目前处于打开状态的所以Socket 关闭Socket .尽管在程序结束时ServerSocket会自动关闭但是尽量还是在程序中保证,当ServerSocket结束时将其手动关闭<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">connect</span>.<span class="built_in">close</span>();</div></pre></td></tr></table></figure></p>
-<p>检查ServerSocket是否打开.当关闭后isClosed会返回true, isBound指的是是否曾经绑定过端口,但是并不指现在的状态<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">if</span>(!<span class="built_in">connect</span>.isClosed() &amp;&amp; <span class="built_in">connect</span>.isBound())</div><div class="line">	<span class="built_in">return</span> false;</div></pre></td></tr></table></figure></p>
-<p>该选项是在accept抛出java.ioInterruptedIOException前等待入栈连接的时间,以毫秒计<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">setSoTimeout</span><span class="params">(timeout)</span></span></div></pre></td></tr></table></figure></p>
-<p>指定如果仍有旧的数据在网络上传输,新的程序是否可以绑定到该端口<br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">connect<span class="selector-class">.setReuseAddress</span>(isSet);</div></pre></td></tr></table></figure></p>
-<p>这相当于调用accept()返回的socket的socket.setReceiveBufferSize(size);可以在绑定服务器socket之前或之后设置此选项 除非要设置大于64K的缓冲区大小,这时对于未绑定的ServerSocket必须在绑定他之前设置这个选项<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setRcvBuf</span><span class="params">(ServerSocket connect)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> size;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		size = connect.getReceiveBufferSize();</div><div class="line">		<span class="keyword">if</span>(size &lt; <span class="number">131072</span>)</div><div class="line">			connect.setReceiveBufferSize(<span class="number">131072</span>);</div><div class="line">		connect.bind(<span class="keyword">new</span> InetSocketAddress(<span class="number">8080</span>));</div><div class="line">	&#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Exception e) &#123;</div><div class="line">		e.printStackTrace();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>new ServerSocket(port); 在当前主机的所有网络接口或者所有IP地址的指定port上进行入站监听,如果port为0系统会随意指定一个端口</p>
+</li>
+<li><p>new ServerSocket(port, queueLenght) 在当前主机的所有网络接口或者所以IP地址的该指定port上进行入站监听.如果port为0系统会随意指定一个端口,queueLenght设置入栈请求的队列长度(如果队列超过最大值,会使用系统最大值). 第二个参数为backlog参数,accept()方法，该方法从队列中取出连接请求，使得队列能够及时的腾出空间，以容纳新的连接请求。 即ServerSocket构造函数中的backlog参数时，是可以serverSocket在不调用accept方法取出连接时，能接受的最大连接数</p>
+</li>
+<li><p>new ServerSocket(port, queueLenght, address); 在当前主机的指定的IP地址的指定port上进行入站监听(适用于多IP地址系统上运行的服务器)如果port为0系统会随意指定一个端口queueLenght设置入栈请求的队列长度(如果队列超过最大值,会使用系统最大值)</p>
+</li>
+<li><p>connect.close() 关闭ServerSocket ：释放本地主机的绑定端口,允许其他程序继续使用释放掉的端口。终端ServerSocket接受的目前处于打开状态的所以Socket 关闭Socket .尽管在程序结束时ServerSocket会自动关闭但是尽量还是在程序中保证,当ServerSocket结束时将其手动关闭</p>
+</li>
+<li><p><code>!connect.isClosed() &amp;&amp; connect.isBound()</code> 检查ServerSocket是否打开.当关闭后isClosed会返回true, isBound指的是是否曾经绑定过端口,但是并不指现在的状态</p>
+</li>
+<li><p>setRcvBuf 这相当于调用accept()返回的socket的socket.setReceiveBufferSize(size);可以在绑定服务器socket之前或之后设置此选项 除非要设置大于64K的缓冲区大小,这时对于未绑定的ServerSocket必须在绑定他之前设置这个选项</p>
+</li>
+</ul>
+<h2 id="TCP参数"><a href="#TCP参数" class="headerlink" title="TCP参数"></a>TCP参数</h2><ul>
+<li><code>setTcpNoDelay(boolean)</code>设置<code>TCP_NODELAY</code>为<code>true</code>,可确保包会尽快地发送,而无论包的大小.正常情况下,小的包(1byte)在发送前会组合为大点的包.在发送另一个包之前,本地主机要等待远程系统对前一个包的响应,这称为<code>Nagle</code>算法.<code>Nagle</code>算法的问题是,如果远程系统没有尽可能快地将回应发送回本地系统,那么依赖于小数据量信息稳定传输的应用程序会变得很慢.为true关闭socket缓冲,为false再次打开socket缓冲.</li>
+<li><code>setSoLinger(boolean, int)</code>该设置规定了当socket关闭时如何处理尚未发送的数据报.如果socket关闭(close方法)系统仍会将剩余的数据发送出去.如果延迟时间为0,那所有未发送的数据都会被丢弃.如果延迟时间为任意正数,close方法会被堵塞指定秒数,等待数据发送和接受回应,该段时间过去后socket被关闭,将会关闭输出输入流,既不会接收到数据也不会在发送数据.</li>
+<li><code>setOOBInline(boolean)</code> 用于发送紧急数据</li>
+<li><code>setSoTimeout(int)</code> 当socket尝试读取数据时,<code>read</code>方法会阻塞尽可能长的时间来得到足够的字节.该选项就是确保此次调用阻塞的时间不会大于某个固定的毫秒数,如果阻塞时间长于固定毫秒数就会抛出<code>InterruptedIoException</code>.尽管抛出了该异常但是socket仍然是连接的.此次read失败,但是仍然可以尝试再次读取该socket. 该选项是在accept抛出java.ioInterruptedIOException前等待入栈连接的时间,以毫秒计</li>
+<li><code>setSendBufferSize(int)</code> 设置socket网络输出的缓冲区字节数</li>
+<li><code>setReceiveBufferSize(int)</code> 设置socket网络输入的缓冲区的字节数.大多数TCP栈使用缓冲区提升网络性能,较大的缓冲区会提升快速连接(比如10M或更快)的网络性能,而较慢的拨号连接在较小的缓冲区下表现更加.一般来讲,传输大的连续的数据块(在FTP和HTTP很常见),这可以从大缓冲区收益;而大缓冲区对交互式会话如<code>telnet</code>和许多游戏则没有多大帮助.</li>
+<li><code>setKeepAlive(boolean)</code> 启用<code>SO_KEEPALIVE</code>客户端会偶尔(一般俩个小时)利用一个空闲连接发送一个数据包,确保服务器没有崩溃.如果服务器没有响应,客户端会在11分钟之内持续发送此包,直到接受到服务器的回馈或者到12分钟左右直接将客户端关闭.</li>
+<li><code>setReuseAddress(boolean)</code> 设置主机地址可重用. 指定如果仍有旧的数据在网络上传输,新的程序是否可以绑定到该端口</li>
+<li><code>getReuseAddress()</code> socket关闭时,可能不会立即释放本地地址,一般会等待一段时间,确保所有寻址到待端口在网络上传输的数据接受到.关闭后一般接收到的数据报不会再进行任何处理,这么做是为了当有新的进程关联到该端口的时候不会接受到莫名其妙的数据.要想使用这个设置必须将老的socket如下设置</li>
+</ul>
+<p><a href="http://www.open-open.com/lib/view/open1412994697952.html#articleHeader3" target="_blank" rel="external">几个重要的TCP/IP选项解析(Java Socket)</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -195,7 +202,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#socket-api"><span class="toc-number">1.</span> <span class="toc-text">socket api</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServerSocket-api"><span class="toc-number">2.</span> <span class="toc-text">ServerSocket api</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#socket-api"><span class="toc-number">1.</span> <span class="toc-text">socket api</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServerSocket-api"><span class="toc-number">2.</span> <span class="toc-text">ServerSocket api</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP参数"><span class="toc-number">3.</span> <span class="toc-text">TCP参数</span></a></li></ol>
  
   </div>
 
@@ -219,15 +226,15 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>32</sup></a></li>
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>35</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>35</sup></a></li>
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
 		  
 		
 		  

@@ -4,47 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Instrumentation Premain | ·</title>
+    <title>Instrumentation | ·</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="王玉">
     
 
     
-    <meta name="description" content="Premain使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至能够替换和修改某些类的定义。
-Instrumentation提供了这样的功能：
-
-获取某个对象的大小
-热加载class文件
-获取JVM信息
-
-
-要知道一个对象所使用的内存量,需要将所有实例变量使用的内存和对象本身的开销(一般是16字节)相加.这些">
+    <meta name="description" content="利用 java.lang.instrument 做动态 Instrumentation 是 Java SE 5 的新特性, 它把 Java 的 instrument 功能从本地代码中解放出来,使之可以用 Java 代码的方式解决问题.
+使用 Instrumentation,开发者可以构建一个独立于应用程序的代理程序(Agent),用来监测和协助运行在 JVM 上的程序,甚至能够替换和修改某些类的定">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Instrumentation Premain">
+<meta property="og:title" content="Instrumentation">
 <meta property="og:url" content="http://www.yu66.wang/2015/11/24/jvm/instrument/index.html">
 <meta property="og:site_name" content="·">
-<meta property="og:description" content="Premain使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至能够替换和修改某些类的定义。
-Instrumentation提供了这样的功能：
-
-获取某个对象的大小
-热加载class文件
-获取JVM信息
-
-
-要知道一个对象所使用的内存量,需要将所有实例变量使用的内存和对象本身的开销(一般是16字节)相加.这些">
-<meta property="og:updated_time" content="2016-11-08T04:30:26.000Z">
+<meta property="og:description" content="利用 java.lang.instrument 做动态 Instrumentation 是 Java SE 5 的新特性, 它把 Java 的 instrument 功能从本地代码中解放出来,使之可以用 Java 代码的方式解决问题.
+使用 Instrumentation,开发者可以构建一个独立于应用程序的代理程序(Agent),用来监测和协助运行在 JVM 上的程序,甚至能够替换和修改某些类的定">
+<meta property="og:updated_time" content="2016-11-17T13:30:19.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Instrumentation Premain">
-<meta name="twitter:description" content="Premain使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至能够替换和修改某些类的定义。
-Instrumentation提供了这样的功能：
-
-获取某个对象的大小
-热加载class文件
-获取JVM信息
-
-
-要知道一个对象所使用的内存量,需要将所有实例变量使用的内存和对象本身的开销(一般是16字节)相加.这些">
+<meta name="twitter:title" content="Instrumentation">
+<meta name="twitter:description" content="利用 java.lang.instrument 做动态 Instrumentation 是 Java SE 5 的新特性, 它把 Java 的 instrument 功能从本地代码中解放出来,使之可以用 Java 代码的方式解决问题.
+使用 Instrumentation,开发者可以构建一个独立于应用程序的代理程序(Agent),用来监测和协助运行在 JVM 上的程序,甚至能够替换和修改某些类的定">
 
     
     <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
@@ -95,14 +74,14 @@ Instrumentation提供了这样的功能：
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/24/jvm/instrument/" title="Instrumentation Premain" itemprop="url">Instrumentation Premain</a>
+      <a href="/2015/11/24/jvm/instrument/" title="Instrumentation" itemprop="url">Instrumentation</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2015-11-24T08:00:00.000Z" itemprop="datePublished"> Published 2015-11-24</time>
+    <time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-24</time>
     
   </p>
 </header>
@@ -111,11 +90,17 @@ Instrumentation提供了这样的功能：
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Premain"><span class="toc-number">1.</span> <span class="toc-text">Premain</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Premain-1"><span class="toc-number">1.1.</span> <span class="toc-text">Premain</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#获取对象大小"><span class="toc-number">1.1.1.</span> <span class="toc-text">获取对象大小</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#加载jar包"><span class="toc-number">1.1.2.</span> <span class="toc-text">加载jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#热加载"><span class="toc-number">1.1.3.</span> <span class="toc-text">热加载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Agentmain"><span class="toc-number">2.</span> <span class="toc-text">Agentmain</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Premain"><span class="toc-number">1.</span> <span class="toc-text">Premain</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#获取对象大小"><span class="toc-number">1.0.1.</span> <span class="toc-text">获取对象大小</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#加载jar包"><span class="toc-number">1.0.2.</span> <span class="toc-text">加载jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#热加载"><span class="toc-number">1.0.3.</span> <span class="toc-text">热加载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Agentmain"><span class="toc-number">2.</span> <span class="toc-text">Agentmain</span></a></li></ol>
 		
 		</div>
 		
-		<h2 id="Premain"><a href="#Premain" class="headerlink" title="Premain"></a>Premain</h2><p>使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至能够替换和修改某些类的定义。</p>
+		<p>利用 <code>java.lang.instrument</code> 做动态 Instrumentation 是 Java SE 5 的新特性, 它把 Java 的 instrument 功能从本地代码中解放出来,使之可以用 Java 代码的方式解决问题.</p>
+<p>使用 Instrumentation,开发者可以构建一个独立于应用程序的代理程序(Agent),用来监测和协助运行在 JVM 上的程序,甚至能够替换和修改某些类的定义.有了这样的功能,开发者就可以实现更为灵活的运行时虚拟机监控和 Java 类操作了,这样的特性实际上提供了一种虚拟机级别支持的 AOP 实现方式,使得开发者无需对 JDK 做任何升级和改动,就可以实现某些 AOP 的功能了.</p>
+<p>在 Java SE 6 里面,instrumentation 包被赋予了更强大的功能：启动后的 instrument、本地代码(native code)instrument,以及动态改变 classpath 等等.这些改变,意味着 Java 具有了更强的动态控制、解释能力,它使得 Java 语言变得更加灵活多变.</p>
+<p>在 Java SE6 里面,最大的改变使运行时的 Instrumentation 成为可能.在 Java SE 5 中,Instrument 要求在运行前利用命令行参数或者系统参数来设置代理类,在实际的运行之中,虚拟机在初始化之时(在绝大多数的 Java 类库被载入之前),instrumentation 的设置已经启动,并在虚拟机中设置了回调函数,检测特定类的加载情况,并完成实际工作.但是在实际的很多的情况下,我们没有办法在虚拟机启动之时就为其设定代理,这样实际上限制了 instrument 的应用.而 Java SE 6 的新特性改变了这种情况,通过 Java Tool API 中的 attach 方式,我们可以很方便地在运行过程中动态地设置加载代理类,以达到 instrumentation 的目的.</p>
+<p>另外,对 native 的 Instrumentation 也是 Java SE 6 的一个崭新的功能,这使以前无法完成的功能 —— 对 native 接口的 instrumentation 可以在 Java SE 6 中,通过一个或者一系列的 prefix 添加而得以完成.<br>最后,Java SE 6 里的 Instrumentation 也增加了动态添加 class path 的功能.所有这些新的功能,都使得 instrument 包的功能更加丰富,从而使 Java 语言本身更加强大.</p>
+<p><code>java.lang.instrument</code>包的具体实现,依赖于 JVMTI. JVMTI(Java Virtual Machine Tool Interface)是一套由 Java 虚拟机提供的,为 JVM 相关的工具提供的本地编程接口集合. JVMTI 是从 Java SE 5 开始引入,整合和取代了以前使用的 Java Virtual Machine Profiler Interface (JVMPI) 和 the Java Virtual Machine Debug Interface (JVMDI),而在 Java SE 6 中,JVMPI 和 JVMDI 已经消失了.JVMTI 提供了一套”代理”程序机制,可以支持第三方工具程序以代理的方式连接和访问 JVM,并利用 JVMTI 提供的丰富的编程接口,完成很多跟 JVM 相关的功能.事实上,java.lang.instrument 包的实现,也就是基于这种机制的：在 Instrumentation 的实现当中,存在一个 JVMTI 的代理程序,通过调用 JVMTI 当中 Java 类相关的函数来完成 Java 类的动态操作.除开 Instrumentation 功能外,JVMTI 还在虚拟机内存管理,线程控制,方法和变量操作等等方面提供了大量有价值的函数.关于 JVMTI 的详细信息,请参考 Java SE 6 文档(请参见 参考资源)当中的介绍.<br>Instrumentation 的最大作用,就是类定义动态改变和操作.在 Java SE 5 及其后续版本当中,开发者可以在一个普通 Java 程序(带有 main 函数的 Java 类)运行时,通过 – javaagent参数指定一个特定的 jar 文件(包含 Instrumentation 代理)来启动 Instrumentation 的代理程序.</p>
+<p>使用 Instrumentation,开发者可以构建一个独立于应用程序的代理程序(Agent),用来监测和协助运行在 JVM 上的程序,甚至能够替换和修改某些类的定义.</p>
 <p>Instrumentation提供了这样的功能：</p>
 <ul>
 <li>获取某个对象的大小</li>
@@ -125,7 +110,7 @@ Instrumentation提供了这样的功能：
 <blockquote>
 <p>要知道一个对象所使用的内存量,需要将所有实例变量使用的内存和对象本身的开销(一般是16字节)相加.这些开销包括一个指向对象的类的引用,垃圾收集信息和同步信息.另外一般内存的使用会被填充为8字节的倍数.</p>
 </blockquote>
-<h3 id="Premain-1"><a href="#Premain-1" class="headerlink" title="Premain"></a>Premain</h3><p>premain函数是JavaSE5中实现instrument的方式.</p>
+<h2 id="Premain"><a href="#Premain" class="headerlink" title="Premain"></a>Premain</h2><p>premain函数是JavaSE5中实现instrument的方式.</p>
 <p>使用premain我们要自定义MANIFEST.MF文件, 定义Premain-Class<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Manifest-Version: <span class="number">1.0</span></div><div class="line">Premain-Class: wang.yu66.instrument.core.Premain</div></pre></td></tr></table></figure></p>
 <p>然后我们在maven文件中输出该文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-jar-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">archive</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">manifestFile</span>&gt;</span></div><div class="line">                        src/main/resources/META-INF/MANIFEST.MF</div><div class="line">                    <span class="tag">&lt;/<span class="name">manifestFile</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">addClasspath</span>&gt;</span>true<span class="tag">&lt;/<span class="name">addClasspath</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">classpathPrefix</span>&gt;</span>lib/<span class="tag">&lt;/<span class="name">classpathPrefix</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></div><div class="line">                    <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <h4 id="获取对象大小"><a href="#获取对象大小" class="headerlink" title="获取对象大小"></a>获取对象大小</h4><p>首先我们要写一个代理文件出来(该文件放在<code>core-1.0-SNAPSHOT.jar</code>中)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Premain</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Instrumentation instrumentation;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">premain</span><span class="params">(String agentArgs, Instrumentation inst)</span> </span>&#123;</div><div class="line">		instrumentation = inst;</div><div class="line">	&#125;;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Instrumentation <span class="title">getInstrumentation</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> instrumentation;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -163,7 +148,7 @@ Instrumentation提供了这样的功能：
 <p>下面我们测试一下,如果增加了属性和方法成员, 看看有什么变化(下面只列出了TestReload.java的新增以及修改部分)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestReload</span> </span>&#123;</div><div class="line"></div><div class="line">	...</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printNewTime</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(id);</div><div class="line">        printName();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> id = <span class="number">2</span>;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> String name = <span class="string">"abc"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printName</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(name);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>当我们再次重新加载的时候就会抛出异常<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">D:\ming\test\target&gt;java -javaagent:D:\premain\target\agent-1.0-SNAPSHOT.jar -cp .;./* TestReload</div><div class="line">1</div><div class="line">1</div><div class="line">2</div><div class="line">2</div><div class="line">2</div><div class="line">2</div><div class="line">java.lang.UnsupportedOperationException: class redefinition failed: attempted to change the schema (add/remove fields)</div><div class="line">	at sun.instrument.InstrumentationImpl.redefineClasses0(Native Method)</div><div class="line">	at sun.instrument.InstrumentationImpl.redefineClasses(Unknown Source)</div><div class="line">	at Premain.redefineClassesFromBytes(Premain.java:44)</div><div class="line">	at Premain.loadFromDirection(Premain.java:24)</div><div class="line">	at TestReload.fromDirection(TestReload.java:19)</div><div class="line">	at TestReload.main(TestReload.java:6)</div><div class="line">2</div><div class="line">java.lang.UnsupportedOperationException: class redefinition failed: attempted to change the schema (add/remove fields)</div><div class="line">	at sun.instrument.InstrumentationImpl.redefineClasses0(Native Method)</div><div class="line">	at sun.instrument.InstrumentationImpl.redefineClasses(Unknown Source)</div><div class="line">	at Premain.redefineClassesFromBytes(Premain.java:44)</div><div class="line">	at Premain.loadFromDirection(Premain.java:24)</div><div class="line">	at TestReload.fromDirection(TestReload.java:19)</div><div class="line">	at TestReload.main(TestReload.java:6)</div><div class="line">2</div></pre></td></tr></table></figure></p>
 <p>完整项目<a href="https://github.com/yu66/JVM-reload" target="_blank" rel="external">JVM-reload</a></p>
-<h2 id="Agentmain"><a href="#Agentmain" class="headerlink" title="Agentmain"></a>Agentmain</h2><p>在 Java SE 5 中premain 所作的 Instrumentation 也仅限与 main 函数执行前，这样的方式存在一定的局限性。Java SE 6 针对这种状况做出了改进，开发者可以在 main 函数开始执行以后，再启动自己的 Instrumentation 程序。在 Java SE 6 的 Instrumentation 当中，有一个跟 premain“并驾齐驱”的“agentmain”方法，可以在 main 函数开始运行之后再运行。</p>
+<h2 id="Agentmain"><a href="#Agentmain" class="headerlink" title="Agentmain"></a>Agentmain</h2><p>在 Java SE 5 中premain 所作的 Instrumentation 也仅限与 main 函数执行前,这样的方式存在一定的局限性.Java SE 6 针对这种状况做出了改进,开发者可以在 main 函数开始执行以后,再启动自己的 Instrumentation 程序.在 Java SE 6 的 Instrumentation 当中,有一个跟 premain“并驾齐驱”的“agentmain”方法,可以在 main 函数开始运行之后再运行.</p>
 <p>首先我们还是需要修改MANIFEST.MF文件, 在其中添加<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Manifest-Version: <span class="number">1.0</span></div><div class="line">Agent-Class: AgentMain</div><div class="line">Can-Redefine-Classes: <span class="keyword">true</span></div></pre></td></tr></table></figure></p>
 <p>然后我们写一个代理类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> javax.xml.transform.Transformer;</div><div class="line"><span class="keyword">import</span> java.lang.instrument.Instrumentation;</div><div class="line"><span class="keyword">import</span> java.lang.instrument.UnmodifiableClassException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AgentMain</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">agentmain</span><span class="params">(String agentArgs, Instrumentation inst)</span></span></div><div class="line">            <span class="keyword">throws</span> ClassNotFoundException, UnmodifiableClassException,</div><div class="line">            InterruptedException &#123;</div><div class="line">        <span class="keyword">for</span> (Class clazz : inst.getAllLoadedClasses()) &#123;</div><div class="line">            System.out.println(<span class="string">"Loaded Class : "</span> + clazz.getName());</div><div class="line">        &#125;</div><div class="line">        Printer.printTime();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Printer</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printTime</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"now is "</span> + <span class="keyword">new</span> Date());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>然后写一个启动类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.sun.tools.attach.VirtualMachine;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.management.ManagementFactory;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AgentLoader</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        String name = ManagementFactory.getRuntimeMXBean().getName();</div><div class="line">        String pid = name.split(<span class="string">"@"</span>)[<span class="number">0</span>];</div><div class="line">        System.out.println(pid);</div><div class="line">        VirtualMachine vm = VirtualMachine.attach(pid);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line"><span class="comment">//            vm.loadAgent("D:\\ming\\test\\target\\test-1.0-SNAPSHOT.jar");</span></div><div class="line">            vm.loadAgentPath(<span class="string">"D:\\ming\\test\\target\\test-1.0-SNAPSHOT.jar"</span>);</div><div class="line">            System.out.println(<span class="string">"Load Agent Over!!!"</span>);</div><div class="line">            TimeUnit.SECONDS.sleep(<span class="number">10</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -185,7 +170,7 @@ Instrumentation提供了这样的功能：
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://www.yu66.wang/2015/11/24/jvm/instrument/" data-title="Instrumentation Premain | ·" data-tsina="3253370782" class="share clearfix">
+	  <div data-url="http://www.yu66.wang/2015/11/24/jvm/instrument/" data-title="Instrumentation | ·" data-tsina="3253370782" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -219,7 +204,7 @@ Instrumentation提供了这样的功能：
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/11/24/jvm/instrument/" data-title="Instrumentation Premain" data-url="http://www.yu66.wang/2015/11/24/jvm/instrument/"></div>
+	<div class="ds-thread" data-thread-key="2015/11/24/jvm/instrument/" data-title="Instrumentation" data-url="http://www.yu66.wang/2015/11/24/jvm/instrument/"></div>
 </section>
 
 
@@ -229,7 +214,7 @@ Instrumentation提供了这样的功能：
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Premain"><span class="toc-number">1.</span> <span class="toc-text">Premain</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Premain-1"><span class="toc-number">1.1.</span> <span class="toc-text">Premain</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#获取对象大小"><span class="toc-number">1.1.1.</span> <span class="toc-text">获取对象大小</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#加载jar包"><span class="toc-number">1.1.2.</span> <span class="toc-text">加载jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#热加载"><span class="toc-number">1.1.3.</span> <span class="toc-text">热加载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Agentmain"><span class="toc-number">2.</span> <span class="toc-text">Agentmain</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Premain"><span class="toc-number">1.</span> <span class="toc-text">Premain</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#获取对象大小"><span class="toc-number">1.0.1.</span> <span class="toc-text">获取对象大小</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#加载jar包"><span class="toc-number">1.0.2.</span> <span class="toc-text">加载jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#热加载"><span class="toc-number">1.0.3.</span> <span class="toc-text">热加载</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Agentmain"><span class="toc-number">2.</span> <span class="toc-text">Agentmain</span></a></li></ol>
  
   </div>
 
@@ -253,15 +238,15 @@ Instrumentation提供了这样的功能：
 		<ul>
 		
 		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>32</sup></a></li>
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>35</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>35</sup></a></li>
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
 		  
 		
 		  

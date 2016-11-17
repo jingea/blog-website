@@ -69,93 +69,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/11/04/jvm/safepoint/" title="safepoint" itemprop="url">safepoint</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-11-04T07:00:00.000Z" itemprop="datePublished"> Published 2016-11-04</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>在Hostspot JVM中 <code>STW暂停机制</code> 称为<code>safepoint</code>. 在safepoint过程当中,所有的java线程都会暂停运行，但是如果native线程准备通过jni访问java对象或者调用java方法等，这些线程也会被暂停掉．</p>
-<p>那safepoint是如何工作的呢? 在Java Application当中, 每个线程都会检查Safepoint 状态, 如果safepoint是需要的话, 线程就会被打断执行.</p>
-<p>JVM有俩种运行方式, 解释形和编译形。</p>
-<ul>
-<li>解释形:  jvm有俩个<code>byte code dispatch tables</code>, 如果需要safepoint的话, JVM会切换BCDT 开启safepoint.</li>
-<li>编译形: 通过JIT编译代码, JIT一般会在方法返回或者循环结束的位置插入safepoint代码.<br>safepoint 的状态检查实现机制非常灵活. 像一般的内存变量检查, 需要消耗非常昂贵的内存屏障(memory barriers).</li>
-</ul>
-<p>在讲Safepoint之前, 先看一下<br>在Java中判断一个对象是否存活采用的是reachability analysis(即root reference)。如果一个对象的引用可以在mutator的栈slot中被直接找到, 那么就说这个对象是reachable的. 当然如果这个对象内部还还引用有其他对象, 那么其他对象也是reachable的.</p>
-<p>在Java GC时需要获得整个JVM环境中的一致性的RootReference信息. 但是如果想要获得这个信息的话, 最简单的一种方式是, 在Root Reference过程中, 暂停整个JVM中Java Thread(以及涉及到Java Thread相关的VMThread) ,也就是发生了Stop The World.  但是STW之后, JVM也不一定能够枚举到整个JVM中的所有的root reference, 除非JVM保存了所有的rootRerence信息. 也就是说JVM能够知道都有JVM栈中的哪些slot和register含有对象的引用信息. 如果JVM能够知道这些信息的话，那么 JVM就能进行一次完整的root enumeration，否则JVM root reference出来的结果就是不完整的。</p>
-<p>为了能够支持完整的root reference enumeration, JIT 就需要做一些额外的工作了, 因为只有JIT清楚的知道JVM的栈振信息和register内容. 当JIT在编译方法的时候, 它就可以保存每个指令的root reference信息，以便当执行该方法的时候，产生了暂停。</p>
-<p>但是记住每个指令的信息所带来的代价实在是太大了。这会额外需要一大块内存进行信息存储, 而且在实际过程中这也是没有必要的，因为只有一小部分的指令才有机会宰执行过程中被暂停。JIT只需要知道这一小部分指令位置的信息就可以了， 这些位置被称为safe-point。safe-point意味着在root set enumeration过程中，这是一个安全的停止的位置。</p>
-<p>然而有个问题是，我们如何能够确保mutator能够在safe-point上暂停呢》？<br>有俩种暂停mutator的方式：抢先式(preemptively )和主动式(voluntarily)</p>
-<p>对于抢先式, 无论GC是否要开始收集了,它都会暂停mutator, 如果它发现mutator处于一个unsafe point的位置, 它会恢复mutator运行. 这种机制实现在了 ORP ，Harmony 的前身，但是现在绝大多数虚拟机都不会采用这种架构。</p>
-<p>在 Harmony中采用的架构是主动式的，当GC想要触发一个收集垃圾动作时，它会设置一个标记。mutator会在safe-point上检查这个标记，一旦发现这个标记被设置了，就会中断当前执行. 绝大多数都是由JIT来负责插入safe-point位置的。</p>
-<pre><code>1. 一个线程要么在Safepoint中，要么就是出于非Safepoint中。 当线程在Safepoint中时，它的Java machine状态可以被很好的描述出来，而且也可以很安全的被其他线程
-</code></pre><p>文章参考</p>
-<ul>
-<li><a href="http://blog.ragozin.info/2012/10/safepoints-in-hotspot-jvm.html" target="_blank" rel="external">Safepoints in HotSpot JVM</a></li>
-<li><a href="http://blog.csdn.net/iter_zc/article/details/41847887" target="_blank" rel="external">聊聊JVM（六）理解JVM的safepoint</a></li>
-<li><a href="http://calvin1978.blogcn.com/articles/safepoint.html" target="_blank" rel="external">JVM的Stop The World，安全点，黑暗的地底世界</a></li>
-<li><a href="https://plumbr.eu/blog/performance-blog/logging-stop-the-world-pauses-in-jvm" target="_blank" rel="external">Logging stop-the-world pauses in JVM</a></li>
-<li><a href="http://xiao-feng.blogspot.tw/2008/01/gc-safe-point-and-safe-region.html" target="_blank" rel="external">GC safe-point (or safepoint) and safe-region</a></li>
-<li><a href="http://chriskirk.blogspot.jp/2013/09/what-is-java-safepoint.html" target="_blank" rel="external"></a></li>
-<li><a href="http://blog.ragozin.info/2012/10/safepoints-in-hotspot-jvm.html" target="_blank" rel="external"></a></li>
-<li><a href="http://blog.csdn.net/iter_zc/article/details/41847887" target="_blank" rel="external"></a></li>
-<li><a href="http://www.zhihu.com/question/29268019" target="_blank" rel="external"></a></li>
-</ul>
-<p><a href="https://groups.google.com/forum/#!msg/mechanical-sympathy/vO7oq9aiG4Y/NrDeAQ1xzcYJ" target="_blank" rel="external">https://groups.google.com/forum/#!msg/mechanical-sympathy/vO7oq9aiG4Y/NrDeAQ1xzcYJ</a></p>
-<p>-XX:+PrintGCApplicationStoppedTime<br>2016-08-09T20:24:00.003+0800: 6632.406: Total time for which application threads were stopped: 0.0002730 seconds, Stopping threads took: 0.0000517 seconds<br>![]{<a href="http://hg.openjdk.java.net/jdk8u/jdk8u/hotspot/file/fc3cd1db10e2/src/share/vm/runtime/vm_operations.hpp#l39}" target="_blank" rel="external">http://hg.openjdk.java.net/jdk8u/jdk8u/hotspot/file/fc3cd1db10e2/src/share/vm/runtime/vm_operations.hpp#l39}</a><br>这个时间并不指的的是GC的时间, 而是花在GC safe-point里消耗的时间.</p>
-<p>-XX:+PrintGCApplicationConcurrentTime<br>2016-08-09T20:24:00.003+0800: 6632.406: Application time: 0.0001614 seconds<br>程序未间断执行的时间</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/11/04/jvm/safepoint/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/11/04/jvm/safepoint/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2016/11/03/jvm/Spring-loaded/" title="Spring-loaded" itemprop="url">Spring-loaded</a>
   </h1>
   <p class="article-author">By
@@ -163,7 +76,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-11-03T07:00:00.000Z" itemprop="datePublished"> Published 2016-11-03</time>
+    <time datetime="2016-11-02T16:00:00.000Z" itemprop="datePublished"> Published 2016-11-03</time>
     
   </p>
 </header>
@@ -228,7 +141,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-11-02T07:00:00.000Z" itemprop="datePublished"> Published 2016-11-02</time>
+    <time datetime="2016-11-01T16:00:00.000Z" itemprop="datePublished"> Published 2016-11-02</time>
     
   </p>
 </header>
@@ -569,69 +482,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/10/11/JavaSE/大小端/" title="大小端" itemprop="url">大小端</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-10-11T07:00:00.000Z" itemprop="datePublished"> Published 2016-10-11</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <ul>
-<li>大端模式 ：指数据的低位保存在内存的高地址中，而数据的高位，保存在内存的低地址中；</li>
-<li>小端模式 ：指数据的低位保存在内存的低地址中，而数据的高位保存在内存的高地址中。</li>
-</ul>
-<p>在计算机存储中是以字节(Byte, 8个bit)为单位进行存储的. 但是除了byte还有16位(2byte)的char, short, 32位(4byte)的int, 64位(8byte)的long等. 大小端就是为了解决在N个byte组成的新的存储单元中, byte的排列顺序.</p>
-<p>例如Short <code>0x1126</code>(10进制为4390), 大端为 <code>0x2611</code>, 小端为<code>0x1126</code> , 这二者表示的是同一个10进制数4390.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/10/11/JavaSE/大小端/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/10/11/JavaSE/大小端/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2016/10/11/JavaLibrary/Jackson/" title="Jackson" itemprop="url">Jackson</a>
   </h1>
   <p class="article-author">By
@@ -639,7 +489,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-10-11T07:00:00.000Z" itemprop="datePublished"> Published 2016-10-11</time>
+    <time datetime="2016-10-10T16:00:00.000Z" itemprop="datePublished"> Published 2016-10-11</time>
     
   </p>
 </header>
@@ -999,7 +849,7 @@
 		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
 		
   <p class="article-time">
-    <time datetime="2016-09-08T07:00:00.000Z" itemprop="datePublished"> Published 2016-09-08</time>
+    <time datetime="2016-09-07T16:00:00.000Z" itemprop="datePublished"> Published 2016-09-08</time>
     
   </p>
 </header>
@@ -1210,85 +1060,6 @@
 	
 	  	<span></span>
 		<a href="/2016/08/26/JavaSE/Java ClassPath 的秘密/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/08/26/JavaSE/Java ClassPath 的秘密/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/08/25/jvm/从top出发以pmap角度看JVM/" title="从top出发以pmap角度看JVM" itemprop="url">从top出发以pmap角度看JVM</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-08-25T07:00:00.000Z" itemprop="datePublished"> Published 2016-08-25</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>首先我写了一个简单的测试程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		JSONObject json = <span class="keyword">new</span> JSONObject();</div><div class="line">		TimeUnit.HOURS.sleep(<span class="number">1</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后在centos编译它<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">javac -cp .:./* Test.java</div></pre></td></tr></table></figure></p>
-<p>然后我运行俩次这个Java程序<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@c2xceshi wangming]<span class="comment"># java -cp .:./* Test &amp;</span></div><div class="line">[1] 7920</div><div class="line">[root@c2xceshi wangming]<span class="comment"># java -cp .:./* Test &amp;</span></div><div class="line">[2] 7935</div></pre></td></tr></table></figure></p>
-<p>然后执行一下top命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@c2xceshi wangming]<span class="comment"># top -p 7920,7935 </span></div><div class="line">top - 20:11:17 up 41 days, 22:18,  4 users,  load average: 0.01, 0.01, 0.01</div><div class="line">Tasks:   2 total,   0 running,   2 sleeping,   0 stopped,   0 zombie</div><div class="line">Cpu(s): 10.8%us,  3.7%sy,  0.0%ni, 83.7%id,  0.8%wa,  0.0%hi,  1.1%si,  0.0%st</div><div class="line">Mem:  24604788k total,  9408816k used, 15195972k free,   198684k buffers</div><div class="line">Swap: 12369912k total,  3386316k used,  8983596k free,  1593972k cached</div><div class="line"></div><div class="line">  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                                                                                                                                                         </div><div class="line"> 7920 root      20   0 8565m  27m  10m S  0.0  0.1   0:00.13 java                                                                                                                                                                            </div><div class="line"> 7935 root      20   0 8565m  27m  10m S  0.0  0.1   0:00.12 java</div></pre></td></tr></table></figure></p>
-<p>好执行到这呢, 我们就看一下<code>pmap</code>执行的结果, <code>pmap 7920</code></p>
-<blockquote>
-<p>pmap用于查看进程的内存映像信息.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line">7920:   java -cp .:./* Test</div><div class="line">0000000000400000      4K r-x--  /home/jdk1.8/bin/java</div><div class="line">0000000000600000      4K rw---  /home/jdk1.8/bin/java</div><div class="line">00000000023da000    132K rw---    [ anon ]</div><div class="line">0000000648800000 257024K rw---    [ anon ]</div><div class="line">0000000658300000 3844608K -----    [ anon ]</div><div class="line">0000000742d80000 128000K rw---    [ anon ]</div><div class="line">000000074aa80000 1922560K -----    [ anon ]</div><div class="line">00000007c0000000    512K rw---    [ anon ]</div><div class="line">00000007c0080000 1048064K -----    [ anon ]</div><div class="line">00000038b1a00000    128K r-x--  /lib64/ld-2.12.so</div><div class="line">00000038b1c1f000      4K r----  /lib64/ld-2.12.so</div><div class="line">00000038b1c20000      4K rw---  /lib64/ld-2.12.so</div><div class="line">00000038b1c21000      4K rw---    [ anon ]</div><div class="line">00000038b1e00000   1576K r-x--  /lib64/libc-2.12.so</div><div class="line">00000038b1f8a000   2048K -----  /lib64/libc-2.12.so</div><div class="line">00000038b218a000     16K r----  /lib64/libc-2.12.so</div><div class="line">00000038b218e000      4K rw---  /lib64/libc-2.12.so</div><div class="line">00000038b218f000     20K rw---    [ anon ]</div><div class="line">00000038b2200000      8K r-x--  /lib64/libdl-2.12.so</div><div class="line">00000038b2202000   2048K -----  /lib64/libdl-2.12.so</div><div class="line">00000038b2402000      4K r----  /lib64/libdl-2.12.so</div><div class="line">00000038b2403000      4K rw---  /lib64/libdl-2.12.so</div><div class="line">00000038b2600000     92K r-x--  /lib64/libpthread-2.12.so</div><div class="line">00000038b2617000   2048K -----  /lib64/libpthread-2.12.so</div><div class="line">00000038b2817000      4K r----  /lib64/libpthread-2.12.so</div><div class="line">00000038b2818000      4K rw---  /lib64/libpthread-2.12.so</div><div class="line">00000038b2819000     16K rw---    [ anon ]</div><div class="line">00000038b2a00000     28K r-x--  /lib64/librt-2.12.so</div><div class="line">00000038b2a07000   2044K -----  /lib64/librt-2.12.so</div><div class="line">00000038b2c06000      4K r----  /lib64/librt-2.12.so</div><div class="line">00000038b2c07000      4K rw---  /lib64/librt-2.12.so</div><div class="line">00000038b2e00000    524K r-x--  /lib64/libm-2.12.so</div><div class="line">00000038b2e83000   2044K -----  /lib64/libm-2.12.so</div><div class="line">00000038b3082000      4K r----  /lib64/libm-2.12.so</div><div class="line">00000038b3083000      4K rw---  /lib64/libm-2.12.so</div><div class="line">00007f2290000000    132K rw---    [ anon ]</div><div class="line">00007f2290021000  65404K -----    [ anon ]</div><div class="line">...</div><div class="line">00007f22a004e000  65224K -----    [ anon ]</div><div class="line">00007f22a616f000  96836K r----  /usr/lib/locale/locale-archive</div><div class="line">00007f22ac000000    132K rw---    [ anon ]</div><div class="line">...</div><div class="line">00007f22e02b5000     12K -----    [ anon ]</div><div class="line">00007f22e04b7000      4K -----    [ anon ]</div><div class="line">00007f22e04b8000  17420K rw---    [ anon ]</div><div class="line">00007f22e15bb000   1888K r-<span class="_">-s</span>-  /home/jdk1.8/jre/lib/rt.jar</div><div class="line">00007f22e1793000   5348K rw---    [ anon ]</div><div class="line">00007f22e1ccc000   3840K -----    [ anon ]</div><div class="line">...</div><div class="line">00007f22e479c000   2496K rwx--    [ anon ]</div><div class="line">00007f22e4a0c000 243264K -----    [ anon ]</div><div class="line">00007f22f379c000    104K r-x--  /home/jdk1.8/jre/lib/amd64/libzip.so</div><div class="line">00007f22f37b6000   2048K -----  /home/jdk1.8/jre/lib/amd64/libzip.so</div><div class="line">00007f22f39b6000      4K rw---  /home/jdk1.8/jre/lib/amd64/libzip.so</div><div class="line">00007f22f39b7000     48K r-x--  /lib64/libnss_files-2.12.so</div><div class="line">00007f22f39c3000   2048K -----  /lib64/libnss_files-2.12.so</div><div class="line">00007f22f3bc3000      4K r----  /lib64/libnss_files-2.12.so</div><div class="line">00007f22f3bc4000      4K rw---  /lib64/libnss_files-2.12.so</div><div class="line">00007f22f3bc5000    168K r-x--  /home/jdk1.8/jre/lib/amd64/libjava.so</div><div class="line">00007f22f3bef000   2048K -----  /home/jdk1.8/jre/lib/amd64/libjava.so</div><div class="line">00007f22f3def000      8K rw---  /home/jdk1.8/jre/lib/amd64/libjava.so</div><div class="line">00007f22f3df1000     52K r-x--  /home/jdk1.8/jre/lib/amd64/libverify.so</div><div class="line">00007f22f3dfe000   2048K -----  /home/jdk1.8/jre/lib/amd64/libverify.so</div><div class="line">00007f22f3ffe000      8K rw---  /home/jdk1.8/jre/lib/amd64/libverify.so</div><div class="line">00007f22f4000000   1136K rw---    [ anon ]</div><div class="line">00007f22f411c000  64400K -----    [ anon ]</div><div class="line">00007f22f804a000    472K rw---    [ anon ]</div><div class="line">00007f22f80c0000     12K -----    [ anon ]</div><div class="line">00007f22f80c3000   1016K rw---    [ anon ]</div><div class="line">00007f22f81c1000  13048K r-x--  /home/jdk1.8/jre/lib/amd64/server/libjvm.so</div><div class="line">00007f22f8e7f000   2044K -----  /home/jdk1.8/jre/lib/amd64/server/libjvm.so</div><div class="line">00007f22f907e000    864K rw---  /home/jdk1.8/jre/lib/amd64/server/libjvm.so</div><div class="line">00007f22f9156000    288K rw---    [ anon ]</div><div class="line">00007f22f919e000     84K r-x--  /home/jdk1.8/lib/amd64/jli/libjli.so</div><div class="line">00007f22f91b3000   2048K -----  /home/jdk1.8/lib/amd64/jli/libjli.so</div><div class="line">00007f22f93b3000      4K rw---  /home/jdk1.8/lib/amd64/jli/libjli.so</div><div class="line">00007f22f93b4000      4K rw---    [ anon ]</div><div class="line">00007f22f93b6000     20K r-<span class="_">-s</span>-  /home/wangming/fastjson-1.2.11.jar</div><div class="line">00007f22f93bb000     32K rw<span class="_">-s</span>-  /tmp/hsperfdata_root/7920</div><div class="line">00007f22f93c3000      4K rw---    [ anon ]</div><div class="line">00007f22f93c4000      4K r----    [ anon ]</div><div class="line">00007f22f93c5000      4K rw---    [ anon ]</div><div class="line">00007fff87f51000     84K rw---    [ stack ]</div><div class="line">00007fff87fff000      4K r-x--    [ anon ]</div><div class="line">ffffffffff600000      4K r-x--    [ anon ]</div><div class="line"> total          8771308K</div></pre></td></tr></table></figure></p>
-</blockquote>
-<p>为了简便可读性性, 我将中间的那部分用<code>...</code>代替了.</p>
-<p>然后就来分析一下上面的内容<br><code>0000000000400000      4K r-x--  /home/jdk1.8/bin/java</code> 每一行都分为四个部分</p>
-<ul>
-<li>0000000000400000    虚拟内存地址</li>
-<li>4K                    大小</li>
-<li>r-x–                    权限    </li>
-<li>/home/jdk1.8/bin/java        源码地址()</li>
-</ul>
-<p>然后我们再一行一行来看</p>
-<p>第一行<code>0000000000400000      4K r-x--  /home/jdk1.8/bin/java</code>, 这个是当我们运行Java程序(执行java命令时生成的). 它所做的就是将JVM代码的共享库加载进内存.</p>
-<p>接下来我们就看到了好几行映射地址为<code>anon</code>的, 这些事被Java堆和内部数据所占用的. 我测试使用的是Hotspot虚拟机, 它会将heap切割成好几部分, 每个部分都会有它自己的内存块. 需要注意的是JVM会根据<code>Xmx</code>的值来分配虚拟内存, 这样子JVM就会有一块连续的内存空间了. </p>
-<p>我使用Beyond Compare 对比了一下7920和7935这俩个进程pmap出来的内容, 发现<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">0000000000400000      4K r-x--  /home/jdk1.8/bin/java</div><div class="line">0000000000600000      4K rw---  /home/jdk1.8/bin/java</div><div class="line">00000000023da000    132K rw---    [ anon ]</div><div class="line">0000000648800000 257024K rw---    [ anon ]</div><div class="line">0000000658300000 3844608K -----    [ anon ]</div><div class="line">0000000742d80000 128000K rw---    [ anon ]</div><div class="line">000000074aa80000 1922560K -----    [ anon ]</div><div class="line">00000007c0000000    512K rw---    [ anon ]</div><div class="line">00000007c0080000 1048064K -----    [ anon ]</div><div class="line">00000038b1a00000    128K r-x--  /lib64/ld-2.12.so</div><div class="line">00000038b1c1f000      4K r----  /lib64/ld-2.12.so</div><div class="line">00000038b1c20000      4K rw---  /lib64/ld-2.12.so</div><div class="line">00000038b1c21000      4K rw---    [ anon ]</div><div class="line">00000038b1e00000   1576K r-x--  /lib64/libc-2.12.so</div><div class="line">00000038b1f8a000   2048K -----  /lib64/libc-2.12.so</div><div class="line">00000038b218a000     16K r----  /lib64/libc-2.12.so</div><div class="line">00000038b218e000      4K rw---  /lib64/libc-2.12.so</div><div class="line">00000038b218f000     20K rw---    [ anon ]</div><div class="line">00000038b2200000      8K r-x--  /lib64/libdl-2.12.so</div><div class="line">00000038b2202000   2048K -----  /lib64/libdl-2.12.so</div><div class="line">00000038b2402000      4K r----  /lib64/libdl-2.12.so</div><div class="line">00000038b2403000      4K rw---  /lib64/libdl-2.12.so</div><div class="line">00000038b2600000     92K r-x--  /lib64/libpthread-2.12.so</div><div class="line">00000038b2617000   2048K -----  /lib64/libpthread-2.12.so</div><div class="line">00000038b2817000      4K r----  /lib64/libpthread-2.12.so</div><div class="line">00000038b2818000      4K rw---  /lib64/libpthread-2.12.so</div><div class="line">00000038b2819000     16K rw---    [ anon ]</div><div class="line">00000038b2a00000     28K r-x--  /lib64/librt-2.12.so</div><div class="line">00000038b2a07000   2044K -----  /lib64/librt-2.12.so</div><div class="line">00000038b2c06000      4K r----  /lib64/librt-2.12.so</div><div class="line">00000038b2c07000      4K rw---  /lib64/librt-2.12.so</div><div class="line">00000038b2e00000    524K r-x--  /lib64/libm-2.12.so</div><div class="line">00000038b2e83000   2044K -----  /lib64/libm-2.12.so</div><div class="line">00000038b3082000      4K r----  /lib64/libm-2.12.so</div><div class="line">00000038b3083000      4K rw---  /lib64/libm-2.12.so</div></pre></td></tr></table></figure></p>
-<p>只有<code>00000000023da000    132K rw---    [ anon ]</code>这一行的内存地址不一样, 其他的都是一样的</p>
-<p>参考<br>(Virtual Memory Usage from Java under Linux, too much memory used)[<a href="http://stackoverflow.com/questions/561245/virtual-memory-usage-from-java-under-linux-too-much-memory-used" target="_blank" rel="external">http://stackoverflow.com/questions/561245/virtual-memory-usage-from-java-under-linux-too-much-memory-used</a>]</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/08/25/jvm/从top出发以pmap角度看JVM/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/08/25/jvm/从top出发以pmap角度看JVM/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1603,9 +1374,231 @@
 
 
 
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/07/29/nosql/jedis lambda/" title="当Jedis 遇上 Lambda" itemprop="url">当Jedis 遇上 Lambda</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-07-29T07:00:00.000Z" itemprop="datePublished"> Published 2016-07-29</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>一直苦恼于使用Jedis时要时时牢记关闭资源这个操作, 当Lambda出现后, 这种苦恼终于可以远离而去了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</div><div class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</div><div class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPoolConfig;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Medis</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> JedisPool jedisPool;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Medis</span><span class="params">()</span> </span>&#123;</div><div class="line">		JedisPoolConfig config = <span class="keyword">new</span> JedisPoolConfig();</div><div class="line">		jedisPool = <span class="keyword">new</span> JedisPool(config, <span class="string">"192.168.15.20"</span>, <span class="number">6379</span>, <span class="number">10000</span>, <span class="string">"xpec@2015"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consumer</span><span class="params">(NonResultOperator consumer)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span>(Jedis jedis = jedisPool.getResource()) &#123;</div><div class="line">			consumer.accept(jedis);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> &lt;U&gt; <span class="function">U <span class="title">accept</span><span class="params">(ResultOperator consumer)</span> </span>&#123;</div><div class="line">		<span class="keyword">try</span>(Jedis jedis = jedisPool.getResource()) &#123;</div><div class="line">			<span class="keyword">return</span> (U) consumer.accept(jedis);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@FunctionalInterface</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ResultOperator</span> </span>&#123;</div><div class="line">	<span class="function">Object <span class="title">accept</span><span class="params">(redis.clients.jedis.Jedis t)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@FunctionalInterface</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">NonResultOperator</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(redis.clients.jedis.Jedis t)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>写一个测试类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MedisTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</div><div class="line">		Medis medis = <span class="keyword">new</span> Medis();</div><div class="line">		medis.consumer(jedis -&gt; jedis.set(<span class="string">"123"</span>, <span class="string">"456"</span>));</div><div class="line"></div><div class="line">		String result = medis.accept(jedis -&gt; jedis.get(<span class="string">"123"</span>));</div><div class="line">		System.out.println(result);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">456</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/07/29/nosql/jedis lambda/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/07/29/nosql/jedis lambda/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/07/25/JavaLibrary/Jetty/" title="Jetty 嵌入模式" itemprop="url">Jetty 嵌入模式</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-07-25T07:00:00.000Z" itemprop="datePublished"> Published 2016-07-25</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>添加依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.eclipse.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jetty-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>9.4.0.M0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>HandlerCollection</code> ：维持一个handlers 集合, 然后按顺序依次调用每个handler(注意这个里的handler不管发生什么情况都会执行一遍, 这通常可以作为一个切面用于统计和记日志). </li>
+<li><code>HandlerList</code>：同样维持一个handlers 集合,也是按顺序调用每个handler.但是当有异常抛出, 或者有response返回, 或者 <code>request.isHandled()</code>被设为true.</li>
+<li><code>HandlerWrapper</code>：继承自<code>HandlerWrapper</code>的类可以以面向切面编程的方式将handler通过链式的形式组合在一起.例如一个标准的web应用程序就实现了一个这样的规则, 他将context,session,security,servlet的handler以链式的方式组合在一起.</li>
+</ul>
+<h2 id="文件服务器"><a href="#文件服务器" class="headerlink" title="文件服务器"></a>文件服务器</h2><p>通过<code>ResourceHandler</code> 指定了资源路径，并且允许列出目录和文件. 下面的例子中就是直接将<code>ResourceHandler</code>映射到根目录<code>/</code>下, 即通过<code>http://localhost:8080/</code>就可以在浏览器上看到所有的文件列表<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.ContextHandler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.HandlerList;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.ResourceHandler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.gzip.GzipHandler;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line"></div><div class="line">		ResourceHandler fileResourceHandler = <span class="keyword">new</span> ResourceHandler();</div><div class="line">		fileResourceHandler.setDirectoriesListed(<span class="keyword">true</span>);</div><div class="line">		fileResourceHandler.setResourceBase(<span class="string">"D:\\repository"</span>);</div><div class="line"></div><div class="line">		GzipHandler gzip = <span class="keyword">new</span> GzipHandler();</div><div class="line">		server.setHandler(gzip);</div><div class="line"></div><div class="line">		ContextHandler fileContext = <span class="keyword">new</span> ContextHandler(<span class="string">"/files"</span>);</div><div class="line">		fileContext.setHandler(fileResourceHandler);</div><div class="line"></div><div class="line">		ResourceHandler indexResourceHandler = <span class="keyword">new</span> ResourceHandler();</div><div class="line">		indexResourceHandler.setDirectoriesListed(<span class="keyword">true</span>);</div><div class="line">		indexResourceHandler.setWelcomeFiles(<span class="keyword">new</span> String[]&#123;<span class="string">"index.html"</span>&#125;);</div><div class="line">		indexResourceHandler.setResourceBase(<span class="string">"."</span>);</div><div class="line"></div><div class="line">		ContextHandler indexContextHandler = <span class="keyword">new</span> ContextHandler(<span class="string">"/"</span>);</div><div class="line">		indexContextHandler.setHandler(indexResourceHandler);</div><div class="line"></div><div class="line">		HandlerList handlerList = <span class="keyword">new</span> HandlerList();</div><div class="line">		handlerList.addHandler(fileContext);</div><div class="line">		handlerList.addHandler(indexContextHandler);</div><div class="line"></div><div class="line">		server.setHandler(handlerList);</div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>还可以使用<code>ContextHandler</code>将<code>ResourceHandler</code>映射到其他路径上. </p>
+</blockquote>
+<h2 id="ContextHandler"><a href="#ContextHandler" class="headerlink" title="ContextHandler"></a>ContextHandler</h2><p><code>ContextHandler</code>实现自<code>ScopedHandler</code>. <code>ContextHandler</code>实现的功能是将Http请求路径映射到某个具体处理业务逻辑的Handler上.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Handler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Request;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.AbstractHandler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.ContextHandler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.ContextHandlerCollection;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.ServletOutputStream;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ManyContexts</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 可以在ContextHandler的构造函数中设置URI映射,但是setContextPath()会覆盖构造函数中的映射</span></div><div class="line">		ContextHandler rootContext = <span class="keyword">new</span> ContextHandler(<span class="string">"/"</span>);</div><div class="line">		rootContext.setContextPath(<span class="string">"/root"</span>);</div><div class="line">		rootContext.setHandler(<span class="keyword">new</span> HelloHandler(<span class="string">"Root Hello"</span>));</div><div class="line"></div><div class="line">		ContextHandler contextFR = <span class="keyword">new</span> ContextHandler(<span class="string">"/fr"</span>);</div><div class="line">		contextFR.setHandler(<span class="keyword">new</span> HelloHandler(<span class="string">"Bonjoir"</span>));</div><div class="line"></div><div class="line">		ContextHandler contextV = <span class="keyword">new</span> ContextHandler(<span class="string">"/"</span>);</div><div class="line">		contextV.setVirtualHosts(<span class="keyword">new</span> String[] &#123; <span class="string">"127.0.0.2"</span> &#125;);</div><div class="line">		contextV.setHandler(<span class="keyword">new</span> HelloHandler(<span class="string">"Virtual Hello"</span>));</div><div class="line"></div><div class="line">		ContextHandler resourceBaseHandler = <span class="keyword">new</span> ContextHandler(<span class="string">"/resources"</span>);</div><div class="line">		<span class="comment">// 设置web内容的路径, 即请求web资源时(Html, js, css文件等)的根路径</span></div><div class="line">		resourceBaseHandler.setResourceBase(<span class="string">"/"</span>);</div><div class="line">		resourceBaseHandler.setHandler(<span class="keyword">new</span> HelloHandler(<span class="string">"Resource Hello"</span>));</div><div class="line"></div><div class="line">		ContextHandlerCollection contexts = <span class="keyword">new</span> ContextHandlerCollection();</div><div class="line">		contexts.setHandlers(<span class="keyword">new</span> Handler[] &#123; rootContext, contextFR, contextV, resourceBaseHandler&#125;);</div><div class="line"></div><div class="line">		server.setHandler(contexts);</div><div class="line"></div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloHandler</span> <span class="keyword">extends</span> <span class="title">AbstractHandler</span> </span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">private</span> String path;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">HelloHandler</span><span class="params">(String path)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.path = path;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</div><div class="line">			ServletOutputStream out = response.getOutputStream();</div><div class="line">			out.print(path);</div><div class="line">			out.flush();</div><div class="line">			response.setStatus(<span class="number">200</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们看一下测试结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">ζ curl http://192.168.10.220:8080/</div><div class="line">Root Hello%                                                                                         </div><div class="line"><span class="comment"># wangming@OA1503P0256: ~                                                               (16:55:48)</span></div><div class="line">ζ curl http://192.168.10.220:8080/fr</div><div class="line"><span class="comment"># wangming@OA1503P0256: ~                                                               (16:55:55)</span></div><div class="line">ζ curl http://192.168.10.220:8080/it</div><div class="line"><span class="comment"># wangming@OA1503P0256: ~                                                               (16:56:07)</span></div><div class="line">ζ curl 127.0.0.2:8080/</div><div class="line">Virtual HelloRoot Hello%</div></pre></td></tr></table></figure></p>
+<h2 id="Servlets"><a href="#Servlets" class="headerlink" title="Servlets"></a>Servlets</h2><p>Servlet是一种标准的处理HTTP请求逻辑的方式. Servlet和Jetty Handler非常像, 但是Servlet得request对象是不可变的.<br>Jetty的ServletHandler采用将请求映射到一个标准路径上.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.servlet.ServletHandler;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MinimalServlets</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line"></div><div class="line">		ServletHandler handler = <span class="keyword">new</span> ServletHandler();</div><div class="line">		server.setHandler(handler);</div><div class="line"></div><div class="line">		<span class="comment">// 下面我们配置一个原生的Servlet, 还有其他的Servlet(例如通过web.xml或者@WebServlet注解生成的)可配置</span></div><div class="line">		handler.addServletWithMapping(HelloServlet.class, <span class="string">"/*"</span>);</div><div class="line"></div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span></span></div><div class="line">				<span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">			response.setContentType(<span class="string">"text/html"</span>);</div><div class="line">			response.setStatus(HttpServletResponse.SC_OK);</div><div class="line">			response.getWriter().println(<span class="string">"&lt;h1&gt;Hello from HelloServlet&lt;/h1&gt;"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="ServletContextHandler"><a href="#ServletContextHandler" class="headerlink" title="ServletContextHandler"></a>ServletContextHandler</h2><p>在上面的<code>Servlets</code>中我们看到每个Servlet都对应一个完整的URI地址映射, 但是如果我们想在某个特定的URI下, 增加子映射怎么办呢？这就用到了<code>ServletContextHandler</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.servlet.ServletContextHandler;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServletContextHandlerTest</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line">		ServletContextHandler servletContextHandler = <span class="keyword">new</span> ServletContextHandler(ServletContextHandler.SESSIONS);</div><div class="line">		servletContextHandler.setContextPath(<span class="string">"/servlet"</span>);</div><div class="line">		servletContextHandler.addServlet(HelloServlet.class, <span class="string">"/abc"</span>);</div><div class="line">		server.setHandler(servletContextHandler);</div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span></span></div><div class="line">				<span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">			response.setContentType(<span class="string">"text/html"</span>);</div><div class="line">			response.setStatus(HttpServletResponse.SC_OK);</div><div class="line">			response.getWriter().println(<span class="string">"&lt;h1&gt;Hello from HelloServlet&lt;/h1&gt;"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Connectors"><a href="#Connectors" class="headerlink" title="Connectors"></a>Connectors</h2><p>当创建N个connectors应用时, 一般我们会将通用的配置首先提取出来, 使用一个配置类配置这些通用配置. 然后在其他具体Connectors配置时将这个配置传递到具体配置类中, 这样一来就形成了一个链式配置形式.</p>
+<p>首先生成一个keystore文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">D:\ssl&gt;keytool -genkey -alias wm -keyalg RSA -keysize 1024 -keypass 123456 -validity 365 -keystore D:\ssl\wm.keystore -storepass 123456</div><div class="line">您的名字与姓氏是什么?</div><div class="line">  [Unknown]:  wm</div><div class="line">您的组织单位名称是什么?</div><div class="line">  [Unknown]:  wm</div><div class="line">您的组织名称是什么?</div><div class="line">  [Unknown]:  wm</div><div class="line">您所在的城市或区域名称是什么?</div><div class="line">  [Unknown]:  bj</div><div class="line">您所在的省/市/自治区名称是什么?</div><div class="line">  [Unknown]:  bj</div><div class="line">该单位的双字母国家/地区代码是什么?</div><div class="line">  [Unknown]:  cn</div><div class="line">CN=wm, OU=wm, O=wm, L=bj, ST=bj, C=cn是否正确?</div><div class="line">  [否]:  y</div><div class="line"></div><div class="line">D:\ssl&gt;</div></pre></td></tr></table></figure></p>
+<p>然后看一下服务器代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"><span class="keyword">import</span> java.io.File;</div><div class="line"><span class="keyword">import</span> java.io.FileNotFoundException;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ManyConnectors</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// 加载ssl需要的keystore</span></div><div class="line">		File keystoreFile = <span class="keyword">new</span> File(<span class="string">"D:\\ssl\\wm.keystore"</span>);</div><div class="line">		<span class="keyword">if</span> (!keystoreFile.exists()) &#123;</div><div class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> FileNotFoundException(keystoreFile.getAbsolutePath());</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 开启一个JettyServer,但是此时我们并不设置端口,在Connectors里设置端口</span></div><div class="line">		Server server = <span class="keyword">new</span> Server();</div><div class="line"></div><div class="line">		<span class="comment">// 一个通用的HTTP配置. 使用HttpConfiguration进行对HTTP和HTTPS进行设置. HTTP默认的scheme是http,HTTPS默认的scheme是https</span></div><div class="line">		HttpConfiguration httpConfig = <span class="keyword">new</span> HttpConfiguration();</div><div class="line">		httpConfig.setSecureScheme(<span class="string">"https"</span>);</div><div class="line">		httpConfig.setSecurePort(<span class="number">8443</span>);</div><div class="line">		httpConfig.setOutputBufferSize(<span class="number">32768</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 构建一个HTTP Connectors</span></div><div class="line">		ServerConnector http = <span class="keyword">new</span> ServerConnector(server, <span class="keyword">new</span> HttpConnectionFactory(httpConfig));</div><div class="line">		http.setPort(<span class="number">8080</span>);</div><div class="line">		http.setIdleTimeout(<span class="number">30000</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 根据SSL证书生成ssl信息</span></div><div class="line">		SslContextFactory sslContextFactory = <span class="keyword">new</span> SslContextFactory();</div><div class="line">		sslContextFactory.setKeyStorePath(keystoreFile.getAbsolutePath());</div><div class="line">		sslContextFactory.setKeyStorePassword(<span class="string">"123456"</span>);</div><div class="line">		sslContextFactory.setKeyManagerPassword(<span class="string">"123456"</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 现在为HTTP Connectors创建一个http配置对象, 这个对象是必须的, 我们不能在http Connectors里复用httpConfig对象,</span></div><div class="line">		<span class="comment">// 即便是将httpConfig对象作为参数进行构建，它的内部也是对它的一个克隆而已</span></div><div class="line">		HttpConfiguration httpsConfig = <span class="keyword">new</span> HttpConfiguration(httpConfig);</div><div class="line">		<span class="comment">// SecureRequestCustomizer用于处理从Jetty接手的https连接</span></div><div class="line">		SecureRequestCustomizer src = <span class="keyword">new</span> SecureRequestCustomizer();</div><div class="line">		src.setStsMaxAge(<span class="number">2000</span>);</div><div class="line">		src.setStsIncludeSubDomains(<span class="keyword">true</span>);</div><div class="line">		httpsConfig.addCustomizer(src);</div><div class="line"></div><div class="line">		ServerConnector https = <span class="keyword">new</span> ServerConnector(server,</div><div class="line">				<span class="keyword">new</span> SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),</div><div class="line">				<span class="keyword">new</span> HttpConnectionFactory(httpsConfig));</div><div class="line">		https.setPort(<span class="number">8443</span>);</div><div class="line">		https.setIdleTimeout(<span class="number">500000</span>);</div><div class="line"></div><div class="line">		server.setConnectors(<span class="keyword">new</span> Connector[] &#123; http, https &#125;);</div><div class="line"></div><div class="line">		ServletHandler handler = <span class="keyword">new</span> ServletHandler();</div><div class="line">		handler.addServletWithMapping(HelloServlet.class, <span class="string">"/*"</span>);</div><div class="line">		server.setHandler(handler);</div><div class="line"></div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span></span></div><div class="line">				<span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">			response.setContentType(<span class="string">"text/html"</span>);</div><div class="line">			response.setStatus(HttpServletResponse.SC_OK);</div><div class="line">			response.getWriter().println(<span class="string">"&lt;h1&gt;Hello from HelloServlet&lt;/h1&gt;"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们使用JMeter模拟客户端进行访问</p>
+<h2 id="JMX"><a href="#JMX" class="headerlink" title="JMX"></a>JMX</h2><p>服务器开启JMX<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.management.ManagementFactory;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.management.remote.JMXServiceURL;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.jmx.ConnectorServer;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.jmx.MBeanContainer;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerWithJMX</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// === jetty-jmx.xml ===</span></div><div class="line">		MBeanContainer mbContainer = <span class="keyword">new</span> MBeanContainer(ManagementFactory.getPlatformMBeanServer());</div><div class="line"></div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line">		server.addBean(mbContainer);</div><div class="line"></div><div class="line">		ConnectorServer jmx = <span class="keyword">new</span> ConnectorServer(</div><div class="line">				<span class="keyword">new</span> JMXServiceURL(<span class="string">"rmi"</span>, <span class="keyword">null</span>, <span class="number">1999</span>, <span class="string">"/jndi/rmi://localhost:1999/jmxrmi"</span>),</div><div class="line">				<span class="string">"org.eclipse.jetty.jmx:name=rmiconnectorserver"</span>);</div><div class="line">		server.addBean(jmx);</div><div class="line"></div><div class="line">		server.start();</div><div class="line">		server.dumpStdErr();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/07/25/JavaLibrary/Jetty/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/07/25/JavaLibrary/Jetty/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/07/24/jvm/动态方法调用/" title="动态方法调用" itemprop="url">动态方法调用</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-07-24T07:00:00.000Z" itemprop="datePublished"> Published 2016-07-24</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>java7增加了一个invokedynamic的指令，这个命令是为了更好地支持JVM平台上的动态语言和lambda表达式。在给出一个使用示例时，我们先看四个概念</p>
+<ul>
+<li>方法句柄(<code>MethodHandle</code>)：这个很像一个方法的代理，通过它就可以调用一个方法。（class文件常量池中的CONSTANT_MethodHandle就是方法句柄）</li>
+<li>调用点(<code>CallSite</code>)：这个是对方法句柄的一个封装，通过在变调用点上设置不同的方法句柄就可以调用不同的方法</li>
+<li>启动方法(<code>BootstrapMethods</code>)：通过启动方法可以获得调用点</li>
+<li>方法类型(<code>MethodType</code>)：主要用于设置方法的参数和返回值</li>
+</ul>
+<p>下面我们看一下方法句柄的使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.invoke.MethodHandle;</div><div class="line"><span class="keyword">import</span> java.lang.invoke.MethodHandles;</div><div class="line"><span class="keyword">import</span> java.lang.invoke.MethodType;</div><div class="line"><span class="keyword">import</span> java.time.LocalDateTime;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestMethodHandler</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="comment">// specify method's parameter and return types</span></div><div class="line">        MethodType methodType = MethodType.methodType(<span class="keyword">void</span>.class);</div><div class="line"></div><div class="line">        <span class="comment">// invoke static method</span></div><div class="line">        MethodHandle printHelloWorld = MethodHandles.lookup().findStatic(TestMethodHandler.class, <span class="string">"printHelloWorld"</span>, methodType);</div><div class="line">        printHelloWorld.invoke();</div><div class="line"></div><div class="line">        <span class="comment">// invoke instance method</span></div><div class="line">        TestMethodHandler testMethodHandler = <span class="keyword">new</span> TestMethodHandler();</div><div class="line">        MethodHandle printTime = MethodHandles.lookup().findVirtual(TestMethodHandler.class, <span class="string">"printTime"</span>, methodType).bindTo(testMethodHandler);</div><div class="line">        printTime.invoke();</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printHelloWorld</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Hello World!"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printTime</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(LocalDateTime.now().toString());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Hello World!</div><div class="line"><span class="number">2016</span>-<span class="number">07</span>-<span class="number">24</span>T01:<span class="number">05</span>:<span class="number">31.010</span></div></pre></td></tr></table></figure></p>
+<p>下面我们依次看一下上面的例子中使用的方法</p>
+<ul>
+<li><code>findStatic()</code>: 查找一个static方法，然后使用invokestatic进行函数调用 </li>
+<li><code>findVirtual()</code>: 查找一个虚方法，使用invokevirtual指令进行函数调用</li>
+<li><code>findSpecial()</code>: 查找私有方法或者父类的方法，使用invokespecial指令进行调用 </li>
+<li><code>findConstructor()</code>:查找构造器方法 </li>
+</ul>
+<p>下面我们接着看一下调用点，调用点一共分为3种</p>
+<ul>
+<li>常量调用点</li>
+<li>可变调用点</li>
+<li>易变调用点</li>
+</ul>
+<p>我们接着看一下常量调用点的示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.invoke.*;</div><div class="line"><span class="keyword">import</span> java.time.LocalDateTime;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCallSite</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="comment">// specify method's parameter and return types</span></div><div class="line">        MethodType methodType = MethodType.methodType(<span class="keyword">void</span>.class);</div><div class="line"></div><div class="line">        <span class="comment">// invoke static method</span></div><div class="line">        MethodHandle printHelloWorld = MethodHandles.lookup().findStatic(TestCallSite.class, <span class="string">"printHelloWorld"</span>, methodType);</div><div class="line"></div><div class="line">        CallSite callSite = <span class="keyword">new</span> ConstantCallSite(printHelloWorld);</div><div class="line">        MethodHandle invoker = callSite.dynamicInvoker();</div><div class="line">        invoker.invoke();</div><div class="line"></div><div class="line">        MethodHandle printTime = MethodHandles.lookup().findStatic(TestCallSite.class, <span class="string">"printTime"</span>, methodType);</div><div class="line">        callSite.setTarget(printTime);</div><div class="line">        invoker.invoke();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printHelloWorld</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Hello World!"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printTime</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(LocalDateTime.now().toString());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Exception in thread <span class="string">"main"</span> java.lang.UnsupportedOperationException</div><div class="line">    at java.lang.invoke.ConstantCallSite.setTarget(ConstantCallSite.java:<span class="number">106</span>)</div><div class="line">    at TestCallSite.main(TestCallSite.java:<span class="number">18</span>)</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</div><div class="line">    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</div><div class="line">    at java.lang.reflect.Method.invoke(Method.java:<span class="number">498</span>)</div><div class="line">    at com.intellij.rt.execution.application.AppMain.main(AppMain.java:<span class="number">147</span>)</div><div class="line">Hello World!</div></pre></td></tr></table></figure></p>
+<p>首先我们发现，当再一个常量调用点上进行重置target的时候，产生了一个异常，那么我们使用可变调用点试试呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.invoke.*;</div><div class="line"><span class="keyword">import</span> java.time.LocalDateTime;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCallSite</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        <span class="comment">// specify method's parameter and return types</span></div><div class="line">        MethodType methodType = MethodType.methodType(<span class="keyword">void</span>.class);</div><div class="line"></div><div class="line">        <span class="comment">// invoke static method</span></div><div class="line">        MethodHandle printHelloWorld = MethodHandles.lookup().findStatic(TestCallSite.class, <span class="string">"printHelloWorld"</span>, methodType);</div><div class="line"></div><div class="line">        CallSite callSite = <span class="keyword">new</span> MutableCallSite(printHelloWorld);</div><div class="line">        MethodHandle invoker = callSite.dynamicInvoker();</div><div class="line">        invoker.invoke();</div><div class="line"></div><div class="line">        MethodHandle printTime = MethodHandles.lookup().findStatic(TestCallSite.class, <span class="string">"printTime"</span>, methodType);</div><div class="line">        callSite.setTarget(printTime);</div><div class="line">        invoker.invoke();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printHelloWorld</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Hello World!"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printTime</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(LocalDateTime.now().toString());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Hello World!</div><div class="line"><span class="number">2016</span>-<span class="number">07</span>-<span class="number">24</span>T01:<span class="number">18</span>:<span class="number">02.905</span></div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JVM/">JVM</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/07/24/jvm/动态方法调用/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/07/24/jvm/动态方法调用/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -1631,15 +1624,15 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>32</sup></a></li>
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>35</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>35</sup></a></li>
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
 		  
 		
 		  
