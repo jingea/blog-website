@@ -1,586 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Dropwizard 初探 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="Setting Up Maven在MAVEN的dependency里添加metrics-core库1234567&amp;lt;dependencies&amp;gt;    &amp;lt;dependency&amp;gt;        &amp;lt;groupId&amp;gt;io.dropwizard.metrics&amp;lt;/groupId&amp;gt;        &amp;lt;artifactId&amp;gt;metrics-core&amp;lt;">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Dropwizard 初探">
-<meta property="og:url" content="http://www.yu66.wang/2015/04/08/JavaLibrary/dropwizard/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="Setting Up Maven在MAVEN的dependency里添加metrics-core库1234567&amp;lt;dependencies&amp;gt;    &amp;lt;dependency&amp;gt;        &amp;lt;groupId&amp;gt;io.dropwizard.metrics&amp;lt;/groupId&amp;gt;        &amp;lt;artifactId&amp;gt;metrics-core&amp;lt;">
-<meta property="og:updated_time" content="2016-11-01T06:11:17.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Dropwizard 初探">
-<meta name="twitter:description" content="Setting Up Maven在MAVEN的dependency里添加metrics-core库1234567&amp;lt;dependencies&amp;gt;    &amp;lt;dependency&amp;gt;        &amp;lt;groupId&amp;gt;io.dropwizard.metrics&amp;lt;/groupId&amp;gt;        &amp;lt;artifactId&amp;gt;metrics-core&amp;lt;">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/08/JavaLibrary/dropwizard/" title="Dropwizard 初探" itemprop="url">Dropwizard 初探</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setting-Up-Maven"><span class="toc-number">1.</span> <span class="toc-text">Setting Up Maven</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Meters"><span class="toc-number">2.</span> <span class="toc-text">Meters</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Console-Reporter"><span class="toc-number">3.</span> <span class="toc-text">Console Reporter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Complete-getting-started"><span class="toc-number">4.</span> <span class="toc-text">Complete getting started</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Registry"><span class="toc-number">5.</span> <span class="toc-text">The Registry</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gauges"><span class="toc-number">6.</span> <span class="toc-text">Gauges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Counters"><span class="toc-number">7.</span> <span class="toc-text">Counters</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Histograms"><span class="toc-number">8.</span> <span class="toc-text">Histograms</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Timers"><span class="toc-number">9.</span> <span class="toc-text">Timers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Health-Checks"><span class="toc-number">10.</span> <span class="toc-text">Health Checks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reporting-Via-JMX"><span class="toc-number">11.</span> <span class="toc-text">Reporting Via JMX</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reporting-Via-HTTP"><span class="toc-number">12.</span> <span class="toc-text">Reporting Via HTTP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Other-Reporting"><span class="toc-number">13.</span> <span class="toc-text">Other Reporting</span></a></li></ol>
-		
-		</div>
-		
-		<h2 id="Setting-Up-Maven"><a href="#Setting-Up-Maven" class="headerlink" title="Setting Up Maven"></a>Setting Up Maven</h2><p>在MAVEN的dependency里添加<code>metrics-core</code>库<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>注意，使用上面依赖你需要在pom文件里声明了<code>metrics.version</code>属性,并且该属性值是<code>3.1.0</code></p>
-<h2 id="Meters"><a href="#Meters" class="headerlink" title="Meters"></a>Meters</h2><p><code>meter</code>表示的是单位时间内事件数的比例(例如每秒请求数). 除了平均速率之外, <code>meter</code>仍然会追踪<code>1-,5-,15-</code>分钟的移动平均数.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Meter requests = metrics.meter(<span class="string">"requests"</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleRequest</span><span class="params">(Request request, Response response)</span> </span>&#123;</div><div class="line">    requests.mark();</div><div class="line">    <span class="comment">// etc</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面的<code>meter</code>表示每秒请求数的比例。</p>
-<h2 id="Console-Reporter"><a href="#Console-Reporter" class="headerlink" title="Console Reporter"></a>Console Reporter</h2><p><code>Console Reporter</code>正如其名,向控制台进行输出日志,下面的示例将每秒进行输出一次.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)</div><div class="line">       .convertRatesTo(TimeUnit.SECONDS)</div><div class="line">       .convertDurationsTo(TimeUnit.MILLISECONDS)</div><div class="line">       .build();</div><div class="line">   reporter.start(<span class="number">1</span>, TimeUnit.SECONDS);</div></pre></td></tr></table></figure></p>
-<h2 id="Complete-getting-started"><a href="#Complete-getting-started" class="headerlink" title="Complete getting started"></a>Complete getting started</h2><p>下面是一个完整的示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">  <span class="keyword">package</span> sample;</div><div class="line">  <span class="keyword">import</span> com.codahale.metrics.*;</div><div class="line">  <span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line">  <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetStarted</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> MetricRegistry metrics = <span class="keyword">new</span> MetricRegistry();</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</div><div class="line">      startReport();</div><div class="line">      Meter requests = metrics.meter(<span class="string">"requests"</span>);</div><div class="line">      requests.mark();</div><div class="line">      wait5Seconds();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">startReport</span><span class="params">()</span> </span>&#123;</div><div class="line">      ConsoleReporter reporter = ConsoleReporter.forRegistry(metrics)</div><div class="line">          .convertRatesTo(TimeUnit.SECONDS)</div><div class="line">          .convertDurationsTo(TimeUnit.MILLISECONDS)</div><div class="line">          .build();</div><div class="line">      reporter.start(<span class="number">1</span>, TimeUnit.SECONDS);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">wait5Seconds</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          Thread.sleep(<span class="number">5</span>*<span class="number">1000</span>);</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">catch</span>(InterruptedException e) &#123;&#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>somegroup<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sample<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>Example project for Metrics<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>注意：使用上面依赖你需要在pom文件里声明了<code>metrics.version</code>属性,并且该属性值是<code>3.1.0</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn <span class="keyword">package</span> exec:java -Dexec.mainClass=sample.First</div></pre></td></tr></table></figure>
-<h2 id="The-Registry"><a href="#The-Registry" class="headerlink" title="The Registry"></a>The Registry</h2><p>Metrics的核心部分是<code>MetricRegistry</code>类,这个类是应用程序中所有的metrics的容器. 下面的示例创建一个新的<code>MetricRegistry</code>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> MetricRegistry metrics = <span class="keyword">new</span> MetricRegistry();</div></pre></td></tr></table></figure></p>
-<p>如果你在应用程序中嵌入一个自己创建的<code>MetricRegistry</code>实例，你应该将这个属性置为静态的.</p>
-<h2 id="Gauges"><a href="#Gauges" class="headerlink" title="Gauges"></a>Gauges</h2><p><code>gauge</code>表示的是一个瞬时值. 例如我们获取队列里待执行的任务数<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class QueueManager &#123;</div><div class="line">    private final Queue queue;</div><div class="line"></div><div class="line">    public QueueManager(MetricRegistry metrics, String name) &#123;</div><div class="line">        this.queue = new Queue();</div><div class="line">        metrics.register(MetricRegistry.name(QueueManager.class, name, "size"),</div><div class="line">                         new Gauge<span class="tag">&lt;<span class="name">Integer</span>&gt;</span>() &#123;</div><div class="line">                             @Override</div><div class="line">                             public Integer getValue() &#123;</div><div class="line">                                 return queue.size();</div><div class="line">                             &#125;</div><div class="line">                         &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>当完成计算之后,它将会返回队列里的任务数。</p>
-<p>在<code>registry</code>里的每个<code>metric</code>都有一个唯一的名字,其命名规范为用<code>.</code>分割的字符串,例如<code>things.count</code>或者<code>com.example.Thing.latency</code>. <code>MetricRegistry</code>类提供了一个静态方法来构建这些名字.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">MetricRegistry.name(QueueManager.class, "jobs", "size")</div></pre></td></tr></table></figure></p>
-<p>上面的调用会返回<code>com.example.QueueManager.jobs.size</code>。</p>
-<p>对于大多数队列或者类队列结构,你也许仅想要获得<code>queue.size()</code>这个值. 大多数<code>java.util</code>和<code>java.util.concurrent</code>包都实现了<code>size()</code>方法,它的复杂度是<code>O(n)</code>,这意味着你的<code>gauge</code>也许会很慢(也许还会持有锁)</p>
-<h2 id="Counters"><a href="#Counters" class="headerlink" title="Counters"></a>Counters</h2><p><code>counter</code>是一个内部采用<code>AtomicLong</code>计数器的<code>gauge</code>实现. 你可以增加或者减少这个值.例如,我们想要一种更加高效的计算队列大小的方式:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final Counter pendingJobs = metrics.counter(name(QueueManager.class, "pending-jobs"));</div><div class="line"></div><div class="line">public void addJob(Job job) &#123;</div><div class="line">    pendingJobs.inc();</div><div class="line">    queue.offer(job);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public Job takeJob() &#123;</div><div class="line">    pendingJobs.dec();</div><div class="line">    return queue.take();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>每一次业务逻辑的调用，counter都会被计算一次,它会返回队列中的任务数.</p>
-<p>正如你看到的,counter的API是非常不同的是,<code>counter(String)</code>取代了<code>register(String, Metric)</code>，然而你可以仍然可以使用<code>register</code>方法创建你自己的<code>Counter</code>实例,实际上<code>counter(String)</code>在内部里已经将这些工作都为你做好了,还允许你使用相同的名字对metric进行复用</p>
-<p>还需要说明一点,在上例中,我们静态引入了<code>MetricRegistry</code>的<code>name</code>方法.</p>
-<h2 id="Histograms"><a href="#Histograms" class="headerlink" title="Histograms"></a>Histograms</h2><p><code>histogram</code>表示的是流中数据值的静态分布. 除了计算<code>minimum, maximum, mean, etc</code>等值,它还计算中间值或者<code>75th, 90th, 95th, 98th, 99th, 99.9th</code>等百分比.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">private final Histogram responseSizes = metrics.histogram(name(RequestHandler.class, "response-sizes"));</div><div class="line"></div><div class="line">public void handleRequest(Request request, Response response) &#123;</div><div class="line">    // etc</div><div class="line">    responseSizes.update(response.getContent().length);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面的<code>histogram</code>统计了响应中的字节数.</p>
-<h2 id="Timers"><a href="#Timers" class="headerlink" title="Timers"></a>Timers</h2><p><code>timer</code>可以计算某个代码段的调用比例,和调用期间的分布状况.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">private final Timer responses = metrics.timer(name(RequestHandler.class, "responses"));</div><div class="line"></div><div class="line">public String handleRequest(Request request, Response response) &#123;</div><div class="line">    final Timer.Context context = responses.time();</div><div class="line">    try &#123;</div><div class="line">        // etc;</div><div class="line">        return "OK";</div><div class="line">    &#125; finally &#123;</div><div class="line">        context.stop();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>This timer will measure the amount of time it takes to process each request in nanoseconds and provide a rate of requests in requests per second.</p>
-<h2 id="Health-Checks"><a href="#Health-Checks" class="headerlink" title="Health Checks"></a>Health Checks</h2><p>Metrics还可以通过<code>metrics-healthchecks</code>模块集中检查你的服务的健康.</p>
-<p>首先创建一个新的<code>HealthCheckRegistry</code>实例<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">final HealthCheckRegistry healthChecks = new HealthCheckRegistry();</div><div class="line">Second, implement a HealthCheck subclass:</div><div class="line"></div><div class="line">public class DatabaseHealthCheck extends HealthCheck &#123;</div><div class="line">    private final Database database;</div><div class="line"></div><div class="line">    public DatabaseHealthCheck(Database database) &#123;</div><div class="line">        this.database = database;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public HealthCheck.Result check() throws Exception &#123;</div><div class="line">        if (database.isConnected()) &#123;</div><div class="line">            return HealthCheck.Result.healthy();</div><div class="line">        &#125; else &#123;</div><div class="line">            return HealthCheck.Result.unhealthy("Cannot connect to " + database.getUrl());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后将Metrics注册到它身上：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">healthChecks.register("postgres", new DatabaseHealthCheck(database));</div></pre></td></tr></table></figure></p>
-<p>接下来运行所有的health checks:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">final Map&lt;String, HealthCheck.Resultresults = healthChecks.runHealthChecks();</div><div class="line">for (Entry&lt;String, HealthCheck.Resultentry : results.entrySet()) &#123;</div><div class="line">    if (entry.getValue().isHealthy()) &#123;</div><div class="line">        System.out.println(entry.getKey() + " is healthy");</div><div class="line">    &#125; else &#123;</div><div class="line">        System.err.println(entry.getKey() + " is UNHEALTHY: " + entry.getValue().getMessage());</div><div class="line">        final Throwable e = entry.getValue().getError();</div><div class="line">        if (e != null) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>Metrics内置了一种health check：<code>ThreadDeadlockHealthCheck</code>,它使用了java内置的线程死锁检测来查找死锁线程.</p>
-<h2 id="Reporting-Via-JMX"><a href="#Reporting-Via-JMX" class="headerlink" title="Reporting Via JMX"></a>Reporting Via JMX</h2><p>通过<code>JMX</code>报告metrics：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">final JmxReporter reporter = JmxReporter.forRegistry(registry).build();</div><div class="line">reporter.start();</div></pre></td></tr></table></figure></p>
-<p>一旦reporter启动了,registry中的所有的metrics都可以通过<code>JConsole</code>或者<code>VisualVM</code>看到.</p>
-<p>Metrics被包装成<code>JMX MBeans</code>,可以在<code>VisualVM&#39;s MBeans browser</code>查看<code>Metrics</code>.</p>
-<p>注意：在VisualVM中，你双击任一metric属性,VisualVM将会将这些属性数据通过图形化的方式展示给你.</p>
-<h2 id="Reporting-Via-HTTP"><a href="#Reporting-Via-HTTP" class="headerlink" title="Reporting Via HTTP"></a>Reporting Via HTTP</h2><p>Metrics仍然可以通过servlet(AdminServlet)展示给你, 提供JSON形式的数据. 它可以报告<code>health checks</code>,打印<code>thread dump</code>,或者提供一个负载均衡的简单响应. (它还提供了其他的<code>servlets–MetricsServlet</code>,例如<code>HealthCheckServlet, ThreadDumpServlet</code>或者<code>PingServlet</code>.)</p>
-<p>如果想要使用servlet你必须在pom文件中依赖<code>metrics-servlets</code>.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.dropwizard.metrics<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>metrics-servlets<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<h2 id="Other-Reporting"><a href="#Other-Reporting" class="headerlink" title="Other Reporting"></a>Other Reporting</h2><p>除了<code>JMX</code>和<code>HTTP</code>以外,Metrics还提供了下面的报告方式</p>
-<ul>
-<li><code>STDOUT</code>: 使用<code>metrics-core</code>的<code>ConsoleReporter</code>报告</li>
-<li><code>CSV files</code>, 使用<code>metrics-core</code>的<code>CsvReporter</code>报告</li>
-<li><code>SLF4J loggers</code>, 使用<code>metrics-core</code>的<code>Slf4jReporter</code>报告</li>
-<li><code>Ganglia</code>, 使用<code>metrics-ganglia</code>的<code>GangliaReporter</code>报告</li>
-<li><code>Graphite</code>, 使用<code>metrics-graphite</code>的<code>GraphiteReporter</code>报告</li>
-</ul>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/04/08/JavaLibrary/dropwizard/" data-title="Dropwizard 初探 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/05/08/杂记/Flick Ticket Server/" title="Flick Ticket Server">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Flick Ticket Server</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/04/08/JavaLibrary/spring boot/"  title="SpringBoot">
- <strong>下一篇：</strong><br/> 
- <span>SpringBoot
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/08/JavaLibrary/dropwizard/" data-title="Dropwizard 初探" data-url="http://www.yu66.wang/2015/04/08/JavaLibrary/dropwizard/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setting-Up-Maven"><span class="toc-number">1.</span> <span class="toc-text">Setting Up Maven</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Meters"><span class="toc-number">2.</span> <span class="toc-text">Meters</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Console-Reporter"><span class="toc-number">3.</span> <span class="toc-text">Console Reporter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Complete-getting-started"><span class="toc-number">4.</span> <span class="toc-text">Complete getting started</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Registry"><span class="toc-number">5.</span> <span class="toc-text">The Registry</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gauges"><span class="toc-number">6.</span> <span class="toc-text">Gauges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Counters"><span class="toc-number">7.</span> <span class="toc-text">Counters</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Histograms"><span class="toc-number">8.</span> <span class="toc-text">Histograms</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Timers"><span class="toc-number">9.</span> <span class="toc-text">Timers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Health-Checks"><span class="toc-number">10.</span> <span class="toc-text">Health Checks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reporting-Via-JMX"><span class="toc-number">11.</span> <span class="toc-text">Reporting Via JMX</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reporting-Via-HTTP"><span class="toc-number">12.</span> <span class="toc-text">Reporting Via HTTP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Other-Reporting"><span class="toc-number">13.</span> <span class="toc-text">Other Reporting</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

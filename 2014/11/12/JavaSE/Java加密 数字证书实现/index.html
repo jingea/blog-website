@@ -1,600 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Java加密 -- 数字签名 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="数字签名通过散列函数可以确保数据内容的完整性,但这还远远不够. 此外,还需要确保数据来源的可认证性和数据发送行为的不可否任性. 完整性,可认证性和不可否认性是数字签名的主要特征. 
-消息发送方通过签名算法将消息计算出一个签名, 然后将消息连同签名一起发送给消息接收方. 然后接收方通过通过验证算法将消息和签名进行验证.
-数字签名离不开非对称密码体制, 签名算法受私钥控制,且由签名者保密. 验证算法受">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Java加密 -- 数字签名">
-<meta property="og:url" content="http://www.yu66.wang/2014/11/12/JavaSE/Java加密 数字证书实现/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="数字签名通过散列函数可以确保数据内容的完整性,但这还远远不够. 此外,还需要确保数据来源的可认证性和数据发送行为的不可否任性. 完整性,可认证性和不可否认性是数字签名的主要特征. 
-消息发送方通过签名算法将消息计算出一个签名, 然后将消息连同签名一起发送给消息接收方. 然后接收方通过通过验证算法将消息和签名进行验证.
-数字签名离不开非对称密码体制, 签名算法受私钥控制,且由签名者保密. 验证算法受">
-<meta property="og:updated_time" content="2016-11-09T04:22:28.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java加密 -- 数字签名">
-<meta name="twitter:description" content="数字签名通过散列函数可以确保数据内容的完整性,但这还远远不够. 此外,还需要确保数据来源的可认证性和数据发送行为的不可否任性. 完整性,可认证性和不可否认性是数字签名的主要特征. 
-消息发送方通过签名算法将消息计算出一个签名, 然后将消息连同签名一起发送给消息接收方. 然后接收方通过通过验证算法将消息和签名进行验证.
-数字签名离不开非对称密码体制, 签名算法受私钥控制,且由签名者保密. 验证算法受">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2014/11/12/JavaSE/Java加密 数字证书实现/" title="Java加密 -- 数字签名" itemprop="url">Java加密 -- 数字签名</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2014-11-11T16:00:00.000Z" itemprop="datePublished"> Published 2014-11-12</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数字签名"><span class="toc-number">1.</span> <span class="toc-text">数字签名</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AbstractSign"><span class="toc-number">2.</span> <span class="toc-text">AbstractSign</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RSA"><span class="toc-number">3.</span> <span class="toc-text">RSA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ECDSA"><span class="toc-number">4.</span> <span class="toc-text">ECDSA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DSA"><span class="toc-number">5.</span> <span class="toc-text">DSA</span></a></li></ol>
-		
-		</div>
-		
-		<h1 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h1><p>通过<a href="http://www.yu66.wang/2014/11/11/Java/Java%E5%8A%A0%E5%AF%86%20%E6%B6%88%E6%81%AF%E6%91%98%E8%A6%81%E5%AE%9E%E7%8E%B0/">散列函数</a>可以确保数据内容的完整性,但这还远远不够. 此外,还需要确保数据来源的可认证性和数据发送行为的不可否任性. 完整性,可认证性和不可否认性是数字签名的主要特征. </p>
-<p>消息发送方通过签名算法将消息计算出一个签名, 然后将消息连同签名一起发送给消息接收方. 然后接收方通过通过验证算法将消息和签名进行验证.</p>
-<p>数字签名离不开非对称密码体制, 签名算法受私钥控制,且由签名者保密. 验证算法受公玥控制,且对外公开.</p>
-<p>数字签名满足以下三个基本要求</p>
-<ul>
-<li>签名者任何时候都无法否认自己曾经签发的数字签名.</li>
-<li>信息接受者能够验证和确认收到的数字签名,但任何人无法伪造信息发送者的数字签名.</li>
-<li>当收发双发对数字签名的真伪产生争议时,可通过仲裁机构进行仲裁.</li>
-</ul>
-<p>暂定甲方(消息发送方)拥有私钥并且奖罚将公玥发布给乙方(消息接收方), 当甲方作为消息的发送方时, 甲方使用私钥对消息做签名处理,然后将加密的消息连同数字签名发送给乙方.乙方使用已获得的公玥对接收到的加密消息做解密处理,然后使用公玥及数字签名对原始消息做验证处理.</p>
-<p>当乙方作为发送方,通过公玥将消息加密后发送给甲方时,由于算法,公玥公开,任何一个已获得公玥的窃密者都可以截获乙方发送的消息,替换成自己的消息发送给甲方,而甲方无法辨别消息来源是否是乙方.也就是说,上述的认证方式是单向的,属于单向认证. 如果拥有俩套公私玥,甲乙双方都对数据做签名及验证就可以避免这一问题. 没错这种认证方式是双向认证.以网银交易事宜的都是单向认证方式,无法验证使用者的身份. 而要求较高的网银交易都是双向认证方式,交易双方身份都可以得到验证.</p>
-<h1 id="AbstractSign"><a href="#AbstractSign" class="headerlink" title="AbstractSign"></a>AbstractSign</h1><p>定义一个签名和验证的抽象类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.bouncycastle.jce.provider.BouncyCastleProvider;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.security.*;</div><div class="line"><span class="keyword">import</span> java.security.spec.PKCS8EncodedKeySpec;</div><div class="line"><span class="keyword">import</span> java.security.spec.X509EncodedKeySpec;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractSign</span> </span>&#123;</div><div class="line">	<span class="comment">// 数字签名密钥算法</span></div><div class="line">	<span class="keyword">private</span> String signKeyAlgorithm;</div><div class="line"></div><div class="line">	<span class="comment">// 数字签名  签名/验证算法</span></div><div class="line">	<span class="keyword">private</span> String signAlgorithm;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> PublicKey publicKey;</div><div class="line">	<span class="keyword">private</span> PrivateKey privateKey;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		Security.addProvider(<span class="keyword">new</span> BouncyCastleProvider());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="title">AbstractSign</span><span class="params">(String signKeyAlgorithm, String signAlgorithm)</span> <span class="keyword">throws</span> NoSuchAlgorithmException </span>&#123;</div><div class="line">		<span class="keyword">this</span>.signKeyAlgorithm = signKeyAlgorithm;</div><div class="line">		<span class="keyword">this</span>.signAlgorithm = signAlgorithm;</div><div class="line">		<span class="comment">// 初始化密钥对儿生成器</span></div><div class="line">		KeyPairGenerator keygen = KeyPairGenerator.getInstance(signKeyAlgorithm);</div><div class="line">		<span class="comment">// 实例化密钥对儿生成器, 调用keygen的initialize()方法</span></div><div class="line">		initKeyPairGenerator(keygen);</div><div class="line">		<span class="comment">// 实例化密钥对儿</span></div><div class="line">		KeyPair keys = keygen.genKeyPair();</div><div class="line">		<span class="comment">// (DSAPublicKey, DSAPrivateKey), (RSAPublicKey, RSAPrivateKey), (ECPublicKey, ECPrivateKey)</span></div><div class="line">		publicKey = keys.getPublic();</div><div class="line">		privateKey = keys.getPrivate();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">initKeyPairGenerator</span><span class="params">(KeyPairGenerator keygen)</span></span>;</div><div class="line"></div><div class="line">	<span class="comment">// 签名</span></div><div class="line">	<span class="keyword">public</span> <span class="keyword">byte</span>[] sign(<span class="keyword">byte</span>[] data) <span class="keyword">throws</span> Exception &#123;</div><div class="line">		<span class="comment">// 还原私钥 转换私钥材料</span></div><div class="line">		PKCS8EncodedKeySpec pkcs8KeySpec = <span class="keyword">new</span> PKCS8EncodedKeySpec(privateKey.getEncoded());</div><div class="line">		<span class="comment">// 实例化密钥工厂</span></div><div class="line">		KeyFactory keyFactory = KeyFactory.getInstance(signKeyAlgorithm);</div><div class="line">		<span class="comment">// 生成私钥对象</span></div><div class="line">		PrivateKey priKey = keyFactory.generatePrivate(pkcs8KeySpec);</div><div class="line">		<span class="comment">// 实例化Signature</span></div><div class="line">		Signature signature = Signature.getInstance(signAlgorithm);</div><div class="line">		<span class="comment">// 初始化Signature</span></div><div class="line">		signature.initSign(priKey);</div><div class="line">		<span class="comment">// 更新</span></div><div class="line">		signature.update(data);</div><div class="line">		<span class="comment">// 签名</span></div><div class="line">		<span class="keyword">return</span> signature.sign();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//校验</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">verify</span><span class="params">(<span class="keyword">byte</span>[] data, <span class="keyword">byte</span>[] sign)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// 还原公钥 转换公钥材料</span></div><div class="line">		X509EncodedKeySpec keySpec = <span class="keyword">new</span> X509EncodedKeySpec(publicKey.getEncoded());</div><div class="line">		<span class="comment">// 实例化密钥工厂</span></div><div class="line">		KeyFactory keyFactory = KeyFactory.getInstance(signKeyAlgorithm);</div><div class="line">		<span class="comment">// 取公钥匙对象</span></div><div class="line">		PublicKey pubKey = keyFactory.generatePublic(keySpec);</div><div class="line">		<span class="comment">// 实例话Signature</span></div><div class="line">		Signature signature = Signature.getInstance(signAlgorithm);</div><div class="line">		<span class="comment">// 初始化Signature</span></div><div class="line">		signature.initVerify(pubKey);</div><div class="line">		<span class="comment">// 更新</span></div><div class="line">		signature.update(data);</div><div class="line">		<span class="comment">// 验证</span></div><div class="line">		<span class="keyword">return</span> signature.verify(sign);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在上面的代码中我们见到了PKCS8和X509这样的字样, 下面就对这俩个概念做一定的讲解</p>
-<p>RSA公司定义了PKCS（Public Key Cryptography Standards,公钥加密标准）,并定义了许多PKI基础组件,如数字签名和证书请求格式；</p>
-<ul>
-<li>IETF（Internet Engineering Task Force,互联网工程任务组）</li>
-<li>PKIWG（Public Key Infrastructure Working Group,PKI工作组）定义了一组具有可操作性的公钥基础设施协议PKIX（Public Key Infrastructure Using X.509,公钥基础设施X.509）.</li>
-</ul>
-<p>PKCS共有15项标准:</p>
-<ol>
-<li>PKCS#1：RSA公钥算法加密和签名机制 (PKCS#2和PKCS#4标准已被撤销,合并至PKCS#1中)</li>
-<li>PKCS#3：DH密钥交换协议</li>
-<li>PKCS#5：PBE加密标准</li>
-<li>PKCS#6：公钥证书（X.509证书的扩展格式）标准语法</li>
-<li>PKCS#7：加密消息语法标准</li>
-<li>PKCS#8：私钥信息格式</li>
-<li>PKCS#9：选择属性格式 (较为常用)</li>
-<li>PKCS#10：证书请求语法</li>
-<li>PKCS#11：密码装置标准接口</li>
-<li>PKCS#12：个人信息交换语法标准(较为常用)</li>
-<li>PKCS#13：椭圆曲线密码体制标准</li>
-<li>PKCS#14：伪随机数生成标准(较为常用)</li>
-<li>PKCS#15：密码令牌信息格式标准</li>
-</ol>
-<p>上述标准主要用于用户实体通过注册机构（RA）进行证书申请、用户证书更新等过程.当证书作废时,注册机构通过认证中心向目录服务器发布证书撤销列表.上述标准还用于扩展证书内容、数字签名、数字签名验证和定义数字信封格式等情况.在构建密钥填充方式时,考虑到不同的安全等级,也会选择不同PKCS标准.</p>
-<p>PKI称为公钥基础设施(Public Key Infrastructure), 是一个基于X.509的、用于创建、分配和撤回证书的模型.<br>PKI能够为所有网络应用提供加密和数字签名等密码服务及所必需的密钥和证书管理体系.换言之,PKI利用公钥密码技术构建基础设施,为网上电子商务、电子政务等应用提供安全服务.PKI技术是信息安全技术的核心,也是电子商务的关键和基础技术.如今大家所熟悉的网银交易系统就是PKI技术的具体体现.</p>
-<p>PKI由公钥密码技术、数字证书、证书认证中心和关于公钥的安全策略等基本成分共同组成,对密钥和证书进行管理.因此,PKI技术涉及对称加密算法、非对称加密算法、消息摘要算法和数字签名等密码学算法.</p>
-<p>PKI系统由以下五部分组成:</p>
-<ul>
-<li>认证中心(Certificate Authority,CA PKI技术核心) : 数字证书的申请及签发机构, 确保公钥管理公开透明,进行 证书发放,, 证书更新, 证书撤销, 证书验证 操作. 由注册服务器、注册机构(Registry Authority,RA)和认证中心服务器三部分组成.</li>
-<li>数字证书库(Certificate Repository,CR PKI技术核心) : 存储已签发的数字证书及公钥</li>
-<li>密钥备份及恢复系统 : 若用户丢失密钥则无法对数据解密,这将造成数据的丢失.为避免此类情况,PKI技术提供密钥备份及恢复功能.</li>
-<li>证书作废系统 : 证书作废系统. 为了确保证书的有效性,证书具有使用时效性. 而且如果证书持有机构存在安全性问题,也需要作废. PKI技术通过将证书列入作废证书列表(Certificate Revocation List,CRL)来完成证书作废操作.用户可以通过查询CRL来验证证书的有效性.</li>
-<li>应用程序接口（Application Programming Interface,API） : PKI技术必须提供良好的应用程序接口,使得各式各样的应用,不同的系统架构都能以安全、一致、可信的方式与PKI进行交互,且能快速完成交互过程,以确保安全网络环境的完整性和易用性.</li>
-</ul>
-<p>数字证书是网络用户的身份标表,包含ID、公钥和颁发机构的数字签名等内容.其形式主要有X.509公钥证书、SPKI（Simple Public Key Infrastructure,简单PKI）证书、PGP（Pretty Good Privacy）证书和属性（Attribute）证书.其中,X.509证书最为常见.我们俗称的数字证书,通常指的是X.509公钥证书.</p>
-<p>目前,我们所使用的X.509证书通常由VeriSign、GeoTrust和Thawte三大国际权威认证机构签发.VeriSign由RSA控股,借助RSA成熟的安全技术提供了较为广泛的PKI产品,其产品活跃在电子商务平台中.当我们在淘宝或者亚马逊上购物时,总能看到熟悉的VeriSign字样.</p>
-<p>由于证书存在时效性,证书持有机构需要定期向认证机构申请证书签发.根据证书持有机构的证书使用范畴,认证机构会对不同的证书签发收取不同的费用.由此,证书持有机构需要每年向认证机构缴纳高额的年费.为了加强系统安全性,证书的密钥长度也会随着其费用递增.其中,价格最高的是商业网站的证书认证费用.上述的费用是认证机构得以生存的经济来源,同时也是电子商务平台等机构构建系统架构必须支付的安全成本之一.</p>
-<h1 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h1><p>RSA算法既是最为常用的非对称加密算法,又是最为常用的签名算法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.junit.Assert;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.security.*;</div><div class="line"><span class="keyword">import</span> java.util.Random;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RSASign</span> <span class="keyword">extends</span> <span class="title">AbstractSign</span></span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">RSASign</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="keyword">super</span>(<span class="string">"RSA"</span>, <span class="string">"SHA1withRSA"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initKeyPairGenerator</span><span class="params">(KeyPairGenerator keygen)</span> </span>&#123;</div><div class="line">		<span class="comment">// RSA密钥长度 默认1024位，密钥长度必须是64的倍数，范围在512至65536位之间。</span></div><div class="line">		keygen.initialize(<span class="number">512</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">byte</span>[] datas = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span> * <span class="number">1024</span>; i++) &#123;</div><div class="line">			datas[i] = (<span class="keyword">byte</span>)<span class="keyword">new</span> Random().nextInt(<span class="number">125</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		RSASign rsaSign = <span class="keyword">new</span> RSASign();</div><div class="line">		<span class="keyword">byte</span>[] signd = rsaSign.sign(datas);</div><div class="line">		<span class="keyword">boolean</span> result = rsaSign.verify(datas, signd);</div><div class="line">		Assert.assertEquals(<span class="keyword">true</span>, result);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="ECDSA"><a href="#ECDSA" class="headerlink" title="ECDSA"></a>ECDSA</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.junit.Assert;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.math.BigInteger;</div><div class="line"><span class="keyword">import</span> java.security.*;</div><div class="line"><span class="keyword">import</span> java.security.spec.*;</div><div class="line"><span class="keyword">import</span> java.util.Random;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ECDSASign</span> <span class="keyword">extends</span> <span class="title">AbstractSign</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ECDSASign</span><span class="params">(String algo)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="keyword">super</span>(<span class="string">"ECDSA"</span>, algo);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initKeyPairGenerator</span><span class="params">(KeyPairGenerator keygen)</span> </span>&#123;</div><div class="line">		BigInteger p = <span class="keyword">new</span> BigInteger(<span class="string">"883423532389192164791648750360308885314476597252960362792450860609699839"</span>);</div><div class="line">		BigInteger a = <span class="keyword">new</span> BigInteger(<span class="string">"7fffffffffffffffffffffff7fffffffffff8000000000007ffffffffffc"</span>, <span class="number">16</span>);</div><div class="line">		BigInteger b = <span class="keyword">new</span> BigInteger( <span class="string">"6b016c3bdcf18941d0d654921475ca71a9db2fb27d1d37796185c2942c0a"</span>, <span class="number">16</span>);</div><div class="line">		ECFieldFp ecFieldFp = <span class="keyword">new</span> ECFieldFp(p);</div><div class="line"></div><div class="line">		EllipticCurve ellipticCurve = <span class="keyword">new</span> EllipticCurve(ecFieldFp, a, b);</div><div class="line"></div><div class="line">		BigInteger x = <span class="keyword">new</span> BigInteger(<span class="string">"110282003749548856476348533541186204577905061504881242240149511594420911"</span>);</div><div class="line">		BigInteger y = <span class="keyword">new</span> BigInteger(<span class="string">"869078407435509378747351873793058868500210384946040694651368759217025454"</span>);</div><div class="line">		BigInteger n = <span class="keyword">new</span> BigInteger(<span class="string">"883423532389192164791648750360308884807550341691627752275345424702807307"</span>);</div><div class="line"></div><div class="line">		ECPoint g = <span class="keyword">new</span> ECPoint(x, y);</div><div class="line">		ECParameterSpec ecParameterSpec = <span class="keyword">new</span> ECParameterSpec(ellipticCurve, g, n, <span class="number">1</span>);</div><div class="line">		<span class="comment">// 初始化密钥对儿生成器</span></div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			keygen.initialize(ecParameterSpec, <span class="keyword">new</span> SecureRandom());</div><div class="line">		&#125; <span class="keyword">catch</span> (InvalidAlgorithmParameterException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">byte</span>[] datas = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line"></div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span> * <span class="number">1024</span>; i++) &#123;</div><div class="line">			datas[i] = (<span class="keyword">byte</span>)<span class="keyword">new</span> Random().nextInt(<span class="number">125</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		signed(<span class="string">"NONEwithECDSA"</span>);</div><div class="line">		signed(<span class="string">"RIPEMD160withECDSA"</span>);</div><div class="line">		signed(<span class="string">"SHA1withECDSA"</span>);</div><div class="line">		signed(<span class="string">"SHA224withECDSA"</span>);</div><div class="line">		signed(<span class="string">"SHA256withECDSA"</span>);</div><div class="line">		signed(<span class="string">"SHA384withECDSA"</span>);</div><div class="line">		signed(<span class="string">"SHA512withECDSA"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">signed</span><span class="params">(String s)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		ECDSASign ecdsaCoder = <span class="keyword">new</span> ECDSASign(s);</div><div class="line">		<span class="keyword">byte</span>[] signed = ecdsaCoder.sign(datas);</div><div class="line">		Assert.assertEquals(<span class="keyword">true</span>, ecdsaCoder.verify(datas, signed));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="DSA"><a href="#DSA" class="headerlink" title="DSA"></a>DSA</h1><p>DSA算法是典型的数字签名算法,其本身属于非对称加密算法不具备数据加密与解密的功能.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.junit.Assert;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.security.*;</div><div class="line"><span class="keyword">import</span> java.util.Random;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DSACoder</span> <span class="keyword">extends</span> <span class="title">AbstractSign</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">DSACoder</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="keyword">super</span>(<span class="string">"DSA"</span>, <span class="string">"SHA1withDSA"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initKeyPairGenerator</span><span class="params">(KeyPairGenerator keygen)</span> </span>&#123;</div><div class="line">		<span class="comment">// DSA密钥长度, 默认1024位，密钥长度必须是64的倍数，范围在512至1024位之间（含）</span></div><div class="line">		keygen.initialize(<span class="number">1024</span>, <span class="keyword">new</span> SecureRandom());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">byte</span>[] datas = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line"></div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span> * <span class="number">1024</span>; i++) &#123;</div><div class="line">			datas[i] = (<span class="keyword">byte</span>)<span class="keyword">new</span> Random().nextInt(<span class="number">125</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		DSACoder dsaCoder = <span class="keyword">new</span> DSACoder();</div><div class="line">		<span class="keyword">byte</span>[] signd = dsaCoder.sign(datas);</div><div class="line">		<span class="keyword">boolean</span> result = dsaCoder.verify(datas, signd);</div><div class="line">		Assert.assertEquals(<span class="keyword">true</span>, result);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2014/11/12/JavaSE/Java加密 数字证书实现/" data-title="Java加密 -- 数字签名 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2014/12/06/jvm/栈上分配/" title="栈上分配">
-  <strong>上一篇：</strong><br/>
-  <span>
-  栈上分配</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2014/11/11/JavaSE/Java加密 消息摘要实现/"  title="Java加密 -- 消息摘要">
- <strong>下一篇：</strong><br/> 
- <span>Java加密 -- 消息摘要
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2014/11/12/JavaSE/Java加密 数字证书实现/" data-title="Java加密 -- 数字签名" data-url="http://www.yu66.wang/2014/11/12/JavaSE/Java加密 数字证书实现/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数字签名"><span class="toc-number">1.</span> <span class="toc-text">数字签名</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AbstractSign"><span class="toc-number">2.</span> <span class="toc-text">AbstractSign</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RSA"><span class="toc-number">3.</span> <span class="toc-text">RSA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ECDSA"><span class="toc-number">4.</span> <span class="toc-text">ECDSA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DSA"><span class="toc-number">5.</span> <span class="toc-text">DSA</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

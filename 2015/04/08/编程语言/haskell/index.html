@@ -1,611 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>haskell类型系统 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="数据类型在Haskell中数据只是函数的一种方言,他们并没有本质上的区别.在Haskell中所有的数据类型都必须首字母都必须大写.
-在GHCI中我们可以通过::t命令来查看一个数据类型或者函数类型.
-我们可以通过下面的语法声明一个数据12var :: 数据类型var = 数据初始值
-或者我们可以将这俩行并为一行1var = 数据初始值 :: 数据类型
-Bool类型我们声明一个bool类型的数据,并">
-<meta property="og:type" content="article">
-<meta property="og:title" content="haskell类型系统">
-<meta property="og:url" content="http://www.yu66.wang/2015/04/08/编程语言/haskell/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="数据类型在Haskell中数据只是函数的一种方言,他们并没有本质上的区别.在Haskell中所有的数据类型都必须首字母都必须大写.
-在GHCI中我们可以通过::t命令来查看一个数据类型或者函数类型.
-我们可以通过下面的语法声明一个数据12var :: 数据类型var = 数据初始值
-或者我们可以将这俩行并为一行1var = 数据初始值 :: 数据类型
-Bool类型我们声明一个bool类型的数据,并">
-<meta property="og:updated_time" content="2016-10-29T06:45:59.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="haskell类型系统">
-<meta name="twitter:description" content="数据类型在Haskell中数据只是函数的一种方言,他们并没有本质上的区别.在Haskell中所有的数据类型都必须首字母都必须大写.
-在GHCI中我们可以通过::t命令来查看一个数据类型或者函数类型.
-我们可以通过下面的语法声明一个数据12var :: 数据类型var = 数据初始值
-或者我们可以将这俩行并为一行1var = 数据初始值 :: 数据类型
-Bool类型我们声明一个bool类型的数据,并">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/08/编程语言/haskell/" title="haskell类型系统" itemprop="url">haskell类型系统</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> Published 2015-04-08</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型"><span class="toc-number">1.</span> <span class="toc-text">数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bool类型"><span class="toc-number">1.1.</span> <span class="toc-text">Bool类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Char类型"><span class="toc-number">1.2.</span> <span class="toc-text">Char类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Int类型"><span class="toc-number">1.3.</span> <span class="toc-text">Int类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Word类型"><span class="toc-number">1.4.</span> <span class="toc-text">Word类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Integer类型"><span class="toc-number">1.5.</span> <span class="toc-text">Integer类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Float类型"><span class="toc-number">1.6.</span> <span class="toc-text">Float类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Double类型"><span class="toc-number">1.7.</span> <span class="toc-text">Double类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rational类型"><span class="toc-number">1.8.</span> <span class="toc-text">Rational类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String类型"><span class="toc-number">1.9.</span> <span class="toc-text">String类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#元组类型"><span class="toc-number">1.10.</span> <span class="toc-text">元组类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#列表类型"><span class="toc-number">1.11.</span> <span class="toc-text">列表类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#拼接列表"><span class="toc-number">1.11.1.</span> <span class="toc-text">拼接列表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多维列表"><span class="toc-number">1.11.2.</span> <span class="toc-text">多维列表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型别名"><span class="toc-number">2.</span> <span class="toc-text">类型别名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型类"><span class="toc-number">3.</span> <span class="toc-text">类型类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串"><span class="toc-number">4.</span> <span class="toc-text">字符串</span></a></li></ol>
-		
-		</div>
-		
-		<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>在Haskell中数据只是函数的一种方言,他们并没有本质上的区别.<br>在Haskell中所有的数据类型都必须首字母都必须大写.</p>
-<p>在GHCI中我们可以通过<code>::t</code>命令来查看一个数据类型或者函数类型.</p>
-<p>我们可以通过下面的语法声明一个数据<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">var</span> :: 数据类型</div><div class="line"><span class="title">var</span> = 数据初始值</div></pre></td></tr></table></figure></p>
-<p>或者我们可以将这俩行并为一行<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">var</span> = 数据初始值 :: 数据类型</div></pre></td></tr></table></figure></p>
-<h3 id="Bool类型"><a href="#Bool类型" class="headerlink" title="Bool类型"></a>Bool类型</h3><p>我们声明一个bool类型的数据,并将其初始化为<code>True</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">true</span> = <span class="type">True</span> :: <span class="type">Bool</span></div></pre></td></tr></table></figure></p>
-<h3 id="Char类型"><a href="#Char类型" class="headerlink" title="Char类型"></a>Char类型</h3><p>单字符类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="title">char</span> = 'a' :: <span class="type">Char</span></div><div class="line"></div><div class="line"><span class="title">char</span> = '\<span class="number">100</span>' :: <span class="type">Char</span></div><div class="line"></div><div class="line"><span class="title">char</span> = '\n' :: <span class="type">Char</span></div></pre></td></tr></table></figure></p>
-<h3 id="Int类型"><a href="#Int类型" class="headerlink" title="Int类型"></a>Int类型</h3><p>有符号整数,其范围和OS与GHC的位数有关.在32位系统中,其范围就是<code>-2^31~2^31-1</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">int</span> = <span class="number">-1</span> :: <span class="type">Int</span></div></pre></td></tr></table></figure></p>
-<h3 id="Word类型"><a href="#Word类型" class="headerlink" title="Word类型"></a>Word类型</h3><p>有符号整数类型,其范围和OS与GHC的位数有关.在32位系统中,其范围就是<code>0~2^32-1</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Data.Word</div><div class="line"></div><div class="line"><span class="title">word</span> = <span class="number">1</span> :: <span class="type">Word</span></div></pre></td></tr></table></figure></p>
-<h3 id="Integer类型"><a href="#Integer类型" class="headerlink" title="Integer类型"></a>Integer类型</h3><p>任意精度类型. 可以表示任意整数的大小, 限制它的因素只和OS有关.</p>
-<p>当数据不指明类型时,Integer是整数的默认类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">integer</span> = <span class="number">199999</span> :: <span class="type">Integer</span></div></pre></td></tr></table></figure></p>
-<h3 id="Float类型"><a href="#Float类型" class="headerlink" title="Float类型"></a>Float类型</h3><p>单精度浮点小数<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">float</span> = <span class="number">1.1</span> :: <span class="type">Float</span></div></pre></td></tr></table></figure></p>
-<h3 id="Double类型"><a href="#Double类型" class="headerlink" title="Double类型"></a>Double类型</h3><p>双精度浮点小数<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">double</span> = <span class="number">1.11111</span> :: <span class="type">Double</span></div></pre></td></tr></table></figure></p>
-<h3 id="Rational类型"><a href="#Rational类型" class="headerlink" title="Rational类型"></a>Rational类型</h3><p>有理数类型<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">rational</span> = <span class="number">1</span> / <span class="number">500</span> :: <span class="type">Rational</span></div></pre></td></tr></table></figure></p>
-<h3 id="String类型"><a href="#String类型" class="headerlink" title="String类型"></a>String类型</h3><p><code>String</code>的类型为<code>[Char]</code><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">string</span> = <span class="string">"char array"</span> :: <span class="type">String</span></div></pre></td></tr></table></figure></p>
-<h3 id="元组类型"><a href="#元组类型" class="headerlink" title="元组类型"></a>元组类型</h3><p>元祖用<code>(,)</code>表示,其中的内容称为元件. 元件的个数并不限制(如有俩个元件的称为2元元组).</p>
-<p>一旦确定了元件的个数和元件的类型,那他们就是不可再变的.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">tuple</span> = (<span class="number">123</span>, <span class="string">"abc"</span>) :: (<span class="type">Int</span>, [<span class="type">Char</span>])</div></pre></td></tr></table></figure></p>
-<h3 id="列表类型"><a href="#列表类型" class="headerlink" title="列表类型"></a>列表类型</h3><p>列表本身就是一个容器,内存可以存放各种类型的数据(包括函数),但是一旦类型确定了,就不可再变.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">list</span> = [<span class="number">123</span>, <span class="number">8</span>, <span class="number">9</span>] :: [<span class="type">Int</span>]</div></pre></td></tr></table></figure></p>
-<h4 id="拼接列表"><a href="#拼接列表" class="headerlink" title="拼接列表"></a>拼接列表</h4><p>采用<code>x:xs</code>的形式进行拼接列表, <code>x</code>代表一个元素, <code>xs</code>代表一个列表.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">list</span> = [<span class="number">123</span>, <span class="number">8</span>, <span class="number">9</span>]</div><div class="line"></div><div class="line"><span class="title">newList</span> = <span class="number">1</span> : list</div></pre></td></tr></table></figure></p>
-<h4 id="多维列表"><a href="#多维列表" class="headerlink" title="多维列表"></a>多维列表</h4><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">mulList</span> = [[]]  <span class="comment">-- 列表中套有一个列表,类似于2维数组</span></div><div class="line"></div><div class="line"><span class="title">mulList</span> = [[[]]]</div></pre></td></tr></table></figure>
-<h2 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h2><p>我们可以使用<code>type</code>关键字将复杂类型起一个简单的名字</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">type</span> <span class="type">NewType</span> = (<span class="type">Int</span>, <span class="type">Int</span>)</span></div></pre></td></tr></table></figure>
-<p>接下来我们就可以使用这个类型了<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">point</span> :: <span class="type">NewType</span></div><div class="line"><span class="title">point</span> = (<span class="number">1</span>, <span class="number">2</span>)</div></pre></td></tr></table></figure></p>
-<p><code>type</code>关键字并没有产生新的类型,只是在编译期将新的类型替换为原来的类型.</p>
-<h2 id="类型类"><a href="#类型类" class="headerlink" title="类型类"></a>类型类</h2><p>Haskell提供了以下的类型类</p>
-<ul>
-<li>Eq</li>
-<li>Ord</li>
-<li>Enum</li>
-<li>Bounded</li>
-<li>Num</li>
-<li>Show</li>
-</ul>
-<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
-<li>show</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>read</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>lines</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>unlines</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>word</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>unword</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/04/08/编程语言/haskell/" data-title="haskell类型系统 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/04/08/编程语言/haskell函数/" title="haskell函数">
-  <strong>上一篇：</strong><br/>
-  <span>
-  haskell函数</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/04/02/nosql/Redis部署/"  title="Redis 部署">
- <strong>下一篇：</strong><br/> 
- <span>Redis 部署
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/08/编程语言/haskell/" data-title="haskell类型系统" data-url="http://www.yu66.wang/2015/04/08/编程语言/haskell/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型"><span class="toc-number">1.</span> <span class="toc-text">数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bool类型"><span class="toc-number">1.1.</span> <span class="toc-text">Bool类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Char类型"><span class="toc-number">1.2.</span> <span class="toc-text">Char类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Int类型"><span class="toc-number">1.3.</span> <span class="toc-text">Int类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Word类型"><span class="toc-number">1.4.</span> <span class="toc-text">Word类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Integer类型"><span class="toc-number">1.5.</span> <span class="toc-text">Integer类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Float类型"><span class="toc-number">1.6.</span> <span class="toc-text">Float类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Double类型"><span class="toc-number">1.7.</span> <span class="toc-text">Double类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rational类型"><span class="toc-number">1.8.</span> <span class="toc-text">Rational类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String类型"><span class="toc-number">1.9.</span> <span class="toc-text">String类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#元组类型"><span class="toc-number">1.10.</span> <span class="toc-text">元组类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#列表类型"><span class="toc-number">1.11.</span> <span class="toc-text">列表类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#拼接列表"><span class="toc-number">1.11.1.</span> <span class="toc-text">拼接列表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多维列表"><span class="toc-number">1.11.2.</span> <span class="toc-text">多维列表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型别名"><span class="toc-number">2.</span> <span class="toc-text">类型别名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型类"><span class="toc-number">3.</span> <span class="toc-text">类型类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串"><span class="toc-number">4.</span> <span class="toc-text">字符串</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

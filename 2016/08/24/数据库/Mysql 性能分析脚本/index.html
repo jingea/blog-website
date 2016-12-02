@@ -1,547 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Mysql 性能分析脚本 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="参考mysql 性能优化方向写了一个性能分析脚本
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Mysql 性能分析脚本">
-<meta property="og:url" content="http://www.yu66.wang/2016/08/24/数据库/Mysql 性能分析脚本/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="参考mysql 性能优化方向写了一个性能分析脚本
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mysql 性能分析脚本">
-<meta name="twitter:description" content="参考mysql 性能优化方向写了一个性能分析脚本
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/08/24/数据库/Mysql 性能分析脚本/" title="Mysql 性能分析脚本" itemprop="url">Mysql 性能分析脚本</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-08-24T07:00:00.000Z" itemprop="datePublished"> Published 2016-08-24</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			
-		
-		</div>
-		
-		<p>参考<a href="http://www.cnblogs.com/AloneSword/p/3207697.html" target="_blank" rel="external">mysql 性能优化方向</a>写了一个性能分析脚本</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> mysql.connector</div><div class="line"></div><div class="line">mysql_host = <span class="string">"192.168.15.25"</span></div><div class="line">mysql_database = <span class="string">"test"</span></div><div class="line">mysql_user = <span class="string">"root"</span></div><div class="line">mysql_passwrold = <span class="string">"xpec@2015"</span></div><div class="line"></div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">exec_sqls</span><span class="params">(exec_sql)</span>:</span></div><div class="line">    cnx = mysql.connector.connect(user=mysql_user, password=mysql_passwrold, host=mysql_host, database=mysql_database)</div><div class="line">    cursor = cnx.cursor()</div><div class="line">    exec_sql(cursor)</div><div class="line">    cnx.commit()</div><div class="line">    cursor.close()</div><div class="line">    cnx.close()</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_2_blank</span><span class="params">(output)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"     "</span> + str(output)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_3_blank</span><span class="params">(output)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"         "</span> + str(output)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">exec_sql_query</span><span class="params">(cursor, sql)</span>:</span></div><div class="line">    cursor.execute(sql)</div><div class="line">    result = cursor.fetchall()</div><div class="line">    print_2_blank(result)</div><div class="line">    <span class="keyword">return</span> result</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_max_connections</span><span class="params">(cursor)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"连接数信息"</span></div><div class="line"></div><div class="line">    max_connections = exec_sql_query(cursor, <span class="string">"show variables like 'max_connections'"</span>)</div><div class="line">    max_connections_num = float(max_connections[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"max_connections : "</span> + str(max_connections_num))</div><div class="line">    <span class="keyword">print</span> <span class="string">""</span></div><div class="line"></div><div class="line">    max_used_connections = exec_sql_query(cursor, <span class="string">"show global status like 'max_used_connections'"</span>)</div><div class="line">    max_used_connections_num = float(max_used_connections[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"Max_used_connections : "</span> + str(max_used_connections_num))</div><div class="line">    print_2_blank(<span class="string">"理想设置值(&lt;=85) max_used_connections / max_connections = "</span> + str(max_used_connections_num / max_connections_num))</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_thread</span><span class="params">(cursor)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"\n线程信息查询"</span></div><div class="line"></div><div class="line">    thread_cache_size = exec_sql_query(cursor, <span class="string">"show variables like 'thread_cache_size'"</span>)</div><div class="line">    print_2_blank(<span class="string">"配置的最大缓存线程数 : "</span> + str(thread_cache_size[<span class="number">0</span>][<span class="number">1</span>]))</div><div class="line">    <span class="keyword">print</span> <span class="string">""</span></div><div class="line"></div><div class="line">    thread = exec_sql_query(cursor, <span class="string">"show global status like 'thread%'"</span>)</div><div class="line">    print_2_blank(<span class="string">"Threads_cached(缓存线程数) : "</span>        + str(thread[<span class="number">0</span>][<span class="number">1</span>]))</div><div class="line">    print_2_blank(<span class="string">"Threads_connected(连接过的线程数) : "</span>    + str(thread[<span class="number">1</span>][<span class="number">1</span>]))</div><div class="line">    print_2_blank(<span class="string">"Threads_created(创建过的线程数) : "</span>    + str(thread[<span class="number">2</span>][<span class="number">1</span>]))</div><div class="line">    print_2_blank(<span class="string">"Threads_running(运行的线程数) : "</span>      + str(thread[<span class="number">3</span>][<span class="number">1</span>]))</div><div class="line">    <span class="keyword">print</span> <span class="string">"\n"</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_files_cache</span><span class="params">(cursor)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"文件打开数"</span></div><div class="line">    open_files = exec_sql_query(cursor, <span class="string">"show global status like 'open_files'"</span>)</div><div class="line"></div><div class="line">    open_files_num = float(open_files[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"open_files : "</span> + str(open_files_num))</div><div class="line">    <span class="keyword">print</span> <span class="string">""</span></div><div class="line"></div><div class="line">    open_files_limit = exec_sql_query(cursor, <span class="string">"show variables like 'open_files_limit'"</span>)</div><div class="line">    open_files_limit_num = float(open_files_limit[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"open_files_limit : "</span> + str(open_files_limit_num))</div><div class="line"></div><div class="line">    <span class="keyword">print</span> <span class="string">""</span></div><div class="line">    batter_value = str(int((open_files_num / open_files_limit_num)))</div><div class="line">    print_2_blank(<span class="string">"理想设置值(&lt;=75) open_files / open_files_limit = "</span> + batter_value)</div><div class="line">    <span class="keyword">print</span> <span class="string">"\n"</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_open_tables</span><span class="params">(cursor)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"数据库表信息"</span></div><div class="line"></div><div class="line">    print_2_blank(<span class="string">"表打开信息"</span>)</div><div class="line">    open_tables = exec_sql_query(cursor, <span class="string">"show global status like 'open%tables%'"</span>)</div><div class="line">    open_tables_num = float(open_tables[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    opened_tables_num = float(open_tables[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"open_tables(打开表的数量) : "</span> + str(open_tables_num))</div><div class="line">    print_2_blank(<span class="string">"opened_tables(打开过的表数量) : "</span> + str(opened_tables_num))</div><div class="line">    batter_value = str(int((open_tables_num / opened_tables_num) * <span class="number">100</span>))</div><div class="line">    print_2_blank(<span class="string">"比较合适的值(&gt;=85) open_tables / opened_tables = "</span> + batter_value)</div><div class="line">    <span class="keyword">print</span> <span class="string">""</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> int(batter_value) &lt; <span class="number">85</span>:</div><div class="line">        table_cache = exec_sql_query(cursor, <span class="string">"show variables like 'table_open_cache'"</span>)</div><div class="line">        table_cache_num = float(table_cache[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">        print_2_blank(<span class="string">"table_open_cache : "</span> + str(table_cache_num))</div><div class="line">        batter_value = str(int((open_tables_num / table_cache_num) * <span class="number">100</span>))</div><div class="line">        print_2_blank(<span class="string">"比较合适的值(&lt;=95) open_tables / table_open_cache = "</span> + batter_value)</div><div class="line"></div><div class="line">    print_2_blank(<span class="string">"\n     临时表信息"</span>)</div><div class="line">    tmp_table_size = exec_sql_query(cursor, <span class="string">"show variables where variable_name in ('tmp_table_size', 'max_heap_table_size')"</span>)</div><div class="line">    max_heap_table_size = float(tmp_table_size[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    tmp_table_size = float(tmp_table_size[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"max_heap_table_size : "</span> + str(max_heap_table_size / <span class="number">1024</span> / <span class="number">1024</span>) + <span class="string">"Mb"</span>)</div><div class="line">    print_2_blank(<span class="string">"tmp_table_size : "</span> + str(tmp_table_size / <span class="number">1024</span> / <span class="number">1024</span>) + <span class="string">"Mb"</span>)</div><div class="line">    print_3_blank(<span class="string">"只有 256mb 以下的临时表才能全部放内存,超过的就会用到硬盘临时表"</span>)</div><div class="line"></div><div class="line">    print_2_blank(<span class="string">"\n      内存临时表信息"</span>)</div><div class="line">    created_tmp = exec_sql_query(cursor, <span class="string">"show global status like 'created_tmp%'"</span>)</div><div class="line">    Created_tmp_disk_tables = float(created_tmp[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    Created_tmp_files = float(created_tmp[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    Created_tmp_tables = float(created_tmp[<span class="number">2</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"Created_tmp_disk_tables : "</span> + str(Created_tmp_disk_tables))</div><div class="line">    print_2_blank(<span class="string">"Created_tmp_files : "</span> + str(Created_tmp_files))</div><div class="line">    print_2_blank(<span class="string">"Created_tmp_tables : "</span> + str(Created_tmp_tables))</div><div class="line">    print_2_blank(<span class="string">"比较合适的值(&lt;=25) created_tmp_disk_tables / created_tmp_tables = "</span> + str(int(Created_tmp_disk_tables / Created_tmp_tables)))</div><div class="line"></div><div class="line"></div><div class="line">    print_2_blank(<span class="string">"\n      表锁情况"</span>)</div><div class="line">    created_tmp = exec_sql_query(cursor, <span class="string">"show global status like 'table_locks%'"</span>)</div><div class="line">    table_locks_immediate = float(created_tmp[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    table_locks_waited = float(created_tmp[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"table_locks_immediate (立即释放表锁数): "</span> + str(table_locks_immediate))</div><div class="line">    print_2_blank(<span class="string">"table_locks_waited (需要等待的表锁数) : "</span> + str(table_locks_waited))</div><div class="line">    batter_value = int(table_locks_immediate / table_locks_waited)</div><div class="line">    <span class="keyword">if</span> batter_value &gt;= <span class="number">5000</span>:</div><div class="line">        print_2_blank(<span class="string">"推荐采用innodb引擎,因为innodb是行锁而myisam是表锁,对于高并发写入的应用innodb效果会好些. "</span> + str(batter_value))</div><div class="line">    <span class="keyword">if</span> batter_value &lt;= <span class="number">235</span>:</div><div class="line">        print_2_blank(<span class="string">"table_locks_immediate / table_locks_waited ＝ 235,myisam就足够了 = "</span> + str(batter_value))</div><div class="line"></div><div class="line">    print_2_blank(<span class="string">"\n      表扫描情况"</span>)</div><div class="line">    handler_read = exec_sql_query(cursor, <span class="string">"show global status like 'handler_read%'"</span>)</div><div class="line">    handler_read_first = float(handler_read[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    handler_read_key = float(handler_read[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    handler_read_next = float(handler_read[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    handler_read_prev = float(handler_read[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    handler_read_rnd = float(handler_read[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    handler_read_rnd_next= float(handler_read[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"handler_read_first : "</span> + str(handler_read_first))</div><div class="line">    print_2_blank(<span class="string">"handler_read_key : "</span> + str(handler_read_key))</div><div class="line">    print_2_blank(<span class="string">"handler_read_next : "</span> + str(handler_read_next))</div><div class="line">    print_2_blank(<span class="string">"handler_read_prev : "</span> + str(handler_read_prev))</div><div class="line">    print_2_blank(<span class="string">"handler_read_rnd : "</span> + str(handler_read_rnd))</div><div class="line">    print_2_blank(<span class="string">"handler_read_rnd_next : "</span> + str(handler_read_rnd_next))</div><div class="line"></div><div class="line">    print_2_blank(<span class="string">"\n      服务器完成的查询请求次数"</span>)</div><div class="line">    com_select = exec_sql_query(cursor, <span class="string">"show global status like 'com_select'"</span>)</div><div class="line">    com_select_num = float(com_select[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"服务器完成的查询请求次数 "</span> + str(com_select_num))</div><div class="line">    batter_value = int(handler_read_rnd_next / com_select_num)</div><div class="line">    print_2_blank(<span class="string">"表扫描率 handler_read_rnd_next / com_select = "</span> + str(batter_value))</div><div class="line">    <span class="keyword">if</span> batter_value &gt; <span class="number">4000</span>:</div><div class="line">        print_2_blank(<span class="string">"表扫描率超过 4000,说明进行了太多表扫描,很有可能索引没有建好,增加 read_buffer_size 值会有一些好处,但最好不要超过8mb"</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_key_buffer_size</span><span class="params">(cursor)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"\nkey_buffer_size"</span></div><div class="line"></div><div class="line">    key_buffer_size = exec_sql_query(cursor, <span class="string">"show variables like 'key_buffer_size'"</span>)</div><div class="line">    key_buffer_size_num = float(key_buffer_size[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"key_buffer_size : "</span> + str(key_buffer_size_num))</div><div class="line"></div><div class="line">    key_read = exec_sql_query(cursor, <span class="string">"show global status like 'key_read%'"</span>)</div><div class="line">    key_read_requests = float(key_read[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    key_reads = float(key_read[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"key_read_requests(索引读取请求次数) : "</span> + str(key_read_requests))</div><div class="line">    print_2_blank(<span class="string">"key_reads(索引从内存查询失败在硬盘读取次数) : "</span> + str(key_reads))</div><div class="line">    print_2_blank(<span class="string">"索引缓存未命中概率 key_reads / key_read_requests = "</span> + str(key_reads / key_read_requests))</div><div class="line"></div><div class="line">    <span class="comment"># 比如上面的数据,key_cache_miss_rate为0.0244%,4000个索引读取请求才有一个直接读硬盘,已经很bt了,</span></div><div class="line">    <span class="comment"># key_cache_miss_rate在0.1%以下都很好(每1000个请求有一个直接读硬盘),如果key_cache_miss_rate在0.01%以下的话,key_buffer_size分配的过多,可以适当减少.</span></div><div class="line">    <span class="comment">#【注意】key_read_buffer 默认值为 8M .在专有的数据库服务器上,该值可设置为 RAM * 1/4</span></div><div class="line">    <span class="keyword">print</span> <span class="string">""</span></div><div class="line">    key_blocks_u = exec_sql_query(cursor, <span class="string">"show global status like 'key_blocks_u%'"</span>)</div><div class="line">    key_blocks_unused = float(key_blocks_u[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    key_blocks_used = float(key_blocks_u[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"未使用的缓存簇(blocks)数 : "</span> + str(key_blocks_unused))</div><div class="line">    print_2_blank(<span class="string">"曾经用到的最大的blocks数 : "</span> + str(key_blocks_used))</div><div class="line">    batter_value = int(key_blocks_used / (key_blocks_unused + key_blocks_used))</div><div class="line">    <span class="comment"># 比如这台服务器,所有的缓存都用到了,要么增加 key_buffer_size,要么就是过渡索引了,把缓存占满了</span></div><div class="line">    print_2_blank(<span class="string">"比较理想的设置(80)：key_blocks_used / (key_blocks_unused + key_blocks_used) -&gt;"</span> + str(batter_value))</div><div class="line">    <span class="keyword">print</span> <span class="string">"\n"</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_sort</span><span class="params">(cursor)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"排序使用情况"</span></div><div class="line">    sort = exec_sql_query(cursor, <span class="string">"show global status like 'sort%'"</span>)</div><div class="line">    sort_merge_passes = float(sort[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    sort_range = float(sort[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    sort_rows = float(sort[<span class="number">2</span>][<span class="number">1</span>])</div><div class="line">    sort_scan = float(sort[<span class="number">3</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"sort_merge_passes : "</span> + str(sort_merge_passes))</div><div class="line">    print_2_blank(<span class="string">"sort_range : "</span> + str(sort_range))</div><div class="line">    print_2_blank(<span class="string">"sort_rows : "</span> + str(sort_rows))</div><div class="line">    print_2_blank(<span class="string">"sort_scan : "</span> + str(sort_scan))</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_cache</span><span class="params">(cursor)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"\n缓存查询"</span></div><div class="line"></div><div class="line">    qcache = exec_sql_query(cursor, <span class="string">"show global status like 'qcache%'"</span>)</div><div class="line">    qcache_free_blocks =    float(qcache[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    qcache_free_memory =    float(qcache[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    qcache_hits =           float(qcache[<span class="number">2</span>][<span class="number">1</span>])</div><div class="line">    qcache_inserts =        float(qcache[<span class="number">3</span>][<span class="number">1</span>])</div><div class="line">    qcache_lowmem_prunes =  float(qcache[<span class="number">4</span>][<span class="number">1</span>])</div><div class="line">    qcache_not_cached =     float(qcache[<span class="number">5</span>][<span class="number">1</span>])</div><div class="line">    qcache_queries_in_cache = float(qcache[<span class="number">6</span>][<span class="number">1</span>])</div><div class="line">    qcache_total_blocks =   float(qcache[<span class="number">7</span>][<span class="number">1</span>])</div><div class="line">    <span class="comment"># 数目大说明可能有碎片.flush query cache会对缓存中的碎片进行整理,从而得到一个空闲块</span></div><div class="line">    print_2_blank(<span class="string">"qcache_free_blocks(缓存中相邻内存块的个数) : "</span> + str(qcache_free_blocks))</div><div class="line">    print_2_blank(<span class="string">"qcache_free_memory(缓存中的空闲内存) : "</span> + str(qcache_free_memory))</div><div class="line">    print_2_blank(<span class="string">"qcache_hits(每次查询在缓存中命中时就增大) : "</span> + str(qcache_hits))</div><div class="line">    <span class="comment"># 每次插入一个查询时就增大.命中次数除以插入次数就是命中比率</span></div><div class="line">    print_2_blank(<span class="string">"qcache_inserts(命中次数) : "</span> + str(qcache_inserts))</div><div class="line">    <span class="comment"># 缓存出现内存不足并且必须要进行清理以便为更多查询提供空间的次数.这个数字最好长时间来看；如果这个数字在不断增长,就表示可能碎片非常严重,或者内存很少.(上面的 free_blocks和free_memory可以告诉您属于哪种情况)</span></div><div class="line">    print_2_blank(<span class="string">"qcache_lowmem_prunes : "</span> + str(qcache_lowmem_prunes))</div><div class="line">    print_2_blank(<span class="string">"qcache_not_cached(不适合进行缓存的查询的数量) : "</span> + str(qcache_not_cached))</div><div class="line">    print_2_blank(<span class="string">"qcache_queries_in_cache(当前缓存的查询(和响应)的数量) : "</span> + str(qcache_queries_in_cache))</div><div class="line">    print_2_blank(<span class="string">"qcache_total_blocks(缓存中块的数量) : "</span> + str(qcache_total_blocks))</div><div class="line"></div><div class="line">    <span class="keyword">print</span> <span class="string">""</span></div><div class="line">    query_cache = exec_sql_query(cursor, <span class="string">"show variables like 'query_cache%'"</span>)</div><div class="line">    query_cache_limit =         float(query_cache[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    query_cache_min_res_unit =  float(query_cache[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    query_cache_size =          float(query_cache[<span class="number">2</span>][<span class="number">1</span>])</div><div class="line">    query_cache_type =          str(query_cache[<span class="number">3</span>][<span class="number">1</span>])</div><div class="line">    query_cache_wlock_invalidate = str(query_cache[<span class="number">4</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"query_cache_limit(超过此大小的查询将不缓存) : "</span> + str(query_cache_limit))</div><div class="line">    print_2_blank(<span class="string">"query_cache_min_res_unit(缓存块的最小大小) : "</span> + str(query_cache_min_res_unit))</div><div class="line">    print_2_blank(<span class="string">"query_cache_size(查询缓存大小) : "</span> + str(query_cache_size))</div><div class="line">    print_2_blank(<span class="string">"query_cache_type(缓存类型,决定缓存什么样的查询) : "</span> + str(query_cache_type))</div><div class="line">    print_2_blank(<span class="string">"query_cache_wlock_invalidate : "</span> + str(query_cache_wlock_invalidate))</div><div class="line">    print_2_blank(<span class="string">"query_cache_wlock_invalidate：当有其他客户端正在对myisam表进行写操作时,如果查询在query cache中,是否返回cache结果还是等写操作完成再读表获取结果."</span>)</div><div class="line">    batter_value = int(qcache_free_blocks / qcache_total_blocks)</div><div class="line">    print_2_blank(<span class="string">"查询缓存碎片率 qcache_free_blocks / qcache_total_blocks = "</span> + str(batter_value))</div><div class="line">    <span class="keyword">if</span> batter_value &gt; <span class="number">20</span>:</div><div class="line">        print_2_blank(<span class="string">"查询缓存碎片率超过20%,可以用flush query cache整理缓存碎片,或者试试减小query_cache_min_res_unit,如果你的查询都是小数据量的话. "</span>)</div><div class="line"></div><div class="line">    batter_value = int((query_cache_size - qcache_free_memory) / query_cache_size)</div><div class="line">    print_2_blank(<span class="string">"查询缓存利用率 (query_cache_size - qcache_free_memory) / query_cache_size = "</span> + str(batter_value))</div><div class="line">    <span class="keyword">if</span> batter_value &lt; <span class="number">25</span>:</div><div class="line">        print_2_blank(<span class="string">"查询缓存利用率在25%以下, query_cache_size设置的过大,可适当减小；查询缓存利用率在80％以上而且qcache_lowmem_prunes &gt; 50的话说明query_cache_size可能有点小,要不就是碎片太多."</span>)</div><div class="line">    <span class="keyword">if</span> qcache_hits &gt; <span class="number">0</span>:</div><div class="line">        batter_value = int((qcache_hits - qcache_inserts) / qcache_hits)</div><div class="line">        print_2_blank(<span class="string">"查询缓存命中率 (qcache_hits - qcache_inserts) / qcache_hits = "</span> + str(batter_value))</div><div class="line">    print_2_blank(<span class="string">"例如 查询缓存碎片率 ＝ 20.46％,查询缓存利用率 ＝ 62.26％,查询缓存命中率 ＝ 1.94％,命中率很差,可能写操作比较频繁吧,而且可能有些碎片."</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_read_buffer_size</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">query_slow</span><span class="params">(cursor)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"\n慢查询"</span></div><div class="line">    variables_slow = exec_sql_query(cursor, <span class="string">"show variables like '%slow%'"</span>)</div><div class="line">    log_slow_admin_statements = str(variables_slow[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    log_slow_slave_statements = str(variables_slow[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    slow_launch_time = float(variables_slow[<span class="number">2</span>][<span class="number">1</span>])</div><div class="line">    slow_query_log = str(variables_slow[<span class="number">3</span>][<span class="number">1</span>])</div><div class="line">    slow_query_log_file = str(variables_slow[<span class="number">4</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"log_slow_admin_statements : "</span> + str(log_slow_admin_statements))</div><div class="line">    print_2_blank(<span class="string">"log_slow_slave_statements : "</span> + str(log_slow_slave_statements))</div><div class="line">    print_2_blank(<span class="string">"slow_launch_time : "</span> + str(slow_launch_time))</div><div class="line">    print_2_blank(<span class="string">"slow_query_log : "</span> + str(slow_query_log))</div><div class="line">    print_2_blank(<span class="string">"slow_query_log_file : "</span> + str(slow_query_log_file))</div><div class="line"></div><div class="line">    slow = exec_sql_query(cursor, <span class="string">"show global status like '%slow%'"</span>)</div><div class="line">    slow_launch_threads = float(slow[<span class="number">0</span>][<span class="number">1</span>])</div><div class="line">    slow_queries = float(slow[<span class="number">1</span>][<span class="number">1</span>])</div><div class="line">    print_2_blank(<span class="string">"slow_launch_threads : "</span> + str(slow_launch_threads))</div><div class="line">    print_2_blank(<span class="string">"slow_queries : "</span> + str(slow_queries))</div><div class="line"></div><div class="line"></div><div class="line">exec_sqls(query_max_connections)</div><div class="line">exec_sqls(query_thread)</div><div class="line">exec_sqls(query_files_cache)</div><div class="line">exec_sqls(query_open_tables)</div><div class="line">exec_sqls(query_key_buffer_size)</div><div class="line">exec_sqls(query_sort)</div><div class="line">exec_sqls(query_cache)</div><div class="line">exec_sqls(query_slow)</div></pre></td></tr></table></figure>  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/数据库/">数据库</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/08/24/数据库/Mysql 性能分析脚本/" data-title="Mysql 性能分析脚本 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/08/26/JavaSE/Java ClassPath 的秘密/" title="Java ClassPath 的秘密">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Java ClassPath 的秘密</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/08/22/jvm/hsperfdata/"  title="hsperfdata">
- <strong>下一篇：</strong><br/> 
- <span>hsperfdata
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/08/24/数据库/Mysql 性能分析脚本/" data-title="Mysql 性能分析脚本" data-url="http://www.yu66.wang/2016/08/24/数据库/Mysql 性能分析脚本/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- 
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

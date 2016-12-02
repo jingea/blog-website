@@ -1,564 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Jetty 嵌入模式 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="添加依赖123456&amp;lt;!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server --&amp;gt;&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.eclipse.jetty&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;jetty-server&amp;lt;/a">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Jetty 嵌入模式">
-<meta property="og:url" content="http://www.yu66.wang/2016/07/25/JavaLibrary/Jetty/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="添加依赖123456&amp;lt;!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server --&amp;gt;&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.eclipse.jetty&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;jetty-server&amp;lt;/a">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Jetty 嵌入模式">
-<meta name="twitter:description" content="添加依赖123456&amp;lt;!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server --&amp;gt;&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.eclipse.jetty&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;jetty-server&amp;lt;/a">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/07/25/JavaLibrary/Jetty/" title="Jetty 嵌入模式" itemprop="url">Jetty 嵌入模式</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-07-25T07:00:00.000Z" itemprop="datePublished"> Published 2016-07-25</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件服务器"><span class="toc-number">1.</span> <span class="toc-text">文件服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ContextHandler"><span class="toc-number">2.</span> <span class="toc-text">ContextHandler</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Servlets"><span class="toc-number">3.</span> <span class="toc-text">Servlets</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletContextHandler"><span class="toc-number">4.</span> <span class="toc-text">ServletContextHandler</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Connectors"><span class="toc-number">5.</span> <span class="toc-text">Connectors</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JMX"><span class="toc-number">6.</span> <span class="toc-text">JMX</span></a></li></ol>
-		
-		</div>
-		
-		<p>添加依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.eclipse.jetty<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jetty-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>9.4.0.M0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<ul>
-<li><code>HandlerCollection</code> ：维持一个handlers 集合, 然后按顺序依次调用每个handler(注意这个里的handler不管发生什么情况都会执行一遍, 这通常可以作为一个切面用于统计和记日志). </li>
-<li><code>HandlerList</code>：同样维持一个handlers 集合,也是按顺序调用每个handler.但是当有异常抛出, 或者有response返回, 或者 <code>request.isHandled()</code>被设为true.</li>
-<li><code>HandlerWrapper</code>：继承自<code>HandlerWrapper</code>的类可以以面向切面编程的方式将handler通过链式的形式组合在一起.例如一个标准的web应用程序就实现了一个这样的规则, 他将context,session,security,servlet的handler以链式的方式组合在一起.</li>
-</ul>
-<h2 id="文件服务器"><a href="#文件服务器" class="headerlink" title="文件服务器"></a>文件服务器</h2><p>通过<code>ResourceHandler</code> 指定了资源路径，并且允许列出目录和文件. 下面的例子中就是直接将<code>ResourceHandler</code>映射到根目录<code>/</code>下, 即通过<code>http://localhost:8080/</code>就可以在浏览器上看到所有的文件列表<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.ContextHandler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.HandlerList;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.ResourceHandler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.gzip.GzipHandler;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line"></div><div class="line">		ResourceHandler fileResourceHandler = <span class="keyword">new</span> ResourceHandler();</div><div class="line">		fileResourceHandler.setDirectoriesListed(<span class="keyword">true</span>);</div><div class="line">		fileResourceHandler.setResourceBase(<span class="string">"D:\\repository"</span>);</div><div class="line"></div><div class="line">		GzipHandler gzip = <span class="keyword">new</span> GzipHandler();</div><div class="line">		server.setHandler(gzip);</div><div class="line"></div><div class="line">		ContextHandler fileContext = <span class="keyword">new</span> ContextHandler(<span class="string">"/files"</span>);</div><div class="line">		fileContext.setHandler(fileResourceHandler);</div><div class="line"></div><div class="line">		ResourceHandler indexResourceHandler = <span class="keyword">new</span> ResourceHandler();</div><div class="line">		indexResourceHandler.setDirectoriesListed(<span class="keyword">true</span>);</div><div class="line">		indexResourceHandler.setWelcomeFiles(<span class="keyword">new</span> String[]&#123;<span class="string">"index.html"</span>&#125;);</div><div class="line">		indexResourceHandler.setResourceBase(<span class="string">"."</span>);</div><div class="line"></div><div class="line">		ContextHandler indexContextHandler = <span class="keyword">new</span> ContextHandler(<span class="string">"/"</span>);</div><div class="line">		indexContextHandler.setHandler(indexResourceHandler);</div><div class="line"></div><div class="line">		HandlerList handlerList = <span class="keyword">new</span> HandlerList();</div><div class="line">		handlerList.addHandler(fileContext);</div><div class="line">		handlerList.addHandler(indexContextHandler);</div><div class="line"></div><div class="line">		server.setHandler(handlerList);</div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>还可以使用<code>ContextHandler</code>将<code>ResourceHandler</code>映射到其他路径上. </p>
-</blockquote>
-<h2 id="ContextHandler"><a href="#ContextHandler" class="headerlink" title="ContextHandler"></a>ContextHandler</h2><p><code>ContextHandler</code>实现自<code>ScopedHandler</code>. <code>ContextHandler</code>实现的功能是将Http请求路径映射到某个具体处理业务逻辑的Handler上.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Handler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Request;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.AbstractHandler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.ContextHandler;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.handler.ContextHandlerCollection;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.ServletOutputStream;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ManyContexts</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 可以在ContextHandler的构造函数中设置URI映射,但是setContextPath()会覆盖构造函数中的映射</span></div><div class="line">		ContextHandler rootContext = <span class="keyword">new</span> ContextHandler(<span class="string">"/"</span>);</div><div class="line">		rootContext.setContextPath(<span class="string">"/root"</span>);</div><div class="line">		rootContext.setHandler(<span class="keyword">new</span> HelloHandler(<span class="string">"Root Hello"</span>));</div><div class="line"></div><div class="line">		ContextHandler contextFR = <span class="keyword">new</span> ContextHandler(<span class="string">"/fr"</span>);</div><div class="line">		contextFR.setHandler(<span class="keyword">new</span> HelloHandler(<span class="string">"Bonjoir"</span>));</div><div class="line"></div><div class="line">		ContextHandler contextV = <span class="keyword">new</span> ContextHandler(<span class="string">"/"</span>);</div><div class="line">		contextV.setVirtualHosts(<span class="keyword">new</span> String[] &#123; <span class="string">"127.0.0.2"</span> &#125;);</div><div class="line">		contextV.setHandler(<span class="keyword">new</span> HelloHandler(<span class="string">"Virtual Hello"</span>));</div><div class="line"></div><div class="line">		ContextHandler resourceBaseHandler = <span class="keyword">new</span> ContextHandler(<span class="string">"/resources"</span>);</div><div class="line">		<span class="comment">// 设置web内容的路径, 即请求web资源时(Html, js, css文件等)的根路径</span></div><div class="line">		resourceBaseHandler.setResourceBase(<span class="string">"/"</span>);</div><div class="line">		resourceBaseHandler.setHandler(<span class="keyword">new</span> HelloHandler(<span class="string">"Resource Hello"</span>));</div><div class="line"></div><div class="line">		ContextHandlerCollection contexts = <span class="keyword">new</span> ContextHandlerCollection();</div><div class="line">		contexts.setHandlers(<span class="keyword">new</span> Handler[] &#123; rootContext, contextFR, contextV, resourceBaseHandler&#125;);</div><div class="line"></div><div class="line">		server.setHandler(contexts);</div><div class="line"></div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloHandler</span> <span class="keyword">extends</span> <span class="title">AbstractHandler</span> </span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">private</span> String path;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">HelloHandler</span><span class="params">(String path)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.path = path;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</div><div class="line">			ServletOutputStream out = response.getOutputStream();</div><div class="line">			out.print(path);</div><div class="line">			out.flush();</div><div class="line">			response.setStatus(<span class="number">200</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我们看一下测试结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">ζ curl http://192.168.10.220:8080/</div><div class="line">Root Hello%                                                                                         </div><div class="line"><span class="comment"># wangming@OA1503P0256: ~                                                               (16:55:48)</span></div><div class="line">ζ curl http://192.168.10.220:8080/fr</div><div class="line"><span class="comment"># wangming@OA1503P0256: ~                                                               (16:55:55)</span></div><div class="line">ζ curl http://192.168.10.220:8080/it</div><div class="line"><span class="comment"># wangming@OA1503P0256: ~                                                               (16:56:07)</span></div><div class="line">ζ curl 127.0.0.2:8080/</div><div class="line">Virtual HelloRoot Hello%</div></pre></td></tr></table></figure></p>
-<h2 id="Servlets"><a href="#Servlets" class="headerlink" title="Servlets"></a>Servlets</h2><p>Servlet是一种标准的处理HTTP请求逻辑的方式. Servlet和Jetty Handler非常像, 但是Servlet得request对象是不可变的.<br>Jetty的ServletHandler采用将请求映射到一个标准路径上.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.servlet.ServletHandler;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MinimalServlets</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line"></div><div class="line">		ServletHandler handler = <span class="keyword">new</span> ServletHandler();</div><div class="line">		server.setHandler(handler);</div><div class="line"></div><div class="line">		<span class="comment">// 下面我们配置一个原生的Servlet, 还有其他的Servlet(例如通过web.xml或者@WebServlet注解生成的)可配置</span></div><div class="line">		handler.addServletWithMapping(HelloServlet.class, <span class="string">"/*"</span>);</div><div class="line"></div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span></span></div><div class="line">				<span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">			response.setContentType(<span class="string">"text/html"</span>);</div><div class="line">			response.setStatus(HttpServletResponse.SC_OK);</div><div class="line">			response.getWriter().println(<span class="string">"&lt;h1&gt;Hello from HelloServlet&lt;/h1&gt;"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="ServletContextHandler"><a href="#ServletContextHandler" class="headerlink" title="ServletContextHandler"></a>ServletContextHandler</h2><p>在上面的<code>Servlets</code>中我们看到每个Servlet都对应一个完整的URI地址映射, 但是如果我们想在某个特定的URI下, 增加子映射怎么办呢？这就用到了<code>ServletContextHandler</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.servlet.ServletContextHandler;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServletContextHandlerTest</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line">		ServletContextHandler servletContextHandler = <span class="keyword">new</span> ServletContextHandler(ServletContextHandler.SESSIONS);</div><div class="line">		servletContextHandler.setContextPath(<span class="string">"/servlet"</span>);</div><div class="line">		servletContextHandler.addServlet(HelloServlet.class, <span class="string">"/abc"</span>);</div><div class="line">		server.setHandler(servletContextHandler);</div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span></span></div><div class="line">				<span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">			response.setContentType(<span class="string">"text/html"</span>);</div><div class="line">			response.setStatus(HttpServletResponse.SC_OK);</div><div class="line">			response.getWriter().println(<span class="string">"&lt;h1&gt;Hello from HelloServlet&lt;/h1&gt;"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Connectors"><a href="#Connectors" class="headerlink" title="Connectors"></a>Connectors</h2><p>当创建N个connectors应用时, 一般我们会将通用的配置首先提取出来, 使用一个配置类配置这些通用配置. 然后在其他具体Connectors配置时将这个配置传递到具体配置类中, 这样一来就形成了一个链式配置形式.</p>
-<p>首先生成一个keystore文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">D:\ssl&gt;keytool -genkey -alias wm -keyalg RSA -keysize 1024 -keypass 123456 -validity 365 -keystore D:\ssl\wm.keystore -storepass 123456</div><div class="line">您的名字与姓氏是什么?</div><div class="line">  [Unknown]:  wm</div><div class="line">您的组织单位名称是什么?</div><div class="line">  [Unknown]:  wm</div><div class="line">您的组织名称是什么?</div><div class="line">  [Unknown]:  wm</div><div class="line">您所在的城市或区域名称是什么?</div><div class="line">  [Unknown]:  bj</div><div class="line">您所在的省/市/自治区名称是什么?</div><div class="line">  [Unknown]:  bj</div><div class="line">该单位的双字母国家/地区代码是什么?</div><div class="line">  [Unknown]:  cn</div><div class="line">CN=wm, OU=wm, O=wm, L=bj, ST=bj, C=cn是否正确?</div><div class="line">  [否]:  y</div><div class="line"></div><div class="line">D:\ssl&gt;</div></pre></td></tr></table></figure></p>
-<p>然后看一下服务器代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> javax.servlet.ServletException;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</div><div class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</div><div class="line"><span class="keyword">import</span> java.io.File;</div><div class="line"><span class="keyword">import</span> java.io.FileNotFoundException;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ManyConnectors</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// 加载ssl需要的keystore</span></div><div class="line">		File keystoreFile = <span class="keyword">new</span> File(<span class="string">"D:\\ssl\\wm.keystore"</span>);</div><div class="line">		<span class="keyword">if</span> (!keystoreFile.exists()) &#123;</div><div class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> FileNotFoundException(keystoreFile.getAbsolutePath());</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// 开启一个JettyServer,但是此时我们并不设置端口,在Connectors里设置端口</span></div><div class="line">		Server server = <span class="keyword">new</span> Server();</div><div class="line"></div><div class="line">		<span class="comment">// 一个通用的HTTP配置. 使用HttpConfiguration进行对HTTP和HTTPS进行设置. HTTP默认的scheme是http,HTTPS默认的scheme是https</span></div><div class="line">		HttpConfiguration httpConfig = <span class="keyword">new</span> HttpConfiguration();</div><div class="line">		httpConfig.setSecureScheme(<span class="string">"https"</span>);</div><div class="line">		httpConfig.setSecurePort(<span class="number">8443</span>);</div><div class="line">		httpConfig.setOutputBufferSize(<span class="number">32768</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 构建一个HTTP Connectors</span></div><div class="line">		ServerConnector http = <span class="keyword">new</span> ServerConnector(server, <span class="keyword">new</span> HttpConnectionFactory(httpConfig));</div><div class="line">		http.setPort(<span class="number">8080</span>);</div><div class="line">		http.setIdleTimeout(<span class="number">30000</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 根据SSL证书生成ssl信息</span></div><div class="line">		SslContextFactory sslContextFactory = <span class="keyword">new</span> SslContextFactory();</div><div class="line">		sslContextFactory.setKeyStorePath(keystoreFile.getAbsolutePath());</div><div class="line">		sslContextFactory.setKeyStorePassword(<span class="string">"123456"</span>);</div><div class="line">		sslContextFactory.setKeyManagerPassword(<span class="string">"123456"</span>);</div><div class="line"></div><div class="line">		<span class="comment">// 现在为HTTP Connectors创建一个http配置对象, 这个对象是必须的, 我们不能在http Connectors里复用httpConfig对象,</span></div><div class="line">		<span class="comment">// 即便是将httpConfig对象作为参数进行构建，它的内部也是对它的一个克隆而已</span></div><div class="line">		HttpConfiguration httpsConfig = <span class="keyword">new</span> HttpConfiguration(httpConfig);</div><div class="line">		<span class="comment">// SecureRequestCustomizer用于处理从Jetty接手的https连接</span></div><div class="line">		SecureRequestCustomizer src = <span class="keyword">new</span> SecureRequestCustomizer();</div><div class="line">		src.setStsMaxAge(<span class="number">2000</span>);</div><div class="line">		src.setStsIncludeSubDomains(<span class="keyword">true</span>);</div><div class="line">		httpsConfig.addCustomizer(src);</div><div class="line"></div><div class="line">		ServerConnector https = <span class="keyword">new</span> ServerConnector(server,</div><div class="line">				<span class="keyword">new</span> SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),</div><div class="line">				<span class="keyword">new</span> HttpConnectionFactory(httpsConfig));</div><div class="line">		https.setPort(<span class="number">8443</span>);</div><div class="line">		https.setIdleTimeout(<span class="number">500000</span>);</div><div class="line"></div><div class="line">		server.setConnectors(<span class="keyword">new</span> Connector[] &#123; http, https &#125;);</div><div class="line"></div><div class="line">		ServletHandler handler = <span class="keyword">new</span> ServletHandler();</div><div class="line">		handler.addServletWithMapping(HelloServlet.class, <span class="string">"/*"</span>);</div><div class="line">		server.setHandler(handler);</div><div class="line"></div><div class="line">		server.start();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span></span></div><div class="line">				<span class="keyword">throws</span> ServletException, IOException &#123;</div><div class="line">			response.setContentType(<span class="string">"text/html"</span>);</div><div class="line">			response.setStatus(HttpServletResponse.SC_OK);</div><div class="line">			response.getWriter().println(<span class="string">"&lt;h1&gt;Hello from HelloServlet&lt;/h1&gt;"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我们使用JMeter模拟客户端进行访问</p>
-<h2 id="JMX"><a href="#JMX" class="headerlink" title="JMX"></a>JMX</h2><p>服务器开启JMX<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.management.ManagementFactory;</div><div class="line"></div><div class="line"><span class="keyword">import</span> javax.management.remote.JMXServiceURL;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.jmx.ConnectorServer;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.jmx.MBeanContainer;</div><div class="line"><span class="keyword">import</span> org.eclipse.jetty.server.Server;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServerWithJMX</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		<span class="comment">// === jetty-jmx.xml ===</span></div><div class="line">		MBeanContainer mbContainer = <span class="keyword">new</span> MBeanContainer(ManagementFactory.getPlatformMBeanServer());</div><div class="line"></div><div class="line">		Server server = <span class="keyword">new</span> Server(<span class="number">8080</span>);</div><div class="line">		server.addBean(mbContainer);</div><div class="line"></div><div class="line">		ConnectorServer jmx = <span class="keyword">new</span> ConnectorServer(</div><div class="line">				<span class="keyword">new</span> JMXServiceURL(<span class="string">"rmi"</span>, <span class="keyword">null</span>, <span class="number">1999</span>, <span class="string">"/jndi/rmi://localhost:1999/jmxrmi"</span>),</div><div class="line">				<span class="string">"org.eclipse.jetty.jmx:name=rmiconnectorserver"</span>);</div><div class="line">		server.addBean(jmx);</div><div class="line"></div><div class="line">		server.start();</div><div class="line">		server.dumpStdErr();</div><div class="line">		server.join();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/07/25/JavaLibrary/Jetty/" data-title="Jetty 嵌入模式 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/07/29/nosql/jedis lambda/" title="当Jedis 遇上 Lambda">
-  <strong>上一篇：</strong><br/>
-  <span>
-  当Jedis 遇上 Lambda</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/07/24/jvm/动态方法调用/"  title="动态方法调用">
- <strong>下一篇：</strong><br/> 
- <span>动态方法调用
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/07/25/JavaLibrary/Jetty/" data-title="Jetty 嵌入模式" data-url="http://www.yu66.wang/2016/07/25/JavaLibrary/Jetty/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件服务器"><span class="toc-number">1.</span> <span class="toc-text">文件服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ContextHandler"><span class="toc-number">2.</span> <span class="toc-text">ContextHandler</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Servlets"><span class="toc-number">3.</span> <span class="toc-text">Servlets</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ServletContextHandler"><span class="toc-number">4.</span> <span class="toc-text">ServletContextHandler</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Connectors"><span class="toc-number">5.</span> <span class="toc-text">Connectors</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JMX"><span class="toc-number">6.</span> <span class="toc-text">JMX</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

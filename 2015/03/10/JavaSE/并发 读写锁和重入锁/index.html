@@ -1,599 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Java 1.5 中的Lock | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="Java提供了同步代码块的另一种机制,它比synchronized关键字更加强大也更加灵活. 这种机制基于Lock接口以及其实现类.
-Lock相比Synchronized：
-
-更灵活的同步代码块结构.使用synchronized关键字只能在同一个synchronized块结构中获取和释放控制. Lock接口允许实现更复杂的临界区结构.(例如可以在不同的方法中加锁和释放锁)
-Lock接口提供了try">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Java 1.5 中的Lock">
-<meta property="og:url" content="http://www.yu66.wang/2015/03/10/JavaSE/并发 读写锁和重入锁/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="Java提供了同步代码块的另一种机制,它比synchronized关键字更加强大也更加灵活. 这种机制基于Lock接口以及其实现类.
-Lock相比Synchronized：
-
-更灵活的同步代码块结构.使用synchronized关键字只能在同一个synchronized块结构中获取和释放控制. Lock接口允许实现更复杂的临界区结构.(例如可以在不同的方法中加锁和释放锁)
-Lock接口提供了try">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java 1.5 中的Lock">
-<meta name="twitter:description" content="Java提供了同步代码块的另一种机制,它比synchronized关键字更加强大也更加灵活. 这种机制基于Lock接口以及其实现类.
-Lock相比Synchronized：
-
-更灵活的同步代码块结构.使用synchronized关键字只能在同一个synchronized块结构中获取和释放控制. Lock接口允许实现更复杂的临界区结构.(例如可以在不同的方法中加锁和释放锁)
-Lock接口提供了try">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/10/JavaSE/并发 读写锁和重入锁/" title="Java 1.5 中的Lock" itemprop="url">Java 1.5 中的Lock</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-10T07:00:00.000Z" itemprop="datePublished"> Published 2015-03-10</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ReentrantLock"><span class="toc-number">1.</span> <span class="toc-text">ReentrantLock</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Condition"><span class="toc-number">1.1.</span> <span class="toc-text">Condition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁的公平性"><span class="toc-number">1.2.</span> <span class="toc-text">锁的公平性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ReadWriteLock"><span class="toc-number">2.</span> <span class="toc-text">ReadWriteLock</span></a></li></ol>
-		
-		</div>
-		
-		<p>Java提供了同步代码块的另一种机制,它比synchronized关键字更加强大也更加灵活. 这种机制基于Lock接口以及其实现类.</p>
-<p>Lock相比Synchronized：</p>
-<ol>
-<li>更灵活的同步代码块结构.使用synchronized关键字只能在同一个synchronized块结构中获取和释放控制. Lock接口允许实现更复杂的临界区结构.(例如可以在不同的方法中加锁和释放锁)</li>
-<li>Lock接口提供了tryLock()方法.这个方法试图获取锁,如果锁已被其他线程获取,它将返回false并继续往下执行代码. 但在使用synchronized关键字时,如果A想要执行一个同步块,但是B恰好在使用她,A就会一直被堵塞到B执行完该同步块</li>
-<li>Lock接口允许分离读操作和写操作,允许多个读线程和一个写线程</li>
-<li>而且Lock接口拥有更好的性能</li>
-</ol>
-<h1 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h1><ul>
-<li><code>lock()</code>: A尝试获取锁的时候,如果B在执行同步块,A将被锁住,直到B执行完</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestReentrantLock</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		<span class="keyword">final</span> ReentrantLock queueLock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">		Runnable runnable = () -&gt; &#123;</div><div class="line">			<span class="comment">// 使用锁实现一个临界区,并且保证同一时间只有一个执行线程访问这个临界区.</span></div><div class="line">			queueLock.lock();</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				<span class="keyword">int</span> random = ThreadLocalRandom.current().nextInt(<span class="number">2</span>);</div><div class="line">				lockInfo(queueLock, random);</div><div class="line">				TimeUnit.SECONDS.sleep(random);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125; <span class="keyword">finally</span> &#123; <span class="comment">// 在执行完的最后必须释放锁</span></div><div class="line">				queueLock.unlock();</div><div class="line">			&#125;</div><div class="line">		&#125;;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) &#123;</div><div class="line">			Thread thread = <span class="keyword">new</span> Thread(runnable);</div><div class="line">			thread.start();</div><div class="line">		&#125;</div><div class="line">		Thread.currentThread().join();</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">lockInfo</span><span class="params">(ReentrantLock queueLock, <span class="keyword">int</span> sleep)</span> </span>&#123;</div><div class="line">		Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">		map.put(<span class="string">"hasQueuedThreads"</span>, queueLock.hasQueuedThreads());</div><div class="line">		map.put(<span class="string">"isFair"</span>, queueLock.isFair());</div><div class="line">		map.put(<span class="string">"isHeldByCurrentThread"</span>, queueLock.isHeldByCurrentThread());</div><div class="line">		map.put(<span class="string">"isLocked"</span>, queueLock.isLocked());</div><div class="line">		map.put(<span class="string">"HoldCount"</span>, queueLock.getHoldCount());</div><div class="line">		map.put(<span class="string">"QueueLength"</span>, queueLock.getQueueLength());</div><div class="line">		System.out.println(LocalDateTime.now() + <span class="string">" -&gt; "</span> + sleep + <span class="string">" -&gt; "</span> + map);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">2016-09-08T13:50:50.440 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=1, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:50.442 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=18, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:50.442 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=17, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:50.442 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=16, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:51.442 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=15, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:52.443 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=14, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:53.443 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=13, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:54.443 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=12, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:55.443 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=11, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:56.444 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=10, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:57.444 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=9, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:57.444 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=8, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:58.445 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=7, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:58.446 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=6, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:50:59.446 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=5, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:51:00.446 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=4, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:51:00.446 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=3, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:51:01.446 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=2, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:51:01.447 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=1, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">true</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:51:02.448 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div></pre></td></tr></table></figure></p>
-<ul>
-<li><code>tryLock()</code>: 这个方法试图获取锁,如果锁已被其他线程获取,它将返回false并继续往下执行代码<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestReentrantLock</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		<span class="keyword">final</span> ReentrantLock queueLock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">		Runnable runnable = () -&gt; &#123;</div><div class="line">			<span class="comment">// 使用锁实现一个临界区,并且保证同一时间只有一个执行线程访问这个临界区.</span></div><div class="line">			<span class="keyword">boolean</span> isLocked = queueLock.tryLock();</div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				<span class="keyword">int</span> random = ThreadLocalRandom.current().nextInt(<span class="number">2</span>);</div><div class="line">				lockInfo(queueLock, random);</div><div class="line">				TimeUnit.SECONDS.sleep(random);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125; <span class="keyword">finally</span> &#123; <span class="comment">// 在执行完的最后必须释放锁</span></div><div class="line">				<span class="keyword">if</span> (isLocked) &#123;</div><div class="line">					queueLock.unlock();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) &#123;</div><div class="line">			Thread thread = <span class="keyword">new</span> Thread(runnable);</div><div class="line">			thread.start();</div><div class="line">		&#125;</div><div class="line">		Thread.currentThread().join();</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">lockInfo</span><span class="params">(ReentrantLock queueLock, <span class="keyword">int</span> sleep)</span> </span>&#123;</div><div class="line">		Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">		map.put(<span class="string">"hasQueuedThreads"</span>, queueLock.hasQueuedThreads());</div><div class="line">		map.put(<span class="string">"isFair"</span>, queueLock.isFair());</div><div class="line">		map.put(<span class="string">"isHeldByCurrentThread"</span>, queueLock.isHeldByCurrentThread());</div><div class="line">		map.put(<span class="string">"isLocked"</span>, queueLock.isLocked());</div><div class="line">		map.put(<span class="string">"HoldCount"</span>, queueLock.getHoldCount());</div><div class="line">		map.put(<span class="string">"QueueLength"</span>, queueLock.getQueueLength());</div><div class="line">		System.out.println(LocalDateTime.now() + <span class="string">" -&gt; "</span> + sleep + <span class="string">" -&gt; "</span> + map);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">2016-09-08T13:55:39.038 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.038 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.038 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.038 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.038 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.039 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.039 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.038 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.037 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.038 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.039 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">true</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=1, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.039 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.039 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.037 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.038 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.038 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.040 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.040 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.040 -&gt; 1 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div><div class="line">2016-09-08T13:55:39.040 -&gt; 0 -&gt; &#123;isLocked=<span class="literal">true</span>, QueueLength=0, isHeldByCurrentThread=<span class="literal">false</span>, hasQueuedThreads=<span class="literal">false</span>, HoldCount=0, isFair=<span class="literal">false</span>&#125;</div></pre></td></tr></table></figure></p>
-<p>当使用<code>tryLock()</code>的时候, 我们必须使用它的返回值来最后判定是否进行unlock操作.</p>
-<p>通过最后的时间我们也可以看到当<code>tryLock()</code>失败之后就直接进行了后续代码的执行.</p>
-<h2 id="Condition"><a href="#Condition" class="headerlink" title="Condition"></a>Condition</h2><p><code>Condition</code>将<code>Object</code>的监视器方法<code>wait, notify, notifyAll</code> 抽象出来. 每个<code>Condition</code>对象都有一个监视器.</p>
-<p><code>Condition</code>重点有如下俩个方法</p>
-<ul>
-<li><code>await()</code> : 执行了<code>await()</code>方法之后, 当前线程会自动释放锁同时该线程会进入休眠装备不再被线程调度, 直到有其他线程执行了<code>signal(), signalAll(), interrupts</code> 等.</li>
-<li><code>signal()</code> : 唤醒等待的线程. 这个方法会从诸多等待该条件的线程中选择一个进行唤醒. 但是被唤醒的线程从<code>await()</code>方法返回之前必须重新获得锁.</li>
-</ul>
-<p>我们直接看<code>Condition</code>API中给出的示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BoundedBuffer</span> </span>&#123;</div><div class="line">   <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">   <span class="keyword">final</span> Condition notFull  = lock.newCondition();</div><div class="line">   <span class="keyword">final</span> Condition notEmpty = lock.newCondition();</div><div class="line"></div><div class="line">   <span class="keyword">final</span> Object[] items = <span class="keyword">new</span> Object[<span class="number">100</span>];</div><div class="line">   <span class="keyword">int</span> putptr, takeptr, count;</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(Object x)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">     lock.lock();</div><div class="line">     <span class="keyword">try</span> &#123;</div><div class="line">       <span class="keyword">while</span> (count == items.length)</div><div class="line">         notFull.await();</div><div class="line">       items[putptr] = x;</div><div class="line">       <span class="keyword">if</span> (++putptr == items.length) putptr = <span class="number">0</span>;</div><div class="line">       ++count;</div><div class="line">       notEmpty.signal();</div><div class="line">     &#125; <span class="keyword">finally</span> &#123;</div><div class="line">       lock.unlock();</div><div class="line">     &#125;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> Object <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">     lock.lock();</div><div class="line">     <span class="keyword">try</span> &#123;</div><div class="line">       <span class="keyword">while</span> (count == <span class="number">0</span>)</div><div class="line">         notEmpty.await();</div><div class="line">       Object x = items[takeptr];</div><div class="line">       <span class="keyword">if</span> (++takeptr == items.length) takeptr = <span class="number">0</span>;</div><div class="line">       --count;</div><div class="line">       notFull.signal();</div><div class="line">       <span class="keyword">return</span> x;</div><div class="line">     &#125; <span class="keyword">finally</span> &#123;</div><div class="line">       lock.unlock();</div><div class="line">     &#125;</div><div class="line">   &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
-<h2 id="锁的公平性"><a href="#锁的公平性" class="headerlink" title="锁的公平性"></a>锁的公平性</h2><p><code>ReentrantLock</code>和<code>ReentrantReadWriteLock</code> 类的构造器都含有一个布尔参数fair.</p>
-<p>ReentrantLock的实现不仅可以替代隐式的synchronized关键字,而且能够提供超过关键字本身的多种功能。这里提到一个锁获取的公平性问题,如果在绝对时间上,先对锁进行获取的请求一定被先满足, 那么这个锁是公平的,反之,是不公平的,也就是说等待时间最长的线程最有机会获取锁,也可以说锁的获取是有序的。</p>
-<p>ReentrantLock这个锁提供了一个构造函数,能够控制这个锁是否是公平的。而锁的名字也是说明了这个锁具备了重复进入的可能,也就是说能够让当前线程多次的进行对锁的获取操作,<br>这样的最大次数限制是Integer.MAX_VALUE,约21亿次左右。</p>
-<p>事实上公平的锁机制往往没有非公平的效率高,因为公平的获取锁没有考虑到操作系统对线程的调度因素,这样造成JVM对于等待中的线程调度次序和操作系统对线程的调度之间的不匹配</p>
-<p>对于锁的快速且重复的获取过程中,连续获取的概率是非常高的,而公平锁会压制这种情况, 虽然公平性得以保障,但是响应比却下降了,但是并不是任何场景都是以TPS作为唯一指标的,因为公平锁能够减少“饥饿”发生的概率,等待越久的请求越是能够得到优先满足。</p>
-<ul>
-<li>fair –&gt; true : 公平模式,当有很多线程在等待锁的时候,锁将选择它们中的一个来访问临界区,选择的是等待时间最长的</li>
-<li>fair –&gt; false: 非公平模式,当有很多线程在等待锁的时候,锁将选择它们中的一个来访问临界区,该选择是没有任何约束的</li>
-</ul>
-<p>这俩种模式只适用于lock(),unlock()方法.</p>
-<p><code>Lock</code>接口的<code>tryLock()</code>方法并没有将线程置为睡眠,所以fair属性并不影响这个方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</div><div class="line">		<span class="keyword">final</span> PrintQueue printQueue = <span class="keyword">new</span> PrintQueue();</div><div class="line"></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">			Runnable r = <span class="keyword">new</span> Runnable() &#123;</div><div class="line"></div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">					System.out.printf(<span class="string">"%s:begin print\n"</span>, Thread</div><div class="line">							.currentThread().getName());</div><div class="line">					printQueue.printJob(<span class="keyword">new</span> Object());</div><div class="line">					System.out.printf(<span class="string">"%s:print over\n"</span>, Thread.currentThread()</div><div class="line">							.getName());</div><div class="line">				&#125;</div><div class="line">			&#125;;</div><div class="line">			Thread t = <span class="keyword">new</span> Thread(r);</div><div class="line">			t.start();</div><div class="line"></div><div class="line">			<span class="keyword">try</span> &#123;</div><div class="line">				Thread.sleep(<span class="number">100</span>);</div><div class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrintQueue</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Lock queueLock = <span class="keyword">new</span> ReentrantLock(<span class="keyword">false</span>);</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printJob</span><span class="params">(Object document)</span> </span>&#123;</div><div class="line">		queueLock.lock();</div><div class="line"></div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			Long duration = (<span class="keyword">long</span>) (Math.random() * <span class="number">10000</span>);</div><div class="line">			System.out.printf(<span class="string">"%s:Printing a Job during %d seconds\n"</span>, Thread</div><div class="line">					.currentThread().getName(), (duration / <span class="number">1000</span>));</div><div class="line">			Thread.sleep(duration);</div><div class="line"></div><div class="line">		&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125; <span class="keyword">finally</span> &#123;</div><div class="line">			queueLock.unlock();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="ReadWriteLock"><a href="#ReadWriteLock" class="headerlink" title="ReadWriteLock"></a>ReadWriteLock</h1><p>读写锁只有一个实现ReentrantReadWriteLock(可重入读写锁)</p>
-<p>读写锁有俩个锁</p>
-<ul>
-<li>读操作锁,使用读操作锁的时候可以允许多个线程同时访问</li>
-<li>写操作锁,只允许一个线程运行,即其他线程既不能执行读操作也不能执行写操作</li>
-</ul>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/03/10/JavaSE/并发 读写锁和重入锁/" data-title="Java 1.5 中的Lock | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/03/12/JavaSE/并发 线程同步辅助类/" title="线程同步辅助类">
-  <strong>上一篇：</strong><br/>
-  <span>
-  线程同步辅助类</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/03/09/JavaSE/并发 线程管理/"  title="线程 状态管理">
- <strong>下一篇：</strong><br/> 
- <span>线程 状态管理
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/03/10/JavaSE/并发 读写锁和重入锁/" data-title="Java 1.5 中的Lock" data-url="http://www.yu66.wang/2015/03/10/JavaSE/并发 读写锁和重入锁/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ReentrantLock"><span class="toc-number">1.</span> <span class="toc-text">ReentrantLock</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Condition"><span class="toc-number">1.1.</span> <span class="toc-text">Condition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁的公平性"><span class="toc-number">1.2.</span> <span class="toc-text">锁的公平性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ReadWriteLock"><span class="toc-number">2.</span> <span class="toc-text">ReadWriteLock</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

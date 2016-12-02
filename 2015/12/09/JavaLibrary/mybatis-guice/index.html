@@ -1,561 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Guice Mybatis 使用笔记 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="参考文档mybatis-guice
-mybatis-guice需要依赖1234567891011121314151617181920212223242526&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;com.google.inject&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;guice&amp;lt;/artifactId&amp;gt;    &amp;l">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Guice Mybatis 使用笔记">
-<meta property="og:url" content="http://www.yu66.wang/2015/12/09/JavaLibrary/mybatis-guice/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="参考文档mybatis-guice
-mybatis-guice需要依赖1234567891011121314151617181920212223242526&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;com.google.inject&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;guice&amp;lt;/artifactId&amp;gt;    &amp;l">
-<meta property="og:updated_time" content="2016-11-01T06:11:17.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Guice Mybatis 使用笔记">
-<meta name="twitter:description" content="参考文档mybatis-guice
-mybatis-guice需要依赖1234567891011121314151617181920212223242526&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;com.google.inject&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;guice&amp;lt;/artifactId&amp;gt;    &amp;l">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/12/09/JavaLibrary/mybatis-guice/" title="Guice Mybatis 使用笔记" itemprop="url">Guice Mybatis 使用笔记</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-12-09T08:00:00.000Z" itemprop="datePublished"> Published 2015-12-09</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#开启事务"><span class="toc-number">1.</span> <span class="toc-text">开启事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定义自己的连接池"><span class="toc-number">2.</span> <span class="toc-text">定义自己的连接池</span></a></li></ol>
-		
-		</div>
-		
-		<p>参考文档<a href="http://mybatis.org/guice/index.html" target="_blank" rel="external">mybatis-guice</a></p>
-<p>mybatis-guice需要依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.inject<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guice<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-guice<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.inject.extensions<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guice-multibindings<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.37<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>表结构<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (</div><div class="line">  <span class="string">`userId`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">100</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span></div><div class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8</div></pre></td></tr></table></figure></p>
-<p>我们首先定义使用到的model类和mapper类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> String userId;</div><div class="line">    <span class="keyword">public</span> String name;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">UserMapper</span> </span>&#123;</div><div class="line">    <span class="meta">@Select</span>(<span class="string">"SELECT * FROM user WHERE userId = #&#123;userId&#125;"</span>)</div><div class="line">    <span class="function">User <span class="title">getUser</span><span class="params">(@Param(<span class="string">"userId"</span>)</span> String userId)</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后我们实现Guice对Mybatis的注解管理<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySqlManager</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Injector injector;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        injector = Guice.createInjector(JdbcHelper.MySQL, <span class="keyword">new</span> MysqlModule());</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">MySqlManager</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">getInstance</span><span class="params">(Class&lt;T&gt; var1)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> injector.getInstance(var1);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MysqlModule</span> <span class="keyword">extends</span> <span class="title">MyBatisModule</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</div><div class="line">            bindDataSourceProviderType(PooledDataSourceProvider.class);</div><div class="line">            bindTransactionFactoryType(JdbcTransactionFactory.class);</div><div class="line">            Names.bindProperties(binder(), createUnpooledProperties());</div><div class="line"></div><div class="line">            addMapperClass();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// 添加映射类</span></div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addMapperClass</span><span class="params">()</span> </span>&#123;</div><div class="line">            addMapperClass(UserMapper.class);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">private</span> Properties <span class="title">createUnpooledProperties</span><span class="params">()</span> </span>&#123;</div><div class="line">            Properties myBatisProperties = <span class="keyword">new</span> Properties();</div><div class="line">            myBatisProperties.setProperty(<span class="string">"mybatis.environment.id"</span>, <span class="string">"test"</span>);</div><div class="line">            myBatisProperties.setProperty(<span class="string">"JDBC.schema"</span>, <span class="string">"test"</span>);</div><div class="line"><span class="comment">//			myBatisProperties.setProperty("JDBC.url", "localhost");</span></div><div class="line"><span class="comment">//			myBatisProperties.setProperty("JDBC.driver", "");</span></div><div class="line">            myBatisProperties.setProperty(<span class="string">"JDBC.username"</span>, <span class="string">"root"</span>);</div><div class="line">            myBatisProperties.setProperty(<span class="string">"JDBC.password"</span>, <span class="string">"root"</span>);</div><div class="line">            myBatisProperties.setProperty(<span class="string">"JDBC.loginTimeout"</span>, <span class="string">"10"</span>);</div><div class="line">            myBatisProperties.setProperty(<span class="string">"JDBC.autoCommit"</span>, <span class="string">"false"</span>);</div><div class="line">            myBatisProperties.setProperty(<span class="string">"derby.create"</span>, <span class="string">"true"</span>);</div><div class="line">            <span class="keyword">return</span> myBatisProperties;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后我们写一个测试类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GettingStarted</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        UserMapper user = MySqlManager.getInstance(UserMapper.class);</div><div class="line">        User user1 = user.getUser(<span class="string">"1"</span>);</div><div class="line">        System.out.println(user1.name);</div><div class="line">		</div><div class="line">		UserMapper userMapper = <span class="keyword">new</span> UserMapper();</div><div class="line">		injector.injectMembers(userMapper);</div><div class="line">		System.out.println(userMapper.name);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><code>MyBatisModule</code>还为我们提供了下述功能的接口</p>
-<ul>
-<li>添加自己的拦截器 : <code>addInterceptorClass(MySqlInterceptor.class);</code></li>
-<li>添加自己的类型转换器 : <code>handleType()</code></li>
-<li>添加别名 : <code>addSimpleAlias(User.class);</code>或者<code>addAlias(&quot;AUser&quot;).to(User.class);</code></li>
-</ul>
-<h2 id="开启事务"><a href="#开启事务" class="headerlink" title="开启事务"></a>开启事务</h2><p>我们在<code>FooServiceMapperImpl</code>中还能定义开启事务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 开启事务</span></div><div class="line"><span class="meta">@Transactional</span>(</div><div class="line">        executorType = ExecutorType.BATCH,</div><div class="line">        isolation = Isolation.READ_UNCOMMITTED,</div><div class="line"><span class="comment">//		rethrowExceptionsAs = MyDaoException.class,</span></div><div class="line">        exceptionMessage = <span class="string">"Something went wrong"</span></div><div class="line">)</div><div class="line"><span class="function"><span class="keyword">public</span> User <span class="title">getUser</span><span class="params">(String userId)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.userMapper.getUser(userId);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="定义自己的连接池"><a href="#定义自己的连接池" class="headerlink" title="定义自己的连接池"></a>定义自己的连接池</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addPooledProperties</span><span class="params">(Binder binder)</span> </span>&#123;</div><div class="line">    <span class="comment">// 连接池并发访问数据的连接数, 默认为10</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.maximumActiveConnections"</span>)).to(<span class="number">10</span>);</div><div class="line">    <span class="comment">// 在被强制返回之前，池中连接被检查的时间</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.maximumCheckoutTime"</span>)).to(<span class="number">20000</span>);</div><div class="line">    <span class="comment">// 连接池里空闲连接数, 默认为5</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.maximumIdleConnections"</span>)).to(<span class="number">5</span>);</div><div class="line">    <span class="comment">// 由于数据库会检查连接达到8小时(默认值)闲置会单方面断开连接, 而客户端如果继续使用已经断开的连接,则会产生异常.</span></div><div class="line">    <span class="comment">// mybatis里内带了ping机制, 设置该值为true的话, 就开启了ping机制</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.pingEnabled"</span>)).to(<span class="keyword">false</span>);</div><div class="line">    <span class="comment">// 设置空闲连接ping时间间隔, 如果超时就进行ping,查看连接是否有效</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.pingConnectionsNotUsedFor"</span>)).to(<span class="number">3600000</span>);</div><div class="line">    <span class="comment">// 执行ping时执行的语句</span></div><div class="line">	<span class="comment">//	binder.bindConstant().annotatedWith(Names.named("mybatis.pooled.pingQuery")).to("");</span></div><div class="line">    <span class="comment">// 这是一个低层设置，如果获取连接花费的相当长的时间，它会给连接池打印日志并重新尝试获取一个连接的机会（避免在误配置的情况下一直安静的失败），默认值：20000 毫秒（即 20 秒）。</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"mybatis.pooled.timeToWait"</span>)).to(<span class="number">0</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addC3P0Properties</span><span class="params">(Binder binder)</span> </span>&#123;</div><div class="line">    <span class="comment">// 当连接池中的的连接耗尽的时候c3p0一次同时获取的连接数，但是池中最大数不会超过maxPoolSize</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.acquireIncrement"</span>)).to(<span class="number">1</span>);</div><div class="line">    <span class="comment">// 从数据库请求连接失败之后,尝试的次数</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.acquireRetryAttempts"</span>)).to(<span class="number">1</span>);</div><div class="line">    <span class="comment">// 连接池耗尽, 连续获得俩个连接直接的间隔时间. 单位ms</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.acquireRetryDelay"</span>)).to(<span class="number">1000</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.automaticTestTable"</span>)).to(<span class="string">"test"</span>);</div><div class="line">    <span class="comment">// 如果为true，则当连接获取失败时自动关闭数据源</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.breakAfterAcquireFailure"</span>)).to(<span class="keyword">false</span>);</div><div class="line">    <span class="comment">// 连接池所有连接耗尽时,应用程序获得新的连接的等待时间. 为0则无限等待直至有其他连接释放或者创建新的连接，</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.checkoutTimeout"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.connectionCustomizerClassName"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.connectionTesterClassName"</span>)).to(<span class="number">1</span>);</div><div class="line">    <span class="comment">// 检查所有连接池中的空闲连接的时间间隔, 单位秒</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.idleConnectionTestPeriod"</span>)).to(<span class="number">900</span>);</div><div class="line">    <span class="comment">// 连接池初始化时创建的连接数,default : 3</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.initialPoolSize"</span>)).to(<span class="number">3</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxAdministrativeTaskTime"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxConnectionAge"</span>)).to(<span class="number">1</span>);</div><div class="line">    <span class="comment">// 池中连接最大空闲时长,如果超时则断开这个连接. 单位是秒</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxIdleTime"</span>)).to(<span class="number">600</span>);</div><div class="line"></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxIdleTimeExcessConnections"</span>)).to(<span class="number">1</span>);</div><div class="line">    <span class="comment">// 接池中拥有的最大连接数，如果获得新连接时会使连接总数超过这个值则不会再获取新连接，而是等待其他连接释放</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxPoolSize"</span>)).to(<span class="number">15</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxStatements"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.maxStatementsPerConnection"</span>)).to(<span class="number">1</span>);</div><div class="line">    <span class="comment">// 连接池保持的最小连接数</span></div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.minPoolSize"</span>)).to(<span class="number">3</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.preferredTestQuery"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.propertyCycle"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.testConnectionOnCheckin"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.testConnectionOnCheckout"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.unreturnedConnectionTimeout"</span>)).to(<span class="number">1</span>);</div><div class="line">    binder.bindConstant().annotatedWith(Names.named(<span class="string">"c3p0.usesTraditionalReflectiveProxies"</span>)).to(<span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我们还可以采用配置文件的方式设置<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.mybatis.guice.XMLMyBatisModule;</div><div class="line"><span class="keyword">import</span> org.mybatis.guice.datasource.helper.JdbcHelper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.google.inject.Guice;</div><div class="line"><span class="keyword">import</span> com.google.inject.Injector;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MybatisManager</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Injector injector;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        injector = Guice.createInjector(JdbcHelper.MySQL, <span class="keyword">new</span> MysqlModule());</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">MybatisManager</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">getInstance</span><span class="params">(Class&lt;T&gt; var1)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> injector.getInstance(var1);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MysqlModule</span> <span class="keyword">extends</span> <span class="title">XMLMyBatisModule</span> </span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</div><div class="line">            setClassPathResource(<span class="string">"configuration.xml"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/12/09/JavaLibrary/mybatis-guice/" data-title="Guice Mybatis 使用笔记 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/12/09/JavaLibrary/lombok/" title="Lombok初探">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Lombok初探</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/12/08/JavaLibrary/guice/"  title="Guice 笔记">
- <strong>下一篇：</strong><br/> 
- <span>Guice 笔记
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/12/09/JavaLibrary/mybatis-guice/" data-title="Guice Mybatis 使用笔记" data-url="http://www.yu66.wang/2015/12/09/JavaLibrary/mybatis-guice/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#开启事务"><span class="toc-number">1.</span> <span class="toc-text">开启事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定义自己的连接池"><span class="toc-number">2.</span> <span class="toc-text">定义自己的连接池</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

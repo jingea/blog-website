@@ -1,551 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>ReflectASM 性能测试 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="我们采用JMH测试ReflectASM 官网给出的几个示例的吞吐量.
-我们的测试代码为1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768package testASM;import com.eso">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ReflectASM 性能测试">
-<meta property="og:url" content="http://www.yu66.wang/2016/06/14/JavaLibrary/ReflectASM 性能测试/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="我们采用JMH测试ReflectASM 官网给出的几个示例的吞吐量.
-我们的测试代码为1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768package testASM;import com.eso">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ReflectASM 性能测试">
-<meta name="twitter:description" content="我们采用JMH测试ReflectASM 官网给出的几个示例的吞吐量.
-我们的测试代码为1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768package testASM;import com.eso">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/06/14/JavaLibrary/ReflectASM 性能测试/" title="ReflectASM 性能测试" itemprop="url">ReflectASM 性能测试</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-06-14T07:00:00.000Z" itemprop="datePublished"> Published 2016-06-14</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			
-		
-		</div>
-		
-		<p>我们采用JMH测试ReflectASM 官网给出的几个示例的吞吐量.</p>
-<p>我们的测试代码为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> testASM;</div><div class="line"></div><div class="line"><span class="keyword">import</span> com.esotericsoftware.reflectasm.ConstructorAccess;</div><div class="line"><span class="keyword">import</span> com.esotericsoftware.reflectasm.FieldAccess;</div><div class="line"><span class="keyword">import</span> com.esotericsoftware.reflectasm.MethodAccess;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.annotations.*;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.Runner;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.RunnerException;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.options.Options;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.options.OptionsBuilder;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="meta">@State</span>(Scope.Thread)</div><div class="line"><span class="meta">@BenchmarkMode</span>(Mode.AverageTime)</div><div class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.NANOSECONDS)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestRelectASM</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</div><div class="line">        Options opt = <span class="keyword">new</span> OptionsBuilder()</div><div class="line">                .include(TestRelectASM.class.getSimpleName())</div><div class="line">                .warmupIterations(<span class="number">5</span>)</div><div class="line">                .measurementIterations(<span class="number">5</span>)</div><div class="line">                .forks(<span class="number">1</span>)</div><div class="line">                .build();</div><div class="line"></div><div class="line">        <span class="keyword">new</span> Runner(opt).run();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@BenchmarkMode</span>(Mode.Throughput)</div><div class="line">    <span class="meta">@OutputTimeUnit</span>(TimeUnit.SECONDS)</div><div class="line">    <span class="meta">@Benchmark</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureMethodAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        SomeClass someObject = <span class="keyword">new</span> SomeClass();</div><div class="line">        MethodAccess access = MethodAccess.get(SomeClass.class);</div><div class="line">        access.invoke(someObject, <span class="string">"setName"</span>, <span class="string">"Awesome McLovin"</span>);</div><div class="line">        String name = (String)access.invoke(someObject, <span class="string">"getName"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@BenchmarkMode</span>(Mode.Throughput)</div><div class="line">    <span class="meta">@OutputTimeUnit</span>(TimeUnit.SECONDS)</div><div class="line">    <span class="meta">@Benchmark</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureFieldAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        SomeClass someObject = <span class="keyword">new</span> SomeClass();</div><div class="line">        FieldAccess access = FieldAccess.get(SomeClass.class);</div><div class="line">        access.set(someObject, <span class="string">"age"</span>, <span class="number">18</span>);</div><div class="line">        Integer age = (Integer)access.get(someObject, <span class="string">"age"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@BenchmarkMode</span>(Mode.Throughput)</div><div class="line">    <span class="meta">@OutputTimeUnit</span>(TimeUnit.SECONDS)</div><div class="line">    <span class="meta">@Benchmark</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureConstructorAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        ConstructorAccess&lt;SomeClass&gt; access = ConstructorAccess.get(SomeClass.class);</div><div class="line">        SomeClass someObject = access.newInstance();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeClass</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">int</span> age;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> name;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>测试结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Warmup: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Measurement: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Timeout: 10 min per iteration</span></div><div class="line"><span class="comment"># Threads: 1 thread, will synchronize iterations</span></div><div class="line"><span class="comment"># Benchmark mode: Throughput, ops/time</span></div><div class="line"><span class="comment"># Benchmark: testASM.TestRelectASM.measureConstructorAccess</span></div><div class="line"></div><div class="line"><span class="comment"># Run progress: 0.00% complete, ETA 00:00:30</span></div><div class="line"><span class="comment"># Fork: 1 of 1</span></div><div class="line"><span class="comment"># Warmup Iteration   1: 146112.555 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   2: 399173.011 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   3: 452136.048 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   4: 450102.353 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   5: 446112.781 ops/s</span></div><div class="line">Iteration   1: 454817.511 ops/s</div><div class="line">Iteration   2: 444272.121 ops/s</div><div class="line">Iteration   3: 454354.750 ops/s</div><div class="line">Iteration   4: 449983.056 ops/s</div><div class="line">Iteration   5: 446149.202 ops/s</div><div class="line"></div><div class="line"></div><div class="line">Result <span class="string">"measureConstructorAccess"</span>:</div><div class="line">  449915.328 ±(99.9%) 18242.255 ops/s [Average]</div><div class="line">  (min, avg, max) = (444272.121, 449915.328, 454817.511), stdev = 4737.456</div><div class="line">  CI (99.9%): [431673.074, 468157.583] (assumes normal distribution)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Warmup: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Measurement: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Timeout: 10 min per iteration</span></div><div class="line"><span class="comment"># Threads: 1 thread, will synchronize iterations</span></div><div class="line"><span class="comment"># Benchmark mode: Throughput, ops/time</span></div><div class="line"><span class="comment"># Benchmark: testASM.TestRelectASM.measureFieldAccess</span></div><div class="line"></div><div class="line"><span class="comment"># Run progress: 33.33% complete, ETA 00:00:21</span></div><div class="line"><span class="comment"># Fork: 1 of 1</span></div><div class="line"><span class="comment"># Warmup Iteration   1: 483272.367 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   2: 638769.340 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   3: 643087.589 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   4: 654921.986 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   5: 646076.594 ops/s</span></div><div class="line">Iteration   1: 657034.718 ops/s</div><div class="line">Iteration   2: 651774.971 ops/s</div><div class="line">Iteration   3: 648118.383 ops/s</div><div class="line">Iteration   4: 647813.662 ops/s</div><div class="line">Iteration   5: 654691.279 ops/s</div><div class="line"></div><div class="line"></div><div class="line">Result <span class="string">"measureFieldAccess"</span>:</div><div class="line">  651886.603 ±(99.9%) 15542.738 ops/s [Average]</div><div class="line">  (min, avg, max) = (647813.662, 651886.603, 657034.718), stdev = 4036.400</div><div class="line">  CI (99.9%): [636343.865, 667429.341] (assumes normal distribution)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Warmup: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Measurement: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Timeout: 10 min per iteration</span></div><div class="line"><span class="comment"># Threads: 1 thread, will synchronize iterations</span></div><div class="line"><span class="comment"># Benchmark mode: Throughput, ops/time</span></div><div class="line"><span class="comment"># Benchmark: testASM.TestRelectASM.measureMethodAccess</span></div><div class="line"></div><div class="line"><span class="comment"># Run progress: 66.67% complete, ETA 00:00:10</span></div><div class="line"><span class="comment"># Fork: 1 of 1</span></div><div class="line"><span class="comment"># Warmup Iteration   1: 432894.585 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   2: 621680.095 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   3: 618783.228 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   4: 624738.576 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   5: 611762.568 ops/s</span></div><div class="line">Iteration   1: 625825.844 ops/s</div><div class="line">Iteration   2: 621933.920 ops/s</div><div class="line">Iteration   3: 644088.779 ops/s</div><div class="line">Iteration   4: 644729.889 ops/s</div><div class="line">Iteration   5: 615383.465 ops/s</div><div class="line"></div><div class="line"></div><div class="line">Result <span class="string">"measureMethodAccess"</span>:</div><div class="line">  630392.379 ±(99.9%) 51331.476 ops/s [Average]</div><div class="line">  (min, avg, max) = (615383.465, 630392.379, 644729.889), stdev = 13330.621</div><div class="line">  CI (99.9%): [579060.904, 681723.855] (assumes normal distribution)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Run complete. Total time: 00:00:31</span></div><div class="line"></div><div class="line">Benchmark                                        Mode  Cnt       Score       Error  Units</div><div class="line"><span class="built_in">test</span>ASM.TestRelectASM.measureConstructorAccess  thrpt    5  449915.328 ± 18242.255  ops/s</div><div class="line"><span class="built_in">test</span>ASM.TestRelectASM.measureFieldAccess        thrpt    5  651886.603 ± 15542.738  ops/s</div><div class="line"><span class="built_in">test</span>ASM.TestRelectASM.measureMethodAccess       thrpt    5  630392.379 ± 51331.476  ops/s</div></pre></td></tr></table></figure></p>
-<p>接下来我们看一下JDK原生反射的性能<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> testASM;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.annotations.*;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.Runner;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.RunnerException;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.options.Options;</div><div class="line"><span class="keyword">import</span> org.openjdk.jmh.runner.options.OptionsBuilder;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Field;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="meta">@State</span>(Scope.Thread)</div><div class="line"><span class="meta">@BenchmarkMode</span>(Mode.AverageTime)</div><div class="line"><span class="meta">@OutputTimeUnit</span>(TimeUnit.NANOSECONDS)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestJDKReflect</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> RunnerException </span>&#123;</div><div class="line">        Options opt = <span class="keyword">new</span> OptionsBuilder()</div><div class="line">                .include(TestRelectASM.class.getSimpleName())</div><div class="line">                .warmupIterations(<span class="number">5</span>)</div><div class="line">                .measurementIterations(<span class="number">5</span>)</div><div class="line">                .forks(<span class="number">1</span>)</div><div class="line">                .build();</div><div class="line"></div><div class="line">        <span class="keyword">new</span> Runner(opt).run();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@BenchmarkMode</span>(Mode.Throughput)</div><div class="line">    <span class="meta">@OutputTimeUnit</span>(TimeUnit.SECONDS)</div><div class="line">    <span class="meta">@Benchmark</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureMethodAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        SomeClass someObject = <span class="keyword">new</span> SomeClass();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Method setNameMethod = SomeClass.class.getMethod(<span class="string">"setName"</span>);</div><div class="line">            setNameMethod.invoke(someObject, <span class="string">"Awesome McLovin"</span>);</div><div class="line">            Method getNameMethod = SomeClass.class.getMethod(<span class="string">"getName"</span>);</div><div class="line">            String name = (String)getNameMethod.invoke(someObject);</div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@BenchmarkMode</span>(Mode.Throughput)</div><div class="line">    <span class="meta">@OutputTimeUnit</span>(TimeUnit.SECONDS)</div><div class="line">    <span class="meta">@Benchmark</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureFieldAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        SomeClass someObject = <span class="keyword">new</span> SomeClass();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Field ageField = SomeClass.class.getField(<span class="string">"age"</span>);</div><div class="line">            ageField.set(someObject, <span class="number">18</span>);</div><div class="line">            Integer age = (Integer)ageField.get(someObject);</div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchFieldException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@BenchmarkMode</span>(Mode.Throughput)</div><div class="line">    <span class="meta">@OutputTimeUnit</span>(TimeUnit.SECONDS)</div><div class="line">    <span class="meta">@Benchmark</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">measureConstructorAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Constructor&lt;SomeClass&gt; con = SomeClass.class.getConstructor();</div><div class="line">            SomeClass newInstance = con.newInstance();</div><div class="line">        &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (InstantiationException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>测试结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Warmup: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Measurement: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Timeout: 10 min per iteration</span></div><div class="line"><span class="comment"># Threads: 1 thread, will synchronize iterations</span></div><div class="line"><span class="comment"># Benchmark mode: Throughput, ops/time</span></div><div class="line"><span class="comment"># Benchmark: testASM.TestRelectASM.measureConstructorAccess</span></div><div class="line"></div><div class="line"><span class="comment"># Run progress: 0.00% complete, ETA 00:00:30</span></div><div class="line"><span class="comment"># Fork: 1 of 1</span></div><div class="line"><span class="comment"># Warmup Iteration   1: 272071.065 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   2: 589448.060 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   3: 583306.327 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   4: 559099.151 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   5: 546514.262 ops/s</span></div><div class="line">Iteration   1: 603711.245 ops/s</div><div class="line">Iteration   2: 582218.187 ops/s</div><div class="line">Iteration   3: 561487.624 ops/s</div><div class="line">Iteration   4: 582646.831 ops/s</div><div class="line">Iteration   5: 612259.454 ops/s</div><div class="line"></div><div class="line"></div><div class="line">Result <span class="string">"measureConstructorAccess"</span>:</div><div class="line">  588464.668 ±(99.9%) 76995.468 ops/s [Average]</div><div class="line">  (min, avg, max) = (561487.624, 588464.668, 612259.454), stdev = 19995.478</div><div class="line">  CI (99.9%): [511469.200, 665460.136] (assumes normal distribution)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Warmup: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Measurement: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Timeout: 10 min per iteration</span></div><div class="line"><span class="comment"># Threads: 1 thread, will synchronize iterations</span></div><div class="line"><span class="comment"># Benchmark mode: Throughput, ops/time</span></div><div class="line"><span class="comment"># Benchmark: testASM.TestRelectASM.measureFieldAccess</span></div><div class="line"></div><div class="line"><span class="comment"># Run progress: 33.33% complete, ETA 00:00:21</span></div><div class="line"><span class="comment"># Fork: 1 of 1</span></div><div class="line"><span class="comment"># Warmup Iteration   1: 407799.239 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   2: 599419.421 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   3: 624838.592 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   4: 636293.822 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   5: 623880.225 ops/s</span></div><div class="line">Iteration   1: 600361.584 ops/s</div><div class="line">Iteration   2: 642029.016 ops/s</div><div class="line">Iteration   3: 613483.428 ops/s</div><div class="line">Iteration   4: 645823.284 ops/s</div><div class="line">Iteration   5: 632346.098 ops/s</div><div class="line"></div><div class="line"></div><div class="line">Result <span class="string">"measureFieldAccess"</span>:</div><div class="line">  626808.682 ±(99.9%) 74589.468 ops/s [Average]</div><div class="line">  (min, avg, max) = (600361.584, 626808.682, 645823.284), stdev = 19370.648</div><div class="line">  CI (99.9%): [552219.214, 701398.150] (assumes normal distribution)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Warmup: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Measurement: 5 iterations, 1 s each</span></div><div class="line"><span class="comment"># Timeout: 10 min per iteration</span></div><div class="line"><span class="comment"># Threads: 1 thread, will synchronize iterations</span></div><div class="line"><span class="comment"># Benchmark mode: Throughput, ops/time</span></div><div class="line"><span class="comment"># Benchmark: testASM.TestRelectASM.measureMethodAccess</span></div><div class="line"></div><div class="line"><span class="comment"># Run progress: 66.67% complete, ETA 00:00:10</span></div><div class="line"><span class="comment"># Fork: 1 of 1</span></div><div class="line"><span class="comment"># Warmup Iteration   1: 397028.204 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   2: 602683.986 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   3: 576226.708 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   4: 602674.109 ops/s</span></div><div class="line"><span class="comment"># Warmup Iteration   5: 591631.635 ops/s</span></div><div class="line">Iteration   1: 607990.169 ops/s</div><div class="line">Iteration   2: 586306.494 ops/s</div><div class="line">Iteration   3: 606049.775 ops/s</div><div class="line">Iteration   4: 583441.620 ops/s</div><div class="line">Iteration   5: 577363.527 ops/s</div><div class="line"></div><div class="line"></div><div class="line">Result <span class="string">"measureMethodAccess"</span>:</div><div class="line">  592230.317 ±(99.9%) 53519.265 ops/s [Average]</div><div class="line">  (min, avg, max) = (577363.527, 592230.317, 607990.169), stdev = 13898.783</div><div class="line">  CI (99.9%): [538711.052, 645749.582] (assumes normal distribution)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Run complete. Total time: 00:00:31</span></div><div class="line"></div><div class="line">Benchmark                                        Mode  Cnt       Score       Error  Units</div><div class="line"><span class="built_in">test</span>ASM.TestRelectASM.measureConstructorAccess  thrpt    5  588464.668 ± 76995.468  ops/s</div><div class="line"><span class="built_in">test</span>ASM.TestRelectASM.measureFieldAccess        thrpt    5  626808.682 ± 74589.468  ops/s</div><div class="line"><span class="built_in">test</span>ASM.TestRelectASM.measureMethodAccess       thrpt    5  592230.317 ± 53519.265  ops/s</div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/06/14/JavaLibrary/ReflectASM 性能测试/" data-title="ReflectASM 性能测试 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/06/15/JavaLibrary/Spring Cache/" title="Spring Cache">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Spring Cache</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/06/14/JavaSE/ClassFinder/"  title="ClassFinder">
- <strong>下一篇：</strong><br/> 
- <span>ClassFinder
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/06/14/JavaLibrary/ReflectASM 性能测试/" data-title="ReflectASM 性能测试" data-url="http://www.yu66.wang/2016/06/14/JavaLibrary/ReflectASM 性能测试/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- 
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

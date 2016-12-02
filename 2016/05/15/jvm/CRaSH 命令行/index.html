@@ -1,566 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>CRaSH 安装启动 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="CRaSH 的全名是 Common Reusable SHell . 网上对其介绍是: 基于 Java 发布提供与 JVM 进行交互的 SHELL 环境. 作为入门, 这篇文章介绍一下, 作为单独程序的使用.
-我在mac上使用brew安装上里CRaSH, 大家可以根据自己的环境自行安装.
-我启动了一个SpringBoot HTTP服务, 然后使用CRaSH连接到这个服务上.123456789101">
-<meta property="og:type" content="article">
-<meta property="og:title" content="CRaSH 安装启动">
-<meta property="og:url" content="http://www.yu66.wang/2016/05/15/jvm/CRaSH 命令行/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="CRaSH 的全名是 Common Reusable SHell . 网上对其介绍是: 基于 Java 发布提供与 JVM 进行交互的 SHELL 环境. 作为入门, 这篇文章介绍一下, 作为单独程序的使用.
-我在mac上使用brew安装上里CRaSH, 大家可以根据自己的环境自行安装.
-我启动了一个SpringBoot HTTP服务, 然后使用CRaSH连接到这个服务上.123456789101">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CRaSH 安装启动">
-<meta name="twitter:description" content="CRaSH 的全名是 Common Reusable SHell . 网上对其介绍是: 基于 Java 发布提供与 JVM 进行交互的 SHELL 环境. 作为入门, 这篇文章介绍一下, 作为单独程序的使用.
-我在mac上使用brew安装上里CRaSH, 大家可以根据自己的环境自行安装.
-我启动了一个SpringBoot HTTP服务, 然后使用CRaSH连接到这个服务上.123456789101">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/05/15/jvm/CRaSH 命令行/" title="CRaSH 安装启动" itemprop="url">CRaSH 安装启动</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-05-15T07:00:00.000Z" itemprop="datePublished"> Published 2016-05-15</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			
-		
-		</div>
-		
-		<p>CRaSH 的全名是 Common Reusable SHell . 网上对其介绍是: 基于 Java 发布提供与 JVM 进行交互的 SHELL 环境. 作为入门, 这篇文章介绍一下, 作为单独程序的使用.</p>
-<p>我在mac上使用brew安装上里CRaSH, 大家可以根据自己的环境自行安装.</p>
-<p>我启动了一个SpringBoot HTTP服务, 然后使用CRaSH连接到这个服务上.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.EnableAutoConfiguration;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</div><div class="line"></div><div class="line"><span class="meta">@Controller</span></div><div class="line"><span class="meta">@EnableAutoConfiguration</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HTTPServer</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</div><div class="line">    <span class="meta">@ResponseBody</span></div><div class="line">    <span class="function">String <span class="title">home</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Hello World!"</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        SpringApplication.run(HTTPServer.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后在命令行找到这个进程id<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">➜  ~ jps <span class="_">-l</span></div><div class="line">467</div><div class="line">488 org.jetbrains.idea.maven.server.RemoteMavenServer</div><div class="line">696 com.intellij.rt.execution.application.AppMain</div><div class="line">697 org.jetbrains.jps.cmdline.Launcher</div><div class="line">845 sun.tools.jps.Jps</div><div class="line">➜  ~ crash.sh 696</div><div class="line"></div><div class="line">   _____     ________                 _______    ____ ____</div><div class="line"> .<span class="string">'     `.  |        `.             .'</span>       `. |    |    | 1.3.0</div><div class="line">|    |    | |    |    |  .-------.  |    |    | |    |    |</div><div class="line">|    |____| |    `   .<span class="string">' |   _|    |  .    '</span>~_ ` |         |</div><div class="line">|    |    | |    .   `.  .~<span class="string">'      | | `~_    `| |         |</span></div><div class="line">|    |    | |    |    | |    |    | |    |    | |    |    |</div><div class="line"> `._____.'  |____|____| `.________|  `._____.<span class="string">'  |____|____|</span></div><div class="line"></div><div class="line">Follow and support the project on http://www.crashub.org</div><div class="line">Welcome to localhost + !</div><div class="line">It is Sun May 15 10:44:03 CST 2016 now</div><div class="line">%</div></pre></td></tr></table></figure></p>
-<p>最后出现<code>%</code>说明我们已经连接到SpringBoot服务所在的虚拟机里了. 同样的在SpringBoot服务的日志里也有输出<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">2016-05-15 10:44:00.005  INFO 696 --- [Attach Listener] org.crsh.standalone.Agent                : CRaSH agent loaded</div><div class="line">2016-05-15 10:44:00.007  INFO 696 --- [Attach Listener] org.crsh.standalone.Agent                : Spawned CRaSH thread 23 <span class="keyword">for</span> further processing</div><div class="line">2016-05-15 10:44:00.097  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property vfs.refresh_period=1 from properties</div><div class="line">2016-05-15 10:44:00.203  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property ssh.port=2000 from properties</div><div class="line">2016-05-15 10:44:00.203  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property ssh.auth_timeout=600000 from properties</div><div class="line">2016-05-15 10:44:00.204  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property ssh.idle_timeout=600000 from properties</div><div class="line">2016-05-15 10:44:00.204  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property ssh.default_encoding=UTF-8 from properties</div><div class="line">2016-05-15 10:44:00.204  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property auth=simple from properties</div><div class="line">2016-05-15 10:44:00.204  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property telnet.port=5000 from properties</div><div class="line">2016-05-15 10:44:00.204  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property mail.debug=<span class="literal">false</span> from properties</div><div class="line">2016-05-15 10:44:00.205  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property auth.simple.username=admin from properties</div><div class="line">2016-05-15 10:44:00.205  INFO 696 --- [       Thread-3] org.crsh.standalone.Bootstrap            : Configuring property auth.simple.password=admin from properties</div><div class="line">2016-05-15 10:44:02.111  INFO 696 --- [       Thread-6] net.wimpi.telnetd.net.PortListener       : Listening to Port 5,000 with a connectivity queue size of 5.</div><div class="line">2016-05-15 10:44:02.700  INFO 696 --- [       Thread-3] org.crsh.standalone.Agent                : Callback back remote on port 50656</div></pre></td></tr></table></figure></p>
-<p>当我们在启动时, 还可以指定一些参数设置</p>
-<ul>
-<li><code>--cmd</code> : 这个选项用于指定, 我们要执行的命令所在的目录. 如果不指定的话, 会默认地从当前classpath下的<code>/crash/commands/</code>进行查找</li>
-<li><code>--conf</code> : 用于指定配置文件所在的目录, 可以指定多个目录</li>
-<li><code>--property</code> : <code>--cmd</code>可选参数, 可以覆盖配置文件中的配置, 示例<code>crash.sh --property crash.telnet.port=3000</code></li>
-</ul>
-<p>下面我们看一下在CRaSH中都可以使用哪些命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">% <span class="built_in">help</span></div><div class="line">Try one of these commands with the -h or --help switch:</div><div class="line"></div><div class="line">NAME      DESCRIPTION</div><div class="line">clock</div><div class="line">cron      manages the cron plugin</div><div class="line">dashboard a monitoring dashboard</div><div class="line">date      show the current time</div><div class="line">egrep     search file(s) <span class="keyword">for</span> lines that match a pattern</div><div class="line">env       display the term env</div><div class="line">filter    a filter <span class="keyword">for</span> a stream of map</div><div class="line">hello</div><div class="line">java      various java language commands</div><div class="line">jdbc      JDBC connection</div><div class="line">jmx       Java Management Extensions</div><div class="line">jndi      Java Naming and Directory Interface</div><div class="line">jpa       Java persistance API</div><div class="line">jul       java.util.logging commands</div><div class="line">jvm       JVM informations</div><div class="line">less      opposite of more</div><div class="line">mail      interact with emails</div><div class="line">man       format and display the on-line manual pages</div><div class="line">shell     shell related <span class="built_in">command</span></div><div class="line">sleep     sleep <span class="keyword">for</span> some time</div><div class="line">sort      sort a map</div><div class="line">system    vm system properties commands</div><div class="line">thread    JVM thread commands</div><div class="line"><span class="built_in">help</span>      provides basic <span class="built_in">help</span></div><div class="line">repl      list the repl or change the current repl</div></pre></td></tr></table></figure></p>
-<p>CRaSH为我们提供了非常多的命令, 对于命令的具体用法, 大家可以使用<code>jvm --help</code>这样的用法具体看一下. CRaSH还提供了pipline, 我们可以使用<code>|</code>管道符使用多个命令.</p>
-<p>具体的命令这篇文章就不再多介绍了, 下面我们看一下如何将CRaSH内嵌到Spring里. 为了简单, 我并没有直接使用CRaSH官网里介绍的那样, 使用xml配置Spring<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.crsh.spring.SpringBootstrap;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        SpringBootstrap springBootstrap = <span class="keyword">new</span> SpringBootstrap();</div><div class="line">        Properties properties = <span class="keyword">new</span> Properties();</div><div class="line">        properties.setProperty(<span class="string">"crash.vfs.refresh_period"</span>, <span class="string">"1"</span>);</div><div class="line">        properties.setProperty(<span class="string">"crash.ssh.port"</span>, <span class="string">"2000"</span>);</div><div class="line">        properties.setProperty(<span class="string">"crash.ssh.idle_timeout"</span>, <span class="string">"3000000"</span>);</div><div class="line">        properties.setProperty(<span class="string">"crash.telnet.port"</span>, <span class="string">"5000"</span>);</div><div class="line">        properties.setProperty(<span class="string">"crash.ssh.auth_timeout"</span>, <span class="string">"300000"</span>);</div><div class="line">        properties.setProperty(<span class="string">"crash.auth"</span>, <span class="string">"simple"</span>);</div><div class="line">        properties.setProperty(<span class="string">"crash.auth.simple.username"</span>, <span class="string">"admin"</span>);</div><div class="line">        properties.setProperty(<span class="string">"crash.auth.simple.password"</span>, <span class="string">"admin"</span>);</div><div class="line">        springBootstrap.setConfig(properties);</div><div class="line"></div><div class="line">        TimeUnit.DAYS.sleep(<span class="number">1</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>然后启动一个客户端<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">➜  ~ telnet localhost 5000</div><div class="line">Trying ::1...</div><div class="line">Connected to localhost.</div><div class="line">Escape character is <span class="string">'^]'</span>.</div><div class="line"></div><div class="line">   _____     ________                 _______    ____ ____</div><div class="line"> .<span class="string">'     `.  |        `.             .'</span>       `. |    |    | 1.3.0</div><div class="line">|    |    | |    |    |  .-------.  |    |    | |    |    |</div><div class="line">|    |____| |    `   .<span class="string">' |   _|    |  .    '</span>~_ ` |         |</div><div class="line">|    |    | |    .   `.  .~<span class="string">'      | | `~_    `| |         |</span></div><div class="line">|    |    | |    |    | |    |    | |    |    | |    |    |</div><div class="line"> `._____.'  |____|____| `.________|  `._____.<span class="string">'  |____|____|</span></div><div class="line"></div><div class="line">Follow and support the project on http://www.crashub.org</div><div class="line">Welcome to localhost + !</div><div class="line">It is Sun May 15 11:29:56 CST 2016 now</div><div class="line"></div><div class="line">%</div></pre></td></tr></table></figure></p>
-<p>通过telnet, 我们也成功连接进来了.</p>
-<p>这个需要添加的CRaSH的maven依赖有<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- http://mvnrepository.com/artifact/org.crashub/crash.shell --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.crashub<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>crash.shell<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- http://mvnrepository.com/artifact/org.crashub/crash.cli --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.crashub<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>crash.cli<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- http://mvnrepository.com/artifact/org.crashub/crash.packaging --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.crashub<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>crash.packaging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- http://mvnrepository.com/artifact/org.crashub/crash.embed.spring --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.crashub<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>crash.embed.spring<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/05/15/jvm/CRaSH 命令行/" data-title="CRaSH 安装启动 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/05/17/数据库/Mysql JSON Data Type/" title="Mysql JSON 支持">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Mysql JSON 支持</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/05/12/JavaLibrary/log4j2/"  title="Log4J2 笔记">
- <strong>下一篇：</strong><br/> 
- <span>Log4J2 笔记
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/05/15/jvm/CRaSH 命令行/" data-title="CRaSH 安装启动" data-url="http://www.yu66.wang/2016/05/15/jvm/CRaSH 命令行/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- 
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

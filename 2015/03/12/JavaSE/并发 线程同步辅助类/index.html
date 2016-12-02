@@ -1,567 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>线程同步辅助类 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="在集合点的同步CyclicBarrier使用一个整数进行初始化,这个数是需要在某个点上同步线程数.当线程完成工作,它可以调用await()方法等待其他线程.当最后一个线程完成工作调用await()方法时,CyclicBarrier将唤醒所有等待的线程,然后这些线程将继续执行
-还有一点值得说明的是：可以在CyclicBarrier的构造参数里传入Runnable对象.当所有线程都达到集合点后,Cyc">
-<meta property="og:type" content="article">
-<meta property="og:title" content="线程同步辅助类">
-<meta property="og:url" content="http://www.yu66.wang/2015/03/12/JavaSE/并发 线程同步辅助类/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="在集合点的同步CyclicBarrier使用一个整数进行初始化,这个数是需要在某个点上同步线程数.当线程完成工作,它可以调用await()方法等待其他线程.当最后一个线程完成工作调用await()方法时,CyclicBarrier将唤醒所有等待的线程,然后这些线程将继续执行
-还有一点值得说明的是：可以在CyclicBarrier的构造参数里传入Runnable对象.当所有线程都达到集合点后,Cyc">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="线程同步辅助类">
-<meta name="twitter:description" content="在集合点的同步CyclicBarrier使用一个整数进行初始化,这个数是需要在某个点上同步线程数.当线程完成工作,它可以调用await()方法等待其他线程.当最后一个线程完成工作调用await()方法时,CyclicBarrier将唤醒所有等待的线程,然后这些线程将继续执行
-还有一点值得说明的是：可以在CyclicBarrier的构造参数里传入Runnable对象.当所有线程都达到集合点后,Cyc">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/12/JavaSE/并发 线程同步辅助类/" title="线程同步辅助类" itemprop="url">线程同步辅助类</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-12T07:00:00.000Z" itemprop="datePublished"> Published 2015-03-12</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在集合点的同步"><span class="toc-number">1.</span> <span class="toc-text">在集合点的同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发任务间的数据交换"><span class="toc-number">2.</span> <span class="toc-text">并发任务间的数据交换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发阶段任务中的阶段切换"><span class="toc-number">3.</span> <span class="toc-text">并发阶段任务中的阶段切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发阶段任务的运行"><span class="toc-number">4.</span> <span class="toc-text">并发阶段任务的运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#等待多个并发事件的完成"><span class="toc-number">5.</span> <span class="toc-text">等待多个并发事件的完成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资源的多副本的并发访问控制"><span class="toc-number">6.</span> <span class="toc-text">资源的多副本的并发访问控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资源的并发访问控制"><span class="toc-number">7.</span> <span class="toc-text">资源的并发访问控制</span></a></li></ol>
-		
-		</div>
-		
-		<h2 id="在集合点的同步"><a href="#在集合点的同步" class="headerlink" title="在集合点的同步"></a>在集合点的同步</h2><p>CyclicBarrier使用一个整数进行初始化,这个数是需要在某个点上同步线程数.当线程完成工作,它可以调用await()方法等待其他线程.当最后一个线程完成工作调用await()方法时,CyclicBarrier将唤醒所有等待的线程,然后这些线程将继续执行</p>
-<p>还有一点值得说明的是：可以在CyclicBarrier的构造参数里传入Runnable对象.当所有线程都达到集合点后,CyclicBarrier将这个Runnable对象作为线程执行.</p>
-<p>CyclicBarrier还有一种await()方式,就是指定结束时间点.<br>如果CyclicBarrier的内部计数器不为0,但是时间到后,就可以唤醒现在被中断的线程</p>
-<p>可以通过reset()方法重置CyclicBarrier</p>
-<p>如果已经在阻塞的线程,被其他的线程中断了,CyclicBarrier将会抛出BrokenBarrierException状态<br>可以通过isBroken()来检查CyclicBarrier是否处于Broken状态</p>
-<h2 id="并发任务间的数据交换"><a href="#并发任务间的数据交换" class="headerlink" title="并发任务间的数据交换"></a>并发任务间的数据交换</h2><h2 id="并发阶段任务中的阶段切换"><a href="#并发阶段任务中的阶段切换" class="headerlink" title="并发阶段任务中的阶段切换"></a>并发阶段任务中的阶段切换</h2><h2 id="并发阶段任务的运行"><a href="#并发阶段任务的运行" class="headerlink" title="并发阶段任务的运行"></a>并发阶段任务的运行</h2><p>Phaser提供了onAdvance()方法,它在phaser阶段改变的时候会自动运行.<br>Phaser允许执行并发任务多阶段任务.在每一步结束的位置进行同步,当所有线程都完成了这一步,才允许执行下一步</p>
-<p>new Phaser(3),初始化3个线程参与的Phaser对象.个数字通知Phaser对象在唤醒所以休眠线程以进行下一个阶段之前,须执行arriveAndAwaitAdvance()的次数</p>
-<p>Phaser有俩种状态：<br>1.活跃态. 当存在参与同步的线程的时候,Phaser对象就是活跃的,并且在每个阶段结束的时候进行同步<br>2.终止态. 当所有参与同步的线程都取消注册的时候,Phaser就处于终止状态,在这种状态下,Phaser没有任何参与者当Phaser对象的onAdvance()方法返回true,Phaser就处于终止态.覆盖通过onAdvance()方法可以改变默认的行为,当Phaser处于终止态,同步方法arriveAndAwaitAdvance()会立即返回,而且不会做任何同步的操作</p>
-<p>arriveAndAwaitAdvance() Phaser对象计数器减一,并且把这个线程置为休眠状态,直到其他线程完成了这个阶段arriveAndDeregister()  通知Phaser对象,当前线程已经完成了当前任务,并且不会在下一个阶段中参与,因而Phaser对象在开始下一个阶段不会等待这个线程</p>
-<p>arrive()<br>awaitAdvance(phase)<br>awaitAdvanceInterruptibly(phase)<br>register()<br>bulkRegister(parties)</p>
-<h2 id="等待多个并发事件的完成"><a href="#等待多个并发事件的完成" class="headerlink" title="等待多个并发事件的完成"></a>等待多个并发事件的完成</h2><p>CountDownLatch是一个同步辅助类. 在完成一组正在其他线程执行的操作之前,它允许线程一直等待.</p>
-<p>该类使用一个整数初始化,这个整数就是线程要等待完成的操作数目.</p>
-<p>当一个线程要等待某些操作先执行时,需要调用await()方法,这个方法让线程进行睡眠,直到所有的操作都完成</p>
-<p>当某一个操作完成后,他它将调用countDown(),将CountDownLatch里的计数器减一.</p>
-<p>当计数器为0时,CountDownLatch将唤醒所有调用await()方法而进入休眠的线程</p>
-<p>CountDownLatch对象内部的计数器被初始化之后就不能再次初始化或者修改. 而且当计数器为0后也不能在调用countDown()方法</p>
-<p>对比同步方法 1.CountDownLatch不是用来保护共享资源或者临界区的.它是用来同步执行多个任务的一个或者多个线程<br>2.CountDownLatch只准许进入一次<br>,一旦CountDownLatch的内部计数器为0,就不可再调用countDown(),如果想要做类似的同步,必须再重新创建一个对象</p>
-<h2 id="资源的多副本的并发访问控制"><a href="#资源的多副本的并发访问控制" class="headerlink" title="资源的多副本的并发访问控制"></a>资源的多副本的并发访问控制</h2><h2 id="资源的并发访问控制"><a href="#资源的并发访问控制" class="headerlink" title="资源的并发访问控制"></a>资源的并发访问控制</h2><p>本例中使用Semaphore来实现二进制信号量(一种特殊信号量,用来保护唯一共享资源的访问).<br>本例使用了Java提供的信号量机制.信号量是一种计数器,用来保护一个或者多个共享资源的访问.</p>
-<p>如果线程要访问一个共享资源,它必须首先获得它的信号量(内含计数器C).C &gt; 0 –&gt; C–,然后允许线程访问该共享变量(C&gt;0 有可用资源,线程被允许使用其中一个资源)C== 0 –&gt; 信号量将线程置为睡眠,直至C&lt;0(C=0, 所以的共享资源都被其他线程使用了,以想要访问该共享资源的线程必须等待).</p>
-<p>当线程使用完某个共享资源,信号量必须被释放(C++),以便其他的线程能够访问共享资源.</p>
-<p>获取信号量<br>1.acquire()<br>2.acqu</p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/03/12/JavaSE/并发 线程同步辅助类/" data-title="线程同步辅助类 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/04/02/nosql/Redis部署/" title="Redis 部署">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Redis 部署</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/03/10/JavaSE/并发 读写锁和重入锁/"  title="Java 1.5 中的Lock">
- <strong>下一篇：</strong><br/> 
- <span>Java 1.5 中的Lock
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/03/12/JavaSE/并发 线程同步辅助类/" data-title="线程同步辅助类" data-url="http://www.yu66.wang/2015/03/12/JavaSE/并发 线程同步辅助类/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在集合点的同步"><span class="toc-number">1.</span> <span class="toc-text">在集合点的同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发任务间的数据交换"><span class="toc-number">2.</span> <span class="toc-text">并发任务间的数据交换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发阶段任务中的阶段切换"><span class="toc-number">3.</span> <span class="toc-text">并发阶段任务中的阶段切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发阶段任务的运行"><span class="toc-number">4.</span> <span class="toc-text">并发阶段任务的运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#等待多个并发事件的完成"><span class="toc-number">5.</span> <span class="toc-text">等待多个并发事件的完成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资源的多副本的并发访问控制"><span class="toc-number">6.</span> <span class="toc-text">资源的多副本的并发访问控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资源的并发访问控制"><span class="toc-number">7.</span> <span class="toc-text">资源的并发访问控制</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

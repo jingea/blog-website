@@ -1,655 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>memcached | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="原理memcached是一个高性能内存对象缓存系统. 它基于libevent,可方便地拓展为任意大小, 而且对防止内存swap和使用非阻塞IO做了大量优化工作.
-memcached内存分配：memcached默认情况下采用了名为Slab Allocator的机制分配、管理内存.
-如果我们在启动memcached时没有指定-m参数的话, 那么memcached能使用的最大内存为默认的64M,但是me">
-<meta property="og:type" content="article">
-<meta property="og:title" content="memcached">
-<meta property="og:url" content="http://www.yu66.wang/2015/11/18/nosql/Memcache/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="原理memcached是一个高性能内存对象缓存系统. 它基于libevent,可方便地拓展为任意大小, 而且对防止内存swap和使用非阻塞IO做了大量优化工作.
-memcached内存分配：memcached默认情况下采用了名为Slab Allocator的机制分配、管理内存.
-如果我们在启动memcached时没有指定-m参数的话, 那么memcached能使用的最大内存为默认的64M,但是me">
-<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/memcached/20120314163538_438.png">
-<meta property="og:updated_time" content="2016-11-09T04:22:28.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="memcached">
-<meta name="twitter:description" content="原理memcached是一个高性能内存对象缓存系统. 它基于libevent,可方便地拓展为任意大小, 而且对防止内存swap和使用非阻塞IO做了大量优化工作.
-memcached内存分配：memcached默认情况下采用了名为Slab Allocator的机制分配、管理内存.
-如果我们在启动memcached时没有指定-m参数的话, 那么memcached能使用的最大内存为默认的64M,但是me">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/memcached/20120314163538_438.png">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="Search"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/11/18/nosql/Memcache/" title="memcached" itemprop="url">memcached</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-17T16:00:00.000Z" itemprop="datePublished"> Published 2015-11-18</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#memcached命令选项"><span class="toc-number">3.</span> <span class="toc-text">memcached命令选项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java使用"><span class="toc-number">4.</span> <span class="toc-text">java使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#memcached信息统计"><span class="toc-number">5.</span> <span class="toc-text">memcached信息统计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stats"><span class="toc-number">5.1.</span> <span class="toc-text">stats</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stats-reset"><span class="toc-number">5.2.</span> <span class="toc-text">stats reset</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stats-slabs"><span class="toc-number">5.3.</span> <span class="toc-text">stats slabs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stats-items"><span class="toc-number">5.4.</span> <span class="toc-text">stats items</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stats-cachedump-1-0"><span class="toc-number">5.5.</span> <span class="toc-text">stats cachedump 1 0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STAT-evictions-0"><span class="toc-number">5.6.</span> <span class="toc-text">STAT evictions 0</span></a></li></ol></li></ol>
-		
-		</div>
-		
-		<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>memcached是一个高性能内存对象缓存系统. 它基于libevent,可方便地拓展为任意大小, 而且对防止内存swap和使用非阻塞IO做了大量优化工作.</p>
-<p>memcached内存分配：<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/memcached/20120314163538_438.png" alt=""><br>memcached默认情况下采用了名为Slab Allocator的机制分配、管理内存.</p>
-<p>如果我们在启动memcached时没有指定<code>-m</code>参数的话, 那么memcached能使用的最大内存为默认的64M,但是memcached启动的时候并不会一次性就都分配出来,而是当发现memcached已被分配的内存不够用的时候才会进行申请. memcached申请内存时一次会申请一个Slab(默认为1M). 然后会将这一个Slab分成不同的Class, 每个Class内部都有N个大小相等的Chunk.每个chunk中都保存了一个item结构体、一对key value键值对.</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>Memcached依赖libevent,所以我们首先需要安装libevent<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">wget http://jaist.dl.sourceforge.net/project/levent/libevent/libevent-2.0/libevent-2.0.22-stable.tar.gz</div><div class="line">tar -zxvf libevent-2.0.22-stable.tar.gz</div><div class="line">cd libevent-2.0.22-stable</div><div class="line">./configure --prefix=/usr &amp;&amp; make &amp;&amp; make install</div></pre></td></tr></table></figure></p>
-<p>接下来安装Memcached<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">wget http://memcached.org/latest</div><div class="line">tar -zxvf memcached-1.x.x.tar.gz</div><div class="line">cd memcached-1.x.x</div><div class="line">./configure --with-libevent=/usr &amp;&amp; make &amp;&amp; make test &amp;&amp; sudo make install</div></pre></td></tr></table></figure></p>
-<h2 id="memcached命令选项"><a href="#memcached命令选项" class="headerlink" title="memcached命令选项"></a><code>memcached</code>命令选项</h2><p>网络相关</p>
-<ul>
-<li><code>-s &lt;file&gt;</code> : Unix socket path to listen on (disables network support).</li>
-<li><code>-a &lt;perms&gt;</code> : 当通过s选项创建socket的时候,我们可以通过-a选项指定创建socket使用的权限(权限为八进制).</li>
-<li><code>-l &lt;ip_addr&gt;</code> : 监听的主机地址. 默认是本机任何可用的地址.</li>
-<li><code>-d</code> : 以后台进程方式运行memcached</li>
-<li><code>-u &lt;username&gt;</code> : memcached不能以root用户运行，如果当前用户为root, 我们需要通过该参数指定用户为root</li>
-<li><code>-c &lt;num&gt;</code> : 设置最大同时连接数.(默认是1024).</li>
-<li><code>-C</code> : 关闭CAS. (每个对象都会减少8bytes大小).</li>
-<li><code>-p &lt;num&gt;</code> : 设置监听TCP端口号, 默认是11211.</li>
-<li><code>-P</code> : 设置pid存储文件.</li>
-<li><code>-U &lt;num&gt;</code> : 设置监听UDP端口号, 默认是11211, 0 表示关闭UDP监听.</li>
-<li><code>-r</code> : 将最大的核心文件大小限制提升到允许的最大值.</li>
-<li><code>-v</code> : 设置为verbose 同时会输出发生的errors 和warnings.</li>
-<li><code>-i</code> : 打印memcached 和libevent 授权.</li>
-<li><code>-R &lt;num&gt;</code> : 这个选项是设置服务器可以处理一个独立客户端连接顺序请求的数量,以防止产生其他客户端饥饿的情况. 一旦设置了这个值当服务器处理一个连接超过20个(默认值)请求之后,就会尝试处理其他的连接请求.</li>
-</ul>
-<p>内存相关</p>
-<ul>
-<li><code>-m &lt;num&gt;</code> : 设置对象存储能使用的最大内存(单位是MB,默认是64M)</li>
-<li><code>-M</code> : 关闭对象存储所需内存超过最大内存时,自动删除缓存对象的功能. 如果memcached的配置内存达到最大值就不可再存储新的对象.</li>
-<li><code>-f &lt;factor&gt;</code> : Class的成长因子(默认是1.25). 也就是说如果Class1是100B,那么Class2就是125B.</li>
-<li><code>-n &lt;size&gt;</code> : key, value, and flags分配到的最小字节数(默认是48字节). 如果你的键值对的值都很小,你可以调低这个值来达到更高的性能. 如果你的成长因子比较大,那么你可以调高这个值,提升命中率.</li>
-<li><code>-t &lt;threads&gt;</code> : 处理请求的线程数(默认是4). 这个选项只有memcached被编译的时候指定了线程开启才有用.</li>
-<li><code>-k</code> : 锁定所有的分页内存. 在巨大的缓存系统中,使用这个选项是非常危险的,使用的使用要参考README文件和memcached homepage进行配置.</li>
-<li><code>-L</code> : 尝试使用尽可能使用到的内存叶. 增加内存叶大小可以减少TLB未命中和提供性能. 为了可以从OS获得更大的内存页,memcached会在一个巨大的chunk上分配所有的item</li>
-<li><code>-I &lt;size&gt;</code> : 指定slab page大小(默认是1mb,最小是1k, 最大是128m). 改变这个值会增加每个item大小的值.  使用-vv来查看更改后的值</li>
-<li><code>-F</code> : 关闭<code>flush_all</code>命令.</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">memcached  -d -p 10021 -l 10.234.10.12 -u root -c 1024  -P ./memcached1.pid</div></pre></td></tr></table></figure>
-<h2 id="java使用"><a href="#java使用" class="headerlink" title="java使用"></a>java使用</h2><p>我们使用spymemcached作为java客户端连接memcached. 在Maven项目中添加以下依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.spy<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spymemcached<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>2.12.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>然后连接memcached<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">MemcachedClient client = <span class="keyword">new</span> MemcachedClient(<span class="keyword">new</span> InetSocketAddress(<span class="string">"10.234.10.12"</span>, <span class="number">10021</span>));</div></pre></td></tr></table></figure></p>
-<p>通过这一行我们就成功的连接上了memcached.然后我们就可以使用spymemcached提供的大量api来操作memcached</p>
-<h2 id="memcached信息统计"><a href="#memcached信息统计" class="headerlink" title="memcached信息统计"></a>memcached信息统计</h2><p>我们可以使用telnet命令直接连接memcached<code>telnet 127.0.0.1 10021</code>,然后输入下列命令查看相关信息</p>
-<h3 id="stats"><a href="#stats" class="headerlink" title="stats"></a>stats</h3><p>统计memcached的各种信息</p>
-<ul>
-<li><code>STAT pid 20401</code> memcache服务器的进程ID</li>
-<li><code>STAT uptime 47</code>  服务器已经运行的秒数</li>
-<li><code>STAT time 1447835371</code> 服务器当前的unix时间戳</li>
-<li><code>STAT version 1.4.24</code>  memcache版本</li>
-<li><code>STAT libevent 2.0.22-stable</code> libevent版本</li>
-<li><code>STAT pointer_size 64</code> 当前操作系统的指针大小（32位系统一般是32bit）</li>
-<li><code>STAT rusage_user 0.002999</code> 进程的累计用户时间</li>
-<li><code>STAT rusage_system 0.001999</code> 进程的累计系统时间</li>
-<li><code>STAT curr_connections 10</code> 当前打开着的连接数</li>
-<li><code>STAT total_connections 11</code> 从服务器启动以后曾经打开过的连接数</li>
-<li><code>STAT connection_structures 11</code> 服务器分配的连接构造数</li>
-<li><code>STAT reserved_fds 20</code></li>
-<li><code>STAT cmd_get 0</code>  get命令（获取）总请求次数</li>
-<li><code>STAT cmd_set 0</code>  set命令（保存）总请求次数</li>
-<li><code>STAT cmd_flush 0</code></li>
-<li><code>STAT cmd_touch 0</code></li>
-<li><code>STAT get_hits 0</code>  总命中次数</li>
-<li><code>STAT get_misses 0</code> 总未命中次数</li>
-<li><code>STAT delete_misses 0</code> delete命令未命中次数</li>
-<li><code>STAT delete_hits 0</code>  delete命令命中次数</li>
-<li><code>STAT incr_misses 0</code>  incr命令未命中次数</li>
-<li><code>STAT incr_hits 0</code>  incr命令命中次数</li>
-<li><code>STAT decr_misses 0</code>  decr命令未命中次数</li>
-<li><code>STAT decr_hits 0</code>  decr命令命中次数</li>
-<li><code>STAT cas_misses 0</code>  cas命令未命中次数</li>
-<li><code>STAT cas_hits 0</code>  cas命令命中次数</li>
-<li><code>STAT cas_badval 0</code></li>
-<li><code>STAT touch_hits 0</code>  touch命令命中次数</li>
-<li><code>STAT touch_misses 0</code>  touch命令未命中次数</li>
-<li><code>STAT auth_cmds 0</code></li>
-<li><code>STAT auth_errors 0</code></li>
-<li><code>STAT bytes_read 7</code> 总读取字节数（请求字节数）</li>
-<li><code>STAT bytes_written 0</code> 总发送字节数（结果字节数）</li>
-<li><code>STAT limit_maxbytes 67108864</code>   分配给memcache的内存大小（字节）</li>
-<li><code>STAT accepting_conns 1</code></li>
-<li><code>STAT listen_disabled_num 0</code></li>
-<li><code>STAT threads 4</code>     当前线程数</li>
-<li><code>STAT conn_yields 0</code></li>
-<li><code>STAT hash_power_level 16</code>  hash等级</li>
-<li><code>STAT hash_bytes 524288</code>  hash字节数</li>
-<li><code>STAT hash_is_expanding 0</code>    </li>
-<li><code>STAT malloc_fails 0</code>  分配失败次数</li>
-<li><code>STAT bytes 0</code>   当前服务器存储items占用的字节数</li>
-<li><code>STAT curr_items 0</code> 服务器当前存储的items数量</li>
-<li><code>STAT total_items 0</code> 从服务器启动以后存储的items总数量</li>
-<li><code>STAT expired_unfetched 0</code></li>
-<li><code>STAT evicted_unfetched 0</code></li>
-<li><code>STAT evictions 0</code> 为获取空闲内存而删除的items数（分配给memcache的空间用满后需</li>
-<li><code>STAT reclaimed 0</code></li>
-<li><code>STAT crawler_reclaimed 0</code></li>
-<li><code>STAT crawler_items_checked 0</code></li>
-<li><code>STAT lrutail_reflocked 0</code></li>
-</ul>
-<p>我们也可以使用java获取这些信息<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">MemcachedClient client = <span class="keyword">new</span> MemcachedClient(<span class="keyword">new</span> InetSocketAddress(<span class="string">"10.234.10.12"</span>, <span class="number">10021</span>));</div><div class="line">client.getStats().entrySet().stream().forEach(entry -&gt; &#123;</div><div class="line">	System.out.println(<span class="string">"Node : "</span> + entry.getKey());</div><div class="line">	entry.getValue().entrySet().stream().forEach(value -&gt; &#123;</div><div class="line">		System.out.println(<span class="string">"    "</span> + value.getKey() + <span class="string">" : "</span> + value.getValue());</div><div class="line">	&#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<h3 id="stats-reset"><a href="#stats-reset" class="headerlink" title="stats reset"></a>stats reset</h3><p>重新统计数据</p>
-<h3 id="stats-slabs"><a href="#stats-slabs" class="headerlink" title="stats slabs"></a>stats slabs</h3><p>显示slabs信息，可以详细看到数据的分段存储情况</p>
-<ul>
-<li><code>STAT active_slabs 0</code></li>
-<li><code>STAT total_malloced 0</code></li>
-</ul>
-<h3 id="stats-items"><a href="#stats-items" class="headerlink" title="stats items"></a>stats items</h3><p>显示slab中的item数目</p>
-<h3 id="stats-cachedump-1-0"><a href="#stats-cachedump-1-0" class="headerlink" title="stats cachedump 1 0"></a>stats cachedump 1 0</h3><p>列出slabs第一段里存的KEY值</p>
-<h3 id="STAT-evictions-0"><a href="#STAT-evictions-0" class="headerlink" title="STAT evictions 0"></a>STAT evictions 0</h3><p>表示要腾出新空间给新的item而移动的合法item数目</p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/11/18/nosql/Memcache/" data-title="memcached | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/11/19/nosql/Redis事务/" title="Redis事务">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Redis事务</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/11/16/nosql/Redis_SortedSet/"  title="Redis SortedSet">
- <strong>下一篇：</strong><br/> 
- <span>Redis SortedSet
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/11/18/nosql/Memcache/" data-title="memcached" data-url="http://www.yu66.wang/2015/11/18/nosql/Memcache/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#memcached命令选项"><span class="toc-number">3.</span> <span class="toc-text">memcached命令选项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java使用"><span class="toc-number">4.</span> <span class="toc-text">java使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#memcached信息统计"><span class="toc-number">5.</span> <span class="toc-text">memcached信息统计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stats"><span class="toc-number">5.1.</span> <span class="toc-text">stats</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stats-reset"><span class="toc-number">5.2.</span> <span class="toc-text">stats reset</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stats-slabs"><span class="toc-number">5.3.</span> <span class="toc-text">stats slabs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stats-items"><span class="toc-number">5.4.</span> <span class="toc-text">stats items</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stats-cachedump-1-0"><span class="toc-number">5.5.</span> <span class="toc-text">stats cachedump 1 0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STAT-evictions-0"><span class="toc-number">5.6.</span> <span class="toc-text">STAT evictions 0</span></a></li></ol></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github Card</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">Categories</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>28</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>33</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>23</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">Tags</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">Links</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">Douban Show</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">Weibo</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>
