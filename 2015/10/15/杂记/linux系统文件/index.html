@@ -1,98 +1,648 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Linux CPU信息 | ·</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="王玉">
+    
+
+    
+    <meta name="description" content="iostatiostat用于输出CPU和磁盘I/O相关的统计信息.
+
+-c 仅显示CPU统计信息.与-d选项互斥.
+-d 仅显示磁盘统计信息.与-c选项互斥.
+-k 以K为单位显示每秒的磁盘请求数,默认单位块.
+-p device | ALL  与-x选项互斥,用于显示块设备及系统分区的统计信息.也可以在-p后指定一个设备名,如:iostat -p hda 或显示所有设备iostat -p ALL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux CPU信息">
+<meta property="og:url" content="http://www.yu66.wang/2015/10/15/杂记/linux系统文件/index.html">
+<meta property="og:site_name" content="·">
+<meta property="og:description" content="iostatiostat用于输出CPU和磁盘I/O相关的统计信息.
+
+-c 仅显示CPU统计信息.与-d选项互斥.
+-d 仅显示磁盘统计信息.与-c选项互斥.
+-k 以K为单位显示每秒的磁盘请求数,默认单位块.
+-p device | ALL  与-x选项互斥,用于显示块设备及系统分区的统计信息.也可以在-p后指定一个设备名,如:iostat -p hda 或显示所有设备iostat -p ALL">
+<meta property="og:updated_time" content="2016-12-03T14:29:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux CPU信息">
+<meta name="twitter:description" content="iostatiostat用于输出CPU和磁盘I/O相关的统计信息.
+
+-c 仅显示CPU统计信息.与-d选项互斥.
+-d 仅显示磁盘统计信息.与-c选项互斥.
+-k 以K为单位显示每秒的磁盘请求数,默认单位块.
+-p device | ALL  与-x选项互斥,用于显示块设备及系统分区的统计信息.也可以在-p后指定一个设备名,如:iostat -p hda 或显示所有设备iostat -p ALL">
+
+    
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/15/杂记/linux系统文件/" title="Linux CPU信息" itemprop="url">Linux CPU信息</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#iostat"><span class="toc-number">1.</span> <span class="toc-text">iostat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#uname"><span class="toc-number">2.</span> <span class="toc-text">uname</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#df"><span class="toc-number">3.</span> <span class="toc-text">df</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#du"><span class="toc-number">4.</span> <span class="toc-text">du</span></a></li></ol>
+		
+		</div>
+		
+		<h3 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a>iostat</h3><p>iostat用于输出CPU和磁盘I/O相关的统计信息.</p>
+<ul>
+<li><code>-c</code> 仅显示CPU统计信息.与-d选项互斥.</li>
+<li><code>-d</code> 仅显示磁盘统计信息.与-c选项互斥.</li>
+<li><code>-k</code> 以K为单位显示每秒的磁盘请求数,默认单位块.</li>
+<li><code>-p device | ALL</code>  与-x选项互斥,用于显示块设备及系统分区的统计信息.也可以在-p后指定一个设备名,如:<code>iostat -p hda</code> 或显示所有设备<code>iostat -p ALL</code></li>
+<li><code>-t</code>    在输出数据时,打印搜集数据的时间.</li>
+<li><code>-V</code>    打印版本号和帮助信息.</li>
+<li><code>-x</code>    输出扩展信息.</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@cvs /]# iostat</div><div class="line">Linux 2.6.32-279.el6.x86_64 (cvs)       2015年10月16日  _x86_64_        (8 CPU)</div><div class="line"></div><div class="line">avg-cpu:  %user   %nice %system %iowait  %steal   %idle</div><div class="line">           1.67    0.00    0.21    0.38    0.00   97.74</div><div class="line"></div><div class="line">Device:            tps   Blk_read/s   Blk_wrtn/s   Blk_read   Blk_wrtn</div><div class="line">sda              18.64        72.79       512.65  951732770 6702726216</div></pre></td></tr></table></figure>
+<p>avg-cpu:  </p>
+<ul>
+<li><code>%user</code>: 在用户级别运行所使用的CPU的百分比.</li>
+<li><code>%nice</code>: nice操作所使用的CPU的百分比.</li>
+<li><code>%system</code>: 在系统级别(kernel)运行所使用CPU的百分比.</li>
+<li><code>%iowait</code>: CPU等待硬件I/O时,所占用CPU百分比.</li>
+<li><code>%steal</code>:</li>
+<li><code>%idle</code>: CPU空闲时间的百分比.</li>
+</ul>
+<p>Device:            </p>
+<ul>
+<li><code>tps</code>: 每秒钟发送到的I/O请求数.</li>
+<li><code>Blk_read/s</code>: 每秒读取的block数.</li>
+<li><code>Blk_wrtn/s</code>: 每秒写入的block数.</li>
+<li><code>Blk_read</code>: 读入的block总数.</li>
+<li><code>Blk_wrtn</code>: 写入的block总数.</li>
+</ul>
+<ul>
+<li><code>Blk_read</code> 读入块的当总数.</li>
+<li><code>Blk_wrtn</code> 写入块的总数.</li>
+<li><code>kB_read/s</code> 每秒从驱动器读入的数据量,单位为K.</li>
+<li><code>kB_wrtn/s</code> 每秒向驱动器写入的数据量,单位为K.</li>
+<li><code>kB_read</code> 读入的数据总量,单位为K.</li>
+<li><code>kB_wrtn</code> 写入的数据总量,单位为K.</li>
+<li><code>rrqm/s</code>  将读入请求合并后,每秒发送到设备的读入请求数.</li>
+<li><code>wrqm/s</code>  将写入请求合并后,每秒发送到设备的写入请求数.</li>
+<li><code>r/s</code>     每秒发送到设备的读入请求数.</li>
+<li><code>w/s</code>     每秒发送到设备的写入请求数.</li>
+<li><code>rsec/s</code>  每秒从设备读入的扇区数.</li>
+<li><code>wsec/s</code>  每秒向设备写入的扇区数.</li>
+<li><code>rkB/s</code>  每秒从设备读入的数据量,单位为K.</li>
+<li><code>wkB/s</code>  每秒向设备写入的数据量,单位为K.</li>
+<li><code>avgrq-sz</code>  发送到设备的请求的平均大小,单位是扇区.</li>
+<li><code>avgqu-sz</code> 发送到设备的请求的平均队列长度.</li>
+<li><code>await</code>  I/O请求平均执行时间.包括发送请求和执行的时间.单位是毫秒.</li>
+<li><code>svctm</code> 发送到设备的I/O请求的平均执行时间.单位是毫秒.</li>
+<li><code>%util</code>  在I/O请求发送到设备期间,占用CPU时间的百分比.用于显示设备的带宽利用率.当这个值接近100%时,表示设备带宽已经占满.</li>
+</ul>
+<h3 id="uname"><a href="#uname" class="headerlink" title="uname"></a>uname</h3><ul>
+<li><code>-a</code> 　显示全部的信息。</li>
+<li><code>-m</code>　显示电脑类型。</li>
+<li><code>-n</code>　显示在网络上的主机名称。</li>
+<li><code>-r</code>　显示操作系统的发行编号。</li>
+<li><code>-s</code>　显示操作系统名称。</li>
+<li><code>-v</code> 　显示操作系统的版本。<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@test game]# uname -a</div><div class="line">Linux test 2.6.32-431.el6.x86_64 #1 SMP Fri Nov 22 03:15:09 UTC 2013 x86_64 x86_64 x86_64 GNU/Linux</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>查看发行版本 <code>cat /etc/issue</code></p>
+</blockquote>
+<h3 id="df"><a href="#df" class="headerlink" title="df"></a>df</h3><p>检查文件系统的磁盘空间占用情况</p>
+<ul>
+<li><code>-a</code> 显示所有文件系统的磁盘使用情况，包括0块（block）的文件系统，如/proc文件系统。</li>
+<li><code>-k</code> 以k字节为单位显示。</li>
+<li><code>-i</code> 显示i节点信息，而不是磁盘块。</li>
+<li><code>-t</code> 显示各指定类型的文件系统的磁盘空间使用情况。</li>
+<li><code>-x</code> 列出不是某一指定类型文件系统的磁盘空间使用情况（与t选项相反）。</li>
+<li><code>-T</code> 显示文件系统类型。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">文件系统                 1K-块      已用      可用 已用% 挂载点</div><div class="line">/dev/sda2             10079084   6660892   2906192  70% /</div><div class="line">tmpfs                  8141376         0   8141376   0% /dev/shm</div><div class="line">/dev/sda1             10079084    173308   9393776   2% /boot</div><div class="line">/dev/sda5            257592732 241557292   2950464  99% /opt</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="du"><a href="#du" class="headerlink" title="du"></a>du</h3><p>显示每个文件和目录的磁盘使用空间。</p>
+<ul>
+<li><code>-a或-all</code>  显示目录中个别文件的大小。   </li>
+<li><code>-b或-bytes</code>  显示目录或文件大小时，以byte为单位。   </li>
+<li><code>-c或--total</code>  除了显示个别目录或文件的大小外，同时也显示所有目录或文件的总和。</li>
+<li><code>-k或--kilobytes</code>  以KB(1024bytes)为单位输出。</li>
+<li><code>-m或--megabytes</code>  以MB为单位输出。   </li>
+<li><code>-s或--summarize</code>  仅显示总计，只列出最后加总的值。</li>
+<li><code>-h或--human-readable</code>  以K，M，G为单位，提高信息的可读性。</li>
+<li><code>-x或--one-file-xystem</code>  以一开始处理时的文件系统为准，若遇上其它不同的文件系统目录则略过。</li>
+<li><code>-L&lt;符号链接&gt;或--dereference&lt;符号链接&gt;</code> 显示选项中所指定符号链接的源文件大小。   </li>
+<li><code>-S或--separate-dirs</code>   显示个别目录的大小时，并不含其子目录的大小。</li>
+<li><code>-X&lt;文件&gt;或--exclude-from=&lt;文件&gt;</code>  在&lt;文件&gt;指定目录或文件。   </li>
+<li><code>--exclude=&lt;目录或文件&gt;</code>         略过指定的目录或文件。    </li>
+<li><code>-D或--dereference-args</code>   显示指定符号链接的源文件大小。   </li>
+<li><code>-H或--si</code>  与-h参数相同，但是K，M，G是以1000为换算单位。   </li>
+<li><code>-l或--count-links</code>   重复计算硬件链接的文件。  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 对当前目前下所有文件按文件大小倒排序，大小相同按文件名字母倒排序</div><div class="line">du -ak | sort -t$&apos;\t&apos; -l1 -nr -k2 -r</div></pre></td></tr></table></figure>
+</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2015/10/15/杂记/linux系统文件/" data-title="Linux CPU信息 | ·" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/10/15/杂记/CheckList/" title="CheckList">
+  <strong>上一篇：</strong><br/>
+  <span>
+  CheckList</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/10/12/算法/1_1_双线程锁/"  title="双线程锁">
+ <strong>下一篇：</strong><br/> 
+ <span>双线程锁
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/10/15/杂记/linux系统文件/" data-title="Linux CPU信息" data-url="http://www.yu66.wang/2015/10/15/杂记/linux系统文件/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#iostat"><span class="toc-number">1.</span> <span class="toc-text">iostat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#uname"><span class="toc-number">2.</span> <span class="toc-text">uname</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#df"><span class="toc-number">3.</span> <span class="toc-text">df</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#du"><span class="toc-number">4.</span> <span class="toc-text">du</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>32</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="王玉">王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>

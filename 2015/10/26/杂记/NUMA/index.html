@@ -1,98 +1,698 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>NUMA和RDMA | ·</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="王玉">
+    
+
+    
+    <meta name="description" content="支持NUMA的CPU英特尔系列的
+
+Nehalem和Tukwila系列之后的处理器
+Xeon
+至强处理器 E5-2690
+i3、i5、i7
+
+HP系列的
+
+Superdome
+SGI的Altix 3000
+
+IBM的
+
+p690
+x440
+
+NEC
+
+TX7
+
+AMD
+
+Opteron
+
+Linux中关于NUMA的命令
+NUMACTL ：设定进程NUMA策略的命令行工具。
+NUMASTAT ：获取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NUMA和RDMA">
+<meta property="og:url" content="http://www.yu66.wang/2015/10/26/杂记/NUMA/index.html">
+<meta property="og:site_name" content="·">
+<meta property="og:description" content="支持NUMA的CPU英特尔系列的
+
+Nehalem和Tukwila系列之后的处理器
+Xeon
+至强处理器 E5-2690
+i3、i5、i7
+
+HP系列的
+
+Superdome
+SGI的Altix 3000
+
+IBM的
+
+p690
+x440
+
+NEC
+
+TX7
+
+AMD
+
+Opteron
+
+Linux中关于NUMA的命令
+NUMACTL ：设定进程NUMA策略的命令行工具。
+NUMASTAT ：获取">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/net/javasdp.jpg">
+<meta property="og:updated_time" content="2016-12-03T14:29:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NUMA和RDMA">
+<meta name="twitter:description" content="支持NUMA的CPU英特尔系列的
+
+Nehalem和Tukwila系列之后的处理器
+Xeon
+至强处理器 E5-2690
+i3、i5、i7
+
+HP系列的
+
+Superdome
+SGI的Altix 3000
+
+IBM的
+
+p690
+x440
+
+NEC
+
+TX7
+
+AMD
+
+Opteron
+
+Linux中关于NUMA的命令
+NUMACTL ：设定进程NUMA策略的命令行工具。
+NUMASTAT ：获取">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/net/javasdp.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/26/杂记/NUMA/" title="NUMA和RDMA" itemprop="url">NUMA和RDMA</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-10-25T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#支持NUMA的CPU"><span class="toc-number">1.</span> <span class="toc-text">支持NUMA的CPU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux中关于NUMA的命令"><span class="toc-number">2.</span> <span class="toc-text">Linux中关于NUMA的命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JAVA中的NUMA"><span class="toc-number"></span> <span class="toc-text">JAVA中的NUMA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NUMA用于MySQL"><span class="toc-number"></span> <span class="toc-text">NUMA用于MySQL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RDMA"><span class="toc-number"></span> <span class="toc-text">RDMA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-7-SDP"><span class="toc-number">1.</span> <span class="toc-text">Java 7 SDP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置JVM7支持SDP"><span class="toc-number">1.1.</span> <span class="toc-text">配置JVM7支持SDP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用SDP的JVM7"><span class="toc-number">1.2.</span> <span class="toc-text">使用SDP的JVM7</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IO性能度量"><span class="toc-number">2.</span> <span class="toc-text">IO性能度量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#全SSD硬盘的IO阀值"><span class="toc-number">2.1.</span> <span class="toc-text">全SSD硬盘的IO阀值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1万转机械磁盘的IO阀值"><span class="toc-number">2.2.</span> <span class="toc-text">1万转机械磁盘的IO阀值</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="支持NUMA的CPU"><a href="#支持NUMA的CPU" class="headerlink" title="支持NUMA的CPU"></a>支持NUMA的CPU</h2><p>英特尔系列的</p>
+<ul>
+<li>Nehalem和Tukwila系列之后的处理器</li>
+<li>Xeon</li>
+<li>至强处理器 E5-2690</li>
+<li>i3、i5、i7</li>
+</ul>
+<p>HP系列的</p>
+<ul>
+<li>Superdome</li>
+<li>SGI的Altix 3000</li>
+</ul>
+<p>IBM的</p>
+<ul>
+<li>p690</li>
+<li>x440</li>
+</ul>
+<p>NEC</p>
+<ul>
+<li>TX7</li>
+</ul>
+<p>AMD</p>
+<ul>
+<li>Opteron</li>
+</ul>
+<h2 id="Linux中关于NUMA的命令"><a href="#Linux中关于NUMA的命令" class="headerlink" title="Linux中关于NUMA的命令"></a>Linux中关于NUMA的命令</h2><ul>
+<li>NUMACTL ：设定进程NUMA策略的命令行工具。</li>
+<li>NUMASTAT ：获取NUMA内存访问统计信息的命令行工具</li>
+</ul>
+<p>开启NUMA<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">numactl --cpunodebind=<span class="number">0</span> --membind=<span class="number">0</span> myapp</div></pre></td></tr></table></figure></p>
+<h1 id="JAVA中的NUMA"><a href="#JAVA中的NUMA" class="headerlink" title="JAVA中的NUMA"></a>JAVA中的NUMA</h1><p><code>-XX:+UseNUMA</code>启用Numa, 默认情况下,JVM所占内存会随机的分配到不同的NUMA节点上,当cpu运算时可能会到不同的NUMA节点的告诉缓存上进行数据查找,降低系统速度,可使用numactl工具将JVM进程绑定到特定的NUMA节点上,只让其访问自己所在节点的内存.</p>
+<h1 id="NUMA用于MySQL"><a href="#NUMA用于MySQL" class="headerlink" title="NUMA用于MySQL"></a>NUMA用于MySQL</h1><p>调优的时候，有哪些关键配置项，需要注意什么</p>
+<ul>
+<li><code>numactl --interleave=all</code></li>
+<li>在MySQL进程启动前，使用<code>sysctl -q -w vm.drop_caches=3</code>清空文件缓存所占用的空间</li>
+<li>Innodb在启动时，就完成整个<code>Innodb_buffer_pool_size</code>的内存分配</li>
+</ul>
+<h1 id="RDMA"><a href="#RDMA" class="headerlink" title="RDMA"></a>RDMA</h1><p>RDMA 技术需要怎样的硬件，寻找一篇RDMA用于数据库或者Java的文章，对其性能和用法做简单的阐述。</p>
+<p>RDMA是一种网卡技术,采用该技术可以使一台计算机直接将信息放入另一台计算机的内存中。RDMA通过在网卡上将可靠传输协议固化于硬件,以及支持绕过内核的零拷贝网络这两种途径来达到这一目标。绕过内核使应用程序不必执行内核调用就可以向网卡发出命令。当一个应用程序执行RDMA读/写请求时,系统并不执行数据拷贝动作。这就减少了处理 网络通信时在内核空间和用户空间上下文切换的次数。RDMA请求的完成,或者完全在用户空间中进行,或者在应用程序希望进入睡眠直到完成信号出现的情况下 通过内核进行。</p>
+<p>RDMA实现：</p>
+<ul>
+<li>利用传统的网络硬件,以TCP/IP及以太网络标准来建立因特网</li>
+<li>InfiniBand网络和实现虚拟接口架构的网络支持RDMA.</li>
+</ul>
+<p>采用RDMA来获取高性能的协议包括</p>
+<ul>
+<li>Sockets Direct Protocol</li>
+<li>SCSI RDMA Protocol（SRP）</li>
+<li>Direct Access File System（DAFS）</li>
+</ul>
+<h2 id="Java-7-SDP"><a href="#Java-7-SDP" class="headerlink" title="Java 7 SDP"></a>Java 7 SDP</h2><p>在Solaris系统上只要有物理InfiniBand网卡，Java 7 SDP就可以立即工作。</p>
+<p>Linux则通过Open Fabrics Enterprise Distribution（OFED）包支持SDP。</p>
+<blockquote>
+<p>确认Linux版本有没有配置OFED设备驱动器，<code>egrep &quot;^[ \t]+ib&quot; /proc/net/dev</code>可以使用该命令测试.</p>
+</blockquote>
+<p>Java只通过<code>java.net.Socket、java.net.ServerSocket、java.net.Datagram</code>对传输层进行抽象,通过<code>Java.net.InetAddress</code>对网络层进行抽象.只需要将JVM和InfiniBand操作系统设备和库进行设定,java就可以通过传输层抽象直接与物理层进行访问,从而绕过了网络层和数据链路层.</p>
+<p>SDP也能让Java具备非常强大的“零拷贝”,这个零拷贝并不是指的是<code>java.nio.channels.FileChannel</code>的<code>transferTo()</code>实现的零拷贝.而是直接使用原生的InfiniBand零拷贝协议实现。现在CPU不用将一个内存区域的数据拷贝到另一个内存区域。CPU可以继续处理其他任务，数据拷贝则由机器的另一部分并行处理，这样就提升了性能。此外，零拷贝操作减少了在用户空间和内核空间之间切换所消耗的时间。</p>
+<p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/net/javasdp.jpg" alt=""></p>
+<h3 id="配置JVM7支持SDP"><a href="#配置JVM7支持SDP" class="headerlink" title="配置JVM7支持SDP"></a>配置JVM7支持SDP</h3><p>SDP配置文件是个文本文件，JVM启动时会从本地文件系统读取该文件。我们有俩种规则来定义：</p>
+<ol>
+<li>bind规则：只要TCP套接字绑定到与规则匹配的地址和端口，就会使用SDP协议进行传输。</li>
+<li>connect规则：没有绑定的TCP套接字尝试连接匹配规则的地址和端口时，就会使用SDP协议进行传输。<br>第一个关键字用来表明规则是bind还是connect。第二部分指定主机名或IP地址。当指定为IP地址时，你也可以指定表示IP地址范围的前缀。第三部分即最后一个部分是端口号或端口号范围。<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 绑定到192.168.1.196主机所有端口使用SDP</div><div class="line">bind 192.168.1.196 *</div><div class="line"></div><div class="line"># 连接到192.168.2.*上的所有应用服务时都使用SDP</div><div class="line">connect 192.168.2.0/24 1024-*</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="使用SDP的JVM7"><a href="#使用SDP的JVM7" class="headerlink" title="使用SDP的JVM7"></a>使用SDP的JVM7</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">java \</div><div class="line">-Dcom.sun.sdp.conf=sdp.conf \</div><div class="line">-Djava.net.preferIPv4Stack=<span class="keyword">true</span> \</div><div class="line">Application.class</div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意要指定网络格式为<code>IPv4Stack</code>。尽管Java 7和InfiniBand都支持IPv6网络格式，但Solaris和Linux都不支持两者之间的映射。所以启动支持SDP的Java 7 VM时，还是要使用基础、可靠的IPv4网络格式。</p>
+</blockquote>
+<h2 id="IO性能度量"><a href="#IO性能度量" class="headerlink" title="IO性能度量"></a>IO性能度量</h2><h3 id="全SSD硬盘的IO阀值"><a href="#全SSD硬盘的IO阀值" class="headerlink" title="全SSD硬盘的IO阀值"></a>全SSD硬盘的IO阀值</h3><p>SSD 硬盘传输速率取 500M/S<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">0.1</span>ms + <span class="number">0</span> + <span class="number">4</span>K/<span class="number">500</span>MB = <span class="number">0.1</span> + <span class="number">0</span> + <span class="number">0.008</span> = <span class="number">0.108</span></div><div class="line"></div><div class="line">IOPS = <span class="number">1</span>/<span class="number">0.108</span> ms = <span class="number">9259</span> IOPS</div></pre></td></tr></table></figure></p>
+<p>吞吐率 = <code>9259 * 4K = 37M / 500M = 7.4%</code></p>
+<h3 id="1万转机械磁盘的IO阀值"><a href="#1万转机械磁盘的IO阀值" class="headerlink" title="1万转机械磁盘的IO阀值"></a>1万转机械磁盘的IO阀值</h3><p>1 万转机械磁盘传输速率取 200M/S<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">5</span>ms + (<span class="number">60</span>sec/<span class="number">10000</span>RPM/<span class="number">2</span>) + <span class="number">4</span>K/<span class="number">200</span>MB = <span class="number">5</span> + <span class="number">3</span> + <span class="number">0.02</span> = <span class="number">8.02</span> IOPS = <span class="number">1</span>/<span class="number">8.02</span>s ms = <span class="number">125</span> IOPS</div></pre></td></tr></table></figure></p>
+<p>吞吐率 = <code>125 * 4K = 500K / 200M = 0.25%</code></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2015/10/26/杂记/NUMA/" data-title="NUMA和RDMA | ·" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/16/nosql/Redis_SortedSet/" title="Redis SortedSet">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Redis SortedSet</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/10/15/杂记/Linux常用命令/"  title="Linux常用命令">
+ <strong>下一篇：</strong><br/> 
+ <span>Linux常用命令
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/10/26/杂记/NUMA/" data-title="NUMA和RDMA" data-url="http://www.yu66.wang/2015/10/26/杂记/NUMA/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#支持NUMA的CPU"><span class="toc-number">1.</span> <span class="toc-text">支持NUMA的CPU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux中关于NUMA的命令"><span class="toc-number">2.</span> <span class="toc-text">Linux中关于NUMA的命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JAVA中的NUMA"><span class="toc-number"></span> <span class="toc-text">JAVA中的NUMA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NUMA用于MySQL"><span class="toc-number"></span> <span class="toc-text">NUMA用于MySQL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RDMA"><span class="toc-number"></span> <span class="toc-text">RDMA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-7-SDP"><span class="toc-number">1.</span> <span class="toc-text">Java 7 SDP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置JVM7支持SDP"><span class="toc-number">1.1.</span> <span class="toc-text">配置JVM7支持SDP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用SDP的JVM7"><span class="toc-number">1.2.</span> <span class="toc-text">使用SDP的JVM7</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IO性能度量"><span class="toc-number">2.</span> <span class="toc-text">IO性能度量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#全SSD硬盘的IO阀值"><span class="toc-number">2.1.</span> <span class="toc-text">全SSD硬盘的IO阀值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1万转机械磁盘的IO阀值"><span class="toc-number">2.2.</span> <span class="toc-text">1万转机械磁盘的IO阀值</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>32</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="王玉">王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>

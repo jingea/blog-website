@@ -1,98 +1,616 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Jackson | ·</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="王玉">
+    
+
+    
+    <meta name="description" content="Jackson 提供了三种对JSON处理的方式
+
+Data Binding 
+Tree Model
+Streaming API
+
+Data Binding这种方式提供了JSON数据和Java对象之间的无缝转换，而且这种方式是相当便利的. 它内部基于 Streaming API 的JSON 读写系统, 尽管Data Binding 是非常高效地,但是相比纯　streaming/incremental">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jackson">
+<meta property="og:url" content="http://www.yu66.wang/2016/10/11/JavaLibrary/Jackson/index.html">
+<meta property="og:site_name" content="·">
+<meta property="og:description" content="Jackson 提供了三种对JSON处理的方式
+
+Data Binding 
+Tree Model
+Streaming API
+
+Data Binding这种方式提供了JSON数据和Java对象之间的无缝转换，而且这种方式是相当便利的. 它内部基于 Streaming API 的JSON 读写系统, 尽管Data Binding 是非常高效地,但是相比纯　streaming/incremental">
+<meta property="og:updated_time" content="2016-12-03T14:29:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Jackson">
+<meta name="twitter:description" content="Jackson 提供了三种对JSON处理的方式
+
+Data Binding 
+Tree Model
+Streaming API
+
+Data Binding这种方式提供了JSON数据和Java对象之间的无缝转换，而且这种方式是相当便利的. 它内部基于 Streaming API 的JSON 读写系统, 尽管Data Binding 是非常高效地,但是相比纯　streaming/incremental">
+
+    
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/10/11/JavaLibrary/Jackson/" title="Jackson" itemprop="url">Jackson</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-10-10T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-10-11</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-Binding"><span class="toc-number">1.</span> <span class="toc-text">Data Binding</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#序列化"><span class="toc-number">1.1.</span> <span class="toc-text">序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据绑定"><span class="toc-number">1.2.</span> <span class="toc-text">数据绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型绑定"><span class="toc-number">1.3.</span> <span class="toc-text">泛型绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组绑定"><span class="toc-number">1.4.</span> <span class="toc-text">数组绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程安全"><span class="toc-number">1.5.</span> <span class="toc-text">线程安全</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tree-Model"><span class="toc-number">2.</span> <span class="toc-text">Tree Model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Streaming-API"><span class="toc-number">3.</span> <span class="toc-text">Streaming API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SerializationFeature"><span class="toc-number">4.</span> <span class="toc-text">SerializationFeature</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WRAP-ROOT-VALUE"><span class="toc-number">4.1.</span> <span class="toc-text">WRAP_ROOT_VALUE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#INDENT-OUTPUT"><span class="toc-number">4.2.</span> <span class="toc-text">INDENT_OUTPUT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WRITE-DATES-AS-TIMESTAMPS"><span class="toc-number">4.3.</span> <span class="toc-text">WRITE_DATES_AS_TIMESTAMPS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WRITE-CHAR-ARRAYS-AS-JSON-ARRAYS"><span class="toc-number">4.4.</span> <span class="toc-text">WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ORDER-MAP-ENTRIES-BY-KEYS"><span class="toc-number">4.5.</span> <span class="toc-text">ORDER_MAP_ENTRIES_BY_KEYS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DeserializationFeature"><span class="toc-number">5.</span> <span class="toc-text">DeserializationFeature</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FAIL-ON-UNKNOWN-PROPERTIES"><span class="toc-number">5.1.</span> <span class="toc-text">FAIL_ON_UNKNOWN_PROPERTIES</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapperFeature"><span class="toc-number">6.</span> <span class="toc-text">MapperFeature</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ACCEPT-CASE-INSENSITIVE-PROPERTIES"><span class="toc-number">6.1.</span> <span class="toc-text">ACCEPT_CASE_INSENSITIVE_PROPERTIES</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注解"><span class="toc-number">7.</span> <span class="toc-text">注解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JsonProperty"><span class="toc-number">7.1.</span> <span class="toc-text">JsonProperty</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JsonInclude"><span class="toc-number">7.2.</span> <span class="toc-text">JsonInclude</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JsonSerialize"><span class="toc-number">7.3.</span> <span class="toc-text">JsonSerialize</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#module"><span class="toc-number">8.</span> <span class="toc-text">module</span></a></li></ol>
+		
+		</div>
+		
+		<p>Jackson 提供了三种对JSON处理的方式</p>
+<ul>
+<li>Data Binding </li>
+<li>Tree Model</li>
+<li>Streaming API</li>
+</ul>
+<h2 id="Data-Binding"><a href="#Data-Binding" class="headerlink" title="Data Binding"></a>Data Binding</h2><p>这种方式提供了JSON数据和Java对象之间的无缝转换，而且这种方式是相当便利的. 它内部基于 Streaming API 的JSON 读写系统, 尽管Data Binding 是非常高效地,但是相比纯　streaming/incremental 方式，仍然有一些额外的性能消耗．</p>
+<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">   <span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_Serialization</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">	Obj obj = <span class="keyword">new</span> Obj();</div><div class="line">	obj.platform = <span class="string">"qq"</span>;</div><div class="line">	StringWriter stringWriter = <span class="keyword">new</span> StringWriter();</div><div class="line"></div><div class="line">	ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">	objectMapper.writeValue(stringWriter, obj);</div><div class="line"></div><div class="line">	System.out.println(stringWriter);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出为<code>{&quot;platform&quot;:&quot;qq&quot;}</code></p>
+<h3 id="数据绑定"><a href="#数据绑定" class="headerlink" title="数据绑定"></a>数据绑定</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_ObjectMapperRead</span> <span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">	String jsonStr = <span class="string">"&#123;\"platform\":\"1\"&#125;"</span>;</div><div class="line">	ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">	Obj obj = objectMapper.readValue(jsonStr, Obj.class);</div><div class="line">	System.out.println(obj.platform);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出为<code>1</code></p>
+<h3 id="泛型绑定"><a href="#泛型绑定" class="headerlink" title="泛型绑定"></a>泛型绑定</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_Serialization</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">	Map&lt;Integer, String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">	map.put(<span class="number">2016</span>, <span class="string">"10/11"</span>);</div><div class="line">	StringWriter stringWriter = <span class="keyword">new</span> StringWriter();</div><div class="line"></div><div class="line">	ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">	objectMapper.writeValue(stringWriter, map);</div><div class="line"></div><div class="line">	Map&lt;Integer, String&gt; newMap = objectMapper.readValue(stringWriter.toString(), <span class="keyword">new</span> TypeReference&lt;Map&lt;Integer, String&gt;&gt;() &#123;&#125;);</div><div class="line">	System.out.println(newMap.get(<span class="number">2016</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出为<code>10/11</code></p>
+<h3 id="数组绑定"><a href="#数组绑定" class="headerlink" title="数组绑定"></a>数组绑定</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_Binding</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		String[] array = &#123;<span class="string">"2016"</span>&#125;;</div><div class="line">		StringWriter stringWriter = <span class="keyword">new</span> StringWriter();</div><div class="line"></div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		objectMapper.writeValue(stringWriter, array);</div><div class="line"></div><div class="line">		String[] arr = objectMapper.readValue(stringWriter.toString(), String[].class);</div><div class="line">		System.out.println(arr[<span class="number">0</span>]);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>ObjectMapper被共享出来之后, 只要重新配置共享实例, 那么它就是线程安全的. 也就是不要调用下列方法</p>
+<ul>
+<li><code>enable()</code></li>
+<li><code>disable()</code></li>
+<li><code>configure()</code></li>
+</ul>
+<p>参考</p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/3907929/should-i-declare-jacksons-objectmapper-as-a-static-field" target="_blank" rel="external">Should I declare Jackson’s ObjectMapper as a static field?</a></li>
+<li><a href="http://wiki.fasterxml.com/JacksonFAQThreadSafety" target="_blank" rel="external">Jackson FAQ: Thread-Safety</a></li>
+</ul>
+<h2 id="Tree-Model"><a href="#Tree-Model" class="headerlink" title="Tree Model"></a>Tree Model</h2><p>Tree Model 和XML 处理方式 非常类似.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.JsonNode;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTreeModel</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Obj1 obj1 = <span class="keyword">new</span> Obj1();</div><div class="line">		Obj2 obj2 = <span class="keyword">new</span> Obj2();</div><div class="line">		Obj3 obj3 = <span class="keyword">new</span> Obj3();</div><div class="line">		obj1.obj2 = obj2;</div><div class="line">		obj2.obj3 = obj3;</div><div class="line">		obj3.string = <span class="string">"hello"</span>;</div><div class="line"></div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		String str = objectMapper.writeValueAsString(obj1);</div><div class="line">		JsonNode objtree = objectMapper.readTree(str);</div><div class="line">		System.out.println(<span class="string">"get obj2 : "</span> + objtree.get(<span class="string">"obj2"</span>));</div><div class="line">		System.out.println(<span class="string">"get obj3 : "</span> + objtree.get(<span class="string">"obj3"</span>));</div><div class="line">		System.out.println(<span class="string">"get string : "</span> + objtree.get(<span class="string">"string"</span>));</div><div class="line"></div><div class="line">		System.out.println(<span class="string">"path obj2 : "</span> + objtree.path(<span class="string">"obj2"</span>));</div><div class="line">		System.out.println(<span class="string">"path obj3 : "</span> + objtree.path(<span class="string">"obj3"</span>));</div><div class="line">		System.out.println(<span class="string">"path string : "</span> + objtree.path(<span class="string">"string"</span>));</div><div class="line"></div><div class="line">		System.out.println(<span class="string">"path string obj2 -&gt; obj3 -&gt; string : "</span> + objtree.path(<span class="string">"obj2"</span>).path(<span class="string">"obj3"</span>).path(<span class="string">"string"</span>));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Obj1</span> </span>&#123;</div><div class="line">		<span class="keyword">public</span> Obj2 obj2;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Obj2</span> </span>&#123;</div><div class="line">		<span class="keyword">public</span> Obj3 obj3;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Obj3</span> </span>&#123;</div><div class="line">		<span class="keyword">public</span> String string;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">get obj2 : &#123;<span class="string">"obj3"</span>:&#123;<span class="string">"string"</span>:<span class="string">"hello"</span>&#125;&#125;</div><div class="line">get obj3 : null</div><div class="line">get string : null</div><div class="line">path obj2 : &#123;<span class="string">"obj3"</span>:&#123;<span class="string">"string"</span>:<span class="string">"hello"</span>&#125;&#125;</div><div class="line">path obj3 : </div><div class="line">path string : </div><div class="line">path string obj2 -&gt; obj3 -&gt; string : <span class="string">"hello"</span></div></pre></td></tr></table></figure></p>
+<p>当调用<code>get()</code>方法时, 如果找不到的话, 会返回<code>null</code>, 而<code>path()</code>找不到的话则会返回<code>MissingNode</code></p>
+<p>还有一个方法<code>with(int index)</code>我们没有演示, 这个方法是如果找不到就添加.</p>
+<p><code>get()</code>方法还有一个特别有用的地方就是用来处理数组.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.JsonNode;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTreeModel</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		Obj1 obj1 = <span class="keyword">new</span> Obj1();</div><div class="line"></div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		String str = objectMapper.writeValueAsString(obj1);</div><div class="line">		System.out.println(str);</div><div class="line"></div><div class="line">		JsonNode tree = objectMapper.readTree(str);</div><div class="line">		System.out.println(tree.get(<span class="string">"strings"</span>).get(<span class="number">1</span>));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Obj1</span> </span>&#123;</div><div class="line">		<span class="keyword">public</span> String[] strings = &#123;<span class="string">"123"</span>, <span class="string">"456"</span>&#125;;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">"strings"</span>:[<span class="string">"123"</span>,<span class="string">"456"</span>]&#125;</div><div class="line"><span class="string">"456"</span></div></pre></td></tr></table></figure></p>
+<h2 id="Streaming-API"><a href="#Streaming-API" class="headerlink" title="Streaming API"></a>Streaming API</h2><p>Streaming API 是 Jackson处理 JSON最高效地方式. 但是它的易用性却大大地降低了, 我们不能像Data Binding 或者 Tree Model 那样随机访问元素.</p>
+<h2 id="SerializationFeature"><a href="#SerializationFeature" class="headerlink" title="SerializationFeature"></a>SerializationFeature</h2><h3 id="WRAP-ROOT-VALUE"><a href="#WRAP-ROOT-VALUE" class="headerlink" title="WRAP_ROOT_VALUE"></a>WRAP_ROOT_VALUE</h3><p>是否环绕根元素，默认false，如果为true，则默认以类名作为根元素，也可以通过<code>@JsonRootName</code>来自定义根元素名称<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.SerializationFeature;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDataBinding</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_SerializationFeature</span> <span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);</div><div class="line">		System.out.println( objectMapper.writeValueAsString(<span class="keyword">new</span> Obj()));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Obj</span> </span>&#123;</div><div class="line">		<span class="keyword">public</span> String platform = <span class="string">"example"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<code>{&quot;Obj&quot;:{&quot;platform&quot;:&quot;example&quot;}}</code> 如果不开启<code>WRAP_ROOT_VALUE</code>的话, 结果为<code>{&quot;platform&quot;:&quot;example&quot;}</code></p>
+<h3 id="INDENT-OUTPUT"><a href="#INDENT-OUTPUT" class="headerlink" title="INDENT_OUTPUT"></a>INDENT_OUTPUT</h3><p> 是否缩放排列输出<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">objectMapper.enable(SerializationFeature.INDENT_OUTPUT);</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"platform"</span> : <span class="string">"example"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="WRITE-DATES-AS-TIMESTAMPS"><a href="#WRITE-DATES-AS-TIMESTAMPS" class="headerlink" title="WRITE_DATES_AS_TIMESTAMPS"></a>WRITE_DATES_AS_TIMESTAMPS</h3><p>序列化日期时以timestamps输出<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDataBinding</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_SerializationFeature</span> <span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		objectMapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);</div><div class="line">		System.out.println( objectMapper.writeValueAsString(<span class="keyword">new</span> Obj()));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Obj</span> </span>&#123;</div><div class="line">		<span class="keyword">public</span> Date now = <span class="keyword">new</span> Date();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="string">"now"</span>:1476179780913&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="WRITE-CHAR-ARRAYS-AS-JSON-ARRAYS"><a href="#WRITE-CHAR-ARRAYS-AS-JSON-ARRAYS" class="headerlink" title="WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS"></a>WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS</h3><p>序列化char[]时以json数组输出</p>
+<h3 id="ORDER-MAP-ENTRIES-BY-KEYS"><a href="#ORDER-MAP-ENTRIES-BY-KEYS" class="headerlink" title="ORDER_MAP_ENTRIES_BY_KEYS"></a>ORDER_MAP_ENTRIES_BY_KEYS</h3><p>序列化Map时对key进行排序操作</p>
+<h2 id="DeserializationFeature"><a href="#DeserializationFeature" class="headerlink" title="DeserializationFeature"></a>DeserializationFeature</h2><h3 id="FAIL-ON-UNKNOWN-PROPERTIES"><a href="#FAIL-ON-UNKNOWN-PROPERTIES" class="headerlink" title="FAIL_ON_UNKNOWN_PROPERTIES"></a>FAIL_ON_UNKNOWN_PROPERTIES</h3><p>在反序列化时, 如果Java对象中不包含json串的某个数据 属性, 则会报错.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDataBinding</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_SerializationFeature</span> <span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);</div><div class="line"></div><div class="line">		String str = <span class="string">"&#123;\"strings1\":[\"123\"],\"strings2\":[\"456\"]&#125;"</span>;</div><div class="line">		objectMapper.readValue(str, Obj.class);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Obj</span> </span>&#123;</div><div class="line">		<span class="keyword">public</span> String[] strings1 = &#123;<span class="string">"123"</span>&#125;;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="MapperFeature"><a href="#MapperFeature" class="headerlink" title="MapperFeature"></a>MapperFeature</h2><h3 id="ACCEPT-CASE-INSENSITIVE-PROPERTIES"><a href="#ACCEPT-CASE-INSENSITIVE-PROPERTIES" class="headerlink" title="ACCEPT_CASE_INSENSITIVE_PROPERTIES"></a>ACCEPT_CASE_INSENSITIVE_PROPERTIES</h3><p> 在反序列化时是否忽略大小写<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.MapperFeature;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDataBinding</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_SerializationFeature</span> <span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		Upper upper = <span class="keyword">new</span> Upper();</div><div class="line">		upper.setFirstName(<span class="string">"John"</span>);</div><div class="line">		System.out.println(objectMapper.writeValueAsString(upper));</div><div class="line"></div><div class="line">		Lower lower = <span class="keyword">new</span> Lower();</div><div class="line">		lower.setLastName(<span class="string">"li"</span>);</div><div class="line">		System.out.println(objectMapper.writeValueAsString(lower));</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_DeserializationFeature</span> <span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);</div><div class="line"></div><div class="line">		Upper obj1 = objectMapper.readValue(<span class="string">"&#123;\"firstName\":\"John\"&#125;"</span>, Upper.class);</div><div class="line">		System.out.println(obj1.getFirstName());</div><div class="line"></div><div class="line">		Upper obj2 = objectMapper.readValue(<span class="string">"&#123;\"FirstName\":\"John\"&#125;"</span>, Upper.class);</div><div class="line">		System.out.println(obj2.getFirstName());</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Upper</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> String FirstName;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getFirstName</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> FirstName;&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFirstName</span><span class="params">(String firstName)</span> </span>&#123;FirstName = firstName;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Lower</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> String lastName;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getLastName</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> lastName;&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLastName</span><span class="params">(String lastName)</span> </span>&#123;<span class="keyword">this</span>.lastName = lastName;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在<code>test_SerializationFeature()</code>这个测试中, 我们可以通过结果看到, Upper的<code>FirstName</code>在JSON串 中成了<code>firstName</code>. 当反序列化得时候, 如果不指定<code>ACCEPT_CASE_INSENSITIVE_PROPERTIES</code>, 那么当JSON串中的<code>FirstName</code>为大写的时候, 是没办法序列化出来的.</p>
+<h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><h3 id="JsonProperty"><a href="#JsonProperty" class="headerlink" title="JsonProperty"></a>JsonProperty</h3><p>jackson 默认是根据Getter来进行注值反序列化的, 但是有时候为了节省存储空间, 字段名远小于Getter名称, 这样就造成了字段名和方法名不一致, 此时就可以利用JsonProperty注解重命名来解决这个问题<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonProperty;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.MapperFeature;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDataBinding</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_Deferent</span> <span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);</div><div class="line"></div><div class="line">		Different different = <span class="keyword">new</span> Different();</div><div class="line">		different.setMiddle(<span class="string">"Nice"</span>);</div><div class="line">		System.out.println(objectMapper.writeValueAsString(different));</div><div class="line"></div><div class="line">		Different obj2 = objectMapper.readValue(<span class="string">"&#123;\"middle\":\"Nice\"&#125;"</span>, Different.class);</div><div class="line">		System.out.println(obj2.getMiddle());</div><div class="line"></div><div class="line">		Different obj3 = objectMapper.readValue(<span class="string">"&#123;\"Mid\":\"Nice\"&#125;"</span>, Different.class);</div><div class="line">		System.out.println(obj3.getMiddle());</div><div class="line"></div><div class="line">		Different obj4 = objectMapper.readValue(<span class="string">"&#123;\"mid\":\"Nice\"&#125;"</span>, Different.class);</div><div class="line">		System.out.println(obj4.getMiddle());</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Different</span> </span>&#123;</div><div class="line">	<span class="meta">@JsonProperty</span>(<span class="string">"mid"</span>)</div><div class="line">	<span class="keyword">private</span> String Mid;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getMiddle</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> Mid;&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMiddle</span><span class="params">(String middle)</span> </span>&#123;<span class="keyword">this</span>.Mid = middle;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>说到这里就需要点出一个坑了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> com.google.gson.Gson;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestPrivate</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line"></div><div class="line">		SimpleId simpleId = <span class="keyword">new</span> SimpleId();</div><div class="line">		simpleId.setString(<span class="string">"simple Id"</span>);</div><div class="line">		String json = objectMapper.writeValueAsString(simpleId);</div><div class="line">		System.out.println(<span class="string">"Jsckson  ---&gt; "</span> + json);</div><div class="line"></div><div class="line">		Gson gson = <span class="keyword">new</span> Gson();</div><div class="line">		json = gson.toJson(simpleId);</div><div class="line">		System.out.println(<span class="string">"Gson     ---&gt; "</span> + json);</div><div class="line"></div><div class="line">		json = JSON.toJSONString(simpleId);</div><div class="line">		System.out.println(<span class="string">"FastJson ---&gt; "</span> + json);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleId</span> </span>&#123;</div><div class="line">		<span class="keyword">private</span> String stringId;</div><div class="line">		<span class="keyword">private</span> String stringName = <span class="string">"empty name"</span>;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> String <span class="title">getString</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">return</span> stringId;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setString</span><span class="params">(String string)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.stringId = string;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> String <span class="title">getString1</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">return</span> <span class="string">"123456"</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Jsckson  ---&gt; &#123;<span class="string">"string"</span>:<span class="string">"simple Id"</span>,<span class="string">"string1"</span>:<span class="string">"123456"</span>&#125;</div><div class="line">Gson     ---&gt; &#123;<span class="string">"stringId"</span>:<span class="string">"simple Id"</span>,<span class="string">"stringName"</span>:<span class="string">"empty name"</span>&#125;</div><div class="line">FastJson ---&gt; &#123;<span class="string">"string"</span>:<span class="string">"simple Id"</span>,<span class="string">"string1"</span>:<span class="string">"123456"</span>&#125;</div></pre></td></tr></table></figure></p>
+<p>有时候我们需要Gson这种输出结果, 即不使用Getter, 而是使用filed进行序列化, 怎么办呢？我们可以使用<code>@JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)</code>, 但是对于有时候我们并不想在每个类上面都加一个这样的注解, 配置一些ObjectMapper就可以了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">objectMapper.setVisibility(objectMapper.getSerializationConfig().getDefaultVisibilityChecker()</div><div class="line">		.withFieldVisibility(JsonAutoDetect.Visibility.ANY)</div><div class="line">		.withGetterVisibility(JsonAutoDetect.Visibility.NONE)</div><div class="line">		.withSetterVisibility(JsonAutoDetect.Visibility.NONE)</div><div class="line">		.withCreatorVisibility(JsonAutoDetect.Visibility.NONE));</div></pre></td></tr></table></figure></p>
+<p>这样结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Jsckson  ---&gt; &#123;<span class="string">"stringId"</span>:<span class="string">"simple Id"</span>,<span class="string">"stringName"</span>:<span class="string">"empty name"</span>&#125;</div><div class="line">Gson     ---&gt; &#123;<span class="string">"stringId"</span>:<span class="string">"simple Id"</span>,<span class="string">"stringName"</span>:<span class="string">"empty name"</span>&#125;</div><div class="line">FastJson ---&gt; &#123;<span class="string">"string"</span>:<span class="string">"simple Id"</span>,<span class="string">"string1"</span>:<span class="string">"123456"</span>&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="JsonInclude"><a href="#JsonInclude" class="headerlink" title="JsonInclude"></a>JsonInclude</h3><p>指定在序列化时, 可以输出哪些值. 例如只输出非默认值(包含类型默认值和初始化默认值)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonInclude;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonProcessingException;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDefault</span> </span>&#123;</div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_</span><span class="params">()</span> <span class="keyword">throws</span> JsonProcessingException </span>&#123;</div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		Foo foo = <span class="keyword">new</span> Foo();</div><div class="line">		foo.string1 = <span class="string">"123"</span>;</div><div class="line">		System.out.println(objectMapper.writeValueAsString(foo));</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@JsonInclude</span>(JsonInclude.Include.NON_DEFAULT)</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> String string1;</div><div class="line">	<span class="keyword">public</span> String string2 = <span class="string">"xxx"</span>;</div><div class="line">	<span class="keyword">public</span> String string3;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="JsonSerialize"><a href="#JsonSerialize" class="headerlink" title="JsonSerialize"></a>JsonSerialize</h3><p>实现浮点数只保留俩位<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonGenerator;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonProcessingException;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.JsonSerializer;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.SerializerProvider;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.annotation.JsonSerialize;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.text.DecimalFormat;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDouble</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="meta">@Test</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_</span><span class="params">()</span> <span class="keyword">throws</span> JsonProcessingException </span>&#123;</div><div class="line">		DoubleObject doubleObject = <span class="keyword">new</span> DoubleObject();</div><div class="line">		doubleObject.aDouble = <span class="number">1.101010101010101</span>;</div><div class="line">		doubleObject.aFloat = <span class="number">1.101010101010101f</span>;</div><div class="line"></div><div class="line">		ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		String string = objectMapper.writeValueAsString(doubleObject);</div><div class="line">		System.out.println(string);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomDoubleSerializer</span> <span class="keyword">extends</span> <span class="title">JsonSerializer</span>&lt;<span class="title">Number</span>&gt; </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">serialize</span><span class="params">(Number value, JsonGenerator jgen, SerializerProvider provider)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">			<span class="keyword">if</span> (<span class="keyword">null</span> == value) &#123;</div><div class="line">				jgen.writeNull();</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value <span class="keyword">instanceof</span> Double || value <span class="keyword">instanceof</span> Float)&#123;</div><div class="line">				<span class="keyword">final</span> String pattern = <span class="string">".##"</span>;</div><div class="line">				<span class="keyword">final</span> DecimalFormat myFormatter = <span class="keyword">new</span> DecimalFormat(pattern);</div><div class="line">				<span class="keyword">final</span> String output = myFormatter.format(value);</div><div class="line">				jgen.writeNumber(output);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DoubleObject</span> </span>&#123;</div><div class="line">		<span class="meta">@JsonSerialize</span>(using = CustomDoubleSerializer.class)</div><div class="line">		<span class="keyword">private</span> <span class="keyword">double</span> aDouble;</div><div class="line">		<span class="meta">@JsonSerialize</span>(using = CustomDoubleSerializer.class)</div><div class="line">		<span class="keyword">private</span> <span class="keyword">float</span> aFloat;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getaDouble</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> aDouble;&#125;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setaDouble</span><span class="params">(<span class="keyword">double</span> aDouble)</span> </span>&#123;<span class="keyword">this</span>.aDouble = aDouble;&#125;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getaFloat</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> aFloat;&#125;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setaFloat</span><span class="params">(<span class="keyword">float</span> aFloat)</span> </span>&#123;<span class="keyword">this</span>.aFloat = aFloat;&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="module"><a href="#module" class="headerlink" title="module"></a>module</h2><p>可以通过module来自定义实现 序列化和反序列机制. 下面的例子中就是演示对Double类型的序列化时保留浮点数位数的实现</p>
+<blockquote>
+<p>注意 如果注解和自定义序列化重复时, 那么注解的设置会覆盖自定义序列化机制. 而且对于原生类型来说, 是区分原生类型和包装类型的</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonGenerator;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonProcessingException;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.JsonSerializer;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.SerializerProvider;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.annotation.JsonSerialize;</div><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.<span class="keyword">module</span>.SimpleModule;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.text.DecimalFormat;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestModule</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ObjectMapper objectMapper;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		objectMapper = <span class="keyword">new</span> ObjectMapper();</div><div class="line">		SimpleModule simpleModule = <span class="keyword">new</span> SimpleModule();</div><div class="line">		simpleModule.addSerializer(Double.class, <span class="keyword">new</span> CustomFiveDoubleSerializer());</div><div class="line">		simpleModule.addSerializer(<span class="keyword">double</span>.class, <span class="keyword">new</span> CustomFiveDoubleSerializer());</div><div class="line">		objectMapper.registerModule(simpleModule);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomFiveDoubleSerializer</span> <span class="keyword">extends</span> <span class="title">JsonSerializer</span>&lt;<span class="title">Number</span>&gt; </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">serialize</span><span class="params">(Number value, JsonGenerator jgen, SerializerProvider provider)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">			<span class="keyword">if</span> (<span class="keyword">null</span> == value) &#123;</div><div class="line">				jgen.writeNull();</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value <span class="keyword">instanceof</span> Double || value <span class="keyword">instanceof</span> Float)&#123;</div><div class="line">				<span class="keyword">final</span> String pattern = <span class="string">".#####"</span>;</div><div class="line">				<span class="keyword">final</span> DecimalFormat myFormatter = <span class="keyword">new</span> DecimalFormat(pattern);</div><div class="line">				<span class="keyword">final</span> String output = myFormatter.format(value);</div><div class="line">				jgen.writeNumber(output);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomOneDoubleSerializer</span> <span class="keyword">extends</span> <span class="title">JsonSerializer</span>&lt;<span class="title">Number</span>&gt; </span>&#123;</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">serialize</span><span class="params">(Number value, JsonGenerator jgen, SerializerProvider provider)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">			<span class="keyword">if</span> (<span class="keyword">null</span> == value) &#123;</div><div class="line">				jgen.writeNull();</div><div class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value <span class="keyword">instanceof</span> Double || value <span class="keyword">instanceof</span> Float)&#123;</div><div class="line">				<span class="keyword">final</span> String pattern = <span class="string">".#"</span>;</div><div class="line">				<span class="keyword">final</span> DecimalFormat myFormatter = <span class="keyword">new</span> DecimalFormat(pattern);</div><div class="line">				<span class="keyword">final</span> String output = myFormatter.format(value);</div><div class="line">				jgen.writeNumber(output);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> JsonProcessingException </span>&#123;</div><div class="line">		Obj obj = <span class="keyword">new</span> Obj();</div><div class="line">		obj.aDouble1 = <span class="number">1.111111111111</span>;</div><div class="line">		obj.aDouble2 = <span class="number">1.111111111111</span>;</div><div class="line"></div><div class="line">		System.out.println(objectMapper.writeValueAsString(obj));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Obj</span> </span>&#123;</div><div class="line">		<span class="keyword">public</span> Double aDouble1;</div><div class="line">		<span class="meta">@JsonSerialize</span>(using = CustomOneDoubleSerializer.class)</div><div class="line">		<span class="keyword">public</span> Double aDouble2;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2016/10/11/JavaLibrary/Jackson/" data-title="Jackson | ·" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/10/24/算法/一致性hash/" title="一致性hash">
+  <strong>上一篇：</strong><br/>
+  <span>
+  一致性hash</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/09/26/JavaSE/Java String/"  title="Java 字符串优化">
+ <strong>下一篇：</strong><br/> 
+ <span>Java 字符串优化
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/10/11/JavaLibrary/Jackson/" data-title="Jackson" data-url="http://www.yu66.wang/2016/10/11/JavaLibrary/Jackson/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-Binding"><span class="toc-number">1.</span> <span class="toc-text">Data Binding</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#序列化"><span class="toc-number">1.1.</span> <span class="toc-text">序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据绑定"><span class="toc-number">1.2.</span> <span class="toc-text">数据绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#泛型绑定"><span class="toc-number">1.3.</span> <span class="toc-text">泛型绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组绑定"><span class="toc-number">1.4.</span> <span class="toc-text">数组绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程安全"><span class="toc-number">1.5.</span> <span class="toc-text">线程安全</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tree-Model"><span class="toc-number">2.</span> <span class="toc-text">Tree Model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Streaming-API"><span class="toc-number">3.</span> <span class="toc-text">Streaming API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SerializationFeature"><span class="toc-number">4.</span> <span class="toc-text">SerializationFeature</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WRAP-ROOT-VALUE"><span class="toc-number">4.1.</span> <span class="toc-text">WRAP_ROOT_VALUE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#INDENT-OUTPUT"><span class="toc-number">4.2.</span> <span class="toc-text">INDENT_OUTPUT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WRITE-DATES-AS-TIMESTAMPS"><span class="toc-number">4.3.</span> <span class="toc-text">WRITE_DATES_AS_TIMESTAMPS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WRITE-CHAR-ARRAYS-AS-JSON-ARRAYS"><span class="toc-number">4.4.</span> <span class="toc-text">WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ORDER-MAP-ENTRIES-BY-KEYS"><span class="toc-number">4.5.</span> <span class="toc-text">ORDER_MAP_ENTRIES_BY_KEYS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DeserializationFeature"><span class="toc-number">5.</span> <span class="toc-text">DeserializationFeature</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FAIL-ON-UNKNOWN-PROPERTIES"><span class="toc-number">5.1.</span> <span class="toc-text">FAIL_ON_UNKNOWN_PROPERTIES</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MapperFeature"><span class="toc-number">6.</span> <span class="toc-text">MapperFeature</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ACCEPT-CASE-INSENSITIVE-PROPERTIES"><span class="toc-number">6.1.</span> <span class="toc-text">ACCEPT_CASE_INSENSITIVE_PROPERTIES</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注解"><span class="toc-number">7.</span> <span class="toc-text">注解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JsonProperty"><span class="toc-number">7.1.</span> <span class="toc-text">JsonProperty</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JsonInclude"><span class="toc-number">7.2.</span> <span class="toc-text">JsonInclude</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JsonSerialize"><span class="toc-number">7.3.</span> <span class="toc-text">JsonSerialize</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#module"><span class="toc-number">8.</span> <span class="toc-text">module</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>32</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="王玉">王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>

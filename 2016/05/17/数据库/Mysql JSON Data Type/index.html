@@ -1,98 +1,675 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Mysql JSON 支持 | ·</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="王玉">
+    
+
+    
+    <meta name="description" content="官方文档学习
+在MySQL5.7版本中增加了对JSON的支持. 在SQL中进行JSON字段操作时都是通过使用函数完成的
+创建JSON字段在Mysql中, JSON是通过字符串进行存储的.
+下面的例子演示了创建JSON类型字段的表, 以及插入一个JSON串和插入一个非法的JSON串12345678mysql&amp;gt; CREATE TABLE t1 (jdoc JSON);Query OK, 0 ro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql JSON 支持">
+<meta property="og:url" content="http://www.yu66.wang/2016/05/17/数据库/Mysql JSON Data Type/index.html">
+<meta property="og:site_name" content="·">
+<meta property="og:description" content="官方文档学习
+在MySQL5.7版本中增加了对JSON的支持. 在SQL中进行JSON字段操作时都是通过使用函数完成的
+创建JSON字段在Mysql中, JSON是通过字符串进行存储的.
+下面的例子演示了创建JSON类型字段的表, 以及插入一个JSON串和插入一个非法的JSON串12345678mysql&amp;gt; CREATE TABLE t1 (jdoc JSON);Query OK, 0 ro">
+<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql JSON 支持">
+<meta name="twitter:description" content="官方文档学习
+在MySQL5.7版本中增加了对JSON的支持. 在SQL中进行JSON字段操作时都是通过使用函数完成的
+创建JSON字段在Mysql中, JSON是通过字符串进行存储的.
+下面的例子演示了创建JSON类型字段的表, 以及插入一个JSON串和插入一个非法的JSON串12345678mysql&amp;gt; CREATE TABLE t1 (jdoc JSON);Query OK, 0 ro">
+
+    
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/17/数据库/Mysql JSON Data Type/" title="Mysql JSON 支持" itemprop="url">Mysql JSON 支持</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-17T07:00:00.000Z" itemprop="datePublished"> 发表于 2016-05-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建JSON字段"><span class="toc-number">1.</span> <span class="toc-text">创建JSON字段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#搜索"><span class="toc-number">2.</span> <span class="toc-text">搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入"><span class="toc-number">3.</span> <span class="toc-text">插入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改"><span class="toc-number">4.</span> <span class="toc-text">修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除"><span class="toc-number">5.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#归一化处理"><span class="toc-number">6.</span> <span class="toc-text">归一化处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并"><span class="toc-number">7.</span> <span class="toc-text">合并</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">8.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON-TYPE"><span class="toc-number">8.1.</span> <span class="toc-text">JSON_TYPE()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建JSON数组"><span class="toc-number">8.2.</span> <span class="toc-text">创建JSON数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建JSON对象"><span class="toc-number">8.3.</span> <span class="toc-text">创建JSON对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#变量赋值"><span class="toc-number">8.4.</span> <span class="toc-text">变量赋值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字面量"><span class="toc-number">8.5.</span> <span class="toc-text">字面量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#转换"><span class="toc-number">8.6.</span> <span class="toc-text">转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#比较和排序"><span class="toc-number">9.</span> <span class="toc-text">比较和排序</span></a></li></ol>
+		
+		</div>
+		
+		<p><a href="http://dev.mysql.com/doc/refman/5.7/en/json.html" target="_blank" rel="external">官方文档</a>学习</p>
+<p>在MySQL5.7版本中增加了对JSON的支持. 在SQL中进行JSON字段操作时都是通过使用函数完成的</p>
+<h2 id="创建JSON字段"><a href="#创建JSON字段" class="headerlink" title="创建JSON字段"></a>创建JSON字段</h2><p>在Mysql中, JSON是通过字符串进行存储的.</p>
+<p>下面的例子演示了创建JSON类型字段的表, 以及插入一个JSON串和插入一个非法的JSON串<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mysql&gt; CREATE TABLE t1 (jdoc JSON);</div><div class="line">Query OK, 0 rows affected (0.20 sec)</div><div class="line"></div><div class="line">mysql&gt; INSERT INTO t1 VALUES('&#123;"key1": "value1", "key2": "value2"&#125;');</div><div class="line">Query OK, 1 row affected (0.01 sec)</div><div class="line"></div><div class="line">mysql&gt; INSERT INTO t1 VALUES('[1, 2,');</div><div class="line">ERROR 3140 (22032) at line 2: Invalid JSON text: "Invalid value." at position 6 in value (or column) '[1, 2,'.</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>at position N</code>是从0 开始计算的</p>
+</blockquote>
+<h2 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h2><p>我们可以在JSON文档中通过<code>JSON_EXTRACT()</code>函数指定path来搜索出一个值.</p>
+<p>在相关方法中使用表达式可以提取数据,或者修改JSON文档 以及进行其他的操作. 例如下面的操作就是从JSON文档中提取key为name的值.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_EXTRACT('&#123;"id": 14, "name": "Aztalan"&#125;', '$.name');</div><div class="line">+---------------------------------------------------------+</div><div class="line">| JSON_EXTRACT('&#123;"id": 14, "name": "Aztalan"&#125;', '$.name') |</div><div class="line">+---------------------------------------------------------+</div><div class="line">| "Aztalan"                                               |</div><div class="line">+---------------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<p>在Mysql中, 可以使用<code>$</code>加后缀的方式表示一个JSON文档. <code>$</code>后可以跟一个选择符来索引到JSON文档中任意的位置元素:</p>
+<ul>
+<li><code>$&quot;key&quot;</code> 表示在JSON文档中, key所对应的值. 注意key必须使用<code>&quot;&quot;</code>括起来.</li>
+<li><code>[N]</code> 表示JSON数组文档中第N个位置的值(从0开始).</li>
+<li>Paths 可以包含 <code>*</code>或者<code>**</code> 通配符.</li>
+<li><code>.[*]</code> 找到JSON对象中所有的成员值</li>
+<li><code>[*]</code> 找到JSON数组中所有的成员值</li>
+<li><code>prefix**suffix</code> 匹配所有的以prefix开头, 以suffix结尾的path.</li>
+</ul>
+<p>下面我们创建出三个元素的数组, 然后假设 <code>$</code> 指向这个数组:<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="number">3</span>, &#123;<span class="attr">"a"</span>: [<span class="number">5</span>, <span class="number">6</span>], <span class="attr">"b"</span>: <span class="number">10</span>&#125;, [<span class="number">99</span>, <span class="number">100</span>]]</div></pre></td></tr></table></figure></p>
+<p>那么:</p>
+<ul>
+<li><code>$[0]</code> 求值为 3.</li>
+<li><code>$[1]</code> 求值为 {“a”: [5, 6], “b”: 10}.</li>
+<li><code>$[2]</code> 求值为[99, 100].</li>
+<li><code>$[3]</code> 求值为 NULL (指向一个不存在的元素).</li>
+</ul>
+<p>因为 $[1] 和 $[2] 是非标量的值, 因此我们可以进一步的使用path表达式求出它内嵌的值. 例如:</p>
+<ul>
+<li><code>$[1].a</code> 求值为 [5, 6].</li>
+<li><code>$[1].a[1]</code> 求值为 6.</li>
+<li><code>$[1].b</code> 求值为 10.</li>
+<li><code>$[2][0]</code> 求值为 99.</li>
+</ul>
+<p>刚才我们也提到了, path表达式的key必须被<code>&quot;&quot;</code>包含起来, 未被<code>&quot;&quot;</code>包含起来的key会被视为非法的.<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="attr">"a fish"</span>: <span class="string">"shark"</span>, <span class="attr">"a bird"</span>: <span class="string">"sparrow"</span>&#125;</div></pre></td></tr></table></figure></p>
+<p>这俩个key都包含了一个空格, 因此在path表达式中, 必须使用<code>&quot;&quot;</code>将key包含:</p>
+<ul>
+<li><code>$.&quot;a fish&quot;</code> 求值为 shark.</li>
+<li><code>$.&quot;a bird&quot;</code> 求值为 to sparrow.</li>
+</ul>
+<p>如果在对数组求值时, path中的通配符会求值出多个结果.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_EXTRACT('&#123;"a": 1, "b": 2, "c": [3, 4, 5]&#125;', '$.*');</div><div class="line">+---------------------------------------------------------+</div><div class="line">| JSON_EXTRACT('&#123;"a": 1, "b": 2, "c": [3, 4, 5]&#125;', '$.*') |</div><div class="line">+---------------------------------------------------------+</div><div class="line">| [1, 2, [3, 4, 5]]                                       |</div><div class="line">+---------------------------------------------------------+</div><div class="line">mysql&gt; SELECT JSON_EXTRACT('&#123;"a": 1, "b": 2, "c": [3, 4, 5]&#125;', '$.c[*]');</div><div class="line">+------------------------------------------------------------+</div><div class="line">| JSON_EXTRACT('&#123;"a": 1, "b": 2, "c": [3, 4, 5]&#125;', '$.c[*]') |</div><div class="line">+------------------------------------------------------------+</div><div class="line">| [3, 4, 5]                                                  |</div><div class="line">+------------------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<p>在下面的例子中, <code>$**.b</code>会在多个path($.a.b 和 $.c.b)中进行求值, 然后将求值结果放到一个数组中:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_EXTRACT('&#123;"a": &#123;"b": 1&#125;, "c": &#123;"b": 2&#125;&#125;', '$**.b');</div><div class="line">+---------------------------------------------------------+</div><div class="line">| JSON_EXTRACT('&#123;"a": &#123;"b": 1&#125;, "c": &#123;"b": 2&#125;&#125;', '$**.b') |</div><div class="line">+---------------------------------------------------------+</div><div class="line">| [1, 2]                                                  |</div><div class="line">+---------------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<p>在MySQL 5.7.9 和以后的版本中, 你可以使用<code>column-&gt;path</code>代替方法<code>JSON_EXTRACT(column, path)</code>.</p>
+<blockquote>
+<p>更多参考See Section 13.16.3, “Functions That Search JSON Values” 以及 Section 14.1.18.6, “Secondary Indexes and Generated Virtual Columns”.</p>
+</blockquote>
+<p>在一些方法中, 会接受一个JSON文档, 然后对该JSON文档进行一些处理. 例如</p>
+<ul>
+<li><code>JSON_SET()</code></li>
+<li><code>JSON_INSERT()</code></li>
+<li><code>JSON_REPLACE()</code></li>
+</ul>
+<h2 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h2><p>我们生成一个JSON文档, 然后在下面的操作中使用这个文档:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SET @j = '["a", &#123;"b": [true, false]&#125;, [10, 20]]';</div></pre></td></tr></table></figure></p>
+<p><code>JSON_SET()</code>会对已经存在的path替换, 不存在的进行添加:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_SET(@j, '$[1].b[0]', 1, '$[2][2]', 2);</div><div class="line">+--------------------------------------------+</div><div class="line">| JSON_SET(@j, '$[1].b[0]', 1, '$[2][2]', 2) |</div><div class="line">+--------------------------------------------+</div><div class="line">| ["a", &#123;"b": [1, false]&#125;, [10, 20, 2]]      |</div><div class="line">+--------------------------------------------+</div></pre></td></tr></table></figure></p>
+<p>在上例中<code>$[1].b[0]</code>选择了一个已经存在的value，然后它被替换成了1. 但是<code>$[2][2]</code> 并不存在, 所以就在<code>$[2][2]</code>插入了值2.</p>
+<p><code>JSON_INSERT()</code>向JSON文档中插入新的值, 但是如果path已经存在, 则会归一化处理, 不会覆盖原有的值:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_INSERT(@j, '$[1].b[0]', 1, '$[2][2]', 2);</div><div class="line">+-----------------------------------------------+</div><div class="line">| JSON_INSERT(@j, '$[1].b[0]', 1, '$[2][2]', 2) |</div><div class="line">+-----------------------------------------------+</div><div class="line">| ["a", &#123;"b": [true, false]&#125;, [10, 20, 2]]      |</div><div class="line">+-----------------------------------------------+</div></pre></td></tr></table></figure></p>
+<h2 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h2><p><code>JSON_REPLACE()</code>执行替换操作, 但是如果path不存在的话, 不会进行插入操作:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_REPLACE(@j, '$[1].b[0]', 1, '$[2][2]', 2);</div><div class="line">+------------------------------------------------+</div><div class="line">| JSON_REPLACE(@j, '$[1].b[0]', 1, '$[2][2]', 2) |</div><div class="line">+------------------------------------------------+</div><div class="line">| ["a", &#123;"b": [1, false]&#125;, [10, 20]]             |</div><div class="line">+------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>JSON_SET()</code>也会完成修改值的功能</p>
+</blockquote>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p><code>JSON_REMOVE()</code> 接受一个 JSON 文档以及一个或者多个要删除的path.  The return value is the original document minus the values selected by paths that exist within the document:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_REMOVE(@j, '$[2]', '$[1].b[1]', '$[1].b[1]');</div><div class="line">+---------------------------------------------------+</div><div class="line">| JSON_REMOVE(@j, '$[2]', '$[1].b[1]', '$[1].b[1]') |</div><div class="line">+---------------------------------------------------+</div><div class="line">| ["a", &#123;"b": [true]&#125;]                              |</div><div class="line">+---------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<p>这三个path产生了如下的效果</p>
+<ul>
+<li><code>$[2]</code>找到匹配[10, 20]值, 然后将其删除掉.</li>
+<li>第一个<code>$[1].b[1]</code>匹配到了false值, 然后将其删除掉.</li>
+<li>第二个<code>$[1].b[1]</code>没有匹配到任何值, 因此该操作不会有任何结果.</li>
+</ul>
+<h2 id="归一化处理"><a href="#归一化处理" class="headerlink" title="归一化处理"></a>归一化处理</h2><p>当一个字符串可以解析成一个有效的JSON文档, 它同时也会进行归一化处理. 当JSON中出现重复的Key时, 只会保留最开始的那个Key/Value, 接下来重复出现的都会抛弃掉.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_OBJECT('key1', 1, 'key2', 'abc', 'key1', 'def');</div><div class="line">+------------------------------------------------------+</div><div class="line">| JSON_OBJECT('key1', 1, 'key2', 'abc', 'key1', 'def') |</div><div class="line">+------------------------------------------------------+</div><div class="line">| &#123;"key1": 1, "key2": "abc"&#125;                           |</div><div class="line">+------------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<p>Mysql的归一化处理还会对JSON对象的key进行排序处理(以便查找时提供更好的性能). The result of this ordering is subject to change and not guaranteed to be consistent across releases. 另外, key或者value之间的空格会自动的被忽略掉.</p>
+<p>同样的, Mysql中创建JSON的方法同样也都做了归一化处理.</p>
+<p>当多个数组合并成一个数组时, 数组元素会依次存储进新的数组中, 如下面的<code>JSON_MERGE()</code>:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_MERGE('[1, 2]', '["a", "b"]', '[true, false]');</div><div class="line">+-----------------------------------------------------+</div><div class="line">| JSON_MERGE('[1, 2]', '["a", "b"]', '[true, false]') |</div><div class="line">+-----------------------------------------------------+</div><div class="line">| [1, 2, "a", "b", true, false]                       |</div><div class="line">+-----------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<h2 id="合并"><a href="#合并" class="headerlink" title="合并"></a>合并</h2><p>多个对象合并到一个对象中的时候, 如果多个对象中都出现了相同的key, 那么相同的key对应的value值会被放到该key对应的数组中.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_MERGE('&#123;"a": 1, "b": 2&#125;', '&#123;"c": 3, "a": 4&#125;');</div><div class="line">+----------------------------------------------------+</div><div class="line">| JSON_MERGE('&#123;"a": 1, "b": 2&#125;', '&#123;"c": 3, "a": 4&#125;') |</div><div class="line">+----------------------------------------------------+</div><div class="line">| &#123;"a": [1, 4], "b": 2, "c": 3&#125;                      |</div><div class="line">+----------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<p>当非数组类型的数据出现在要求数组为参数的上下文中时, 非数组类型的数据会自动被包装成数组类型(会自动在数据俩侧添加<code>[]</code>将其括起来). 在下面的例子中, 每一个参数都会被自动包装成([1], [2]), 然后产生一个新的数组.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_MERGE('1', '2');</div><div class="line">+----------------------+</div><div class="line">| JSON_MERGE('1', '2') |</div><div class="line">+----------------------+</div><div class="line">| [1, 2]               |</div><div class="line">+----------------------+</div></pre></td></tr></table></figure></p>
+<p>当对象和数组进行合并时, 对象会自动的包装成一个数组, 然后将这俩个数组进行合并<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_MERGE('[10, 20]', '&#123;"a": "x", "b": "y"&#125;');</div><div class="line">+------------------------------------------------+</div><div class="line">| JSON_MERGE('[10, 20]', '&#123;"a": "x", "b": "y"&#125;') |</div><div class="line">+------------------------------------------------+</div><div class="line">| [10, 20, &#123;"a": "x", "b": "y"&#125;]                 |</div><div class="line">+------------------------------------------------+</div></pre></td></tr></table></figure></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>在下面我们看一下除了增删改查之外的其他常用函数</p>
+<h3 id="JSON-TYPE"><a href="#JSON-TYPE" class="headerlink" title="JSON_TYPE()"></a>JSON_TYPE()</h3><p><code>JSON_TYPE()</code>方法接受一个JSON串, 然后尝试解析它, 最后返回该JSON的数据类型<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_TYPE('["a", "b", 1]');</div><div class="line">+----------------------------+</div><div class="line">| JSON_TYPE('["a", "b", 1]') |</div><div class="line">+----------------------------+</div><div class="line">| ARRAY                      |</div><div class="line">+----------------------------+</div><div class="line"></div><div class="line">mysql&gt; SELECT JSON_TYPE('"hello"');</div><div class="line">+----------------------+</div><div class="line">| JSON_TYPE('"hello"') |</div><div class="line">+----------------------+</div><div class="line">| STRING               |</div><div class="line">+----------------------+</div><div class="line"></div><div class="line">mysql&gt; SELECT JSON_TYPE('hello');</div><div class="line">ERROR 3146 (22032): Invalid data type for JSON data in argument 1</div><div class="line">to function json_type; a JSON string or JSON type is required.</div></pre></td></tr></table></figure></p>
+<p>MySQL 使用<code>utf8mb4</code>编码和<code>utf8mb4_bin</code>集合处理JSON 字符串内容. 其他的编码会被转换成utf8mb4编码. (ascii 和 utf8 编码并不会进行转换, 因为这俩个字符集是utf8mb4的子集.)</p>
+<h3 id="创建JSON数组"><a href="#创建JSON数组" class="headerlink" title="创建JSON数组"></a>创建JSON数组</h3><p>除了使用字面量JSON串之外, Mysql还提供了很多创建JSON串的方法. 例如JSON_ARRAY()`函数接受一个参数列表(个数大于等于0), 然后返回一个JSON字符串数组.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_ARRAY('a', 1, NOW());</div><div class="line">+----------------------------------------+</div><div class="line">| JSON_ARRAY('a', 1, NOW())              |</div><div class="line">+----------------------------------------+</div><div class="line">| ["a", 1, "2015-07-27 09:43:47.000000"] |</div><div class="line">+----------------------------------------+</div></pre></td></tr></table></figure></p>
+<h3 id="创建JSON对象"><a href="#创建JSON对象" class="headerlink" title="创建JSON对象"></a>创建JSON对象</h3><p><code>JSON_OBJECT()</code>接受一个key/value形式的参数列表, 返回一个包含那些元素的JSON对象:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_OBJECT('key1', 1, 'key2', 'abc');</div><div class="line">+---------------------------------------+</div><div class="line">| JSON_OBJECT('key1', 1, 'key2', 'abc') |</div><div class="line">+---------------------------------------+</div><div class="line">| &#123;"key1": 1, "key2": "abc"&#125;            |</div><div class="line">+---------------------------------------+</div></pre></td></tr></table></figure></p>
+<h3 id="变量赋值"><a href="#变量赋值" class="headerlink" title="变量赋值"></a>变量赋值</h3><p>也可以将JSON赋给一个用户自定义的变量<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SET @j = JSON_OBJECT('key', 'value');</div><div class="line">mysql&gt; SELECT @j;</div><div class="line">+------------------+</div><div class="line">| @j               |</div><div class="line">+------------------+</div><div class="line">| &#123;"key": "value"&#125; |</div><div class="line">+------------------+</div></pre></td></tr></table></figure></p>
+<p>在上例中, 尽管<code>JSON_OBJECT()</code>方法会返回一个JSON类型对象, 但是当将其赋给一个变量(<code>@j</code>)时, 它就被自动转换成了一个字符串类型.</p>
+<p>JSON转换成的字符串, 它的编码是<code>utf8mb4</code>, 字符序为<code>utf8mb4_bin</code>:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT CHARSET(@j), COLLATION(@j);</div><div class="line">+-------------+---------------+</div><div class="line">| CHARSET(@j) | COLLATION(@j) |</div><div class="line">+-------------+---------------+</div><div class="line">| utf8mb4     | utf8mb4_bin   |</div><div class="line">+-------------+---------------+</div></pre></td></tr></table></figure></p>
+<p>因为<code>utf8mb4_bin</code>是一种二进制的字符序, 因此在对比俩个JSON值是区分大小写的.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_ARRAY('x') = JSON_ARRAY('X');</div><div class="line">+-----------------------------------+</div><div class="line">| JSON_ARRAY('x') = JSON_ARRAY('X') |</div><div class="line">+-----------------------------------+</div><div class="line">|                                 0 |</div><div class="line">+-----------------------------------+</div></pre></td></tr></table></figure></p>
+<h3 id="字面量"><a href="#字面量" class="headerlink" title="字面量"></a>字面量</h3><p>区分大小写同样支持JSON的<code>null</code>, <code>true</code>, <code>false</code>等字面量. 因此在引用他们的时候一定要小写.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT JSON_VALID('null'), JSON_VALID('Null'), JSON_VALID('NULL');</div><div class="line">+--------------------+--------------------+--------------------+</div><div class="line">| JSON_VALID('null') | JSON_VALID('Null') | JSON_VALID('NULL') |</div><div class="line">+--------------------+--------------------+--------------------+</div><div class="line">|                  1 |                  0 |                  0 |</div><div class="line">+--------------------+--------------------+--------------------+</div><div class="line"></div><div class="line">mysql&gt; SELECT CAST('null' AS JSON);</div><div class="line">+----------------------+</div><div class="line">| CAST('null' AS JSON) |</div><div class="line">+----------------------+</div><div class="line">| null                 |</div><div class="line">+----------------------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure></p>
+<h3 id="转换"><a href="#转换" class="headerlink" title="转换"></a>转换</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT CAST('NULL' AS JSON);</div><div class="line">ERROR 3141 (22032): Invalid JSON text in argument 1 to function cast_as_json:</div><div class="line">"Invalid value." at position 0 in 'NULL'.</div></pre></td></tr></table></figure>
+<p>JSON字面量区分大小写与SQL中的不同. 在SQL中<code>NULL, TRUE, FALSE</code>等字面量可以写成由任意大小写组成:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT ISNULL(null), ISNULL(Null), ISNULL(NULL);</div><div class="line">+--------------+--------------+--------------+</div><div class="line">| ISNULL(null) | ISNULL(Null) | ISNULL(NULL) |</div><div class="line">+--------------+--------------+--------------+</div><div class="line">|            1 |            1 |            1 |</div><div class="line">+--------------+--------------+--------------+</div></pre></td></tr></table></figure></p>
+<h2 id="比较和排序"><a href="#比较和排序" class="headerlink" title="比较和排序"></a>比较和排序</h2><p>JSON文档里面的value可以通过如下操作符进行比较操作</p>
+<ul>
+<li>=</li>
+<li>&lt;</li>
+<li>&lt;=</li>
+<li>&gt;</li>
+<li><blockquote>
+<p>=</p>
+</blockquote>
+</li>
+<li>&lt;&gt;</li>
+<li>!=</li>
+<li>&lt;=&gt;</li>
+</ul>
+<p>下面的比较操作符和方法并不支持JSON值</p>
+<ul>
+<li>BETWEEN</li>
+<li>IN()</li>
+<li>GREATEST()</li>
+<li>LEAST()</li>
+</ul>
+<p>刚才列出的比较操作符和方法会将JSON值转换成MySQL原生的numeric或者string类型, 因此他们有一个consistent non-JSON扩展类型.</p>
+<p>JSON值进行比较时会先根据JSON类型进行比较, 如果类型不同的话, 比较结果就决定于更高优先级的类型. 如果类型一样的话, 则会根据指定类型原则进行比较.</p>
+<p>下面列出了JSON类型的优先级, 从高到低进行排序. 我们可以通过<code>JSON_TYPE()</code>来获取某个值得类型.</p>
+<ul>
+<li>BLOB</li>
+<li>BIT</li>
+<li>OPAQUE</li>
+<li>DATETIME</li>
+<li>TIME</li>
+<li>DATE</li>
+<li>BOOLEAN</li>
+<li>ARRAY</li>
+<li>OBJECT</li>
+<li>STRING</li>
+<li>INTEGER, DOUBLE</li>
+<li>NULL<br>如果JSON值拥有相同的优先级的话, 那么不同的类型或根据下面介绍的规则进行比较:</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2016/05/17/数据库/Mysql JSON Data Type/" data-title="Mysql JSON 支持 | ·" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/05/30/杂记/ttystudio/" title="终端生成GIF文件">
+  <strong>上一篇：</strong><br/>
+  <span>
+  终端生成GIF文件</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/05/15/jvm/CRaSH 命令行/"  title="CRaSH 安装启动">
+ <strong>下一篇：</strong><br/> 
+ <span>CRaSH 安装启动
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/05/17/数据库/Mysql JSON Data Type/" data-title="Mysql JSON 支持" data-url="http://www.yu66.wang/2016/05/17/数据库/Mysql JSON Data Type/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#创建JSON字段"><span class="toc-number">1.</span> <span class="toc-text">创建JSON字段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#搜索"><span class="toc-number">2.</span> <span class="toc-text">搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入"><span class="toc-number">3.</span> <span class="toc-text">插入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改"><span class="toc-number">4.</span> <span class="toc-text">修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除"><span class="toc-number">5.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#归一化处理"><span class="toc-number">6.</span> <span class="toc-text">归一化处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并"><span class="toc-number">7.</span> <span class="toc-text">合并</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">8.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON-TYPE"><span class="toc-number">8.1.</span> <span class="toc-text">JSON_TYPE()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建JSON数组"><span class="toc-number">8.2.</span> <span class="toc-text">创建JSON数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建JSON对象"><span class="toc-number">8.3.</span> <span class="toc-text">创建JSON对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#变量赋值"><span class="toc-number">8.4.</span> <span class="toc-text">变量赋值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字面量"><span class="toc-number">8.5.</span> <span class="toc-text">字面量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#转换"><span class="toc-number">8.6.</span> <span class="toc-text">转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#比较和排序"><span class="toc-number">9.</span> <span class="toc-text">比较和排序</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>32</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="王玉">王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>

@@ -1,98 +1,549 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>ZooKeeper Curator 事件监听 | ·</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="王玉">
+    
+
+    
+    <meta name="description" content="监测时检查出已有节点1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZooKeeper Curator 事件监听">
+<meta property="og:url" content="http://www.yu66.wang/2016/04/26/zookeeper/ZooKeeper Curator 事件监听/index.html">
+<meta property="og:site_name" content="·">
+<meta property="og:description" content="监测时检查出已有节点1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991">
+<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ZooKeeper Curator 事件监听">
+<meta name="twitter:description" content="监测时检查出已有节点1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495969798991">
+
+    
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/26/zookeeper/ZooKeeper Curator 事件监听/" title="ZooKeeper Curator 事件监听" itemprop="url">ZooKeeper Curator 事件监听</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-26T07:00:00.000Z" itemprop="datePublished"> 发表于 2016-04-26</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#监测时检查出已有节点"><span class="toc-number">1.</span> <span class="toc-text">监测时检查出已有节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除节点监测"><span class="toc-number">2.</span> <span class="toc-text">删除节点监测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端网络断开监测"><span class="toc-number">3.</span> <span class="toc-text">客户端网络断开监测</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="监测时检查出已有节点"><a href="#监测时检查出已有节点" class="headerlink" title="监测时检查出已有节点"></a>监测时检查出已有节点</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> zk;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.Date;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.curator.framework.CuratorFramework;</div><div class="line"><span class="keyword">import</span> org.apache.curator.framework.CuratorFrameworkFactory;</div><div class="line"><span class="keyword">import</span> org.apache.curator.framework.recipes.cache.ChildData;</div><div class="line"><span class="keyword">import</span> org.apache.curator.framework.recipes.cache.PathChildrenCache;</div><div class="line"><span class="keyword">import</span> org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;</div><div class="line"><span class="keyword">import</span> org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;</div><div class="line"><span class="keyword">import</span> org.apache.curator.retry.ExponentialBackoffRetry;</div><div class="line"><span class="keyword">import</span> org.apache.curator.utils.CloseableUtils;</div><div class="line"><span class="keyword">import</span> org.apache.curator.utils.ZKPaths;</div><div class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PathCacheExample</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line"></div><div class="line">		ZKClient zkClient1 = register(<span class="string">"Server1"</span>);</div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">10</span>);</div><div class="line"></div><div class="line">		ZKClient zkClient2 = register(<span class="string">"Server2"</span>);</div><div class="line">		ZKClient zkClient3 = register(<span class="string">"Server3"</span>);</div><div class="line"></div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">5</span>);</div><div class="line">		zkClient1.closeAllService();</div><div class="line">		zkClient2.closeAllService();</div><div class="line">		zkClient3.closeAllService();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ZKClient <span class="title">register</span><span class="params">(String serverName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		ZKClient zkClient = <span class="keyword">new</span> ZKClient(serverName);</div><div class="line">		Thread thread = <span class="keyword">new</span> Thread(zkClient);</div><div class="line">		thread.start();</div><div class="line">		<span class="keyword">return</span> zkClient;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZKClient</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/ServersCache1"</span>;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> CuratorFramework client = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">private</span> PathChildrenCache cache = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">private</span> String servername = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closeAllService</span><span class="params">()</span> </span>&#123;</div><div class="line">		closeCuratorFramework();</div><div class="line">		closePathChildrenCache();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closeCuratorFramework</span><span class="params">()</span> </span>&#123;</div><div class="line">		CloseableUtils.closeQuietly(cache);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closePathChildrenCache</span><span class="params">()</span> </span>&#123;</div><div class="line">		CloseableUtils.closeQuietly(client);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ZKClient</span><span class="params">(String serverName)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.servername = serverName;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client = CuratorFrameworkFactory.newClient(<span class="string">"0.0.0.0:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</div><div class="line">			client.start();</div><div class="line">			cache = <span class="keyword">new</span> PathChildrenCache(client, PATH, <span class="keyword">true</span>);</div><div class="line">			cache.start();</div><div class="line">			addListener(cache);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">		create(client, servername, servername);</div><div class="line">		setValue(client, servername, servername);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">		&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addListener</span><span class="params">(PathChildrenCache cache)</span> </span>&#123;</div><div class="line">		PathChildrenCacheListener listener = (client, event) -&gt; &#123;</div><div class="line">			<span class="keyword">switch</span> (event.getType()) &#123;</div><div class="line">				<span class="keyword">case</span> CHILD_ADDED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"added"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">case</span> CHILD_UPDATED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"changed"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">case</span> CHILD_REMOVED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"removed"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;;</div><div class="line">		cache.getListenable().addListener(listener);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printNodeStateChange</span><span class="params">(String type, String path)</span> </span>&#123;</div><div class="line">		System.out.println(servername + <span class="string">" Monitor Node "</span> + type + <span class="string">": "</span> + path + <span class="string">". "</span> + <span class="keyword">new</span> Date().toLocaleString());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(CuratorFramework client, String pathName)</span> </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.delete().deletingChildrenIfNeeded().forPath(path);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">create</span><span class="params">(CuratorFramework client, String pathName, String data)</span>  </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, data.getBytes());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(CuratorFramework client, String pathName, String data)</span> </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.setData().forPath(path, data.getBytes());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Server1 Monitor Node added: /ServersCache1/Server1. 2016-4-28 18:41:54</div><div class="line">Server1 Monitor Node added: /ServersCache1/Server2. 2016-4-28 18:42:04</div><div class="line">Server1 Monitor Node added: /ServersCache1/Server3. 2016-4-28 18:42:04</div><div class="line">Server3 Monitor Node added: /ServersCache1/Server1. 2016-4-28 18:42:04</div><div class="line">Server3 Monitor Node added: /ServersCache1/Server2. 2016-4-28 18:42:04</div><div class="line">Server3 Monitor Node added: /ServersCache1/Server3. 2016-4-28 18:42:04</div><div class="line">Server2 Monitor Node added: /ServersCache1/Server1. 2016-4-28 18:42:04</div><div class="line">Server2 Monitor Node added: /ServersCache1/Server2. 2016-4-28 18:42:04</div><div class="line">Server2 Monitor Node added: /ServersCache1/Server3. 2016-4-28 18:42:04</div><div class="line">Server3 Monitor Node removed: /ServersCache1/Server1. 2016-4-28 18:42:09</div><div class="line">Server2 Monitor Node removed: /ServersCache1/Server1. 2016-4-28 18:42:09</div><div class="line">Server3 Monitor Node removed: /ServersCache1/Server2. 2016-4-28 18:42:09</div></pre></td></tr></table></figure></p>
+<h2 id="删除节点监测"><a href="#删除节点监测" class="headerlink" title="删除节点监测"></a>删除节点监测</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PathCacheExample</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line"></div><div class="line">		ZKClient zkClient1 = register(<span class="string">"Server1"</span>);</div><div class="line"></div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</div><div class="line">		ZKClient zkClient2 = register(<span class="string">"Server2"</span>);</div><div class="line">		ZKClient zkClient3 = register(<span class="string">"Server3"</span>);</div><div class="line"></div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ZKClient <span class="title">register</span><span class="params">(String serverName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		ZKClient zkClient = <span class="keyword">new</span> ZKClient(serverName);</div><div class="line">		Thread thread = <span class="keyword">new</span> Thread(zkClient);</div><div class="line">		thread.start();</div><div class="line">		<span class="keyword">return</span> zkClient;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZKClient</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/ServersCache5"</span>;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> CuratorFramework client = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">private</span> PathChildrenCache cache = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">private</span> String servername = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closeAllService</span><span class="params">()</span> </span>&#123;</div><div class="line">		closeCuratorFramework();</div><div class="line">		closePathChildrenCache();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closeCuratorFramework</span><span class="params">()</span> </span>&#123;</div><div class="line">		CloseableUtils.closeQuietly(client);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closePathChildrenCache</span><span class="params">()</span> </span>&#123;</div><div class="line">		CloseableUtils.closeQuietly(cache);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ZKClient</span><span class="params">(String serverName)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.servername = serverName;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client = CuratorFrameworkFactory.newClient(<span class="string">"0.0.0.0:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</div><div class="line">			client.start();</div><div class="line">			cache = <span class="keyword">new</span> PathChildrenCache(client, PATH, <span class="keyword">true</span>);</div><div class="line">			cache.start();</div><div class="line">			addListener(cache);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">		create(client, servername, servername);</div><div class="line">		setValue(client, servername, servername);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			TimeUnit.SECONDS.sleep(<span class="number">3</span>);</div><div class="line">		&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">		remove(client, servername);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addListener</span><span class="params">(PathChildrenCache cache)</span> </span>&#123;</div><div class="line">		PathChildrenCacheListener listener = (client, event) -&gt; &#123;</div><div class="line">			<span class="keyword">switch</span> (event.getType()) &#123;</div><div class="line">				<span class="keyword">case</span> CHILD_ADDED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"added"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">case</span> CHILD_UPDATED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"changed"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">case</span> CHILD_REMOVED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"removed"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;;</div><div class="line">		cache.getListenable().addListener(listener);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printNodeStateChange</span><span class="params">(String type, String path)</span> </span>&#123;</div><div class="line">		System.out.println(servername + <span class="string">" Monitor Node "</span> + type + <span class="string">": "</span> + path + <span class="string">". "</span> + <span class="keyword">new</span> Date().toLocaleString());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(CuratorFramework client, String pathName)</span> </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.delete().forPath(path);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">create</span><span class="params">(CuratorFramework client, String pathName, String data)</span>  </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, data.getBytes());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(CuratorFramework client, String pathName, String data)</span> </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.setData().forPath(path, data.getBytes());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">Server1 Monitor Node added: /ServersCache5/Server1. 2016-4-28 19:33:13</div><div class="line">Server1 Monitor Node added: /ServersCache5/Server2. 2016-4-28 19:33:16</div><div class="line">Server2 Monitor Node added: /ServersCache5/Server1. 2016-4-28 19:33:16</div><div class="line">Server1 Monitor Node added: /ServersCache5/Server3. 2016-4-28 19:33:16</div><div class="line">Server2 Monitor Node added: /ServersCache5/Server2. 2016-4-28 19:33:16</div><div class="line">Server2 Monitor Node added: /ServersCache5/Server3. 2016-4-28 19:33:16</div><div class="line">Server3 Monitor Node added: /ServersCache5/Server1. 2016-4-28 19:33:16</div><div class="line">Server3 Monitor Node added: /ServersCache5/Server2. 2016-4-28 19:33:16</div><div class="line">Server3 Monitor Node added: /ServersCache5/Server3. 2016-4-28 19:33:16</div><div class="line">Server2 Monitor Node removed: /ServersCache5/Server1. 2016-4-28 19:33:16</div><div class="line">Server1 Monitor Node removed: /ServersCache5/Server1. 2016-4-28 19:33:16</div><div class="line">Server3 Monitor Node removed: /ServersCache5/Server1. 2016-4-28 19:33:16</div><div class="line">Server1 Monitor Node removed: /ServersCache5/Server2. 2016-4-28 19:33:19</div><div class="line">Server3 Monitor Node removed: /ServersCache5/Server2. 2016-4-28 19:33:19</div><div class="line">Server2 Monitor Node removed: /ServersCache5/Server2. 2016-4-28 19:33:19</div><div class="line">Server3 Monitor Node removed: /ServersCache5/Server3. 2016-4-28 19:33:19</div><div class="line">Server1 Monitor Node removed: /ServersCache5/Server3. 2016-4-28 19:33:19</div><div class="line">Server2 Monitor Node removed: /ServersCache5/Server3. 2016-4-28 19:33:19</div></pre></td></tr></table></figure></p>
+<h2 id="客户端网络断开监测"><a href="#客户端网络断开监测" class="headerlink" title="客户端网络断开监测"></a>客户端网络断开监测</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PathCacheExample</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line"></div><div class="line">		ZKClient zkClient1 = register(<span class="string">"Server1"</span>);</div><div class="line"></div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</div><div class="line">		ZKClient zkClient2 = register(<span class="string">"Server2"</span>);</div><div class="line">		ZKClient zkClient3 = register(<span class="string">"Server3"</span>);</div><div class="line"></div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</div><div class="line">		zkClient1.closeCuratorFramework();</div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">		zkClient2.closeCuratorFramework();</div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">		zkClient3.closeCuratorFramework();</div><div class="line"></div><div class="line">		TimeUnit.SECONDS.sleep(<span class="number">3</span>);</div><div class="line">		zkClient1.closePathChildrenCache();</div><div class="line">		zkClient2.closePathChildrenCache();</div><div class="line">		zkClient3.closePathChildrenCache();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ZKClient <span class="title">register</span><span class="params">(String serverName)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">		ZKClient zkClient = <span class="keyword">new</span> ZKClient(serverName);</div><div class="line">		Thread thread = <span class="keyword">new</span> Thread(zkClient);</div><div class="line">		thread.start();</div><div class="line">		<span class="keyword">return</span> zkClient;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZKClient</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = <span class="string">"/ServersCache4"</span>;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> CuratorFramework client = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">private</span> PathChildrenCache cache = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">private</span> String servername = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closeAllService</span><span class="params">()</span> </span>&#123;</div><div class="line">		closeCuratorFramework();</div><div class="line">		closePathChildrenCache();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closeCuratorFramework</span><span class="params">()</span> </span>&#123;</div><div class="line">		CloseableUtils.closeQuietly(client);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">closePathChildrenCache</span><span class="params">()</span> </span>&#123;</div><div class="line">		CloseableUtils.closeQuietly(cache);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ZKClient</span><span class="params">(String serverName)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.servername = serverName;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client = CuratorFrameworkFactory.newClient(<span class="string">"0.0.0.0:2181"</span>, <span class="keyword">new</span> ExponentialBackoffRetry(<span class="number">1000</span>, <span class="number">3</span>));</div><div class="line">			client.start();</div><div class="line">			cache = <span class="keyword">new</span> PathChildrenCache(client, PATH, <span class="keyword">true</span>);</div><div class="line">			cache.start();</div><div class="line">			addListener(cache);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">		create(client, servername, servername);</div><div class="line"><span class="comment">//		remove(client, servername);</span></div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">		&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addListener</span><span class="params">(PathChildrenCache cache)</span> </span>&#123;</div><div class="line">		PathChildrenCacheListener listener = (client, event) -&gt; &#123;</div><div class="line">			<span class="keyword">switch</span> (event.getType()) &#123;</div><div class="line">				<span class="keyword">case</span> CHILD_ADDED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"added"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">case</span> CHILD_UPDATED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"changed"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">case</span> CHILD_REMOVED: &#123;</div><div class="line">					printNodeStateChange(<span class="string">"removed"</span>, event.getData().getPath());</div><div class="line">					<span class="keyword">break</span>;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;;</div><div class="line">		cache.getListenable().addListener(listener);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printNodeStateChange</span><span class="params">(String type, String path)</span> </span>&#123;</div><div class="line">		System.out.println(servername + <span class="string">" Monitor Node "</span> + type + <span class="string">": "</span> + path + <span class="string">". "</span> + <span class="keyword">new</span> Date().toLocaleString());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(CuratorFramework client, String pathName)</span> </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.delete().deletingChildrenIfNeeded().forPath(path);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">create</span><span class="params">(CuratorFramework client, String pathName, String data)</span>  </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath(path, data.getBytes());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(CuratorFramework client, String pathName, String data)</span> </span>&#123;</div><div class="line">		String path = ZKPaths.makePath(PATH, pathName);</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			client.setData().forPath(path, data.getBytes());</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结果输出为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Server1 Monitor Node added: /ServersCache4/Server1. 2016-4-28 19:27:32</div><div class="line">Server1 Monitor Node added: /ServersCache4/Server2. 2016-4-28 19:27:35</div><div class="line">Server3 Monitor Node added: /ServersCache4/Server1. 2016-4-28 19:27:35</div><div class="line">Server1 Monitor Node added: /ServersCache4/Server3. 2016-4-28 19:27:35</div><div class="line">Server3 Monitor Node added: /ServersCache4/Server2. 2016-4-28 19:27:35</div><div class="line">Server3 Monitor Node added: /ServersCache4/Server3. 2016-4-28 19:27:35</div><div class="line">Server2 Monitor Node added: /ServersCache4/Server1. 2016-4-28 19:27:35</div><div class="line">Server2 Monitor Node added: /ServersCache4/Server2. 2016-4-28 19:27:35</div><div class="line">Server2 Monitor Node added: /ServersCache4/Server3. 2016-4-28 19:27:35</div><div class="line">Server2 Monitor Node removed: /ServersCache4/Server1. 2016-4-28 19:27:38</div><div class="line">Server1 Monitor Node removed: /ServersCache4/Server1. 2016-4-28 19:27:38</div><div class="line">Server3 Monitor Node removed: /ServersCache4/Server1. 2016-4-28 19:27:38</div><div class="line">Server2 Monitor Node removed: /ServersCache4/Server2. 2016-4-28 19:27:39</div><div class="line">Server3 Monitor Node removed: /ServersCache4/Server2. 2016-4-28 19:27:39</div><div class="line">Server3 Monitor Node removed: /ServersCache4/Server3. 2016-4-28 19:27:40</div></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/ZooKeeper/">ZooKeeper</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2016/04/26/zookeeper/ZooKeeper Curator 事件监听/" data-title="ZooKeeper Curator 事件监听 | ·" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/04/27/zookeeper/ZooKeeper Curator 基本操作/" title="ZooKeeper Curator 基本操作">
+  <strong>上一篇：</strong><br/>
+  <span>
+  ZooKeeper Curator 基本操作</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/04/26/JavaLibrary/Spring 任务调度/"  title="Spring 任务调度">
+ <strong>下一篇：</strong><br/> 
+ <span>Spring 任务调度
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/04/26/zookeeper/ZooKeeper Curator 事件监听/" data-title="ZooKeeper Curator 事件监听" data-url="http://www.yu66.wang/2016/04/26/zookeeper/ZooKeeper Curator 事件监听/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#监测时检查出已有节点"><span class="toc-number">1.</span> <span class="toc-text">监测时检查出已有节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除节点监测"><span class="toc-number">2.</span> <span class="toc-text">删除节点监测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端网络断开监测"><span class="toc-number">3.</span> <span class="toc-text">客户端网络断开监测</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>32</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="王玉">王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>

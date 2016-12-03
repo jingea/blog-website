@@ -1,98 +1,566 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Netty NioEventLoop | ·</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="王玉">
+    
+
+    
+    <meta name="description" content="在真实的业务环境中, 我们都是使用主从Reactor线程模型. 在Netty中主从线程池都是使用的NioEventLoopGroup, 它实现了java.util.concurrent.Executor. 虽然在编程中我们使用的是NioEventLoopGroup, 但是主要的逻辑确是在MultithreadEventExecutorGroup里实现的.下来我们首先看一下MultithreadEv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty NioEventLoop">
+<meta property="og:url" content="http://www.yu66.wang/2016/03/14/JavaLibrary/Netty NioEventLoop/index.html">
+<meta property="og:site_name" content="·">
+<meta property="og:description" content="在真实的业务环境中, 我们都是使用主从Reactor线程模型. 在Netty中主从线程池都是使用的NioEventLoopGroup, 它实现了java.util.concurrent.Executor. 虽然在编程中我们使用的是NioEventLoopGroup, 但是主要的逻辑确是在MultithreadEventExecutorGroup里实现的.下来我们首先看一下MultithreadEv">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/netty/NioEventLoopGroup.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/netty/NioEventLoop.jpg">
+<meta property="og:updated_time" content="2016-12-03T14:29:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty NioEventLoop">
+<meta name="twitter:description" content="在真实的业务环境中, 我们都是使用主从Reactor线程模型. 在Netty中主从线程池都是使用的NioEventLoopGroup, 它实现了java.util.concurrent.Executor. 虽然在编程中我们使用的是NioEventLoopGroup, 但是主要的逻辑确是在MultithreadEventExecutorGroup里实现的.下来我们首先看一下MultithreadEv">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/netty/NioEventLoopGroup.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="·">·</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/14/JavaLibrary/Netty NioEventLoop/" title="Netty NioEventLoop" itemprop="url">Netty NioEventLoop</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-13T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-14</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>在真实的业务环境中, 我们都是使用主从Reactor线程模型. 在Netty中主从线程池都是使用的<code>NioEventLoopGroup</code>, 它实现了<br><code>java.util.concurrent.Executor</code>. 虽然在编程中我们使用的是<code>NioEventLoopGroup</code>, 但是主要的逻辑确是在<code>MultithreadEventExecutorGroup</code>里实现的.<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/netty/NioEventLoopGroup.jpg" alt=""><br>下来我们首先看一下<code>MultithreadEventExecutorGroup</code>的数据成员<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> EventExecutor[] children;</div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> EventExecutorChooser chooser;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">MultithreadEventExecutorGroup</span><span class="params">(<span class="keyword">int</span> nThreads, ThreadFactory threadFactory, Object... args)</span> </span>&#123;</div><div class="line">        children = <span class="keyword">new</span> SingleThreadEventExecutor[nThreads];</div><div class="line">        <span class="keyword">if</span> (isPowerOfTwo(children.length)) &#123;</div><div class="line">            chooser = <span class="keyword">new</span> PowerOfTwoEventExecutorChooser();</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            chooser = <span class="keyword">new</span> GenericEventExecutorChooser();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nThreads; i ++) &#123;</div><div class="line">            <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                children[i] = newChild(threadFactory, args);</div><div class="line">                success = <span class="keyword">true</span>;</div><div class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">                <span class="comment">// <span class="doctag">TODO:</span> Think about if this is a good exception type</span></div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"failed to create a child event loop"</span>, e);</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>我们看到了<code>NioEventLoopGroup</code>内部聚合了一个<code>EventExecutor</code>的数组. 这个数组就构成了主从线程池. 线程的选择由<code>EventExecutorChooser chooser</code>来实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> EventExecutor <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> chooser.next();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">PowerOfTwoEventExecutorChooser</span> <span class="keyword">implements</span> <span class="title">EventExecutorChooser</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> EventExecutor <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> children[childIndex.getAndIncrement() &amp; children.length - <span class="number">1</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">GenericEventExecutorChooser</span> <span class="keyword">implements</span> <span class="title">EventExecutorChooser</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> EventExecutor <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> children[Math.abs(childIndex.getAndIncrement() % children.length)];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>而<code>newChild()</code>的方法实现是由子类来确定的, 我们来直接看一下<code>NioEventLoopGroup</code>的内部实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> EventExecutor <span class="title">newChild</span><span class="params">(ThreadFactory threadFactory, Object... args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> NioEventLoop(<span class="keyword">this</span>, threadFactory, (SelectorProvider) args[<span class="number">0</span>]);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>它是直接生成了一个<code>NioEventLoop</code>的实例出来. 下来我们看一下<code>NioEventLoop</code>的实现<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/netty/NioEventLoop.jpg" alt=""><br>我们看一下<code>NioEventLoop</code>的属性成员<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 多路选择复用器</span></div><div class="line">Selector selector;</div><div class="line"><span class="comment">// Netty优化过的SelectedSelectionKeys</span></div><div class="line"><span class="keyword">private</span> SelectedSelectionKeySet selectedKeys;</div><div class="line"><span class="comment">// SelectorProvider.provider()提供, 在NioEventLoopGroup构造器中实现</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> SelectorProvider provider;</div></pre></td></tr></table></figure></p>
+<p>我们看到<code>NioEventLoop</code>主要是实现了IO多路复用, 它的任务执行是由父类<code>SingleThreadEventExecutor</code>实现的, 下面我们从它的构造器来追溯到<code>SingleThreadEventExecutor</code>上<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">NioEventLoop(NioEventLoopGroup parent, ThreadFactory threadFactory, SelectorProvider selectorProvider) &#123;</div><div class="line">    <span class="keyword">super</span>(parent, threadFactory, <span class="keyword">false</span>);</div><div class="line">    <span class="keyword">if</span> (selectorProvider == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"selectorProvider"</span>);</div><div class="line">    &#125;</div><div class="line">    provider = selectorProvider;</div><div class="line">    selector = openSelector();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>SingleThreadEventExecutor</code>这个类主要是实现了主从线程池中的线程功能, 所有的任务都在单线程中执行, 因此将这个线程池串行化, 可以将其看待成一个线程. 在<code>SingleThreadEventExecutor</code>中的构造器中,添加向任务队列中添加一个调用<code>NioEventLoop</code>的<code>run()</code>方法的任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">SingleThreadEventExecutor</span><span class="params">(</span></span></div><div class="line">            EventExecutorGroup parent, ThreadFactory threadFactory, <span class="keyword">boolean</span> addTaskWakesUp) &#123;</div><div class="line">        thread = threadFactory.newThread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</div><div class="line">                updateLastExecutionTime();</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    SingleThreadEventExecutor.<span class="keyword">this</span>.run();</div><div class="line">                    success = <span class="keyword">true</span>;</div><div class="line">                &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">                &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                    <span class="keyword">for</span> (;;) &#123;</div><div class="line">                        <span class="keyword">int</span> oldState = STATE_UPDATER.get(SingleThreadEventExecutor.<span class="keyword">this</span>);</div><div class="line">                        <span class="keyword">if</span> (oldState &gt;= ST_SHUTTING_DOWN || STATE_UPDATER.compareAndSet(</div><div class="line">                                SingleThreadEventExecutor.<span class="keyword">this</span>, oldState, ST_SHUTTING_DOWN)) &#123;</div><div class="line">                            <span class="keyword">break</span>;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                    <span class="comment">// Check if confirmShutdown() was called at the end of the loop.</span></div><div class="line">                    <span class="keyword">if</span> (success &amp;&amp; gracefulShutdownStartTime == <span class="number">0</span>) &#123;</div><div class="line">                        logger.error(<span class="string">"Buggy "</span> + EventExecutor.class.getSimpleName());</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    <span class="keyword">try</span> &#123;</div><div class="line">                        <span class="comment">// Run all remaining tasks and shutdown hooks.</span></div><div class="line">                        <span class="keyword">for</span> (;;) &#123;</div><div class="line">                            <span class="keyword">if</span> (confirmShutdown()) &#123;</div><div class="line">                                <span class="keyword">break</span>;</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                        <span class="keyword">try</span> &#123;</div><div class="line">                            cleanup();</div><div class="line">                        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                            STATE_UPDATER.set(SingleThreadEventExecutor.<span class="keyword">this</span>, ST_TERMINATED);</div><div class="line">                            threadLock.release();</div><div class="line">                            terminationFuture.setSuccess(<span class="keyword">null</span>);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        taskQueue = newTaskQueue();</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>我们看到了一行关键性代码<code>SingleThreadEventExecutor.this.run()</code>, 它调用了自己的<code>run()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure></p>
+<p>而这个方法是在<code>NioEventLoop</code>中实现的,也是我们要重点分析的代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (;;) &#123;</div><div class="line">            <span class="keyword">boolean</span> oldWakenUp = wakenUp.getAndSet(<span class="keyword">false</span>);</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="comment">// 查看taskQueue里是否有任务, 如果有任务的话, 则直接selector.selectNow();</span></div><div class="line">                <span class="keyword">if</span> (hasTasks()) &#123;</div><div class="line">                    selectNow();</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    select(oldWakenUp);</div><div class="line"></div><div class="line">                    <span class="keyword">if</span> (wakenUp.get()) &#123;</div><div class="line">                        selector.wakeup();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                cancelledKeys = <span class="number">0</span>;</div><div class="line">                needsToSelectAgain = <span class="keyword">false</span>;</div><div class="line">                <span class="keyword">final</span> <span class="keyword">int</span> ioRatio = <span class="keyword">this</span>.ioRatio;</div><div class="line">                <span class="comment">// 如果当前线程是百分百执行的话, 则直接处理所有的任务</span></div><div class="line">                <span class="keyword">if</span> (ioRatio == <span class="number">100</span>) &#123;</div><div class="line">                    processSelectedKeys();</div><div class="line">                    runAllTasks();</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="keyword">final</span> <span class="keyword">long</span> ioStartTime = System.nanoTime();</div><div class="line"></div><div class="line">                    processSelectedKeys();</div><div class="line"></div><div class="line">                    <span class="keyword">final</span> <span class="keyword">long</span> ioTime = System.nanoTime() - ioStartTime;</div><div class="line">                    runAllTasks(ioTime * (<span class="number">100</span> - ioRatio) / ioRatio);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="comment">//</span></div><div class="line">                <span class="keyword">if</span> (isShuttingDown()) &#123;</div><div class="line">                    closeAll();</div><div class="line">                    <span class="keyword">if</span> (confirmShutdown()) &#123;</div><div class="line">                        <span class="keyword">break</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>上面的<code>run()</code>就是不断的轮询当前<code>NioEventLoop</code>里是否有任务. 然后处理Selector上已经就绪的Channel和任务队列里的任务.<br>然后我们接着往下看<code>processSelectedKeys()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKeys</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">if</span> (selectedKeys != <span class="keyword">null</span>) &#123;</div><div class="line">           processSelectedKeysOptimized(selectedKeys.flip());</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           processSelectedKeysPlain(selector.selectedKeys());</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line"></div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSelectedKeysPlain</span><span class="params">(Set&lt;SelectionKey&gt; selectedKeys)</span> </span>&#123;</div><div class="line">           <span class="comment">// check if the set is empty and if so just return to not create garbage by</span></div><div class="line">           <span class="comment">// creating a new Iterator every time even if there is nothing to process.</span></div><div class="line">           <span class="comment">// See https://github.com/netty/netty/issues/597</span></div><div class="line">           <span class="keyword">if</span> (selectedKeys.isEmpty()) &#123;</div><div class="line">               <span class="keyword">return</span>;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           Iterator&lt;SelectionKey&gt; i = selectedKeys.iterator();</div><div class="line">           <span class="keyword">for</span> (;;) &#123;</div><div class="line">               <span class="keyword">final</span> SelectionKey k = i.next();</div><div class="line">               <span class="comment">// 取出SelectionKey的附件</span></div><div class="line">               <span class="keyword">final</span> Object a = k.attachment();</div><div class="line">               i.remove();</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (a <span class="keyword">instanceof</span> AbstractNioChannel) &#123;</div><div class="line">                 <span class="comment">// a有可能是NioServerSocketChannel或者NioSocketChannel</span></div><div class="line">                   processSelectedKey(k, (AbstractNioChannel) a);</div><div class="line">               &#125; <span class="keyword">else</span> &#123;</div><div class="line">                   <span class="comment">// 如果a不是Channel的话, 那就是NioTask了</span></div><div class="line">                   <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">                   NioTask&lt;SelectableChannel&gt; task = (NioTask&lt;SelectableChannel&gt;) a;</div><div class="line">                   processSelectedKey(k, task);</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (!i.hasNext()) &#123;</div><div class="line">                   <span class="keyword">break</span>;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (needsToSelectAgain) &#123;</div><div class="line">                   selectAgain();</div><div class="line">                   selectedKeys = selector.selectedKeys();</div><div class="line"></div><div class="line">                   <span class="comment">// Create the iterator again to avoid ConcurrentModificationException</span></div><div class="line">                   <span class="keyword">if</span> (selectedKeys.isEmpty()) &#123;</div><div class="line">                       <span class="keyword">break</span>;</div><div class="line">                   &#125; <span class="keyword">else</span> &#123;</div><div class="line">                       i = selectedKeys.iterator();</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">       &#125;</div></pre></td></tr></table></figure></p>
+<p>然后咱们接着往下看对Channel的处理<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">processSelectedKey</span><span class="params">(SelectionKey k, AbstractNioChannel ch)</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> NioUnsafe unsafe = ch.unsafe();</div><div class="line"></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">int</span> readyOps = k.readyOps();</div><div class="line">        <span class="comment">// Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead</span></div><div class="line">        <span class="comment">// to a spin loop</span></div><div class="line">        <span class="keyword">if</span> ((readyOps &amp; (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != <span class="number">0</span> || readyOps == <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// 如果是读事件或者连接的事件,则直接调用read方法</span></div><div class="line">            unsafe.read();</div><div class="line">            <span class="keyword">if</span> (!ch.isOpen()) &#123;</div><div class="line">                <span class="comment">// Connection already closed - no need to handle write.</span></div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> ((readyOps &amp; SelectionKey.OP_WRITE) != <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// 如果是写操作位, 则说明有半包消息没有写完, 需要继续</span></div><div class="line">            ch.unsafe().forceFlush();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> ((readyOps &amp; SelectionKey.OP_CONNECT) != <span class="number">0</span>) &#123;</div><div class="line">            <span class="comment">// remove OP_CONNECT as otherwise Selector.select(..) will always return without blocking</span></div><div class="line">            <span class="comment">// See https://github.com/netty/netty/issues/924</span></div><div class="line">            <span class="keyword">int</span> ops = k.interestOps();</div><div class="line">            ops &amp;= ~SelectionKey.OP_CONNECT;</div><div class="line">            k.interestOps(ops);</div><div class="line"></div><div class="line">            unsafe.finishConnect();</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (CancelledKeyException ignored) &#123;</div><div class="line">        unsafe.close(unsafe.voidPromise());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>在unsafe的多态这我们要多说一些, 我们知道NioEventLoop内部处理的Channel其实是有俩种类型的, 一个是<code>NioServerScoketChannel</code>一个是<code>NioSocketChannel</code>.</p>
+<p><code>NioServerSocketChannel</code>继承自<code>AbstractNioMessageChannel</code>, 而这个父类实现了一个<code>NioMessageUnsafe</code>的一个内部类, 这个内部类的<code>read()</code>方法会调用Channel里的<code>doReadMessage()</code>方法. 父类的<code>doReadMessage()</code>方法是由子类来具体实现的. 在<code>NioServerScoketChannel</code>中是生成了一个<code>NioSocketChannel</code>的列表作为消息返回, 然后再让<code>ServerBootstrapAcceptor</code>将<code>NioSocketChannel</code>绑定到从Reactor上.</p>
+<p><code>NioSocketChannel</code>继承自<code>AbstractNioByteChannel</code>, 这个父类实现了一个<code>NioByteUnsafe</code>, 这个Unsafe就负责创建ByteBuf, 接受真正的网络数据了.</p>
+</blockquote>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Netty/">Netty</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2016/03/14/JavaLibrary/Netty NioEventLoop/" data-title="Netty NioEventLoop | ·" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/03/16/杂记/编码和补码/" title="原码 反码 补码">
+  <strong>上一篇：</strong><br/>
+  <span>
+  原码 反码 补码</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/03/12/算法/环形队列/"  title="环形队列">
+ <strong>下一篇：</strong><br/> 
+ <span>环形队列
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/03/14/JavaLibrary/Netty NioEventLoop/" data-title="Netty NioEventLoop" data-url="http://www.yu66.wang/2016/03/14/JavaLibrary/Netty NioEventLoop/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>17</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>32</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="王玉">王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>
