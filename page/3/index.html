@@ -69,231 +69,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/04/23/nginx/nginx web服务器/" title="nginx web服务器" itemprop="url">nginx web服务器</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-22T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-04-23</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>官方文档<a href="https://www.nginx.com/resources/admin-guide/nginx-web-server/" target="_blank" rel="external"></a>学习</p>
-<p>在Nginx中每个用来处理HTTP请求的virtual server都被称为<code>location</code>. <code>location</code>可以参与请求处理的整个过程. <code>location</code>可以代理一个请求或者直接返回一个文件. 不但如此, 在<code>location</code>中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的<code>location</code>或者其他的virtual server. </p>
-<h2 id="Setting-Up-Virtual-Servers"><a href="#Setting-Up-Virtual-Servers" class="headerlink" title="Setting Up Virtual Servers"></a>Setting Up Virtual Servers</h2><p>Nginx插件配置必须最少包含一个<code>server</code>指令(用于定义虚拟服务器-virtual server). 当Nginx插件处理一个请求时, 它首先会选择处理该请求的虚拟服务器. 一个虚拟服务器定义在<code>http</code>上下文里, 例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http &#123;</div><div class="line">    server &#123;</div><div class="line">        # Server configuration</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在<code>http</code>上下文里可以定义多个<code>server</code>指令, 这样一来就可以实现多个虚拟服务器了.</p>
-<p>在<code>server</code>指令里通常包含一个<code>listen</code>指令, 通过<code>listen</code>指令来指定监听请求的IP地址和端口号(或者Unix domain socket and path). IPv4 和 IPv6 地址都可进行配置</p>
-<p>下面的例子展示了在IP地址<code>127.0.0.1</code>和端口<code>8080</code>上进行网络事件监听<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen 127.0.0.1:8080;</div><div class="line">    # The rest of server configuration</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>如果端口忽略不写的话, Nginx插件会使用标准端口. 还有如果IP地址忽略不填的话, Nginx插件会在所有的IP地址上进行网络事件监听. 如果没有配置<code>listen</code>指令的话, 在超级用户权限下, 标准端口是<code>80/tcp</code>, 默认端口<code>8000/tcp</code>.</p>
-<p>如果有多个<code>server</code>指令里配置的IP地址和端口匹配到请求, 那么Nginx插件会根据请求的<code>Host header</code>字段与<code>server_name</code>指令进行匹配. 我们可以将<code>server_name</code>指令配置成一个全名称的地址, 或者使用通配符, 正则表达式. 如果想要使用通配符的话, 可以在地址的开头或者结尾使用<code>*</code>.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen      80;</div><div class="line">    server_name example.org www.example.org;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果有多个<code>server_name</code>指令匹配到<code>Host header</code>, Nginx插件会根据如下顺序进行匹配查找, 直到找到第一个.</p>
-<ol>
-<li>名字完全符合</li>
-<li>以<code>*</code>开始的, 最符合的名字, 例如<code>*.example.org</code></li>
-<li>以<code>*</code>结束的, 最符合的名字, 例如<code>mail.*</code></li>
-<li>第一个匹配正则表达式的</li>
-</ol>
-<p>如果请求中的<code>Host header</code>没有匹配到一个合适的server name, Nginx插件会将该消息路由到默认服上面去. 默认服是在<code>nginx.conf</code>文件里进行配置的. 我们也可以使用<code>default_server</code>参数在<code>listen</code>指令中进行显示设定.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen      80 default_server;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="Configuring-Locations"><a href="#Configuring-Locations" class="headerlink" title="Configuring Locations"></a>Configuring Locations</h2><p>Nginx插件可以根据请求的URI将请求派发到不同的代理上, 或者处理不同的文件. 这种功能是通过<code>server</code>指令里的<code>location</code>指令完成的.</p>
-<p>例如你可以定义三个<code>location</code>指令, 一个用来将请求派发到一个代理服务器, 一个用来将其他的请求派发到另外的一个代理服务器,最后的一个用来提供本地文件系统服务.</p>
-<p>NGINX Plus tests request URIs against the parameters of all location directives and applies the directives defined in the matching location. Inside each location block, it is usually possible (with a few exceptions) to place even more location directives to further refine the processing for specific groups of requests.</p>
-<blockquote>
-<p>注意, 在这篇教程中, location这个字指的是一个单独的<code>location</code>上下文.</p>
-</blockquote>
-<p>有俩种<code>location</code>指令参数</p>
-<ul>
-<li>prefix strings : 请求的URI是以固定的字符串开头, 例如prefix strings是<code>/some/path/</code>, 那么<code>/some/path/document.html</code>就是这种类型的, 但是<code>/my-site/some/path</code>就不是.</li>
-<li>regular expressions :</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /some/path/ &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>当使用表达式的时候, 如果使用<code>~</code>开头则表示要区分大小写. 如果以<code>~*</code>开头,则表示忽略大小写. 下面的例子是只要请求包含<code>.html</code>或者<code>.htm</code>这些字符串就都匹配<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location ~ \.html? &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>Nginx插件进行location匹配时, 优先进行<code>prefix string</code>匹配, 如果<code>prefix string</code>匹配不到再进行正则匹配.</p>
-<p>Higher priority is given to regular expressions, unless the ^~ modifier is used. Among the prefix strings NGINX Plus selects the most specific one (that is, the longest and most complete string). The exact logic for selecting a location to process a request is given below:</p>
-<ol>
-<li>Test the URI against all prefix strings.</li>
-<li>The = (equals sign) modifier defines an exact match of the URI and a prefix string. If the exact match is found, the search stops.</li>
-<li>If the ^~ (caret-tilde) modifier prepends the longest matching prefix string, the regular expressions are not checked.</li>
-<li>Store the longest matching prefix string.</li>
-<li>Test the URI against regular expressions.</li>
-<li>Break on the first matching regular expression and use the corresponding location.</li>
-<li>If no regular expression matches, use the location corresponding to the stored prefix string.</li>
-</ol>
-<p><code>=</code>的典型用例是请求<code>/</code>, 如果请求<code>/</code>是非常频繁的, 在<code>location</code>指令上设置<code>= /</code>可以大幅提升访问速度, 这是因为在路径搜索匹配时, 一旦匹配到就不再继续搜素匹配了, 节约了时间.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location = / &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><code>location</code>上下文中可以包含多个指令, 用于说明如何处理一个请求, 例如是想提供静态文件服务还是想向一个代理服务器派发请求. 例如, 在下面的例子中, 第一个请求就是提供<code>/data</code>目录下的静态文件服务, 第二个请求就是向一个代理服务器<code>www.example.com</code>派发请求.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    location /images/ &#123;</div><div class="line">        root /data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location / &#123;</div><div class="line">        proxy_pass http://www.example.com;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<ul>
-<li><code>root</code>指令用于指定提供静态文件服务的文件系统路径. 如果有一个请求<code>/images/example.png</code>, 那么nginx插件会在文件系统中进行如下搜索<code>/data/images/example.png</code>.</li>
-<li><code>proxy_pass</code>指令会将请求派发到代理服务器上. 在上面的例子中, 只要是请求不是以<code>/images/</code>开头的, 那么请求都会派发到那个代理服务器上.</li>
-</ul>
-<h2 id="Using-Variables"><a href="#Using-Variables" class="headerlink" title="Using Variables"></a>Using Variables</h2><p>你可以在配置文件里使用变量, 以便Nginx插件可以根据不同的情况进行不同的处理. 变量在运行时进行计算, 然后将值传递给指令使用. 我们可以通过<code>$</code>来引用一个变量(例如<code>$time</code>).</p>
-<p>在Nginx里已经为我们提前定义好了一些变量, 例如<a href="http://nginx.org/en/docs/http/ngx_http_core_module.html?&amp;_ga=1.54594219.1025068217.1457188479#variables" target="_blank" rel="external">core HTTP</a>. 而且你也可以使用<code>set</code>, <code>map</code>, <code>geo</code>等指令自定义一些变量.</p>
-<h2 id="Returning-Specific-Status-Codes"><a href="#Returning-Specific-Status-Codes" class="headerlink" title="Returning Specific Status Codes"></a>Returning Specific Status Codes</h2><p>在一些web站点中, 由于资源移除或者其他原因, 我们需要直接给前端返回一个错误码, 那么我们可以使用<code>return</code>指令来完成.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /wrong/url &#123;</div><div class="line">    return 404;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>下面的例子中, 第一个参数是一个错误码. 第二个参数是一个可选参数(代表一个重连接的URL)<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /permanently/moved/url &#123;</div><div class="line">    return 301 http://www.example.com/moved/here;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><code>return</code>指令既可以放在<code>location</code>指令里, 也可以放在<code>server</code>指令里</p>
-<h2 id="Rewriting-URIs-in-Requests"><a href="#Rewriting-URIs-in-Requests" class="headerlink" title="Rewriting URIs in Requests"></a>Rewriting URIs in Requests</h2><p>请求URI可以在被处理时通过<code>rewrite</code>指令被多次修改, <code>rewrite</code>指令包含一个可选参数和俩个必选参数.</p>
-<ul>
-<li>第一个参数(必填)是用来匹配请求的正则表达式.</li>
-<li>第二个参数(必填)是用来指向重连接所需要匹配的URI.(下面的例子中我们采用的是正则表达式进行匹配)</li>
-<li>第三个参数(选填)是用来标记是继续执行下一个重连接还是执行其他操作(例如返回一个错误码)<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /users/ &#123;</div><div class="line">    rewrite ^/users/(.*)$ /show?user=$1 break;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>在<code>server</code>或者<code>location</code>指令中可以包含多个<code>rewrite</code>指令. Nginx插件会根据<code>rewrite</code>指令出现的顺序依次执行.</p>
-<p>After NGINX processes a set of rewriting instructions, it selects a location context according to the new URI. If the selected location contains rewrite directives, they are executed in turn. If the URI matches any of those, a search for the new location starts after all defined rewrite directives are processed.</p>
-<p>下面的例子展示里<code>rewrite</code>和<code>return</code>指令混合使用的方式<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    ...</div><div class="line">    rewrite ^(/download/.*)/media/(.*)\..*$ $1/mp3/$2.mp3 last;</div><div class="line">    rewrite ^(/download/.*)/audio/(.*)\..*$ $1/mp3/$2.ra  last;</div><div class="line">    return  403;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>上面的例子区分了俩组URI. <code>/download/some/media/file</code>的URI会被替换成<code>/download/some/mp3/file.mp3</code>. 由于这个<code>rewrite</code>指令后面跟里一个<code>last</code>标记, 因此下面的<code>rewrite</code>和<code>return</code>指令就不会再执行到了. 但是如果URI例如<code>/download/some/audio/file</code>并不符合第一个,那么Nginx插件会继续匹配到第二个, 当然第二个符合, 于是URI被替换成<code>/download/some/mp3/file.ra</code>. 如果前俩个都不符合的话, 那么就会返回<code>403</code>错误码.</p>
-<p>下面, 我们会介绍俩种终止URI<code>rewrite</code>执行的方式:</p>
-<ul>
-<li><code>last</code> – 这种方式只是会在当前的<code>server</code>或者<code>location</code>上下文中停止, 但是Nginx插件会对重写的URI继续在<code>location</code>里进行查找.</li>
-<li><code>break</code> – 它不会对新的URI在当前上下文中进行查找, 而是简单的终止掉整个过程.</li>
-</ul>
-<h2 id="Rewriting-HTTP-Responses"><a href="#Rewriting-HTTP-Responses" class="headerlink" title="Rewriting HTTP Responses"></a>Rewriting HTTP Responses</h2><p>有时候你可能需要重写或者替换HTTP响应中的内容, 或者将一个字符串替换为另一个. <code>sub_filter</code>指令可以实现类似于这种的需求. <code>sub_filter</code>支持变量以及链式替换, 以便实现更加复杂的重写功能.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">    sub_filter      /blog/ /blog-staging/;</div><div class="line">    sub_filter_once off;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>另一个例子是将<code>http://</code>改变为<code>https://</code>, 而且将localhost地址改变为请求头中的主机名. <code>sub_filter_once</code>指令是告诉NGINX在<code>location</code>指令里可以开启多个<code>sub_filter</code>.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">    sub_filter     'href="http://127.0.0.1:8080/'    'href="http://$host/';</div><div class="line">    sub_filter     'img src="http://127.0.0.1:8080/' 'img src="http://$host/';</div><div class="line">    sub_filter_once on;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>注意, 如果响应已经在一个<code>sub_filter</code>修改过里, 那么即使另一个<code>sub_filter</code>也匹配到了,但是不会再次修改.</p>
-</blockquote>
-<h2 id="Handling-Errors"><a href="#Handling-Errors" class="headerlink" title="Handling Errors"></a>Handling Errors</h2><p>使用<code>error_page</code>指令, 我们可以配置Nginx插件返回一个自定义的界面或者响应一个不同的错误码,甚至可以重定向到一个新的地址上面去. 在下面的例子中, <code>error_page</code>指令会在发生错误时返回一个指定的界面<code>/404.html</code>, 而不是像默认的返回一个404错误码.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">error_page 404 /404.html;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>注意, 这个指令并不是直接就返回了(<code>return</code>指令直接返回), 而是指定一种当错误发生时的一种处理方式.</p>
-</blockquote>
-<p>在下面的例子中, 当Nginx找不到文件时, 它会返回<code>301</code>错误码, 同时告诉客户端重定向到<code>http:/example.com/new/path.html</code>这个界面上.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /old/path.html &#123;</div><div class="line">    error_page 404 =301 http:/example.com/new/path.html;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>The following configuration is an example of passing a request to the back end when a file is not found. Because there is no status code specified after the equals sign in the error_page directive, the response to the client has the status code returned by the proxied server (not necessarily 404).</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    ...</div><div class="line">    location /images/ &#123;</div><div class="line">        # Set the root directory to search for the file</div><div class="line">        root /data/www;</div><div class="line"></div><div class="line">        # Disable logging of errors related to file existence</div><div class="line">        open_file_cache_errors off;</div><div class="line"></div><div class="line">        # Make an internal redirect if the file is not found</div><div class="line">        error_page 404 = /fetch$uri;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location /fetch/ &#123;</div><div class="line">        proxy_pass http://backend/;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>The error_page directive instructs NGINX Plus to make an internal redirect when a file is not found. The $uri variable in the final parameter to the error_page directive holds the URI of the current request, which gets passed in the redirect.</p>
-<p>For example, if /images/some/file is not found, it is replaced with /fetch/images/some/file and a new search for a location starts. As a result, the request ends up in the second location context and is proxied to <a href="http://backend/" target="_blank" rel="external">http://backend/</a>.</p>
-<p>The open_file_cache_errors directive prevents writing an error message if a file is not found. This is not necessary here since missing files are correctly handled.</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/23/nginx/nginx web服务器/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/23/nginx/nginx web服务器/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/22/JavaLibrary/Spring 异步方法访问/" title="Spring 异步方法访问" itemprop="url">Spring 异步方法访问</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-21T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-04-22</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p><a href="https://spring.io/guides/gs/async-method/" target="_blank" rel="external">官方文档</a>学习</p>
-<p>官网的教程就是访问GitHub 的一个用户数据. 首先我们创建一个Model类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonIgnoreProperties;</div><div class="line"></div><div class="line"><span class="meta">@JsonIgnoreProperties</span>(ignoreUnknown=<span class="keyword">true</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> String blog;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getBlog</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> blog;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBlog</span><span class="params">(String blog)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.blog = blog;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"User [name="</span> + name + <span class="string">", blog="</span> + blog + <span class="string">"]"</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>Spring默认使用的是 Jackson JSON类库。 在这个例子中@JsonIgnoreProperties, 会忽略Github返回的不在User中的参数</p>
-</blockquote>
-<p>然后我们创建一个异步的服务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.concurrent.Future;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.Async;</div><div class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.AsyncResult;</div><div class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</div><div class="line"><span class="keyword">import</span> org.springframework.web.client.RestTemplate;</div><div class="line"></div><div class="line"><span class="meta">@Service</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GitHubLookupService</span> </span>&#123;</div><div class="line"></div><div class="line">    RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate();</div><div class="line"></div><div class="line">    <span class="meta">@Async</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Future&lt;User&gt; <span class="title">findUser</span><span class="params">(String user)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        System.out.println(<span class="string">"Looking up "</span> + user);</div><div class="line">        User results = restTemplate.getForObject(<span class="string">"https://api.github.com/users/"</span> + user, User.class);</div><div class="line">        <span class="comment">// Artificial delay of 1s for demonstration purposes</span></div><div class="line">        Thread.sleep(<span class="number">1000L</span>);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AsyncResult&lt;User&gt;(results);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>我们创建的服务, 使用的是RestTemplate来创建一个Rest远程调用, 然后将结果转换为一个User实例.</p>
-<p><code>@Async</code>注解会让Spring在一个单独的线程中执行该方法, 最后我们使用<code>AsyncResult</code>对调用的结果进行了一个异步的封装.</p>
-<blockquote>
-<p>需要注意的是, 如果创建一个本地实例并不会异步调用<code>findUser()</code>方法, 我们必须在<code>@Configuration</code>或者<code>@ComponentScan</code>注解中才行.</p>
-</blockquote>
-<p>下面我们创建Demo运行一下程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.concurrent.Future;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.CommandLineRunner;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line"><span class="keyword">import</span> org.springframework.scheduling.annotation.EnableAsync;</div><div class="line"></div><div class="line"><span class="meta">@SpringBootApplication</span></div><div class="line"><span class="meta">@EnableAsync</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> <span class="keyword">implements</span> <span class="title">CommandLineRunner</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    GitHubLookupService gitHubLookupService;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(String... args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// Start the clock</span></div><div class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</div><div class="line"></div><div class="line">        <span class="comment">// Kick of multiple, asynchronous lookups</span></div><div class="line">        Future&lt;User&gt; page1 = gitHubLookupService.findUser(<span class="string">"PivotalSoftware"</span>);</div><div class="line">        Future&lt;User&gt; page2 = gitHubLookupService.findUser(<span class="string">"CloudFoundry"</span>);</div><div class="line">        Future&lt;User&gt; page3 = gitHubLookupService.findUser(<span class="string">"Spring-Projects"</span>);</div><div class="line"></div><div class="line">        <span class="comment">// Wait until they are all done</span></div><div class="line">        <span class="keyword">while</span> (!(page1.isDone() &amp;&amp; page2.isDone() &amp;&amp; page3.isDone())) &#123;</div><div class="line">            Thread.sleep(<span class="number">10</span>); <span class="comment">//10-millisecond pause between each check</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Print results, including elapsed time</span></div><div class="line">        System.out.println(<span class="string">"Elapsed time: "</span> + (System.currentTimeMillis() - start));</div><div class="line">        System.out.println(page1.get());</div><div class="line">        System.out.println(page2.get());</div><div class="line">        System.out.println(page3.get());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        SpringApplication.run(Application.class, args);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><code>@EnableAsync</code>注解, 会让<code>@Async</code>方法在一个线程池中执行</p>
-<blockquote>
-<p>@SpringBootApplication会为我们做如下工作</p>
-<ul>
-<li>@Configuration</li>
-<li>@EnableAutoConfiguration</li>
-<li>@ComponentScan</li>
-</ul>
-</blockquote>
-<p>最后添加所需要的Maven依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></div><div class="line">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gs-async-method<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.3.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-databind<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/Spring/">Spring</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/04/22/JavaLibrary/Spring 异步方法访问/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/04/22/JavaLibrary/Spring 异步方法访问/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2016/04/20/JavaLibrary/JProfiler nowait连接/" title="JProfiler nowait连接" itemprop="url">JProfiler nowait连接</a>
   </h1>
   <p class="article-author">By
@@ -970,69 +745,6 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2016/03/16/数据库/数据压缩/" title="Mysql 数据压缩" itemprop="url">Mysql 数据压缩</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-16T07:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-16</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>我们在创建一个表的时候, 可以采用压缩技术<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> CUSTOMER (  </div><div class="line">…  </div><div class="line">) <span class="keyword">COMPRESS</span> YES;</div></pre></td></tr></table></figure></p>
-<p>如果想要在中途停止表的压缩<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> CUSTOMER <span class="keyword">COMPRESS</span> <span class="keyword">NO</span>;</div></pre></td></tr></table></figure></p>
-<p>但是停止之后并不会对已经存在的数据进行解压缩,如果想要对已经存在的数据解压缩的话, 我们可以使用<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">REORG TABLE CUSTOMER;</div></pre></td></tr></table></figure></p>
-<p>这个语句会根据当前表的压缩状态来重新整理表, 对数据进行压缩解压缩.</p>
-<p>如果我们只是想要对某个字符串字段(一般是针对Blob字段进行压缩)进行压缩的话, 那么我们可以使用压缩函数<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">COMPRESS(string_to_compress)</div></pre></td></tr></table></figure></p>
-<p>然后再对其进行解压缩<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UNCOMPRESS()</div></pre></td></tr></table></figure></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/数据库/">数据库</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/16/数据库/数据压缩/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/数据库/数据压缩/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
       <a href="/2016/03/16/数据库/SQL Mod/" title="Data too long for column 引起的设置 sql_mod" itemprop="url">Data too long for column 引起的设置 sql_mod</a>
   </h1>
   <p class="article-author">By
@@ -1095,6 +807,69 @@
 	
 	  	<span></span>
 		<a href="/2016/03/16/数据库/SQL Mod/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/数据库/SQL Mod/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/16/数据库/数据压缩/" title="Mysql 数据压缩" itemprop="url">Mysql 数据压缩</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-16T07:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-16</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>我们在创建一个表的时候, 可以采用压缩技术<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> CUSTOMER (  </div><div class="line">…  </div><div class="line">) <span class="keyword">COMPRESS</span> YES;</div></pre></td></tr></table></figure></p>
+<p>如果想要在中途停止表的压缩<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> CUSTOMER <span class="keyword">COMPRESS</span> <span class="keyword">NO</span>;</div></pre></td></tr></table></figure></p>
+<p>但是停止之后并不会对已经存在的数据进行解压缩,如果想要对已经存在的数据解压缩的话, 我们可以使用<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">REORG TABLE CUSTOMER;</div></pre></td></tr></table></figure></p>
+<p>这个语句会根据当前表的压缩状态来重新整理表, 对数据进行压缩解压缩.</p>
+<p>如果我们只是想要对某个字符串字段(一般是针对Blob字段进行压缩)进行压缩的话, 那么我们可以使用压缩函数<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">COMPRESS(string_to_compress)</div></pre></td></tr></table></figure></p>
+<p>然后再对其进行解压缩<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UNCOMPRESS()</div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/16/数据库/数据压缩/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/16/数据库/数据压缩/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1388,6 +1163,74 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2016/03/06/nginx/nginx负载均衡/" title="Nginx负载均衡实战" itemprop="url">Nginx负载均衡实战</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-05T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-06</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>我们测试一次Nginx的负载均衡配置.</p>
+<p>首先我们使用python启动俩个HTTP服务器<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> BaseHTTPServer</div><div class="line"><span class="keyword">import</span> urlparse</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line">port = sys.argv[<span class="number">1</span>]</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">WebRequestHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        """</div><div class="line">        <span class="keyword">print</span> port</div><div class="line"></div><div class="line">server = BaseHTTPServer.HTTPServer((<span class="string">'0.0.0.0'</span>,int(sys.argv[<span class="number">1</span>])), WebRequestHandler)</div><div class="line">server.serve_forever()</div></pre></td></tr></table></figure></p>
+<p>然后在命令行分别启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">python ./PyHttpServer.py 8091</div><div class="line">python ./PyHttpServer.py 8092</div></pre></td></tr></table></figure></p>
+<p>然后我们配置nginx.conf文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">#user  nobody;</div><div class="line">worker_processes  1;</div><div class="line"></div><div class="line">pid        logs/nginx.pid;</div><div class="line"></div><div class="line">events &#123;</div><div class="line">    worker_connections  1024;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">http &#123;</div><div class="line">    include       mime.types;</div><div class="line">    default_type  application/octet-stream;</div><div class="line"></div><div class="line">    sendfile        on;</div><div class="line">    upstream big_server_com &#123;</div><div class="line">      server 127.0.0.1:8091 weight=5;</div><div class="line">      server 127.0.0.1:8092 weight=5;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    server &#123;</div><div class="line">        listen       8090;</div><div class="line">        server_name  localhost;</div><div class="line"></div><div class="line">        location / &#123;</div><div class="line">            root   html;</div><div class="line">            index  index.html index.htm;</div><div class="line">            proxy_pass      http://big_server_com;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        error_page   500 502 503 504  /50x.html;</div><div class="line">        location = /50x.html &#123;</div><div class="line">            root   html;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们让nginx在8090端口上监听, 然后将其反向代理到<code>8091</code>和<code>8092</code>端口上.</p>
+<blockquote>
+<p>还有一点很重要的是, 要代理的服务必须在Nginx启动之前都启动完毕, 否则Nginx没办法完成代理工作.</p>
+</blockquote>
+<p>最后我们在浏览器上发送HTTP请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:8090</div></pre></td></tr></table></figure></p>
+<p>我们发现那俩个python的HTTP服务器果真都有输出了.</p>
+<p>但是我们发现, 就是那俩个服务器同时都有输出, 而不是应该只有其中一个有输出. 所以下来还需要研究一下如何配置Upstream, 看看如何让其真正实现负载均衡和单点失败</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/06/nginx/nginx负载均衡/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx负载均衡/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2016/03/06/nginx/nginx安装与命令/" title="Nginx安装与启动,关闭" itemprop="url">Nginx安装与启动,关闭</a>
   </h1>
   <p class="article-author">By
@@ -1448,74 +1291,6 @@
 	
 	  	<span></span>
 		<a href="/2016/03/06/nginx/nginx安装与命令/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx安装与命令/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/03/06/nginx/nginx负载均衡/" title="Nginx负载均衡实战" itemprop="url">Nginx负载均衡实战</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-03-05T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-06</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>我们测试一次Nginx的负载均衡配置.</p>
-<p>首先我们使用python启动俩个HTTP服务器<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> BaseHTTPServer</div><div class="line"><span class="keyword">import</span> urlparse</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line">port = sys.argv[<span class="number">1</span>]</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">WebRequestHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        """</div><div class="line">        <span class="keyword">print</span> port</div><div class="line"></div><div class="line">server = BaseHTTPServer.HTTPServer((<span class="string">'0.0.0.0'</span>,int(sys.argv[<span class="number">1</span>])), WebRequestHandler)</div><div class="line">server.serve_forever()</div></pre></td></tr></table></figure></p>
-<p>然后在命令行分别启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">python ./PyHttpServer.py 8091</div><div class="line">python ./PyHttpServer.py 8092</div></pre></td></tr></table></figure></p>
-<p>然后我们配置nginx.conf文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">#user  nobody;</div><div class="line">worker_processes  1;</div><div class="line"></div><div class="line">pid        logs/nginx.pid;</div><div class="line"></div><div class="line">events &#123;</div><div class="line">    worker_connections  1024;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">http &#123;</div><div class="line">    include       mime.types;</div><div class="line">    default_type  application/octet-stream;</div><div class="line"></div><div class="line">    sendfile        on;</div><div class="line">    upstream big_server_com &#123;</div><div class="line">      server 127.0.0.1:8091 weight=5;</div><div class="line">      server 127.0.0.1:8092 weight=5;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    server &#123;</div><div class="line">        listen       8090;</div><div class="line">        server_name  localhost;</div><div class="line"></div><div class="line">        location / &#123;</div><div class="line">            root   html;</div><div class="line">            index  index.html index.htm;</div><div class="line">            proxy_pass      http://big_server_com;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        error_page   500 502 503 504  /50x.html;</div><div class="line">        location = /50x.html &#123;</div><div class="line">            root   html;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>我们让nginx在8090端口上监听, 然后将其反向代理到<code>8091</code>和<code>8092</code>端口上.</p>
-<blockquote>
-<p>还有一点很重要的是, 要代理的服务必须在Nginx启动之前都启动完毕, 否则Nginx没办法完成代理工作.</p>
-</blockquote>
-<p>最后我们在浏览器上发送HTTP请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:8090</div></pre></td></tr></table></figure></p>
-<p>我们发现那俩个python的HTTP服务器果真都有输出了.</p>
-<p>但是我们发现, 就是那俩个服务器同时都有输出, 而不是应该只有其中一个有输出. 所以下来还需要研究一下如何配置Upstream, 看看如何让其真正实现负载均衡和单点失败</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
-</div>
-
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2016/03/06/nginx/nginx负载均衡/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/06/nginx/nginx负载均衡/" data-count-type="comments">&nbsp;</a>
 	
 </div>
 
@@ -1665,9 +1440,143 @@
 
 
 
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/04/杂记/java游戏服务器/" title="Java游戏服务器设计" itemprop="url">Java游戏服务器设计</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-03T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-04</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>从毕业就开始在游戏行业摸爬滚打,至今4年将至,今天特意总结一下这四年来的心得.</p>
+<p>现在的游戏服务器大多采用Netty作为网络传输层,然后采用Reactor模型将消息转发到业务线程池中进行执行,然后在业务线程池中进行CPU计算,数据库IO操作,最后将结果返回给前端.</p>
+<p>这样的游戏服务器在压测的时候在线玩家不会超过2000人,而且经常会出现比较大的延迟,因为有的IO操作真的很耗时. </p>
+<p>在上个项目中我见到了这样一种设计,仍然是采用Netty完成网络层Socket数据读取发送工作,然后将解码出的数据扔到俩个消息队列里面去(采用Vertx的EventBus实现). 一个消息队列负责登录请求,一个消息队列负责整个游戏的业务逻辑. 这么着一来整个游戏的业务就不会出现数据竞争的情况. 然后再定时的将数据写到redis里面去. 这种设计在压测的时候达到了10000人的同时在线规模. (当然还有很多优化的地方, 例如在消息查找的时候采取ASM而不是低效的JDK反射, 但是并没有对JVM和Netty进行过特殊优化, 只是对JVM的新生代的分区将8:1:1改成了6:2:2)</p>
+<p>前俩天和一些游戏团队的人聊了聊,他们一致认为这种设计方式没有能充分的利用上主机多核的优势, 但是在Reactor的模型中, 主线程池和工作线程池都是需要CPU来运算的, 如果所有的CPU运算都来支持业务逻辑, 那么玩家一样会感觉到卡顿. 而且我们还可以对刚才的设计进行优化, 将不同模块业务放到不同的线程进行. 例如在Thread1中进行玩家自己的业务逻辑运算, 在Thread2中进行公会模块的业务计算, 当公会对玩家本身数据产生影响的时候, 我们可以让公会线程给玩家的业务线程发送消息(同样的使用消息队列). 这么着也能最大可能的利用多核优势同时让开发人员少的思考数据竞争出现的问题, 现在大多数的开发人员在处理数据竞争的时候还是较多的使用synchronized这种加锁方式(有些底层的接口也有可能使用读写锁, 但是使用锁, 在大规模用户的情况下,真的比较耗时).</p>
+<p>还有一点需要说的是, 在上个项目中,只使用到了很少的数据库表, 基本上玩家数据都存储到了一张表里, 当定时存储的时候,将玩家数据整个序列化成一个JSON串, 然后入库. 这么做有显而易见的好处,在分服的游戏中, 合服很容易而且在线上出现问题的时候,也很容易拿到一个玩家的数据进行问题排查. 而且在线上的时候也会出现因为异常而导致玩家刷材料等等, 因此如果在处理消息之前, 拿一个玩家备份的数据让玩家去操作,一旦出现数据异常也不会对玩家自己的数据造成影响. (需要考虑的是大量的序列号和反序列化会造成大量的GC操作.)</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/杂记/">杂记</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/04/杂记/java游戏服务器/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/04/杂记/java游戏服务器/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/03/02/nosql/jedis/" title="Jedis 初探" itemprop="url">Jedis 初探</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-03-02T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-03-02</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="using-Jedis-in-a-multithreaded-environment"><a href="#using-Jedis-in-a-multithreaded-environment" class="headerlink" title="using Jedis in a multithreaded environment"></a>using Jedis in a multithreaded environment</h2><p>我们不应该在多线程的情况下使用同一个Jedis实例对象, 因为在Jedis本身不是线程安全的, 它可能会引发一些奇奇怪怪的问题. 但是如果我们在每个线程中都创建一个Jedis实例对象的话这也是不可取的, 因为每个Jedis对象的创建都意味着socket和网络连接的创建. 为了避免这种情况,我们应该使用<code>JedisPool</code>, 它是一个线程安全的网络连接池. 我们可以通过池子创建多个Jedis实例对象, 当使用完之后再将它返回给池子.</p>
+<p>在下面的实例中我们初始化一个池子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JedisPool pool = <span class="keyword">new</span> JedisPool(<span class="keyword">new</span> JedisPoolConfig(), <span class="string">"localhost"</span>);</div></pre></td></tr></table></figure></p>
+<p>因为JedisPool是线程安全的, 因此我们可以将它缓存起来, 供所有线程使用.</p>
+<p><code>JedisPoolConfig</code>包含了一个丰富有用的Redis连接配置参数. <code>JedisPoolConfig</code>基于<a href="http://commons.apache.org/proper/commons-pool/apidocs/org/apache/commons/pool2/impl/GenericObjectPoolConfig.html" target="_blank" rel="external">Commons Pool 2</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// Jedis implements Closable. Hence, the jedis instance will be auto-closed after the last statement.</span></div><div class="line"><span class="keyword">try</span> (Jedis jedis = pool.getResource()) &#123;</div><div class="line">  <span class="comment">/// ... do stuff here ... for example</span></div><div class="line">  jedis.set(<span class="string">"foo"</span>, <span class="string">"bar"</span>);</div><div class="line">  String foobar = jedis.get(<span class="string">"foo"</span>);</div><div class="line">  jedis.zadd(<span class="string">"sose"</span>, <span class="number">0</span>, <span class="string">"car"</span>); jedis.zadd(<span class="string">"sose"</span>, <span class="number">0</span>, <span class="string">"bike"</span>);</div><div class="line">  Set&lt;String&gt; sose = jedis.zrange(<span class="string">"sose"</span>, <span class="number">0</span>, -<span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"><span class="comment">/// ... when closing your application:</span></div><div class="line">pool.destroy();</div></pre></td></tr></table></figure>
+<p>如果你不喜欢<code>try-with-resource</code>这种语法, 那么你可以使用<code>Jedis.close()</code>.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">Jedis jedis = <span class="keyword">null</span>;</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">  jedis = pool.getResource();</div><div class="line">  <span class="comment">/// ... do stuff here ... for example</span></div><div class="line">  jedis.set(<span class="string">"foo"</span>, <span class="string">"bar"</span>);</div><div class="line">  String foobar = jedis.get(<span class="string">"foo"</span>);</div><div class="line">  jedis.zadd(<span class="string">"sose"</span>, <span class="number">0</span>, <span class="string">"car"</span>); jedis.zadd(<span class="string">"sose"</span>, <span class="number">0</span>, <span class="string">"bike"</span>);</div><div class="line">  Set&lt;String&gt; sose = jedis.zrange(<span class="string">"sose"</span>, <span class="number">0</span>, -<span class="number">1</span>);</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">  <span class="keyword">if</span> (jedis != <span class="keyword">null</span>) &#123;</div><div class="line">    jedis.close();</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">/// ... when closing your application:</span></div><div class="line">pool.destroy();</div></pre></td></tr></table></figure></p>
+<p>If Jedis was borrowed from pool, it will be returned to pool with proper method since it already determines there was JedisConnectionException occurred. If Jedis wasn’t borrowed from pool, it will be disconnected and closed.</p>
+<p>下来我们来看一段测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</div><div class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</div><div class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPoolConfig;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        JedisPoolConfig jedisPoolConfig = <span class="keyword">new</span> JedisPoolConfig();</div><div class="line">        jedisPoolConfig.setMaxTotal(<span class="number">10</span>);</div><div class="line">        JedisPool pool = <span class="keyword">new</span> JedisPool(jedisPoolConfig, <span class="string">"10.1.4.110"</span>);</div><div class="line">        System.out.println(<span class="string">"begin : "</span> + pool.getNumActive());</div><div class="line">        System.out.println(<span class="string">"begin : "</span> + pool.getNumIdle());</div><div class="line">        System.out.println(<span class="string">"begin : "</span> + pool.getNumWaiters());</div><div class="line">        Jedis jedis = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            jedis = pool.getResource();</div><div class="line">            System.out.println(<span class="string">"borrow : "</span> + pool.getNumActive());</div><div class="line">            System.out.println(<span class="string">"borrow : "</span> + pool.getNumIdle());</div><div class="line">            System.out.println(<span class="string">"borrow : "</span> + pool.getNumWaiters());</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">if</span> (jedis != <span class="keyword">null</span>) &#123;</div><div class="line">                jedis.close();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        System.out.println(<span class="string">"return : "</span> + pool.getNumActive());</div><div class="line">        System.out.println(<span class="string">"return : "</span> + pool.getNumIdle());</div><div class="line">        System.out.println(<span class="string">"return : "</span> + pool.getNumWaiters());</div><div class="line">        pool.destroy();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">begin : <span class="number">0</span></div><div class="line">begin : <span class="number">0</span></div><div class="line">begin : <span class="number">0</span></div><div class="line">borrow : <span class="number">1</span></div><div class="line">borrow : <span class="number">0</span></div><div class="line">borrow : <span class="number">0</span></div><div class="line"><span class="keyword">return</span> : <span class="number">0</span></div><div class="line"><span class="keyword">return</span> : <span class="number">1</span></div><div class="line"><span class="keyword">return</span> : <span class="number">0</span></div></pre></td></tr></table></figure></p>
+<p>当调用<code>jedis.close();</code>后,池子里空闲的Jedis对象就多了1个, 可是如果我们注释掉这一行后的结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">begin : <span class="number">0</span></div><div class="line">begin : <span class="number">0</span></div><div class="line">begin : <span class="number">0</span></div><div class="line">borrow : <span class="number">1</span></div><div class="line">borrow : <span class="number">0</span></div><div class="line">borrow : <span class="number">0</span></div><div class="line"><span class="keyword">return</span> : <span class="number">1</span></div><div class="line"><span class="keyword">return</span> : <span class="number">0</span></div><div class="line"><span class="keyword">return</span> : <span class="number">0</span></div></pre></td></tr></table></figure></p>
+<p>我们发现那个Jedis仍然处于激活状态, 在Jedis 2.8.0版本以前当我们从池子里借用一个Jedis之后还需要将其还回去<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(Jedis resource)</span> </span>&#123;</div><div class="line">    jedisPool.returnResource(resource);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但是现在已经不需要了, 而且Jedis已经将这个<code>returnResource()</code>的方法舍弃掉了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** <span class="doctag">@deprecated</span> */</span></div><div class="line"><span class="meta">@Deprecated</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">returnResource</span><span class="params">(Jedis resource)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>(resource != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            resource.resetState();</div><div class="line">            <span class="keyword">this</span>.returnResourceObject(resource);</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception var3) &#123;</div><div class="line">            <span class="keyword">this</span>.returnBrokenResource(resource);</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> JedisException(<span class="string">"Could not return the resource to the pool"</span>, var3);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接下来我们看一下多线程情况<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisTest</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        JedisPoolConfig jedisPoolConfig = <span class="keyword">new</span> JedisPoolConfig();</div><div class="line">        jedisPoolConfig.setMaxTotal(<span class="number">3</span>);</div><div class="line">        JedisPool pool = <span class="keyword">new</span> JedisPool(jedisPoolConfig, <span class="string">"10.1.4.110"</span>);</div><div class="line">        List&lt;Thread&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">            Runnable runnable = () -&gt; &#123;</div><div class="line">                Jedis jedis = <span class="keyword">null</span>;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    jedis = pool.getResource();</div><div class="line">                    <span class="keyword">int</span> sleep = <span class="keyword">new</span> Random().nextInt(<span class="number">5</span>);</div><div class="line">                    System.out.println(<span class="string">"sleep:"</span> + sleep + <span class="string">". time:"</span> + <span class="keyword">new</span> Date().toLocaleString() + <span class="string">". active: "</span> + pool.getNumActive() + <span class="string">". idle: "</span> + pool.getNumIdle());</div><div class="line"></div><div class="line">                    TimeUnit.SECONDS.sleep(sleep);</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                    <span class="keyword">if</span> (jedis != <span class="keyword">null</span>) &#123;</div><div class="line">                        jedis.close();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;;</div><div class="line">            list.add(<span class="keyword">new</span> Thread(runnable));</div><div class="line">        &#125;</div><div class="line">        list.forEach(thread -&gt; thread.start());</div><div class="line"></div><div class="line">        Thread.currentThread().join();</div><div class="line">        pool.destroy();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sleep:<span class="number">4</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">03</span>. active: <span class="number">3</span>. idle: <span class="number">0</span></div><div class="line">sleep:<span class="number">4</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">03</span>. active: <span class="number">3</span>. idle: <span class="number">0</span></div><div class="line">sleep:<span class="number">3</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">03</span>. active: <span class="number">3</span>. idle: <span class="number">0</span></div><div class="line">sleep:<span class="number">3</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">06</span>. active: <span class="number">3</span>. idle: <span class="number">0</span></div><div class="line">sleep:<span class="number">3</span>. time:<span class="number">2016</span>-<span class="number">3</span>-<span class="number">4</span> <span class="number">10</span>:<span class="number">04</span>:<span class="number">07</span>. active: <span class="number">2</span>. idle: <span class="number">1</span></div></pre></td></tr></table></figure></p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
+</div>
+
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2016/03/02/nosql/jedis/#comments" class="ds-thread-count comments-count-link" data-thread-key="2016/03/02/nosql/jedis/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
   </nav>
 
 </div>
@@ -1693,11 +1602,11 @@
 		<ul>
 		
 		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>17</sup></a></li>
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>32</sup></a></li>
+			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
 		  
 		
 		  
@@ -1717,7 +1626,7 @@
 		  
 		
 		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>10</sup></a></li>
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
 		  
 		
 		  
