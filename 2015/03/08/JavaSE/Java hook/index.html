@@ -1,598 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>JAVA钩子程序 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="简介触发的时机有：
-
-当所有的非deamon线程(守护线程)结束, 或者调用了Systrem.exit()方法 而导致的程序正常的退出
-JVM收到需要关闭自己的信号（比如SIGINT、SIGTERM等，但像SIGKILL，JVM就没有机会去处理了），也或者发生如系统关闭这种不可阻挡的事件。
-
-对于addShutdownHook中的钩子代码，也是有一些要注意的地方，下面列举几点：
-
-关闭钩子可以注册">
-<meta property="og:type" content="article">
-<meta property="og:title" content="JAVA钩子程序">
-<meta property="og:url" content="http://www.yu66.wang/2015/03/08/JavaSE/Java hook/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="简介触发的时机有：
-
-当所有的非deamon线程(守护线程)结束, 或者调用了Systrem.exit()方法 而导致的程序正常的退出
-JVM收到需要关闭自己的信号（比如SIGINT、SIGTERM等，但像SIGKILL，JVM就没有机会去处理了），也或者发生如系统关闭这种不可阻挡的事件。
-
-对于addShutdownHook中的钩子代码，也是有一些要注意的地方，下面列举几点：
-
-关闭钩子可以注册">
-<meta property="og:updated_time" content="2016-12-17T15:41:02.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JAVA钩子程序">
-<meta name="twitter:description" content="简介触发的时机有：
-
-当所有的非deamon线程(守护线程)结束, 或者调用了Systrem.exit()方法 而导致的程序正常的退出
-JVM收到需要关闭自己的信号（比如SIGINT、SIGTERM等，但像SIGKILL，JVM就没有机会去处理了），也或者发生如系统关闭这种不可阻挡的事件。
-
-对于addShutdownHook中的钩子代码，也是有一些要注意的地方，下面列举几点：
-
-关闭钩子可以注册">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/03/08/JavaSE/Java hook/" title="JAVA钩子程序" itemprop="url">JAVA钩子程序</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-03-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-03-08</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信号触发"><span class="toc-number">2.</span> <span class="toc-text">信号触发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存溢出触发"><span class="toc-number">3.</span> <span class="toc-text">内存溢出触发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正常结束触发"><span class="toc-number">4.</span> <span class="toc-text">正常结束触发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调用exit-触发"><span class="toc-number">5.</span> <span class="toc-text">调用exit()触发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不被触发"><span class="toc-number">6.</span> <span class="toc-text">不被触发</span></a></li></ol>
-		
-		</div>
-		
-		<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>触发的时机有：</p>
-<ol>
-<li>当所有的非deamon线程(守护线程)结束, 或者调用了<code>Systrem.exit()</code>方法 而导致的程序正常的退出</li>
-<li>JVM收到需要关闭自己的信号（比如SIGINT、SIGTERM等，但像SIGKILL，JVM就没有机会去处理了），也或者发生如系统关闭这种不可阻挡的事件。</li>
-</ol>
-<p>对于addShutdownHook中的钩子代码，也是有一些要注意的地方，下面列举几点：</p>
-<ol>
-<li>关闭钩子可以注册多个，在关闭JVM时就会起多个线程来运行钩子。通常来说，一个钩子就足够了，但如果需要启用多个钩子，就需要注意并发带来的问题。</li>
-<li>钩子里也要注意对异常的处理，如果不幸抛出了异常，那么钩子的执行序列就会被终止。</li>
-<li>在钩子运行期间，工作线程也在运行，需要考虑到工作线程是否会对钩子的执行带来影响</li>
-<li>钩子里的代码尽可能简洁，否则当像系统关闭等情景可能钩子来不及运行完JVM就被退出了。</li>
-</ol>
-<h2 id="信号触发"><a href="#信号触发" class="headerlink" title="信号触发"></a>信号触发</h2><p>使信号触发JVM的钩子程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>)&#123;&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"Hook execute!!!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行钩子程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nohup java HookTest &amp;</div></pre></td></tr></table></figure></p>
-<p>关闭程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kill HookTest_PID</div></pre></td></tr></table></figure></p>
-<p>我们可以在nohup程序中看到Hook execute!!!输出</p>
-<p>我从<a href="http://journal.thobe.org/2013/02/jvms-and-kill-signals.html" target="_blank" rel="external">JVMs and kill signals</a>看到一篇博客, 这个上面总结了哪些信号会导致JVM运行Hook<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="function">signal			shutdown	runs hook	exit code	comment</span></div><div class="line"><span class="title">default</span> <span class="params">(<span class="number">15</span>)</span>	yes			yes			143			SIGTERM is the <span class="keyword">default</span> unix kill signal</div><div class="line">0				no			-			-	</div><div class="line">1 <span class="params">(SIGHUP)</span>		yes			yes			129	</div><div class="line">2 <span class="params">(SIGINT)</span>		yes			yes			130			SIGINT is the signal sent on ^C</div><div class="line">3 <span class="params">(SIGQUIT)</span>		no			-			-			触发 JVM dump threads / stack-traces</div><div class="line">4 <span class="params">(SIGILL)</span>		yes			no			134			触发 JVM 输出一个 core dump 文件, 同时abort on trap 6</div><div class="line">5				yes			no			133			Makes the JVM exit with "Trace/BPT trap: 5"</div><div class="line">6 <span class="params">(SIGABRT)</span>		yes			no			134			Makes the JVM exit with "Abort trap: 6"</div><div class="line">7				yes			no			135			Makes the JVM exit with "EMT trap: 7"</div><div class="line">8 <span class="params">(SIGFPE)</span>		yes			no			134			Makes the JVM write a core dump and abort on trap 6</div><div class="line">9 <span class="params">(SIGKILL)</span>		yes			no			137			The JVM is forcibly <span class="title">killed</span> <span class="params">(exits with <span class="string">"Killed: 9"</span>)</span></div><div class="line">10 <span class="params">(SIGBUS)</span>		yes			no			134			Emulates a "Bus Error"</div><div class="line">11 <span class="params">(SIGSEGV)</span>	yes			no			134			Emulates a "Segmentation fault"</div><div class="line">12				yes			no			140			Makes the JVM exit with "Bad system call: 12"</div><div class="line">13				no			-			-			</div><div class="line">14				yes			no			142			Makes the JVM exit with "Alarm clock: 14"</div><div class="line">15 <span class="params">(SIGTERM)</span>	yes			yes			143			This is the <span class="keyword">default</span> unix kill signal</div><div class="line">16				no			-			-			</div><div class="line">17				no			-			145			Stops the <span class="title">application</span> <span class="params">(sends it to the background)</span>, same as ^Z</div><div class="line">18				no			-			146			Stops the <span class="title">application</span> <span class="params">(sends it to the background)</span>, same as ^Z</div><div class="line">19				no			-			-			</div><div class="line">20				no			-			-			</div><div class="line">21				no			-			149			Stops the <span class="title">application</span> <span class="params">(sends it to the background)</span>, same as ^Z</div><div class="line">22				no			-			150			Stops the <span class="title">application</span> <span class="params">(sends it to the background)</span>, same as ^Z</div><div class="line">23				no			-			-			</div><div class="line">24				yes			no			152			Makes the JVM exit with "Cputime limit exceeded: 24"</div><div class="line">25				no			-			-			</div><div class="line">26				yes			no			154			Makes the JVM exit with "Virtual timer expired: 26"</div><div class="line">27				yes			no			155			Makes the JVM exit with "Profiling timer expired: 27"</div><div class="line">28				no			-			-			</div><div class="line">29				no			-			-			</div><div class="line">30				yes			no			158			Makes the JVM exit with "User defined signal 1: 30"</div><div class="line">31				yes			no			134			Makes the JVM exit on Segmentation fault</div></pre></td></tr></table></figure></p>
-<h2 id="内存溢出触发"><a href="#内存溢出触发" class="headerlink" title="内存溢出触发"></a>内存溢出触发</h2><p>测试JVM栈溢出后调用钩子程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line">		exec();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exec</span><span class="params">()</span> </span>&#123;</div><div class="line">		exec();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"Hook execute!!!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行后输出为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java HookTest</div><div class="line">Exception <span class="keyword">in</span> thread <span class="string">"main"</span> java.lang.StackOverflowError</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	...</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">	at HookTest.exec(HookTest.java:9)</div><div class="line">Hook execute!!!</div><div class="line"></div><div class="line">D:\<span class="built_in">test</span>OOM&gt;</div></pre></td></tr></table></figure></p>
-<p>为了测试在更加复杂的环境下, Hook的使用情况, 看下面的测试代码<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.time.LocalDateTime;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, String&gt; cache = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		cache.put(<span class="string">"abc"</span>, <span class="string">"abc"</span>);</div><div class="line"></div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line"></div><div class="line">		<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">1024</span> *<span class="number">1024</span> * <span class="number">1024</span>];</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line">				System.out.println(LocalDateTime.now());</div><div class="line">				System.out.println(<span class="string">"    freeMemory ： "</span> + Runtime.getRuntime().freeMemory());</div><div class="line">				System.out.println(<span class="string">"    maxMemory ： "</span> + Runtime.getRuntime().maxMemory());</div><div class="line">				System.out.println(<span class="string">"    totalMemory ： "</span> + Runtime.getRuntime().totalMemory());</div><div class="line">				System.out.println(<span class="string">"    currentThread name : "</span> + Thread.currentThread().getName());</div><div class="line">				System.out.println(<span class="string">"    cache size : "</span> + cache.size());</div><div class="line">				cache.put(LocalDateTime.now().toString(), LocalDateTime.now().toString());</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					TimeUnit.SECONDS.sleep(<span class="number">1</span>);</div><div class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">					e.printStackTrace();</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行后的输出结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">ζ java HookTest</div><div class="line">2016-07-09T16:12:12.479</div><div class="line">    freeMemory : 155922512</div><div class="line">    maxMemory : 2375024640</div><div class="line">    totalMemory : 160956416</div><div class="line">    currentThread name : Thread-0</div><div class="line">    cache size : 1</div><div class="line">2016-07-09T16:12:13.480</div><div class="line">    freeMemory : 155922512</div><div class="line">    maxMemory : 2375024640</div><div class="line">    totalMemory : 160956416</div><div class="line">    currentThread name : Thread-0</div><div class="line">    cache size : 2</div><div class="line">2016-07-09T16:12:14.480</div><div class="line">    freeMemory : 155922512</div><div class="line">    maxMemory : 2375024640</div><div class="line">    totalMemory : 160956416</div><div class="line">    currentThread name : Thread-0</div><div class="line">    cache size : 3</div><div class="line">2016-07-09T16:12:15.480</div><div class="line">    freeMemory : 155922512</div><div class="line">    maxMemory : 2375024640</div><div class="line">    totalMemory : 160956416</div><div class="line">    currentThread name : Thread-0</div><div class="line">    cache size : 4</div><div class="line">...</div></pre></td></tr></table></figure></p>
-<h2 id="正常结束触发"><a href="#正常结束触发" class="headerlink" title="正常结束触发"></a>正常结束触发</h2><p>测试程序正常结束后也会调用钩子程序<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"Hook execute!!!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>运行结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java HookTest</div><div class="line">Hook execute!!!</div><div class="line"></div><div class="line">D:\<span class="built_in">test</span>OOM&gt;</div></pre></td></tr></table></figure></p>
-<h2 id="调用exit-触发"><a href="#调用exit-触发" class="headerlink" title="调用exit()触发"></a>调用exit()触发</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HookTest</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Hook());</div><div class="line">		System.exit(<span class="number">0</span>);</div><div class="line"></div><div class="line">		System.out.println(<span class="string">"Main over"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Hook</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			System.out.println(<span class="string">"Hook execute!!!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>运行结果为<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">D:\<span class="built_in">test</span>OOM&gt;java HookTest</div><div class="line">Hook execute!!!</div><div class="line"></div><div class="line">D:\<span class="built_in">test</span>OOM&gt;</div></pre></td></tr></table></figure></p>
-<h2 id="不被触发"><a href="#不被触发" class="headerlink" title="不被触发"></a>不被触发</h2><p>再google上找到了一篇这样的文章<a href="https://dzone.com/articles/know-jvm-series-2-shutdown" target="_blank" rel="external">Know the JVM Series: Shutdown Hooks</a>里面介绍了钩子程序在什么情况下不会执行<br>尽管上面列举出了N多触发钩子程序的示例, 但是并不保证这个钩子程序总是能被触发执行的, 例如</p>
-<ul>
-<li>JVM内部发生错误, 可能还没有来得及触发钩子程序, JVM就挂掉了(JVM 发生内部错误, 有没有日志呢?)</li>
-<li>还有上面我们给出的那个信号表, 如果操作系统发送出上面的信号的话, 同样的, JVM没有执行钩子程序就退出了</li>
-<li>还有调用<code>Runime.halt()</code>函数也不会执行钩子程序</li>
-</ul>
-<p>还有一种情况是, 当操作系统向进程发送一个<code>SIGTERM</code>信号之后, 如果进程没有在指定的时间之内关闭, 那么操作系统会强制将该进程杀掉, 如此一来钩子程序也不会得到完整的执行(因为钩子程序可能执行到一半就被操作系统杀死了). 因此不管是这篇文章还是JDK API都推荐不要在钩子程序里写复杂的业务逻辑, 避免产生死锁或者产生长时间的IO操作, 尽可能快地让钩子程序执行完毕.</p>
-<p>在oracle上的<a href="http://docs.oracle.com/javase/1.5.0/docs/guide/lang/hook-design.html" target="_blank" rel="external">Design of the Shutdown Hooks API</a>同样见到这样一句话,<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Will shutdown hooks be run <span class="keyword">if</span> the VM crashes?</div><div class="line">	If the VM crashes due to an error <span class="keyword">in</span> native code <span class="keyword">then</span> no guarantee can be made about whether or not the hooks will be run.</div></pre></td></tr></table></figure></p>
-<p>哎,, 怎么着才能监控JVM挂掉的信息呢？</p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java/">Java</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/03/08/JavaSE/Java hook/" data-title="JAVA钩子程序 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/03/08/nosql/MongoDB客户端/" title="MongoDB客户端">
-  <strong>上一篇：</strong><br/>
-  <span>
-  MongoDB客户端</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2014/09/26/JavaSE/Java网络 BIO server/"  title="java BIO服务器">
- <strong>下一篇：</strong><br/> 
- <span>java BIO服务器
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/03/08/JavaSE/Java hook/" data-title="JAVA钩子程序" data-url="http://www.yu66.wang/2015/03/08/JavaSE/Java hook/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#信号触发"><span class="toc-number">2.</span> <span class="toc-text">信号触发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存溢出触发"><span class="toc-number">3.</span> <span class="toc-text">内存溢出触发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正常结束触发"><span class="toc-number">4.</span> <span class="toc-text">正常结束触发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调用exit-触发"><span class="toc-number">5.</span> <span class="toc-text">调用exit()触发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不被触发"><span class="toc-number">6.</span> <span class="toc-text">不被触发</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

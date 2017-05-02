@@ -1,561 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>ASM Core(5) 工具 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="ASM通过org.objectweb.asm.util对ClassVisitor, ClassReader, ClassWriter提供非常多有帮助的类，通过这些类可以帮助开发者简化字节码的操作过程.
-Type在前面的文章中我们看到ASM API暴露了存储在字节码中的类型信息等等, 但是上文中的信息我们看到了可读性比较差, 因此ASM提供了Type这个工具类,让我们可以像源码中那样看到可读性更高的">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ASM Core(5) 工具">
-<meta property="og:url" content="http://www.yu66.wang/2016/01/14/JavaLibrary/ASM Core(5) 工具/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="ASM通过org.objectweb.asm.util对ClassVisitor, ClassReader, ClassWriter提供非常多有帮助的类，通过这些类可以帮助开发者简化字节码的操作过程.
-Type在前面的文章中我们看到ASM API暴露了存储在字节码中的类型信息等等, 但是上文中的信息我们看到了可读性比较差, 因此ASM提供了Type这个工具类,让我们可以像源码中那样看到可读性更高的">
-<meta property="og:updated_time" content="2016-12-17T15:41:02.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ASM Core(5) 工具">
-<meta name="twitter:description" content="ASM通过org.objectweb.asm.util对ClassVisitor, ClassReader, ClassWriter提供非常多有帮助的类，通过这些类可以帮助开发者简化字节码的操作过程.
-Type在前面的文章中我们看到ASM API暴露了存储在字节码中的类型信息等等, 但是上文中的信息我们看到了可读性比较差, 因此ASM提供了Type这个工具类,让我们可以像源码中那样看到可读性更高的">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/01/14/JavaLibrary/ASM Core(5) 工具/" title="ASM Core(5) 工具" itemprop="url">ASM Core(5) 工具</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-01-13T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-14</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Type"><span class="toc-number">1.</span> <span class="toc-text">Type</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TraceClassVisitor"><span class="toc-number">2.</span> <span class="toc-text">TraceClassVisitor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CheckClassAdapter"><span class="toc-number">3.</span> <span class="toc-text">CheckClassAdapter</span></a></li></ol>
-		
-		</div>
-		
-		<p>ASM通过<code>org.objectweb.asm.util</code>对<code>ClassVisitor, ClassReader, ClassWriter</code>提供非常多有帮助的类，通过这些类可以帮助开发者简化字节码的操作过程.</p>
-<h2 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h2><p>在前面的文章中我们看到ASM API暴露了存储在字节码中的类型信息等等, 但是上文中的信息我们看到了可读性比较差, 因此ASM提供了<code>Type</code>这个工具类,让我们可以像源码中那样看到可读性更高的类型信息.</p>
-<p>每个<code>Type</code>对象都代表着一个java类型, 我们可以通过类型描述符或者<code>Class</code>对象中构建出一个<code>Type</code>对象. 另外<code>Type</code>中还包含一些静态成员属性用于表示原生类型, 例如<code>e Type.INT_TYPE</code>就表示int类型.</p>
-<p><code>getInternalName</code>方法用于获取类型的全限定名, 例如<code>Type.getType(String.class).getInternalName()</code>我们会得到一个<code>&quot;java/lang/String&quot;.</code>值, 需要注意的是这个方法只能用在class或者interface类型上.</p>
-<p><code>getDescriptor</code>方法返回一个类型的描述符. 例如<code>&quot;Ljava/lang/String;&quot;</code>代表一个字符串类型, 但是我们可以在代码中使用<code>Type.getType(String.class).getDescriptor()</code>替代这种写法, 来换取更高的可读性. </p>
-<p><code>Type</code>对象还可以表示一个方法类型. 方法类型的<code>Type</code>对象可以通过方法描述符或者<code>Method</code>对象构建出来. 同样的除了我们可以使用<code>getDescriptor</code>方法外,还可以使用<code>getArgumentTypes</code>和<code>getReturnType</code>来获取方法的参数或者返回值类型. 例如<code>Type.getArgumentTypes(&quot;(I)V&quot;)</code>和<code>Type.getReturnType(&quot;(I)V&quot;)</code>来获得更好的可读性.</p>
-<h2 id="TraceClassVisitor"><a href="#TraceClassVisitor" class="headerlink" title="TraceClassVisitor"></a>TraceClassVisitor</h2><p>我们使用<code>ClassWriter</code>生成的新的class字节码是一个byte数组, 这种东西根本不具有可读性,因此ASM为我们提供了<code>TraceClassVisitor</code>, 它同样是继承自<code>ClassVisitor</code>, 他会输出一个文本格式的可读的新的类出来. 下面的例子中我们同时使用了<code>ClassWriter</code>和<code>TraceClassVisitor</code>, <code>TraceClassVisitor</code>代理了<code>ClassWriter</code>的全部方法调用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">TraceClassVisitor cv = <span class="keyword">new</span> TraceClassVisitor(cw, printWriter);</div><div class="line">cv.visit(...);</div><div class="line">...</div><div class="line">cv.visitEnd();</div><div class="line"><span class="keyword">byte</span> b[] = cw.toByteArray();</div></pre></td></tr></table></figure></p>
-<h2 id="CheckClassAdapter"><a href="#CheckClassAdapter" class="headerlink" title="CheckClassAdapter"></a>CheckClassAdapter</h2><p><code>ClassWriter</code>并不会检查生成的方法在调用的时候是顺序且参数是否都是正确的. 因此当JVM加载类进行验证的时候可能会抛出异常. 因此当我们秉持着错误越早发现越好, ASM为我们提供了<code>CheckClassAdapter</code>, 这个工具类会为我们检查上述问题. 同样的<code>CheckClassAdapter</code>继承自<code>ClassWriter.</code>, 它可以代理<code>TraceClassVisitor</code>或者<code>ClassWriter</code>的全部方法. 下面我们给出一个示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">TraceClassVisitor tcv = <span class="keyword">new</span> TraceClassVisitor(cw, printWriter);</div><div class="line">CheckClassAdapter cv = <span class="keyword">new</span> CheckClassAdapter(tcv);</div><div class="line">cv.visit(...);</div><div class="line">...</div><div class="line">cv.visitEnd();</div><div class="line"><span class="keyword">byte</span> b[] = cw.toByteArray();</div></pre></td></tr></table></figure></p>
-<p>注意, 我们要确定visitor之间的顺序关系, 如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">CheckClassAdapter cca = <span class="keyword">new</span> CheckClassAdapter(cw);</div><div class="line">TraceClassVisitor cv = <span class="keyword">new</span> TraceClassVisitor(cca, printWriter);</div></pre></td></tr></table></figure></p>
-<p>上面的例子是先进行文本输出然后再进行方法检查, 这是因为相当于<code>TraceClassVisitor</code>最终代理了所有的方法调用</p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/asm/">asm</a>
-  </div>
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/01/14/JavaLibrary/ASM Core(5) 工具/" data-title="ASM Core(5) 工具 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/01/19/JavaLibrary/OWNER 初探/" title="OWNER 初探">
-  <strong>上一篇：</strong><br/>
-  <span>
-  OWNER 初探</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/01/13/JavaLibrary/ASM Core(3) Methods/"  title="ASM Core(3) Methods">
- <strong>下一篇：</strong><br/> 
- <span>ASM Core(3) Methods
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/01/14/JavaLibrary/ASM Core(5) 工具/" data-title="ASM Core(5) 工具" data-url="http://www.yu66.wang/2016/01/14/JavaLibrary/ASM Core(5) 工具/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Type"><span class="toc-number">1.</span> <span class="toc-text">Type</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TraceClassVisitor"><span class="toc-number">2.</span> <span class="toc-text">TraceClassVisitor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CheckClassAdapter"><span class="toc-number">3.</span> <span class="toc-text">CheckClassAdapter</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

@@ -1,592 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Mybatis SqlSession | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="一直在使用Mybatis, 但是一直对Mybatis中的SqlSession的实际操作过程没有深入了解过, 今天在项目中引用了Mybatis-Guice模块, 很好奇Mybatis-Guice是如何做的SqlSeesion自动资源释放,因此今天就找时间好好研究一下SqlSession.
-首先看一下Mybatis3官方文档中对SqlSessionFactoryBuilder, SqlSessionF">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Mybatis SqlSession">
-<meta property="og:url" content="http://www.yu66.wang/2016/04/12/JavaLibrary/Mybatis SqlSession/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="一直在使用Mybatis, 但是一直对Mybatis中的SqlSession的实际操作过程没有深入了解过, 今天在项目中引用了Mybatis-Guice模块, 很好奇Mybatis-Guice是如何做的SqlSeesion自动资源释放,因此今天就找时间好好研究一下SqlSession.
-首先看一下Mybatis3官方文档中对SqlSessionFactoryBuilder, SqlSessionF">
-<meta property="og:updated_time" content="2016-12-17T15:41:02.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mybatis SqlSession">
-<meta name="twitter:description" content="一直在使用Mybatis, 但是一直对Mybatis中的SqlSession的实际操作过程没有深入了解过, 今天在项目中引用了Mybatis-Guice模块, 很好奇Mybatis-Guice是如何做的SqlSeesion自动资源释放,因此今天就找时间好好研究一下SqlSession.
-首先看一下Mybatis3官方文档中对SqlSessionFactoryBuilder, SqlSessionF">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/04/12/JavaLibrary/Mybatis SqlSession/" title="Mybatis SqlSession" itemprop="url">Mybatis SqlSession</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-04-11T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-04-12</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用示例"><span class="toc-number">1.</span> <span class="toc-text">使用示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SqlSession-源码"><span class="toc-number">2.</span> <span class="toc-text">SqlSession 源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常测试"><span class="toc-number">3.</span> <span class="toc-text">异常测试</span></a></li></ol>
-		
-		</div>
-		
-		<p>一直在使用Mybatis, 但是一直对Mybatis中的SqlSession的实际操作过程没有深入了解过, 今天在项目中引用了Mybatis-Guice模块, 很好奇Mybatis-Guice是如何做的SqlSeesion自动资源释放,因此今天就找时间好好研究一下<code>SqlSession</code>.</p>
-<p>首先看一下<a href="http://www.mybatis.org/mybatis-3/zh/getting-started.html" target="_blank" rel="external">Mybatis3官方文档</a>中对<code>SqlSessionFactoryBuilder</code>, <code>SqlSessionFactory</code>和<code>SqlSession</code>的描述：</p>
-<ul>
-<li><code>SqlSessionFactoryBuilder</code> : 用于构建<code>SqlSessionFactory</code>. 我们可以使用它来构建一个单数据源或者多数据源的应用程序.</li>
-<li><code>SqlSessionFactory</code> : 创建<code>SqlSession</code>, 该实例的生命周期应该是整个应用程序.</li>
-<li><code>SqlSession</code> : 包含了面向数据库执行 SQL 命令所需的所有方法, 但它不是线程安全的. 每当向数据库发起一个请求时都应该打开一个<code>SqlSession</code>,然后操作完之后再<code>finally</code>中关闭它.</li>
-</ul>
-<h2 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h2><p><code>SqlSessionFactoryBuilder</code>是通过xml配置文件或者<code>Configuration</code>建构出<code>SqlSessionFactory</code>, 然后<code>SqlSessionFactory</code>通过<code>openSession()</code>来获得一个<code>SqlSession</code>. <code>SqlSession</code>接口实现自<code>Closeable</code>接口. 按照官网所说, 我们应该这样使用<code>SqlSession</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">SqlSession session = sqlSessionFactory.openSession();</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">  <span class="comment">// do work</span></div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>但其实我们可以使用Java7提供的AutoClose语法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> (SqlSession sqlSession = sqlSessionFactory.openSession()) &#123;</div><div class="line">	<span class="comment">// do work</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这样代码就精简了很多.</p>
-<h2 id="SqlSession-源码"><a href="#SqlSession-源码" class="headerlink" title="SqlSession 源码"></a>SqlSession 源码</h2><p><code>SqlSession</code>接口中定义了大量的我们操作SQL提供的接口</p>
-<ul>
-<li><t> T selectOne(String statement);</t></li>
-<li><e> List<e> selectList(String statement);</e></e></li>
-<li><p>void select(String statement, ResultHandler handler);<br>等等. 我们看一下它的实现类<code>DefaultSqlSession</code>的实现:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Configuration configuration;</div><div class="line"><span class="keyword">private</span> Executor executor;</div><div class="line"><span class="keyword">private</span> <span class="keyword">boolean</span> dirty;</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>Configuration</code> 是我们通过<code>SqlSessionFactoryBuilder</code>构建出<code>SqlSessionFactory</code>时使用的配置</p>
-</li>
-<li><code>Executor</code> 是真正的sql执行的部分</li>
-</ul>
-<p>我们在<code>DefaultSqlSessionFactory</code>看一下<code>SqlSession</code>的真实创建过程<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> SqlSession <span class="title">openSessionFromDataSource</span><span class="params">(ExecutorType execType, TransactionIsolationLevel level, <span class="keyword">boolean</span> autoCommit)</span> </span>&#123;</div><div class="line">  Transaction tx = <span class="keyword">null</span>;</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">    <span class="keyword">final</span> Environment environment = configuration.getEnvironment();</div><div class="line">    <span class="keyword">final</span> TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</div><div class="line">    tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);</div><div class="line">    <span class="keyword">final</span> Executor executor = configuration.newExecutor(tx, execType, autoCommit);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DefaultSqlSession(configuration, executor);</div><div class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">    closeTransaction(tx); <span class="comment">// may have fetched a connection so lets call close()</span></div><div class="line">    <span class="keyword">throw</span> ExceptionFactory.wrapException(<span class="string">"Error opening session.  Cause: "</span> + e, e);</div><div class="line">  &#125; <span class="keyword">finally</span> &#123;</div><div class="line">    ErrorContext.instance().reset();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在<code>final Executor executor = configuration.newExecutor(tx, execType, autoCommit);</code>会根据execType创建出不同类型的<code>Executor</code></p>
-<ul>
-<li>BatchExecutor</li>
-<li>ReuseExecutor</li>
-<li>SimpleExecutor</li>
-<li>CachingExecutor</li>
-</ul>
-<p>下来我们看一下<code>selectList()</code>实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> &lt;E&gt; <span class="function">List&lt;E&gt; <span class="title">selectList</span><span class="params">(String statement, Object parameter, RowBounds rowBounds)</span> </span>&#123;</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">    MappedStatement ms = configuration.getMappedStatement(statement);</div><div class="line">    List&lt;E&gt; result = executor.&lt;E&gt;query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">    <span class="keyword">throw</span> ExceptionFactory.wrapException(<span class="string">"Error querying database.  Cause: "</span> + e, e);</div><div class="line">  &#125; <span class="keyword">finally</span> &#123;</div><div class="line">    ErrorContext.instance().reset();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>MappedStatement类在Mybatis框架中用于表示XML文件中一个sql语句节点,即一个<code>&lt;select /&gt;、&lt;update /&gt;</code>或者<code>&lt;insert /&gt;</code>标签.Mybatis框架在初始化阶段会对XML配置文件进行读取,将其中的sql语句节点对象化为一个个<code>MappedStatement</code>对象.<br>从配置中拿到一个<code>MappedStatement</code>然后交给executor去真正的执行, 真正的有query逻辑的只有<code>BaseExecutor</code>和<code>CachingExecutor</code>, 为了简单起见,我们看一下<code>BaseExecutor</code>. 由于中间的过程还涉及到了Mybatis的本地存储, 我们也跳过这部分.<br><code>BaseExecutor#query()</code> -&gt; <code>BaseExecutor#queryFromDatabase()</code>-&gt; <code>SimpleExecutor#doQuery()</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> &lt;E&gt; <span class="function">List&lt;E&gt; <span class="title">doQuery</span><span class="params">(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql)</span> <span class="keyword">throws</span> SQLException </span>&#123;</div><div class="line">    Statement stmt = <span class="keyword">null</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      Configuration configuration = ms.getConfiguration();</div><div class="line">	  <span class="comment">// StatementHandler用于管理java.sql.Statement, 执行真正的与数据库操作</span></div><div class="line">      StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler, boundSql);</div><div class="line">	  <span class="comment">// 通过StatementHandler实例化出一个Statement</span></div><div class="line">      stmt = prepareStatement(handler, ms.getStatementLog());</div><div class="line">	  <span class="comment">// Statement开始执行查询逻辑</span></div><div class="line">      <span class="keyword">return</span> handler.&lt;E&gt;query(stmt, resultHandler);</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">      closeStatement(stmt);</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-</blockquote>
-<p>我们看一下<code>SimpleStatementHandler</code>里的查询逻辑<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> &lt;E&gt; <span class="function">List&lt;E&gt; <span class="title">query</span><span class="params">(Statement statement, ResultHandler resultHandler)</span> <span class="keyword">throws</span> SQLException </span>&#123;</div><div class="line">   String sql = boundSql.getSql();</div><div class="line">   statement.execute(sql);</div><div class="line">   <span class="keyword">return</span> resultSetHandler.&lt;E&gt;handleResultSets(statement);</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p><code>SqlSource</code>接口只有一个<code>getBoundSql(Object parameterObject)</code>方法,返回一个<code>BoundSql</code>对象.一个<code>BoundSql</code>对象,代表了一次sql语句的实际执行,而<code>SqlSource</code>对象的责任,就是根据传入的参数对象,动态计算出这个<code>BoundSql</code>,也就是说Mapper文件中的<if>节点的计算,是由SqlSource对象完成的.<code>SqlSource</code>最常用的实现类是<code>DynamicSqlSource</code></if></p>
-</blockquote>
-<p>那么<code>close()</code>执行的是什么操作呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">try</span> &#123;</div><div class="line">    executor.close(isCommitOrRollbackRequired(<span class="keyword">false</span>));</div><div class="line">    dirty = <span class="keyword">false</span>;</div><div class="line">  &#125; <span class="keyword">finally</span> &#123;</div><div class="line">    ErrorContext.instance().reset();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>我们还是看<code>BaseExecutor</code>的<code>close()</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(<span class="keyword">boolean</span> forceRollback)</span> </span>&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        rollback(forceRollback);</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">		<span class="comment">// 真正关闭资源</span></div><div class="line">        <span class="keyword">if</span> (transaction != <span class="keyword">null</span>) transaction.close();</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">catch</span> (SQLException e) &#123;</div><div class="line">      log.debug(<span class="string">"Unexpected exception on closing transaction.  Cause: "</span> + e);</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">      transaction = <span class="keyword">null</span>;</div><div class="line">      deferredLoads = <span class="keyword">null</span>;</div><div class="line">      localCache = <span class="keyword">null</span>;</div><div class="line">      localOutputParameterCache = <span class="keyword">null</span>;</div><div class="line">      closed = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-<p>我们看一下<code>JdbcTransaction</code>的<code>close()</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</div><div class="line">  <span class="keyword">if</span> (connection != <span class="keyword">null</span>) &#123;</div><div class="line">    resetAutoCommit();</div><div class="line">    <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</div><div class="line">      log.debug(<span class="string">"Closing JDBC Connection ["</span> + connection + <span class="string">"]"</span>);</div><div class="line">    &#125;</div><div class="line">    connection.close();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<ul>
-<li><code>Transaction</code> : 包装了一个数据库连接. 处理整个网络连接过程中的所有操作, 例如creation, preparation, commit/rollback and close. </li>
-</ul>
-<h2 id="异常测试"><a href="#异常测试" class="headerlink" title="异常测试"></a>异常测试</h2><p>如果我们不关闭SqlSession会有什么情况发生呢?<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"><span class="keyword">import</span> java.sql.SQLException;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.Date;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Select;</div><div class="line"><span class="keyword">import</span> org.apache.ibatis.io.Resources;</div><div class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSession;</div><div class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSessionFactory;</div><div class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSessionFactoryBuilder;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestMybatis</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        String resource = <span class="string">"mybatis-config.xml"</span>;</div><div class="line">        InputStream inputStream = Resources.getResourceAsStream(resource);</div><div class="line">        SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</div><div class="line">        List&lt;SqlSession&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">            SqlSession session = sqlSessionFactory.openSession();</div><div class="line">            QueryMapper mapper = session.getMapper(QueryMapper.class);</div><div class="line">            list.add(session);</div><div class="line">            System.out.println(i + <span class="string">"  :  "</span> + mapper.select() + <span class="string">" - "</span> + <span class="keyword">new</span> Date().toLocaleString());</div><div class="line">        &#125;</div><div class="line">        list.forEach(session -&gt; &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                System.out.println(session.getConnection().isClosed());</div><div class="line">            &#125; <span class="keyword">catch</span> (SQLException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">QueryMapper</span> </span>&#123;</div><div class="line">    <span class="meta">@Select</span>(<span class="string">"select name from user"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">select</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>下面是我们的配置文件<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span> <span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE configuration</span></div><div class="line">        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"</div><div class="line">        "http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;</div><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">"development"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">"development"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">"JDBC"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">"POOLED"</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driver"</span> <span class="attr">value</span>=<span class="string">"com.mysql.jdbc.Driver"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"jdbc:mysql://localhost:3306/test?autoReconnect=true"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"root"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"root"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"poolMaximumActiveConnections"</span> <span class="attr">value</span>=<span class="string">"3"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"poolMaximumIdleConnections"</span> <span class="attr">value</span>=<span class="string">"1"</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"poolTimeToWait"</span> <span class="attr">value</span>=<span class="string">"5"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">class</span>=<span class="string">"QueryMapper"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>我们配置了最大可用连接数为3, 最大的闲置连接为1. 结果为<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">37</span>:<span class="number">28</span></div><div class="line"><span class="number">2</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">37</span>:<span class="number">28</span></div><div class="line"><span class="number">3</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">37</span>:<span class="number">28</span></div><div class="line"><span class="number">4</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">37</span>:<span class="number">48</span></div><div class="line"><span class="number">5</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">37</span>:<span class="number">48</span></div><div class="line"><span class="number">6</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">37</span>:<span class="number">48</span></div><div class="line"><span class="number">7</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">38</span>:<span class="number">08</span></div><div class="line"><span class="number">8</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">38</span>:<span class="number">08</span></div><div class="line"><span class="number">9</span>  :  [<span class="number">123</span>] - <span class="number">2016</span>-<span class="number">4</span>-<span class="number">12</span> <span class="number">18</span>:<span class="number">38</span>:<span class="number">08</span></div><div class="line">java.sql.SQLException: Error accessing PooledConnection. Connection is invalid.</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.checkConnection(PooledConnection.java:<span class="number">254</span>)</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.invoke(PooledConnection.java:<span class="number">243</span>)</div><div class="line">	at com.sun.proxy.$Proxy3.isClosed(Unknown Source)</div><div class="line">	at TestMybatis.lambda$main$<span class="number">0</span>(TestMybatis.java:<span class="number">29</span>)</div><div class="line">	at java.util.ArrayList.forEach(ArrayList.java:<span class="number">1249</span>)</div><div class="line">	at TestMybatis.main(TestMybatis.java:<span class="number">27</span>)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:<span class="number">498</span>)</div><div class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:<span class="number">144</span>)</div><div class="line">java.sql.SQLException: Error accessing PooledConnection. Connection is invalid.</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.checkConnection(PooledConnection.java:<span class="number">254</span>)</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.invoke(PooledConnection.java:<span class="number">243</span>)</div><div class="line">	at com.sun.proxy.$Proxy3.isClosed(Unknown Source)</div><div class="line">	at TestMybatis.lambda$main$<span class="number">0</span>(TestMybatis.java:<span class="number">29</span>)</div><div class="line">	at java.util.ArrayList.forEach(ArrayList.java:<span class="number">1249</span>)</div><div class="line">	at TestMybatis.main(TestMybatis.java:<span class="number">27</span>)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:<span class="number">498</span>)</div><div class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:<span class="number">144</span>)</div><div class="line">java.sql.SQLException: Error accessing PooledConnection. Connection is invalid.</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.checkConnection(PooledConnection.java:<span class="number">254</span>)</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.invoke(PooledConnection.java:<span class="number">243</span>)</div><div class="line">	at com.sun.proxy.$Proxy3.isClosed(Unknown Source)</div><div class="line">	at TestMybatis.lambda$main$<span class="number">0</span>(TestMybatis.java:<span class="number">29</span>)</div><div class="line">	at java.util.ArrayList.forEach(ArrayList.java:<span class="number">1249</span>)</div><div class="line">	at TestMybatis.main(TestMybatis.java:<span class="number">27</span>)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:<span class="number">498</span>)</div><div class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:<span class="number">144</span>)</div><div class="line">java.sql.SQLException: Error accessing PooledConnection. Connection is invalid.</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.checkConnection(PooledConnection.java:<span class="number">254</span>)</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.invoke(PooledConnection.java:<span class="number">243</span>)</div><div class="line">	at com.sun.proxy.$Proxy3.isClosed(Unknown Source)</div><div class="line">	at TestMybatis.lambda$main$<span class="number">0</span>(TestMybatis.java:<span class="number">29</span>)</div><div class="line">	at java.util.ArrayList.forEach(ArrayList.java:<span class="number">1249</span>)</div><div class="line">	at TestMybatis.main(TestMybatis.java:<span class="number">27</span>)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:<span class="number">498</span>)</div><div class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:<span class="number">144</span>)</div><div class="line">java.sql.SQLException: Error accessing PooledConnection. Connection is invalid.</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.checkConnection(PooledConnection.java:<span class="number">254</span>)</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.invoke(PooledConnection.java:<span class="number">243</span>)</div><div class="line">	at com.sun.proxy.$Proxy3.isClosed(Unknown Source)</div><div class="line">	at TestMybatis.lambda$main$<span class="number">0</span>(TestMybatis.java:<span class="number">29</span>)</div><div class="line">	at java.util.ArrayList.forEach(ArrayList.java:<span class="number">1249</span>)</div><div class="line">	at TestMybatis.main(TestMybatis.java:<span class="number">27</span>)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:<span class="number">498</span>)</div><div class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:<span class="number">144</span>)</div><div class="line">java.sql.SQLException: Error accessing PooledConnection. Connection is invalid.</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.checkConnection(PooledConnection.java:<span class="number">254</span>)</div><div class="line">	at org.apache.ibatis.datasource.pooled.PooledConnection.invoke(PooledConnection.java:<span class="number">243</span>)</div><div class="line">	at com.sun.proxy.$Proxy3.isClosed(Unknown Source)</div><div class="line">	at TestMybatis.lambda$main$<span class="number">0</span>(TestMybatis.java:<span class="number">29</span>)</div><div class="line">	at java.util.ArrayList.forEach(ArrayList.java:<span class="number">1249</span>)</div><div class="line">	at TestMybatis.main(TestMybatis.java:<span class="number">27</span>)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:<span class="number">498</span>)</div><div class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:<span class="number">144</span>)</div><div class="line"><span class="keyword">false</span></div><div class="line"><span class="keyword">false</span></div><div class="line"><span class="keyword">false</span></div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/04/12/JavaLibrary/Mybatis SqlSession/" data-title="Mybatis SqlSession | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/04/20/JavaLibrary/JProfiler nowait连接/" title="JProfiler nowait连接">
-  <strong>上一篇：</strong><br/>
-  <span>
-  JProfiler nowait连接</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/04/06/JavaSE/IP地址在网卡上的表现/"  title="IP地址在网卡上的表现">
- <strong>下一篇：</strong><br/> 
- <span>IP地址在网卡上的表现
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/04/12/JavaLibrary/Mybatis SqlSession/" data-title="Mybatis SqlSession" data-url="http://www.yu66.wang/2016/04/12/JavaLibrary/Mybatis SqlSession/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用示例"><span class="toc-number">1.</span> <span class="toc-text">使用示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SqlSession-源码"><span class="toc-number">2.</span> <span class="toc-text">SqlSession 源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常测试"><span class="toc-number">3.</span> <span class="toc-text">异常测试</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

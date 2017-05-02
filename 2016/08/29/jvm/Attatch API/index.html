@@ -1,569 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>HotSpot Dynamic Attach Mechanism 简析 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="在 在VirtualMachine javadoc中给了我们一个示范用例12345678910111213141516// attach to target VMVirtualMachine vm = VirtualMachine.attach(&quot;2177&quot;);// get system properties in target VMProperties props = vm.getSystemP">
-<meta property="og:type" content="article">
-<meta property="og:title" content="HotSpot Dynamic Attach Mechanism 简析">
-<meta property="og:url" content="http://www.yu66.wang/2016/08/29/jvm/Attatch API/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="在 在VirtualMachine javadoc中给了我们一个示范用例12345678910111213141516// attach to target VMVirtualMachine vm = VirtualMachine.attach(&quot;2177&quot;);// get system properties in target VMProperties props = vm.getSystemP">
-<meta property="og:updated_time" content="2016-12-17T15:41:03.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HotSpot Dynamic Attach Mechanism 简析">
-<meta name="twitter:description" content="在 在VirtualMachine javadoc中给了我们一个示范用例12345678910111213141516// attach to target VMVirtualMachine vm = VirtualMachine.attach(&quot;2177&quot;);// get system properties in target VMProperties props = vm.getSystemP">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/08/29/jvm/Attatch API/" title="HotSpot Dynamic Attach Mechanism 简析" itemprop="url">HotSpot Dynamic Attach Mechanism 简析</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-08-28T16:00:00.000Z" itemprop="datePublished"> 发表于 2016-08-29</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			
-		
-		</div>
-		
-		<p>在 <code>在VirtualMachine</code> javadoc中给了我们一个示范用例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// attach to target VM</span></div><div class="line">VirtualMachine vm = VirtualMachine.attach(<span class="string">"2177"</span>);</div><div class="line"></div><div class="line"><span class="comment">// get system properties in target VM</span></div><div class="line">Properties props = vm.getSystemProperties();</div><div class="line"></div><div class="line"><span class="comment">// construct path to management agent</span></div><div class="line">String home = props.getProperty(<span class="string">"java.home"</span>);</div><div class="line">String agent = home + File.separator + <span class="string">"lib"</span> + File.separator</div><div class="line">    + <span class="string">"management-agent.jar"</span>;</div><div class="line"></div><div class="line"><span class="comment">// load agent into target VM</span></div><div class="line">vm.loadAgent(agent, <span class="string">"com.sun.management.jmxremote.port=5000"</span>);</div><div class="line"></div><div class="line"><span class="comment">// detach</span></div><div class="line">vm.detach();</div></pre></td></tr></table></figure></p>
-<p>如果要引用 <code>在VirtualMachine</code>的话, 我们需要在classpath上添加tools.jar文件。注意在Windows和Linux上的tools.jar文件实现是不同的, 需要在不同的平台上依赖不同的文件.</p>
-<p>Attach API 相关实现可以在openjdk中找到</p>
-<ul>
-<li><code>VirtualMachine</code> : <code>openjdk\jdk\src\share\classes\com\sun\tools\attach</code></li>
-<li><code>AttachProvider</code> : <code>openjdk\jdk\src\share\classes\com\sun\tools\attach\spi</code></li>
-<li><code>HotSpotAttachProvider</code> : <code>openjdk\jdk\src\share\classes\sun\tools\attach</code></li>
-<li><code>HotSpotVirtualMachine</code> : <code>openjdk\jdk\src\share\classes\sun\tools\attach</code></li>
-<li><code>LinuxVirtualMachine</code> : <code>openjdk\jdk\src\solaris\classes\sun\tools\attach</code></li>
-<li><code>LinuxAttachProvider</code> : <code>openjdk\jdk\src\solaris\classes\sun\tools\attach</code></li>
-<li><code>jvmstat</code> : <code>openjdk\jdk\src\share\classes\sun\jvmstat</code></li>
-</ul>
-<p>Attach API 主要就是依赖上面的几个文件实现的</p>
-<p>从<a href="http://openjdk.java.net/groups/hotspot/docs/Serviceability.html#battach" target="_blank" rel="external">HotSpot Dynamic Attach Mechanism</a>这篇介绍中我们可以看到Attach API的实现概要.</p>
-<p>HotSpot Dynamic Attach Mechanism这个工具是用于Attach到另一个运行Java代码的进程, 目标Java进程会开启一个<code>JVM TI</code>代理或者一个<code>java.lang.instrument</code>代理.</p>
-<p>而Sun公司(Hotspot VM)对其还有一些额外的功能实现(<code>HotSpotVirtualMachine</code>中实现)</p>
-<ul>
-<li>dump堆内存</li>
-<li>显示加载进目标虚拟机的class的实例数量. 可以选择是全部的实例数量还是仅仅显示存活下来的实例数量.</li>
-</ul>
-<p>当JVM第一次收到attach请求的时候, 它会创建一个<code>attach listener</code>线程. </p>
-<p>在不同的系统上, 请求的发送方式也不一样(参考<code>LinuxVirtualMachine</code>). 例如在Linux或者Solaris系统上, attach 客户端会创建一个<code>.attach_pid(pid)</code>文件, 然后向目标虚拟机发送一个<code>SIGQUIT</code>信号. 目标虚拟机会根据<code>.attach_pid(pid)</code>文件与否运行<code>attach listener</code>线程. </p>
-<p>在Linux系统上客户端是通过socket与<code>attach listener</code>线程进行交互的.</p>
-<p>当attach成功之后, 会在<code>/tmp</code>目录下生成一个<code>.java_pid&lt;pid&gt;</code>的文件生成. 这个文件的生成目录是不可修改的, 而且一旦文件生成之后, 不可以删掉再尝试重新生成.</p>
-<p>我们看一下<code>LinuxVirtualMachine</code> 的attach 过程<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line">LinuxVirtualMachine(AttachProvider provider, String vmid)</div><div class="line">      <span class="keyword">throws</span> AttachNotSupportedException, IOException</div><div class="line">  &#123;</div><div class="line">      <span class="keyword">super</span>(provider, vmid);</div><div class="line"></div><div class="line">      <span class="comment">// This provider only understands pids</span></div><div class="line">      <span class="keyword">int</span> pid;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          pid = Integer.parseInt(vmid);</div><div class="line">      &#125; <span class="keyword">catch</span> (NumberFormatException x) &#123;</div><div class="line">          <span class="keyword">throw</span> <span class="keyword">new</span> AttachNotSupportedException(<span class="string">"Invalid process identifier"</span>);</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="comment">// 尝试搜索 socket file. 如果找不到的话就向目标虚拟机发送QUIT信号, 让目标虚拟机开启 attach mechanism.</span></div><div class="line">      <span class="comment">// 然后继续尝试搜索  socket file.</span></div><div class="line">      <span class="comment">// target VM会创建这个文件, 这个是因为Unix domain socket本身的实现机制需要去创建一个文件, 通过这个文件来进行IPC</span></div><div class="line">      <span class="comment">// Find the  socket file. If not found then we attempt to start the</span></div><div class="line">      <span class="comment">// attach mechanism in the target VM by sending it a QUIT signal.</span></div><div class="line">      <span class="comment">// Then we attempt to find the socket file again.</span></div><div class="line">      path = findSocketFile(pid);</div><div class="line">      <span class="keyword">if</span> (path == <span class="keyword">null</span>) &#123;</div><div class="line">          <span class="comment">// 创建 .attach_pid&lt;pid&gt; 文件, 触发Attach Listener线程的创建,因为SIGQUIT信号不是只有这里发送，</span></div><div class="line">          <span class="comment">// 通过这个文件来告诉target VM，有attach请求过来了。</span></div><div class="line">          File f = createAttachFile(pid);</div><div class="line">          <span class="keyword">try</span> &#123;</div><div class="line">              <span class="comment">// On LinuxThreads each thread is a process and we don't have the</span></div><div class="line">              <span class="comment">// pid of the VMThread which has SIGQUIT unblocked. To workaround</span></div><div class="line">              <span class="comment">// this we get the pid of the "manager thread" that is created</span></div><div class="line">              <span class="comment">// by the first call to pthread_create. This is parent of all</span></div><div class="line">              <span class="comment">// threads (except the initial thread).</span></div><div class="line">              <span class="keyword">if</span> (isLinuxThreads) &#123;</div><div class="line">                  <span class="keyword">int</span> mpid;</div><div class="line">                  <span class="keyword">try</span> &#123;</div><div class="line">                      mpid = getLinuxThreadsManager(pid);</div><div class="line">                  &#125; <span class="keyword">catch</span> (IOException x) &#123;</div><div class="line">                      <span class="keyword">throw</span> <span class="keyword">new</span> AttachNotSupportedException(x.getMessage());</div><div class="line">                  &#125;</div><div class="line">                  <span class="keyword">assert</span>(mpid &gt;= <span class="number">1</span>);</div><div class="line">                  sendQuitToChildrenOf(mpid);</div><div class="line">              &#125; <span class="keyword">else</span> &#123;</div><div class="line">                  sendQuitTo(pid);</div><div class="line">              &#125;</div><div class="line"></div><div class="line">              <span class="comment">// 默认等待5秒钟, 等待目标虚拟机 attach mechanism 启动完成</span></div><div class="line">              <span class="comment">// 启动完成之后会创建一个 .java_pid&lt;pid&gt; 文件, 该文件会赋值给 path 变量</span></div><div class="line">              <span class="comment">// give the target VM time to start the attach mechanism</span></div><div class="line">              <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">              <span class="keyword">long</span> delay = <span class="number">200</span>;</div><div class="line">              <span class="keyword">int</span> retries = (<span class="keyword">int</span>)(attachTimeout() / delay);</div><div class="line">              do &#123;</div><div class="line">                  <span class="keyword">try</span> &#123;</div><div class="line">                      Thread.sleep(delay);</div><div class="line">                  &#125; <span class="keyword">catch</span> (InterruptedException x) &#123; &#125;</div><div class="line">                  path = findSocketFile(pid);</div><div class="line">                  i++;</div><div class="line">              &#125; <span class="keyword">while</span> (i &lt;= retries &amp;&amp; path == <span class="keyword">null</span>);</div><div class="line">              <span class="keyword">if</span> (path == <span class="keyword">null</span>) &#123;</div><div class="line">                  <span class="keyword">throw</span> <span class="keyword">new</span> AttachNotSupportedException(</div><div class="line">                      <span class="string">"Unable to open socket file: target process not responding "</span> +</div><div class="line">                      <span class="string">"or HotSpot VM not loaded"</span>);</div><div class="line">              &#125;</div><div class="line">          &#125; <span class="keyword">finally</span> &#123;</div><div class="line">              f.delete();</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="comment">// Check that the file owner/permission to avoid attaching to</span></div><div class="line">      <span class="comment">// bogus process</span></div><div class="line">      checkPermissions(path);</div><div class="line"></div><div class="line">      <span class="comment">// Check that we can connect to the process</span></div><div class="line">      <span class="comment">// - this ensures we throw the permission denied error now rather than</span></div><div class="line">      <span class="comment">// later when we attempt to enqueue a command.</span></div><div class="line">      <span class="keyword">int</span> s = socket();</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          connect(s, path);</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">          close(s);</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">	</div><div class="line"> <span class="comment">// Return the socket file for the given process.</span></div><div class="line">  <span class="function"><span class="keyword">private</span> String <span class="title">findSocketFile</span><span class="params">(<span class="keyword">int</span> pid)</span> </span>&#123;</div><div class="line">      File f = <span class="keyword">new</span> File(tmpdir, <span class="string">".java_pid"</span> + pid);</div><div class="line">      <span class="keyword">if</span> (!f.exists()) &#123;</div><div class="line">          <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> f.getPath();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 在 Solaris/Linux 系统中开启 attach mechanism 的一个非常简单的方式是使用握手的方式. 通过在目标虚拟机的工作目录</span></div><div class="line">  <span class="comment">// (或者tmp目录下) 创建一个.attach_pid&lt;pid&gt; 文件 , 然后目标虚拟机的 SIGQUIT 信号处理器通过不断地查询这个文件是否存在</span></div><div class="line">  <span class="comment">// 来决定是否开启 attach mechanism .</span></div><div class="line">  <span class="comment">//</span></div><div class="line">  <span class="comment">// On Solaris/Linux a simple handshake is used to start the attach mechanism</span></div><div class="line">  <span class="comment">// if not already started. The client creates a .attach_pid&lt;pid&gt; file in the</span></div><div class="line">  <span class="comment">// target VM's working directory (or temp directory), and the SIGQUIT handler</span></div><div class="line">  <span class="comment">// checks for the file.</span></div><div class="line">  <span class="function"><span class="keyword">private</span> File <span class="title">createAttachFile</span><span class="params">(<span class="keyword">int</span> pid)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">      String fn = <span class="string">".attach_pid"</span> + pid;</div><div class="line">      String path = <span class="string">"/proc/"</span> + pid + <span class="string">"/cwd/"</span> + fn;</div><div class="line">      File f = <span class="keyword">new</span> File(path);</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">          f.createNewFile();</div><div class="line">      &#125; <span class="keyword">catch</span> (IOException x) &#123;</div><div class="line">          f = <span class="keyword">new</span> File(tmpdir, fn);</div><div class="line">          f.createNewFile();</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> f;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-<p>从以上分析我们可以看出, Attach API 是客户端通过本地socket与目标jvm进行通信的, 具体的功能实现都是在目标JVM里实现的.</p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/08/29/jvm/Attatch API/" data-title="HotSpot Dynamic Attach Mechanism 简析 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/09/08/JavaSE/LinkedBlockingQueue/" title="LinkedBlockingQueue">
-  <strong>上一篇：</strong><br/>
-  <span>
-  LinkedBlockingQueue</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/08/26/JavaSE/Java ClassPath 的秘密/"  title="Java ClassPath 的秘密">
- <strong>下一篇：</strong><br/> 
- <span>Java ClassPath 的秘密
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/08/29/jvm/Attatch API/" data-title="HotSpot Dynamic Attach Mechanism 简析" data-url="http://www.yu66.wang/2016/08/29/jvm/Attatch API/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- 
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

@@ -1,722 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>haskell函数 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="我们采用如下格式定义一个函数12函数名 :: 参数1的类型 -&amp;gt; 参数2的类型 -&amp;gt; ... -&amp;gt; 结果类型 (1)函数名 参数1 参数2 ... = 函数体                         (2)
-
-定义函数签名
-定义函数
-
-下面我们举例出多种函数定义变体形式:
-带有类型类的函数定义12add :: Num t =&amp;gt; t -&amp;gt; t -&amp;gt; tad">
-<meta property="og:type" content="article">
-<meta property="og:title" content="haskell函数">
-<meta property="og:url" content="http://www.yu66.wang/2015/04/08/编程语言/haskell函数/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="我们采用如下格式定义一个函数12函数名 :: 参数1的类型 -&amp;gt; 参数2的类型 -&amp;gt; ... -&amp;gt; 结果类型 (1)函数名 参数1 参数2 ... = 函数体                         (2)
-
-定义函数签名
-定义函数
-
-下面我们举例出多种函数定义变体形式:
-带有类型类的函数定义12add :: Num t =&amp;gt; t -&amp;gt; t -&amp;gt; tad">
-<meta property="og:updated_time" content="2016-10-29T06:45:59.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="haskell函数">
-<meta name="twitter:description" content="我们采用如下格式定义一个函数12函数名 :: 参数1的类型 -&amp;gt; 参数2的类型 -&amp;gt; ... -&amp;gt; 结果类型 (1)函数名 参数1 参数2 ... = 函数体                         (2)
-
-定义函数签名
-定义函数
-
-下面我们举例出多种函数定义变体形式:
-带有类型类的函数定义12add :: Num t =&amp;gt; t -&amp;gt; t -&amp;gt; tad">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/08/编程语言/haskell函数/" title="haskell函数" itemprop="url">haskell函数</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-08T07:00:00.000Z" itemprop="datePublished"> 发表于 2015-04-08</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#带有类型类的函数定义"><span class="toc-number">1.</span> <span class="toc-text">带有类型类的函数定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#带有多个类型的函数定义"><span class="toc-number">2.</span> <span class="toc-text">带有多个类型的函数定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#不带有类型类的函数定义"><span class="toc-number">2.1.</span> <span class="toc-text">不带有类型类的函数定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#函数定义"><span class="toc-number">2.2.</span> <span class="toc-text">函数定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#类型自动推断的函数定义"><span class="toc-number">2.3.</span> <span class="toc-text">类型自动推断的函数定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#函数后跟’"><span class="toc-number">2.4.</span> <span class="toc-text">函数后跟’</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数类型"><span class="toc-number"></span> <span class="toc-text">函数类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#柯里化函数"><span class="toc-number">1.</span> <span class="toc-text">柯里化函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#偏函数"><span class="toc-number">2.</span> <span class="toc-text">偏函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非柯里化函数"><span class="toc-number">3.</span> <span class="toc-text">非柯里化函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多态函数"><span class="toc-number">4.</span> <span class="toc-text">多态函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重载类型函数"><span class="toc-number">5.</span> <span class="toc-text">重载类型函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参数绑定"><span class="toc-number"></span> <span class="toc-text">参数绑定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#let…in…"><span class="toc-number">1.</span> <span class="toc-text">let…in…</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#替换表达式"><span class="toc-number">1.1.</span> <span class="toc-text">替换表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#替换多个表达式"><span class="toc-number">1.2.</span> <span class="toc-text">替换多个表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#替换函数"><span class="toc-number">1.3.</span> <span class="toc-text">替换函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常用函数"><span class="toc-number">1.4.</span> <span class="toc-text">常用函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列表函数"><span class="toc-number">1.5.</span> <span class="toc-text">列表函数</span></a></li></ol></li></ol>
-		
-		</div>
-		
-		<p>我们采用如下格式定义一个函数<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">函数名 :: 参数<span class="number">1</span>的类型 -&gt; 参数<span class="number">2</span>的类型 -&gt; ... -&gt; 结果类型 (<span class="number">1</span>)</div><div class="line">函数名 参数<span class="number">1</span> 参数<span class="number">2</span> ... = 函数体                         (<span class="number">2</span>)</div></pre></td></tr></table></figure></p>
-<ol>
-<li>定义函数签名</li>
-<li>定义函数</li>
-</ol>
-<p>下面我们举例出多种函数定义变体形式:</p>
-<h3 id="带有类型类的函数定义"><a href="#带有类型类的函数定义" class="headerlink" title="带有类型类的函数定义"></a>带有类型类的函数定义</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">add</span> :: <span class="type">Num</span> t =&gt; t -&gt; t -&gt; t</div><div class="line"><span class="title">add</span> x y = x + y</div></pre></td></tr></table></figure>
-<h3 id="带有多个类型的函数定义"><a href="#带有多个类型的函数定义" class="headerlink" title="带有多个类型的函数定义"></a>带有多个类型的函数定义</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">add</span> :: (<span class="type">Show</span> t, <span class="type">Int</span> t) =&gt; t -&gt; t -&gt; t</div><div class="line"><span class="title">add</span> x y = x + y</div></pre></td></tr></table></figure>
-<h4 id="不带有类型类的函数定义"><a href="#不带有类型类的函数定义" class="headerlink" title="不带有类型类的函数定义"></a>不带有类型类的函数定义</h4><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">add</span> :: <span class="type">Int</span> -&gt; <span class="type">Int</span> -&gt; <span class="type">Int</span></div><div class="line"><span class="title">add</span> x y = x + y</div></pre></td></tr></table></figure>
-<h4 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h4><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">add</span> x y = x + y :: <span class="type">Int</span></div></pre></td></tr></table></figure>
-<h4 id="类型自动推断的函数定义"><a href="#类型自动推断的函数定义" class="headerlink" title="类型自动推断的函数定义"></a>类型自动推断的函数定义</h4><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">add</span> x y = x + y</div></pre></td></tr></table></figure>
-<h4 id="函数后跟’"><a href="#函数后跟’" class="headerlink" title="函数后跟’"></a>函数后跟’</h4><p>在函数名后加一个<code>&#39;</code>,与原函数这代表着俩个函数.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="title">add'</span> :: <span class="type">Num</span> t =&gt; t -&gt; t -&gt; t</div><div class="line"><span class="title">add'</span> x y = x + y</div><div class="line"></div><div class="line"><span class="title">add</span> :: <span class="type">Num</span> t =&gt; t -&gt; t -&gt; t</div><div class="line"><span class="title">add</span> x y = x + y</div></pre></td></tr></table></figure></p>
-<h2 id="函数类型"><a href="#函数类型" class="headerlink" title="函数类型"></a>函数类型</h2><h3 id="柯里化函数"><a href="#柯里化函数" class="headerlink" title="柯里化函数"></a>柯里化函数</h3><p>当调用一个N参数的函数时, 传递M个参数(N &lt; M),那么该参数返回的结果也是一个函数.这个过程称为柯里化.</p>
-<p>但是并不是每种函数都可以这么调用,只有下面形式的函数才可以这么调用.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">add</span> :: <span class="type">Num</span> t =&gt; t -&gt; t -&gt; t</div><div class="line"><span class="title">add</span> x y = x + y</div></pre></td></tr></table></figure></p>
-<p>当我们只向<code>add</code>函数传递一个参数<code>5</code>的时候,我们会得到下面一个这样子的函数:<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">add</span> <span class="number">5</span> y = <span class="number">5</span> + y</div><div class="line"></div><div class="line">函数类型为:</div><div class="line"><span class="title">add</span> :: <span class="type">Num</span> t =&gt; t -&gt; t</div></pre></td></tr></table></figure></p>
-<h3 id="偏函数"><a href="#偏函数" class="headerlink" title="偏函数"></a>偏函数</h3><p>如果调用函数时,参数列表不完整,这时就称为函数的不完全应用,也称为偏函数.</p>
-<h3 id="非柯里化函数"><a href="#非柯里化函数" class="headerlink" title="非柯里化函数"></a>非柯里化函数</h3><p>非柯里化的函数,必须在调用的时候,将所有参数都放到元组中,然后传递给函数.<br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="title">add</span> :: <span class="type">Num</span> t =&gt; (t ,t) -&gt; t</div><div class="line"><span class="title">add</span> (x, y) = x + y</div></pre></td></tr></table></figure></p>
-<h3 id="多态函数"><a href="#多态函数" class="headerlink" title="多态函数"></a>多态函数</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<h3 id="重载类型函数"><a href="#重载类型函数" class="headerlink" title="重载类型函数"></a>重载类型函数</h3><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<h2 id="参数绑定"><a href="#参数绑定" class="headerlink" title="参数绑定"></a>参数绑定</h2><h3 id="let…in…"><a href="#let…in…" class="headerlink" title="let…in…"></a>let…in…</h3><p><code>let</code>里定义的部分会在函数体中进行替换</p>
-<h4 id="替换表达式"><a href="#替换表达式" class="headerlink" title="替换表达式"></a>替换表达式</h4><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">s</span> :: <span class="type">Double</span> -&gt; <span class="type">Double</span> -&gt; <span class="type">Double</span> -&gt; <span class="type">Double</span></div><div class="line"><span class="title">s</span> a b c =</div><div class="line">    <span class="keyword">let</span> p = (a + b + c) / <span class="number">2</span></div><div class="line">    <span class="keyword">in</span> sqrt (p * (p - a) * (p - b) * (p - c))</div></pre></td></tr></table></figure>
-<h4 id="替换多个表达式"><a href="#替换多个表达式" class="headerlink" title="替换多个表达式"></a>替换多个表达式</h4><figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<h4 id="替换函数"><a href="#替换函数" class="headerlink" title="替换函数"></a>替换函数</h4><ul>
-<li>where<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="title">s</span> :: <span class="type">Double</span> -&gt; <span class="type">Double</span> -&gt; <span class="type">Double</span> -&gt; <span class="type">Double</span></div><div class="line"><span class="title">s</span> a b c = sqrt (p * (p - a) * (p - b) * (p - c))</div><div class="line">    <span class="keyword">where</span> p = (a + b + c) / <span class="number">2</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h4><ul>
-<li>恒值函数id</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>常数函数const</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>参数反置函数flip</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>错误函数error</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>undifine函数</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>min/max函数<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="列表函数"><a href="#列表函数" class="headerlink" title="列表函数"></a>列表函数</h4><ul>
-<li>null</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>length</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>!!</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>reverse</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>head</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>last</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>tail</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>init</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>map</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>filter</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>take</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>drop</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>span</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>break</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>takeWhile</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>dropWhile</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>spiltAt</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>repeat</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>replicate</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>any</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>all</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>elem</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>notelem</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>iterate</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>until</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>zip</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>concat</li>
-</ul>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
-<ul>
-<li>concatMap</li>
-</ul>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/04/08/编程语言/haskell函数/" data-title="haskell函数 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/04/08/编程语言/haskell表达式/" title="haskell表达式">
-  <strong>上一篇：</strong><br/>
-  <span>
-  haskell表达式</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/04/08/编程语言/haskell/"  title="haskell类型系统">
- <strong>下一篇：</strong><br/> 
- <span>haskell类型系统
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/04/08/编程语言/haskell函数/" data-title="haskell函数" data-url="http://www.yu66.wang/2015/04/08/编程语言/haskell函数/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#带有类型类的函数定义"><span class="toc-number">1.</span> <span class="toc-text">带有类型类的函数定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#带有多个类型的函数定义"><span class="toc-number">2.</span> <span class="toc-text">带有多个类型的函数定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#不带有类型类的函数定义"><span class="toc-number">2.1.</span> <span class="toc-text">不带有类型类的函数定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#函数定义"><span class="toc-number">2.2.</span> <span class="toc-text">函数定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#类型自动推断的函数定义"><span class="toc-number">2.3.</span> <span class="toc-text">类型自动推断的函数定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#函数后跟’"><span class="toc-number">2.4.</span> <span class="toc-text">函数后跟’</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数类型"><span class="toc-number"></span> <span class="toc-text">函数类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#柯里化函数"><span class="toc-number">1.</span> <span class="toc-text">柯里化函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#偏函数"><span class="toc-number">2.</span> <span class="toc-text">偏函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非柯里化函数"><span class="toc-number">3.</span> <span class="toc-text">非柯里化函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多态函数"><span class="toc-number">4.</span> <span class="toc-text">多态函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重载类型函数"><span class="toc-number">5.</span> <span class="toc-text">重载类型函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参数绑定"><span class="toc-number"></span> <span class="toc-text">参数绑定</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#let…in…"><span class="toc-number">1.</span> <span class="toc-text">let…in…</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#替换表达式"><span class="toc-number">1.1.</span> <span class="toc-text">替换表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#替换多个表达式"><span class="toc-number">1.2.</span> <span class="toc-text">替换多个表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#替换函数"><span class="toc-number">1.3.</span> <span class="toc-text">替换函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常用函数"><span class="toc-number">1.4.</span> <span class="toc-text">常用函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列表函数"><span class="toc-number">1.5.</span> <span class="toc-text">列表函数</span></a></li></ol></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

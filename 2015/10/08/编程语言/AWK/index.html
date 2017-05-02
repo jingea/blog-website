@@ -1,628 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>AWK | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="AWKawk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。
-语法1awk [-F  field-separator]  &amp;apos;commands&amp;apos;  input-file(s)
-
--F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符-F &amp;#39;:&amp;#39;)
-comm">
-<meta property="og:type" content="article">
-<meta property="og:title" content="AWK">
-<meta property="og:url" content="http://www.yu66.wang/2015/10/08/编程语言/AWK/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="AWKawk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。
-语法1awk [-F  field-separator]  &amp;apos;commands&amp;apos;  input-file(s)
-
--F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符-F &amp;#39;:&amp;#39;)
-comm">
-<meta property="og:updated_time" content="2016-12-17T15:41:03.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AWK">
-<meta name="twitter:description" content="AWKawk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。
-语法1awk [-F  field-separator]  &amp;apos;commands&amp;apos;  input-file(s)
-
--F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符-F &amp;#39;:&amp;#39;)
-comm">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/10/08/编程语言/AWK/" title="AWK" itemprop="url">AWK</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-10-07T16:00:00.000Z" itemprop="datePublished"> 发表于 2015-10-08</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AWK"><span class="toc-number">1.</span> <span class="toc-text">AWK</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-number">1.1.</span> <span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#内置变量"><span class="toc-number">1.1.1.</span> <span class="toc-text">内置变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义变量"><span class="toc-number">1.1.2.</span> <span class="toc-text">自定义变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组"><span class="toc-number">1.1.3.</span> <span class="toc-text">数组</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#运算符"><span class="toc-number">2.</span> <span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#流程控制"><span class="toc-number">3.</span> <span class="toc-text">流程控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#条件语句"><span class="toc-number">3.1.</span> <span class="toc-text">条件语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环语句"><span class="toc-number">3.2.</span> <span class="toc-text">循环语句</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#字符串处理"><span class="toc-number">4.</span> <span class="toc-text">字符串处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sub函数"><span class="toc-number">4.1.</span> <span class="toc-text">sub函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gsub函数"><span class="toc-number">4.2.</span> <span class="toc-text">gsub函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#index函数"><span class="toc-number">4.3.</span> <span class="toc-text">index函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#length函数"><span class="toc-number">4.4.</span> <span class="toc-text">length函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#substr函数"><span class="toc-number">4.5.</span> <span class="toc-text">substr函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#toupper和tolower函数"><span class="toc-number">4.6.</span> <span class="toc-text">toupper和tolower函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#split函数"><span class="toc-number">4.7.</span> <span class="toc-text">split函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正则表达式"><span class="toc-number">5.</span> <span class="toc-text">正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-number">5.1.</span> <span class="toc-text">\</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-1"><span class="toc-number">5.2.</span> <span class="toc-text">^</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-2"><span class="toc-number">5.3.</span> <span class="toc-text">$</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-3"><span class="toc-number">5.4.</span> <span class="toc-text">*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-4"><span class="toc-number">5.5.</span> <span class="toc-text">+</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-5"><span class="toc-number">5.6.</span> <span class="toc-text">?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n"><span class="toc-number">5.7.</span> <span class="toc-text">{n}</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n-1"><span class="toc-number">5.8.</span> <span class="toc-text">{n,}</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n-m"><span class="toc-number">5.9.</span> <span class="toc-text">{n,m}</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-6"><span class="toc-number">5.10.</span> <span class="toc-text">.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern"><span class="toc-number">5.11.</span> <span class="toc-text">(pattern)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-1"><span class="toc-number">5.12.</span> <span class="toc-text">(?:pattern)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-2"><span class="toc-number">5.13.</span> <span class="toc-text">(?=pattern)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-3"><span class="toc-number">5.14.</span> <span class="toc-text">(?!pattern)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#x-y"><span class="toc-number">5.15.</span> <span class="toc-text">x|y</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xyz"><span class="toc-number">5.16.</span> <span class="toc-text">[xyz]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xyz-1"><span class="toc-number">5.17.</span> <span class="toc-text">[^xyz]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-z"><span class="toc-number">5.18.</span> <span class="toc-text">[a-z]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-z-1"><span class="toc-number">5.19.</span> <span class="toc-text">[^a-z]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#d"><span class="toc-number">5.20.</span> <span class="toc-text">\d</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#D"><span class="toc-number">5.21.</span> <span class="toc-text">\D</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n-2"><span class="toc-number">5.22.</span> <span class="toc-text">\n</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#r"><span class="toc-number">5.23.</span> <span class="toc-text">\r</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#s"><span class="toc-number">5.24.</span> <span class="toc-text">\s</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#S"><span class="toc-number">5.25.</span> <span class="toc-text">\S</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#w"><span class="toc-number">5.26.</span> <span class="toc-text">\w</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#W"><span class="toc-number">5.27.</span> <span class="toc-text">\W</span></a></li></ol></li></ol>
-		
-		</div>
-		
-		<h1 id="AWK"><a href="#AWK" class="headerlink" title="AWK"></a>AWK</h1><p>awk就是把文件逐行的读入，以空格为默认分隔符将每行切片，切开的部分再进行各种分析处理。</p>
-<p>语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk [-F  field-separator]  &apos;commands&apos;  input-file(s)</div></pre></td></tr></table></figure></p>
-<ul>
-<li>-F: 域分隔符,由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。(我们指定:为分隔符<code>-F &#39;:&#39;</code>)</li>
-<li>commands: ‘PATTERN{COMMAND}’. PATTERN为模式(正在表达式),COMMAND为要执行的命令.</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk  -F &apos;:&apos;  &apos;BEGIN &#123;print &quot;start&quot;&#125;  &#123;print $1&quot;&#125; END &#123;print &quot;end&quot;&#125;&apos; ./txt</div></pre></td></tr></table></figure>
-<p>上面的例子是读取<code>txt</code>文件,然后使用<code>:</code>分割每一行数据,在开始处理的时候输出start，在处理过程中第一列数据，最后输出end。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="内置变量"><a href="#内置变量" class="headerlink" title="内置变量"></a>内置变量</h3><p>我们可以在AWK命令中直接使用以下内置变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">ARGC               命令行参数个数</div><div class="line">ARGV               命令行参数排列</div><div class="line">ENVIRON            支持队列中系统环境变量的使用</div><div class="line">FILENAME           awk浏览的文件名</div><div class="line">FNR                浏览文件的记录数</div><div class="line">FS                 设置输入域分隔符，等价于命令行 -F选项</div><div class="line">NF                 浏览记录的域的个数</div><div class="line">NR                 已读的记录数</div><div class="line">OFS                输出域分隔符</div><div class="line">ORS                输出记录分隔符</div><div class="line">RS                 控制记录分隔符</div></pre></td></tr></table></figure></p>
-<p>例如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;print ARGC&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h3 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h3><p>我们通过赋值的方式直接定义一个变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;BEGIN&#123;size=0;&#125; &#123;size=1+size&#125; &#123;print $1&#125; END&#123;print size&#125;&apos;</div></pre></td></tr></table></figure></p>
-<p>上面我们定义了一个数值型的size变量.</p>
-<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><ul>
-<li><code>= += -= *= /= %= ^= **=</code>    赋值</li>
-<li><code>?:</code>    C条件表达式</li>
-<li><code>||</code>    逻辑或</li>
-<li><code>&amp;&amp;</code>    逻辑与</li>
-<li><code>~ ~!</code>    匹配正则表达式和不匹配正则表达式</li>
-<li><code>&lt; &lt;= &gt; &gt;= != ==</code>    关系运算符</li>
-<li><code>空格</code>    连接</li>
-<li><code>+ -</code>    加，减</li>
-<li><code>* / &amp;</code>    乘，除与求余</li>
-<li><code>+ - !</code>    一元加，减和逻辑非</li>
-<li><code>^ ***</code>    求幂</li>
-<li><code>++ --</code>    增加或减少，作为前缀或后缀</li>
-<li><code>$</code>    字段引用</li>
-<li><code>in</code>    数组成员</li>
-</ul>
-<h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>下面输出了大于10000的java进程号<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;BEGIN&#123;size=0&#125; &#123;if($1&gt;10000) &#123;size++;print $1&#125;&#125; END&#123;print size&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><p>awk中的循环语句借鉴于C语言，支持while、do/while、for、break、continue，这些关键字的语义和C语言中的语义完全相同。</p>
-<h1 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h1><h2 id="sub函数"><a href="#sub函数" class="headerlink" title="sub函数"></a>sub函数</h2><p>匹配从左侧开始找到的第一个符合规则的字符串，然后使用替换字符串替换这些字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<p>上面这个例子就使用sun这个字符串替换了$2中的moon字符串。</p>
-<p>我们还可以指定在哪列执行查找替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;sub(/moon/, &quot;sun&quot;, $1)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<p>上面的例子中我们只在第一列进行查找替换</p>
-<h2 id="gsub函数"><a href="#gsub函数" class="headerlink" title="gsub函数"></a>gsub函数</h2><p>与sub函数不同的是，这个执行的是全局替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;gsub(/moon/, &quot;sun&quot;)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="index函数"><a href="#index函数" class="headerlink" title="index函数"></a>index函数</h2><p>返回子字符串第一次被匹配的位置，偏移量从位置1开始<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;print$2; $2=index($2, &quot;moon&quot;)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="length函数"><a href="#length函数" class="headerlink" title="length函数"></a>length函数</h2><p>返回记录的字符数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;print$2; $2=length($2)&#125; &#123;print $2&#125;&apos;</div></pre></td></tr></table></figure></p>
-<h2 id="substr函数"><a href="#substr函数" class="headerlink" title="substr函数"></a>substr函数</h2><p>返回从位置1开始的子字符串，如果指定长度超过实际长度，就返回整个字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123;print substr($2, 2, 10)&#125; &apos;</div></pre></td></tr></table></figure></p>
-<p>上面的例子将$2字符串从第二个字符还是截取，截取10个长度的字符串出来</p>
-<h2 id="toupper和tolower函数"><a href="#toupper和tolower函数" class="headerlink" title="toupper和tolower函数"></a>toupper和tolower函数</h2><p>可用于字符串大小间的转换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;&#123;print toupper($2)&#125; &apos;</div></pre></td></tr></table></figure></p>
-<h2 id="split函数"><a href="#split函数" class="headerlink" title="split函数"></a>split函数</h2><p>可按给定的分隔符把字符串分割为一个数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jps -l | awk &apos;&#123; split($2, array, &quot;/&quot;); print array[3]&#125; &apos;</div></pre></td></tr></table></figure></p>
-<p>上面的例子我们将$2这一列按照<code>/</code>进行分割,然后将分割出的数据存储到array数组里. 注意这里首先不需要转义</p>
-<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><h2 id=""><a href="#" class="headerlink" title="\"></a>\</h2><p>将下一字符标记为特殊字符、文本、反向引用或八进制转义符。例如，“n”匹配字符“n”。“\n”匹配换行符。序列“\”匹配“\”，“(”匹配“(”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\\/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<p>过滤出带有<code>\</code>的行</p>
-<h2 id="-1"><a href="#-1" class="headerlink" title="^"></a>^</h2><p>匹配输入字符串与最左侧开始的位置的字符串。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/^\\n/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<p>找到所有以<code>\n</code>字符串开始的数据</p>
-<h2 id="-2"><a href="#-2" class="headerlink" title="$"></a>$</h2><p>匹配输入字符串结尾的位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/)。$/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<p>过滤以<code>)。</code>结尾的行</p>
-<h2 id="-3"><a href="#-3" class="headerlink" title="*"></a>*</h2><p>零次或多次匹配前面的字符或子表达式。例如，zo<em> 匹配“z”和“zoo”。</em> 等效于 {0,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/反向引用*/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="-4"><a href="#-4" class="headerlink" title="+"></a>+</h2><p>一次或多次匹配前面的字符或子表达式。例如，“zo+”与“zo”和“zoo”匹配，但与“z”不匹配。+ 等效于 {1,}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/反向引用+/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="-5"><a href="#-5" class="headerlink" title="?"></a>?</h2><p>零次或一次匹配前面的字符或子表达式。例如，“do(es)?”匹配“do”或“does”中的“do”。? 等效于 {0,1}。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/反向引用?/&#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="n"><a href="#n" class="headerlink" title="{n}"></a>{n}</h2><p>n 是非负整数。正好匹配 n 次。例如，“o{2}”与“Bob”中的“o”不匹配，但与“food”中的两个“o”匹配。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="n-1"><a href="#n-1" class="headerlink" title="{n,}"></a>{n,}</h2><p>n 是非负整数。至少匹配 n 次。例如，“o{2,}”不匹配“Bob”中的“o”，而匹配“foooood”中的所有 o。“o{1,}”等效于“o+”。“o{0,}”等效于“o*”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="n-m"><a href="#n-m" class="headerlink" title="{n,m}"></a>{n,m}</h2><p>M 和 n 是非负整数，其中 n &lt;= m。匹配至少 n 次，至多 m 次。例如，“o{1,3}”匹配“fooooood”中的头三个 o。’o{0,1}’ 等效于 ‘o?’。注意：您不能将空格插入逗号和数字之间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="-6"><a href="#-6" class="headerlink" title="."></a>.</h2><p>匹配除“\n”之外的任何单个字符。若要匹配包括“\n”在内的任意字符，请使用诸如“[\s\S]”之类的模式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="pattern"><a href="#pattern" class="headerlink" title="(pattern)"></a>(pattern)</h2><p>匹配 pattern 并捕获该匹配的子表达式。可以使用 $0…$9 属性从结果“匹配”集合中检索捕获的匹配。若要匹配括号字符 ( )，请使用“(”或者“)”。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="pattern-1"><a href="#pattern-1" class="headerlink" title="(?:pattern)"></a>(?:pattern)</h2><p>匹配 pattern 但不捕获该匹配的子表达式，即它是一个非捕获匹配，不存储供以后使用的匹配。这对于用“or”字符 (|) 组合模式部件的情况很有用。例如，’industr(?:y|ies) 是比 ‘industry|industries’ 更经济的表达式。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="pattern-2"><a href="#pattern-2" class="headerlink" title="(?=pattern)"></a>(?=pattern)</h2><p>执行正向预测先行搜索的子表达式，该表达式匹配处于匹配 pattern 的字符串的起始点的字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?=95|98|NT|2000)’ 匹配“Windows 2000”中的“Windows”，但不匹配“Windows 3.1”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="pattern-3"><a href="#pattern-3" class="headerlink" title="(?!pattern)"></a>(?!pattern)</h2><p>执行反向预测先行搜索的子表达式，该表达式匹配不处于匹配 pattern 的字符串的起始点的搜索字符串。它是一个非捕获匹配，即不能捕获供以后使用的匹配。例如，’Windows (?!95|98|NT|2000)’ 匹配“Windows 3.1”中的 “Windows”，但不匹配“Windows 2000”中的“Windows”。预测先行不占用字符，即发生匹配后，下一匹配的搜索紧随上一匹配之后，而不是在组成预测先行的字符后。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
-<h2 id="x-y"><a href="#x-y" class="headerlink" title="x|y"></a>x|y</h2><p>匹配 x 或 y。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/换页符等|十六进制转义码必须正好是两位数长/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="xyz"><a href="#xyz" class="headerlink" title="[xyz]"></a>[xyz]</h2><p>匹配是否包含xyz中任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/[前面至少有]/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="xyz-1"><a href="#xyz-1" class="headerlink" title="[^xyz]"></a>[^xyz]</h2><p>匹配不能包含xyz任意一个字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/[^前面至少有]/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="a-z"><a href="#a-z" class="headerlink" title="[a-z]"></a>[a-z]</h2><p>与<code>[xyz]</code>规则相同,只不过这个模式提供了一个范围模式.例如[a-c]实际为匹配[abc]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/[a-b]/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="a-z-1"><a href="#a-z-1" class="headerlink" title="[^a-z]"></a>[^a-z]</h2><p>反向范围字符。匹配不在指定的范围内的任何字符。例如，“[^a-z]”匹配任何不在“a”到“z”范围内的任何字符。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/[^a-z]/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<p>需要注意的是’\t’会被匹配出来</p>
-<h2 id="d"><a href="#d" class="headerlink" title="\d"></a>\d</h2><p>数字字符匹配。等效于 [0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\d/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="D"><a href="#D" class="headerlink" title="\D"></a>\D</h2><p>非数字字符匹配。等效于 [^0-9]。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\D/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="n-2"><a href="#n-2" class="headerlink" title="\n"></a>\n</h2><p>换行符匹配。等效于 \x0a 和 \cJ。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\n/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="r"><a href="#r" class="headerlink" title="\r"></a>\r</h2><p>匹配一个回车符。等效于 \x0d 和 \cM。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\t/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="s"><a href="#s" class="headerlink" title="\s"></a>\s</h2><p>匹配任何空白字符，包括空格、制表符、换页符等。与 [ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\s/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="S"><a href="#S" class="headerlink" title="\S"></a>\S</h2><p>匹配任何非空白字符。与 [^ \f\n\r\t\v] 等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\S/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="w"><a href="#w" class="headerlink" title="\w"></a>\w</h2><p>匹配任何字类字符，包括下划线。与“[A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\w/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-<h2 id="W"><a href="#W" class="headerlink" title="\W"></a>\W</h2><p>与任何非单词字符匹配。与“[^A-Za-z0-9_]”等效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk &apos;/\W/ &#123;print $0&#125;&apos; ./txt</div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/编程语言/">编程语言</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/10/08/编程语言/AWK/" data-title="AWK | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/10/08/杂记/vim/" title="GVIM">
-  <strong>上一篇：</strong><br/>
-  <span>
-  GVIM</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/09/08/JavaSE/Java8 lambda/"  title="java lambda">
- <strong>下一篇：</strong><br/> 
- <span>java lambda
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/10/08/编程语言/AWK/" data-title="AWK" data-url="http://www.yu66.wang/2015/10/08/编程语言/AWK/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#AWK"><span class="toc-number">1.</span> <span class="toc-text">AWK</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-number">1.1.</span> <span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#内置变量"><span class="toc-number">1.1.1.</span> <span class="toc-text">内置变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义变量"><span class="toc-number">1.1.2.</span> <span class="toc-text">自定义变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组"><span class="toc-number">1.1.3.</span> <span class="toc-text">数组</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#运算符"><span class="toc-number">2.</span> <span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#流程控制"><span class="toc-number">3.</span> <span class="toc-text">流程控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#条件语句"><span class="toc-number">3.1.</span> <span class="toc-text">条件语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环语句"><span class="toc-number">3.2.</span> <span class="toc-text">循环语句</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#字符串处理"><span class="toc-number">4.</span> <span class="toc-text">字符串处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sub函数"><span class="toc-number">4.1.</span> <span class="toc-text">sub函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gsub函数"><span class="toc-number">4.2.</span> <span class="toc-text">gsub函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#index函数"><span class="toc-number">4.3.</span> <span class="toc-text">index函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#length函数"><span class="toc-number">4.4.</span> <span class="toc-text">length函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#substr函数"><span class="toc-number">4.5.</span> <span class="toc-text">substr函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#toupper和tolower函数"><span class="toc-number">4.6.</span> <span class="toc-text">toupper和tolower函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#split函数"><span class="toc-number">4.7.</span> <span class="toc-text">split函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正则表达式"><span class="toc-number">5.</span> <span class="toc-text">正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-number">5.1.</span> <span class="toc-text">\</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-1"><span class="toc-number">5.2.</span> <span class="toc-text">^</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-2"><span class="toc-number">5.3.</span> <span class="toc-text">$</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-3"><span class="toc-number">5.4.</span> <span class="toc-text">*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-4"><span class="toc-number">5.5.</span> <span class="toc-text">+</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-5"><span class="toc-number">5.6.</span> <span class="toc-text">?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n"><span class="toc-number">5.7.</span> <span class="toc-text">{n}</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n-1"><span class="toc-number">5.8.</span> <span class="toc-text">{n,}</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n-m"><span class="toc-number">5.9.</span> <span class="toc-text">{n,m}</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-6"><span class="toc-number">5.10.</span> <span class="toc-text">.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern"><span class="toc-number">5.11.</span> <span class="toc-text">(pattern)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-1"><span class="toc-number">5.12.</span> <span class="toc-text">(?:pattern)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-2"><span class="toc-number">5.13.</span> <span class="toc-text">(?=pattern)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-3"><span class="toc-number">5.14.</span> <span class="toc-text">(?!pattern)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#x-y"><span class="toc-number">5.15.</span> <span class="toc-text">x|y</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xyz"><span class="toc-number">5.16.</span> <span class="toc-text">[xyz]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xyz-1"><span class="toc-number">5.17.</span> <span class="toc-text">[^xyz]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-z"><span class="toc-number">5.18.</span> <span class="toc-text">[a-z]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-z-1"><span class="toc-number">5.19.</span> <span class="toc-text">[^a-z]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#d"><span class="toc-number">5.20.</span> <span class="toc-text">\d</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#D"><span class="toc-number">5.21.</span> <span class="toc-text">\D</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#n-2"><span class="toc-number">5.22.</span> <span class="toc-text">\n</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#r"><span class="toc-number">5.23.</span> <span class="toc-text">\r</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#s"><span class="toc-number">5.24.</span> <span class="toc-text">\s</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#S"><span class="toc-number">5.25.</span> <span class="toc-text">\S</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#w"><span class="toc-number">5.26.</span> <span class="toc-text">\w</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#W"><span class="toc-number">5.27.</span> <span class="toc-text">\W</span></a></li></ol></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

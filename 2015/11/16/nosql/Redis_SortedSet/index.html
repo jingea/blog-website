@@ -1,752 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Redis SortedSet | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="在命令行中使用Redis客户端连接Redis服务器： redis-cli -h 127.0.0.1 -p 7000
-
-增加成员ZADD语法：ZADD key score member [[score member] [score member] ...].   
-
-ZADD redis命令
-key 有序集合名
-score  值 (可以是整数值或双精度浮点数)
-member 键
-
-这个命令也就是将">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Redis SortedSet">
-<meta property="og:url" content="http://www.yu66.wang/2015/11/16/nosql/Redis_SortedSet/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="在命令行中使用Redis客户端连接Redis服务器： redis-cli -h 127.0.0.1 -p 7000
-
-增加成员ZADD语法：ZADD key score member [[score member] [score member] ...].   
-
-ZADD redis命令
-key 有序集合名
-score  值 (可以是整数值或双精度浮点数)
-member 键
-
-这个命令也就是将">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis SortedSet">
-<meta name="twitter:description" content="在命令行中使用Redis客户端连接Redis服务器： redis-cli -h 127.0.0.1 -p 7000
-
-增加成员ZADD语法：ZADD key score member [[score member] [score member] ...].   
-
-ZADD redis命令
-key 有序集合名
-score  值 (可以是整数值或双精度浮点数)
-member 键
-
-这个命令也就是将">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/11/16/nosql/Redis_SortedSet/" title="Redis SortedSet" itemprop="url">Redis SortedSet</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2015-11-16T08:00:00.000Z" itemprop="datePublished"> 发表于 2015-11-16</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#增加成员"><span class="toc-number">1.</span> <span class="toc-text">增加成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZADD"><span class="toc-number">1.1.</span> <span class="toc-text">ZADD</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改成员"><span class="toc-number">2.</span> <span class="toc-text">修改成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZINCRBY"><span class="toc-number">2.1.</span> <span class="toc-text">ZINCRBY</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除成员"><span class="toc-number">3.</span> <span class="toc-text">删除成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREM"><span class="toc-number">3.1.</span> <span class="toc-text">ZREM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREMRANGEBYRANK"><span class="toc-number">3.2.</span> <span class="toc-text">ZREMRANGEBYRANK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREMRANGEBYSCORE"><span class="toc-number">3.3.</span> <span class="toc-text">ZREMRANGEBYSCORE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并集合"><span class="toc-number">4.</span> <span class="toc-text">合并集合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZUNIONSTORE"><span class="toc-number">4.1.</span> <span class="toc-text">ZUNIONSTORE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZINTERSTORE"><span class="toc-number">4.2.</span> <span class="toc-text">ZINTERSTORE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取集合数量"><span class="toc-number">5.</span> <span class="toc-text">获取集合数量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZCARD"><span class="toc-number">5.1.</span> <span class="toc-text">ZCARD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZCOUNT"><span class="toc-number">5.2.</span> <span class="toc-text">ZCOUNT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取集合列表"><span class="toc-number">6.</span> <span class="toc-text">获取集合列表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZRANGE"><span class="toc-number">6.1.</span> <span class="toc-text">ZRANGE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREVRANGE"><span class="toc-number">6.2.</span> <span class="toc-text">ZREVRANGE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZRANGEBYSCORE"><span class="toc-number">6.3.</span> <span class="toc-text">ZRANGEBYSCORE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREVRANGEBYSCORE"><span class="toc-number">6.4.</span> <span class="toc-text">ZREVRANGEBYSCORE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZRANGEBYLEX"><span class="toc-number">6.5.</span> <span class="toc-text">ZRANGEBYLEX</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查询某个成员"><span class="toc-number">7.</span> <span class="toc-text">查询某个成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZRANK"><span class="toc-number">7.1.</span> <span class="toc-text">ZRANK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREVRANK"><span class="toc-number">7.2.</span> <span class="toc-text">ZREVRANK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZSCORE"><span class="toc-number">7.3.</span> <span class="toc-text">ZSCORE</span></a></li></ol></li></ol>
-		
-		</div>
-		
-		<blockquote>
-<p>在命令行中使用Redis客户端连接Redis服务器： <code>redis-cli -h 127.0.0.1 -p 7000</code></p>
-</blockquote>
-<h2 id="增加成员"><a href="#增加成员" class="headerlink" title="增加成员"></a>增加成员</h2><h3 id="ZADD"><a href="#ZADD" class="headerlink" title="ZADD"></a>ZADD</h3><p>语法：<code>ZADD key score member [[score member] [score member] ...]</code>.   </p>
-<ul>
-<li><code>ZADD</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>score</code>  值 (可以是整数值或双精度浮点数)</li>
-<li><code>member</code> 键</li>
-</ul>
-<p>这个命令也就是将键值对(member score)插入到有序集合key中. 如果集合不存在就创建一个集合,如果键已经存在就代替原来的值.</p>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZADD test1 10 a</div><div class="line">(integer) 1</div></pre></td></tr></table></figure></p>
-<h2 id="修改成员"><a href="#修改成员" class="headerlink" title="修改成员"></a>修改成员</h2><h3 id="ZINCRBY"><a href="#ZINCRBY" class="headerlink" title="ZINCRBY"></a>ZINCRBY</h3><p>语法<code>ZINCRBY key increment member</code></p>
-<ul>
-<li><code>ZINCRBY</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>increment</code>  score值的增量</li>
-<li><code>member</code>  针对哪个成员进行改变</li>
-</ul>
-<p>这个命令就是对某个成员进行增加或者减少(通过负数实现). (member 成员的新 score 值,以字符串形式表示)</p>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; zadd test1 23 t</div><div class="line">(integer) 1</div><div class="line">redis 127.0.0.1:7006&gt; ZINCRBY test1 10 t</div><div class="line">&quot;33&quot;</div><div class="line">redis 127.0.0.1:7006&gt; zincrby test1 -20 t</div><div class="line">&quot;13&quot;</div></pre></td></tr></table></figure></p>
-<h2 id="删除成员"><a href="#删除成员" class="headerlink" title="删除成员"></a>删除成员</h2><h3 id="ZREM"><a href="#ZREM" class="headerlink" title="ZREM"></a>ZREM</h3><p>语法<code>ZREM key member [member ...]</code></p>
-<ul>
-<li><code>ZREM</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>member</code> 成员名</li>
-</ul>
-<p>移除有序集 key 中的一个或多个成员,不存在的成员将被忽略.</p>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; zcard test1</div><div class="line">(integer) 7</div><div class="line">redis 127.0.0.1:7006&gt; zrem test1 a</div><div class="line">(integer) 1</div><div class="line">redis 127.0.0.1:7006&gt; zcard test1</div><div class="line">(integer) 6</div></pre></td></tr></table></figure></p>
-<h3 id="ZREMRANGEBYRANK"><a href="#ZREMRANGEBYRANK" class="headerlink" title="ZREMRANGEBYRANK"></a>ZREMRANGEBYRANK</h3><p>语法<code>ZREMRANGEBYRANK key start stop</code></p>
-<ul>
-<li><code>ZREMRANGEBYRANK</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>start</code> 开始索引从0开始(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>stop</code>  结束索引从0开始(默认闭区间,使用<code>(</code>表示开区间)</li>
-</ul>
-<p>移除有序集 key 中,指定排名(rank)区间内的所有成员.</p>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZREMRANGEBYRANK test1 1 2 # 将第二名和第三名移除</div><div class="line">(integer) 2</div></pre></td></tr></table></figure></p>
-<h3 id="ZREMRANGEBYSCORE"><a href="#ZREMRANGEBYSCORE" class="headerlink" title="ZREMRANGEBYSCORE"></a>ZREMRANGEBYSCORE</h3><p>语法<code>ZREMRANGEBYSCORE key min max</code></p>
-<ul>
-<li><code>ZREMRANGEBYSCORE</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>min</code>最小值(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>max</code> 最大值(默认闭区间,使用<code>(</code>表示开区间)</li>
-</ul>
-<p>将集合key里的score值区间为[min,max]的成员删除</p>
-<blockquote>
-<p><code>+</code>和<code>-</code>在 min 参数以及 max 参数中表示正无限和负无限.</p>
-</blockquote>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZREMRANGEBYSCORE test1 10 20</div><div class="line">(integer) 1</div></pre></td></tr></table></figure></p>
-<h2 id="合并集合"><a href="#合并集合" class="headerlink" title="合并集合"></a>合并集合</h2><h3 id="ZUNIONSTORE"><a href="#ZUNIONSTORE" class="headerlink" title="ZUNIONSTORE"></a>ZUNIONSTORE</h3><p>语法<code>ZUNIONSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]</code></p>
-<ul>
-<li><code>ZUNIONSTORE</code> redis命令</li>
-<li><code>destination</code> 有序集合名</li>
-<li><code>numkeys</code>  需要合并的集合数量</li>
-<li><code>key</code>  需要合并的集合</li>
-<li><code>WEIGHTS</code>  指定该值,则在合并的时候,对每个score值都乘以该元素</li>
-<li><code>AGGREGATE</code> 指定并集的结果集的聚合方式</li>
-</ul>
-<p>对多个集合采取并集</p>
-<blockquote>
-<p>AGGREGATE有三种值：A. SUM,将相同的成员的score相加. MIN,取相同成员的最小score值. MAX,取相同成员的最大score值</p>
-</blockquote>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; zadd a 10 a1 20 a2 30 a3 40 a4 50 a5</div><div class="line">(integer) 5</div><div class="line">redis 127.0.0.1:7006&gt; zadd b 11 b1 12 b2 13 b3 14 b4 15 b5</div><div class="line">(integer) 5</div><div class="line">redis 127.0.0.1:7006&gt; ZUNIONSTORE c 2 a b</div><div class="line">(integer) 10</div><div class="line">redis 127.0.0.1:7006&gt; ZRANGE c 0 -1 WITHSCORES</div><div class="line"> 1) &quot;a1&quot;</div><div class="line"> 2) &quot;10&quot;</div><div class="line"> 3) &quot;b1&quot;</div><div class="line"> 4) &quot;11&quot;</div><div class="line"> 5) &quot;b2&quot;</div><div class="line"> 6) &quot;12&quot;</div><div class="line"> 7) &quot;b3&quot;</div><div class="line"> 8) &quot;13&quot;</div><div class="line"> 9) &quot;b4&quot;</div><div class="line">10) &quot;14&quot;</div><div class="line">11) &quot;b5&quot;</div><div class="line">12) &quot;15&quot;</div><div class="line">13) &quot;a2&quot;</div><div class="line">14) &quot;20&quot;</div><div class="line">15) &quot;a3&quot;</div><div class="line">16) &quot;30&quot;</div><div class="line">17) &quot;a4&quot;</div><div class="line">18) &quot;40&quot;</div><div class="line">19) &quot;a5&quot;</div><div class="line">20) &quot;50&quot;</div><div class="line">redis 127.0.0.1:7006&gt; ZUNIONSTORE e 2 c a</div><div class="line">(integer) 10</div><div class="line">redis 127.0.0.1:7006&gt; ZRANGE e  0 -1 WITHSCORES</div><div class="line"> 1) &quot;b1&quot;</div><div class="line"> 2) &quot;11&quot;</div><div class="line"> 3) &quot;b2&quot;</div><div class="line"> 4) &quot;12&quot;</div><div class="line"> 5) &quot;b3&quot;</div><div class="line"> 6) &quot;13&quot;</div><div class="line"> 7) &quot;b4&quot;</div><div class="line"> 8) &quot;14&quot;</div><div class="line"> 9) &quot;b5&quot;</div><div class="line">10) &quot;15&quot;</div><div class="line">11) &quot;a1&quot;</div><div class="line">12) &quot;20&quot;</div><div class="line">13) &quot;a2&quot;</div><div class="line">14) &quot;40&quot;</div><div class="line">15) &quot;a3&quot;</div><div class="line">16) &quot;60&quot;</div><div class="line">17) &quot;a4&quot;</div><div class="line">18) &quot;80&quot;</div><div class="line">19) &quot;a5&quot;</div><div class="line">20) &quot;100&quot;</div></pre></td></tr></table></figure></p>
-<h3 id="ZINTERSTORE"><a href="#ZINTERSTORE" class="headerlink" title="ZINTERSTORE"></a>ZINTERSTORE</h3><p>语法<code>ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]</code></p>
-<ul>
-<li><code>ZINTERSTORE</code> redis命令</li>
-<li><code>destination</code> 有序集合名</li>
-<li><code>numkeys</code>  需要合并的集合数量</li>
-<li><code>key</code>  需要合并的集合</li>
-<li><code>WEIGHTS</code>  指定该值,则在合并的时候,对每个score值都乘以该元素</li>
-<li><code>AGGREGATE</code> 指定并集的结果集的聚合方式</li>
-</ul>
-<p>对多个集合采取交集</p>
-<blockquote>
-<p>AGGREGATE有三种值：A. SUM,将相同的成员的score相加. MIN,取相同成员的最小score值. MAX,取相同成员的最大score值</p>
-</blockquote>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; zadd h 1 a1 2 a2</div><div class="line">(integer) 2</div><div class="line">redis 127.0.0.1:7006&gt; ZINTERSTORE j 2 e h</div><div class="line">(integer) 2</div><div class="line">redis 127.0.0.1:7006&gt; zrange j 0 -1 WITHSCORES</div><div class="line">1) &quot;a1&quot;</div><div class="line">2) &quot;21&quot;</div><div class="line">3) &quot;a2&quot;</div><div class="line">4) &quot;42&quot;</div><div class="line">redis 127.0.0.1:7006&gt;</div></pre></td></tr></table></figure></p>
-<h2 id="获取集合数量"><a href="#获取集合数量" class="headerlink" title="获取集合数量"></a>获取集合数量</h2><h3 id="ZCARD"><a href="#ZCARD" class="headerlink" title="ZCARD"></a>ZCARD</h3><p>语法<code>ZCARD key</code></p>
-<ul>
-<li><code>ZCARD</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-</ul>
-<p>获得集合大小</p>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZCARD test1</div><div class="line">(integer) 2</div></pre></td></tr></table></figure></p>
-<h3 id="ZCOUNT"><a href="#ZCOUNT" class="headerlink" title="ZCOUNT"></a>ZCOUNT</h3><p>语法<code>ZCOUNT key min max</code></p>
-<ul>
-<li><code>ZCOUNT</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>min</code>最小值(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>max</code> 最大值(默认闭区间,使用<code>(</code>表示开区间)<br>这个命令就是统计score 值在 min 和 max 之间(默认包括 score 值等于 min 或 max )的成员的数量<blockquote>
-<p><code>+</code>和<code>-</code>在 min 参数以及 max 参数中表示正无限和负无限.</p>
-</blockquote>
-</li>
-</ul>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZCOUNT test 10 50</div><div class="line">(integer) 6</div></pre></td></tr></table></figure></p>
-<h2 id="获取集合列表"><a href="#获取集合列表" class="headerlink" title="获取集合列表"></a>获取集合列表</h2><h3 id="ZRANGE"><a href="#ZRANGE" class="headerlink" title="ZRANGE"></a>ZRANGE</h3><p>语法<code>ZRANGE key start stop [WITHSCORES]</code></p>
-<ul>
-<li><code>ZRANGE</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>start</code> 开始索引从0开始(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>stop</code>  结束索引从0开始(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>WITHSCORES</code>  同时也返回成员对应的值</li>
-</ul>
-<p>返回有序集key中指定区间内的成员,得到的成员是递增(从小到大)排序的.</p>
-<blockquote>
-<p>索引从0开始, 如果索引为负数则代表从倒序,即-1代表最后一个,-2代表倒数第二个. ( <code>ZRANGE test1 0 -1 WITHSCORES</code>显示整个有序集成员)</p>
-</blockquote>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; zrange test1 0 3</div><div class="line">1) &quot;a&quot;</div><div class="line">2) &quot;c&quot;</div><div class="line">3) &quot;t&quot;</div><div class="line">4) &quot;b&quot;</div><div class="line">redis 127.0.0.1:7006&gt; zrange test1 0 3 WITHSCORES</div><div class="line">1) &quot;a&quot;</div><div class="line">2) &quot;10&quot;</div><div class="line">3) &quot;c&quot;</div><div class="line">4) &quot;12&quot;</div><div class="line">5) &quot;t&quot;</div><div class="line">6) &quot;13&quot;</div><div class="line">7) &quot;b&quot;</div><div class="line">8) &quot;20&quot;</div></pre></td></tr></table></figure></p>
-<h3 id="ZREVRANGE"><a href="#ZREVRANGE" class="headerlink" title="ZREVRANGE"></a>ZREVRANGE</h3><p>语法<code>ZREVRANGE key start stop [WITHSCORES]</code></p>
-<ul>
-<li><code>ZREVRANGE</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>start</code> 开始索引从0开始(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>stop</code>  结束索引从0开始(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>WITHSCORES</code> 输出score值</li>
-</ul>
-<p>和<code>ZRANGE</code>命令不同的是它是从按 score 值递减(从大到小)来排列,其他和ZRANGE命令一样</p>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZREVRANGE test1 1 100</div><div class="line">1) &quot;d&quot;</div><div class="line">2) &quot;f&quot;</div></pre></td></tr></table></figure></p>
-<h3 id="ZRANGEBYSCORE"><a href="#ZRANGEBYSCORE" class="headerlink" title="ZRANGEBYSCORE"></a>ZRANGEBYSCORE</h3><p>语法<code>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]</code></p>
-<ul>
-<li><code>ZRANGEBYSCORE</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>min</code>最小值(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>max</code> 最大值(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>WITHSCORES</code> 输出score值</li>
-<li><code>LIMIT offset count</code></li>
-</ul>
-<p>返回有序集key中,score值介于 [min, max]之间(闭区间)的成员,按 score 值递增(从小到大)次序排列</p>
-<blockquote>
-<p><code>+</code>和<code>-</code>在 min 参数以及 max 参数中表示正无限和负无限.</p>
-</blockquote>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZRANGEBYSCORE test1 10 56 WITHSCORES	# 闭区间</div><div class="line"> 1) &quot;a&quot;</div><div class="line"> 2) &quot;10&quot;</div><div class="line"> 3) &quot;c&quot;</div><div class="line"> 4) &quot;12&quot;</div><div class="line"> 5) &quot;t&quot;</div><div class="line"> 6) &quot;13&quot;</div><div class="line"> 7) &quot;b&quot;</div><div class="line"> 8) &quot;20&quot;</div><div class="line"> 9) &quot;f&quot;</div><div class="line">10) &quot;42&quot;</div><div class="line">11) &quot;d&quot;</div><div class="line">12) &quot;56&quot;</div><div class="line">redis 127.0.0.1:7006&gt; ZRANGEBYSCORE test1 (10 (56 WITHSCORES # 开区间</div><div class="line">1) &quot;c&quot;</div><div class="line">2) &quot;12&quot;</div><div class="line">3) &quot;t&quot;</div><div class="line">4) &quot;13&quot;</div><div class="line">5) &quot;b&quot;</div><div class="line">6) &quot;20&quot;</div><div class="line">7) &quot;f&quot;</div><div class="line">8) &quot;42&quot;</div><div class="line">redis 127.0.0.1:7006&gt; ZRANGEBYSCORE test1 10 56 WITHSCORES LIMIT 0 3 # 从第一个成员开始选择三个成员</div><div class="line">1) &quot;a&quot;</div><div class="line">2) &quot;10&quot;</div><div class="line">3) &quot;c&quot;</div><div class="line">4) &quot;12&quot;</div><div class="line">5) &quot;t&quot;</div><div class="line">6) &quot;13&quot;</div></pre></td></tr></table></figure></p>
-<h3 id="ZREVRANGEBYSCORE"><a href="#ZREVRANGEBYSCORE" class="headerlink" title="ZREVRANGEBYSCORE"></a>ZREVRANGEBYSCORE</h3><p>语法<code>ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]</code></p>
-<ul>
-<li><code>ZREVRANGEBYSCORE</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>min</code>最小值(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>max</code> 最大值(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>WITHSCORES</code> 输出score值</li>
-<li><code>LIMIT offset count</code>  </li>
-</ul>
-<p>除了成员按 score 值递减的次序排列这一点外, ZREVRANGEBYSCORE 命令的其他方面和 ZRANGEBYSCORE 命令一样.</p>
-<blockquote>
-<p><code>+</code>和<code>-</code>在 min 参数以及 max 参数中表示正无限和负无限.</p>
-</blockquote>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZREVRANGE test1 1 100 WITHSCORES</div><div class="line"> 1) &quot;f&quot;</div><div class="line"> 2) &quot;42&quot;</div><div class="line"> 3) &quot;d&quot;</div><div class="line"> 4) &quot;40&quot;</div><div class="line"> 5) &quot;c&quot;</div><div class="line"> 6) &quot;30&quot;</div><div class="line"> 7) &quot;b&quot;</div><div class="line"> 8) &quot;20&quot;</div><div class="line"> 9) &quot;a&quot;</div><div class="line">10) &quot;10&quot;</div></pre></td></tr></table></figure></p>
-<h3 id="ZRANGEBYLEX"><a href="#ZRANGEBYLEX" class="headerlink" title="ZRANGEBYLEX"></a>ZRANGEBYLEX</h3><p>语法<code>ZRANGEBYLEX key min max [LIMIT offset count]</code></p>
-<ul>
-<li><code>ZRANGEBYLEX</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>min</code>最小值(默认闭区间,使用<code>(</code>表示开区间)</li>
-<li><code>max</code> 最大值(默认闭区间,使用<code>(</code>表示开区间)</li>
-</ul>
-<p>根据成员进行排序而不是根据score值排序,然后返回[min, max]区间内的成员</p>
-<blockquote>
-<p><code>+</code>和<code>-</code>在 min 参数以及 max 参数中表示正无限和负无限.</p>
-</blockquote>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZRANGEBYLEX test1 10 30</div></pre></td></tr></table></figure></p>
-<h2 id="查询某个成员"><a href="#查询某个成员" class="headerlink" title="查询某个成员"></a>查询某个成员</h2><h3 id="ZRANK"><a href="#ZRANK" class="headerlink" title="ZRANK"></a>ZRANK</h3><p>语法<code>ZRANK key member</code></p>
-<ul>
-<li><code>ZRANK</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>member</code>  成员值</li>
-</ul>
-<p>返回有序集 key 中成员 member 的排名.其中有序集成员按 score 值递增(从小到大)顺序排列.（排名从0开始）</p>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZRANK test1 d</div><div class="line">(integer) 5</div></pre></td></tr></table></figure></p>
-<h3 id="ZREVRANK"><a href="#ZREVRANK" class="headerlink" title="ZREVRANK"></a>ZREVRANK</h3><p>语法<code>ZREVRANK key member</code></p>
-<ul>
-<li><code>ZREVRANK</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>member</code>  成员值<br>除了成员按 score 值递减的次序排列这一点外, ZREVRANK 命令的其他方面和 ZRANK 命令一样.</li>
-</ul>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZREVRANK test1 c</div><div class="line">(integer) 3</div></pre></td></tr></table></figure></p>
-<h3 id="ZSCORE"><a href="#ZSCORE" class="headerlink" title="ZSCORE"></a>ZSCORE</h3><p>语法<code>ZSCORE key member</code></p>
-<ul>
-<li><code>ZSCORE</code> redis命令</li>
-<li><code>key</code> 有序集合名</li>
-<li><code>member</code> 成员</li>
-</ul>
-<p>返回有序集 key 中,成员 member 的 score 值.</p>
-<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">redis 127.0.0.1:7006&gt; ZSCORE test1 a</div><div class="line">&quot;10&quot;</div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2015/11/16/nosql/Redis_SortedSet/" data-title="Redis SortedSet | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2015/11/18/nosql/Memcache/" title="memcached">
-  <strong>上一篇：</strong><br/>
-  <span>
-  memcached</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2015/10/26/杂记/NUMA/"  title="NUMA和RDMA">
- <strong>下一篇：</strong><br/> 
- <span>NUMA和RDMA
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/11/16/nosql/Redis_SortedSet/" data-title="Redis SortedSet" data-url="http://www.yu66.wang/2015/11/16/nosql/Redis_SortedSet/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#增加成员"><span class="toc-number">1.</span> <span class="toc-text">增加成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZADD"><span class="toc-number">1.1.</span> <span class="toc-text">ZADD</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改成员"><span class="toc-number">2.</span> <span class="toc-text">修改成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZINCRBY"><span class="toc-number">2.1.</span> <span class="toc-text">ZINCRBY</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除成员"><span class="toc-number">3.</span> <span class="toc-text">删除成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREM"><span class="toc-number">3.1.</span> <span class="toc-text">ZREM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREMRANGEBYRANK"><span class="toc-number">3.2.</span> <span class="toc-text">ZREMRANGEBYRANK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREMRANGEBYSCORE"><span class="toc-number">3.3.</span> <span class="toc-text">ZREMRANGEBYSCORE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并集合"><span class="toc-number">4.</span> <span class="toc-text">合并集合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZUNIONSTORE"><span class="toc-number">4.1.</span> <span class="toc-text">ZUNIONSTORE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZINTERSTORE"><span class="toc-number">4.2.</span> <span class="toc-text">ZINTERSTORE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取集合数量"><span class="toc-number">5.</span> <span class="toc-text">获取集合数量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZCARD"><span class="toc-number">5.1.</span> <span class="toc-text">ZCARD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZCOUNT"><span class="toc-number">5.2.</span> <span class="toc-text">ZCOUNT</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取集合列表"><span class="toc-number">6.</span> <span class="toc-text">获取集合列表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZRANGE"><span class="toc-number">6.1.</span> <span class="toc-text">ZRANGE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREVRANGE"><span class="toc-number">6.2.</span> <span class="toc-text">ZREVRANGE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZRANGEBYSCORE"><span class="toc-number">6.3.</span> <span class="toc-text">ZRANGEBYSCORE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREVRANGEBYSCORE"><span class="toc-number">6.4.</span> <span class="toc-text">ZREVRANGEBYSCORE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZRANGEBYLEX"><span class="toc-number">6.5.</span> <span class="toc-text">ZRANGEBYLEX</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查询某个成员"><span class="toc-number">7.</span> <span class="toc-text">查询某个成员</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ZRANK"><span class="toc-number">7.1.</span> <span class="toc-text">ZRANK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZREVRANK"><span class="toc-number">7.2.</span> <span class="toc-text">ZREVRANK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ZSCORE"><span class="toc-number">7.3.</span> <span class="toc-text">ZSCORE</span></a></li></ol></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

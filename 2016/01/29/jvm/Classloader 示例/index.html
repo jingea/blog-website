@@ -1,582 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>使用Classloader加载类 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="类加载器不单单是用于实现类的加载动作, 对于任意一个类,都需要由加载它的类加载器和类本身一同确立其在java虚拟机中的唯一性.换句话说:比较俩个类是否相等,只有在这俩个类是由同一个类加载器加载的前提下才有意义. 否则即使来自同一个源文件,只要加载它们的类加载器不同,这俩个类就必定不相等.
-
-判断俩个类相等可以通过下面方法: Class对象的equals()方法, isAssignbleFrom()">
-<meta property="og:type" content="article">
-<meta property="og:title" content="使用Classloader加载类">
-<meta property="og:url" content="http://www.yu66.wang/2016/01/29/jvm/Classloader 示例/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="类加载器不单单是用于实现类的加载动作, 对于任意一个类,都需要由加载它的类加载器和类本身一同确立其在java虚拟机中的唯一性.换句话说:比较俩个类是否相等,只有在这俩个类是由同一个类加载器加载的前提下才有意义. 否则即使来自同一个源文件,只要加载它们的类加载器不同,这俩个类就必定不相等.
-
-判断俩个类相等可以通过下面方法: Class对象的equals()方法, isAssignbleFrom()">
-<meta property="og:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/jvm/ClassLoader%E7%9A%84%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用Classloader加载类">
-<meta name="twitter:description" content="类加载器不单单是用于实现类的加载动作, 对于任意一个类,都需要由加载它的类加载器和类本身一同确立其在java虚拟机中的唯一性.换句话说:比较俩个类是否相等,只有在这俩个类是由同一个类加载器加载的前提下才有意义. 否则即使来自同一个源文件,只要加载它们的类加载器不同,这俩个类就必定不相等.
-
-判断俩个类相等可以通过下面方法: Class对象的equals()方法, isAssignbleFrom()">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/ming15/blog-website/images/jvm/ClassLoader%E7%9A%84%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/01/29/jvm/Classloader 示例/" title="使用Classloader加载类" itemprop="url">使用Classloader加载类</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-01-29T08:00:00.000Z" itemprop="datePublished"> 发表于 2016-01-29</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派模型"><span class="toc-number">1.</span> <span class="toc-text">双亲委派模型</span></a></li></ol>
-		
-		</div>
-		
-		<p>类加载器不单单是用于实现类的加载动作, 对于任意一个类,都需要由加载它的类加载器和类本身一同确立其在java虚拟机中的唯一性.换句话说:比较俩个类是否相等,只有在这俩个类是由同一个类加载器加载的前提下才有意义. 否则即使来自同一个源文件,只要加载它们的类加载器不同,这俩个类就必定不相等.</p>
-<blockquote>
-<p>判断俩个类相等可以通过下面方法: <code>Class</code>对象的<code>equals()</code>方法, <code>isAssignbleFrom()</code>方法, <code>isInstance()</code>方法的返回结果, 也包括使用<code>instanceof</code>关键字做对象所属关系判断等. 不同的类加载器对<code>instanceof</code>关键字运算结果的影响</p>
-</blockquote>
-<h2 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h2><p><img src="https://raw.githubusercontent.com/ming15/blog-website/images/jvm/ClassLoader%E7%9A%84%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84.png" alt="ClassLoader的体系架构"><br>从JVM来角度讲, 只存在俩种不同的类加载器:</p>
-<ul>
-<li>启动类加载器: 使用C++语言实践,是虚拟机自身的一部分. </li>
-<li>其他类加载器: 这些类加载器都由java语言实现,独立于虚拟机外部,并且全部都继承自抽象类:<code>java.lang.ClassLoader</code></li>
-</ul>
-<p>系统提供的类加载器</p>
-<ul>
-<li>启动类加载器 : 这个类加载器负责将<code>&lt;JAVA_HOME&gt;\lib</code>目录中的,或者<code>-Xbootclasspath</code>参数所指定的路径中的,并且是虚拟机识别的(仅按照文件名识别,如rt,jar,名字不符合的类库即使放在lib目录里也不会被加载)类库加载到虚拟机内存中,启动类加载器无法被java程序直接使用.</li>
-<li>扩展类加载器 : 这个类加载器由<code>sun.misc.Launcher$ExtClassLoader</code>实现,负责加载<code>&lt;JAVA_HOME&gt;\lib\ext</code>目录中的,或者被<code>java.ext.dirs</code>系统变量所指定的路径中的所有类库, 开发者可以直接使用扩展类加载器.</li>
-<li>应用程序加载器 : 这个类加载器由<code>sun.misc.Launcher$AppClassLoader</code>来实现. 由于类加载器是<code>ClassLoader</code>中<code>getSystemClassLoader()</code>方法的返回值,所以一般也称它为系统类加载器. 它负责加载用户类路径(ClassPath)上所指定的类库,开发者可以直接使用这个类加载器,如果应用程序中没有自定义过自己的类加载器,一般情况下就是程序中默认的类加载器.</li>
-</ul>
-<p>类加载器收到类加载请求,它不会自己去尝试加载这个类,而把这个请求委派给父类加载器去完成,每一个层次的类加载都是如此,因此所有的类加请求最终都应该传送到顶层的启动类加载器中,只有当父加载器反馈自己无法完成这个加载请求(它的搜索范围中没有找到所需的类)时,子类加载器才会尝试自己去加载.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</div><div class="line">       <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">   &#123;</div><div class="line">       <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</div><div class="line">           <span class="comment">// 第一步检查被加载的类是否已经被加载进入了虚拟机</span></div><div class="line">           Class&lt;?&gt; c = findLoadedClass(name);</div><div class="line">           <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">			<span class="comment">// 如果没有被加载进虚拟机中则进行加载</span></div><div class="line">               <span class="keyword">long</span> t0 = System.nanoTime();</div><div class="line">               <span class="keyword">try</span> &#123;</div><div class="line">				<span class="comment">// 优先从父类加载器中进行加载, 所有的类加请求最终都应该传送到顶层的启动类加载器中</span></div><div class="line">                   <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</div><div class="line">                       c = parent.loadClass(name, <span class="keyword">false</span>);</div><div class="line">                   &#125; <span class="keyword">else</span> &#123;</div><div class="line">				<span class="comment">// </span></div><div class="line">                       c = findBootstrapClassOrNull(name);</div><div class="line">                   &#125;</div><div class="line">               &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">                   <span class="comment">// ClassNotFoundException thrown if class not found</span></div><div class="line">                   <span class="comment">// from the non-null parent class loader</span></div><div class="line">               &#125;</div><div class="line">			</div><div class="line">               <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">                   <span class="comment">// 父类加载器找不到则调用自己的findClass(name)找到类然后进行加载</span></div><div class="line">                   <span class="keyword">long</span> t1 = System.nanoTime();</div><div class="line">                   c = findClass(name);</div><div class="line"></div><div class="line">                   <span class="comment">// this is the defining class loader; record the stats</span></div><div class="line">                   sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</div><div class="line">                   sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</div><div class="line">                   sun.misc.PerfCounter.getFindClasses().increment();</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">if</span> (resolve) &#123;</div><div class="line">               resolveClass(c);</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">return</span> c;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>使用双亲委派模型来组织类加载之间的关系, 可以确保我们自己JVM的安全. 因为当我们自己写一个 <code>java.lang.Object</code>, 这个类虽然能够被正常编译, 但是它永远不会被加载器虚拟机中, 因为这个类会在启动类加载器中完成了加载.</p>
-</blockquote>
-<p>在刚才的<code>loadClass()</code>方法中我们看到最终我们自己实现类加载的逻辑是在<code>findClass()</code>中进行的, 这是为了向前兼容,JDK1.2之后添加的方法.JDK1.2之后已不提倡用户再去覆盖<code>loadClass()</code>方法,而在<code>loadClass()</code>方法的逻辑里如果父类加载失败,则会调用自己的<code>findClass()</code>方法来完成加载,这样就可以保证新写出来的类加载器是符合双亲委派规则的.</p>
-<blockquote>
-<p>为了解决各个类加载器的基础类调用用户代码, java设计团队引入了这样一个设计:线程上下文类加载器,这个类加载器可以通过<code>java.lang.Thread</code>类的<code>setContextClassLoaser()</code>方法进行设置,如果创建线程时还未设置,它将会从父线程中继承一个:如果在应用程序的全局范围内都没有设置过,那么这个类加载器默认就是应用程序类加载器.有了线程上下文类加载器,JNDI服务使用这个线程上下文类加载器去加载所需要的SPI代码,也就是父类加载器请求子类加载器去完成类加载的动作,这种行为实际就是打通了双亲委派模型的层次结构来逆向使用类加载器,已经违背了双亲委派模型的一般性原则.</p>
-</blockquote>
-<p>上面所说只完成了类加载的动作, 但是如果我们想要实现热更代码的这种功能的话,就不能单纯依赖重写<code>findClass(name)</code>了，而是要重写<code>loadClass(String name)</code>了，这是因为在<code>ClassLoader</code>中的<code>loadClass(String name)</code>方法当发现已经加载过的类就不会再重新加载了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.File;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Field;</div><div class="line"><span class="keyword">import</span> java.net.URL;</div><div class="line"><span class="keyword">import</span> java.net.URLClassLoader;</div><div class="line"><span class="keyword">import</span> java.util.Random;</div><div class="line"></div><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.objectweb.asm.Opcodes.*;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClassLoader</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line"></div><div class="line">		URL url = <span class="keyword">new</span> File(<span class="string">"."</span>).toURL();</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; <span class="number">5</span>; i++) &#123;</div><div class="line">			MyClassLoader myLoader = <span class="keyword">new</span> MyClassLoader(<span class="keyword">new</span> URL[]&#123;url&#125;);</div><div class="line">			Class&lt;?&gt; obj = myLoader.loadClass(<span class="string">"Mesurable"</span>);</div><div class="line">			<span class="keyword">for</span> (Field field : obj.getFields()) &#123;</div><div class="line">				System.out.println(field.getName());</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">URLClassLoader</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MyClassLoader</span><span class="params">(URL[] urls)</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>(urls);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">		Class&lt;?&gt; loadClass = <span class="keyword">null</span>;</div><div class="line">		<span class="keyword">if</span> (name.contains(<span class="string">"java.lang.Object"</span>)) &#123;</div><div class="line">			<span class="comment">// 因为我们的父类是java.lang.Object, 因此我们要调用父类加载器进行加载</span></div><div class="line">			loadClass = <span class="keyword">super</span>.loadClass(name);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			loadClass = findLoadedClass(name);</div><div class="line">			<span class="keyword">if</span> (loadClass != <span class="keyword">null</span>) &#123;</div><div class="line">				<span class="keyword">return</span> loadClass;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">byte</span>[] bytes = generateClass();</div><div class="line">			loadClass = defineClass(name, bytes, <span class="number">0</span>, bytes.length);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> loadClass;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">byte</span>[] generateClass() &#123;</div><div class="line">		ClassWriter cw = <span class="keyword">new</span> ClassWriter(<span class="number">0</span>);</div><div class="line">		cw.visit(V1_8,											<span class="comment">// 指定class文件版本号, 我们将其设置为java8</span></div><div class="line">				ACC_PUBLIC,	<span class="comment">// 设置接口的修饰符</span></div><div class="line">				<span class="string">"Mesurable"</span>,								<span class="comment">// 我们设置classname, 需要在这里指定全限定名</span></div><div class="line">				<span class="keyword">null</span>,											<span class="comment">// 设置泛型信息, 因为我们的接口是非泛化的, 因此我们将其设置为null</span></div><div class="line">				<span class="string">"java/lang/Object"</span>,							<span class="comment">// 设置父类, 同时需要设定全限定名</span></div><div class="line">				<span class="keyword">null</span>);			<span class="comment">// 设置接口, 同样需要设置全限定名</span></div><div class="line"></div><div class="line">		cw.visitField(</div><div class="line">				ACC_PUBLIC,	<span class="comment">// 设置字段的修饰符</span></div><div class="line">				<span class="string">"LESS__"</span> + random.nextInt(<span class="number">100</span>),										<span class="comment">// 设置字段名</span></div><div class="line">				<span class="string">"I"</span>,										<span class="comment">// 设置字段类型</span></div><div class="line">				<span class="keyword">null</span>,										<span class="comment">// 设置泛型信息</span></div><div class="line">				<span class="keyword">new</span> Long(-<span class="number">1</span>))							<span class="comment">// 设置字面量值.</span></div><div class="line">				.visitEnd();</div><div class="line"></div><div class="line">		cw.visitEnd();</div><div class="line">		<span class="keyword">return</span> cw.toByteArray();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> Random random = <span class="keyword">new</span> Random();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p><code>URLClassLoader</code>根据<code>URL</code>指定的路径从<code>JAR</code>文件或者目录里加载<code>class</code>文件或者其他资源文件. 如果<code>URL</code>以<code>/</code>结束,就表示到某个目录里进行加载. 否则就表示到某个<code>JAR</code>文件里进行加载. 线程里用于创建<code>URLClassLoader</code>实例的<code>AccessControlContext</code>会在加载类文件以及资源文件时使用到. <code>URLClassLoader</code>实例创建好之后会根据默认的授权权限依据指定的<code>URL</code>来进行加载类.</p>
-</blockquote>
-<p>从文件中加载class<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.*;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.net.URL;</div><div class="line"><span class="keyword">import</span> java.net.URLClassLoader;</div><div class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; <span class="number">5</span>; i++) &#123;</div><div class="line">			MyClassLoader myLoader = <span class="keyword">new</span> MyClassLoader(<span class="keyword">new</span> URL[]&#123;&#125;);</div><div class="line">			Class&lt;?&gt; obj = myLoader.loadClass(<span class="string">"D:\\ming\\test\\target\\classes\\Test.class"</span>);</div><div class="line">			<span class="keyword">for</span> (Method method : obj.getMethods()) &#123;</div><div class="line">				<span class="keyword">if</span> (method.getName().equals(<span class="string">"printTime"</span>)) &#123;</div><div class="line">					method.invoke(<span class="keyword">null</span>);</div><div class="line">					TimeUnit.SECONDS.sleep(<span class="number">10</span>);</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printTime</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="number">123</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">URLClassLoader</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MyClassLoader</span><span class="params">(URL[] urls)</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>(urls);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</div><div class="line">		Class&lt;?&gt; loadClass = findLoadedClass(name);</div><div class="line">		<span class="keyword">if</span> (loadClass != <span class="keyword">null</span>) &#123;</div><div class="line">			<span class="keyword">return</span> loadClass;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			<span class="keyword">byte</span>[] bytes = loadClassFromFile(name);</div><div class="line">			<span class="keyword">int</span> idx = name.lastIndexOf(<span class="string">"\\"</span>);</div><div class="line">			name = name.substring(idx + <span class="number">1</span>);</div><div class="line">			name = name.split(<span class="string">"\\.class"</span>)[<span class="number">0</span>];</div><div class="line">			loadClass = defineClass(name, bytes, <span class="number">0</span>, bytes.length);</div><div class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">			loadClass = <span class="keyword">super</span>.loadClass(name);</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> loadClass;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> <span class="keyword">byte</span>[] loadClassFromFile(String fileName) <span class="keyword">throws</span> Exception &#123;</div><div class="line">		InputStream input = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(fileName));</div><div class="line">		<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[input.available()];</div><div class="line">		input.read(bytes);</div><div class="line">		<span class="keyword">return</span> bytes;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>同一个类加载器不同加载同一个类俩次, 例如我们利用上面的<code>MyClassLoader</code>进行加载<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		MyClassLoader myLoader1 = <span class="keyword">new</span> MyClassLoader(<span class="keyword">new</span> URL[]&#123;&#125;);</div><div class="line">		Class&lt;?&gt; obj1 = myLoader1.loadClass(<span class="string">"D:\\ming\\test\\target\\classes\\Test.class"</span>);</div><div class="line">		MyClassLoader myLoader2 = <span class="keyword">new</span> MyClassLoader(<span class="keyword">new</span> URL[]&#123;&#125;);</div><div class="line">		Class&lt;?&gt; obj2 = myLoader2.loadClass(<span class="string">"D:\\ming\\test\\target\\classes\\Test.class"</span>);</div><div class="line">		System.out.println(obj1.equals(obj2));</div><div class="line">		Class&lt;?&gt; obj3 = myLoader2.loadClass(<span class="string">"D:\\ming\\test\\target\\classes\\Test.class"</span>);</div><div class="line">		System.out.println(obj2.equals(obj3));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>会产生异常<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">false</div><div class="line">Exception in thread "main" java.lang.LinkageError: loader (instance of  MyClassLoader): attempted  duplicate class definition for name: "Test"</div><div class="line">	at java.lang.ClassLoader.defineClass1(Native Method)</div><div class="line">	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)</div><div class="line">	at java.lang.ClassLoader.defineClass(ClassLoader.java:642)</div><div class="line">	at MyClassLoader.loadClass(Test.java:37)</div><div class="line">	at Test.main(Test.java:15)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</div><div class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</div><div class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</div><div class="line">	at java.lang.reflect.Method.invoke(Method.java:498)</div><div class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:144)</div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/JVM/">JVM</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/01/29/jvm/Classloader 示例/" data-title="使用Classloader加载类 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/01/30/JavaLibrary/Typesafe Config 初探/" title="Typesafe Config 初探">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Typesafe Config 初探</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/01/20/JavaLibrary/Retrofit/"  title="Retrofit 初探">
- <strong>下一篇：</strong><br/> 
- <span>Retrofit 初探
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/01/29/jvm/Classloader 示例/" data-title="使用Classloader加载类" data-url="http://www.yu66.wang/2016/01/29/jvm/Classloader 示例/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#双亲委派模型"><span class="toc-number">1.</span> <span class="toc-text">双亲委派模型</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>

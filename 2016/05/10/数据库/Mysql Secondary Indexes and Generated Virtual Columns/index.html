@@ -1,576 +1,98 @@
-
- <!DOCTYPE HTML>
-<html >
-<head>
-  <meta charset="UTF-8">
-  
-    <title>Mysql 第二索引和虚拟列 | ·</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    
-    <meta name="author" content="王玉">
-    
-
-    
-    <meta name="description" content="官方文档
-Generated Columnsgenerated column是由普通column生成的列.1234567891011121314CREATE TABLE sum (  num1 int,  num2 int,  sum int AS (num1 + num2));INSERT INTO sum (num1, num2) VALUES(1,1),(3,4);mysql&amp;gt; SEL">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Mysql 第二索引和虚拟列">
-<meta property="og:url" content="http://www.yu66.wang/2016/05/10/数据库/Mysql Secondary Indexes and Generated Virtual Columns/index.html">
-<meta property="og:site_name" content="·">
-<meta property="og:description" content="官方文档
-Generated Columnsgenerated column是由普通column生成的列.1234567891011121314CREATE TABLE sum (  num1 int,  num2 int,  sum int AS (num1 + num2));INSERT INTO sum (num1, num2) VALUES(1,1),(3,4);mysql&amp;gt; SEL">
-<meta property="og:updated_time" content="2016-10-29T06:45:58.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mysql 第二索引和虚拟列">
-<meta name="twitter:description" content="官方文档
-Generated Columnsgenerated column是由普通column生成的列.1234567891011121314CREATE TABLE sum (  num1 int,  num2 int,  sum int AS (num1 + num2));INSERT INTO sum (num1, num2) VALUES(1,1),(3,4);mysql&amp;gt; SEL">
-
-    
-    <link rel="alternative" href="/atom.xml" title="·" type="application/atom+xml">
-    
-    
-    
-    <link rel="apple-touch-icon" href="/img/author.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
-    
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-
+<% if (page.layout=='post' || page.layout=='photo'){ %>
+ <%- partial('_partial/head') %>
   <body>
     <header>
-      
-<div>
-		
-			<div id="textlogo">
-				<h1 class="site-name"><a href="/" title="·">·</a></h1>
-				<h2 class="blog-motto"></h2>
-			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
-			</a></div>
-			<nav class="animated">
-				<ul>
-					<ul>
-					 
-						<li><a href="/">主页</a></li>
-					
-						<li><a href="/about">关于</a></li>
-					
-					<li>
- 					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
-					
-					</li>
-				</ul>
-			</nav>			
-</div>
+      <%- partial('_partial/header') %>
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
-  
-	<article itemprop="articleBody"> 
-		<header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2016/05/10/数据库/Mysql Secondary Indexes and Generated Virtual Columns/" title="Mysql 第二索引和虚拟列" itemprop="url">Mysql 第二索引和虚拟列</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="王玉" target="_blank" itemprop="author">王玉</a>
-		
-  <p class="article-time">
-    <time datetime="2016-05-10T07:00:00.000Z" itemprop="datePublished"> 发表于 2016-05-10</time>
-    
-  </p>
-</header>
-	<div class="article-content">
-		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Generated-Columns"><span class="toc-number">1.</span> <span class="toc-text">Generated Columns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Secondary-Indexes"><span class="toc-number">2.</span> <span class="toc-text">Secondary Indexes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Generated-Virtual-Column索引JSON-Column上"><span class="toc-number">3.</span> <span class="toc-text">Generated Virtual Column索引JSON Column上</span></a></li></ol>
-		
-		</div>
-		
-		<p><a href="http://dev.mysql.com/doc/refman/5.7/en/create-table-secondary-indexes-virtual-columns.html" target="_blank" rel="external">官方文档</a></p>
-<h2 id="Generated-Columns"><a href="#Generated-Columns" class="headerlink" title="Generated Columns"></a>Generated Columns</h2><p>generated column是由普通column生成的列.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE sum (</div><div class="line">  num1 int,</div><div class="line">  num2 int,</div><div class="line">  sum int AS (num1 + num2)</div><div class="line">);</div><div class="line"></div><div class="line">INSERT INTO sum (num1, num2) VALUES(1,1),(3,4);</div><div class="line">mysql&gt; SELECT * FROM sum;</div><div class="line">+-------+-------+--------------------+</div><div class="line">| num1  | num2  | sum                |</div><div class="line">+-------+-------+--------------------+</div><div class="line">|     1 |     1 |                  2 |</div><div class="line">|     3 |     4 |                  7 |</div><div class="line">+-------+-------+--------------------+</div></pre></td></tr></table></figure></p>
-<p>在上面的实例中我们首先创建了一个sum表，然后插入俩条数据数据 我们发现sum这一列上自动生成一个值</p>
-<p>这种自动生成列的语法为为<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">col_name data_type [GENERATED ALWAYS] AS (expression)</div><div class="line">  [VIRTUAL | STORED] [UNIQUE [KEY]] [COMMENT comment]</div><div class="line">  [[NOT] NULL] [[PRIMARY] KEY]</div></pre></td></tr></table></figure></p>
-<ul>
-<li>VIRTUAL: 不存储值到磁盘上</li>
-<li>STORED : 将值存储到磁盘上</li>
-</ul>
-<h2 id="Secondary-Indexes"><a href="#Secondary-Indexes" class="headerlink" title="Secondary Indexes"></a>Secondary Indexes</h2><p>从MySQL5.7.8开始, InnoDB引擎基于自生成(generated virtual columns)的虚拟列支持辅助索引索引(secondary indexes, 并不支持其他索引, 例如簇索引等).</p>
-<p>secondary indexe可以基于一个, 多个, 组合virtual columns或者非generated virtual columns生成。当基于virtual column的secondary index可以由<code>UNIQUE</code>进行定义.</p>
-<p>当基于generated virtual column创建的secondary index, generated column的值就体现在了这个secondary index的记录上. 如果这个索引是一个covering index, generated column值是从索引中已经生成的值进行索引, 而不是再自己计算一遍.</p>
-<blockquote>
-<p>covering index 查询时检索所有的column.</p>
-</blockquote>
-<p>在执行<code>INSERT</code>和<code>UPDATE</code>这样的写操作时, 如果用到了基于virtual column的辅助索引时, 那么生成virtual column时会产生额外的性能消耗. 甚至当使用STORED generated columns时, 写操作会带来更多的性能消耗, 还有更多的内存和磁盘消耗. 如果secondary index不是基于virtual column, 当产生读操作时会带来更多的性能消耗, 这是因为virtual column的值每当该column的列被检查时都会计算一次.</p>
-<p>当发生回滚或者清除操作时, 被索引过的virtual column已经经过里MVCC-logged, 如此一来就可以以避免再计算一次. logged值的长度是由索引长度限制的, <code>COMPACT</code>和<code>REDUNDANT</code>是767字节, <code>DYNAMIC</code>和<code>COMPRESSED</code>是3072个字节.</p>
-<p>在virtual column 上增加或者删除secondary index是一个内置的操作.</p>
-<p>virtual column 上的secondary index不能成为外键的索引. 同样secondary index的virtual column也不能指向外键, 而且也不能使用如下的语句定义</p>
-<ul>
-<li>ON DELETE CASCADE</li>
-<li>ON DELETE SET NULL</li>
-<li>ON UPDATE CASCADE</li>
-<li>ON UPDATE SET NULL.</li>
-</ul>
-<h2 id="Generated-Virtual-Column索引JSON-Column上"><a href="#Generated-Virtual-Column索引JSON-Column上" class="headerlink" title="Generated Virtual Column索引JSON Column上"></a>Generated Virtual Column索引JSON Column上</h2><p>JSON columns是不能被直接索引的. 但是我们可以通过创建一个generated column来间接为JSON columns生成一个索引, 如下例:<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">mysql&gt; CREATE TABLE jemp (</div><div class="line">    -&gt;     c JSON,</div><div class="line">    -&gt;     g INT GENERATED ALWAYS AS (JSON_EXTRACT(c, '$.id')),</div><div class="line">    -&gt;     INDEX i (g)</div><div class="line">    -&gt; );</div><div class="line">Query OK, 0 rows affected (0.28 sec)</div><div class="line"></div><div class="line">mysql&gt; INSERT INTO jemp (c) VALUES</div><div class="line">     &gt;   ('&#123;"id": "1", "name": "Fred"&#125;'), ('&#123;"id": "2", "name": "Wilma"&#125;'),</div><div class="line">     &gt;   ('&#123;"id": "3", "name": "Barney"&#125;'), ('&#123;"id": "4", "name": "Betty"&#125;');</div><div class="line">Query OK, 4 rows affected (0.04 sec)</div><div class="line">Records: 4  Duplicates: 0  Warnings: 0</div><div class="line"></div><div class="line">mysql&gt; SELECT JSON_UNQUOTE(JSON_EXTRACT(c, '$.name')) AS name</div><div class="line">     &gt;     FROM jemp WHERE g &gt; 2;</div><div class="line">+--------+</div><div class="line">| name   |</div><div class="line">+--------+</div><div class="line">| Barney |</div><div class="line">| Betty  |</div><div class="line">+--------+</div><div class="line">2 rows in set (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; EXPLAIN SELECT JSON_UNQUOTE(JSON_EXTRACT(c, '$.name')) AS name</div><div class="line">     &gt;    FROM jemp WHERE g &gt; 2\G</div><div class="line">*************************** 1. row ***************************</div><div class="line">           id: 1</div><div class="line">  select_type: SIMPLE</div><div class="line">        table: jemp</div><div class="line">   partitions: NULL</div><div class="line">         type: range</div><div class="line">possible_keys: i</div><div class="line">          key: i</div><div class="line">      key_len: 5</div><div class="line">          ref: NULL</div><div class="line">         rows: 2</div><div class="line">     filtered: 100.00</div><div class="line">        Extra: Using where</div><div class="line">1 row in set, 1 warning (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; SHOW WARNINGS\G</div><div class="line">*************************** 1. row ***************************</div><div class="line">  Level: Note</div><div class="line">   Code: 1003</div><div class="line">Message: /* select#1 */ select json_unquote(json_extract(`test`.`jemp`.`c`,'$.name'))</div><div class="line">AS `name` from `test`.`jemp` where (`test`.`jemp`.`g` &gt; 2)</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>关于上例中创建表的更多信息参考 <a href="">Section 9.3.9, “Optimizer Use of Generated Column Indexes”</a></p>
-</blockquote>
-<p>在Mysql 5.7.9以后, 你可以使用<code>-&gt;</code>替代<code>JSON_EXTRACT()</code>作为path访问JSON列.</p>
-<p>当你使用<code>EXPLAIN</code>的语句中包含了一个或者多个<code>-&gt;</code>操作符时, 它们会被<code>JSON_EXTRACT()</code>进行替换.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">mysql&gt; EXPLAIN SELECT c-&gt;"$.name"</div><div class="line">     &gt; FROM jemp WHERE g &gt; 2\G ORDER BY c-&gt;"$.name"</div><div class="line">*************************** 1. row ***************************</div><div class="line">           id: 1</div><div class="line">  select_type: SIMPLE</div><div class="line">        table: jemp</div><div class="line">   partitions: NULL</div><div class="line">         type: range</div><div class="line">possible_keys: i</div><div class="line">          key: i</div><div class="line">      key_len: 5</div><div class="line">          ref: NULL</div><div class="line">         rows: 2</div><div class="line">     filtered: 100.00</div><div class="line">        Extra: Using where; Using filesort</div><div class="line">1 row in set, 1 warning (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; SHOW WARNINGS\G</div><div class="line">*************************** 1. row ***************************</div><div class="line">  Level: Note</div><div class="line">   Code: 1003</div><div class="line">Message: /* select#1 */ select json_extract(`test`.`jemp`.`c`,'$.name') AS</div><div class="line">`c-&gt;"$.name"` from `test`.`jemp` where (`test`.`jemp`.`g` &gt; 2) order by</div><div class="line">json_extract(`test`.`jemp`.`c`,'$.name')  </div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure></p>
-  
-	</div>
-		<footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/数据库/">数据库</a>
-</div>
-
-
-</div>
-
-
-
-	<div class="article-share" id="share">
-	
-	  <div data-url="http://www.yu66.wang/2016/05/10/数据库/Mysql Secondary Indexes and Generated Virtual Columns/" data-title="Mysql 第二索引和虚拟列 | ·" data-tsina="3253370782" class="share clearfix">
-	  </div>
-	
-	</div>
-
-
-</footer>
-
-   	       
-	</article>
-	
-<nav class="article-nav clearfix">
- 
- <div class="prev" >
- <a href="/2016/05/11/JavaLibrary/Oracle Solaris Studio/" title="Oracle® Solaris Studio">
-  <strong>上一篇：</strong><br/>
-  <span>
-  Oracle® Solaris Studio</span>
-</a>
-</div>
-
-
-<div class="next">
-<a href="/2016/05/09/JavaLibrary/JMeter/"  title="JMeter">
- <strong>下一篇：</strong><br/> 
- <span>JMeter
-</span>
-</a>
-</div>
-
-</nav>
-
-	
-<section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2016/05/10/数据库/Mysql Secondary Indexes and Generated Virtual Columns/" data-title="Mysql 第二索引和虚拟列" data-url="http://www.yu66.wang/2016/05/10/数据库/Mysql Secondary Indexes and Generated Virtual Columns/"></div>
-</section>
-
-
-</div>  
-      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Generated-Columns"><span class="toc-number">1.</span> <span class="toc-text">Generated Columns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Secondary-Indexes"><span class="toc-number">2.</span> <span class="toc-text">Secondary Indexes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Generated-Virtual-Column索引JSON-Column上"><span class="toc-number">3.</span> <span class="toc-text">Generated Virtual Column索引JSON Column上</span></a></li></ol>
- 
-  </div>
-
-<div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
-<aside class="clearfix">
-
-  
-<div class="github-card">
-<p class="asidetitle">Github 名片</p>
-<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
-<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
-</div>
-  </div>
-
-
-
-  
-<div class="categorieslist">
-	<p class="asidetitle">分类</p>
-		<ul>
-		
-		  
-			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java/" title="Java">Java<sup>24</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>34</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/杂记/" title="杂记">杂记<sup>18</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
-		  
-		
-		  
-			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
-		  
-		
-		</ul>
-</div>
-
-
-  
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			
-				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Spring/" title="Spring">Spring<sup>4</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
-			
-		
-		</ul>
-</div>
-
-
-  <div class="linkslist">
-  <p class="asidetitle">友情链接</p>
-    <ul>
-        
-          <li>
-            
-            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
-            
-          </li>
-        
-    </ul>
-</div>
-
-  
-
-<div class="doubanshow">
-<p class="asidetitle">豆瓣秀</p>
-<div>
-<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
-</div>
-</div>
-
-
-  <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
-</div>
-
-  <div class="weiboshow">
-  <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
-</div>
-
-
-  
-
-<div class="lofter">
-<p class="asidetitle">Lofter</p>
-
- <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
-</div>
-
-
-
-
-</aside>
-</div>
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: true}) %>
     </div>
-    <footer><div id="footer" >
-	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
-	
-	
-	<section class="info">
-		<p> 博客,我选择重构 <br/>
-			重构使事情变得更美,更加正确</p>
-	</section>
-	 
-	<div class="social-font" class="clearfix">
-		
-		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
-		
-		
-		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
-		
-		
-		
-		
-		
-		
-		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
-		
-		
-		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
-		
-		
-		
-	</div>
-			
-		
-
-		<p class="copyright">
-		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
-		
-		<a href="/about" target="_blank" title="王玉">王玉</a>
-		
-		
-		</p>
-</div>
-</footer>
-    <script src="/js/jquery-2.0.3.min.js"></script>
-<script src="/js/jquery.imagesloaded.min.js"></script>
-<script src="/js/gallery.js"></script>
-<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.navbar').click(function(){
-    $('header nav').toggleClass('shownav');
-  });
-  var myWidth = 0;
-  function getSize(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-  };
-  var m = $('#main'),
-      a = $('#asidepart'),
-      c = $('.closeaside'),
-      o = $('.openaside');
-  c.click(function(){
-    a.addClass('fadeOut').css('display', 'none');
-    o.css('display', 'block').addClass('fadeIn');
-    m.addClass('moveMain');
-  });
-  o.click(function(){
-    o.css('display', 'none').removeClass('beforeFadeIn');
-    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
-    m.removeClass('moveMain');
-  });
-  $(window).scroll(function(){
-    o.css("top",Math.max(80,260-$(this).scrollTop()));
-  });
-  
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else{
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
-});
-</script>
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var ai = $('.article-content>iframe'),
-      ae = $('.article-content>embed'),
-      t  = $('#toc'),
-      ta = $('#toc.toc-aside'),
-      o  = $('.openaside'),
-      c  = $('.closeaside');
-  if(ai.length>0){
-    ai.wrap('<div class="video-container" />');
-  };
-  if(ae.length>0){
-   ae.wrap('<div class="video-container" />');
-  };
-  c.click(function(){
-    ta.css('display', 'block').addClass('fadeIn');
-  });
-  o.click(function(){
-    ta.css('display', 'none');
-  });
-  $(window).scroll(function(){
-    ta.css("top",Math.max(140,320-$(this).scrollTop()));
-  });
-});
-</script>
-
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var $this = $('.share'),
-      url = $this.attr('data-url'),
-      encodedUrl = encodeURIComponent(url),
-      title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina'),
-      description = $this.attr('description');
-  var html = [
-  '<div class="hoverqrcode clearfix"></div>',
-  '<a class="overlay" id="qrcode"></a>',
-  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
-  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
-  '<span title="Share to"></span>'
-  ].join('');
-  $this.append(html);
-
-  $('.hoverqrcode').hide();
-
-  var myWidth = 0;
-  function updatehoverqrcode(){
-    if( typeof( window.innerWidth ) == 'number' ) {
-      myWidth = window.innerWidth;
-    } else if( document.documentElement && document.documentElement.clientWidth) {
-      myWidth = document.documentElement.clientWidth;
-    };
-    var qrsize = myWidth > 1024 ? 200:100;
-    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
-    var p = $('.article-share-qrcode').position();
-    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
-                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
-                          .qrcode(options);
-  };
-  $(window).resize(function(){
-    $('.hoverqrcode').hide();
-  });
-  $('.article-share-qrcode').click(function(){
-    updatehoverqrcode();
-    $('.hoverqrcode').toggle();
-  });
-  $('.article-share-qrcode').hover(function(){}, function(){
-      $('.hoverqrcode').hide();
-  });
-});   
-</script>
-
-
-
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"wanggnim"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script> 
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){ 
-  $('.article-content').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox')) return;
-      var alt = this.alt;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'article' + i);
-    });
-  });
-  if($.fancybox){
-    $('.fancybox').fancybox();
-  }
-}); 
-</script>
-
-
-
-<!-- Analytics Begin -->
-
-
-
-<script type="text/javascript">
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
-</script>
-
-
-
-<!-- Analytics End -->
-
-<!-- Totop Begin -->
-
-	<div id="totop">
-	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
-	</div>
-	<script src="/js/totop.js"></script>
-
-<!-- Totop End -->
-
-<!-- MathJax Begin -->
-<!-- mathjax config similar to math.stackexchange -->
-
-
-<!-- MathJax End -->
-
-<!-- Tiny_search Begin -->
-
-<!-- Tiny_search End -->
-
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
   </body>
 </html>
+<% } else if(page.layout=='page'){ %>
+  <% if(page.source.match(/\.md$/)){ %>
+    <%- partial('_partial/head') %>
+      <body>
+        <header>
+          <%- partial('_partial/header') %>
+        </header>
+        <div id="container">
+          <%- body %>
+        </div>
+        <footer><%- partial('_partial/footer') %></footer>
+        <%- partial('_partial/after_footer') %>
+      </body>
+     </html>
+     <% }else{ %>
+    <%- page.content %>
+  <% } %>
+<% } else if(page.layout=='search'){ %>
+<%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- partial('_partial/search')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='tags'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/tags')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.layout=='categories'){ %>
+ <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+          <%- partial('_partial/categories')%>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
+  <%- partial('_partial/head') %>
+    <body>
+      <header>
+        <%- partial('_partial/header') %>
+      </header>
+      <div id="container">
+        <%- body %>
+      </div>
+      <footer><%- partial('_partial/footer') %></footer>
+      <%- partial('_partial/after_footer') %>
+    </body>
+   </html>
+<% } else { %>
+ <%- partial('_partial/head') %>
+  <body>
+    <header>
+      <%- partial('_partial/header') %>
+    </header>
+    <div id="container">
+      <%- body %>
+      <%- partial('_partial/sidebar',{item: page,table: false}) %>
+    </div>
+    <footer><%- partial('_partial/footer') %></footer>
+    <%- partial('_partial/after_footer') %>
+  </body>
+ </html>
+<% } %>
