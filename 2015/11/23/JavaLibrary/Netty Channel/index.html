@@ -1,98 +1,603 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Netty Channel | 大王玉的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="大王玉">
+    
+
+    
+    <meta name="description" content="Channel是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等. 下面我们看一下Channel提供的API  parent() : 获取父Channel unsafe() : localAddress() : 当前Channel的本地绑定地址 eventLoop() : 当前Channel注册到的EventLoop对象 config() : 获取当前C">
+<meta name="keywords" content="Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty Channel">
+<meta property="og:url" content="http://www.yu66.wang/2015/11/23/JavaLibrary/Netty Channel/index.html">
+<meta property="og:site_name" content="大王玉的技术博客">
+<meta property="og:description" content="Channel是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等. 下面我们看一下Channel提供的API  parent() : 获取父Channel unsafe() : localAddress() : 当前Channel的本地绑定地址 eventLoop() : 当前Channel注册到的EventLoop对象 config() : 获取当前C">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/netty/channel.jpg">
+<meta property="og:updated_time" content="2017-05-02T14:35:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Netty Channel">
+<meta name="twitter:description" content="Channel是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等. 下面我们看一下Channel提供的API  parent() : 获取父Channel unsafe() : localAddress() : 当前Channel的本地绑定地址 eventLoop() : 当前Channel注册到的EventLoop对象 config() : 获取当前C">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/netty/channel.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="大王玉的技术博客" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="大王玉的技术博客">大王玉的技术博客</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/23/JavaLibrary/Netty Channel/" title="Netty Channel" itemprop="url">Netty Channel</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="大王玉" target="_blank" itemprop="author">大王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-22T16:00:00.000Z" itemprop="datePublished"> 發表於 2015-11-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractChannel"><span class="toc-number">1.</span> <span class="toc-text">AbstractChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioChannel"><span class="toc-number">2.</span> <span class="toc-text">AbstractNioChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioByteChannel"><span class="toc-number">3.</span> <span class="toc-text">AbstractNioByteChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioMessageChannel"><span class="toc-number">4.</span> <span class="toc-text">AbstractNioMessageChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioServerSocketChannel"><span class="toc-number">5.</span> <span class="toc-text">NioServerSocketChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioSocketChannel"><span class="toc-number">6.</span> <span class="toc-text">NioSocketChannel</span></a></li></ol>
+		
+		</div>
+		
+		<p><code>Channel</code>是Netty网络抽象类. 它的功能包括网络IO的读写,链路的连接和关闭, 通信双方的通信地址等.<br><img src="https://raw.githubusercontent.com/yu66/blog-website/images/netty/channel.jpg" alt=""></p>
+<p>下面我们看一下Channel提供的API</p>
+<ul>
+<li><code>parent()</code> : 获取父Channel</li>
+<li><code>unsafe()</code> :</li>
+<li><code>localAddress()</code> : 当前Channel的本地绑定地址</li>
+<li><code>eventLoop()</code> : 当前Channel注册到的EventLoop对象</li>
+<li><code>config()</code> : 获取当前Channel的配置信息</li>
+<li><code>remoteAddress()</code> : 当前Channel通信的远程Socket地址</li>
+<li><code>metadata()</code> : 当前Channel的元数据描述信息,例如TCP参数等等</li>
+<li><code>isOpen()</code> : 判断当初Channel是否已经打开</li>
+<li><code>isWritable()</code> : 当前Channel是否可写</li>
+<li><code>isRegistered()</code> : 是否注册当EventLoop上</li>
+<li><code>isActive()</code> : 当前Channel是否处于激活状态</li>
+<li><code>pipeline()</code> : 当前Channel的ChannelPipeline对象</li>
+</ul>
+<p>下面的网络IO操作会直接调用ChannelPipeline里的方法, 在ChannelPipeline里进行事件传播</p>
+<ul>
+<li><code>read()</code> : 从Channel中读取数据到inbound缓冲区</li>
+<li><code>write()</code> : 将消息通过ChannelPipeline写入到目标Channel中</li>
+<li><code>close()</code> : 主动关闭与网络对端的连接</li>
+<li><code>flush()</code> : 将之前写到环形队列里的消息全部写到目标Channel中,发送给网络对端</li>
+<li><code>connect()</code> : 与网络对端发起连接请求(一般由客户端调用这个方法)</li>
+<li><code>bind()</code> :</li>
+<li><code>disconnect()</code> : 请求关闭与网络对端的连接.</li>
+</ul>
+<h2 id="AbstractChannel"><a href="#AbstractChannel" class="headerlink" title="AbstractChannel"></a>AbstractChannel</h2><p>我们首先看一下<code>AbstractChannel</code>里定义的成员<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 链路已经关闭异常</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> ClosedChannelException CLOSED_CHANNEL_EXCEPTION = <span class="keyword">new</span> ClosedChannelException();</div><div class="line"><span class="comment">// 链路尚未连接异常</span></div><div class="line"><span class="keyword">static</span> <span class="keyword">final</span> NotYetConnectedException NOT_YET_CONNECTED_EXCEPTION = <span class="keyword">new</span> NotYetConnectedException();</div><div class="line"></div><div class="line"><span class="keyword">static</span> &#123;</div><div class="line">    CLOSED_CHANNEL_EXCEPTION.setStackTrace(EmptyArrays.EMPTY_STACK_TRACE);</div><div class="line">    NOT_YET_CONNECTED_EXCEPTION.setStackTrace(EmptyArrays.EMPTY_STACK_TRACE);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 用于预测下一个报文的大小.</span></div><div class="line"><span class="keyword">private</span> MessageSizeEstimator.Handle estimatorHandle;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Channel parent;</div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Unsafe unsafe;</div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> ChannelPipeline pipeline;</div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> ChannelFuture succeededFuture = <span class="keyword">new</span> SucceededChannelFuture(<span class="keyword">this</span>, <span class="keyword">null</span>);</div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> VoidChannelPromise voidPromise = <span class="keyword">new</span> VoidChannelPromise(<span class="keyword">this</span>, <span class="keyword">true</span>);</div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> VoidChannelPromise unsafeVoidPromise = <span class="keyword">new</span> VoidChannelPromise(<span class="keyword">this</span>, <span class="keyword">false</span>);</div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> CloseFuture closeFuture = <span class="keyword">new</span> CloseFuture(<span class="keyword">this</span>);</div><div class="line"></div><div class="line"><span class="comment">// 本地IP地址</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> SocketAddress localAddress;</div><div class="line"><span class="comment">// 网络通信对端的IP地址</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> SocketAddress remoteAddress;</div><div class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> EventLoop eventLoop;</div><div class="line"><span class="comment">// Channel是否注册到了EventLoop上</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> registered;</div><div class="line"></div><div class="line"><span class="comment">/** Cache for the string representation of this channel */</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">boolean</span> strValActive;</div><div class="line"><span class="keyword">private</span> String strVal;</div></pre></td></tr></table></figure></p>
+<p><code>AbstractChannel</code>聚合了所有Channel使用到的能力的对象. 如果某个功能和子类相关则定义抽象方法,由子类去实现.</p>
+<p>在这里我们主要关注三个变量</p>
+<ul>
+<li><code>unsafe</code> : 真实网络IO的操作类</li>
+<li><code>pipeline</code> : 当前Channel对应的ChannelPipeline. 负责</li>
+<li><code>eventLoop</code> : 该Channel注册到的EventLoop<br>在实例化的时候, 会对<code>pipeline</code>和<code>unsafe</code>进行赋值.<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractChannel</span><span class="params">(Channel parent)</span> </span>&#123;</div><div class="line">      <span class="keyword">this</span>.parent = parent;</div><div class="line">      unsafe = newUnsafe();</div><div class="line">      pipeline = <span class="keyword">new</span> DefaultChannelPipeline(<span class="keyword">this</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>unsafe实例化由子类实现, 这是因为unsafe的类型是个Unsafe接口, 而且AbstractChannel的内部类AbstractUnsafe是个抽象类, 那么我们就不知道如果要实例化这个类型究竟要使用哪个类型, 因此让AbstractChannel的子类继续实现自己的Unsafe接口的内部类和newUnsafe()方法, unsafe实质类型就有很大的可扩展性</p>
+</blockquote>
+<p>我们看到每一个Channel都有一个自己的<code>pipeline</code>和<code>unsafe</code>. <code>eventLoop</code>是在<code>AbstractUnsafe</code>中<code>register()</code>方法调用时进行赋值的<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(EventLoop eventLoop, <span class="keyword">final</span> ChannelPromise promise)</span> </span>&#123;</div><div class="line">        AbstractChannel.<span class="keyword">this</span>.eventLoop = eventLoop;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>AbstractChannel</code>完成的功能很少, 只是实现了一些初始化的工作, 然后将网络相关的建立,数据读写操作等交给<code>pipeline</code>来完成.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">disconnect</span><span class="params">(ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> pipeline.disconnect(promise);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">close</span><span class="params">(ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> pipeline.close(promise);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">bind</span><span class="params">(SocketAddress localAddress, ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> pipeline.bind(localAddress, promise);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">connect</span><span class="params">(SocketAddress remoteAddress, ChannelPromise promise)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> pipeline.connect(remoteAddress, promise);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function">Override</span></div><div class="line"><span class="keyword">public</span> Channel <span class="title">read</span><span class="params">()</span> &#123;</div><div class="line">    pipeline.read();</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> ChannelFuture <span class="title">write</span><span class="params">(Object msg)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> pipeline.write(msg);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>还提供了一个<code>unsafe()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Unsafe <span class="title">unsafe</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="keyword">return</span> unsafe;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们看一下<code>AbstractUnsafe</code>的定义<code>protected abstract class AbstractUnsafe implements Unsafe</code>, 它是作为一个<code>AbstractChannel</code>的抽象内部类, 这种关系也很容易让<code>AbstractUnsafe</code>访问<code>AbstractChannel</code>定义的一些空实现方法. 例如<code>AbstractUnsafe</code>中调用<code>AbstractChannel</code>的方法如下</p>
+<ul>
+<li><code>beginRead()</code> -&gt; <code>doBeginRead()</code></li>
+<li><code>doBind()</code> -&gt; <code>doBind()</code></li>
+<li><code>doDisconnect()</code> -&gt; <code>doDisconnect()()</code></li>
+<li><code>doClose()</code> -&gt; <code>doClose()</code></li>
+<li><code>register()</code> -&gt; <code>doRegister()</code>以及调用pipeline的相关方法(fireChannelRegistered()和fireChannelActive())</li>
+</ul>
+<h2 id="AbstractNioChannel"><a href="#AbstractNioChannel" class="headerlink" title="AbstractNioChannel"></a>AbstractNioChannel</h2><p><code>AbstractNioChannel</code>主要是实现了<code>AbstractChannel</code>的<code>doRegister(), doDeregister(), doBeginRead()</code>方法. 通过下面的变量我们也可以看出这个类主要是为了完成<code>SelectableChannel</code>向<code>Selector</code>的注册功能.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> SelectableChannel ch;</div><div class="line"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">int</span> readInterestOp;</div><div class="line"><span class="keyword">volatile</span> SelectionKey selectionKey;</div></pre></td></tr></table></figure></p>
+<p><code>java.nio.channels.ServerSocketChannel</code>和<code>java.nio.channels.SocketChannel</code>都是实现了<code>java.nio.channels.SelectableChannel</code>接口. 而<code>NioSocketChannel</code>和<code>NioServerSocketChannel</code>实现了<code>AbstractNioChannel</code>接口, 因此我们在<code>AbstractNioChannel</code>内定义了一个<code>SelectableChannel</code>成员用于实现<code>ServerSocketChannel</code>和<code>SocketChannel</code>的共用</p>
+<p>然后我们看一下<code>doRegister()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doRegister</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">boolean</span> selected = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">for</span> (;;) &#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">			<span class="comment">// 我们将ServerSocketChannel或者SocketChannel注册到NioEventLoop里的Selector上</span></div><div class="line">			<span class="comment">// 0表示我们对任何事件Channel里的任何事件都不感兴趣</span></div><div class="line">			<span class="comment">// 同时我们将this作为附件传送进去,</span></div><div class="line">            selectionKey = javaChannel().register(eventLoop().selector, <span class="number">0</span>, <span class="keyword">this</span>);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125; <span class="keyword">catch</span> (CancelledKeyException e) &#123;</div><div class="line">            <span class="keyword">if</span> (!selected) &#123;</div><div class="line">                <span class="comment">// Force the Selector to select now as the "canceled" SelectionKey may still be</span></div><div class="line">                <span class="comment">// cached and not removed because no Select.select(..) operation was called yet.</span></div><div class="line">                eventLoop().selectNow();</div><div class="line">                selected = <span class="keyword">true</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// We forced a select operation on the selector before but the SelectionKey is still cached</span></div><div class="line">                <span class="comment">// for whatever reason. JDK bug ?</span></div><div class="line">                <span class="keyword">throw</span> e;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>最后我们看一下<code>doBeginRead()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doBeginRead</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="comment">// Channel.read() or ChannelHandlerContext.read() was called</span></div><div class="line">    <span class="keyword">if</span> (inputShutdown) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> SelectionKey selectionKey = <span class="keyword">this</span>.selectionKey;</div><div class="line">    <span class="keyword">if</span> (!selectionKey.isValid()) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    readPending = <span class="keyword">true</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 获取selectionKey的操作位</span></div><div class="line">    <span class="keyword">final</span> <span class="keyword">int</span> interestOps = selectionKey.interestOps();</div><div class="line">    <span class="keyword">if</span> ((interestOps &amp; readInterestOp) == <span class="number">0</span>) &#123;</div><div class="line">        <span class="comment">// 如果slectionKey不对读事件感兴趣, 那么就修改selectionKey的操作位, 开始设置对读事件感兴趣</span></div><div class="line">        selectionKey.interestOps(interestOps | readInterestOp);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>还记得在<code>AbstractChannel</code>中的<code>AbstractUnsafe</code>吗?里面有个<code>beginRead()</code>, 这个<code>doBeginRead()</code>正是由其调用的.</p>
+<h2 id="AbstractNioByteChannel"><a href="#AbstractNioByteChannel" class="headerlink" title="AbstractNioByteChannel"></a>AbstractNioByteChannel</h2><p><code>AbstractNioByteChannel</code>内部只有一个<code>Runnable</code>类型的<code>flushTask</code>属性, 它是用来写半包的, 当我们使用到它的时候,我们再具体分析. 我们来重点看一下<code>doWrite()</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doWrite</span><span class="params">(ChannelOutboundBuffer in)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">       <span class="keyword">int</span> writeSpinCount = -<span class="number">1</span>;</div><div class="line"></div><div class="line">       <span class="keyword">for</span> (;;) &#123;</div><div class="line">           <span class="comment">// 从环形数组ChannelOutboundBuffer中弹出一个消息对象</span></div><div class="line">           Object msg = in.current();</div><div class="line">           <span class="keyword">if</span> (msg == <span class="keyword">null</span>) &#123;</div><div class="line">               <span class="comment">// 如果全部消息都发送完毕累,则清除半包标志, clearOpWrite() 内部操作 TODO ???</span></div><div class="line">               clearOpWrite();</div><div class="line">               <span class="keyword">break</span>;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> ByteBuf) &#123;</div><div class="line">               ByteBuf buf = (ByteBuf) msg;</div><div class="line">               <span class="keyword">int</span> readableBytes = buf.readableBytes();</div><div class="line">               <span class="keyword">if</span> (readableBytes == <span class="number">0</span>) &#123;</div><div class="line">                   <span class="comment">// 当前消息没有可读内容, 也就是没有内容需要向外发送,</span></div><div class="line">                   <span class="comment">// 则将其从还行数组中删除, 然后继续处理下一个消息</span></div><div class="line">                   in.remove();</div><div class="line">                   <span class="keyword">continue</span>;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="comment">//设置半包标志</span></div><div class="line">               <span class="keyword">boolean</span> setOpWrite = <span class="keyword">false</span>;</div><div class="line">               <span class="comment">// 设置消息是否发送完毕</span></div><div class="line">               <span class="keyword">boolean</span> done = <span class="keyword">false</span>;</div><div class="line">               <span class="comment">// 设置消息发送的总得数量</span></div><div class="line">               <span class="keyword">long</span> flushedAmount = <span class="number">0</span>;</div><div class="line">               <span class="keyword">if</span> (writeSpinCount == -<span class="number">1</span>) &#123;</div><div class="line">                   <span class="comment">// 从配置中我们获取每次写半包消息进行的最大次数. 也即是如果环形数组里的消息一次性发送</span></div><div class="line">                   <span class="comment">// 不完, 需要循环发送的次数,至于为什么不一直发送, 这是因为如果网络阻塞或者对方接受数据很慢,可能会造成网络IO线程假死</span></div><div class="line">                   writeSpinCount = config().getWriteSpinCount();</div><div class="line">               &#125;</div><div class="line">               <span class="keyword">for</span> (<span class="keyword">int</span> i = writeSpinCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i --) &#123;</div><div class="line">                   <span class="comment">// 将buf内部的数据进行发送, 返回值是数据发送量</span></div><div class="line">                   <span class="keyword">int</span> localFlushedAmount = doWriteBytes(buf);</div><div class="line">                   <span class="keyword">if</span> (localFlushedAmount == <span class="number">0</span>) &#123;</div><div class="line">                       <span class="comment">// 数量为0,说明一个数据都没有发送出去, 可能是TCP缓冲区满了. 因此设置写半包标志</span></div><div class="line">                       <span class="comment">// 同时退出写循环,这是因为下次写数据还可能TCP缓冲区处于已满状态,导致IO线程空循环</span></div><div class="line">                       setOpWrite = <span class="keyword">true</span>;</div><div class="line">                       <span class="keyword">break</span>;</div><div class="line">                   &#125;</div><div class="line"></div><div class="line">                   <span class="comment">// 数据发送成功, 将发送的数据量累加到flushedAmount上.</span></div><div class="line">                   flushedAmount += localFlushedAmount;</div><div class="line">                   <span class="keyword">if</span> (!buf.isReadable()) &#123;</div><div class="line">                       <span class="comment">// 当前消息里的数据已经发送完毕, 退出buf发送循环,继续处理环形队列中下一个消息</span></div><div class="line">                       done = <span class="keyword">true</span>;</div><div class="line">                       <span class="keyword">break</span>;</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="comment">// 将发送的数据量同步到环形队列中</span></div><div class="line">               in.progress(flushedAmount);</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (done) &#123;</div><div class="line">                   <span class="comment">// buf数据已经发送完, 则将该消息从环形队列中删除</span></div><div class="line">                   in.remove();</div><div class="line">               &#125; <span class="keyword">else</span> &#123;</div><div class="line">                   <span class="comment">// 在写半包消息最大循环次数之内都没有将buf数据写完, 可能是数据量太多或者TCP缓冲区已满</span></div><div class="line">                   <span class="comment">// 释放当前IO线程,让其进行其他工作.</span></div><div class="line">                   incompleteWrite(setOpWrite);</div><div class="line">                   <span class="keyword">break</span>;</div><div class="line">               &#125;</div><div class="line">           &#125; <span class="keyword">else</span> <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> FileRegion) &#123;</div><div class="line">               FileRegion region = (FileRegion) msg;</div><div class="line">               <span class="keyword">boolean</span> done = region.transfered() &gt;= region.count();</div><div class="line">               <span class="keyword">boolean</span> setOpWrite = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (!done) &#123;</div><div class="line">                   <span class="keyword">long</span> flushedAmount = <span class="number">0</span>;</div><div class="line">                   <span class="keyword">if</span> (writeSpinCount == -<span class="number">1</span>) &#123;</div><div class="line">                       writeSpinCount = config().getWriteSpinCount();</div><div class="line">                   &#125;</div><div class="line"></div><div class="line">                   <span class="keyword">for</span> (<span class="keyword">int</span> i = writeSpinCount - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">                       <span class="keyword">long</span> localFlushedAmount = doWriteFileRegion(region);</div><div class="line">                       <span class="keyword">if</span> (localFlushedAmount == <span class="number">0</span>) &#123;</div><div class="line">                           setOpWrite = <span class="keyword">true</span>;</div><div class="line">                           <span class="keyword">break</span>;</div><div class="line">                       &#125;</div><div class="line"></div><div class="line">                       flushedAmount += localFlushedAmount;</div><div class="line">                       <span class="keyword">if</span> (region.transfered() &gt;= region.count()) &#123;</div><div class="line">                           done = <span class="keyword">true</span>;</div><div class="line">                           <span class="keyword">break</span>;</div><div class="line">                       &#125;</div><div class="line">                   &#125;</div><div class="line"></div><div class="line">                   in.progress(flushedAmount);</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (done) &#123;</div><div class="line">                   in.remove();</div><div class="line">               &#125; <span class="keyword">else</span> &#123;</div><div class="line">                   incompleteWrite(setOpWrite);</div><div class="line">                   <span class="keyword">break</span>;</div><div class="line">               &#125;</div><div class="line">           &#125; <span class="keyword">else</span> &#123;</div><div class="line">               <span class="comment">// Should not reach here.</span></div><div class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> Error();</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p><code>doWrite()</code>方法是由<code>AbstractUnsafe</code>的<code>flush()</code>调用的. 从<code>AbstractUnsafe</code>我们可以看到每个Unsafe类都有一个<code>ChannelOutboundBuffer</code>属性.</p>
+<p>下来我们看一下<code>incompleteWrite()</code>方法实现<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">incompleteWrite</span><span class="params">(<span class="keyword">boolean</span> setOpWrite)</span> </span>&#123;</div><div class="line">        <span class="comment">// 从doWrite()方法中可以看到只有当TCP缓冲区已满的时候才会设置写半包操作</span></div><div class="line">        <span class="keyword">if</span> (setOpWrite) &#123;</div><div class="line">            <span class="comment">// 设置累写半包的话,则将SelectionKey注册为OP_WRITE, 让多路复用器不断的轮训对应的Channel,</span></div><div class="line">            <span class="comment">// 继续处理没有发送完的消息</span></div><div class="line">            setOpWrite();</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 如果没有半包,则让eventLoop继续执行写半包操作</span></div><div class="line">            Runnable flushTask = <span class="keyword">this</span>.flushTask;</div><div class="line">            <span class="keyword">if</span> (flushTask == <span class="keyword">null</span>) &#123;</div><div class="line">                flushTask = <span class="keyword">this</span>.flushTask = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">                    <span class="meta">@Override</span></div><div class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                        flush();</div><div class="line">                    &#125;</div><div class="line">                &#125;;</div><div class="line">            &#125;</div><div class="line">            eventLoop().execute(flushTask);</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="AbstractNioMessageChannel"><a href="#AbstractNioMessageChannel" class="headerlink" title="AbstractNioMessageChannel"></a>AbstractNioMessageChannel</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doWrite</span><span class="params">(ChannelOutboundBuffer in)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">       <span class="keyword">final</span> SelectionKey key = selectionKey();</div><div class="line">       <span class="keyword">final</span> <span class="keyword">int</span> interestOps = key.interestOps();</div><div class="line"></div><div class="line">       <span class="keyword">for</span> (;;) &#123;</div><div class="line">           <span class="comment">// 从环形队列中获取一条消息</span></div><div class="line">           Object msg = in.current();</div><div class="line">           <span class="keyword">if</span> (msg == <span class="keyword">null</span>) &#123;</div><div class="line">               <span class="comment">// 消息为空,说明所有的消息都已经发送出去了. TODO</span></div><div class="line">               <span class="keyword">if</span> ((interestOps &amp; SelectionKey.OP_WRITE) != <span class="number">0</span>) &#123;</div><div class="line">                   key.interestOps(interestOps &amp; ~SelectionKey.OP_WRITE);</div><div class="line">               &#125;</div><div class="line">               <span class="keyword">break</span>;</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">try</span> &#123;</div><div class="line">               <span class="keyword">boolean</span> done = <span class="keyword">false</span>;</div><div class="line">               <span class="keyword">for</span> (<span class="keyword">int</span> i = config().getWriteSpinCount() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</div><div class="line">                   <span class="comment">// 在配置的最大次数下,将msg发送出去</span></div><div class="line">                   <span class="keyword">if</span> (doWriteMessage(msg, in)) &#123;</div><div class="line">                       done = <span class="keyword">true</span>;</div><div class="line">                       <span class="keyword">break</span>;</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (done) &#123;</div><div class="line">                   <span class="comment">// 如果消息发送完毕累, 则将其从环形数组中删除</span></div><div class="line">                   in.remove();</div><div class="line">               &#125; <span class="keyword">else</span> &#123;</div><div class="line">                   <span class="comment">//  如果没有发送完毕, 则设置SelectionKey为写操作位, 让多路复用器不断的轮训channel,发送剩余的数据</span></div><div class="line">                   <span class="keyword">if</span> ((interestOps &amp; SelectionKey.OP_WRITE) == <span class="number">0</span>) &#123;</div><div class="line">                       key.interestOps(interestOps | SelectionKey.OP_WRITE);</div><div class="line">                   &#125;</div><div class="line">                   <span class="keyword">break</span>;</div><div class="line">               &#125;</div><div class="line">           &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">               <span class="keyword">if</span> (continueOnWriteError()) &#123;</div><div class="line">                   in.remove(e);</div><div class="line">               &#125; <span class="keyword">else</span> &#123;</div><div class="line">                   <span class="keyword">throw</span> e;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h2 id="NioServerSocketChannel"><a href="#NioServerSocketChannel" class="headerlink" title="NioServerSocketChannel"></a>NioServerSocketChannel</h2><p><code>NioServerSocketChannel</code>的主要作用是接受客户端连接<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">int</span> <span class="title">doReadMessages</span><span class="params">(List&lt;Object&gt; buf)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">       SocketChannel ch = javaChannel().accept();</div><div class="line"></div><div class="line">       <span class="keyword">try</span> &#123;</div><div class="line">           <span class="keyword">if</span> (ch != <span class="keyword">null</span>) &#123;</div><div class="line">               buf.add(<span class="keyword">new</span> NioSocketChannel(<span class="keyword">this</span>, ch));</div><div class="line">               <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">           &#125;</div><div class="line">       &#125; <span class="keyword">catch</span> (Throwable t) &#123;</div><div class="line">           logger.warn(<span class="string">"Failed to create a new channel from an accepted socket."</span>, t);</div><div class="line"></div><div class="line">           <span class="keyword">try</span> &#123;</div><div class="line">               ch.close();</div><div class="line">           &#125; <span class="keyword">catch</span> (Throwable t2) &#123;</div><div class="line">               logger.warn(<span class="string">"Failed to close a socket."</span>, t2);</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>这个方法调用主要是由<code>NioMessageUnsafe</code>的<code>read()</code>方法调用</p>
+<h2 id="NioSocketChannel"><a href="#NioSocketChannel" class="headerlink" title="NioSocketChannel"></a>NioSocketChannel</h2>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java-Library/">Java Library</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Netty/">Netty</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2015/11/23/JavaLibrary/Netty Channel/" data-title="Netty Channel | 大王玉的技术博客" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/24/jvm/instrument/" title="Instrumentation">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Instrumentation</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/20/JavaLibrary/Netty ByteBuf/"  title="Netty ByteBuf">
+ <strong>下一篇：</strong><br/> 
+ <span>Netty ByteBuf
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/11/23/JavaLibrary/Netty Channel/" data-title="Netty Channel" data-url="http://www.yu66.wang/2015/11/23/JavaLibrary/Netty Channel/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractChannel"><span class="toc-number">1.</span> <span class="toc-text">AbstractChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioChannel"><span class="toc-number">2.</span> <span class="toc-text">AbstractNioChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioByteChannel"><span class="toc-number">3.</span> <span class="toc-text">AbstractNioByteChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractNioMessageChannel"><span class="toc-number">4.</span> <span class="toc-text">AbstractNioMessageChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioServerSocketChannel"><span class="toc-number">5.</span> <span class="toc-text">NioServerSocketChannel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NioSocketChannel"><span class="toc-number">6.</span> <span class="toc-text">NioSocketChannel</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
+		
+		<a href="/about" target="_blank" title="大王玉">大王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>

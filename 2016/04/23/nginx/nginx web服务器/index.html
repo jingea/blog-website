@@ -1,98 +1,619 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>nginx web服务器 | 大王玉的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="大王玉">
+    
+
+    
+    <meta name="description" content="官方文档学习 在Nginx中每个用来处理HTTP请求的virtual server都被称为location. location可以参与请求处理的整个过程. location可以代理一个请求或者直接返回一个文件. 不但如此, 在location中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的location或者其他的virtual server.  Setting Up Virtu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx web服务器">
+<meta property="og:url" content="http://www.yu66.wang/2016/04/23/nginx/nginx web服务器/index.html">
+<meta property="og:site_name" content="大王玉的技术博客">
+<meta property="og:description" content="官方文档学习 在Nginx中每个用来处理HTTP请求的virtual server都被称为location. location可以参与请求处理的整个过程. location可以代理一个请求或者直接返回一个文件. 不但如此, 在location中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的location或者其他的virtual server.  Setting Up Virtu">
+<meta property="og:updated_time" content="2017-05-02T14:35:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx web服务器">
+<meta name="twitter:description" content="官方文档学习 在Nginx中每个用来处理HTTP请求的virtual server都被称为location. location可以参与请求处理的整个过程. location可以代理一个请求或者直接返回一个文件. 不但如此, 在location中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的location或者其他的virtual server.  Setting Up Virtu">
+
+    
+    <link rel="alternative" href="/atom.xml" title="大王玉的技术博客" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="大王玉的技术博客">大王玉的技术博客</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/04/23/nginx/nginx web服务器/" title="nginx web服务器" itemprop="url">nginx web服务器</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="大王玉" target="_blank" itemprop="author">大王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2016-04-22T16:00:00.000Z" itemprop="datePublished"> 發表於 2016-04-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setting-Up-Virtual-Servers"><span class="toc-number">1.</span> <span class="toc-text">Setting Up Virtual Servers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuring-Locations"><span class="toc-number">2.</span> <span class="toc-text">Configuring Locations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-Variables"><span class="toc-number">3.</span> <span class="toc-text">Using Variables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Returning-Specific-Status-Codes"><span class="toc-number">4.</span> <span class="toc-text">Returning Specific Status Codes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rewriting-URIs-in-Requests"><span class="toc-number">5.</span> <span class="toc-text">Rewriting URIs in Requests</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rewriting-HTTP-Responses"><span class="toc-number">6.</span> <span class="toc-text">Rewriting HTTP Responses</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handling-Errors"><span class="toc-number">7.</span> <span class="toc-text">Handling Errors</span></a></li></ol>
+		
+		</div>
+		
+		<p>官方文档<a href="https://www.nginx.com/resources/admin-guide/nginx-web-server/" target="_blank" rel="external"></a>学习</p>
+<p>在Nginx中每个用来处理HTTP请求的virtual server都被称为<code>location</code>. <code>location</code>可以参与请求处理的整个过程. <code>location</code>可以代理一个请求或者直接返回一个文件. 不但如此, 在<code>location</code>中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的<code>location</code>或者其他的virtual server. </p>
+<h2 id="Setting-Up-Virtual-Servers"><a href="#Setting-Up-Virtual-Servers" class="headerlink" title="Setting Up Virtual Servers"></a>Setting Up Virtual Servers</h2><p>Nginx插件配置必须最少包含一个<code>server</code>指令(用于定义虚拟服务器-virtual server). 当Nginx插件处理一个请求时, 它首先会选择处理该请求的虚拟服务器. 一个虚拟服务器定义在<code>http</code>上下文里, 例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http &#123;</div><div class="line">    server &#123;</div><div class="line">        # Server configuration</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在<code>http</code>上下文里可以定义多个<code>server</code>指令, 这样一来就可以实现多个虚拟服务器了.</p>
+<p>在<code>server</code>指令里通常包含一个<code>listen</code>指令, 通过<code>listen</code>指令来指定监听请求的IP地址和端口号(或者Unix domain socket and path). IPv4 和 IPv6 地址都可进行配置</p>
+<p>下面的例子展示了在IP地址<code>127.0.0.1</code>和端口<code>8080</code>上进行网络事件监听<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen 127.0.0.1:8080;</div><div class="line">    # The rest of server configuration</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果端口忽略不写的话, Nginx插件会使用标准端口. 还有如果IP地址忽略不填的话, Nginx插件会在所有的IP地址上进行网络事件监听. 如果没有配置<code>listen</code>指令的话, 在超级用户权限下, 标准端口是<code>80/tcp</code>, 默认端口<code>8000/tcp</code>.</p>
+<p>如果有多个<code>server</code>指令里配置的IP地址和端口匹配到请求, 那么Nginx插件会根据请求的<code>Host header</code>字段与<code>server_name</code>指令进行匹配. 我们可以将<code>server_name</code>指令配置成一个全名称的地址, 或者使用通配符, 正则表达式. 如果想要使用通配符的话, 可以在地址的开头或者结尾使用<code>*</code>.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen      80;</div><div class="line">    server_name example.org www.example.org;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果有多个<code>server_name</code>指令匹配到<code>Host header</code>, Nginx插件会根据如下顺序进行匹配查找, 直到找到第一个.</p>
+<ol>
+<li>名字完全符合</li>
+<li>以<code>*</code>开始的, 最符合的名字, 例如<code>*.example.org</code></li>
+<li>以<code>*</code>结束的, 最符合的名字, 例如<code>mail.*</code></li>
+<li>第一个匹配正则表达式的</li>
+</ol>
+<p>如果请求中的<code>Host header</code>没有匹配到一个合适的server name, Nginx插件会将该消息路由到默认服上面去. 默认服是在<code>nginx.conf</code>文件里进行配置的. 我们也可以使用<code>default_server</code>参数在<code>listen</code>指令中进行显示设定.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    listen      80 default_server;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Configuring-Locations"><a href="#Configuring-Locations" class="headerlink" title="Configuring Locations"></a>Configuring Locations</h2><p>Nginx插件可以根据请求的URI将请求派发到不同的代理上, 或者处理不同的文件. 这种功能是通过<code>server</code>指令里的<code>location</code>指令完成的.</p>
+<p>例如你可以定义三个<code>location</code>指令, 一个用来将请求派发到一个代理服务器, 一个用来将其他的请求派发到另外的一个代理服务器,最后的一个用来提供本地文件系统服务.</p>
+<p>NGINX Plus tests request URIs against the parameters of all location directives and applies the directives defined in the matching location. Inside each location block, it is usually possible (with a few exceptions) to place even more location directives to further refine the processing for specific groups of requests.</p>
+<blockquote>
+<p>注意, 在这篇教程中, location这个字指的是一个单独的<code>location</code>上下文.</p>
+</blockquote>
+<p>有俩种<code>location</code>指令参数</p>
+<ul>
+<li>prefix strings : 请求的URI是以固定的字符串开头, 例如prefix strings是<code>/some/path/</code>, 那么<code>/some/path/document.html</code>就是这种类型的, 但是<code>/my-site/some/path</code>就不是.</li>
+<li>regular expressions :</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /some/path/ &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当使用表达式的时候, 如果使用<code>~</code>开头则表示要区分大小写. 如果以<code>~*</code>开头,则表示忽略大小写. 下面的例子是只要请求包含<code>.html</code>或者<code>.htm</code>这些字符串就都匹配<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location ~ \.html? &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Nginx插件进行location匹配时, 优先进行<code>prefix string</code>匹配, 如果<code>prefix string</code>匹配不到再进行正则匹配.</p>
+<p>Higher priority is given to regular expressions, unless the ^~ modifier is used. Among the prefix strings NGINX Plus selects the most specific one (that is, the longest and most complete string). The exact logic for selecting a location to process a request is given below:</p>
+<ol>
+<li>Test the URI against all prefix strings.</li>
+<li>The = (equals sign) modifier defines an exact match of the URI and a prefix string. If the exact match is found, the search stops.</li>
+<li>If the ^~ (caret-tilde) modifier prepends the longest matching prefix string, the regular expressions are not checked.</li>
+<li>Store the longest matching prefix string.</li>
+<li>Test the URI against regular expressions.</li>
+<li>Break on the first matching regular expression and use the corresponding location.</li>
+<li>If no regular expression matches, use the location corresponding to the stored prefix string.</li>
+</ol>
+<p><code>=</code>的典型用例是请求<code>/</code>, 如果请求<code>/</code>是非常频繁的, 在<code>location</code>指令上设置<code>= /</code>可以大幅提升访问速度, 这是因为在路径搜索匹配时, 一旦匹配到就不再继续搜素匹配了, 节约了时间.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location = / &#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>location</code>上下文中可以包含多个指令, 用于说明如何处理一个请求, 例如是想提供静态文件服务还是想向一个代理服务器派发请求. 例如, 在下面的例子中, 第一个请求就是提供<code>/data</code>目录下的静态文件服务, 第二个请求就是向一个代理服务器<code>www.example.com</code>派发请求.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    location /images/ &#123;</div><div class="line">        root /data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location / &#123;</div><div class="line">        proxy_pass http://www.example.com;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>root</code>指令用于指定提供静态文件服务的文件系统路径. 如果有一个请求<code>/images/example.png</code>, 那么nginx插件会在文件系统中进行如下搜索<code>/data/images/example.png</code>.</li>
+<li><code>proxy_pass</code>指令会将请求派发到代理服务器上. 在上面的例子中, 只要是请求不是以<code>/images/</code>开头的, 那么请求都会派发到那个代理服务器上.</li>
+</ul>
+<h2 id="Using-Variables"><a href="#Using-Variables" class="headerlink" title="Using Variables"></a>Using Variables</h2><p>你可以在配置文件里使用变量, 以便Nginx插件可以根据不同的情况进行不同的处理. 变量在运行时进行计算, 然后将值传递给指令使用. 我们可以通过<code>$</code>来引用一个变量(例如<code>$time</code>).</p>
+<p>在Nginx里已经为我们提前定义好了一些变量, 例如<a href="http://nginx.org/en/docs/http/ngx_http_core_module.html?&amp;_ga=1.54594219.1025068217.1457188479#variables" target="_blank" rel="external">core HTTP</a>. 而且你也可以使用<code>set</code>, <code>map</code>, <code>geo</code>等指令自定义一些变量.</p>
+<h2 id="Returning-Specific-Status-Codes"><a href="#Returning-Specific-Status-Codes" class="headerlink" title="Returning Specific Status Codes"></a>Returning Specific Status Codes</h2><p>在一些web站点中, 由于资源移除或者其他原因, 我们需要直接给前端返回一个错误码, 那么我们可以使用<code>return</code>指令来完成.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /wrong/url &#123;</div><div class="line">    return 404;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面的例子中, 第一个参数是一个错误码. 第二个参数是一个可选参数(代表一个重连接的URL)<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /permanently/moved/url &#123;</div><div class="line">    return 301 http://www.example.com/moved/here;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>return</code>指令既可以放在<code>location</code>指令里, 也可以放在<code>server</code>指令里</p>
+<h2 id="Rewriting-URIs-in-Requests"><a href="#Rewriting-URIs-in-Requests" class="headerlink" title="Rewriting URIs in Requests"></a>Rewriting URIs in Requests</h2><p>请求URI可以在被处理时通过<code>rewrite</code>指令被多次修改, <code>rewrite</code>指令包含一个可选参数和俩个必选参数.</p>
+<ul>
+<li>第一个参数(必填)是用来匹配请求的正则表达式.</li>
+<li>第二个参数(必填)是用来指向重连接所需要匹配的URI.(下面的例子中我们采用的是正则表达式进行匹配)</li>
+<li>第三个参数(选填)是用来标记是继续执行下一个重连接还是执行其他操作(例如返回一个错误码)<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /users/ &#123;</div><div class="line">    rewrite ^/users/(.*)$ /show?user=$1 break;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在<code>server</code>或者<code>location</code>指令中可以包含多个<code>rewrite</code>指令. Nginx插件会根据<code>rewrite</code>指令出现的顺序依次执行.</p>
+<p>After NGINX processes a set of rewriting instructions, it selects a location context according to the new URI. If the selected location contains rewrite directives, they are executed in turn. If the URI matches any of those, a search for the new location starts after all defined rewrite directives are processed.</p>
+<p>下面的例子展示里<code>rewrite</code>和<code>return</code>指令混合使用的方式<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    ...</div><div class="line">    rewrite ^(/download/.*)/media/(.*)\..*$ $1/mp3/$2.mp3 last;</div><div class="line">    rewrite ^(/download/.*)/audio/(.*)\..*$ $1/mp3/$2.ra  last;</div><div class="line">    return  403;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的例子区分了俩组URI. <code>/download/some/media/file</code>的URI会被替换成<code>/download/some/mp3/file.mp3</code>. 由于这个<code>rewrite</code>指令后面跟里一个<code>last</code>标记, 因此下面的<code>rewrite</code>和<code>return</code>指令就不会再执行到了. 但是如果URI例如<code>/download/some/audio/file</code>并不符合第一个,那么Nginx插件会继续匹配到第二个, 当然第二个符合, 于是URI被替换成<code>/download/some/mp3/file.ra</code>. 如果前俩个都不符合的话, 那么就会返回<code>403</code>错误码.</p>
+<p>下面, 我们会介绍俩种终止URI<code>rewrite</code>执行的方式:</p>
+<ul>
+<li><code>last</code> – 这种方式只是会在当前的<code>server</code>或者<code>location</code>上下文中停止, 但是Nginx插件会对重写的URI继续在<code>location</code>里进行查找.</li>
+<li><code>break</code> – 它不会对新的URI在当前上下文中进行查找, 而是简单的终止掉整个过程.</li>
+</ul>
+<h2 id="Rewriting-HTTP-Responses"><a href="#Rewriting-HTTP-Responses" class="headerlink" title="Rewriting HTTP Responses"></a>Rewriting HTTP Responses</h2><p>有时候你可能需要重写或者替换HTTP响应中的内容, 或者将一个字符串替换为另一个. <code>sub_filter</code>指令可以实现类似于这种的需求. <code>sub_filter</code>支持变量以及链式替换, 以便实现更加复杂的重写功能.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">    sub_filter      /blog/ /blog-staging/;</div><div class="line">    sub_filter_once off;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另一个例子是将<code>http://</code>改变为<code>https://</code>, 而且将localhost地址改变为请求头中的主机名. <code>sub_filter_once</code>指令是告诉NGINX在<code>location</code>指令里可以开启多个<code>sub_filter</code>.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">    sub_filter     'href="http://127.0.0.1:8080/'    'href="http://$host/';</div><div class="line">    sub_filter     'img src="http://127.0.0.1:8080/' 'img src="http://$host/';</div><div class="line">    sub_filter_once on;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意, 如果响应已经在一个<code>sub_filter</code>修改过里, 那么即使另一个<code>sub_filter</code>也匹配到了,但是不会再次修改.</p>
+</blockquote>
+<h2 id="Handling-Errors"><a href="#Handling-Errors" class="headerlink" title="Handling Errors"></a>Handling Errors</h2><p>使用<code>error_page</code>指令, 我们可以配置Nginx插件返回一个自定义的界面或者响应一个不同的错误码,甚至可以重定向到一个新的地址上面去. 在下面的例子中, <code>error_page</code>指令会在发生错误时返回一个指定的界面<code>/404.html</code>, 而不是像默认的返回一个404错误码.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">error_page 404 /404.html;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意, 这个指令并不是直接就返回了(<code>return</code>指令直接返回), 而是指定一种当错误发生时的一种处理方式.</p>
+</blockquote>
+<p>在下面的例子中, 当Nginx找不到文件时, 它会返回<code>301</code>错误码, 同时告诉客户端重定向到<code>http:/example.com/new/path.html</code>这个界面上.<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">location /old/path.html &#123;</div><div class="line">    error_page 404 =301 http:/example.com/new/path.html;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>The following configuration is an example of passing a request to the back end when a file is not found. Because there is no status code specified after the equals sign in the error_page directive, the response to the client has the status code returned by the proxied server (not necessarily 404).</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">    ...</div><div class="line">    location /images/ &#123;</div><div class="line">        # Set the root directory to search for the file</div><div class="line">        root /data/www;</div><div class="line"></div><div class="line">        # Disable logging of errors related to file existence</div><div class="line">        open_file_cache_errors off;</div><div class="line"></div><div class="line">        # Make an internal redirect if the file is not found</div><div class="line">        error_page 404 = /fetch$uri;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    location /fetch/ &#123;</div><div class="line">        proxy_pass http://backend/;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>The error_page directive instructs NGINX Plus to make an internal redirect when a file is not found. The $uri variable in the final parameter to the error_page directive holds the URI of the current request, which gets passed in the redirect.</p>
+<p>For example, if /images/some/file is not found, it is replaced with /fetch/images/some/file and a new search for a location starts. As a result, the request ends up in the second location context and is proxied to <a href="http://backend/" target="_blank" rel="external">http://backend/</a>.</p>
+<p>The open_file_cache_errors directive prevents writing an error message if a file is not found. This is not necessary here since missing files are correctly handled.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Nginx/">Nginx</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2016/04/23/nginx/nginx web服务器/" data-title="nginx web服务器 | 大王玉的技术博客" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/04/26/zookeeper/ZooKeeper Curator 事件监听/" title="ZooKeeper Curator 事件监听">
+  <strong>上一篇：</strong><br/>
+  <span>
+  ZooKeeper Curator 事件监听</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/04/12/JavaLibrary/Mybatis SqlSession/"  title="Mybatis SqlSession">
+ <strong>下一篇：</strong><br/> 
+ <span>Mybatis SqlSession
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/04/23/nginx/nginx web服务器/" data-title="nginx web服务器" data-url="http://www.yu66.wang/2016/04/23/nginx/nginx web服务器/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setting-Up-Virtual-Servers"><span class="toc-number">1.</span> <span class="toc-text">Setting Up Virtual Servers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuring-Locations"><span class="toc-number">2.</span> <span class="toc-text">Configuring Locations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-Variables"><span class="toc-number">3.</span> <span class="toc-text">Using Variables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Returning-Specific-Status-Codes"><span class="toc-number">4.</span> <span class="toc-text">Returning Specific Status Codes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rewriting-URIs-in-Requests"><span class="toc-number">5.</span> <span class="toc-text">Rewriting URIs in Requests</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rewriting-HTTP-Responses"><span class="toc-number">6.</span> <span class="toc-text">Rewriting HTTP Responses</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Handling-Errors"><span class="toc-number">7.</span> <span class="toc-text">Handling Errors</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
+		
+		<a href="/about" target="_blank" title="大王玉">大王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>

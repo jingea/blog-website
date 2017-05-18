@@ -1,98 +1,603 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>java lambda | 大王玉的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="大王玉">
+    
+
+    
+    <meta name="description" content="函数接口函数接口定义函数接口只是一个抽象方法的接口,用作lambda表达式类型. 注意, 上面这个定义有三个需要注意的地方  函数接口是一个接口 函数接口有且只有一个抽象方法(只有一个表示数量上是唯一的,重载也是不可以) 函数接口用作lambda表达式类型  函数接口示例:12345678910111213141516// 定义一个非泛型没有返回值没有参数的函数接口interface Run1 &amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java lambda">
+<meta property="og:url" content="http://www.yu66.wang/2015/09/08/JavaSE/Java8 lambda/index.html">
+<meta property="og:site_name" content="大王玉的技术博客">
+<meta property="og:description" content="函数接口函数接口定义函数接口只是一个抽象方法的接口,用作lambda表达式类型. 注意, 上面这个定义有三个需要注意的地方  函数接口是一个接口 函数接口有且只有一个抽象方法(只有一个表示数量上是唯一的,重载也是不可以) 函数接口用作lambda表达式类型  函数接口示例:12345678910111213141516// 定义一个非泛型没有返回值没有参数的函数接口interface Run1 &amp;">
+<meta property="og:updated_time" content="2017-05-02T14:35:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java lambda">
+<meta name="twitter:description" content="函数接口函数接口定义函数接口只是一个抽象方法的接口,用作lambda表达式类型. 注意, 上面这个定义有三个需要注意的地方  函数接口是一个接口 函数接口有且只有一个抽象方法(只有一个表示数量上是唯一的,重载也是不可以) 函数接口用作lambda表达式类型  函数接口示例:12345678910111213141516// 定义一个非泛型没有返回值没有参数的函数接口interface Run1 &amp;">
+
+    
+    <link rel="alternative" href="/atom.xml" title="大王玉的技术博客" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="大王玉的技术博客">大王玉的技术博客</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/08/JavaSE/Java8 lambda/" title="java lambda" itemprop="url">java lambda</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="大王玉" target="_blank" itemprop="author">大王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished"> 發表於 2015-09-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#函数接口"><span class="toc-number">1.</span> <span class="toc-text">函数接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数接口定义"><span class="toc-number">1.1.</span> <span class="toc-text">函数接口定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#函数接口示例"><span class="toc-number">1.2.</span> <span class="toc-text">函数接口示例:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#默认方法"><span class="toc-number">1.3.</span> <span class="toc-text">默认方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#继承默认方法"><span class="toc-number">1.3.1.</span> <span class="toc-text">继承默认方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多重继承"><span class="toc-number">1.3.2.</span> <span class="toc-text">多重继承</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接口静态方法"><span class="toc-number">1.4.</span> <span class="toc-text">接口静态方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FunctionalInterface"><span class="toc-number">1.5.</span> <span class="toc-text">@FunctionalInterface</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lambda表达式"><span class="toc-number">2.</span> <span class="toc-text">lambda表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda表达式定义"><span class="toc-number">2.1.</span> <span class="toc-text">lambda表达式定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda表达式使用"><span class="toc-number">2.2.</span> <span class="toc-text">lambda表达式使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#注意"><span class="toc-number">2.2.1.</span> <span class="toc-text">注意</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#java中重要的函数接口"><span class="toc-number">2.2.2.</span> <span class="toc-text">java中重要的函数接口</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">3.</span> <span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#高阶函数"><span class="toc-number">3.1.</span> <span class="toc-text">高阶函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#返回函数"><span class="toc-number">3.1.1.</span> <span class="toc-text">返回函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重载解析"><span class="toc-number">3.2.</span> <span class="toc-text">重载解析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法引用"><span class="toc-number">4.</span> <span class="toc-text">方法引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#静态方法引用"><span class="toc-number">4.1.</span> <span class="toc-text">静态方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型实例方法引用"><span class="toc-number">4.2.</span> <span class="toc-text">类型实例方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造方法引用"><span class="toc-number">4.3.</span> <span class="toc-text">构造方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#闭包"><span class="toc-number">4.4.</span> <span class="toc-text">闭包</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="函数接口"><a href="#函数接口" class="headerlink" title="函数接口"></a>函数接口</h2><h3 id="函数接口定义"><a href="#函数接口定义" class="headerlink" title="函数接口定义"></a>函数接口定义</h3><p>函数接口只是一个抽象方法的接口,用作lambda表达式类型.</p>
+<p>注意, 上面这个定义有三个需要注意的地方</p>
+<ol>
+<li>函数接口是一个接口</li>
+<li>函数接口有且只有一个抽象方法(只有一个表示数量上是唯一的,重载也是不可以)</li>
+<li>函数接口用作lambda表达式类型</li>
+</ol>
+<h3 id="函数接口示例"><a href="#函数接口示例" class="headerlink" title="函数接口示例:"></a>函数接口示例:</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 定义一个非泛型没有返回值没有参数的函数接口</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run1</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 定义一个非泛型没有返回值有参数的函数接口</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run2</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">(<span class="keyword">int</span> seconds)</span></span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 定义一个非泛型有返回值有参数的函数接口</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run3</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">runFast</span><span class="params">(<span class="keyword">int</span> seconds)</span></span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 定义一个泛型有返回值有参数的函数接口</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run4</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">runFast</span><span class="params">(T t, <span class="keyword">int</span> seconds)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="默认方法"><a href="#默认方法" class="headerlink" title="默认方法"></a>默认方法</h3><p>我们知道java8对核心集合类进行了大幅度修改,例如<code>Collection</code>接口添加了<code>stream()</code>方法. 那么所有的<code>Collection</code>实现类都必须来实现该方法. 为了保持二进制接口的兼容性,java8提供了默认方法,来保证这一兼容性(例如来源在java1到jav7平台写出的代码仍然可以在java8平台上编译运行)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run10</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"run10 runAt9Clock"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run11</span>  <span class="keyword">extends</span> <span class="title">Run10</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 调用</span></div><div class="line">Run11 run11 = () -&gt; &#123;</div><div class="line">	System.out.println();</div><div class="line">&#125;;</div><div class="line">run11.runAt9Clock();</div></pre></td></tr></table></figure></p>
+<p>那么所有的子类都可以来调用这个默认方法, 而不必实现它。</p>
+<blockquote>
+<p>如果接口中只有一个默认方法,那么这个接口就不是接口函数.</p>
+</blockquote>
+<h4 id="继承默认方法"><a href="#继承默认方法" class="headerlink" title="继承默认方法"></a>继承默认方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run11</span> <span class="keyword">extends</span> <span class="title">Run10</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"run11 runAt9Clock"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Run12</span> <span class="keyword">implements</span> <span class="title">Run10</span> </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"run12 runAt9Clock"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从上面的例子中我们可以看到如果接口<code>Run11</code>继承了接口<code>Run10</code>, 同时重载了默认方法, 那么<code>Run11</code>中的默认方法也必须含有<code>default</code>关键字. 但是在类中重载的话,就可以不必存在了.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Run11 run11 = () -&gt; &#123;</div><div class="line">	System.out.println();</div><div class="line">&#125;;</div><div class="line">run11.runAt9Clock();</div><div class="line"></div><div class="line">Run12 run12 = <span class="keyword">new</span> Run12();</div><div class="line">run12.runAt9Clock();</div><div class="line"></div><div class="line"><span class="comment">//result</span></div><div class="line">run11 runAt9Clock</div><div class="line">run12 runAt9Clock</div></pre></td></tr></table></figure></p>
+<p>接着我们都调用默认方法,我们发现当调用默认方法时都会优先调用子类中的方法.</p>
+<h4 id="多重继承"><a href="#多重继承" class="headerlink" title="多重继承"></a>多重继承</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run10</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"run10 runAt9Clock"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run13</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">default</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"run13 runAt9Clock"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Run14</span> <span class="keyword">implements</span> <span class="title">Run10</span>, <span class="title">Run13</span> </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在上面这个情况下,我们需要手动在<code>Run14</code>这个类中指定重载哪个方法, 否则会产生编译错误：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Run14</span> <span class="keyword">implements</span> <span class="title">Run10</span>, <span class="title">Run13</span> </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runAt9Clock</span><span class="params">()</span> </span>&#123;</div><div class="line">		Run10.<span class="keyword">super</span>.runAt9Clock();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="接口静态方法"><a href="#接口静态方法" class="headerlink" title="接口静态方法"></a>接口静态方法</h3><p>我们定义一个接口静态方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run1</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runSlowly</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"run1 run slowly"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//</span></div><div class="line">Run1.runSlowly();</div></pre></td></tr></table></figure></p>
+<p>需要注意的是：</p>
+<ul>
+<li>接口静态方法不会被继承到子接口或者子类中</li>
+</ul>
+<h3 id="FunctionalInterface"><a href="#FunctionalInterface" class="headerlink" title="@FunctionalInterface"></a>@FunctionalInterface</h3><p>所有的函数接口都应该添加<code>@FunctionalInterface</code>注释. 该注释会强制检查javac检查一个接口是否符合函数接口的标准. 如果将这个注释添加给类，枚举，多个方法的接口都会产生编译错误.</p>
+<h2 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h2><h3 id="lambda表达式定义"><a href="#lambda表达式定义" class="headerlink" title="lambda表达式定义"></a>lambda表达式定义</h3><p>接下来我们根据上面定义的函数接口来定义一下lambda表达式<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 不带参数的版本</span></div><div class="line">Run1 run1 = () -&gt; &#123;</div><div class="line">	System.out.println(<span class="string">"I am running"</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 参数要指定</span></div><div class="line">Run2 run2 = seconds -&gt; &#123;</div><div class="line">	System.out.println(<span class="string">"I am running "</span> + seconds + <span class="string">" seconds"</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 下面这个版本就必须要有个返回值了</span></div><div class="line">Run3 run3 = seconds -&gt; &#123;</div><div class="line">	System.out.println(<span class="string">"I am running"</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 我们在下面的版本中指定了它的泛型信息</span></div><div class="line">Run4&lt;String&gt; run4 = (name, seconds) -&gt; &#123;</div><div class="line">	System.out.println(name + <span class="string">" is running"</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h3 id="lambda表达式使用"><a href="#lambda表达式使用" class="headerlink" title="lambda表达式使用"></a>lambda表达式使用</h3><p>接下来我们使用上面定义的lambda表达式<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">run1.runFast();</div><div class="line">-&gt; I am running</div><div class="line"></div><div class="line">run2.runFast(<span class="number">10</span>);</div><div class="line">-&gt; I am running <span class="number">10</span> seconds</div><div class="line"></div><div class="line"><span class="keyword">int</span> result = run3.runFast(<span class="number">10</span>);</div><div class="line">-&gt; I am running</div><div class="line"></div><div class="line">run4.runFast(<span class="string">"小狗"</span>, <span class="number">10</span>); 小狗 is running</div><div class="line">-&gt;</div></pre></td></tr></table></figure></p>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>我们引用lambda表达式外部的一个变量<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String name = <span class="string">"sam"</span>;</div><div class="line">Run1 run1 = () -&gt; &#123;</div><div class="line">	System.out.println(name + <span class="string">" am running"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>编译运行通过没有问题,但是如果我们将name在lambda表达式内部重新赋值的话</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">String name = <span class="string">"sam"</span>;</div><div class="line">Run1 run1 = () -&gt; &#123;</div><div class="line">	name = <span class="string">""</span>;</div><div class="line">	System.out.println(name + <span class="string">" am running"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>会提示<code>variable used in lambda expression shouble be final</code>, 这说明lambda其实内部引用的是值而不是变量.</p>
+<p>好,接下来我们换种方式再次验证一下我们的结果：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">String name = <span class="string">"sam"</span>;</div><div class="line">name = <span class="string">"Jams"</span>;</div><div class="line">Run1 run1 = () -&gt; &#123;</div><div class="line">	System.out.println(name + <span class="string">" am running"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>同样的产生了编译错误.</p>
+<h4 id="java中重要的函数接口"><a href="#java中重要的函数接口" class="headerlink" title="java中重要的函数接口"></a>java中重要的函数接口</h4><ul>
+<li><code>Predicate&lt;T&gt;</code>: <code>boolean test(T t)</code> 判断输入的对象是否符合某个条件</li>
+<li><code>Consumer&lt;T&gt;</code>: <code>void accept(T t);</code>  接收一个输入参数并且没有返回值</li>
+<li><code>Supplier&lt;T&gt;</code>: <code>T get();</code>  可以看成一个对象的工厂，每次调用返回一个给定类型的对象</li>
+<li><code>UnaryOperator&lt;T&gt;</code>: ``</li>
+<li><code>BinaryOperator&lt;T&gt;</code>: ``</li>
+</ul>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>在Java8中什么是函数呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Run1 run1 = () -&gt; &#123;</div><div class="line">	System.out.println(<span class="string">"I am running"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>上面<code>run1</code>这个就代表一个函数. 一般我们把属于某个类的函数称为方法, 而不依赖于类而存在的函数称之为方法.</p>
+<h3 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h3><p>如果某个函数A作为函数B的参数或者返回值, 那么我们称函数B为高阶函数,像下面的<code>run6</code>就是一个高级函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run6</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Run1 run1)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Run6 run6 = run1Param -&gt; &#123;</div><div class="line">			System.out.println(<span class="string">"run6"</span>);</div><div class="line">			run1Param.runFast();</div><div class="line">		&#125;;</div><div class="line"></div><div class="line">run6.run(run1);</div></pre></td></tr></table></figure></p>
+<p>我们将<code>run1</code>这个函数作为方法传递给了<code>run6</code>.</p>
+<h4 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run8</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(String name, <span class="keyword">int</span> second, <span class="keyword">int</span> mils)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run9</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> Run8 <span class="title">run</span><span class="params">(Run8 run8)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Run8 run8 = (name, second, mils) -&gt; &#123;</div><div class="line">	System.out.println();</div><div class="line">&#125;;</div><div class="line"></div><div class="line">Run9 run9 = run8Param -&gt; &#123;</div><div class="line">	<span class="keyword">return</span> run8Param.run(<span class="string">"lily"</span>);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>在上述的例子中产生了编译错误, 在<code>Haskell</code>这种纯FP语言中可以将一个调用函数但是参数不完整的函数从某个参数中返回或者定义一个参数不完整的函数值.</p>
+<h3 id="重载解析"><a href="#重载解析" class="headerlink" title="重载解析"></a>重载解析</h3><p>我们使用函数接口作为方法参数,然后进行重载<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 定义函数接口</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run1</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run2</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// 定义重载代码</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Run1 run1)</span></span>&#123;</div><div class="line">		System.out.println(<span class="string">"run1"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(Run2 run2)</span></span>&#123;</div><div class="line">		System.out.println(<span class="string">"run2"</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line"><span class="comment">// 定义运行代码</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">	run(() -&gt; System.out.println());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当我们进行如上定义时,javac提示了编译错误：不确定的方法调用,<code>run(Run1 run1)</code>和<code>run(Run2 run2)</code>都符合.</p>
+<p>但是如果<code>Run2</code>继承了<code>Run1</code>这个接口之后<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run1</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Run2</span> <span class="keyword">extends</span> <span class="title">Run1</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runFast</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>当我们运行测试代码之后,我们发现输出的<code>run2</code>.</p>
+<p>当Lambda表达式作为参数时,其类型由它的目标类型推导得出,推导过程遵循如下规则：</p>
+<ul>
+<li>如果只有一个可能的目标类型,由相应的函数接口里的参数类型推导得出</li>
+<li>如果有多个可能的目标类型，由最具体的类型推导得出</li>
+<li>如果有多个可能的目标类型且最具体的类型不明确，则需要人为指定类型</li>
+</ul>
+<h2 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h2><p>方法引用是简洁的Lambda表达式，能够用于已经拥有名称的方法。</p>
+<ul>
+<li>静态方法 (ClassName::methName)</li>
+<li>对象实例方法 (instanceRef::methName)</li>
+<li>类型的实例方法 (ClassName::methName, 引用时和静态方法是一样的，但这里的 methName 是个实例方法)</li>
+<li>构造方法 (ClassName::new)</li>
+<li>数组的构造方法 (TypeName[]::new)</li>
+</ul>
+<h3 id="静态方法引用"><a href="#静态方法引用" class="headerlink" title="静态方法引用"></a>静态方法引用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		F f = Print::p;</div><div class="line">		f.m();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">p</span><span class="params">()</span> </span>&#123;</div><div class="line">		System.out.println(<span class="string">"Print"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@FunctionalInterface</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">F</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">void</span> <span class="title">m</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="类型实例方法引用"><a href="#类型实例方法引用" class="headerlink" title="类型实例方法引用"></a>类型实例方法引用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		F f = String::length;</div><div class="line">		<span class="keyword">int</span> len = f.m(<span class="string">"12"</span>);</div><div class="line">		System.out.println(len);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@FunctionalInterface</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">F</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">int</span> <span class="title">m</span><span class="params">(String p)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="构造方法引用"><a href="#构造方法引用" class="headerlink" title="构造方法引用"></a>构造方法引用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Print</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		F f = Print::<span class="keyword">new</span>;</div><div class="line">		Print p = f.m();</div><div class="line">		System.out.println(p == <span class="keyword">null</span>);	<span class="comment">// 结果为null</span></div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@FunctionalInterface</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">F</span> </span>&#123;</div><div class="line">	<span class="function">Print <span class="title">m</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><p>Java8还提供了闭包这个特性,虽然我不知道闭包这个特性有啥用,但是还是实验了一下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Java8</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		I i = () -&gt; &#123;</div><div class="line">			C c = <span class="keyword">new</span> C();</div><div class="line">			c.count = <span class="number">10</span>;</div><div class="line"></div><div class="line">			J j = () -&gt; &#123;</div><div class="line">				System.out.println(<span class="string">"J print c:"</span> + c.count);</div><div class="line">				<span class="keyword">return</span> c;</div><div class="line">			&#125;;</div><div class="line"></div><div class="line">			System.out.println(<span class="string">"I print c:"</span> + c.count);</div><div class="line">			<span class="keyword">return</span> j;</div><div class="line">		&#125;;</div><div class="line"></div><div class="line">		J j = i.r();</div><div class="line">		C c = j.c();</div><div class="line">		c.count = <span class="number">20</span>;</div><div class="line">		System.out.println(<span class="string">"main print c:"</span> + c.count);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">I</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> J <span class="title">r</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">J</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> C <span class="title">c</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">int</span> count;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们定义了俩个接口, <code>I</code>和<code>J</code>, 我们在I的lambada中调用J的lambada, 然后让J返回一个定义在I的对象C, 最后我们在main函数中成功的返回了这个对象.</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2015/09/08/JavaSE/Java8 lambda/" data-title="java lambda | 大王玉的技术博客" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/10/08/数据库/数据库事务/" title="MySQL事务">
+  <strong>上一篇：</strong><br/>
+  <span>
+  MySQL事务</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/09/08/编程语言/JavaScript函数/"  title="JavaScript函数">
+ <strong>下一篇：</strong><br/> 
+ <span>JavaScript函数
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/09/08/JavaSE/Java8 lambda/" data-title="java lambda" data-url="http://www.yu66.wang/2015/09/08/JavaSE/Java8 lambda/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#函数接口"><span class="toc-number">1.</span> <span class="toc-text">函数接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数接口定义"><span class="toc-number">1.1.</span> <span class="toc-text">函数接口定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#函数接口示例"><span class="toc-number">1.2.</span> <span class="toc-text">函数接口示例:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#默认方法"><span class="toc-number">1.3.</span> <span class="toc-text">默认方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#继承默认方法"><span class="toc-number">1.3.1.</span> <span class="toc-text">继承默认方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多重继承"><span class="toc-number">1.3.2.</span> <span class="toc-text">多重继承</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接口静态方法"><span class="toc-number">1.4.</span> <span class="toc-text">接口静态方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FunctionalInterface"><span class="toc-number">1.5.</span> <span class="toc-text">@FunctionalInterface</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lambda表达式"><span class="toc-number">2.</span> <span class="toc-text">lambda表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda表达式定义"><span class="toc-number">2.1.</span> <span class="toc-text">lambda表达式定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda表达式使用"><span class="toc-number">2.2.</span> <span class="toc-text">lambda表达式使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#注意"><span class="toc-number">2.2.1.</span> <span class="toc-text">注意</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#java中重要的函数接口"><span class="toc-number">2.2.2.</span> <span class="toc-text">java中重要的函数接口</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">3.</span> <span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#高阶函数"><span class="toc-number">3.1.</span> <span class="toc-text">高阶函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#返回函数"><span class="toc-number">3.1.1.</span> <span class="toc-text">返回函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重载解析"><span class="toc-number">3.2.</span> <span class="toc-text">重载解析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法引用"><span class="toc-number">4.</span> <span class="toc-text">方法引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#静态方法引用"><span class="toc-number">4.1.</span> <span class="toc-text">静态方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型实例方法引用"><span class="toc-number">4.2.</span> <span class="toc-text">类型实例方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造方法引用"><span class="toc-number">4.3.</span> <span class="toc-text">构造方法引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#闭包"><span class="toc-number">4.4.</span> <span class="toc-text">闭包</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
+		
+		<a href="/about" target="_blank" title="大王玉">大王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>

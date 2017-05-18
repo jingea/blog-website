@@ -1,98 +1,620 @@
-<% if (page.layout=='post' || page.layout=='photo'){ %>
- <%- partial('_partial/head') %>
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>MongoDB客户端 | 大王玉的技术博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="大王玉">
+    
+
+    
+    <meta name="description" content="A Quick Tour使用java 驱动开发是非常简单的,首先你要确保你的classpath中包含mongo.jar Making a Connection为了能够连接上MongoDB,最低的要求也是你要知道连接的database的名称. 这个数据库可以不存在,如果不存在的话,MongoDB会自动创建这个数据库 另外,你可以指定连接的服务器的地址和端口,下面的例子展示了三种连接本地mydb数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MongoDB客户端">
+<meta property="og:url" content="http://www.yu66.wang/2015/03/08/nosql/MongoDB客户端/index.html">
+<meta property="og:site_name" content="大王玉的技术博客">
+<meta property="og:description" content="A Quick Tour使用java 驱动开发是非常简单的,首先你要确保你的classpath中包含mongo.jar Making a Connection为了能够连接上MongoDB,最低的要求也是你要知道连接的database的名称. 这个数据库可以不存在,如果不存在的话,MongoDB会自动创建这个数据库 另外,你可以指定连接的服务器的地址和端口,下面的例子展示了三种连接本地mydb数据库">
+<meta property="og:updated_time" content="2017-05-02T14:35:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MongoDB客户端">
+<meta name="twitter:description" content="A Quick Tour使用java 驱动开发是非常简单的,首先你要确保你的classpath中包含mongo.jar Making a Connection为了能够连接上MongoDB,最低的要求也是你要知道连接的database的名称. 这个数据库可以不存在,如果不存在的话,MongoDB会自动创建这个数据库 另外,你可以指定连接的服务器的地址和端口,下面的例子展示了三种连接本地mydb数据库">
+
+    
+    <link rel="alternative" href="/atom.xml" title="大王玉的技术博客" type="application/atom+xml">
+    
+    
+    
+    <link rel="apple-touch-icon" href="/img/author.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/author.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
   <body>
     <header>
-      <%- partial('_partial/header') %>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="大王玉的技术博客">大王玉的技术博客</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= 17728547076946147000 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
     </header>
     <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: true}) %>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/08/nosql/MongoDB客户端/" title="MongoDB客户端" itemprop="url">MongoDB客户端</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="大王玉" target="_blank" itemprop="author">大王玉</a>
+		
+  <p class="article-time">
+    <time datetime="2015-03-07T16:00:00.000Z" itemprop="datePublished"> 發表於 2015-03-08</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#A-Quick-Tour"><span class="toc-number">1.</span> <span class="toc-text">A Quick Tour</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Making-a-Connection"><span class="toc-number">1.1.</span> <span class="toc-text">Making a Connection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Authentication-Optional"><span class="toc-number">1.2.</span> <span class="toc-text">Authentication (Optional)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-a-Collection"><span class="toc-number">1.3.</span> <span class="toc-text">Getting a Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setting-Write-Concern"><span class="toc-number">1.4.</span> <span class="toc-text">Setting Write Concern</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Inserting-a-Document"><span class="toc-number">1.5.</span> <span class="toc-text">Inserting a Document</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#findOne"><span class="toc-number">1.6.</span> <span class="toc-text">findOne()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adding-Multiple-Documents"><span class="toc-number">1.7.</span> <span class="toc-text">Adding Multiple Documents</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Counting-Documents-in-A-Collection"><span class="toc-number">1.8.</span> <span class="toc-text">Counting Documents in A Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Using-a-Cursor-to-Get-All-the-Documents"><span class="toc-number">1.9.</span> <span class="toc-text">Using a Cursor to Get All the Documents</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-A-Single-Document-with-A-Query"><span class="toc-number">1.10.</span> <span class="toc-text">Getting A Single Document with A Query</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-A-Set-of-Documents-With-a-Query"><span class="toc-number">1.11.</span> <span class="toc-text">Getting A Set of Documents With a Query</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MaxTime"><span class="toc-number">1.12.</span> <span class="toc-text">MaxTime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bulk-operations"><span class="toc-number">1.13.</span> <span class="toc-text">Bulk operations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#parallelScan"><span class="toc-number">1.14.</span> <span class="toc-text">parallelScan</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Tour-of-the-Administrative-Functions"><span class="toc-number">2.</span> <span class="toc-text">Quick Tour of the Administrative Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-A-List-of-Databases"><span class="toc-number">2.1.</span> <span class="toc-text">Getting A List of Databases</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dropping-A-Database"><span class="toc-number">2.2.</span> <span class="toc-text">Dropping A Database</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Creating-A-Collection"><span class="toc-number">2.3.</span> <span class="toc-text">Creating A Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-A-List-of-Collections"><span class="toc-number">2.4.</span> <span class="toc-text">Getting A List of Collections</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dropping-A-Collection"><span class="toc-number">2.5.</span> <span class="toc-text">Dropping A Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-a-List-of-Indexes-on-a-Collection"><span class="toc-number">2.6.</span> <span class="toc-text">Getting a List of Indexes on a Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Creating-An-Index"><span class="toc-number">2.7.</span> <span class="toc-text">Creating An Index</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Geo-indexes"><span class="toc-number">2.8.</span> <span class="toc-text">Geo indexes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Text-indexes"><span class="toc-number">2.9.</span> <span class="toc-text">Text indexes</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="A-Quick-Tour"><a href="#A-Quick-Tour" class="headerlink" title="A Quick Tour"></a>A Quick Tour</h2><p>使用java 驱动开发是非常简单的,首先你要确保你的<code>classpath</code>中包含<code>mongo.jar</code></p>
+<h3 id="Making-a-Connection"><a href="#Making-a-Connection" class="headerlink" title="Making a Connection"></a>Making a Connection</h3><p>为了能够连接上MongoDB,最低的要求也是你要知道连接的database的名称. 这个数据库可以不存在,如果不存在的话,MongoDB会自动创建这个数据库</p>
+<p>另外,你可以指定连接的服务器的地址和端口,下面的例子展示了三种连接本地<code>mydb</code>数据库的方式<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> com.mongodb.BasicDBObject;</div><div class="line"><span class="keyword">import</span> com.mongodb.BulkWriteOperation;</div><div class="line"><span class="keyword">import</span> com.mongodb.BulkWriteResult;</div><div class="line"><span class="keyword">import</span> com.mongodb.Cursor;</div><div class="line"><span class="keyword">import</span> com.mongodb.DB;</div><div class="line"><span class="keyword">import</span> com.mongodb.DBCollection;</div><div class="line"><span class="keyword">import</span> com.mongodb.DBCursor;</div><div class="line"><span class="keyword">import</span> com.mongodb.DBObject;</div><div class="line"><span class="keyword">import</span> com.mongodb.MongoClient;</div><div class="line"><span class="keyword">import</span> com.mongodb.ParallelScanOptions;</div><div class="line"><span class="keyword">import</span> com.mongodb.ServerAddress;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> java.util.Set;</div><div class="line"></div><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.util.concurrent.TimeUnit.SECONDS;</div><div class="line"></div><div class="line"><span class="comment">// To directly connect to a single MongoDB server (note that this will not auto-discover the primary even</span></div><div class="line"><span class="comment">// if it's a member of a replica set:</span></div><div class="line">MongoClient mongoClient = <span class="keyword">new</span> MongoClient();</div><div class="line"><span class="comment">// or</span></div><div class="line">MongoClient mongoClient = <span class="keyword">new</span> MongoClient( <span class="string">"localhost"</span> );</div><div class="line"><span class="comment">// or</span></div><div class="line">MongoClient mongoClient = <span class="keyword">new</span> MongoClient( <span class="string">"localhost"</span> , <span class="number">27017</span> );</div><div class="line"><span class="comment">// or, to connect to a replica set, with auto-discovery of the primary, supply a seed list of members</span></div><div class="line">MongoClient mongoClient = <span class="keyword">new</span> MongoClient(Arrays.asList(<span class="keyword">new</span> ServerAddress(<span class="string">"localhost"</span>, <span class="number">27017</span>),</div><div class="line">                                      <span class="keyword">new</span> ServerAddress(<span class="string">"localhost"</span>, <span class="number">27018</span>),</div><div class="line">                                      <span class="keyword">new</span> ServerAddress(<span class="string">"localhost"</span>, <span class="number">27019</span>)));</div><div class="line"></div><div class="line">DB db = mongoClient.getDB( <span class="string">"mydb"</span> );</div></pre></td></tr></table></figure></p>
+<p>在这个例子中<code>db</code>对象保持着一个对MongoDB服务器指定数据库的一个连接. 通过这个对象你可以做很多其他操作</p>
+<blockquote>
+<p>Note:</p>
+<p><code>MongoClient</code>实例实际上维持着对这个数据库的一个连接池. 即使在多线程的情况下,你也只需要一个<code>MongoClient</code>实例, 参考<a href="">concurrency doc page</a></p>
+</blockquote>
+<p><code>MongoClient</code>被设计成一个线程安全且线程共享的类. 一个典型例子是,你对一个数据库集群仅仅创建了一个<code>MongoClient</code>实例,然后在你的整个应用程序中都使用这一个实例. 如果出于一些特殊原因你不得不创建多个<code>MongoClient</code>实例,那么你需要注意下面俩点：</p>
+<ul>
+<li>all resource usage limits (max connections, etc) apply per MongoClient instance</li>
+<li>当关闭一个实例时,你必须确保你调用了<code>MongoClient.close()</code>清理掉了全部的资源</li>
+</ul>
+<p>New in version 2.10.0: The MongoClient class is new in version 2.10.0. For releases prior to that, please use the Mongo class instead.</p>
+<h3 id="Authentication-Optional"><a href="#Authentication-Optional" class="headerlink" title="Authentication (Optional)"></a>Authentication (Optional)</h3><p>MongoDB可以在安全模式下运行, 这种模式下,需要通过验证才能访问数据库. 当在这种模式下运行的时候, 任何客户端都必须提供一组证书.在java Driver中,你只需要在创建<code>MongoClient</code>实例时提供一下证书.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">MongoCredential credential = MongoCredential.createMongoCRCredential(userName, database, password);</div><div class="line">MongoClient mongoClient = <span class="keyword">new</span> MongoClient(<span class="keyword">new</span> ServerAddress(), Arrays.asList(credential));</div></pre></td></tr></table></figure></p>
+<p>MongoDB支持不同的认证机制,具体参考<a href="">the access control tutorials</a></p>
+<h3 id="Getting-a-Collection"><a href="#Getting-a-Collection" class="headerlink" title="Getting a Collection"></a>Getting a Collection</h3><p>如果想要使用一个collection,那么你仅仅需要调用<code>getCollection(String collectionName)</code>方法,然后指定该collection名称就好</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DBCollection coll = db.getCollection(<span class="string">"testCollection"</span>);</div></pre></td></tr></table></figure>
+<p>一旦你有了collection对象,那你就可以执行例如插入数据,查询数据等等的操作了</p>
+<h3 id="Setting-Write-Concern"><a href="#Setting-Write-Concern" class="headerlink" title="Setting Write Concern"></a>Setting Write Concern</h3><p>在2.10.0这个版本里,默认的write concern是<code>WriteConcern.ACKNOWLEDGED</code>不过你可以通过下面的方法轻松改变它<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongoClient.setWriteConcern(WriteConcern.JOURNALED);</div></pre></td></tr></table></figure></p>
+<p>对应write concern提供了很多种选项. 另外,这个默认的write concern分别可以在数据库,collection,以及单独的更新操作上重载.</p>
+<h3 id="Inserting-a-Document"><a href="#Inserting-a-Document" class="headerlink" title="Inserting a Document"></a>Inserting a Document</h3><p>一旦你拥有了collection对象,你就可以向该collection中插入document. 例如,我们可以插入一个像下面这样的一个json文档<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">   "name" : "MongoDB",</div><div class="line">   "type" : "database",</div><div class="line">   "count" : 1,</div><div class="line">   "info" : &#123;</div><div class="line">               x : 203,</div><div class="line">               y : 102</div><div class="line">             &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意,上面的例子中我们有一个内嵌的文档.想要插入这样一个文档,我们可以使用<code>BasicDBObject</code>类来实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">BasicDBObject doc = <span class="keyword">new</span> BasicDBObject(<span class="string">"name"</span>, <span class="string">"MongoDB"</span>)</div><div class="line">        .append(<span class="string">"type"</span>, <span class="string">"database"</span>)</div><div class="line">        .append(<span class="string">"count"</span>, <span class="number">1</span>)</div><div class="line">        .append(<span class="string">"info"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"x"</span>, <span class="number">203</span>).append(<span class="string">"y"</span>, <span class="number">102</span>));</div><div class="line">coll.insert(doc);</div></pre></td></tr></table></figure></p>
+<h3 id="findOne"><a href="#findOne" class="headerlink" title="findOne()"></a>findOne()</h3><p>如果想要查看刚才插入的文档,我们可以简单地调用<code>findOne()</code>,这个操作会获得该collection中的第一个文档.这个方法只是返回一个文档对象(而<code>find()</code>会返回一个<code>DBCursor</code>对象),当collection中只有一个文档的时候,这是非常有用的.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">DBObject myDoc = coll.findOne();</div><div class="line">System.out.println(myDoc);</div></pre></td></tr></table></figure></p>
+<p>结果如下：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123; <span class="attr">"_id"</span> : <span class="string">"49902cde5162504500b45c2c"</span> ,</div><div class="line">  <span class="attr">"name"</span> : <span class="string">"MongoDB"</span> ,</div><div class="line">  <span class="attr">"type"</span> : <span class="string">"database"</span> ,</div><div class="line">  <span class="attr">"count"</span> : <span class="number">1</span> ,</div><div class="line">  <span class="attr">"info"</span> : &#123; <span class="attr">"x"</span> : <span class="number">203</span> , <span class="attr">"y"</span> : <span class="number">102</span>&#125;&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Note:</p>
+<p><code>_id</code>元素是MongoDB自动添加到你的文档中的. 记住,MongoDB内部以“_”/”$”开头储存元素名称</p>
+</blockquote>
+<h3 id="Adding-Multiple-Documents"><a href="#Adding-Multiple-Documents" class="headerlink" title="Adding Multiple Documents"></a>Adding Multiple Documents</h3><p>当测试一些其他查询的时候,我们需要大量的数据,让我们添加一些简单的文档到collection中.<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">   <span class="attr">"i"</span> : value</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们可以在一个循环中不断地插入数据<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line">    coll.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"i"</span>, i));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意：我们可以向同一个collection中插入包含不同元素的文档.所以MongoDB也被称为<code>schema-free</code></p>
+<h3 id="Counting-Documents-in-A-Collection"><a href="#Counting-Documents-in-A-Collection" class="headerlink" title="Counting Documents in A Collection"></a>Counting Documents in A Collection</h3><p>通过以上的操作我们已经插入了101个文档,我们通过<code>getCount()</code>方法来检查一下.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">System.out.println(coll.getCount());</div></pre></td></tr></table></figure></p>
+<h3 id="Using-a-Cursor-to-Get-All-the-Documents"><a href="#Using-a-Cursor-to-Get-All-the-Documents" class="headerlink" title="Using a Cursor to Get All the Documents"></a>Using a Cursor to Get All the Documents</h3><p>如果想要获得collection中的全部文档,我们可以使用<code>find()</code>方法. <code>find()</code>返回一个<code>DBCursor</code>对象,我们可以通过遍历该对象获取所有匹配我们需求的文档.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DBCursor cursor = coll.find();</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">   <span class="keyword">while</span>(cursor.hasNext()) &#123;</div><div class="line">       System.out.println(cursor.next());</div><div class="line">   &#125;</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">   cursor.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="Getting-A-Single-Document-with-A-Query"><a href="#Getting-A-Single-Document-with-A-Query" class="headerlink" title="Getting A Single Document with A Query"></a>Getting A Single Document with A Query</h3><p>我们可以向<code>find()</code>方法传递一个查询参数, 通过该参数找到集合中符合需求的文档子集. 下例中展示了我们想要找到i是7的所有文档.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">BasicDBObject query = <span class="keyword">new</span> BasicDBObject(<span class="string">"i"</span>, <span class="number">71</span>);</div><div class="line"></div><div class="line">cursor = coll.find(query);</div><div class="line"></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">   <span class="keyword">while</span>(cursor.hasNext()) &#123;</div><div class="line">       System.out.println(cursor.next());</div><div class="line">   &#125;</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">   cursor.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>该代码只会输出一个文档<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123; <span class="attr">"_id"</span> : <span class="string">"49903677516250c1008d624e"</span> , <span class="attr">"i"</span> : <span class="number">71</span> &#125;</div></pre></td></tr></table></figure></p>
+<p>你也可以从其他的实例和文档中查看<code>$</code>操作符的用法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.things.find(&#123;j: &#123;$ne: <span class="number">3</span>&#125;, k: &#123;$gt: <span class="number">10</span>&#125; &#125;);</div></pre></td></tr></table></figure></p>
+<p>使用内嵌的<code>DBObject</code>,<code>$</code>可以看作是正则表达式字串<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">query = <span class="keyword">new</span> BasicDBObject(<span class="string">"j"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"$ne"</span>, <span class="number">3</span>))</div><div class="line">        .append(<span class="string">"k"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"$gt"</span>, <span class="number">10</span>));</div><div class="line"></div><div class="line">cursor = coll.find(query);</div><div class="line"></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="keyword">while</span>(cursor.hasNext()) &#123;</div><div class="line">        System.out.println(cursor.next());</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">    cursor.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="Getting-A-Set-of-Documents-With-a-Query"><a href="#Getting-A-Set-of-Documents-With-a-Query" class="headerlink" title="Getting A Set of Documents With a Query"></a>Getting A Set of Documents With a Query</h3><p>我们可以使用查询来获得collection中的一个文档集合.例如,我们使用下面的语法来获取所有i &gt; 50的文档<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// find all where i &gt; 50</span></div><div class="line">query = <span class="keyword">new</span> BasicDBObject(<span class="string">"i"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"$gt"</span>, <span class="number">50</span>));</div><div class="line"></div><div class="line">cursor = coll.find(query);</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="keyword">while</span> (cursor.hasNext()) &#123;</div><div class="line">        System.out.println(cursor.next());</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">    cursor.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们还可以获得一个区间(20 &lt; i &lt;= 30)文档集合<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">query = <span class="keyword">new</span> BasicDBObject(<span class="string">"i"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"$gt"</span>, <span class="number">20</span>).append(<span class="string">"$lte"</span>, <span class="number">30</span>));</div><div class="line">cursor = coll.find(query);</div><div class="line"></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    <span class="keyword">while</span> (cursor.hasNext()) &#123;</div><div class="line">        System.out.println(cursor.next());</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">    cursor.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="MaxTime"><a href="#MaxTime" class="headerlink" title="MaxTime"></a>MaxTime</h3><p>MongoDB2.6 添加查询超时的能力</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">coll.find().maxTime(<span class="number">1</span>, SECONDS).count();</div></pre></td></tr></table></figure>
+<p>在上面的例子中将<code>maxTime</code>设置为1s,当时间到后查询将被打断</p>
+<h3 id="Bulk-operations"><a href="#Bulk-operations" class="headerlink" title="Bulk operations"></a>Bulk operations</h3><p>Under the covers MongoDB is moving away from the combination of a write operation followed by get last error (GLE) and towards a write commands API. These new commands allow for the execution of bulk insert/update/remove operations. There are two types of bulk operations:</p>
+<ol>
+<li>Ordered bulk operations. 按顺序执行全部的操作,当遇到第一个写失败的时候,退出</li>
+<li>Unordered bulk operations. 并行执行全部操作, 同时收集全部错误.该操作不保证按照顺序执行</li>
+</ol>
+<p>下面展示了上面所说的俩个示例<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 1. Ordered bulk operation</span></div><div class="line">BulkWriteOperation builder = coll.initializeOrderedBulkOperation();</div><div class="line">builder.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">1</span>));</div><div class="line">builder.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">2</span>));</div><div class="line">builder.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">3</span>));</div><div class="line"></div><div class="line">builder.find(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">1</span>)).updateOne(<span class="keyword">new</span> BasicDBObject(<span class="string">"$set"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"x"</span>, <span class="number">2</span>)));</div><div class="line">builder.find(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">2</span>)).removeOne();</div><div class="line">builder.find(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">3</span>)).replaceOne(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">3</span>).append(<span class="string">"x"</span>, <span class="number">4</span>));</div><div class="line"></div><div class="line">BulkWriteResult result = builder.execute();</div><div class="line"></div><div class="line"><span class="comment">// 2. Unordered bulk operation - no guarantee of order of operation</span></div><div class="line">builder = coll.initializeUnorderedBulkOperation();</div><div class="line">builder.find(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">1</span>)).removeOne();</div><div class="line">builder.find(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">2</span>)).removeOne();</div><div class="line"></div><div class="line">result = builder.execute();</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Note:</p>
+<p>For servers older than 2.6 the API will down convert the operations. To support the correct semantics for BulkWriteResult and BulkWriteException, the operations have to be done one at a time. It’s not possible to down convert 100% so there might be slight edge cases where it cannot correctly report the right numbers.</p>
+</blockquote>
+<h3 id="parallelScan"><a href="#parallelScan" class="headerlink" title="parallelScan"></a>parallelScan</h3><p>MongoDB 2.6 增加了<code>parallelCollectionScan</code>命令, 该命令通过使用多个游标读取整个collection.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">ParallelScanOptions parallelScanOptions = ParallelScanOptions</div><div class="line">        .builder()</div><div class="line">        .numCursors(<span class="number">3</span>)</div><div class="line">        .batchSize(<span class="number">300</span>)</div><div class="line">        .build();</div><div class="line"></div><div class="line">List&lt;Cursor&gt; cursors = coll.parallelScan(parallelScanOptions);</div><div class="line"><span class="keyword">for</span> (Cursor pCursor: cursors) &#123;</div><div class="line">    <span class="keyword">while</span> (pCursor.hasNext()) &#123;</div><div class="line">        System.out.println((pCursor.next()));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其对collection进行IO吞吐量的优化.</p>
+<blockquote>
+<p>Note:</p>
+<p><code>ParallelScan</code>不能通过<code>mongos</code>运行</p>
+</blockquote>
+<h2 id="Quick-Tour-of-the-Administrative-Functions"><a href="#Quick-Tour-of-the-Administrative-Functions" class="headerlink" title="Quick Tour of the Administrative Functions"></a>Quick Tour of the Administrative Functions</h2><h3 id="Getting-A-List-of-Databases"><a href="#Getting-A-List-of-Databases" class="headerlink" title="Getting A List of Databases"></a>Getting A List of Databases</h3><p>通过下面的代码你可以获取一个可用数据库列表<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">MongoClient mongoClient = <span class="keyword">new</span> MongoClient();</div><div class="line"></div><div class="line"><span class="keyword">for</span> (String s : mongoClient.getDatabaseNames()) &#123;</div><div class="line">   System.out.println(s);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用<code>mongoClient.getDB()</code>并不会创建一个数据库. 仅仅当尝试向数据库写入数据时,该数据库才会被创建. 例如尝试创建一个所以或者一个collection或者插入一个文档.</p>
+<h3 id="Dropping-A-Database"><a href="#Dropping-A-Database" class="headerlink" title="Dropping A Database"></a>Dropping A Database</h3><p>通过<code>MongoClient</code>实例你也可以<code>drop</code>掉一个数据库<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">MongoClient mongoClient = <span class="keyword">new</span> MongoClient();</div><div class="line">mongoClient.dropDatabase(<span class="string">"databaseToBeDropped"</span>);</div></pre></td></tr></table></figure></p>
+<h3 id="Creating-A-Collection"><a href="#Creating-A-Collection" class="headerlink" title="Creating A Collection"></a>Creating A Collection</h3><p>有俩种方式创建collection：</p>
+<ol>
+<li>如果向一个不存在的collection中尝试插入一个文档,那么该collection会被创建出来</li>
+<li>或者直接调用<code>createCollection</code>命令</li>
+</ol>
+<p>下面的例子展示了创建1M大小的collection<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">db = mongoClient.getDB(<span class="string">"mydb"</span>);</div><div class="line">db.createCollection(<span class="string">"testCollection"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"capped"</span>, <span class="keyword">true</span>)</div><div class="line">        .append(<span class="string">"size"</span>, <span class="number">1048576</span>));</div></pre></td></tr></table></figure></p>
+<h3 id="Getting-A-List-of-Collections"><a href="#Getting-A-List-of-Collections" class="headerlink" title="Getting A List of Collections"></a>Getting A List of Collections</h3><p>你可以通过下面的方式获得一个数据库当中可用collection列表<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (String s : db.getCollectionNames()) &#123;</div><div class="line">   System.out.println(s);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的例子会输出：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">system.indexes</div><div class="line">testCollection</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Note:</p>
+<p><code>system.indexes</code> collection是自动创建的, 它里面是数据库中所有的索引, 所以不应该直接访问它</p>
+</blockquote>
+<h3 id="Dropping-A-Collection"><a href="#Dropping-A-Collection" class="headerlink" title="Dropping A Collection"></a>Dropping A Collection</h3><p>你可以通过<code>drop()</code>方法直接drop掉一个collection<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">DBCollection coll = db.getCollection(<span class="string">"testCollection"</span>);</div><div class="line">coll.drop();</div><div class="line">System.out.println(db.getCollectionNames());</div></pre></td></tr></table></figure></p>
+<h3 id="Getting-a-List-of-Indexes-on-a-Collection"><a href="#Getting-a-List-of-Indexes-on-a-Collection" class="headerlink" title="Getting a List of Indexes on a Collection"></a>Getting a List of Indexes on a Collection</h3><p>下例展示了如何获得一个collection中索引的列表<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">List&lt;DBObject&gt; list = coll.getIndexInfo();</div><div class="line"></div><div class="line"><span class="keyword">for</span> (DBObject o : list) &#123;</div><div class="line">   System.out.println(o.get(<span class="string">"key"</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的实例会进行下面的输出：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123; "v" : 1 , "key" : &#123; "_id" : 1&#125; , "name" : "_id_" , "ns" : "mydb.testCollection"&#125;</div><div class="line">&#123; "v" : 1 , "key" : &#123; "i" : 1&#125; , "name" : "i_1" , "ns" : "mydb.testCollection"&#125;</div><div class="line">&#123; "v" : 1 , "key" : &#123; "loc" : "2dsphere"&#125; , "name" : "loc_2dsphere" , ... &#125;</div><div class="line">&#123; "v" : 1 , "key" : &#123; "_fts" : "text" , "_ftsx" : 1&#125; , "name" : "content_text" , ... &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="Creating-An-Index"><a href="#Creating-An-Index" class="headerlink" title="Creating An Index"></a>Creating An Index</h3><p>MongoDB支持索引,而且它们可以轻松地插入到一个集合中.创建索引的过程非常简单,你只需要指定被索引的字段,你还可以指定该索引是上升的(1)还是下降的(-1).<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">coll.createIndex(<span class="keyword">new</span> BasicDBObject(<span class="string">"i"</span>, <span class="number">1</span>));  <span class="comment">// create index on "i", ascending</span></div></pre></td></tr></table></figure></p>
+<h3 id="Geo-indexes"><a href="#Geo-indexes" class="headerlink" title="Geo indexes"></a>Geo indexes</h3><p>MongoDB支持不同的地理空间索引,在下面的例子中,我们将窗口一个<code>2dsphere</code>索引, 我们可以通过标准<code>GeoJson</code>标记进行查询. 想要创建一个<code>2dsphere</code>索引,我们需要在索引文档中指定<code>2dsphere</code>这个字面量.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">coll.createIndex(<span class="keyword">new</span> BasicDBObject(<span class="string">"loc"</span>, <span class="string">"2dsphere"</span>));</div></pre></td></tr></table></figure></p>
+<p>有不同的方式去查询<code>2dsphere</code>索引,下面的例子中找到了500m以内的位置.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">BasicDBList coordinates = <span class="keyword">new</span> BasicDBList();</div><div class="line">coordinates.put(<span class="number">0</span>, -<span class="number">73.97</span>);</div><div class="line">coordinates.put(<span class="number">1</span>, <span class="number">40.77</span>);</div><div class="line">coll.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"name"</span>, <span class="string">"Central Park"</span>)</div><div class="line">                .append(<span class="string">"loc"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"type"</span>, <span class="string">"Point"</span>).append(<span class="string">"coordinates"</span>, coordinates))</div><div class="line">                .append(<span class="string">"category"</span>, <span class="string">"Parks"</span>));</div><div class="line"></div><div class="line">coordinates.put(<span class="number">0</span>, -<span class="number">73.88</span>);</div><div class="line">coordinates.put(<span class="number">1</span>, <span class="number">40.78</span>);</div><div class="line">coll.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"name"</span>, <span class="string">"La Guardia Airport"</span>)</div><div class="line">        .append(<span class="string">"loc"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"type"</span>, <span class="string">"Point"</span>).append(<span class="string">"coordinates"</span>, coordinates))</div><div class="line">        .append(<span class="string">"category"</span>, <span class="string">"Airport"</span>));</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">// Find whats within 500m of my location</span></div><div class="line">BasicDBList myLocation = <span class="keyword">new</span> BasicDBList();</div><div class="line">myLocation.put(<span class="number">0</span>, -<span class="number">73.965</span>);</div><div class="line">myLocation.put(<span class="number">1</span>, <span class="number">40.769</span>);</div><div class="line">myDoc = coll.findOne(</div><div class="line">            <span class="keyword">new</span> BasicDBObject(<span class="string">"loc"</span>,</div><div class="line">                <span class="keyword">new</span> BasicDBObject(<span class="string">"$near"</span>,</div><div class="line">                        <span class="keyword">new</span> BasicDBObject(<span class="string">"$geometry"</span>,</div><div class="line">                                <span class="keyword">new</span> BasicDBObject(<span class="string">"type"</span>, <span class="string">"Point"</span>)</div><div class="line">                                    .append(<span class="string">"coordinates"</span>, myLocation))</div><div class="line">                             .append(<span class="string">"$maxDistance"</span>,  <span class="number">500</span>)</div><div class="line">                        )</div><div class="line">                )</div><div class="line">            );</div><div class="line">System.out.println(myDoc.get(<span class="string">"name"</span>));</div></pre></td></tr></table></figure></p>
+<p>更多参考<a href="">geospatial</a>文档</p>
+<h3 id="Text-indexes"><a href="#Text-indexes" class="headerlink" title="Text indexes"></a>Text indexes</h3><p>MongoDB还支持<code>text</code>索引,该索引用来支持从String中搜索文本. <code>text</code>索引可以包含任何字段,但是该字段的值必须是String或者String数组.想要创建一个<code>text</code>索引,只需要在索引文档中指定<code>text</code>字面量.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// create a text index on the "content" field</span></div><div class="line">coll.createIndex(<span class="keyword">new</span> BasicDBObject(<span class="string">"content"</span>, <span class="string">"text"</span>));</div></pre></td></tr></table></figure></p>
+<p>MongoDB2.6 以后<code>text</code>索引融进了主要的查询语言中,并且成为了一种默认的方式.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Insert some documents</span></div><div class="line">coll.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">0</span>).append(<span class="string">"content"</span>, <span class="string">"textual content"</span>));</div><div class="line">coll.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">1</span>).append(<span class="string">"content"</span>, <span class="string">"additional content"</span>));</div><div class="line">coll.insert(<span class="keyword">new</span> BasicDBObject(<span class="string">"_id"</span>, <span class="number">2</span>).append(<span class="string">"content"</span>, <span class="string">"irrelevant content"</span>));</div><div class="line"></div><div class="line"><span class="comment">// Find using the text index</span></div><div class="line">BasicDBObject search = <span class="keyword">new</span> BasicDBObject(<span class="string">"$search"</span>, <span class="string">"textual content -irrelevant"</span>);</div><div class="line">BasicDBObject textSearch = <span class="keyword">new</span> BasicDBObject(<span class="string">"$text"</span>, search);</div><div class="line"><span class="keyword">int</span> matchCount = coll.find(textSearch).count();</div><div class="line">System.out.println(<span class="string">"Text search matches: "</span>+ matchCount);</div><div class="line"></div><div class="line"><span class="comment">// Find using the $language operator</span></div><div class="line">textSearch = <span class="keyword">new</span> BasicDBObject(<span class="string">"$text"</span>, search.append(<span class="string">"$language"</span>, <span class="string">"english"</span>));</div><div class="line">matchCount = coll.find(textSearch).count();</div><div class="line">System.out.println(<span class="string">"Text search matches (english): "</span>+ matchCount);</div><div class="line"></div><div class="line"><span class="comment">// Find the highest scoring match</span></div><div class="line">BasicDBObject projection = <span class="keyword">new</span> BasicDBObject(<span class="string">"score"</span>, <span class="keyword">new</span> BasicDBObject(<span class="string">"$meta"</span>, <span class="string">"textScore"</span>));</div><div class="line">myDoc = coll.findOne(textSearch, projection);</div><div class="line">System.out.println(<span class="string">"Highest scoring document: "</span>+ myDoc);</div></pre></td></tr></table></figure></p>
+<p>上面的代码应该输出：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Text search matches: <span class="number">2</span></div><div class="line"><span class="function">Text search <span class="title">matches</span> <span class="params">(english)</span>: 2</span></div><div class="line">Highest scoring document: &#123; <span class="string">"_id"</span> : <span class="number">1</span> , <span class="string">"content"</span> : <span class="string">"additional content"</span> , <span class="string">"score"</span> : <span class="number">0.75</span>&#125;</div></pre></td></tr></table></figure></p>
+<p>更多关于text search,参考<a href="">text index and $text query operator</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/NoSql/">NoSql</a>
+</div>
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.yu66.wang/2015/03/08/nosql/MongoDB客户端/" data-title="MongoDB客户端 | 大王玉的技术博客" data-tsina="3253370782" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/09/JavaSE/并发 线程管理/" title="线程 状态管理">
+  <strong>上一篇：</strong><br/>
+  <span>
+  线程 状态管理</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/03/08/nosql/MongoDB/"  title="运行MongoDB">
+ <strong>下一篇：</strong><br/> 
+ <span>运行MongoDB
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/03/08/nosql/MongoDB客户端/" data-title="MongoDB客户端" data-url="http://www.yu66.wang/2015/03/08/nosql/MongoDB客户端/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#A-Quick-Tour"><span class="toc-number">1.</span> <span class="toc-text">A Quick Tour</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Making-a-Connection"><span class="toc-number">1.1.</span> <span class="toc-text">Making a Connection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Authentication-Optional"><span class="toc-number">1.2.</span> <span class="toc-text">Authentication (Optional)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-a-Collection"><span class="toc-number">1.3.</span> <span class="toc-text">Getting a Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setting-Write-Concern"><span class="toc-number">1.4.</span> <span class="toc-text">Setting Write Concern</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Inserting-a-Document"><span class="toc-number">1.5.</span> <span class="toc-text">Inserting a Document</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#findOne"><span class="toc-number">1.6.</span> <span class="toc-text">findOne()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adding-Multiple-Documents"><span class="toc-number">1.7.</span> <span class="toc-text">Adding Multiple Documents</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Counting-Documents-in-A-Collection"><span class="toc-number">1.8.</span> <span class="toc-text">Counting Documents in A Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Using-a-Cursor-to-Get-All-the-Documents"><span class="toc-number">1.9.</span> <span class="toc-text">Using a Cursor to Get All the Documents</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-A-Single-Document-with-A-Query"><span class="toc-number">1.10.</span> <span class="toc-text">Getting A Single Document with A Query</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-A-Set-of-Documents-With-a-Query"><span class="toc-number">1.11.</span> <span class="toc-text">Getting A Set of Documents With a Query</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MaxTime"><span class="toc-number">1.12.</span> <span class="toc-text">MaxTime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bulk-operations"><span class="toc-number">1.13.</span> <span class="toc-text">Bulk operations</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#parallelScan"><span class="toc-number">1.14.</span> <span class="toc-text">parallelScan</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Tour-of-the-Administrative-Functions"><span class="toc-number">2.</span> <span class="toc-text">Quick Tour of the Administrative Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-A-List-of-Databases"><span class="toc-number">2.1.</span> <span class="toc-text">Getting A List of Databases</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dropping-A-Database"><span class="toc-number">2.2.</span> <span class="toc-text">Dropping A Database</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Creating-A-Collection"><span class="toc-number">2.3.</span> <span class="toc-text">Creating A Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-A-List-of-Collections"><span class="toc-number">2.4.</span> <span class="toc-text">Getting A List of Collections</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dropping-A-Collection"><span class="toc-number">2.5.</span> <span class="toc-text">Dropping A Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Getting-a-List-of-Indexes-on-a-Collection"><span class="toc-number">2.6.</span> <span class="toc-text">Getting a List of Indexes on a Collection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Creating-An-Index"><span class="toc-number">2.7.</span> <span class="toc-text">Creating An Index</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Geo-indexes"><span class="toc-number">2.8.</span> <span class="toc-text">Geo indexes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Text-indexes"><span class="toc-number">2.9.</span> <span class="toc-text">Text indexes</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="yu66" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/JVM/" title="JVM">JVM<sup>13</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java/" title="Java">Java<sup>18</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Java-Library/" title="Java Library">Java Library<sup>28</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/Nginx/" title="Nginx">Nginx<sup>5</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/NoSql/" title="NoSql">NoSql<sup>9</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/ZooKeeper/" title="ZooKeeper">ZooKeeper<sup>6</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/算法/" title="算法">算法<sup>11</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/编程语言/" title="编程语言">编程语言<sup>20</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/Netty/" title="Netty">Netty<sup>7</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/asm/" title="asm">asm<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/Guice/" title="Guice">Guice<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="http://vertx.yu66.wang/" target="_blank" title="vertx3">vertx3</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+<div class="doubanshow">
+<p class="asidetitle">豆瓣秀</p>
+<div>
+<script type="text/javascript" src="http://www.douban.com/service/badge/xxxyy/?show=collection&amp;n=12&amp;columns=3&amp;hidelogo=yes&amp;hideself=yes&amp;cat=book|movie" ></script>
+</div>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=3253370782&verifier=e9ca895b&dpc=1"></iframe>
+</div>
+
+
+  
+
+<div class="lofter">
+<p class="asidetitle">Lofter</p>
+
+ <iframe width="100%" height="39" class="share_self"  frameborder="0" scrolling="no" src="http://ming15.lofter.com/"></iframe>
+</div>
+
+
+
+
+</aside>
+</div>
     </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 博客,我选择重构 <br/>
+			重构使事情变得更美,更加正确</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/3253370782" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		
+		<a href="https://github.com/yu66" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		<a href="https://www.douban.com/people/xxxyy" target="_blank" class="icon-douban" title="豆瓣"></a>
+		
+		
+		<a href="http://www.zhihu.com/people/ming15" target="_blank" class="icon-zhihu" title="知乎"></a>
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2017 
+		
+		<a href="/about" target="_blank" title="大王玉">大王玉</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"wanggnim"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F9e8fca440159a2125668804e46682db4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
   </body>
 </html>
-<% } else if(page.layout=='page'){ %>
-  <% if(page.source.match(/\.md$/)){ %>
-    <%- partial('_partial/head') %>
-      <body>
-        <header>
-          <%- partial('_partial/header') %>
-        </header>
-        <div id="container">
-          <%- body %>
-        </div>
-        <footer><%- partial('_partial/footer') %></footer>
-        <%- partial('_partial/after_footer') %>
-      </body>
-     </html>
-     <% }else{ %>
-    <%- page.content %>
-  <% } %>
-<% } else if(page.layout=='search'){ %>
-<%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- partial('_partial/search')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='tags'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/tags')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.layout=='categories'){ %>
- <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-          <%- partial('_partial/categories')%>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else if(page.category!=null||page.tag!=null||page.archive!=null) { %>
-  <%- partial('_partial/head') %>
-    <body>
-      <header>
-        <%- partial('_partial/header') %>
-      </header>
-      <div id="container">
-        <%- body %>
-      </div>
-      <footer><%- partial('_partial/footer') %></footer>
-      <%- partial('_partial/after_footer') %>
-    </body>
-   </html>
-<% } else { %>
- <%- partial('_partial/head') %>
-  <body>
-    <header>
-      <%- partial('_partial/header') %>
-    </header>
-    <div id="container">
-      <%- body %>
-      <%- partial('_partial/sidebar',{item: page,table: false}) %>
-    </div>
-    <footer><%- partial('_partial/footer') %></footer>
-    <%- partial('_partial/after_footer') %>
-  </body>
- </html>
-<% } %>
